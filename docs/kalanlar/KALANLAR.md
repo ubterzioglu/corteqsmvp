@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **46** (N 0 · W 8 · M 27 · G 11 · KR 0) — G10+G12+G13+G15–G22 kapandı (Faz E TAMAM + G22), **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **45** (N 0 · W 8 · M 27 · G 10 · KR 0) — G10+G12+G13+G15–G23 kapandı (Faz E TAMAM + G22 + G23), **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -140,7 +140,7 @@ traction ölçülecek.
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | ~~G18~~ ~~G19~~ ~~G20~~ ~~G21~~ | ✅ **FAZ E TAMAM 02.10** — G18 (S1 form, kabul 14/14) · G19 (S2 dizin, kabul 8/8) · G20 (S3 detay + claim UI, kabul DOM+canlı 5/5; "Şikayet et" G14'e ertelendi) · ✅ **G21 KAPANDI 02.10** (S4 sahip paneli: `group_owner_panel_state`+`group_owner_update_v1`; kabul #9 canlı 9/9 — kaldırma ANINDA hidden) | 🟢 | ⚠️ G18–G21 frontend deploy kuyruğunda (G03b ile aynı) |
-| F | ~~G22~~ · **G23–G25** | ✅ **G22 KAPANDI 02.10** (6 cron işi + `group-link-health` edge; kabul #8 canlı 8/8 + GERÇEK tur koştu; health-score BAYRAKLA KAPALI — deploy sonrası insan kararı) · kalan: bildirimler · moderatör paneli · QA | 🟢 | ⚠️ G23 outbox CHECK 7 değere kilitli (migration ister) |
+| F | ~~G22~~ ~~G23~~ · **G24–G25** | ✅ G22 02.10 (6 cron + link-health; kabul #8 8/8) · ✅ **G23 KAPANDI 02.10** (8 bildirim: CHECK 9→17, 5 trigger, §9 metinleri kilitli; kabul: 8/8 outbox + **gerçek drenaj sent 8/8**) · kalan: moderatör paneli · QA | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
 
@@ -1904,10 +1904,49 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
 - *(özgün kapsam)* 6 görev + üç değerli link kontrolü + unknown sayacı artırmaz. **Kabul:** **#8**
   — 2 başarısız gizler, 1 başarılı geri açar, `unknown` etkisiz (canlı ölçüldü).
 
-**G23 — 8 bildirim metni** · migration + kod · tasarım §9. ⚠️ `notification_email_outbox.event_type`
-CHECK'i canlıda **7 değere kilitli** — yeni tip **migration ister**; TS birliğini tek başına
-genişletirsen RPC reddeder, kayıt **sessizce kaybolur**.
-**Kabul:** her bildirim için outbox satırı + drenaj sonrası **`sent_at` dolu**.
+**~~G23~~ — ✅ KAPANDI 02.10** · 8 bildirim metni · migration + edge
+
+- Migration `20261002120000_group_notifications.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **458/458**): outbox `event_type` CHECK'i **9→17** değere GENİŞLETİLDİ
+  (KR09 dersi: TS birliği tek başına genişlerse satırlar 23514'le SESSİZCE kaybolur) · 8 genel
+  anahtar `notification_settings`'te · `enqueue_group_notification` TEK kapı (alıcı maili
+  `auth.users`'tan — **maili yoksa satır YAZILMAZ**, dedupe idempotent, yeni satırda dispatcher
+  poke, `corteqs.skip_group_notify` bayrağı = G11/G10c toplu işlem güvencesi) · **5 trigger**
+  (landing INSERT · moderation_log INSERT · claims UPDATE→verified · posts INSERT
+  pending_group_admin · landings UPDATE badge false→true) — **fonksiyon redefine YOK** (kapalı
+  batch fonksiyonları dokunulmadı).
+- Çift/üçlü bildirim kilidi: hızlı şerit INSERT'te doğrudan `group_published` ("alındı" atlanır);
+  `from_status IS NULL` log satırları (fast_lane) ATLANIR. `group_post_pending` **günde grup
+  başına TEK mail** (gün damgalı dedupe, {n} güncel). hidden(link_dead)/suspended→published geri
+  açılışları da `group_published` üretir (tek yayın metni — karar). Sahipsiz grupta alıcı
+  `submitted_by`'a düşer (sessiz kayıp yok).
+- **Edge `send-notification-emails` YENİDEN DEPLOY** (`check:functions` 15/15): `_shared/emails/
+  group-notifications.ts` — 8 şablon, metinler tasarım §9 tablosuna karşı **testle birebir
+  kilitli** · alıcı `payload.email` (transactional — admin aboneliğine bakmaz, member_welcome
+  deseni) · 8 anahtar `SETTING_KEY_BY_EVENT`'te. 🔴 **Kural 8:** maile davet linki GİRMEZ —
+  {link} alanları site sayfası (`/addcom?group={slug}`), rozet görseli panelden.
+- **Kabul canlı ölçüldü (iki ayak):** (A) **geri alınan işlem — 8/8 olay tipi üretildi:**
+  submit→received · hızlı şerit→published (received 0 — çift yok) · moderatör published/rejected
+  (sebep notu taşındı: "Kusur sebebi G23") · link_dead→hidden maili · strike_2 log→"2. ihlal —
+  30 gün askı" · claim verified→sahibe · 2 gönderi→**TEK** post_pending (n=1) · badge→score 85 ·
+  skip bayrağı→0 satır · **kural 8 taraması: 0 sızıntı** (payload'larda link/invite/davet kodu yok)
+  · rollback temiz (0 grup satırı, 5 admin_update özeti dokunulmamış). (B) **GERÇEK drenaj:**
+  8 test satırı (admin adresi) → edge → **`processed:8, sent:8, failed:0`**, hepsi `status=sent` +
+  `sent_at` dolu + `recipient_count=1` → satırlar silindi (KR09 ölçüm deseni). ⚠️ ilk deneme
+  satır içi SQL'de Türkçe karakter konsol kodlamasında bozuldu (0x97) — SQL dosyadan verildi
+  (PowerShell dersi: Türkçe metin `-c` ile DEĞİL `-f` ile).
+- **Kanıt:** **43 yeni test** (şablon 15 — §9 metinleri dosyadan ayrıştırılıp birebir karşılaştırıldı,
+  XSS kaçışı, bilinmeyen tip nötr · sözleşme 15 — CHECK 17 değer, 5 trigger+WHEN, dedupe/skip/kural 8,
+  edge dörtlü kablolama · şema regresyonları yeşil) · **mutasyon 6/6** (CHECK'ten eski tip düşürme ·
+  fast_lane atlama kaldırma · gün-dedupe kaldırma · payload'a link sızdırma [M4 ilk koşuda desen
+  uyuşmadığı için uygulanamadı — tekil koşuda YAKALANDI] · edge anahtarı düşürme · "24 saat"→"48 saat"
+  metin kaydırma) · tam takım **414 dosya / 3405 test** · `tsc` 0 · lint 0 (30 problem tümü
+  `corteqs-ekstre-motoru/`) · `check:dead` 0/0/987 · `ingest:tools` 58 · `verify:text` ✓ 1918.
+- 📌 **Devir:** G24 moderatör paneli "bildirim gönderildi" izlerini outbox'tan gösterebilir ·
+  yıllık yenileme HATIRLATMA maili (`owner_renewal_due` yaklaşınca) bu batch'te YOK — G22
+  yenileme döngüsü çalışıyor, hatırlatma istenirse yeni event_type + trigger (küçük iş).
+- *(özgün kapsam)* tasarım §9'un 8 metni. **Kabul:** her bildirim için outbox satırı + drenaj
+  sonrası `sent_at` dolu (8/8 ölçüldü).
 
 **G24 — M5 Moderatör paneli** · kod · tek ekran 4 kuyruk (Yeni gruplar · Sahiplik talepleri ·
 Şikayetler · `pending_platform` gönderiler); kısayollar `A`/`R`/`J`/`K`; üst şerit kuyruk
@@ -2238,6 +2277,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G23 · 8 bildirim metni (tasarım §9) | mig `20261002120000` canlıda + kayıt (**458/458**) · outbox CHECK **9→17** (KR09 sessiz-kayıp dersi) · 8 anahtar `notification_settings` · `enqueue_group_notification` tek kapı (mail yoksa satır YOK · dedupe · poke · `corteqs.skip_group_notify`) · **5 trigger** (fonksiyon redefine YOK): landing INSERT (hızlı şeritte "alındı" ATLANIR — çift mail yok) · moderation_log (`from_status NULL` fast_lane satırı ATLANIR; published/rejected+sebep/link_dead/strike→insan metni) · claims→verified · posts pending_group_admin (**günde grup başına TEK mail**, n güncel) · badge false→true (skor payload'da) · sahipsiz grupta alıcı submitted_by (sessiz kayıp yok) · edge YENİDEN DEPLOY (15/15): `_shared/emails/group-notifications.ts` 8 şablon — **§9 metinleri dosyaya karşı birebir kilitli** · alıcı payload.email (transactional) · 🔴 kural 8: maile/payload'a davet linki GİRMEZ ({link}=site sayfası) · **kabul iki ayak:** (A) geri alınan işlem **8/8 olay tipi** + skip bayrağı + kural-8 taraması 0 sızıntı + rollback temiz · (B) **gerçek drenaj `processed:8, sent:8, failed:0`** — 8/8 `sent_at` dolu rc=1, satırlar silindi (KR09 deseni) · ⚠️ ders: Türkçe SQL `-c` ile bozuluyor (0x97) → `-f` dosyadan · 43 yeni test · **mutasyon 6/6** (M4 desen uyuşmazlığı tekil koşuda giderildi) · tam takım **414 dosya/3405 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 58 |
 | G22 · 6 zamanlanmış görev + link-health edge | mig `20261002110000` canlıda + kayıt (**457/457**) · pg_cron 6 isimli iş (link-health :23 edge · queue :17 · health-score 04:31 · suspension 04:37 · renewal 04:43 · claim-expiry */10) · 🔴 **G17 tuzağı bayrakla kapalı:** `health_score_cron_enabled=false` → -1 (canlı ölçüldü; deploy sonrası İNSAN kararıyla açılacak — kullanıcıda bekleyenler listesinde) · edge DEPLOY (`check:functions` **15/15**) + `verify_jwt=false` ÖLÇÜLDÜ (fonksiyon 401'i, gateway değil — A99-R2 dersi) + sabit-zamanlı `x-dispatch-secret` · ⚠️ secret: vault'a SQL'den yazılamıyor (ölçüldü) → `radar_news_cron_secret` yeniden kullanıldı + `supabase secrets set` (rotasyonda İKİ yer) · **kabul #8 canlı 8/8** (geri alınan işlem: 2 invalid→hidden(link_dead)+log system · unknown sayaç 2 KALDI+checked_at tazelendi · ok→published+sayaç 0 · due yayma/boş-link eleme · suspension · renewal çıpa+düşürme+renew · claim-expiry · grant matrisi · rollback temiz) + **GERÇEK tur:** slot-21 grubu kontrol edildi → unknown, ayak izi doğru · 🔴 canlı test 2 gerçek kusur yakaladı: security-definer zincirinde `auth.role()` claim taşımıyor → record/suspension `group_forbidden` (geçici service claim + geri yükleme ile yamandı) · 7 yeni ayar anahtarı · sözleşme **21/21** · **mutasyon 6/6** · tam takım **412 dosya/3377 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 58 (15 edge) |
 | G21 · S4 sahip paneli | mig `20261002100000` canlıda + kayıt (`check:migrations` **456/456**) · `group_owner_panel_state` (sahiplik kontrolü VERİDEN ÖNCE — sahip değilse/anon `{"is_owner":false}` TEK alan, skor G17 compute'tan, kuyruk pending_group_admin) + `group_owner_update_v1` (motor form alanları+rules+tagline; set listesi içerikle sınırlı — group_score/ownership/listing YAZILAMAZ; aile-cocuk G18 kilidi; legacy description ETİKET KUYRUĞU korunur) · kaldırmada YENİ KAPI YOK: UI → G12 `set_group_status_v1(hidden, owner_request)` · kuyruk → G16 `group_post_review` · panel: skor 6 kalem + "Kurallarını ekle, +15" rehberi + rozet SVG (1080², XSS kaçışlı) + paylaş + iki adım onaylı kaldırma · **kabul #9 canlı 9/9** (geri alınan işlem: ANINDA hidden + log actor_kind=owner + dizin 10→9 · sahip-olmayan forbidden · panel sızıntısız · düzenleme + etiket korundu + 161/aile/diger reddi · kuyruk approve/reject · rollback temiz) · 🔴 mutasyon turu TEST AÇIĞI yakaladı: M3 ilk turda geçildi (test yalnız raise'i kilitliyordu) → koşul kilidi eklendi, tekil koşuda düştü → **6/6** · 49 yeni test · tam takım **411 dosya/3356 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 57+0 · 📌 Faz E TAMAM — deploy kuyruğu G03b+G18–G21 |
 | G20 · S3 detay — "Bu grup sizin mi?" claim UI | KOD (migration YOK — G13 backend hazırdı): `GroupOwnershipClaim` + `src/lib/group-claims.ts` — kod yolu (CQ+4, talimat §3.B.2 birebir, verify body YALNIZ `claim_id` [kural 8], verified→"Kodu artık silebilirsin"+sayfa tazelenir, exhausted→ekran görüntüsü formu açılır, invalid/unknown "deneme sayılmadı") + screenshot yolu (`{uid}/screenshot-*` private kova, RPC/policy deseni birebir) + bekleyen talep geri yükleme + `claim_group` OAuth intent'i · ⚠️ "Şikayet et" ÇİZİLMEDİ (group_reports YOK — G14 ⛔; ölü düğme yok, yokluk testle kilitli) · boş koşullar gizli + "Katıl" RPC'den (kilitlendi) · **kabul DOM'da:** signed_out innerHTML'de platform linki izi YOK · **canlı prob 5/5** (geri alınan işlem: anon claims okuyamıyor · view link 0 · start_code→CQ6991+pending · RLS başka kullanıcı 0 · yabancı path reddi · rollback temiz) · 28 yeni test (hata haritası G13'e karşı çift yönlü) · **mutasyon 6/6** (⚠️ M3/M5 konsol kodlaması yüzünden ilk koşuda uygulanamadı — UTF-8 Node betiğiyle tekil koşuldu, ikisi de yakalandı; PowerShell mutasyonlarında Türkçe karakter dersi) · tam takım **408 dosya/3321 test** · `tsc` 0 · `check:dead` 0/0/985 · `ingest` 57+check 0 · deploy kuyruğu G18+G19'la aynı |

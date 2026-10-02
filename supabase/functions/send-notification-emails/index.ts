@@ -38,6 +38,10 @@ import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocatio
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionCompletedEmail } from "../_shared/emails/revision-request-completed.ts";
 import { buildCareerApplicationEmail } from "../_shared/emails/career-application.ts";
+import {
+  buildGroupNotificationEmail,
+  type GroupNotificationEventType,
+} from "../_shared/emails/group-notifications.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
@@ -63,6 +67,16 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   relocation_tool_abandonment: "email.relocation_tool_abandonment.enabled",
   radar_scan_digest: "email.radar_scan_digest.enabled",
   career_application: "email.career_application.enabled",
+  // G23 · tasarım §9 — grup bildirileri transactional'dır (üye kendi işleminin
+  // sonucunu alır); anahtarlar migration 20261002120000'de seed edildi.
+  group_submission_received: "email.group_submission_received.enabled",
+  group_published: "email.group_published.enabled",
+  group_rejected: "email.group_rejected.enabled",
+  group_ownership_verified: "email.group_ownership_verified.enabled",
+  group_post_pending: "email.group_post_pending.enabled",
+  group_link_dead: "email.group_link_dead.enabled",
+  group_score_badge: "email.group_score_badge.enabled",
+  group_strike_warning: "email.group_strike_warning.enabled",
 };
 
 type EventType =
@@ -74,7 +88,8 @@ type EventType =
   | "relocation_tool_report"
   | "relocation_tool_abandonment"
   | "radar_scan_digest"
-  | "career_application";
+  | "career_application"
+  | GroupNotificationEventType;
 
 type OutboxRow = {
   id: string;
@@ -201,6 +216,16 @@ function buildEmail(row: OutboxRow): BuiltEmail {
       return buildRelocationToolAbandonmentEmail(row.payload, resolveSiteUrl());
     case "career_application":
       return buildCareerApplicationEmail(row.payload, resolveSiteUrl());
+    // G23 · tasarım §9 — 8 grup bildirimi tek şablonda (metinler §9'dan birebir).
+    case "group_submission_received":
+    case "group_published":
+    case "group_rejected":
+    case "group_ownership_verified":
+    case "group_post_pending":
+    case "group_link_dead":
+    case "group_score_badge":
+    case "group_strike_warning":
+      return buildGroupNotificationEmail(row.event_type, row.payload, resolveSiteUrl());
     default:
       return buildNewMemberEmail(row.payload);
   }
@@ -379,13 +404,24 @@ Deno.serve(async (request) => {
     /**
      * Alıcı listesi. member_welcome üyenin KENDİSİNE gider — abone RPC'sine hiç uğramaz,
      * dolayısıyla admin aboneliklerinden bağımsızdır. Diğer iki tip abone listesini kullanır.
+     * G23: grup bildirimleri de KİŞİYE özeldir (payload.email — ekleyen/sahip);
+     * admin aboneliğine bakmaz (transactional).
      */
     const resolveRecipients = async (row: OutboxRow): Promise<string[]> => {
-      if (
-        row.event_type !== "member_welcome"
-        && row.event_type !== "relocation_tool_report"
-        && row.event_type !== "relocation_tool_abandonment"
-      ) {
+      const directEvents = new Set<string>([
+        "member_welcome",
+        "relocation_tool_report",
+        "relocation_tool_abandonment",
+        "group_submission_received",
+        "group_published",
+        "group_rejected",
+        "group_ownership_verified",
+        "group_post_pending",
+        "group_link_dead",
+        "group_score_badge",
+        "group_strike_warning",
+      ]);
+      if (!directEvents.has(row.event_type)) {
         return (await getSubscribers(row.event_type)).map((subscriber) => subscriber.email);
       }
 
@@ -416,11 +452,13 @@ Deno.serve(async (request) => {
 
         const recipients = await resolveRecipients(row);
         if (recipients.length === 0) {
-          // member_welcome'da bu payload'da adres yok demektir (beklenmez);
-          // diğer tiplerde kimse abone olmamış demektir.
+          // member_welcome/relocation/grup bildirimlerinde bu payload'da adres yok
+          // demektir (beklenmez — G23 enqueue'su adresi olmayan kullanıcıya satır
+          // yazmaz); diğer tiplerde kimse abone olmamış demektir.
           const directRecipient = row.event_type === "member_welcome"
             || row.event_type === "relocation_tool_report"
-            || row.event_type === "relocation_tool_abandonment";
+            || row.event_type === "relocation_tool_abandonment"
+            || row.event_type.startsWith("group_");
           const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin
             .from("notification_email_outbox")

@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-bildirimleri",
+    date: "2 Ekim 2026",
+    title: "Grup bildirimleri canlıda — 8 olayda üyeler artık otomatik e-posta alıyor",
+    items: [
+      "8 BİLDİRİM: “Grubun alındı” (inceleme genelde 24 saat) · “{Grup} yayında — sayfanı paylaş” · “Yayınlanamadı + sebep + Grup Sözü linki” · “Sahiplik doğrulandı — kodu grup adından silebilirsin” · “Onay bekleyen {n} gönderi var, 48 saatte bakmazsan ekip devralır” · “Davet linkin çalışmıyor, grup geçici gizlendi” · “Tebrikler, Onaylı Grup oldun — rozet görselin hazır” · “İhlal kaydı oluştu: {sebep}”. Metinler tasarım dokümanındaki tabloyla birebir (testle kilitli).",
+      "NASIL ÇALIŞIYOR: Bildirimler veritabanı tetikleyicilerinden kuyruğa düşüyor ve anında gönderiliyor (akşam özeti beklenmiyor — bunlar işlemsel bildirimler). Kimse kimsenin adresini görmüyor; her mail tek alıcıya gidiyor.",
+      "SPAM KORUMASI: “Onay bekleyen gönderi” maili grup başına GÜNDE BİR kez gelir (içinde güncel sayıyla). Hızlı şeritle yayına çıkan grup hem “alındı” hem “yayında” maili ÜRETMEZ — yalnız “yayında”.",
+      "GÜVENLİK: Mail içeriğine davet linki ASLA konmuyor (kural 8) — {link} alanları site sayfası; davet linki yalnız girişli kullanıcıya grup sayfasında. Test satırları dahil hiçbir kuyruk kaydına link yazılmadı (canlıda tarandı: 0 sızıntı).",
+      "KANIT: 8 olayın 8’i de canlıda uçtan uca doğrulandı — tetikleyiciler geri alınan işlemde ölçüldü (8/8 olay tipi üretildi, gün-dedupe çalıştı, toplu-işlem bayrağı susturdu), ardından 8 gerçek mail yönetici adresine gönderildi: 8/8 “sent”, alıcı sayısı 1, hata yok. Test satırları silindi. Her bildirim tipi admin panelindeki Bildirim Ayarları anahtarlarıyla kapatılabilir.",
+    ],
+  },
+  {
     id: "20261002-grup-motoru-zamanlanmis-gorevler",
     date: "2 Ekim 2026",
     title: "Grup motorunun 6 zamanlanmış görevi canlıda — link sağlığı çalışmaya başladı",

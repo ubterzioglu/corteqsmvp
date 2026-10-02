@@ -3306,6 +3306,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-notifications-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-owner-panel-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4512,6 +4517,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/career-application.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/group-notifications.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/group-notifications.ts",
       "kind": "ts",
       "module_family": "edge"
     },
