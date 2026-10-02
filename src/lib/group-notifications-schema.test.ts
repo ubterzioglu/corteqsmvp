@@ -24,6 +24,7 @@ import { describe, expect, it } from "vitest";
 import { sliceBetween } from "@/test/source-slice";
 
 const MIGRATION = "20261002120000_group_notifications.sql";
+const FIX_MIGRATION = "20261002140000_group_strike_notification.sql";
 const EDGE = "supabase/functions/send-notification-emails/index.ts";
 
 const GROUP_EVENTS = [
@@ -182,8 +183,7 @@ describe("G23 · trigger zinciri", () => {
   });
 });
 
-describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıcı)", () => {
-  const edge = () => readFileSync(EDGE, "utf8");
+describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıcı)", () => {  const edge = () => readFileSync(EDGE, "utf8");
 
   it("8 olay SETTING_KEY_BY_EVENT'te", () => {
     for (const event of GROUP_EVENTS) {
@@ -219,5 +219,66 @@ describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıc
     expect(edge()).toContain("buildGroupNotificationEmail,");
     expect(edge()).toContain("type GroupNotificationEventType,");
     expect(edge()).toContain('from "../_shared/emails/group-notifications.ts";');
+  });
+});
+
+// ─── G25 düzeltmesi: uyarı bildirimi group_strikes'a taşındı ────────────────
+//
+// QA #13 canlı ölçümde yakaladı: G15 merdiveninin İLK basamağı (warning) durum
+// geçişi yapmaz → moderation_log satırı YAZILMAZ (G12: no-op log yazmaz) →
+// G23'ün log-trigger kancası uyarı mailini HİÇ göndermiyordu. Düzeltme:
+// tek kanca `group_strikes` AFTER INSERT; log trigger'ının strike dalı
+// KALDIRILDI (strike_2/3'te çift mail riski de kapanır).
+
+const fixSql = () => {
+  const candidates = [
+    `supabase/migrations/applied/${FIX_MIGRATION}`,
+    `supabase/migrations/${FIX_MIGRATION}`,
+  ];
+  const path = candidates.find((candidate) => existsSync(candidate));
+  if (!path) throw new Error(`${FIX_MIGRATION} bulunamadı (applied/ altında yaşamalı).`);
+  return readFileSync(path, "utf8")
+    .split("\n")
+    .filter((line) => !line.trimStart().startsWith("--"))
+    .join("\n");
+};
+
+describe("G25 düzeltmesi · uyarı bildirimi tek kancada", () => {
+  it("log trigger'ı strike dalı OLMADAN yeniden tanımlanır (çift mail kilidi)", () => {
+    const logFn = sliceBetween(
+      fixSql(),
+      "create or replace function public.group_notify_moderation_log",
+      "comment on function public.group_notify_moderation_log",
+      "log trigger (fix)",
+    );
+
+    expect(logFn).not.toContain("strike_1");
+    expect(logFn).not.toContain("group_strike_warning");
+    // Diğer üç dal birebir korunur
+    expect(logFn).toContain("new.to_status = 'published'");
+    expect(logFn).toContain("new.to_status = 'rejected'");
+    expect(logFn).toContain("new.reason = 'link_dead'");
+  });
+
+  it("group_strikes AFTER INSERT trigger'ı kurulur — her ihlal = 1 mail", () => {
+    const sql = fixSql();
+
+    expect(sql).toContain("after insert on public.group_strikes");
+    expect(sql).toContain("execute function public.group_notify_strike()");
+    expect(sql).toContain("'group_strike_warning:' || new.id::text");
+  });
+
+  it("outcome {sebep} içine işlenir (2./3. ihlalde cümle yanlış anlaşılmasın)", () => {
+    const fn = sliceBetween(
+      fixSql(),
+      "create or replace function public.group_notify_strike",
+      "comment on function public.group_notify_strike",
+      "strike trigger",
+    );
+
+    expect(fn).toContain("when 'suspended' then v_reason || ' — grup 30 gün askıya alındı'");
+    expect(fn).toContain("when 'removed' then v_reason || ' — grup listeden kaldırıldı'");
+    expect(fn).toContain("'kırmızı çizgi ' || new.redline_number");
+    expect(fn).toContain("coalesce(v_landing.owner_user_id, v_landing.submitted_by, v_landing.user_id)");
   });
 });

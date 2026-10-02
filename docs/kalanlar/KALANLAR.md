@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **44** (N 0 · W 8 · M 27 · G 9 · KR 0) — G10+G12+G13+G15–G24 kapandı (Faz E+F büyük ölçüde tamam), **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **43** (N 0 · W 8 · M 27 · G 8 · KR 0) — G10+G12+G13+G15–G25 kapandı; G serisinde açık kalanlar: **G04–G07** (⛔ K09/U06) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c/G03c** (⛔ deploy) — **blokesiz G batch'i KALMADI** |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -140,7 +140,7 @@ traction ölçülecek.
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | ~~G18~~ ~~G19~~ ~~G20~~ ~~G21~~ | ✅ **FAZ E TAMAM 02.10** — G18 (S1 form, kabul 14/14) · G19 (S2 dizin, kabul 8/8) · G20 (S3 detay + claim UI, kabul DOM+canlı 5/5; "Şikayet et" G14'e ertelendi) · ✅ **G21 KAPANDI 02.10** (S4 sahip paneli: `group_owner_panel_state`+`group_owner_update_v1`; kabul #9 canlı 9/9 — kaldırma ANINDA hidden) | 🟢 | ⚠️ G18–G21 frontend deploy kuyruğunda (G03b ile aynı) |
-| F | ~~G22~~ ~~G23~~ ~~G24~~ · **G25** | ✅ G22 02.10 (6 cron + link-health) · ✅ G23 02.10 (8 bildirim, gerçek drenaj 8/8) · ✅ **G24 KAPANDI 02.10** (M5 moderatör paneli `/admin/gruplar`: 4 kuyruk + A/R/J/K + hızlı şerit anahtarı beyaz listeyle yazıyor; kabul canlı 4/4; şikayet sekmesi G14'e dek bilinçli boş) · kalan: QA | 🟢 | — |
+| F | ~~G22~~ ~~G23~~ ~~G24~~ ~~G25~~ | ✅ **FAZ F KISMEN TAMAM 02.10** — G22 (6 cron) · G23 (8 bildirim) · G24 (moderatör paneli) · ✅ **G25 KAPANDI 02.10** (13 kabul: `supabase/qa/group-motor-acceptance.sql` exit 0 — 12 ölçüldü + #6 tripwire; QA gerçek kusur yakaladı → strike bildirimi `group_strikes`'a taşındı, mig `20261002140000`; mutasyon 6/6 canlı fonksiyonlar üzerinde) | 🟢 | ⛔ #6 kabulu G14'le tamamlanacak (tripwire kurulu) |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
 
@@ -1992,10 +1992,36 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
   görev son koşuları · nav satırı `communities.ts`'e. **Kabul:** 4 kuyruk canlı veriyle doluyor
   (3'ü dolu ölçüldü, şikayet G14'e dek 0); anahtar `group_settings`'i yazıyor (canlı ölçüldü).
 
-**G25 — QA: 13 kabul testi** · test · tasarım §13'ün tamamı otomatik (mümkün olmayan için yazılı
-canlı ölçüm). ⚠️ Test **#5** (RLS) ve **#6** (şikayet eşiği) **mutasyonla** sınanır — kuralı
-bozunca kırmızıya dönmüyorsa **test yanlıştır**.
-**Kabul:** 13/13 + `npm run test` · `tsc` 0 · `lint` 0 · `verify:text` temiz.
+**~~G25~~ — ✅ KAPANDI 02.10** · QA: 13 kabul testi · test + düzeltme migration'ı
+
+- **`supabase/qa/group-motor-acceptance.sql`** — 13 kabulün 12'si TEK kendini-doğrulayan betikte
+  (`assert` bazlı; exit≠0 = kabul düştü; tümü geri alınan işlemde, #5 işlem DIŞINDA gerçek anon
+  rolüyle). Rapor: **`docs/dijital-gruplar/2026-10-02-g25-kabul-raporu.md`** (13/13 tablo +
+  kanıt değerleri + mutasyon sonuçları). Ölçüldü: **exit 0 · 12 senaryo yeşil + #6 tripwire**.
+- ⛔ **#6 TRIPWIRE:** `assert to_regclass('public.group_reports') IS NULL` — G14 tabloyu yarattığı
+  an QA KIZARIR ve #6 senaryosunu (3 onaylı şikayet/30 gün → hidden · 2 → strike) yazmaya ZORLAR.
+  Şema uydurulmadı; mutasyon sınavı da G14'le yapılacak.
+- 🔴 **QA GERÇEK KUSUR YAKALADI (batch'te onarıldı):** #13 ilk koşuda kırmızı —
+  `group_strike_warning` outbox'a hiç düşmüyordu. Kök neden: G23 kancası `group_moderation_log`
+  satırlarındaydı; G15'in İLK basamağı (warning) geçiş yapmadığı için log satırı YAZILMIYOR
+  (G12 no-op log yazmaz) → uyarı maili asla gitmezdi. Düzeltme mig
+  **`20261002140000_group_strike_notification.sql`** (canlıda, `check:migrations` **460/460**):
+  uyarının TEK kancası `group_strikes AFTER INSERT` (her ihlal=1 satır=1 mail; `outcome` →
+  `{sebep}` alanına: "— grup 30 gün askıya alındı" / "— listeden kaldırıldı"; kırmızı çizgi
+  öneki) · log trigger'ının strike dalı KALDIRILDI (strike_2/3 ÇİFT mail riski de kapandı) ·
+  published/rejected/link_dead dalları birebir korundu. Düzeltme sonrası #13 yeşil.
+- **Mutasyon sınavı 6/6 (tasarım §13: #5/#6 mutasyonla sınanır):** D1 `unknown` sayaç artırır →
+  **#8 KIRMIZI** (canlı fonksiyon bozuldu, betik yakaladı, geri yüklendi) · D2 aile-cocuk kilidi
+  açık → **#10 KIRMIZI** · D3 view link sızdırır → **#5 KIRMIZI** ("10 satır" — restore sonrası
+  canlı 0 ölçüldü) · M1 strikes trigger sil → sözleşme kırmızı · M2 strike dalı log'a geri →
+  kırmızı (çift mail kilidi) · M3 outcome işlemesi sil → kırmızı.
+- **Kabul:** 13/13 (12 ölçüldü + #6 tripwire) · `npm run test` **417 dosya / 3440 test** ·
+  `tsc` 0 · lint 0 (30 problem tümü `corteqs-ekstre-motoru/`) · `verify:text` ✓ 1924 ·
+  `check:dead` 0/0 · `ingest:tools:check` 0. Sözleşme kilidi: fix migration
+  `group-notifications-schema.test.ts`'te (31 test).
+- 📌 QA betiği şema değiştikçe güncellenir (G11/G14/G06) — tripwire'lar bunu zorlar.
+- *(özgün kapsam)* tasarım §13'ün tamamı otomatik + #6 için yazılı canlı ölçüm (rapor).
+  ⚠️ #5 ve #6 mutasyonla sınanır — sınandı (yukarıda). **Kabul:** 13/13 + tam takım yeşil.
 
 ⚠️ **Tanıtım (`05`/`06` dosyaları) G19 canlıya çıktıktan SONRA başlar** — eski sayfaya trafik
 gönderilmez.
@@ -2315,6 +2341,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G25 · QA: 13 kabul testi | **`supabase/qa/group-motor-acceptance.sql` exit 0 — 13/13** (12 senaryo assert'li canlı ölçüm geri alınan işlemde + #5 gerçek anon rolüyle işlem dışında + **#6 TRIPWIRE**: group_reports ortaya çıkınca QA kızarır, G14 senaryoyu yazmak zorunda) · rapor `docs/dijital-gruplar/2026-10-02-g25-kabul-raporu.md` · 🔴 **QA gerçek kusur yakaladı:** uyarı maili log kancasına bağlıydı ama warning geçiş üretmiyor → log satırı yok → mail HİÇ gitmiyordu; düzeltme mig `20261002140000` canlıda (**460/460**): tek kanca `group_strikes AFTER INSERT` (outcome {sebep}'e işlenir) + log trigger'ının strike dalı kaldırıldı (çift mail riski kapandı) · **mutasyon 6/6:** D1 unknown-sayaç / D2 aile kilidi / D3 view sızıntısı — üçü de CANLI fonksiyonda bozuldu, QA kızardı, geri yüklendi (restore sonrası canlı yeniden ölçüldü) + M1-M3 sözleşme · tam takım **417 dosya/3440 test** · `tsc` 0 · `verify:text` ✓1924 · 📌 G serisinde BLOKESİZ batch kalmadı (G04-G07 ⛔ K09/U06 · G11 ⛔ U07 · G14 ⛔ G04 · G10c/G03c ⛔ deploy) |
 | G24 · M5 moderatör paneli (`/admin/gruplar`) | mig `20261002130000` canlıda + kayıt (**459/459**) · `admin_set_group_setting` (is_admin + **beyaz liste TEK anahtar** fast_lane_enabled + boolean tip + updated_by izi) · `group_moderator_summary` (4 sayaç + moderated x/threshold + cron.job_run_details'tan `group_%` son koşuları — cron şeması grant'sız) · karar kapısı UYDURULMADI (G12/G13/G15/G16 tek kapıları) · sayfa: KR08 üçlüsü (rota+meta+nav, menü **89→90**, korpus **90/90**) + A/R/J/K kısayolları (input'ta devre dışı) + red= hazır sebep+not→G23 mailine "Sebep:" + uyarı=G15 merdiveni (kırmızı çizgi 1-7) + kanıt signed URL 5dk + çekişmeli rozeti + GÖRÜNÜR yükleme hatası · ⚠️ şikayet sekmesi BİLİNÇLİ boş (pending_reports sabit 0 — fonksiyon group_reports'a BAKAMIYOR, kilitli) · **kabul canlı 4/4** (geri alınan işlem: üye/anon özeti okuyamıyor · anahtarı yalnız admin yazıyor · beyaz liste dışı/tip reddi · gerçek gönderiyle sayaç 0→1 · bonus: G22 cron'u gerçekten koşuyor — claim_expiry 22:30 succeeded) · 33 yeni test (hata haritası BEŞ migration'a çift yönlü) · **mutasyon 6/6** (M3 dosya-genel iddia yüzünden ilk koşuda kaçtı → fonksiyon-kapsamına güçlendirildi — G21 dersi 2. kez) · tam takım **417 dosya/3437 test** · `tsc` 0 · `check:dead` 0/0/989 · `ingest` 58 · 📌 şikayet sekmesi G14'te dolar · legacy `WhatsAppLandingsModeration` ekranı G25/G10c'de tek dile iner |
 | G23 · 8 bildirim metni (tasarım §9) | mig `20261002120000` canlıda + kayıt (**458/458**) · outbox CHECK **9→17** (KR09 sessiz-kayıp dersi) · 8 anahtar `notification_settings` · `enqueue_group_notification` tek kapı (mail yoksa satır YOK · dedupe · poke · `corteqs.skip_group_notify`) · **5 trigger** (fonksiyon redefine YOK): landing INSERT (hızlı şeritte "alındı" ATLANIR — çift mail yok) · moderation_log (`from_status NULL` fast_lane satırı ATLANIR; published/rejected+sebep/link_dead/strike→insan metni) · claims→verified · posts pending_group_admin (**günde grup başına TEK mail**, n güncel) · badge false→true (skor payload'da) · sahipsiz grupta alıcı submitted_by (sessiz kayıp yok) · edge YENİDEN DEPLOY (15/15): `_shared/emails/group-notifications.ts` 8 şablon — **§9 metinleri dosyaya karşı birebir kilitli** · alıcı payload.email (transactional) · 🔴 kural 8: maile/payload'a davet linki GİRMEZ ({link}=site sayfası) · **kabul iki ayak:** (A) geri alınan işlem **8/8 olay tipi** + skip bayrağı + kural-8 taraması 0 sızıntı + rollback temiz · (B) **gerçek drenaj `processed:8, sent:8, failed:0`** — 8/8 `sent_at` dolu rc=1, satırlar silindi (KR09 deseni) · ⚠️ ders: Türkçe SQL `-c` ile bozuluyor (0x97) → `-f` dosyadan · 43 yeni test · **mutasyon 6/6** (M4 desen uyuşmazlığı tekil koşuda giderildi) · tam takım **414 dosya/3405 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 58 |
 | G22 · 6 zamanlanmış görev + link-health edge | mig `20261002110000` canlıda + kayıt (**457/457**) · pg_cron 6 isimli iş (link-health :23 edge · queue :17 · health-score 04:31 · suspension 04:37 · renewal 04:43 · claim-expiry */10) · 🔴 **G17 tuzağı bayrakla kapalı:** `health_score_cron_enabled=false` → -1 (canlı ölçüldü; deploy sonrası İNSAN kararıyla açılacak — kullanıcıda bekleyenler listesinde) · edge DEPLOY (`check:functions` **15/15**) + `verify_jwt=false` ÖLÇÜLDÜ (fonksiyon 401'i, gateway değil — A99-R2 dersi) + sabit-zamanlı `x-dispatch-secret` · ⚠️ secret: vault'a SQL'den yazılamıyor (ölçüldü) → `radar_news_cron_secret` yeniden kullanıldı + `supabase secrets set` (rotasyonda İKİ yer) · **kabul #8 canlı 8/8** (geri alınan işlem: 2 invalid→hidden(link_dead)+log system · unknown sayaç 2 KALDI+checked_at tazelendi · ok→published+sayaç 0 · due yayma/boş-link eleme · suspension · renewal çıpa+düşürme+renew · claim-expiry · grant matrisi · rollback temiz) + **GERÇEK tur:** slot-21 grubu kontrol edildi → unknown, ayak izi doğru · 🔴 canlı test 2 gerçek kusur yakaladı: security-definer zincirinde `auth.role()` claim taşımıyor → record/suspension `group_forbidden` (geçici service claim + geri yükleme ile yamandı) · 7 yeni ayar anahtarı · sözleşme **21/21** · **mutasyon 6/6** · tam takım **412 dosya/3377 test** · `tsc` 0 · `check:dead` 0/0/987 · `ingest` 58 (15 edge) |

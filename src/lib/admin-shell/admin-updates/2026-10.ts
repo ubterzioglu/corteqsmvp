@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-motoru-kabul-testleri",
+    date: "2 Ekim 2026",
+    title: "Grup motorunun 13 kabul testi tek betikte — QA turu bir gerçek kusuru daha yakaladı",
+    items: [
+      "QA BETİĞİ: Motorun 13 kabul testinin 12'si tek komutla yeniden koşulan, KENDİNİ DOĞRUAYAN bir canlı betiğe bağlandı (her senaryo veritabanı üzerinde iddialı; hepsi geri alınan işlemde — canlıya dokunmaz). Anonim ziyaretçinin link/panel/kuyruk göremediği bölüm gerçek rollerle ayrıca ölçülüyor.",
+      "KUSUR YAKALANDI VE ONARILDI: “Grup için bir ihlal kaydı oluştu” uyarı maili hiçbir zaman gitmeyecekti — bildirim, ihlalin log satırına bağlanmıştı ama ilk ihlal (uyarı) log üretmiyor. Uyarı artık doğrudan ihlal kaydı tablosuna bağlı: her ihlal = tek mail; askı/kaldırma sonucu da mailin sebep alanına işleniyor. Çift mail riski de kapatıldı.",
+      "MUTASYON SINAVI: Testlerin gerçekten test olduğu kanıtlandı — “bilinmeyen link sonucu sayacı bozmasın” kuralı, “Aile & Çocuk kilidi” ve “anonime link sızmaz” kuralı canlıda bilerek BOZULDU; betik üçünde de kızardı, kurallar geri yüklendi ve canlı yeniden ölçüldü.",
+      "ŞİKAYET TESTİ BİLİNÇLİ BEKLEMEDE: Şikayet eşiği kabulü (#6) telefon doğrulamasına bağlı altyapıyı bekliyor. Betikte tripwire var: şikayet tablosu ortaya çıktığı an QA kızarır ve o kabul testi yazılmak zorunda kalır — unutulamaz.",
+      "RAPOR: 13 kabulün tamamı, kanıt değerleri ve mutasyon sonuçları docs/dijital-gruplar/2026-10-02-g25-kabul-raporu.md dosyasında. Tam test takımı 417 dosya / 3440 test yeşil.",
+    ],
+  },
+  {
     id: "20261002-grup-moderator-paneli",
     date: "2 Ekim 2026",
     title: "Grup moderatör paneli hazır — dört kuyruk tek ekranda (/admin/gruplar, deploy kuyruğunda)",
