@@ -109,7 +109,10 @@ describe("group_settings sözleşmesi", () => {
     expect(sql).toContain("grant execute on function public.group_setting_int(text, integer) to authenticated");
   });
 
-  it("kaynak ağacında çıplak `groups.<anahtar>` metni yok", () => {
+  // ⚠️ timeout bilerek 60 sn: tarama src/ altındaki ~1000 dosyayı tek tek okur.
+  // Ölçüldü (02.10): tek başına ~4 sn, tam takım yükü altında 17.9 sn → varsayılan
+  // 15 sn'lik testTimeout'u aşıp SAHTE KIRMIZI üretti (ihlal yok, süre var).
+  it("kaynak ağacında çıplak `groups.<anahtar>` metni yok", { timeout: 60_000 }, () => {
     // Yanlış yazılmış anahtar HATA VERMEZ: group_setting_* sessizce varsayılana
     // düşer ve ürün kuralı sessizce yanlış çalışır. Anahtarı kullanan ilk üretim
     // kodu tek bir modülden okumalı ve o modül buraya yazılmalıdır.
@@ -126,6 +129,9 @@ describe("group_settings sözleşmesi", () => {
       // G15: uyarı sistemi sözleşme testi strike eşiklerini kilitler
       // (strike_suspend_threshold · strike_remove_threshold · terminal_redlines).
       "src/lib/group-strikes-schema.test.ts",
+      // G16: gönderi sözleşme testi post anahtarlarını kilitler
+      // (post_escalation_hours · post_max_chars · trusted_member_min_approved_posts).
+      "src/lib/group-posts-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

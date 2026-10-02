@@ -3204,6 +3204,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-posts-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-settings.test.ts",
       "kind": "ts",
       "module_family": "lib"
