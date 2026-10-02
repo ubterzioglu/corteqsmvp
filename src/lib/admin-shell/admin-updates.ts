@@ -14,6 +14,7 @@
 // senkronunu sessizce kırar. (tsconfig.app.json: allowImportingTsExtensions)
 
 import type { AdminUpdateEntry } from "./admin-updates/types.ts";
+import { ADMIN_UPDATES_2026_10 } from "./admin-updates/2026-10.ts";
 import { ADMIN_UPDATES_2026_09 } from "./admin-updates/2026-09.ts";
 import { ADMIN_UPDATES_2026_08 } from "./admin-updates/2026-08.ts";
 import { ADMIN_UPDATES_2026_07 } from "./admin-updates/2026-07.ts";
@@ -23,6 +24,7 @@ import { ADMIN_UPDATES_2026_04 } from "./admin-updates/2026-04.ts";
 export type { AdminUpdateEntry };
 
 export const ADMIN_UPDATES: AdminUpdateEntry[] = [
+  ...ADMIN_UPDATES_2026_10,
   ...ADMIN_UPDATES_2026_09,
   ...ADMIN_UPDATES_2026_08,
   ...ADMIN_UPDATES_2026_07,

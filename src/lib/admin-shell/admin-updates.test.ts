@@ -532,4 +532,49 @@ describe("ADMIN_UPDATES", () => {
       "kendi hesabından kaynak gönderebiliyor",
     );
   });
+
+  it("kariyer kaydı, başvuruların nereden okunacağını ve CV'nin maile konmadığını söyler", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20261002-kariyer-sayfasi-ve-basvuru-sistemi",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(update?.date).toBe("2 Ekim 2026");
+    // ⚠️ EN KRİTİK CÜMLE: başvurular bir yerde birikiyor. Bu düşerse gelen
+    // başvurular kimsenin bakmadığı bir kuyrukta bekler.
+    expect(detail).toContain("/admin/kadro");
+    expect(detail).toContain("Başvurular");
+    // CV bağlantısının maile KONMADIĞI yazılı kalmalı — düşerse biri "mailden
+    // açayım" diye arar, bulamayınca sistemin bozuk olduğunu sanır.
+    expect(detail).toContain("CV’LER MAİLE KONMUYOR");
+    expect(detail).toContain("5 dakika");
+    expect(detail).toContain("TÜM yöneticilere");
+  });
+
+  it("dijital gruplar kaydı, panelde henüz ekran OLMADIĞINI ve bloke işi söyler", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20261002-dijital-gruplar-motoru");
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(update?.date).toBe("2 Ekim 2026");
+    // ⚠️ EN KRİTİK CÜMLE: bu kayıt "ekran geldi" diye okunursa yöneticiler
+    // panelde olmayan bir şeyi arar ve sistemi bozuk sanır.
+    expect(detail).toContain("PANELDE HENÜZ YENİ BİR EKRAN YOK");
+    // Bloke iş kullanıcı kararına bağlı; düşerse kimse karar vermez ve batch susar.
+    expect(detail).toContain("KARAR SİZDE");
+    expect(detail).toContain("Kurumsal doğrulama");
+  });
+
+  it("güvenlik kaydı iki açığı da ayrı ayrı adlandırır", () => {
+    const update = ADMIN_UPDATES.find(
+      ({ id }) => id === "20261001-whatsapp-gruplari-guvenlik-acigi",
+    );
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(update?.date).toBe("1 Ekim 2026");
+    // İki açık iki ayrı sınıftır; biri silinirse kayıt "tek bir hata olmuş" diye okunur.
+    expect(detail).toContain("HERKES SINIRSIZ GRUP EKLEYEBİLİYORDU");
+    expect(detail).toContain("KİŞİSEL BİLGİLERİ HERKESE AÇIKTI");
+    // Sızan alanların ne olduğu yazılı kalmalı — "link sızdı" sanılmasın.
+    expect(detail).toContain("TELEFON NUMARASI");
+  });
 });
