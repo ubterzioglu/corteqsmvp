@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261002-grup-ekleme-formu-yenilendi",
+    date: "2 Ekim 2026",
+    title: "Grup ekleme formu baştan yazıldı — link yapıştır, gerisi otomatik (deploy kuyruğunda)",
+    items: [
+      "YENİ FORM: Kullanıcı fiilen üç şey yazıyor: link, kısa açıklama (en fazla 160 karakter), şehir. Linki yapıştırınca sistem davet sayfasını SUNUCU tarafında okuyor — grup adı ve görseli otomatik doluyor, platform (WhatsApp/Telegram/Discord) linkten tanınıyor. Platform seçimi ve serbest metin ülke/şehir alanları KALDIRILDI; konum artık coğrafi katalogdan seçiliyor (Global gruplar için hedef ülke + 'Genel').",
+      "AYNI GRUP İKİ KEZ EKLENEMEZ: Davet linkinin kodu tekilleştirme anahtarı. Link zaten listedeyse form 'Bu grup zaten listede — sahibi misin?' uyarısı veriyor. Eskiden aynı linkle onlarca kayıt açılabiliyordu.",
+      "KARA LİSTE ÖN TARAMASI: 'Vize, oturum, garanti, sinyal, yatırım getirisi, kredi' gibi kelimeler geçen gönderimler OTOMATİK REDDEDİLMİYOR — yalnızca işaretleniyor ve hızlı şeritten geçemiyor. Karar moderatörün (liste ayar tablosunda, kodda sabit değil).",
+      "HIZLI ŞERİT HAZIR (ŞU AN KAPALI): Yönetici, kendi grubunu eklerken 'adminiyim' derse ve şerit açıksa grup anında yayına çıkar — karar moderasyon kayıt defterine 'fast_lane' olarak düşer. Normal üyelerde 'adminiyim' beyanı grubu yayına çıkarmaz; sahiplik doğrulama kuyruğu açılır. Şeridi açma kararı insanındır (100 grup önerisi).",
+      "GÜNDE 5 GÖNDERİM SINIRI + GRUP SÖZÜ: Spam koruması olarak kullanıcı başına 24 saatte en fazla 5 gönderim (ayarlardan değiştirilebilir). Form, politika metnindeki 'Grup Sözü' onay kutusu işaretlenmeden gönderilemiyor. Yasaklı kullanıcı (ihlal sistemi) formu açtığında uyarıyı görüyor.",
+      "⚠️ EKRAN DEPLOY BEKLİYOR: Yeni form, dizin/detay sayfalarıyla aynı kuyrukta — Coolify deploy'undan sonra canlıya çıkar. Eski form deploy'a kadar çalışmaya devam eder (sunucu tarafı kapılar her iki yolu da koruyor). 'Aile & Çocuk' kategorisi doğrulama altyapısı (kurumsal seviye) gelene dek kilitli.",
+    ],
+  },
+  {
     id: "20261002-grup-saglik-skoru",
     date: "2 Ekim 2026",
     title: "Grup sağlık skoru motoru kuruldu — “Onaylı Grup” rozeti otomatik hesaplanacak (ekranlar henüz yok)",

@@ -12,6 +12,7 @@ const getEditableLandingForCurrentUserSpy = vi.fn();
 const canCurrentUserEditLandingSpy = vi.fn();
 const useAuthMock = vi.fn();
 const signInWithOAuthMock = vi.fn();
+const checkGroupSubmissionBannedSpy = vi.fn();
 
 vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({
@@ -29,6 +30,43 @@ vi.mock("@/integrations/supabase/client", () => ({
       signInWithOAuth: (...args: unknown[]) => signInWithOAuthMock(...args),
     },
   },
+}));
+
+// G18: ağ/RPC dokunan yardımcılar mock; saf mantık (detectMotorPlatform,
+// kategoriler, Grup Sözü) GERÇEK modülden gelir — form onları render ediyor.
+vi.mock("@/lib/group-submit", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group-submit")>();
+  return {
+    ...actual,
+    checkGroupSubmissionBanned: () => checkGroupSubmissionBannedSpy(),
+    fetchGroupPreview: vi.fn(),
+    submitGroupV1: vi.fn(),
+    resolveMotorLocation: vi.fn(),
+  };
+});
+
+// G18: form geo autocomplete kullanıyor (react-query) — sayfa testinde
+// provider yok, basit input stub'ı yeterli (davranış kilidi bileşen testinde).
+vi.mock("@/components/SearchableCountrySelect", () => ({
+  default: (props: { value: string; onChange: (v: string) => void; disabled?: boolean }) => (
+    <input
+      aria-label="Ülke autocomplete"
+      value={props.value}
+      disabled={props.disabled}
+      onChange={(event) => props.onChange(event.target.value)}
+    />
+  ),
+}));
+
+vi.mock("@/components/SearchableCitySelect", () => ({
+  default: (props: { value: string; onChange: (v: string) => void; disabled?: boolean }) => (
+    <input
+      aria-label="Şehir autocomplete"
+      value={props.value}
+      disabled={props.disabled}
+      onChange={(event) => props.onChange(event.target.value)}
+    />
+  ),
 }));
 
 vi.mock("@/lib/whatsapp-landings", () => ({
@@ -89,6 +127,7 @@ describe("AddWhatsAppPage", () => {
     canCurrentUserEditLandingSpy.mockResolvedValue(false);
     signInWithOAuthMock.mockResolvedValue({ error: null });
     useAuthMock.mockReturnValue({ user: null });
+    checkGroupSubmissionBannedSpy.mockResolvedValue(false);
   });
 
   afterEach(() => {

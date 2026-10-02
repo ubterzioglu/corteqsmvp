@@ -137,6 +137,9 @@ describe("group_settings sözleşmesi", () => {
       // health_score_recommendation_cap · health_score_queue_window_days ·
       // health_score_min_days_published).
       "src/lib/group-health-score-schema.test.ts",
+      // G18: S1 form sözleşme testi gönderim kapısının ayar anahtarlarını kilitler
+      // (daily_submit_limit · fast_lane_enabled · blocklist_keywords).
+      "src/lib/group-submit-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

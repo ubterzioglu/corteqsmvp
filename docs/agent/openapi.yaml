@@ -128,6 +128,30 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
+  /functions/v1/group-preview:
+    post:
+      summary: group-preview aracını çalıştır
+      operationId: execute_group_preview
+      x-tool-key: edge.group_preview
+      x-status: active
+      x-tables: [whatsapp_landings]
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "405":
+          description: Yöntem desteklenmiyor
+        "413":
+          description: Payload çok büyük
+        "429":
+          description: Çok fazla istek (rate limit)
+        "500":
+          description: Sunucu hatası
   /functions/v1/lansman-admin:
     post:
       summary: lansman-admin aracını çalıştır

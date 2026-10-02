@@ -92,6 +92,12 @@ export interface InviteRead {
   name: string | null;
   /** Telegram'da kod açıklamada da olabilir — aramaya dahil edilir. */
   description: string | null;
+  /**
+   * Grup görseli (G18: S1 formu ön doldurma, tasarım §3.A adım 4).
+   * WhatsApp/Telegram → `og:image`; Discord → guild icon CDN URL'i.
+   * Okunamazsa null — form bu adıma asla takılmaz, kullanıcı elle doldurur.
+   */
+  image: string | null;
 }
 
 const BROWSER_UA =
@@ -116,7 +122,7 @@ export async function readInvitePage(
   platform: string,
   fetchImpl: FetchLike = globalThis.fetch as unknown as FetchLike,
 ): Promise<InviteRead> {
-  const unknown: InviteRead = { result: "unknown", name: null, description: null };
+  const unknown: InviteRead = { result: "unknown", name: null, description: null, image: null };
 
   if (platform === "discord") {
     const code = extractDiscordInviteCode(url);
@@ -126,12 +132,19 @@ export async function readInvitePage(
         headers: { "User-Agent": BROWSER_UA },
         signal: AbortSignal.timeout(15_000),
       });
-      if (response.status === 404) return { result: "invalid", name: null, description: null };
+      if (response.status === 404) return { result: "invalid", name: null, description: null, image: null };
       if (!response.ok) return unknown;
-      const payload = (await response.json()) as { guild?: { name?: string } | null };
+      const payload = (await response.json()) as {
+        guild?: { id?: string; name?: string; icon?: string | null } | null;
+      };
       const name = payload?.guild?.name ?? null;
+      // G18: guild icon → CDN URL (icon yoksa null — form elle doldurmaya düşer).
+      const image =
+        payload?.guild?.id && payload?.guild?.icon
+          ? `https://cdn.discordapp.com/icons/${payload.guild.id}/${payload.guild.icon}.png`
+          : null;
       return name
-        ? { result: "ok", name, description: null }
+        ? { result: "ok", name, description: null, image }
         : unknown;
     } catch {
       return unknown;
@@ -148,21 +161,22 @@ export async function readInvitePage(
     const html = await response.text();
     const name = parseOgMeta(html, "og:title");
     const description = parseOgMeta(html, "og:description");
+    const image = parseOgMeta(html, "og:image"); // G18: ön doldurma görseli
 
     if (name === null) return unknown; // og hiç yok → biçim değişti (kural 6)
 
     if (platform === "whatsapp") {
       // Tek ayırt edici işaret: BOŞ og:title (200 her durumda gelir)
       return name.trim() === ""
-        ? { result: "invalid", name: null, description }
-        : { result: "ok", name, description };
+        ? { result: "invalid", name: null, description, image: null }
+        : { result: "ok", name, description, image };
     }
 
     if (platform === "telegram") {
       if (name.trim() === "" || name.trim().toLowerCase() === TELEGRAM_GENERIC_TITLE) {
-        return { result: "invalid", name: null, description };
+        return { result: "invalid", name: null, description, image: null };
       }
-      return { result: "ok", name, description };
+      return { result: "ok", name, description, image };
     }
 
     return unknown; // tanınmayan platform

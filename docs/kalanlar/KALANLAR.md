@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **51** (N 0 · W 8 · M 27 · G 16 · KR 0) — G10+G12+G13+G15+G16+G17 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
+> | **Açık batch** | **50** (N 0 · W 8 · M 27 · G 15 · KR 0) — G10+G12+G13+G15+G16+G17+G18 kapandı, **G10c** açık (eski kolonların düşürülmesi, ⛔ G03b deploy) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -139,7 +139,7 @@ traction ölçülecek.
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
-| E | **G18–G21** | 4 sayfa: form · dizin · detay · sahip paneli | 🟢 | — |
+| E | ~~G18~~ · **G19–G21** | ✅ **G18 KAPANDI 02.10** (S1 form: `submit_group_v1` tek kapı + `group-preview` edge DEPLOY + dedup/kara liste/hızlı şerit; kabul 14/14) · kalan 3 sayfa: dizin · detay · sahip paneli | 🟢 | ⚠️ yeni form frontend deploy kuyruğunda (G03b ile aynı) |
 | F | **G22–G25** | 6 zamanlanmış görev · 8 bildirim · moderatör paneli · 13 kabul testi | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
@@ -1627,10 +1627,72 @@ doğrulanmamış hesabın şikayeti sayılmaz. ⚠️ "0 geçerli şikayet" ile 
 
 ### Faz E — sayfalar (paketin S1–S4'ü)
 
-**G18 — S1 Form** · link → otomatik ad/görsel/platform; 7 kategori tek seçim; `geo_*` otomatik
-tamamlama + Global; 160 karakter; "admini misin"; Grup Sözü. **Platform seçimi ve serbest metin
-konum KALKAR.** "Aile & Çocuk" yalnız `verification_level=2` hesaplara açık (G06).
-**Kabul:** kabul testi **#1** · **#2** · **#4** · **#10**.
+**~~G18~~ — ✅ KAPANDI 02.10** · S1 Form · migration + edge + kod
+
+- Migration `20261002080000_group_submit.sql` **canlıda** (`applied/` + kayıt, `check:migrations`
+  454/454 sapmasız): **tek gönderim kapısı** `submit_group_v1` (security definer, authenticated) —
+  link normalize + platform türetme (ŞEMA-ÇIPALI: yalnız chat.whatsapp.com · t.me/telegram.me ·
+  discord.gg/discord.com-invite) + dedup (`group_invite_code` — G10 tek kaynak, ikinci regex YOK) +
+  kara liste ön taraması (`review_flags`'e yazar, REDDETMEZ — §8) + hızlı şerit (4 koşul: şerit açık
+  AND admin AND claims_admin AND işaretsiz) + günlük sınır (`daily_submit_limit`, kayan 24h) + Grup
+  Sözü kapısı + geo doğrulama. Kategori CHECK'i **genişletildi** (eski 10 + yeni 7 — politika §5,
+  "Diğer" yok). `group_slugify` yardımcısı. Hızlı şerit yayını `group_moderation_log`'a `fast_lane`
+  düşürür (kabul #12 zinciri).
+- **Edge `group-preview` DEPLOY EDİLDİ** (`check:functions` **14/14** sapmasız): dedup (exists →
+  DIŞ İSTEK ATILMADAN döner) + ad/görsel ön doldurma (`_shared/group-invite-read`'e `image` eklendi:
+  og:image · Discord CDN — G13 semantiği değişmedi). Kural 8 kilitli: dedup select'i `whatsapp_link`
+  OKUMAZ, log link taşımaz. Duman 4/4: preflight **200** · JWT'siz **401** (gateway — `verify_jwt`
+  default true ÖLÇÜLDÜ) · kötü origin **401** (gateway önce kesiyor) · anon anahtar **401**
+  (`getUser` reddi — verify_jwt tek başına yetki değil dersi).
+- **Form yeniden yazıldı** (politika §2'nin 7 satırı): link (blur'da önizleme) · ad (otomatik dolar,
+  elle düzeltilir — kullanıcı adı ezilmez) · 7 kategori tek seçim (**Aile & Çocuk disabled** ↓) ·
+  `SearchableCountrySelect`/`SearchableCitySelect` + Global kutusu (şehir kapanır, ülke "Hedef
+  Ülke") · 160 karakter sayaçlı · "admini misin" Evet/Hayır · **Grup Sözü BİREBİR** (politika §10
+  metnine karşı test kilitli) işaretsiz gönderim kapalı. **Platform seçimi + serbest metin konum
+  KALKTI.** Yasaklı kullanıcı (G15 `group_submission_banned`) form açılışında uyarı görür.
+- ⚠️ **KARAR — kabul #10 bugünkü hâliyle kilitli:** `verification_level` sistemi YOK (K09/G06) →
+  Aile & Çocuk **SUNUCUDA da kilitli** (`group_submit_category_locked`; bugün hiçbir hesap seviye-2
+  DEĞİL, yani "seviye-2 olmayana kapalı" = herkese kapalı = doğru). G06 kilidi seviye kontrolüne
+  çevirirken `group-submit-schema.test.ts` bilinçli güncellenecek (G14/G16 deseni).
+- ⚠️ **KARAR — hızlı şerit admin özbeyanı:** "Ekleyen admin VE sahiplik verified" koşulu, admin
+  `claims_admin=true` dediğinde verified sayılır (G12/G15 admin güven doktrini; claim kod/ekran
+  akışı admin-OLMAYANLAR için — kabul #3 ancak böyle gönderim anında ölçülebilir).
+- ⚠️ **PARALEL SİSTEM (deploy'a dek):** canlı eski paket hâlâ `submitLanding` (doğrudan insert +
+  `Users can create own landings` RLS) kullanıyor → politika ve eski fonksiyon BİLEREK duruyor;
+  yeni form deploy'dan sonra canlı olur. Deploy sonrası temizlik: `submitLanding` emekliliği +
+  INSERT politikasının RPC'ye daraltılması (G10c/G19 kuyruğuyla aynı karar anı). Legacy köprü
+  kolonları RPC'de doldurulur: `country/city` geo'dan (Global→'Genel'), `description` etiketleri
+  (`[Platform:]`/`[Badge …]`), `status` approved/pending eşlemesi — canlı eski paket yeni kayıtları
+  da doğru çizer.
+- **Kabul kanıtı (canlı, geri alınan işlem — 14/14):** **#1** aynı kod → `already_listed` + INSERT
+  YOK (10→10) · **#2** şerit AÇIK + admin değil → `pending_review` + `claim_pending` · **#3-karşılığı**
+  şerit AÇIK + admin + claims → `published` + legacy `approved` + log `fast_lane/moderator` ·
+  **#4** "vize ve oturum" → `review_flags={vize,oturum}` + şerit açıkken bile `pending_review`,
+  log YOK · 8 sınır hatası (söz yok · aile-cocuk kilit · eski `diger` reddi · 161 karakter ·
+  facebook linki · şehirsiz · uydurma ülke · ülke-dışı şehir) · günlük sınır 6.'da `rate_limited` ·
+  yasaklı → `group_submission_banned` · Global → Almanya/Genel/city_id null/mode visual/hero ·
+  anon `permission denied` · şerit KAPALI + admin → `pending_review`. Rollback sonrası canlı
+  **dokunulmamış** (10 landing, fastlane false, 0 ban, 0 log, 0 test kaydı).
+- 🔴 **İki gerçek kusur canlı testte yakalandı (kaynak testi GÖREMEZDİ):** (1) `v_country.code`
+  select listesine alınmamıştı → her gönderim `record has no field "code"` ile düşerdi; (2) Global
+  dalda `v_city.id` hiç atanmadan INSERT ifadesinde okunuyordu → `record "v_city" is not assigned
+  yet` (SQL CASE kısa devresi plan-parametreyi kurtarmıyor). İkisi de onarıldı, canlı fonksiyon
+  yamandı, kabul yeniden koştu.
+- **Kanıt:** sözleşme+birim **67 test** (`group-submit-schema` 28 · `group-submit` 10 ·
+  `AddCommunityFormSection` 14 · sayfa/insert-auth/settings regresyonları yeşil; `insert-auth-contract`
+  çıpası `submitLanding`→`submitGroupV1`'e BİLİNÇLİ taşındı — G02 giriş kapısı iddiaları aynen) ·
+  **mutasyon 6/6** (hızlı şerit koşulu düşürme · kara listeyi sabitleme · aile-cocuk kilidini açma ·
+  edge dedup'a link sızdırma · client çıpa gevşetme [M5 ilk koşuda rapor yarışına takıldı, tekil
+  yeniden koşuda 3 test düşürdüğü ÖLÇÜLDÜ] · söz olmadan gönderim) · `tsc` 0 · lint 0 (32 problem
+  tümü `corteqs-ekstre-motoru/`) · tam takım **402 dosya / 3263 test yeşil** · `check:dead` 0/0/**983** ·
+  `ingest:tools` **57 araç** (14 edge) · `verify:text` ✓ 1900 · types regen YOK (`as never` deseni —
+  G12 borcu; regen gelince `group-submit.ts` tip kazanır).
+- 📌 **G19/G20'ye devir:** `already_listed` uyarısı "Sahibi misin?" der ama claim akışı GİRİŞİ
+  (kod iste/ekran görüntüsü UI) G20 detay sayfasında · public view rozet/skor kolonları G19'da ·
+  "Yeni" etiketi 72 saat (#3'ün UI yarısı) G19'da.
+- *(özgün kapsam)* link → otomatik ad/görsel/platform; 7 kategori; `geo_*` + Global; 160 karakter;
+  "admini misin"; Grup Sözü. **Kabul:** **#1** · **#2** · **#4** · **#10** (bugünkü hâli: sunucu
+  kilidi — seviye sistemi G06'da).
 
 **G19 — S2 Dizin** · "Admin onaylı!"/"Üye onaylı!" **kalkar** → "Sahibi doğruladı"/"Üye önerisi";
 "Skor bekleniyor" **hiçbir yerde** görünmez; filtreler kartlarla aynı listeyi kullanır; Türkçe
@@ -1993,6 +2055,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G18 · S1 form + `submit_group_v1` + `group-preview` edge | mig `20261002080000` canlıda + kayıt (`check:migrations` 454/454) · tek gönderim kapısı (dedup `group_invite_code` · kara liste→`review_flags` REDDETMEZ · hızlı şerit 4 koşul + `fast_lane` log · günlük 5 · Grup Sözü · geo doğrulama · kategori CHECK 10+7) · edge DEPLOY (`check:functions` **14/14**, duman 4/4: 200/401/401/401 — verify_jwt default ÖLÇÜLDÜ) · `_shared/group-invite-read`'e `image` (og:image + Discord CDN, G13 semantiği değişmedi) · form 7 satır (politika §2): platform seçimi + serbest metin konum KALKTI, Grup Sözü birebir kilitli, Aile & Çocuk disabled + **sunucuda kilitli** (kabul #10 bugünkü hâl — seviye sistemi G06/K09) · karar: admin `claims_admin` özbeyanı = verified (kabul #3 ölçülebilir) · ⚠️ paralel sistem: `submitLanding`+INSERT RLS deploy'a dek BİLİNÇLİ duruyor · **kabul canlı 14/14** (geri alınan işlem: #1 already_listed+INSERT yok · #2 şerit açıkken pending_review · #4 {vize,oturum} işaretli pending_review · #3-karşılığı published+log · 8 sınır hatası · limit · ban · Global · anon) · 🔴 iki gerçek kusur canlı testte yakalandı (`v_country.code` select eksik · Global dalda `v_city` atanmadan okunuyor) — kaynak testi göremezdi · sözleşme+birim 67 · **mutasyon 6/6** · tam takım **402 dosya/3263 test** · `tsc` 0 · `check:dead` 0/0/983 · `ingest:tools` 57 (14 edge) · 📌 devir: claim UI girişi G20 · rozet/skor view G19 · "Yeni" 72h G19 |
 | G17 · grup sağlık skoru + tavsiyeler | mig `20261002070000` canlıda + kayıt (`check:migrations` 453/453 sapmasız) · `group_recommendations` (tekil, tek kapı RPC) + `group_health_score_compute` (§5 birebir 15+15+15+15+20+20) + `recompute`/`_all` (service_role ONLY, cron G22) + 4 eşik `group_settings`'te (70/65/10/90) + **guard v3** (skor kolonları motor alanı, `is_admin` muaf) · 🔴 **ölçüm:** eski kod group_score'a YAZIYORDU (`updateLanding` her admin kaydında null — `1a3310a1` 03.06, canlı pakette) → src clobber kaldırıldı, guard admin'i muaf tuttu (canlı moderasyon kırılmasın) · ⚠️ **kalıcı skor YAZILMADI:** canlı eski kart `X / 10` çiziyor → cron G22'ye dek NULL (🔴 G22 tuzağı panoda yazılı) · vacuous kalemler: şikayet (group_reports YOK → G14) + link (`link_fail_count=0`, tarihçe yok → G22) · **kabul #11 canlı 16/16** (geri alınan işlem: grace NULL · 35→65→80 · histerezis 65'te korudu/50'de düştü · tavsiye idempotent+cap→100 · guard sahip engelledi/admin geçti · RLS · rollback sonrası canlı dokunulmamış 0/0/0) · sözleşme **23/23** · **mutasyon 6/6** · tam takım **399 dosya/3211 test** yeşil · `tsc` 0 · `check:dead` 0/0/982 · `ingest:tools` 56 · types regen YOK (TS tüketici yok — G12 borcu aynı) |
 | G16 · grup gönderileri + moderasyon | mig `20261002060000` canlıda + kayıt (`check:migrations` sapmasız) · ⚠️ tasarım §4 çürüdü (ölçüldü): `whatsapp_landing_comments/_likes/_follows` canlıda YOK → `group_posts` sıfırdan · ilk durum §3.D birebir 4 sınıf (verified admin→published · güvenilir üye→published · sahiplide diğer→pending_group_admin+48h `escalate_at` · sahipsizde→pending_platform) · **kabul #7 canlı:** `group_posts_escalate_due()` (service_role ONLY) süresi dolanı platform kuyruğuna taşıdı · yetki: sahip yalnız kendi kuyruğu, platform kuyruğu + remove YALNIZ admin (uydurma yetki yok) · istemciye yazma yolu YOK (grant select only) · kararlar: yalnız published gruba · `post_max_chars=10000` ajan ihtiyatı · trusted'ın "onaylı şikayet yok" yarısı G14'e (group_reports YOK, şema uydurulmadı — sözleşme kilitli) · **kabul canlı 14/14** (C1–C14, geri alınan işlem; rollback sonrası 0/10/10) · sözleşme **25/25** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · cron G22 · bildirim G23 · UI G20/G21 |
 | G15 · uyarı (strike) sistemi + ekleme yasağı | mig `20261002050000` canlıda + kayıt (`check:migrations` sapmasız) · `group_strikes` + `group_submission_bans` + `admin_record_group_strike` (is_admin tek kapı) + `trg_block_banned_submitter` (BEFORE INSERT, admin muaf) · merdiven §7 birebir: 1.=uyarı · 2.=30 gün suspended (`suspended_until`) · 3.=removed+**ekleyen VE sahip** yasaklı · kırmızı çizgi **2/4/6 ilk ihlalde** removed+yasak · eşikler `group_settings`'te (2/3/[2,4,6]) · geçişler YALNIZ `set_group_status_v1` → hepsi `group_moderation_log`'da (reason=strike_N, canlı doğrulandı) · karar: published-olmayanda 2. ihlal warning+not (matris), 3.'te removed · **kabul canlı 13/13** (geri alınan işlem; rollback sonrası 0/0/0, 10 published, max_strike 0) · sözleşme **16/16** · **mutasyon 6/6** · `tsc` 0 · `check:dead` 0 · bildirim G23'e, yasak kaldırma G24'e |

@@ -2,8 +2,8 @@
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 56,
-    "edge_functions": 13,
+    "total": 57,
+    "edge_functions": 14,
     "workers": 2,
     "ui_modules": 40
   },
@@ -213,6 +213,49 @@
         "zod": "3.25.76"
       },
       "evidence_path": "supabase/functions/group-claim-verify/index.ts"
+    },
+    {
+      "tool_key": "edge.group_preview",
+      "tool_name": "group-preview",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/group-preview/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": []
+      },
+      "tables_read_write": [
+        "whatsapp_landings"
+      ],
+      "rpcs": [
+        "group_invite_code"
+      ],
+      "limits": {
+        "MAX_BODY_BYTES": 1024,
+        "RATE_LIMIT_MAX": 20,
+        "RATE_LIMIT_WINDOW_SECONDS": 600
+      },
+      "http_statuses": [
+        200,
+        400,
+        401,
+        403,
+        405,
+        413,
+        429,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/group-preview/index.ts"
     },
     {
       "tool_key": "edge.lansman_admin",
@@ -3231,6 +3274,21 @@
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-submit-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-submit.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-submit.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/header-compact-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4507,6 +4565,11 @@
     },
     {
       "path": "supabase/functions/group-claim-verify/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/group-preview/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

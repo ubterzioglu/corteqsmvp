@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import { trIncludes } from "@/lib/text-normalization";
@@ -13,7 +13,14 @@ import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
 import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
 import {
-  buildSubmitterDescription,
+  checkGroupSubmissionBanned,
+  detectMotorPlatform,
+  fetchGroupPreview,
+  resolveMotorLocation,
+  submitGroupV1,
+  type GroupPreviewState,
+} from "@/lib/group-submit";
+import {
   getErrorMessage,
   initialGroupForm,
   initialJoinForm,
@@ -22,7 +29,6 @@ import {
 } from "@/lib/whatsapp-landing-form";
 import { placeholderLandings } from "@/lib/whatsapp-landing-placeholders";
 import {
-  buildLandingDescription,
   canCurrentUserEditLanding,
   createJoinRequest,
   fetchLandingInviteUrl,
@@ -30,7 +36,6 @@ import {
   getLanding,
   LANDING_INVITE_FAILURE_MESSAGES,
   listLandings,
-  submitLanding,
   type LandingCategory,
   type WhatsAppLanding,
 } from "@/lib/whatsapp-landings";
@@ -64,6 +69,11 @@ export default function AddWhatsAppPage() {
   const [invite, setInvite] = useState<LandingInviteState>({ kind: "signed_out" });
   const [groupForm, setGroupForm] = useState<GroupFormState>(initialGroupForm);
   const [joinForm, setJoinForm] = useState<JoinFormState>(initialJoinForm);
+  // G18: link önizleme durumu (tasarım §3.A 3-4) + G15 yasak ön kontrolü.
+  const [groupPreview, setGroupPreview] = useState<GroupPreviewState>({ status: "idle" });
+  const [submissionBanned, setSubmissionBanned] = useState(false);
+  const previewedLinkRef = useRef("");
+  const prefilledGroupNameRef = useRef("");
 
   useEffect(() => {
     document.dispatchEvent(new Event("render-complete"));
@@ -219,6 +229,85 @@ export default function AddWhatsAppPage() {
 
   const updateGroupForm = <K extends keyof GroupFormState>(field: K, value: GroupFormState[K]) => {
     setGroupForm((current) => ({ ...current, [field]: value }));
+    // Link değişince önizleme bayatlar — sessizce eski sonuca güvenme.
+    if (field === "link") setGroupPreview({ status: "idle" });
+  };
+
+  // G15: yasaklı gönderici form açılışında okunur (yardımcının kendi notu:
+  // "G18 formu da bunu okuyacak"). Hata çıkarsa sessiz düşer — sunucu trigger'ı
+  // INSERT'te zaten keser.
+  useEffect(() => {
+    let cancelled = false;
+
+    if (!groupFormOpen || !user) {
+      setSubmissionBanned(false);
+      return;
+    }
+
+    void checkGroupSubmissionBanned().then((value) => {
+      if (!cancelled) setSubmissionBanned(value);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [groupFormOpen, user]);
+
+  /**
+   * Link önizlemesi (onBlur): dedup + ad/görsel ön doldurma. Form bu adıma
+   * ASLA takılmaz (tasarım §3.A adım 4) — hata/unknown yalnız bilgidir;
+   * gönderimi bloklayan tek okuma sonucu `invalid` (kesin ölü link) ve
+   * `exists` (kabul #1) — ikisi de `previewBlocksSubmit`'te.
+   */
+  const handleLinkPreview = async () => {
+    const link = groupForm.link.trim();
+    if (!link || link === previewedLinkRef.current) return;
+    previewedLinkRef.current = link;
+
+    if (!user) {
+      // Önizleme girişli kullanıcı ister (edge getUser); girişsiz form zaten
+      // gönderimde OAuth'a düşer. Sessiz bekle.
+      setGroupPreview({ status: "idle" });
+      return;
+    }
+
+    if (!detectMotorPlatform(link)) {
+      setGroupPreview({ status: "unsupported" });
+      return;
+    }
+
+    setGroupPreview({ status: "loading" });
+    try {
+      const data = await fetchGroupPreview(link);
+      setGroupPreview({ status: "done", data });
+
+      if (!data.exists && data.read_result === "ok" && data.name) {
+        const readName = data.name;
+        const previousPrefill = prefilledGroupNameRef.current;
+        setGroupForm((current) => ({
+          ...current,
+          // Kullanıcının ELLE yazdığı adı ezme; yalnız boşsa veya önceki
+          // önizlemeden geldiyse güncelle.
+          groupName:
+            current.groupName.trim() === "" || current.groupName === previousPrefill
+              ? readName
+              : current.groupName,
+          heroImage: current.heroImage || data.image_url || "",
+        }));
+        prefilledGroupNameRef.current = readName;
+      }
+
+      if (data.exists) {
+        toast({
+          title: "Bu grup zaten listede",
+          description: data.group_name
+            ? `${data.group_name} — sahibiysen grup sayfasından doğrulama başlatabilirsin.`
+            : "Sahibiysen grup sayfasından doğrulama başlatabilirsin.",
+        });
+      }
+    } catch (error) {
+      setGroupPreview({ status: "failed", message: getErrorMessage(error, "Önizleme alınamadı") });
+    }
   };
 
   const updateJoinForm = <K extends keyof JoinFormState>(field: K, value: JoinFormState[K]) => {
@@ -302,11 +391,42 @@ export default function AddWhatsAppPage() {
 
   const ensureSignedInForGroupSubmit = () => ensureSignedIn("submit_group");
 
+  // G18: gönderim TEK kapıdan — `submit_group_v1` RPC (doğrudan tabloya insert
+  // YOK). Dedup/kara liste/hızlı şerit/günlük sınır/Grup Sözü hepsi sunucuda;
+  // istemci yalnız alan bütünlüğünü ön kontrol eder.
   const handleGroupSubmit = async () => {
-    if (!groupForm.groupName.trim() || !groupForm.whatsappLink.trim() || !groupForm.country.trim() || !groupForm.city.trim()) {
+    const link = groupForm.link.trim();
+
+    if (
+      !link ||
+      !groupForm.groupName.trim() ||
+      !groupForm.category ||
+      !groupForm.shortDescription.trim() ||
+      !groupForm.countryName.trim() ||
+      (!groupForm.isGlobal && !groupForm.cityName.trim()) ||
+      !groupForm.claimsAdmin
+    ) {
       toast({
         title: "Eksik alan",
-        description: "Grup adı, link, ülke ve şehir zorunludur.",
+        description: "Link, grup adı, kategori, kısa açıklama, konum ve admin sorusu zorunludur.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!groupForm.pledgeAccepted) {
+      toast({
+        title: "Grup Sözü gerekli",
+        description: "Grup Sözü onaylanmadan gönderim yapılamaz.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!detectMotorPlatform(link)) {
+      toast({
+        title: "Desteklenmeyen link",
+        description: "Yalnızca WhatsApp, Telegram ve Discord davet linkleri kabul edilir.",
         variant: "destructive",
       });
       return;
@@ -316,32 +436,57 @@ export default function AddWhatsAppPage() {
 
     setSubmittingGroup(true);
     try {
-      const description = buildLandingDescription({
-        description: buildSubmitterDescription(groupForm),
-        platform: groupForm.platform,
-        memberApproved: true,
-        adminApproved: false,
-        editorReviewPending: false,
+      // Konum adları kataloğa çözülür (serbest metin konum YOK — G10 şeması
+      // country_code + city_id ister; geo_* tek kaynak).
+      const motorLocation = await resolveMotorLocation({
+        countryName: groupForm.countryName,
+        cityName: groupForm.cityName,
+        isGlobal: groupForm.isGlobal,
       });
 
-      await submitLanding({
-        groupName: groupForm.groupName,
-        category: "diger",
-        country: groupForm.country,
-        city: groupForm.city,
-        mode: "text",
-        // platform YUKARIDA `description` etiketine yazıldı; ayrı bir sütun yok.
-        whatsappLink: groupForm.whatsappLink,
-        description,
+      const result = await submitGroupV1({
+        link,
+        groupName: groupForm.groupName.trim(),
+        category: groupForm.category,
+        shortDescription: groupForm.shortDescription.trim(),
+        countryCode: motorLocation.countryCode,
+        cityId: motorLocation.cityId,
+        isGlobal: groupForm.isGlobal,
+        claimsAdmin: groupForm.claimsAdmin === "yes",
+        pledgeAccepted: true,
+        heroImage: groupForm.heroImage.trim() || null,
       });
 
+      if (result.result === "already_listed") {
+        // Kabul #1'in sunucu yakası: önizlemeyi atlayan/aşan yarış burada durur.
+        toast({
+          title: "Bu grup zaten listede",
+          description: `${result.group_name} — sahibiysen grup sayfasından sahiplik doğrulamayı başlatabilirsin.`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const published = result.listing_status === "published";
       toast({
-        title: "Grubunuz alındı",
-        description: "Admin onayından sonra listede yayınlanacak.",
+        title: published ? "Grubun yayınlandı" : "Grubun alındı",
+        description: published
+          ? "Hızlı şerit açık ve admin sahipliğin doğrulandı — grup doğrudan yayına çıktı."
+          : "İnceleme genelde 24 saat sürer." +
+            (result.ownership === "claim_pending"
+              ? " Sahiplik doğrulama adımı grup sayfasında seni bekliyor."
+              : ""),
       });
 
       resetGroupForm();
+      setGroupPreview({ status: "idle" });
+      previewedLinkRef.current = "";
+      prefilledGroupNameRef.current = "";
       setGroupFormOpen(false);
+
+      // Yeni kayıt dizinde hemen görünsün (liste önbelleği tazelenir).
+      const rows = await listLandings();
+      setLandings(rows);
     } catch (error) {
       toast({
         title: "Gönderilemedi",
@@ -351,6 +496,15 @@ export default function AddWhatsAppPage() {
     } finally {
       setSubmittingGroup(false);
     }
+  };
+
+  /** "Bu grup zaten listede" → grup sayfası (sahiplik akışının girişi G20'de). */
+  const openGroupBySlug = (slug: string) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set("group", slug);
+    nextParams.delete("openGroupForm");
+    setSearchParams(nextParams);
+    setGroupFormOpen(false);
   };
 
   const handleJoinSubmit = async () => {
@@ -455,12 +609,14 @@ export default function AddWhatsAppPage() {
           onOpenChange={setGroupFormOpen}
           form={groupForm}
           onFieldChange={updateGroupForm}
-          heroImageFile={null}
-          onHeroImageFileChange={() => undefined}
+          preview={groupPreview}
+          onPreviewLink={() => void handleLinkPreview()}
+          banned={submissionBanned}
           oauthSubmitting={oauthSubmitting}
           submitting={submittingGroup}
           onStartGoogleAuth={() => void startGoogleAuthForGroupForm()}
           onSubmit={() => void handleGroupSubmit()}
+          onOpenExistingGroup={openGroupBySlug}
         />
 
         <section className="mt-8">

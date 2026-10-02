@@ -96,9 +96,13 @@ describe("G02 · grup ekleme giriş ister (arayüz yakası)", () => {
   });
 
   it("gönderim hatası kullanıcıya gösterilir, yutulmaz", () => {
+    // ⚠️ G18 (02.10): gönderim yolu `submitLanding` (doğrudan insert) →
+    // `submitGroupV1` (RPC tek kapı) olarak değişti; çıpa GERÇEK kapıya
+    // taşındı — gevşetme değil, hedef düzeltme (G03b'de ensureSignedIn'de
+    // yapılanın aynısı). Giriş kapısı iddiaları yukarıda aynen duruyor.
     const catchBlock = sliceBetween(
       read(PAGE),
-      "await submitLanding({",
+      "await submitGroupV1({",
       "setSubmittingGroup(false)",
       "handleGroupSubmit catch bloğu",
     );
