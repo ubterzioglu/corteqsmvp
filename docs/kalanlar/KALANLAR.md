@@ -10,7 +10,7 @@
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
 > | **Açık batch** | **56** (N 0 · W 8 · M 27 · G 21 · KR 0) |
-> | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 7 (K) · **Onay** 6 (P) |
+> | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 8 (K — **K09 yeni, 02.10**) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
 > | **Son devir notu** | [`docs/handover/2026-10-01-devir-notu-2.md`](../handover/2026-10-01-devir-notu-2.md) — 1 Ekim akşam oturumu, 24 commit (PUSH EDİLMEDİ); ilk not [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) hâlâ geçerli (§7 tuzaklar + §9 ortam) |
@@ -135,7 +135,7 @@ traction ölçülecek.
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
 | A | ~~G02~~ ~~G03a~~ ~~G03b~~ · **G03c** | ✅ G02 + G03a + G03b KAPANDI 01.10 · 🔴 **sızıntı G03c'ye kadar AÇIK** (taban tablo hâlâ anonime açık) | 🟢 | ⛔ G03b canlıda olmalı |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
-| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | — |
+| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ · **G10–G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda, 15 satır) · kalan: `whatsapp_landings` genişletme · 10 grubun göçü | 🟢 | ⛔ **U07** (G11) |
 | D | **G12–G17** | Durum makinesi · sahiplik · şikayet · uyarı · gönderiler · sağlık skoru | 🟢 | — |
@@ -179,6 +179,10 @@ traction ölçülecek.
 ### K · Karar · P · Onay · X · Ertelenen
 
 - **K01–K07** — kod işi olmayan kararlar (K08 ✅ cevaplandı → G bölümü).
+- 🔴 **K09 (02.10) — kurumsal doğrulama hangi kolonda yaşayacak?** G06/G07'yi bloke eder.
+  Ölçüm ve öneri G06 bloğunda; özet: `catalog_items` zaten `verification_status`
+  (5 değer) + `is_verified` taşıyor, spec üçüncü bir `verification_level` istiyor.
+  Ayrıca politika kapıyı **ekleyen kişiye** koyuyor, spec **katalog kaydına**.
 - **P02–P07** — clean-code planının canlı DB/deploy/ürün kararı isteyen maddeleri.
 - **X** — batch'e bölünmeden önce ayrı plan isteyen büyük işler.
 
@@ -1281,7 +1285,43 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
   dolduruldu (günde 5 · saatte 3 · 60 sn bekleme · 5 doğrulama denemesi). Pakette sayı YOK;
   bu batch'te kullanıcıyla teyit edilir. Değiştirmek kod değil, tek satır SQL `update`'idir.
 
-**G06 — Kurumsal doğrulama seviyesi: şema + belge yükleme** · migration + kod
+**G06 — Kurumsal doğrulama seviyesi: şema + belge yükleme** · 🔴 **K09 KARARI BEKLİYOR**
+
+> ⚠️ **02.10 ölçümü bu batch'in öncülünü çürüttü — kod yazılmadan önce karar gerekiyor.**
+> Ölçülenler (canlı):
+>
+> | Spec diyor | Canlı gerçek |
+> |---|---|
+> | `catalog_items`'a `verification_level` (0/1/2) ekle | ⚠️ Tabloda **ZATEN iki doğrulama kavramı var**: `verification_status` (5 değerli CHECK: `unverified` 452 · `claimed` 190 · `verified` 9) ve `is_verified` (bool). Üçüncüsünü eklemek **ikinci kaynak** yaratır — bu reponun defalarca belgelediği sınıf. İkisi de canlı kodda kullanılıyor (`admin-catalog.ts` filtre+görünüm, dizin rozetleri). |
+> | `claim_type`/`status` CHECK'i önce ölç | ✅ Ölçüldü: **`claim_type` üzerinde CHECK YOK** → yeni değer serbest. (⚠️ `status` üzerinde **iki mükerrer** CHECK var: `catalog_claim_requests_status_check` + `catalog_item_claims_status_chk` — ayrı temizlik.) |
+> | 267 kurumsal kayıt | **262** (`platform_role_key like 'Organization%'`) |
+>
+> 🔴 **Asıl sorun — gate yanlış yerde olabilir.** Politika §6 ve tasarım §190/§244
+> Seviye 2'yi **grubu EKLEYEN kişi** için istiyor ("Ekleyen Seviye 2 doğrulanmış
+> kuruluş değilse"), ama spec kolonu **`catalog_items`**'a (katalog kaydına)
+> koyuyor. İkisi aynı şey değil: bir kullanıcı doğrulanmış bir kuruluşu temsil
+> ediyor olabilir ama kendisi katalog kaydı değildir.
+>
+> Politika yalnız **Seviye 2**'yi tanımlıyor ("okul, dernek, veli birliği");
+> **0 ve 1 hiçbir yerde tanımlı değil** — "0/1/2" ölçeği planın kendi eklemesi.
+>
+> **Önerim (onayına sunuluyor):** yeni kolon AÇMA.
+> 1. Seviye 2 = `verification_status='verified'` (bugün 9 kayıt) olarak **türetilsin**;
+>    gerekirse `verification_level` bir **generated column** olsun, böylece sürüklenemez.
+> 2. Eksik olan tek gerçek bilgi **kanıt ve iz**: `verified_at` + `verified_by_user_id`
+>    eklensin.
+> 3. Talep akışı `catalog_item_claims` üzerinden (`claim_type='verification_level_2'`,
+>    belgeler `evidence jsonb`) + private `org-verification-docs` kovası — bu kısım
+>    spec'te doğru.
+> 4. Grup eklemedeki kapı **kullanıcı** üzerinden sorulsun: "bu kullanıcı Seviye 2
+>    bir kuruluşun yöneticisi mi" (`catalog_item_managers` + türetilmiş seviye).
+>
+> Onaylarsan G06 bu şekilde yazılır; farklı düşünüyorsan hangi kolonun tek kaynak
+> olacağını söyle, ona göre yazarım.
+
+*(özgün kapsam aşağıda)*
+
+**G06 (özgün) — Kurumsal doğrulama seviyesi: şema + belge yükleme** · migration + kod
 - `catalog_items.verification_level` (0/1/2) + `verified_at` + `verified_by`. Talep akışı
   **mevcut `catalog_item_claims`** üzerinden: `claim_type='verification_level_2'`, belgeler
   `evidence jsonb`'de. ⚠️ `claim_type`/`status` CHECK'i **önce ölçülür**; varsa yeni değer eklenir
