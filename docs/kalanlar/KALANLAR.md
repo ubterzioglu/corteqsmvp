@@ -72,7 +72,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 | ID | Başlık | Boyut | Kapı | Not |
 |---|---|---|---|---|
-| **A15** | Cadde logosu yerleştirme — `caddelogo.png` geldi (03.10) | küçük | 🟢 | 🔴 dosya DEPO KÖKÜNDE → önce `public/` · 🔴 m151 kararı BİLEREK kaldırmıştı, geri ekleme gerekçesi commit'e yazılır |
+| ~~A15~~ | ✅ **KAPANDI 03.10** — Cadde kimlik işareti kapsam şeridinin sol ucunda | küçük | ✅ | ↓ ayrıntı · ⏳ ekran bir sonraki frontend deploy'unda canlanır |
 
 ✅ A14 01.10'da kapandı, **Burak görsel onayını 03.10'da verdi** — kalan tek adım
 panelden REV-034 "Yapıldı" işareti (↓ Kapananlar / A14 bölümü).
@@ -2470,7 +2470,45 @@ orada). Başvurular oraya **5. madde** olarak girer.
   batch'i hâlâ **kanıtsız** ✅. Gerçekten yaptıysan kanıtı yaz; yapmadıysan 🔒'ya
   ("auth gerektiriyor, test hesabı gerekli") geri döndür.
 
-### ✅ U05 · Cadde logosu — DOSYA GELDİ 03.10 → **A15 olarak ajan işine döndü**
+### ✅ A15 · Cadde logosu — **KAPANDI 03.10**
+
+> **Yerleşim kararı (kullanıcı, 03.10): kapsam şeridinin SOL ucu.** `CaddeBrandMark`
+> (24px) `CaddeFeedScopeBar`'ın mevcut çip satırının İÇİNDE durur; satır yüksekliği
+> DEĞİŞMEZ (çip py-1.5 ≈ 30px). Y1 (m151) kimlik ŞERİDİNİ ve 05.08.2026'nın üç
+> revizyonlu "akışın üstünde tam genişlik blok YOK" kararını bozmaz.
+> `brandSlot` **isteğe bağlı** (`notificationsSlot` deseni) → /cadde/cafe ve
+> /cadde/carsi'nin DOM'u birebir aynı kaldı.
+>
+> 🔴 **Kaynak dosyada ALFA KANALI YOKTU** (PNG color type 2, 2000×2000, 3.095 KB,
+> zemini beyaz + basılı dama deseni). Olduğu gibi konsaydı **koyu modda beyaz bir
+> kutu** olarak görünürdü ve bunu ne tsc, ne lint, ne de mevcut testler yakalardı.
+> Üretilen varlık: `public/cadde-logo.png` — kenarlardan taşma dolgusuyla zemin
+> gerçekten saydamlaştırıldı (%73,9 piksel), içerik kutusuna kırpıldı, 512×512,
+> **220 KB**. Sözleşme testi PNG başlığını okuyup color type'ı 4/6'ya kilitler —
+> biri opak bir sürümle değiştirirse test düşer.
+>
+> **Marka rengi kararı (kullanıcı, 03.10): ikisi de kalsın.** Logo çok renkli,
+> arayüz kimliği bronz `#aa8c42` olarak DURUYOR; `cadde-brand-token.test.ts`
+> değiştirilmedi.
+>
+> **Erişilebilirlik:** işaret DEKORATİF (`alt=""` + `aria-hidden`). Sayfanın tek
+> h1'i zaten "Diaspora Cadde" diyor (Y1'de eklenen sr-only); metin verilseydi
+> ekran okuyucu aynı adı iki kez okurdu.
+>
+> **Kanıt:** 9 sözleşme testi · **mutasyon 6/6** — ⚠️ M2 (işareti çip satırının
+> DIŞINA, şeridin köküne taşı) **ilk turda GEÇTİ**: `querySelectorAll("button")`
+> torunları da sayıyordu. `:scope > button` koşuluna çevrildi. "Metin kilidi değil
+> koşul kilidi" dersi bu batch'te de doğrulandı. Diğer beşi ilk turda düştü
+> (varsayılan prop · aria-hidden · h-6→h-12 · FeedView prop'u · opak PNG).
+> Tam takım **435 dosya / 3589 test** yeşil · `tsc` 0 · lint 32 (tümü
+> `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · 1001 erişilebilir ·
+> `verify:text` ✓ 1955.
+>
+> ⚠️ **Kökteki `caddelogo.png` (Burak'ın 3 MB'lık özgün dosyası) DURUYOR** —
+> takipsiz, commit'e girmedi. CLAUDE.md kökte yalnız `CLAUDE.md` + `README.md`
+> ister; kullanıcı kararı bekliyor (arşive mi, silinsin mi).
+
+### ✅ U05 · Cadde logosu — DOSYA GELDİ 03.10 → A15 olarak kapandı
 
 > ✅ Burak `caddelogo.png` dosyasını verdi (03.10). U maddesi KAPANDI; kalan iş ajanda.
 > 🔴 **Dosya bugün DEPO KÖKÜNDE** (`./caddelogo.png`) — CLAUDE.md kuralı kökte yalnız

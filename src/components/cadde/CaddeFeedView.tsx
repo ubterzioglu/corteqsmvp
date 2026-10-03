@@ -17,6 +17,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
+import CaddeBrandMark from "@/components/cadde/CaddeBrandMark";
 import CaddeComposer from "@/components/cadde/CaddeComposer";
 import CaddeEmojiPickerButton from "@/components/cadde/CaddeEmojiPickerButton";
 import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
@@ -142,6 +143,7 @@ export const CaddeFeedView = ({
             scope={filters.scope}
             hashtag={filters.hashtag}
             clockTarget={clockTarget}
+            brandSlot={<CaddeBrandMark />}
             notificationsSlot={<NotificationsBell />}
             onScopeChange={(scope) => updateFilters({ scope })}
             onClearHashtag={() => updateFilters({ hashtag: "" })}

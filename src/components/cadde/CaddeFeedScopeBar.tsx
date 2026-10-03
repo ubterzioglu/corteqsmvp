@@ -57,6 +57,19 @@ export interface CaddeFeedScopeBarProps {
    * yani /cadde/cafe ve /cadde/carsi bu değişiklikten hiç etkilenmez.
    */
   notificationsSlot?: ReactNode;
+  /**
+   * A15 (03.10): Cadde kimlik işareti, çip satırının SOL ucunda.
+   * `notificationsSlot` ile AYNI desen — isteğe bağlı, varsayılanı yok; prop
+   * verilmezse DOM birebir eskisi gibi kalır ve /cadde/cafe ile /cadde/carsi
+   * bu değişiklikten hiç etkilenmez.
+   *
+   * ⚠️ Buraya kendi satırı olan bir blok KOYMA. İşaret mevcut çip satırının
+   * İÇİNDE durur (çip py-1.5 ≈ 30px, işaret 24px) ve satır yüksekliğini
+   * değiştirmez. Y1 (m151) kimlik şeridini tam da "akışın üstünde yer kaplıyor,
+   * içeriği kopya" diye kaldırmıştı; 05.08.2026'nın üç revizyonlu kararı da
+   * akışın üstünde tam genişlik blok istemiyor.
+   */
+  brandSlot?: ReactNode;
 }
 
 const CaddeFeedScopeBar = ({
@@ -66,9 +79,11 @@ const CaddeFeedScopeBar = ({
   onClearHashtag,
   clockTarget = null,
   notificationsSlot,
+  brandSlot,
 }: CaddeFeedScopeBarProps) => (
   <div className="space-y-2" data-testid="cadde-feed-scope-bar">
     <div className="flex flex-wrap items-center gap-1.5">
+      {brandSlot}
       {SCOPES.map((option) => {
         const active = option.key === scope;
         return (
