@@ -4456,6 +4456,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/user-invites-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/utils.ts",
       "kind": "ts",
       "module_family": "lib"

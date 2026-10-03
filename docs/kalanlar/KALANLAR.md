@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **33** (N 0 · W 8 · M 18 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M10 (**Faz 1 + Faz 5 TAMAM · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **32** (N 0 · W 8 · M 17 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M11 (**Faz 1 + Faz 5 TAMAM + M11 · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -125,7 +125,7 @@ traction ölçülecek.
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
-| 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
+| 3 | ~~M11~~ · **M12–M13** | ✅ **M11 KAPANDI 03.10** (davet tabloları + 3 RPC + `invite_settings`; sızıntı üçlüsü SQL'de; smoke 6/6 — admin/placeholder/görünmez-rol listede YOK; mutasyon 6/6) · kalan: `/liderlik` + InviteCard · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
@@ -1102,17 +1102,44 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 ### Faz 3 — davet + liderlik
 
-**M11 — Migration: davet tabloları + RPC'ler + rozet ayarları**
-- `user_invites (code benzersiz, owner_user_id, created_at)` — alfabe:
-  `referral-codes.ts`'teki `SAFE_CHARS` yeniden kullanılır. ⚠️ Mevcut `referral_codes`
-  tablosu admin'in **pazarlama kodu** — karıştırma, dokunma.
-- `user_invite_redemptions (code, invited_user_id BENZERSİZ, redeemed_at)`.
-- RPC: `get_or_create_my_invite_code()` · `redeem_invite_code(p_code)` ·
-  `get_invite_leaderboard(p_limit)`.
-- ⚠️ Rozet eşikleri **ayar tablosundan** (M02 deseni), koda gömülmez.
-- ⚠️ Liderlik SQL'i dizin görünürlüğünü aynen yansıtır: `is_directory_visible=false` roller
-  ve `[PLACEHOLDER]` kayıtlar **SQL'de** elenir (AI korpus sızıntısı tekrarı).
-- **Kabul:** SQL smoke — leaderboard çıktısında admin/test/placeholder yok.
+**~~M11~~ — ✅ KAPANDI 03.10** · Migration: davet tabloları + RPC'ler + rozet ayarları
+
+- Migration `20261003050000_user_invites_and_leaderboard.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **466/466** sapmasız): `user_invites` (code PK · **owner UNIQUE** — üye
+  başına tek kod · alfabe `SAFE_CHARS` birebir: I/O/0/1 YOK, ayna test iki dosyayı kilitler) ·
+  `user_invite_redemptions` (**invited_user_id UNIQUE** — bir üye bir kez sayılır · satır
+  silinmez) · RLS: select kendi satırı (+admin), **yazma politikası YOK** (tek yol RPC) ·
+  `invite_settings` (event_settings deseni): `invites.badge_tiers=[3,10,25]` ⚠️ ajan ihtiyatı
+  (paket "3 davet"i söyler, kademeleri söylemez — ürün kararı SQL update) + `leaderboard_limit=20`.
+  ⚠️ `referral_codes` (admin pazarlama kodu) ile karıştırılmadı, dokunulmadı.
+- **RPC'ler:** `get_or_create_my_invite_code()` (idempotent, 6 hane SAFE_CHARS) ·
+  `redeem_invite_code(p_code)` (self-invite → `invite_self_not_allowed` · uydurma kod →
+  `invite_code_not_found` · ikinci kullanım `already:true` — row_count ile ayrım) ·
+  `get_invite_leaderboard(p_limit)` — **SIZINTI ÜÇLÜSÜ SQL'DE** (AI korpus dersi):
+  `is_directory_visible=false` rol + `is_placeholder`/`[PLACEHOLDER]` + `is_admin` elenir;
+  katalog kaydı olmayan davetçi hiç listelenmez (yarım kimlik sızmaz) · **anon'a açık +
+  gövdede auth.uid() YOK** (ikisi ayrı kilitli — M12 doğrulama notu) · eşikler/limit
+  `invite_settings`'ten · yanıt `{entries:[{display_name,slug,invite_count}], badge_tiers}`.
+- **Kabul (SQL smoke, geri alınan işlem — 6/6):** D1 kod `HKWXK6` + ikinci çağrı `created:false` +
+  alfabe regex ✓ · D2 redeem → tek satır, tekrar → `already:true` · D3 kendi kodu →
+  `invite_self_not_allowed`, `ZZZZZZ` → `invite_code_not_found` · D4 liderlik: gerçek katalog
+  kaydıyla `{display_name:"smddnz", invite_count:1}` · D4b rol `Admin_PlatformAdmin` yapılınca
+  entries `[]` · D4c `[PLACEHOLDER]` başlık → 0 · D4d **admin davetçi: kullanım `redeemed:true`
+  ama listede YOK (0)** · D5 tiers `[3,10,25]` → ayar `[5,50]` yapılınca değişti · D6 anon
+  liderliği OKUR (`array`), kod ÜRETEMEZ (`permission denied`) · rollback sonrası canlı temiz
+  (0 invite, 0 redemption, katalog/ayarlar eski değerinde).
+- **Kanıt:** sözleşme **10/10** (`user-invites-schema.test.ts`) · **mutasyon 6/6** (owner unique ·
+  alfabe sızdırma · self-invite koşulu [M3 ilk koşuda metin kilidi yüzünden kaçtı → KOŞUL kilidi
+  eklendi, 5. tekrar — tekil koşuda düştü] · admin filtresi · placeholder filtresi · anon grant) ·
+  tam takım **432 dosya / 3560 test** · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) ·
+  `check:dead` 0/0 · `ingest` 59+0 · `verify:text` ✓ 1947.
+- 📌 **M12'ye devir:** `/liderlik` sayfası `get_invite_leaderboard`'ı anon okur (grant + gövde-auth
+  ölçümleri burada hazır); `InviteCard` kod + link + QR (`referral-qr.ts`); quick actions'a
+  "Davet et" M12'de EKLENİR (community-quick-actions test kilidi bilinçli güncellenir);
+  rozet etiketleri eşiklerden istemcide türetilir (DB'de uydurma metin yok). M13: kayıt akışında
+  `redeem_invite_code` çağrısı + davet linki (`?kod=` taşıyıcısı M12'de tanımlanır).
+- *(özgün kapsam)* davet tabloları + 3 RPC + rozet ayarları. **Kabul:** SQL smoke — leaderboard
+  çıktısında admin/test/placeholder YOK ✓ (üçü de ayrı senaryoda ölçüldü).
 
 **M12 — Kod: invites-api + LeaderboardPage + InviteCard**
 - `src/lib/invites-api.ts` · `src/lib/invites-badges.ts` (eşik → rozet) ·
