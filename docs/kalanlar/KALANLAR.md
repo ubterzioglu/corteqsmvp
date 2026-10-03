@@ -127,7 +127,7 @@ traction ölçülecek.
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
 | 6 | ~~M14~~ ~~M15~~ ~~M16~~ | ✅ **FAZ 6 TAMAM 03.10** — M14 (5 metrik view, mig `20261003120000`, kabul K1–K13 13/13 + mutasyon 6/6) · M15 (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — Traction #2, numaralar kaydı, ai-knowledge 91 belge + 90 embed; 12 test + mutasyon 6/6) · ✅ **M16 KAPANDI 03.10** (canlı doğrulama **8/8 ESLESTI**: WAU 6 · içerik 41 · cadde 30 · tavsiye available=false · davet 0 · dönüş cohort 166/5/%3.01; ayırt kanıtı — bozuk metrik 2 FARK verdi) | ✅ |
-| 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
+| 2 | ~~M17~~ · **M18–M23** | ✅ **M17 KAPANDI 03.10** (mig `20261003140000` canlıda, `check:migrations` 472/472; `recommendation_requests`+`recommendation_answers` tabloları, RPC-only yazma, **ban kill-switch `is_cadde_banned` tek nokta**, diaspora CHECK tr/in/cn/ph, is_professional katalogdan türetilir; **kabul K1–K11 11/11** + mutasyon 6/6) · kalan: M18 match RPC · M19 kod lib · M20 /tavsiye · M21 bileşen+Cadde kartı · M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
 ### G · Dijital Gruplar Motoru
@@ -1279,15 +1279,36 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 ### Faz 2 — Tavsiye İste (en büyük modül)
 
-**M17 — Migration 1: tablolar + RPC-only yazma + ban kill-switch**
-- `recommendation_requests`: `id, user_id, title, body, category_slug, country, city,
-  status (open|answered|closed), diaspora_key + CHECK, created_at`. ⚠️ CLAUDE.md kuralı:
-  yeni topluluk içerik tablosu `diaspora_key` taşır ve liste filtresine girer.
-- `recommendation_answers`: `id, request_id, user_id, body, is_professional, created_at`.
-- RLS: okuma herkese açık (yayınlanmış); yazma **yalnız security-definer RPC**
-  (`create_recommendation_request_v1`, `answer_recommendation_v1`).
-- Ban kill-switch tek noktadan (`has_cadde_feature` deseni) — yeni yazma yolları otomatik kapsansın.
-- **Kabul:** banlı kullanıcı RPC'den reddediliyor (SQL smoke).
+**~~M17~~ — ✅ KAPANDI 03.10** · Migration 1: tablolar + RPC-only yazma + ban kill-switch · mig `20261003140000` canlıda (`check:migrations` **472/472** sapmasız)
+
+- **`recommendation_requests`** (id, user_id, title, body, category_slug, country, city,
+  status `open|answered|closed`+CHECK, **diaspora_key + CHECK `tr/in/cn/ph`** [cadde ile aynı küme],
+  created_at, updated_at) · **`recommendation_answers`** (id, request_id, user_id, body,
+  **is_professional**, created_at, `unique(request_id,user_id)` — bir üye bir talebe BİR yanıt).
+- **RLS:** SELECT serbest (anon+authenticated, topluluk içeriği) · **YAZMA YALNIZ RPC** —
+  INSERT/UPDATE/DELETE grant'ları anon+authenticated'tan GERİ ALINDI + write policy YOK
+  (owner=RPC yazar). `create_recommendation_request_v1` + `answer_recommendation_v1`
+  (security definer, status GÖVDEDE 'open', **is_professional KATALOGDAN TÜRETİLİR** —
+  istemci gönderemez, RPC'de parametresi YOK).
+- 🔴 **BAN KILL-SWITCH TEK NOKTA:** her iki RPC `is_cadde_banned(uid)` çağırır → banlı kullanıcı
+  create VE answer'dan OTOMATİK reddedilir (`recommendation_banned`). Hata kodları `recommendation_*`
+  (auth_required · banned · invalid_diaspora · invalid_title · invalid_body · request_not_found ·
+  request_closed) — M19'da TS çift yönlü harita + ayna testi.
+- **Kabul (`supabase/qa/recommendation-requests-acceptance.sql`, geri alınan işlem, K1–K11 11/11):**
+  K1 üye talep oluşturur (satır + status open + diaspora tr) · K2 **BANLI create → recommendation_banned** ·
+  K3 **BANLI answer → recommendation_banned** (kill-switch 2. yazma yolunu da kapsar) · K4 RPC-only yazma
+  (authenticated INSERT/UPDATE/DELETE grant YOK) · K5 yanıt → satır + **is_professional KATALOGDAN türetildi**
+  (bağımsız EXISTS ile karşılaştırıldı) + open→answered · K6 aynı kullanıcıdan 2. yanıt → unique ihlali ·
+  K7 kapalı talebe yanıt → request_closed · K8 oturumsuz → auth_required · K9 geçersiz diaspora →
+  invalid_diaspora · K10 grant (anon execute YOK/auth VAR) · K11 diaspora CHECK (tr/in/cn/ph). **AYIRT:**
+  banlı reddedilirken banlı-olmayan aynı RPC'de başarılı (K1) — vakum değil. Rollback temiz.
+- **Mutasyon 6/6 (canlı fonksiyonlar/grant'lar üzerinde):** M1 create ban sil→K2 · M2 answer ban sil→K3 ·
+  M3 is_professional sabit false→K5 (prof≠katalog) · M4 closed kontrolü sil→K7 · M5 diaspora doğrulama sil→
+  K9 (CHECK constraint farklı kodla yakalar, TEK kod kilidi düşer) · M6 authenticated INSERT grant→K4.
+  Her mutasyon sonrası migration yeniden uygulandı (11/11'e döndü).
+- 📌 Not: yeni kullanıcıya yayınli üye kataloğu OTOMATİK açılıyor (ölçüldü: is_professional=true) — M18
+  eşleştirmesi bunu kullanır. Migration-scan sözleşme testleri (cadde_/career_/event) recommendation_
+  kodlarını TARAMAZ (31 test yeşil, modül-özel prefix).
 
 **M18 — Migration 2: `match_recommendation_professionals(request_id)`**
 - Kategori + şehir/ülke eşleşen profesyoneller; **eşleşme eler değil sıralar** (`match_rank`
