@@ -12,6 +12,14 @@ vi.mock("@/components/auth/AuthProvider", () => ({
   AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+// M13: App artık InviteRedemption'ı AuthProvider içinde mount ediyor ve o bileşen
+// useAuth çağırıyor — passthrough AuthProvider mock'ı context sağlamadığı için
+// useAuth mock'u ŞART (ProfilePage.test deseni). Bu, App düzeyinde useAuth
+// kullanan ilk bileşen; useAuth'un "provider şart" sözleşmesi BİLEREK korunuyor.
+vi.mock("@/components/auth/useAuth", () => ({
+  useAuth: () => ({ user: null, isLoading: false }),
+}));
+
 vi.mock("@/components/admin/AdminLayout", () => ({
   default: () => (
     <div>

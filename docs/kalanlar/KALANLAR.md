@@ -125,7 +125,7 @@ traction ölçülecek.
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
-| 3 | ~~M11~~ ~~M12~~ · **M13** | ✅ M11 03.10 (davet tabloları + 3 RPC; smoke 6/6) · ✅ **M12 KAPANDI 03.10** (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA doğrulandı — anon HTTP ile gerçek veri turu) · kalan: kayıt akışı redeem | 🟢 (onay 03.10) |
+| 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
@@ -1184,10 +1184,32 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   /liderlik açılıyor ✓ (rota + bileşen) · quick action linki çalışıyor ✓ · sızıntı üçlüsü
   EKRANDA yok ✓ (anon HTTP çıktısı + placeholder düşüşü yukarıda).
 
-**M13 — Kayıt akışı + Faz 3 canlı doğrulama**
-- Kayıt akışında `redeem_invite_code` çağrısı (davet linkiyle gelen kullanıcı).
-- **Kabul (canlı):** davet linkiyle yeni kayıt → `user_invite_redemptions` satırı; aynı
-  kullanıcı ikinci kez sayılmıyor; `/liderlik`'te admin ve test hesapları görünmüyor.
+**~~M13~~ — ✅ KAPANDI 03.10** · Kod: kayıt akışı redeem (taşıyıcı + hook) · **FAZ 3 TAMAM**
+
+- **`src/lib/invites-api.ts` (M13 eki):** `INVITE_CARRIER_STORAGE_KEY` · `captureInviteCarrier`
+  (`?davet=` → localStorage, kod yoksa mevcut taşıyıcıya DOKUNMAZ — oturumlar arası korunur) ·
+  `takeInviteCarrier` (OKUR VE SİLER, tek kullanım; normalize ÖNCE silme SONRA değil — silme
+  normalize'dan ÖNCE, zehirli kod kalıcılaşmaz) · `redeemInviteCodeSafely` (**ASLA fırlatmaz** —
+  RPC hatası/ağ reject'i `reportClientError` + `false`; kayıt akışı kutsal, davet bonus).
+- **`src/hooks/use-invite-redemption.ts`:** App mount'ta taşıyıcıyı yakalar; `user` dolu gelince
+  bir kez tüketir (`void` fire-and-forget, await/throw YOK). "Yeni kullanıcı" ayrımı YAPILMAZ
+  (OAuth'ta güvenilir değil) — idempotans SQL'de (M11 `invited_user_id` UNIQUE), istemcide sayaç YOK.
+- **`src/App.tsx`:** `<InviteRedemption />` **AuthProvider İÇİNDE**, Suspense/Routes DIŞINDA mount
+  (null çizer — kayıt akışına dokunmaz; kaynak sözleşmesi testle kilitli: authIdx < inviteIdx < suspIdx).
+- **Kabul (canlı SQL, geri alınan işlem — `supabase/qa/invite-flow-acceptance.sql`, K1–K5 5/5):**
+  K1 davet linkiyle kayıt → TAM 1 `user_invite_redemptions` satırı (`redeemed:true,already:false`) ·
+  K2 AYNI kullanıcı ikinci kez → `already:true`, satır HALA 1 (çift sayım YOK) · K3 geçersiz kod →
+  TEK kod `invite_code_not_found` (kayıt düşmez — istemci fire-and-forget yakalar) · K4 kendi kodu →
+  TEK kod `invite_self_not_allowed` · K5 `/liderlik`: admin davetçi **geçerli katalog kaydı +
+  redemption'ı OLSA DA listede YOK** (`not is_admin` filtresi; join değil) + POZİFİF KONTROL
+  admin-olmayan davetçi `invite_count:1` GÖRÜNÜR (vakum geçiş yok) · grant: `redeem` anon'a KAPALI,
+  `leaderboard` anon'a AÇIK (2/2) · rollback sonrası canlı temiz (m13-* kalıntı 0, invites/redemptions 0).
+- **Kanıt:** 14 test (`invite-redemption.test.ts`) · **mutasyon 6/6** (M1 take-silmez→3 · M2 capture
+  kod-yokken-yazar→4 · M3 redeem hatada true→2 · M4 redeem ağ-reject fırlatır→1 [asla-fırlatmaz
+  sözleşmesi] · M5 hook koşulu ters→4 · M6 App kablolaması AuthProvider dışı→1) · tam takım
+  **436 dosya / 3611 test** yeşil · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`,
+  benim dosyalarda 0) · `check:dead` 0/0/1002 · `check:migrations` **468/468** sapmasız ·
+  `ingest:tools` 60 (+invites-api yeni exportlar, +invite-redemption.test file_index) · `verify:text` ✓ 1957.
 
 ### Faz 6 — admin traction panosu
 

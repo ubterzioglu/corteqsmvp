@@ -11,6 +11,7 @@
 // ⚠️ types.ts regen BORCU (G12): `as never` deseni bilinçli. RPC hataları
 // DÜZ NESNE — instanceof Error daraltması YASAK (m75/KR03).
 import { supabase } from "@/integrations/supabase/client";
+import { reportClientError } from "@/lib/client-error-reports";
 import { normalizeReferralCode } from "@/lib/referral-qr";
 
 /** M11 raise kodları → Türkçe (çift yönlü ayna test: user-invites-schema). */
@@ -86,5 +87,76 @@ export function readInviteCodeFromSearch(search: string): string | null {
     return normalizeReferralCode(raw);
   } catch {
     return null;
+  }
+}
+
+// ── M13 · davet taşıyıcısı (OAuth redirect query'yi düşürebilir) ─────────────
+
+/** Taşıyıcı anahtar — OAuth gidiş-dönüşünde kod kaybolmasın diye localStorage. */
+export const INVITE_CARRIER_STORAGE_KEY = "corteqs.davetKodu";
+
+/**
+ * URL'deki `?davet=` kodunu localStorage'a yakalar (App mount). Kod yoksa
+ * mevcut taşıyıcıya DOKUNMAZ — oturumlar arası korunur (kayıt yarım kalıp
+ * kullanıcı ertesi gün dönerse davet hâlâ sayılır).
+ */
+export function captureInviteCarrier(search: string): void {
+  const code = readInviteCodeFromSearch(search);
+  if (!code) return;
+  try {
+    window.localStorage.setItem(INVITE_CARRIER_STORAGE_KEY, code);
+  } catch {
+    // Depolama kapalıysa (gizli sekme kotası vb.) sessiz düş — davet bonus,
+    // kayıt akışı asla bloklanmaz.
+  }
+}
+
+/**
+ * Taşıyıcıdaki kodu OKUR VE SİLER (tek kullanımlık). Giriş yoksa null — kod
+ * saklı kalır, sonraki oturumda denenir. İdempotans SQL'de (M11: invited_user_id
+ * UNIQUE) — istemci tarafı sayaç TUTULMAZ (M03/M04 dersi).
+ */
+export function takeInviteCarrier(): string | null {
+  try {
+    const code = window.localStorage.getItem(INVITE_CARRIER_STORAGE_KEY);
+    if (code) window.localStorage.removeItem(INVITE_CARRIER_STORAGE_KEY);
+    return code ? normalizeReferralCode(code) : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Davet kodunu kullanır (M13). 🔴 KAYIT AKIŞININ PARÇASI DEĞİL — bonus:
+ * hata FIRLATMAZ, `reportClientError` ile tanılanır ve `false` döner.
+ * Geçersiz/silinmiş kod, self-invite ve ikinci kullanım burada sessizce
+ * yutulur; kayıt/giriş akışı kesintisiz devam eder.
+ */
+export async function redeemInviteCodeSafely(code: string): Promise<boolean> {
+  try {
+    const { error } = await supabase.rpc("redeem_invite_code" as never, {
+      p_code: code,
+    } as never);
+
+    if (error) {
+      // Bilinen kodlar (geçersiz/kendi kodu/ikinci kullanım) BEKLENEN durumdur —
+      // tanılama yine de yazılır (client_error_reports 60sn dedupe içerir).
+      reportClientError({
+        source: "unhandled",
+        context: "redeemInviteCodeSafely",
+        error,
+      });
+      return false;
+    }
+    return true;
+  } catch (error) {
+    // Ağ düzeyi reject bile KAYDI DÜŞÜREMEZ — sözleşme: bu fonksiyon ASLA
+    // fırlatmaz (M13 tuzağı).
+    reportClientError({
+      source: "unhandled",
+      context: "redeemInviteCodeSafely",
+      error,
+    });
+    return false;
   }
 }

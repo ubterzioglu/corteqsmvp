@@ -1224,16 +1224,21 @@ export const toolCatalog = {
       "entrypoint": "src/lib/invites-api.ts",
       "interface_kind": "internal_api",
       "exports": [
+        "INVITE_CARRIER_STORAGE_KEY",
         "INVITE_QUERY_PARAM",
         "buildInviteLink",
+        "captureInviteCarrier",
         "fetchInviteLeaderboard",
         "getOrCreateMyInviteCode",
-        "readInviteCodeFromSearch"
+        "readInviteCodeFromSearch",
+        "redeemInviteCodeSafely",
+        "takeInviteCarrier"
       ],
       "tables_read_write": [],
       "rpcs": [
         "get_invite_leaderboard",
-        "get_or_create_my_invite_code"
+        "get_or_create_my_invite_code",
+        "redeem_invite_code"
       ],
       "evidence_path": "src/lib/invites-api.ts"
     },
@@ -3508,6 +3513,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/internal-links.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/invite-redemption.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

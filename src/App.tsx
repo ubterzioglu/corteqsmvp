@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { lazyWithReload } from "@/lib/lazy-with-reload";
+import { useInviteRedemption } from "@/hooks/use-invite-redemption";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useParams } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -114,6 +115,14 @@ const FoundersCombinedPage = () => (
   </>
 );
 
+// M13: davet taşıyıcısı tüketimi — AuthProvider İÇİNDE mount edilir, hiçbir
+// şey çizmez (ScrollToTop deseni). Kayıt akışına DOKUNMAZ: redeem fire-and-
+// forget, hata bloklamaz (davet bonus, giriş kutsal).
+const InviteRedemption = () => {
+  useInviteRedemption();
+  return null;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -127,6 +136,7 @@ const App = () => (
         <RouterAppErrorBoundary>
           <DiasporaProvider>
             <AuthProvider>
+              <InviteRedemption />
               <Suspense fallback={<RouteLoadingFallback />}>
                 <Routes>
                   <Route element={<PublicLayout />}>
