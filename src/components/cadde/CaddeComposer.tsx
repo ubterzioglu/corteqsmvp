@@ -71,6 +71,13 @@ export interface CaddeComposerProps {
    * kararı verilip anahtar sözlüğe eklenince bu prop `true` geçilir.
    */
   canAddExtraTarget?: boolean;
+  /**
+   * CD02 · düzenleme modu: composer mevcut gönderinin verisiyle açılır, buton
+   * "Kaydet" olur, "Vazgeç" düzenlemeyi bırakır. T1: @anmalar korunur (RPC
+   * p_mentions null → mevcut anmalara dokunmaz) — banner'da kullanıcıya söylenir.
+   */
+  editMode?: boolean;
+  onCancelEdit?: () => void;
 }
 
 const CaddeComposer = ({
@@ -84,6 +91,8 @@ const CaddeComposer = ({
   onError,
   variant = "feed",
   canAddExtraTarget = false,
+  editMode = false,
+  onCancelEdit,
 }: CaddeComposerProps) => {
   const showLocation = variant === "feed";
   const [locationOpen, setLocationOpen] = useState(false);
@@ -162,6 +171,26 @@ const CaddeComposer = ({
   return (
     <Card id="cadde-composer" className="scroll-mt-24 border-slate-200 bg-white/95">
       <CardContent className="space-y-3 p-4 sm:p-5">
+        {editMode ? (
+          <div
+            data-testid="cadde-composer-edit-banner"
+            className="flex items-center justify-between gap-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2"
+          >
+            <p className="text-xs font-semibold text-orange-800">
+              Paylaşımını düzenliyorsun — metin, medya ve konum değişir; @anmaların korunur.
+            </p>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-7 shrink-0 text-orange-700 hover:bg-orange-100"
+              onClick={onCancelEdit}
+              disabled={isSubmitting}
+            >
+              Vazgeç
+            </Button>
+          </div>
+        ) : null}
         <MentionTextarea
           ref={textareaRef}
           value={value.body}
@@ -264,7 +293,9 @@ const CaddeComposer = ({
                   Yükleniyor
                 </>
               ) : isSubmitting ? (
-                "Gönderiliyor…"
+                editMode ? "Kaydediliyor…" : "Gönderiliyor…"
+              ) : editMode ? (
+                "Kaydet"
               ) : (
                 "Paylaş"
               )}
