@@ -16,6 +16,7 @@ import {
 } from "@/lib/events-vocabulary";
 import { describeEventSchedule, formatEventDate, resolveViewerTimezone } from "@/lib/events-timezone";
 import { EVENTS_ACTIVE_LIMIT } from "@/lib/events-rules";
+import { EventFeaturePromo } from "@/components/events/EventFeaturePromo";
 import { buildEventShareUrl } from "@/lib/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
 
@@ -174,6 +175,10 @@ export function MyEventsPanel() {
           ))}
         </div>
       )}
+
+      {/* M10: kilitli ücretli yüzeyler — yalnız etkinliği olan üyeye (etkinliği
+          olmayana "öne çıkar" satmak anlamsız). Ödeme YOK, ilgi kaydı var. */}
+      {!isLoading && !error && events && events.length > 0 && <EventFeaturePromo />}
     </div>
   );
 }

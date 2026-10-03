@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **34** (N 0 · W 8 · M 19 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M08 (**Faz 1 TAMAM · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **33** (N 0 · W 8 · M 18 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M10 (**Faz 1 + Faz 5 TAMAM · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -124,7 +124,7 @@ traction ölçülecek.
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
-| 5 | ~~M08~~ ~~M09~~ · **M10** | ✅ M08 03.10 (QuickActionsCard) · ✅ **M09 KAPANDI 03.10** (GettingStartedCard — satırlar gerçek veriden, davet satırı M13'e dek pasif; mutasyon 6/6) · kalan: feature_interest + EventFeaturePromo | 🟢 (onay 03.10) |
+| 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
@@ -1068,11 +1068,37 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* profili tamamla · ilk hizmet/ürün/etkinlik · 3 davet; tamamlanma gerçek
   veriden. **Kabul:** her satırın durumu ilgili tablodan okunuyor; elle SQL ile karşılaştırıldı ✓.
 
-**M10 — feature_interest + EventFeaturePromo (kilitli ücretli yüzey)**
-- Migration (küçük): `feature_interest (feature_key, user_id, created_at)` + RLS (kendi satırı).
-- `src/components/events/EventFeaturePromo.tsx` (yeni): "Öne çıkar" / "Bilet sat" **kilitli**
-  kart + ilgi kaydı. Ödeme YOK (Stripe ayrı plan).
-- **Kabul:** karta tıklayınca `feature_interest` satırı oluşuyor (DB ölçümü).
+**~~M10~~ — ✅ KAPANDI 03.10** · feature_interest + EventFeaturePromo (kilitli ücretli yüzey)
+
+- Migration `20261003040000_feature_interest.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **465/465** sapmasız): `feature_interest (feature_key, user_id)` **TEKİL**
+  + `created_at` · RLS: okuma kendi satırı (+admin), **insert/update/delete politikası YOK**
+  (kanıt satırı silinemez — yazma yalnız RPC) · anon'a tablo tamamen kapalı ·
+  `register_feature_interest(text)` — **beyaz liste** `event.featured` + `event.ticketing`
+  (⚠️ ajan ihtiyatı: anahtar adları planın Türkçe yüzey adlarından türetildi; M20 `pro.inbox`'ı
+  İKİ tarafla birlikte ekler — ayna testi zorlar) · idempotent (`already:true`).
+  ⚠️ `interest_registrations` (lansman LEAD formu, ölçüldü: email/phone/message kolonları,
+  1 satır) ile KARIŞTIRILMADI — o tabloya dokunulmadı.
+- **`src/lib/feature-interest-api.ts`** (FEATURE_INTEREST_KEYS aynası + hata haritası +
+  `fetchMyFeatureInterests` ikincil yüzey: hata fırlatmaz boş döner) + **`EventFeaturePromo.tsx`**:
+  iki KİLİTLİ kart ("Öne çıkar"/"Bilet sat") + "İlgileniyorum" → ilgi kaydı → "İlgin kaydedildi".
+  **Ödeme/fiyat UI'ı YOK** (plan: ödeme kapsam dışı; test kilitliyor). Yerleşim: MyEventsPanel
+  altı — **yalnız etkinliği olan üye görür**.
+- **Kabul (DB ölçümü, geri alınan işlem — 6/6):** F1 kayıt → satır (`{registered:true,
+  already:false}`) · F2 ikinci tık → `already:true` + TEK satır · F3 beyaz liste dışı
+  (`pro.inbox`) ve null → `feature_interest_unknown_key` · F4 ikinci anahtar ayrı satır ·
+  F5 anon → fonksiyon VE tablo `permission denied` · rollback sonrası canlı 0 satır.
+- **Kanıt:** sözleşme **11** + bileşen **4** test · **mutasyon 6/6** (unique silme · beyaz
+  listeye tek taraflı anahtar sızdırma · delete politikası ekleme · idempotency koşulu
+  [M4 ilk koşuda metin kilidi yüzünden kaçtı → KOŞUL kilidi eklendi, tekil koşuda düştü —
+  G21/M02 dersi 4. kez] · anon revoke silme · istemciye üçüncü anahtar) · tam takım **431
+  dosya / 3550 test yeşil** · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) ·
+  `check:dead` 0/0 · `ingest:tools` **59** (feature-interest-api kataloglandı) + check 0 ·
+  `verify:text` ✓ 1946.
+- 📌 **M20'ye devir:** `ProLockedInboxCard` aynı deseni kullanır — beyaz listeye `pro.inbox`
+  eklenirken migration + `FEATURE_INTEREST_KEYS` + ayna testi ÜÇÜ birden güncellenir.
+- *(özgün kapsam)* `feature_interest` + RLS + kilitli kart + ilgi kaydı; ödeme YOK.
+  **Kabul:** karta tıklayınca `feature_interest` satırı oluşuyor (DB ölçümü) ✓.
 
 ### Faz 3 — davet + liderlik
 

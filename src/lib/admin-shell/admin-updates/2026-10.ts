@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-profil-baslangic-kartlari",
+    date: "3 Ekim 2026",
+    title: "Profilin ilk ekranına üç yeni kart geldi — hızlı işlemler, başlangıç adımları ve “yakında” vitrini (deploy kuyruğunda)",
+    items: [
+      "HIZLI İŞLEMLER: Profilin ilk ekranında (tüm rollerde) kısayol kartı: “Etkinlik oluştur” ve “Grup ekle”. Listeye “Davet et” ve “Tavsiye iste” kendi modülleri geldiğinde eklenecek — çalışan rotası olmayan düğme konmuyor.",
+      "BAŞLANGIÇ ADIMLARI: Dört satırlık ilerleme kartı — profilini tamamla (zorunlu alan sayın gerçek kayıtlardan), ilk hizmet/ürününü ekle (Çarşı ilanların), ilk etkinliğini oluştur, 3 arkadaşını davet et. Tamamlanma GERÇEK veriden okunuyor; davet satırı sistem gelene kadar “yakında” diye PASİF duruyor — sahte tik yok.",
+      "YAKINDA · ÜCRETLİ ÖZELLİKLER: “Öne çıkar” ve “Bilet sat” KİLİTLİ kart olarak duruyor (ödeme kapsam dışı, ayrı plan). “İlgileniyorum” diyenin kaydı alınıyor — hangi ücretli özelliğin önce yapılacağına bu ilgi birikimi karar verecek. İlgi kaydı silinemez ve aynı kişi iki kez sayılmaz.",
+      "KANIT: İlgi kaydı canlıda ölçüldü (geri alınan işlem): kayıt satırı oluştu · ikinci tık “zaten kayıtlı” dedi, tek satır kaldı · listede olmayan anahtar reddedildi · giriş yapmamış kullanıcı hiç kayıt açamadı · işlem geri alınca canlıda iz kalmadı. Ekranlar bir sonraki frontend deploy’unda görünür.",
+    ],
+  },
+  {
     id: "20261003-etkinlik-motoru-faz1",
     date: "3 Ekim 2026",
     title: "Etkinlik motoru Faz 1 hazır — ilk-onay kuralı, kontenjan ve katılım düğmesi (arayüz deploy kuyruğunda)",

@@ -2,10 +2,10 @@
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 58,
+    "total": 59,
     "edge_functions": 15,
     "workers": 2,
-    "ui_modules": 40
+    "ui_modules": 41
   },
   "tools": [
     {
@@ -1143,6 +1143,26 @@
         "leave_event_v1"
       ],
       "evidence_path": "src/lib/events-api.ts"
+    },
+    {
+      "tool_key": "module.feature_interest_api",
+      "tool_name": "feature-interest-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/feature-interest-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "FEATURE_INTEREST_KEYS",
+        "fetchMyFeatureInterests",
+        "registerFeatureInterest"
+      ],
+      "tables_read_write": [
+        "feature_interest"
+      ],
+      "rpcs": [
+        "register_feature_interest"
+      ],
+      "evidence_path": "src/lib/feature-interest-api.ts"
     },
     {
       "tool_key": "module.flat_roles_api",
@@ -3204,6 +3224,16 @@
     },
     {
       "path": "src/lib/events-vocabulary.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/feature-interest-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/feature-interest-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
