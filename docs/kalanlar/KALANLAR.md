@@ -135,12 +135,13 @@ traction ölçülecek.
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
 | A | ~~G02~~ ~~G03a~~ ~~G03b~~ · **G03c** | ✅ G02 + G03a + G03b KAPANDI 01.10 · 🔴 **sızıntı G03c'ye kadar AÇIK** (taban tablo hâlâ anonime açık) | 🟢 | ⛔ G03b canlıda olmalı |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
-| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🔴 | ⛔ **K09 kararı** (↓ ölçüm 02.10) |
+| B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | ✅ **K09 cevaplandı (a)** — mevcut katalog doğrulaması, yeni kolon YOK |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
 | E | ~~G18~~ ~~G19~~ ~~G20~~ ~~G21~~ | ✅ **FAZ E TAMAM 02.10** — G18 (S1 form, kabul 14/14) · G19 (S2 dizin, kabul 8/8) · G20 (S3 detay + claim UI, kabul DOM+canlı 5/5; "Şikayet et" G14'e ertelendi) · ✅ **G21 KAPANDI 02.10** (S4 sahip paneli: `group_owner_panel_state`+`group_owner_update_v1`; kabul #9 canlı 9/9 — kaldırma ANINDA hidden) | 🟢 | ⚠️ G18–G21 frontend deploy kuyruğunda (G03b ile aynı) |
 | F | ~~G22~~ ~~G23~~ ~~G24~~ ~~G25~~ | ✅ **FAZ F KISMEN TAMAM 02.10** — G22 (6 cron) · G23 (8 bildirim) · G24 (moderatör paneli) · ✅ **G25 KAPANDI 02.10** (13 kabul: `supabase/qa/group-motor-acceptance.sql` exit 0 — 12 ölçüldü + #6 tripwire; QA gerçek kusur yakaladı → strike bildirimi `group_strikes`'a taşındı, mig `20261002140000`; mutasyon 6/6 canlı fonksiyonlar üzerinde) | 🟢 | ⛔ #6 kabulu G14'le tamamlanacak (tripwire kurulu) |
+| G | **K10a** | ✅ K10(a) kararıyla AÇILDI (03.10): `group_claim_apply_verified` rol ataması **yükseltme**ye çevrilir — mevcut rol yalnız DEFAULT `User_DiasporaMember` ise `Community_*Admin` atanır; diğer roller ezilmez (`role_skipped_reason` yolu daralır, davranış korunur). Küçük batch: migration yok (fonksiyon redefine) + QA + sözleşme güncelleme | 🟢 | — |
 
 ### KR · Kariyer sayfası yenilemesi — ✅ SERİ TAMAMEN KAPANDI (02.10)
 
@@ -159,13 +160,15 @@ traction ölçülecek.
 
 | Konu | Durum |
 |---|---|
-| **Cadde gönderi DÜZENLEME UI'ı** | ✅ **PLAN YAZILDI, ONAYA SUNULDU (03.10 gece turu):** [`docs/plans/2026-10-03-cadde-gonderi-duzenleme-plani.md`](../plans/2026-10-03-cadde-gonderi-duzenleme-plani.md) — CD01–CD04 (sarmalayıcı+şema · composer edit modu · menü bağlantısı · canlı kanıt turu). Backend hazır (`update_cadde_post_v1`, A11b); migration yok; T1-T5 tuzakları planda (mentions null · medya tam-değişim · premium kapı · facade/diagnostics testleri · invalidation). **Onay gelince CD01'den başlanır** |
+| **Cadde gönderi DÜZENLEME UI'ı** | ✅ **PLAN ONAYLANDI (03.10, kullanıcı): CD01'den başla** — [`docs/plans/2026-10-03-cadde-gonderi-duzenleme-plani.md`](../plans/2026-10-03-cadde-gonderi-duzenleme-plani.md) (CD01–CD04: sarmalayıcı+şema · composer edit modu · menü bağlantısı · canlı kanıt turu). Backend hazır (`update_cadde_post_v1`, A11b); migration yok; T1-T5 tuzakları planda |
 
 ### U · Kullanıcı eli gerekiyor (öncelik sırasıyla)
 
 | ID | Konu | Neyi açar |
 |---|---|---|
-| **U10** | **Frontend deploy kuyruğu** (Coolify): G03b + G18 form + G19 dizin + G20 detay/claim + G21 panel — tek deploy hepsini canlandırır. Deploy sonrası: (1) `/addcom` ziyaretçi + girişli tur, (2) `groups.health_score_cron_enabled=true` **insan kararı** (G17/G22 tuzağı: eski kart 0-100 skoru "X / 10" çiziyor — bayrak bu yüzden KAPALI), (3) G03c + G10c'nin önü açılır | **G03c · G10c · health-score cron · yeni UI'ın tamamı** |
+| **U10** | **Frontend deploy kuyruğu** (Coolify): G03b + G18 form + G19 dizin + G20 detay/claim + G21 panel — tek deploy hepsini canlandırır. **🟢 KULLANICI DEPLOY EDİYOR (03.10 ~07:10, soru-cevap turu).** Deploy sonrası sıra (ajanda): (1) `/addcom` ziyaretçi + girişli tur (dizin 10 grup + detay + yeni form), (2) **G03c migration'ı UYGULA** (kod zaten commit'li — sızıntıyı kapatan adım), (3) `groups.health_score_cron_enabled=true` — **onay 03.10 soru-cevap turunda verildi**
+   (soru metni bayrağı içeriyordu); yine de YALNIZ deploy doğrulandıktan ve ziyaretçi turu
+   geçtikten sonra açılır, (4) G10c'nin önü açılır | **G03c · G10c · health-score cron · yeni UI'ın tamamı** |
 | **U09** | WhatsApp Meta kimlik bilgileri (5 secret) — 30.09: "bilgiler hazır" | **W01–W08** |
 | **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) | A14 kapanış maili |
 | **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) | **G04–G05** |
@@ -180,18 +183,15 @@ traction ölçülecek.
 ### K · Karar · P · Onay · X · Ertelenen
 
 - **K01–K07** — kod işi olmayan kararlar (K08 ✅ cevaplandı → G bölümü).
-- 🔴 **K09 (02.10) — kurumsal doğrulama hangi kolonda yaşayacak?** G06/G07'yi bloke eder.
-  Ölçüm ve öneri G06 bloğunda; özet: `catalog_items` zaten `verification_status`
-  (5 değer) + `is_verified` taşıyor, spec üçüncü bir `verification_level` istiyor.
-  Ayrıca politika kapıyı **ekleyen kişiye** koyuyor, spec **katalog kaydına**.
-- 🔴 **K10 (02.10) — rol modeli TEK rol: grup admini rolü kimseye ATANAMIYOR.**
-  G13 ölçümü: `auth.users` trigger'ı her yeni kullanıcıya `User_DiasporaMember` atıyor;
-  `user_role_assignments` PK=(user_id) → **175/175 kullanıcının tam 1 rolü var**. Ezme-yok
-  ilkesiyle `Community_*Admin` üretikte kimseye verilemez (G13 güvenli davranıyor: rol
-  yerinde kalır, `role_skipped_reason` yazılır). Karar seçenekleri: (a) yalnız DEFAULT rol
-  ezilebilir (yükseltme) · (b) PK → (user_id, role_id) çoklu rol (geniş etki: `is_admin`,
-  dizin, `sync_member_catalog_role_for_user`) · (c) rol faydası ertelenir. G18 sahip paneli
-  ve G24'ün rol tabanlı ayrıcalıkları bu karara bağlı.
+- ✅ **K09 CEVAPLANDI (03.10, kullanıcı): (a) MEVCUT KATALOG DOĞRULAMASI.** Yeni
+  `verification_level` kolonu AÇILMAZ; `catalog_items.verification_status` kullanılır ve
+  politikanın dediği gibi kapı BAŞVURAN KİŞİYE bağlanır (kişi ↔ kuruluş bağlantısı G06'da
+  ölçülecek). **G06–G07 bu kararla AÇILDI** (⛔ kalktı) — sıraya alınabilir.
+- ✅ **K10 CEVAPLANDI (03.10, kullanıcı): (a) YÜKSELTME — tek rol kalır.** Varsayılan
+  `User_DiasporaMember` rolü `Community_*Admin`'e YÜKSELTİLEBİLİR (mevcut rol ezilmez
+  ilkesi korunur: yalnız DEFAULT rol yükseltmeye açıktır). G13'ün `role_skipped_reason`
+  güvenli-atlama kodu gerçek atamaya çevrilecek — küçük batch (K10a olarak sıraya alındı,
+  aşağıda G bölümü notuna bakın). Çoklu rol (b) REDDEDİLDİ, erteleme (c) değil.
 - **P02–P07** — clean-code planının canlı DB/deploy/ürün kararı isteyen maddeleri.
 - **X** — batch'e bölünmeden önce ayrı plan isteyen büyük işler.
 
@@ -764,7 +764,7 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 > **Kaynak plan:** [`docs/plans/2026-09-30-topluluk-motoru-ucretsiz-islevler-plani.md`](../plans/2026-09-30-topluluk-motoru-ucretsiz-islevler-plani.md)
 > — bağlam, ölçülen taban, T1/T2 tuzakları ve faz ayrıntıları orada. Batch'e başlamadan
 > önce planın ilgili fazını oku; bu liste yalnız sıra + kapsam + kabul özeti.
-> **Durum:** plan "onaya sunuldu" — M01'den önce onayı teyit et.
+> **Durum:** ✅ **ONAYLANDI (03.10, kullanıcı): M01'den başla.** Sıra aşağıdaki gibi.
 > **Sıra:** M01 → M02…M07 (Faz 1 etkinlik) → M08…M10 (Faz 5 panel) → M11…M13 (Faz 3 davet)
 > → M14…M16 (Faz 6 metrik) → M17…M23 (Faz 2 tavsiye) → M24…M27 (Faz 4 özet mail).
 > Faz 6'nın Faz 2'den önce olması bilinçli: tavsiyeye girmeden önce traction ölçülecek.
