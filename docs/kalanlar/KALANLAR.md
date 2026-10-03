@@ -9,9 +9,9 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **40** (N 0 · W 8 · M 25 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+**M01+M02** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **39** (N 0 · W 8 · M 24 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01+M02+**M03 (T1 KAPANDI)** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
-> | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
+> | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
 > | **Son devir notu** | [`docs/handover/2026-10-02-devir-notu.md`](../handover/2026-10-02-devir-notu.md) — 2 Ekim gece oturumu (KR01–KR10 + G08/G09) · [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) §7 tuzaklar + §9 ortam hâlâ geçerli |
 > | **Kalıcı operasyon dersleri** | [`docs/operations/2026-09-30-kalici-operasyon-dersleri.md`](../operations/2026-09-30-kalici-operasyon-dersleri.md) |
@@ -117,7 +117,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | ~~M02~~ · **M03–M07** | ✅ **M02 KAPANDI 03.10** (`create_event_v1` + `event_settings` + `approval_source`; smoke 7/7, mutasyon 6/6) · kalan: RLS sıkılaştırma (T1) · katılım · UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ ~~M03~~ · **M04–M07** | ✅ M02 03.10 (`create_event_v1` + `event_settings`) · ✅ **M03 KAPANDI 03.10** (**T1 KAPANDI**: INSERT `status='pending'` zorunlu + `events_guard_status` trigger'ı; kabul DÖRT yolla ölçüldü, PostgREST gövdesi kanıt) · kalan: katılım tabloları/RPC · UI · canlı doğrulama | 🟢 (onay 03.10) |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -840,11 +840,40 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* `approval_source` + ayar tablosu + `create_event_v1`. **Kabul:** canlıya
   uygulandı + `applied/`'a taşındı; SQL smoke ilk/ikinci/üçüncü etkinlik RPC üzerinden ✓.
 
-**M03 — Migration 2: RLS sıkılaştırma + status trigger (T1'i kapatır)**
-- INSERT politikası `status='pending'` zorunlu; status değiştirmeyi engelleyen **trigger**
-  (RLS, UPDATE'te eski satırı göremez). Yayınlama yalnız RPC + `is_admin()`.
-- **Kabul (ölç, varsayma):** PostgREST'e doğrudan `status='published'` POST → **reddedildi**
-  (yanıt gövdesi kanıt olarak buraya yazılır).
+**~~M03~~ — ✅ KAPANDI 03.10** · Migration 2: RLS sıkılaştırma + status trigger (**T1 KAPANDI**)
+
+- Migration `20261003020000_events_rls_status_guard.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **463/463** sapmasız): INSERT politikası aynı adla yeniden —
+  `with check (auth.uid() = user_id and status = 'pending')` · `events_guard_status()`
+  BEFORE UPDATE trigger'ı (RLS UPDATE'te eski satırı göremez — status korumasının tek gerçek
+  yolu; G12 guard deseni): `status` + `approval_source` değişimi →
+  `event_status_direct_update_forbidden`; muafiyet üçlüsü `event_status.via_rpc` bayrağı
+  (AYRI GUC isim alanı — grup motorunun bayrağıyla karışmaz) · `is_admin` · `service_role`.
+  **İçerik alanları serbest** (başlık/tarih düzenlemesi açık). `create_event_v1`
+  security definer → politika RPC'yi kesmez (M02 auto-publish yolu çalışır).
+  ⚠️ İlk uygulama denemesi comment satırındaki eksik tırnak yüzünden düştü (transaction
+  rollback — politika/trigger YARIM kalmadı); dosya düzeltilip yeniden uygulandı.
+- **Kabul (plan T1: "ölç, varsayma" — DÖRT yol, yanıt gövdeleri kanıt):**
+  (a) **PostgREST anon POST `status='published'` → HTTP 401, gövde birebir:**
+  `{"code":"42501",...,"message":"new row violates row-level security policy for table \"events\""}` ·
+  (b) authenticated rol simülasyonu: `published` insert → **42501 RLS** reddi, `pending`
+  insert → BAŞARILI · (c) sahibi `update ... set status='published'` →
+  **`event_status_direct_update_forbidden`**; `approval_source='auto'` denemesi → aynı red;
+  `title` güncellemesi → SERBEST · (d) admin `status='published'` + `approval_source='admin'`
+  → BAŞARILI (M08 onay yolu). Rollback sonrası canlı dokunulmamış (1 eski satır, 0 test satırı).
+- Mevcut akış bozulmadı: istemci form zaten `status:'pending'` yazıyor (events-api:158);
+  AdminEventsPage `is_admin` muaf.
+- **Kanıt:** sözleşme **7/7** (`events-status-guard-schema.test.ts` — politika/trigger/muafiyet
+  üçlüsü/içerik serbestisi/salt ekleme) · **mutasyon 6/6 İLK TURDA** (pending koşulu · admin
+  muafiyeti · raise · approval_source · via_rpc · trigger silme) · tam takım **424 dosya / 3497
+  test** · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 ·
+  `ingest` 58+0 · `verify:text` ✓ 1932.
+- 📌 **M08'e devir:** admin onay ekranı status'a `approval_source='admin'` damgasını basmalı
+  (bugün AdminEventsPage yalnız status güncelliyor — null "eski yol" demek); onay RPC'si
+  çıkarsa `event_status.via_rpc` bayrağını o açar.
+- *(özgün kapsam)* INSERT `status='pending'` zorunlu + status trigger'ı; yayınlama yalnız
+  RPC + `is_admin()`. **Kabul:** PostgREST'e doğrudan `status='published'` POST → reddedildi
+  (gövde yukarıda birebir).
 
 **M04 — Migration 3: `event_attendees` + join/leave RPC'leri**
 - `event_attendees (event_id, user_id)` PK · `created_at` · `status` (`going|cancelled`).
