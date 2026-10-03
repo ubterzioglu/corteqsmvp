@@ -1,5 +1,9 @@
 # Cadde Gönderi Düzenleme UI'ı — Uygulama Planı (CD01–CD04)
 
+> ✅ **SERİ TAMAM 03.10** — CD01 `7a3f3f84` · CD02 `591caa84` · CD03 `4023751e` ·
+> CD04 canlı kabul 10/10 (kanıt KALANLAR satır 163'te). Ekran sıradaki frontend
+> deploy'unda canlıya çıkar.
+>
 > **Durum: ONAYA SUNULDU (03.10, gece turu).** Backend hazır: `update_cadde_post_v1`
 > canlıda (A11b, mig `20260929140000`, smoke'lanmış). Eksik olan tek şey UI:
 > sarmalayıcı + composer'ın "düzenleme modu" + menü bağlantısı. Bu plan KALANLAR

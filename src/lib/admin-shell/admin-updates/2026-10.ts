@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-cadde-gonderi-duzenleme",
+    date: "3 Ekim 2026",
+    title: "Cadde'de paylaşım düzenleme açıldı — artık silmek zorunda değilsin",
+    items: [
+      "DÜZENLE MENÜDE: Kendi paylaşımının üç nokta menüsünde “Düzenle” var. Composer aynı kutuda düzenleme moduna geçer: metin, medya ve konum ön dolu gelir; “Kaydet” ile güncellenir, “Vazgeç” ile hiçbir şey değişmez.",
+      "NE DEĞİŞİR, NE DEĞİŞMEZ: Metin, görsel/video ve ülke-şehir hedefi düzenlenebilir. @anmaların KORUNUR (metinden silsen bile anma kayıtları durur), #etiketler yeni metinden otomatik tazelenir. Paylaşımın tipi ve kafe bağlantısı değişmez.",
+      "SINIRLAR: Aynı kurallar düzenlemede de geçerli — metin 4000 karakter, en fazla 4 görsel + 1 video, tek hedef (birden fazla hedef premium kapsamında ve şimdilik kapalı). Boş paylaşım kaydedilemez (metin silinecekse medya da silinmeli).",
+      "GÜVENLİK: Düzenleme yetkisinin gerçek denetimi veritabanında — yalnız paylaşım sahibi (veya admin/moderatör) kaydedebilir; başkasının paylaşımında menü hiç görünmez, görünse bile sunucu reddeder. Canlıda 10 senaryoyla ölçüldü (hepsi geri alınan işlemde): sahip düzenledi · anmalar korundu · etiket tazelendi · medya temizlendi · hedef değişti · ikinci hedef premium kapısına takıldı · sahip olmayan reddedildi · gizli paylaşım 'yok' sayıldı · kafe paylaşımında hedef yok sayıldı · 4001 karakter reddedildi.",
+      "NOT: Bu ekran da bir sonraki frontend deploy'unda canlıya çıkar (veritabanı tarafı zaten çalışıyordu, şimdi arayüzü bağlandı).",
+    ],
+  },
+  {
     id: "20261003-deploy-sonrasi-guvenlik-ve-skorlar",
     date: "3 Ekim 2026",
     title: "Deploy tamam: yeni grup ekranları canlıda, link sızıntısı KAPANDI, grup skorları görünür oldu",

@@ -160,7 +160,7 @@ traction ölçülecek.
 
 | Konu | Durum |
 |---|---|
-| **Cadde gönderi DÜZENLEME UI'ı** | ✅ **PLAN ONAYLANDI (03.10, kullanıcı): CD01'den başla** — [`docs/plans/2026-10-03-cadde-gonderi-duzenleme-plani.md`](../plans/2026-10-03-cadde-gonderi-duzenleme-plani.md) (CD01–CD04: sarmalayıcı+şema · composer edit modu · menü bağlantısı · canlı kanıt turu). Backend hazır (`update_cadde_post_v1`, A11b); migration yok; T1-T5 tuzakları planda |
+| **Cadde gönderi DÜZENLEME UI'ı** | ✅ **KAPANDI 03.10 (CD01–CD04)** — plan: [`docs/plans/2026-10-03-cadde-gonderi-duzenleme-plani.md`](../plans/2026-10-03-cadde-gonderi-duzenleme-plani.md) · CD01 `updateCaddePost`+şema (`7a3f3f84`) · CD02 composer edit modu + `updateMutation` (`591caa84`) · CD03 menü "Düzenle" + FeedView kablolaması (`4023751e`) · CD04 canlı kabul **10/10** (geri alınan işlem: sahip düzenler · **T1 mentions korunur** · hashtag re-sync · medya `[]` temizler · tek hedef uygulanır [⚠️ hedefler `cadde_countries/cadde_cities`'ten çözülür — geo join'le DOĞRULANMAZ, CD04 dersi] · iki geçerli hedef → `premium_required` · sahip-olmayan → `owner_required` · hidden → `not_found` · cafe `p_targets` yok sayar · 4001 → `invalid_body` · rollback temiz) · mutasyon CD01/02/03 = 6+6+6 · ekran sıradaki frontend deploy'unda canlı olur |
 
 ### U · Kullanıcı eli gerekiyor (öncelik sırasıyla)
 
