@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-kurumsal-dogrulama-basvuru-formu",
+    date: "3 Ekim 2026",
+    title: "Kurumsal doğrulama başvurusu artık ekranda — kuruluş kaydını belgeyle doğrulat (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ: Dün kurulan kurumsal doğrulama altyapısının (belge kovası + talep kuyruğu) üye tarafındaki ekranı hazır. Bir dernek/okul/kuruluş kaydının temsilcisi, kayıt sayfasında tüzük veya yetki belgesini yükleyip doğrulama talebi açabiliyor; talep yönetici kuyruğuna düşüyor.",
+      "ÖNCE KAYDI SAHİPLEN (iki adım): 262 kurumsal kaydın 249'unda kaydı temsil eden hiçbir kişi bağı yok (sahipsiz içe aktarılmış kayıtlar). Bu yüzden bağı olmayan kullanıcıya belge formu GÖSTERİLMİYOR — bunun yerine 'önce kaydı sahiplen' (düzenleme yetkisi) yolu gösteriliyor. Yalnız temsil yetkisi olan başvuru yapabiliyor. Bu bilinçli: sahipsiz bir kaydı doğrulatmak, o kurumu temsil etmekle aynı şey değil.",
+      "BELGE GÜVENLİĞİ: Belgeler dışarıya kapalı özel alanda duruyor; yalnız yükleyen kişi ve yöneticiler, o da süreli bağlantıyla açabiliyor (herkese açık bağlantı üretilmiyor). Dosyanın ham adı depolama anahtarına girmiyor (dizin dışına çıkma denemeleri kapatılıyor). Tür, dosyanın içeriğinden değil uzantısından belirleniyor — dar liste: PDF/JPG/PNG/WebP, dosya başına en çok 15 MB, en çok 5 belge.",
+      "KANIT: 26 test (17 sözleşme + 9 bileşen) yeşil; kod 6 yerden bilerek bozuldu (mutasyon) ve testler her seferinde yakaladı. Canlı kova ölçüldü: özel · 15 MB · 4 tür · 'her şeyi kabul et' türü YOK · başvuru fonksiyonu anonime kapalı, üyeye açık.",
+      "KALAN: Yönetici inceleme ekranı (kuyruk + belge önizleme + onayla/reddet) sırada. Bu form üye tarafıdır ve bir sonraki frontend deploy'ında canlıya çıkar.",
+    ],
+  },
+  {
     id: "20261003-kurumsal-dogrulama-altyapisi",
     date: "3 Ekim 2026",
     title: "Kurumsal doğrulama altyapısı kuruldu — dernek/okul/kuruluş kayıtları için belgeli başvuru",

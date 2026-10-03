@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 60,
+    "total": 61,
     "edge_functions": 15,
     "workers": 2,
-    "ui_modules": 42
+    "ui_modules": 43
   },
   "tools": [
     {
@@ -1342,6 +1342,34 @@ export const toolCatalog = {
       ],
       "rpcs": [],
       "evidence_path": "src/lib/muhasebe-butce-api.ts"
+    },
+    {
+      "tool_key": "module.org_verification_api",
+      "tool_name": "org-verification-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/org-verification-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "ORG_VERIFICATION_ACCEPT",
+        "ORG_VERIFICATION_BUCKET",
+        "ORG_VERIFICATION_EXTENSIONS",
+        "ORG_VERIFICATION_MAX_DOCUMENTS",
+        "ORG_VERIFICATION_MAX_SIZE",
+        "isOrgVerificationNotLinkedError",
+        "openOrgVerificationDocument",
+        "orgVerificationContentType",
+        "orgVerificationErrorMessage",
+        "orgVerificationStorageKey",
+        "requestOrgVerification",
+        "uploadOrgVerificationDocuments",
+        "validateOrgVerificationFile"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "request_org_verification_v1"
+      ],
+      "evidence_path": "src/lib/org-verification-api.ts"
     },
     {
       "tool_key": "module.pending_onboarding_api",
@@ -3800,6 +3828,16 @@ export const toolCatalog = {
       "path": "src/lib/muhasebe-schemas.ts",
       "kind": "ts",
       "module_family": "muhasebe"
+    },
+    {
+      "path": "src/lib/org-verification-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/org-verification-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
     },
     {
       "path": "src/lib/page-seo.ts",

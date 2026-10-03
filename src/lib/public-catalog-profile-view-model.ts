@@ -83,6 +83,15 @@ export type PublicProfileClaimViewModel = {
   slug: string;
   canClaim: boolean;
   isManaged: boolean;
+  /**
+   * Kurumsal kayıt mı? (G06b) — kurumsal doğrulama (Seviye 2) talebi YALNIZ
+   * kuruluş kayıtlarında açılır. `itemType='organization'` VEYA rol anahtarı
+   * `Organization%` (RPC'nin `platform_role_key like 'Organization%'` kapısıyla
+   * aynı kaynak). Üye/danışman kaydında doğrulama kartı çizilmez.
+   */
+  isOrganization: boolean;
+  /** Kayıt zaten doğrulanmış mı (verification_status='verified') — G06b. */
+  isVerified: boolean;
 };
 
 /**
@@ -710,6 +719,9 @@ export function buildPublicCatalogProfileViewModel(
       slug: item.slug,
       canClaim: payload.claim.canClaim && item.verificationStatus !== "claimed",
       isManaged: item.verificationStatus === "claimed",
+      isOrganization:
+        item.itemType === "organization" || (item.roleKey?.startsWith("Organization") ?? false),
+      isVerified: item.verificationStatus === "verified",
     },
     provenance: buildProvenance(payload),
     presentation,

@@ -19,6 +19,7 @@ import PublicProfileQuickActions, { sharePublicProfile } from "./PublicProfileQu
 import PublicProfileSectionList from "./PublicProfileSectionList";
 import PublicProfileTrustCard from "./PublicProfileTrustCard";
 import PublicProfileInlineEditor from "./edit/PublicProfileInlineEditor";
+import OrgVerificationRequestCard from "./OrgVerificationRequestCard";
 
 const AmbientOrbs = () => (
   <>
@@ -170,6 +171,22 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
         {viewModel.provenance ? (
           <div className="mt-4">
             <PublicProfileProvenanceCard provenance={viewModel.provenance} />
+          </div>
+        ) : null}
+
+        {/* G06b · kurumsal doğrulama (Seviye 2) — YALNIZ kuruluş kaydında ve
+            girişli kullanıcıya. Bağı olmayan "önce kaydı sahiplen" yolunu görür
+            (isOwner=false); sahip/yönetici belge yükler. Anonime çizilmez
+            (anon zaten hero'daki login-claim CTA'sını görür). */}
+        {viewModel.claim.isOrganization && user ? (
+          <div className="mt-4">
+            <OrgVerificationRequestCard
+              itemId={viewModel.claim.itemId}
+              slug={viewModel.claim.slug}
+              isVerified={viewModel.claim.isVerified}
+              isOwner={isOwner}
+              canClaim={viewModel.claim.canClaim}
+            />
           </div>
         ) : null}
 
