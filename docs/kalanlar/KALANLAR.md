@@ -127,7 +127,7 @@ traction ölçülecek.
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
 | 6 | ~~M14~~ ~~M15~~ ~~M16~~ | ✅ **FAZ 6 TAMAM 03.10** — M14 (5 metrik view, mig `20261003120000`, kabul K1–K13 13/13 + mutasyon 6/6) · M15 (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — Traction #2, numaralar kaydı, ai-knowledge 91 belge + 90 embed; 12 test + mutasyon 6/6) · ✅ **M16 KAPANDI 03.10** (canlı doğrulama **8/8 ESLESTI**: WAU 6 · içerik 41 · cadde 30 · tavsiye available=false · davet 0 · dönüş cohort 166/5/%3.01; ayırt kanıtı — bozuk metrik 2 FARK verdi) | ✅ |
-| 2 | ~~M17~~ · **M18–M23** | ✅ **M17 KAPANDI 03.10** (mig `20261003140000` canlıda, `check:migrations` 472/472; `recommendation_requests`+`recommendation_answers` tabloları, RPC-only yazma, **ban kill-switch `is_cadde_banned` tek nokta**, diaspora CHECK tr/in/cn/ph, is_professional katalogdan türetilir; **kabul K1–K11 11/11** + mutasyon 6/6) · kalan: M18 match RPC · M19 kod lib · M20 /tavsiye · M21 bileşen+Cadde kartı · M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
+| 2 | ~~M17~~ ~~M18~~ · **M19–M23** | ✅ **M17 KAPANDI 03.10** (mig `20261003140000`; `recommendation_requests`+`recommendation_answers`, RPC-only yazma, **ban kill-switch `is_cadde_banned` tek nokta**, diaspora CHECK, is_professional katalogdan; **kabul K1–K11 11/11** + mutasyon 6/6) · ✅ **M18 KAPANDI 03.10** (mig `20261003150000`; `match_recommendation_professionals` — **eşleşme ELER DEĞİL SIRALAR** [skor kategori100/şehir30/ülke15], `catalog_search_normalize` katlama, **search_text OKUNMAZ** [iletişim sızıntısı yok]; **kabul K1–K9 9/9** + mutasyon 6/6 — M1 kabulün yeniden-sıralama kusurunu yakaladı, `over()` geliş sırasına düzeltildi) · kalan: M19 kod lib · M20 /tavsiye · M21 bileşen+Cadde kartı · M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
 ### G · Dijital Gruplar Motoru
@@ -1310,11 +1310,32 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   eşleştirmesi bunu kullanır. Migration-scan sözleşme testleri (cadde_/career_/event) recommendation_
   kodlarını TARAMAZ (31 test yeşil, modül-özel prefix).
 
-**M18 — Migration 2: `match_recommendation_professionals(request_id)`**
-- Kategori + şehir/ülke eşleşen profesyoneller; **eşleşme eler değil sıralar** (`match_rank`
-  dersi); `catalog_search_normalize()` ile katlanır.
-- ⚠️ **`catalog_search_documents.search_text` KULLANILMAZ** — iletişim bilgisi taşır.
-- **Kabul:** örnek taleple SQL smoke; dönen listede iletişim bilgisi sızıntısı yok.
+**~~M18~~ — ✅ KAPANDI 03.10** · Migration 2: `match_recommendation_professionals(request_id, limit)` · mig `20261003150000` canlıda (`check:migrations` **473/473** sapmasız)
+
+- Kategori + şehir/ülke eşleşen **dizin-görünür profesyoneller** (member+published+public+
+  non-placeholder+directory-visible rol — admin/test elenir). 🔴 **EŞLEŞME ELER DEĞİL SIRALAR**
+  (`match_rank` dersi): kategori/şehir/ülke yalnız SKOR (kategori 100 · şehir 30 · ülke 15) ve
+  `order by match_score desc` — WHERE'da sert eşleşme filtresi YOK (kısmi eşleşme dışlanmaz).
+  `catalog_search_normalize()` (lower+unaccent+trim) ile Türkçe duyarsız katlanır.
+- 🔴 **`catalog_search_documents.search_text` KULLANILMAZ** (iletişim taşır) — yalnız
+  title/category_slugs/country_code/city (herkese açık dizin alanları). Dönen tabloda İLETİŞİM YOK
+  (item_id·title·slug·country_code·city·category_slugs·match_score·match_reason). auth.uid() zorunlu.
+- **Kabul (`supabase/qa/match-recommendation-acceptance.sql`, geri alınan işlem, K1–K9 9/9):** 4 test
+  profesyoneli (A terzi+Dortmund+DE=145 · B terzi+Berlin+DE=115 · C doktor+Dortmund+DE=45 · D
+  doktor+Paris+FR=0) ile: K1 tam eşleşme A **skor=145 + liste başı (rnk=1)** · K2 **sıralama A>B>C**
+  (145>115>45, fonksiyonun KENDİ çıktısında — over() ile geliş sırası) · K3 **kısmi eşleşme C listede**
+  (kategori tutmasa da şehir+ülke ile — ELER DEĞİL) · K4 normalize katlama (talep 'Terzi' ~ doc 'terzi',
+  skor 145 kategori 100'ü içerir) · K5 **iletişim sızıntısı YOK** (fonksiyon tanımı search_text OKUMAZ) ·
+  K6 match_reason yalnız etiket (kategori/şehir/ülke, email/telefon yok) · K7 oturumsuz→auth_required ·
+  K8 olmayan talep→request_not_found · K9 grant (anon YOK/auth VAR). Rollback temiz.
+- **Mutasyon 6/6 (canlı fonksiyon):** M1 order by title (sıralama boz)→K1+K2 · M2 kategori normalize
+  sil→K4 · M3 sert kategori filtresi (dışlama)→K3 · M4 gövdeye search_text sızdır→K5 · M5 city_score
+  30→200 (ağırlık boz, C>B)→K2 · M6 auth sil→K7. 🔴 **M1 kabul kusurunu YAKALADI:** ilk kabul sonucu
+  `order by match_score` ile YENİDEN SIRALIYORDU (fonksiyonun sırası bozulsa bile geçiyordu) → `over ()`
+  (geliş sırası) ile düzeltildi. Mutasyon olmasa bu vakum geçiş görünmezdi.
+- 📌 Not: canlıda member `category_slugs` çoğunlukla boş (238'in 1'i dolu) → eşleşme bugün ağırlıkla
+  şehir/ülke sinyaliyle sıralar; kategori sinyali category_slugs doldukça güçlenir (fonksiyon doğru,
+  veri seyrek). İletişim sızıntısı YOK (search_text okunmuyor).
 
 **M19 — Kod lib: api + schemas + rules + hook**
 - `src/lib/recommendations-api.ts` · `recommendations-schemas.ts` (Zod + z.infer) ·
