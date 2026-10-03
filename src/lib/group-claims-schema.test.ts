@@ -14,7 +14,7 @@
  *      ne de log'a yazılır. Kolon adları bunu kilitler.
  *   5. **Eşiklerin koda sabitlenmesi.** TTL/deneme/pencere `group_settings`'ten.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
@@ -216,7 +216,14 @@ describe("G13 · rol ataması mevcut rolü EZMEZ", () => {
     }
   });
 
-  it("mevcut rol varsa atlanır ve sebebi yazılır (PK user_id — tek rol)", () => {
+  // ⚠️ BU TEST G13 DÖNEMİNİN DAVRANIŞINI ANLATIR, CANLIYI DEĞİL.
+  // K10a (`20261003090000_group_claim_role_upgrade.sql`, 03.10.2026) fonksiyonu
+  // yeniden tanımladı: VARSAYILAN rol (`User_DiasporaMember`) artık YÜKSELTİLİR,
+  // yalnız varsayılan dışındaki roller atlanır. Buradaki iddialar hâlâ doğrudur
+  // çünkü okudukları DOSYA (20261002040000) değişmedi — ama güncel sözleşme
+  // `group-claim-role-upgrade.test.ts` dosyasındadır. Oradaki "bayatlama kapanı"
+  // testi, fonksiyonu yeniden tanımlayan en son migration'ı kilitler.
+  it("G13 dönemi: mevcut rol varsa atlanır ve sebebi yazılır (PK user_id — tek rol)", () => {
     const body = applyVerified();
 
     expect(body).toContain("elsif v_has_role then");
@@ -340,5 +347,111 @@ describe("G13 · guard v2 — ownership + motor alanları", () => {
     expect(body).not.toContain("new.tagline");
     expect(body).not.toContain("new.group_name");
     expect(body).not.toContain("new.description");
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// K10a (03.10.2026) — sahiplik doğrulanınca VARSAYILAN rolün yükseltilmesi.
+// Ayrı dosyaya konmadı: ajan araç kataloğu `src/lib/**` altındaki her yeni
+// dosyayı girdi sayıyor ve `ingest:tools:check` CI'da koşuyor; aynı ailenin
+// sözleşmesini tek dosyada tutmak hem kataloğu hem okuyucuyu sadeleştiriyor.
+// ─────────────────────────────────────────────────────────────────────────────
+
+const K10A_MIGRATION = "20261003090000_group_claim_role_upgrade.sql";
+const K10A_APPLIED_DIR = "supabase/migrations/applied";
+const K10A_REDEFINE_ANCHOR = "create or replace function public.group_claim_apply_verified";
+
+const k10aMigrationSql = () => {
+  const candidates = [`${K10A_APPLIED_DIR}/${K10A_MIGRATION}`, `supabase/migrations/${K10A_MIGRATION}`];
+  const path = candidates.find((candidate) => existsSync(candidate));
+  if (!path) throw new Error(`${K10A_MIGRATION} bulunamadı (applied/ altında yaşamalı).`);
+  return readFileSync(path, "utf8");
+};
+
+/** Yorum satırları atılır: iddia GÖVDEYİ tutmalı, açıklamayı değil. */
+const k10aCode = () =>
+  k10aMigrationSql()
+    .split("\n")
+    .filter((line) => !line.trimStart().startsWith("--"))
+    .join("\n");
+
+const k10aApplyVerified = () =>
+  sliceBetween(
+    k10aCode(),
+    K10A_REDEFINE_ANCHOR,
+    "comment on function public.group_claim_apply_verified",
+    "k10a_apply_verified",
+  );
+
+describe("K10a · varsayılan rol yükseltilir", () => {
+  it("yükseltme dalı VARDIR ve gerçek bir UPDATE yapar", () => {
+    const body = k10aApplyVerified();
+    const branch = sliceBetween(body, "c_default_role_key then", "elsif v_has_role then", "yükseltme dalı");
+
+    expect(branch).toContain("update public.user_role_assignments");
+    expect(branch).toContain("set role_id = v_role_id");
+    // Yeni satır EKLEMEZ: PK (user_id) tek rol modelidir.
+    expect(branch).not.toContain("insert into public.user_role_assignments");
+  });
+
+  it("yükseltme YALNIZ varsayılan role açıktır — diğer roller korunur", () => {
+    const body = k10aApplyVerified();
+
+    // Koşulsuz `elsif v_has_role then` yükseltmeye BAĞLANAMAZ: o dal atlama dalıdır.
+    expect(body).toContain("elsif v_has_role and v_existing_role_key = c_default_role_key then");
+
+    const skip = sliceBetween(body, "elsif v_has_role then", "else", "atlama dalı");
+    expect(skip).toContain("role_assigned = false");
+    expect(skip).toContain("role_skipped_reason");
+    expect(skip).not.toContain("update public.user_role_assignments");
+  });
+
+  it("varsayılan rol anahtarı signup trigger'ının atadığı rolle aynıdır", () => {
+    // Kayarsa yükseltme sessizce hiç çalışmaz — hata vermez, sadece olmaz.
+    expect(k10aApplyVerified()).toContain("c_default_role_key constant text := 'User_DiasporaMember';");
+  });
+
+  it("yükseltmede updated_at tazelenir (tabloda bunu yapan trigger YOK)", () => {
+    const branch = sliceBetween(k10aApplyVerified(), "c_default_role_key then", "elsif v_has_role then", "yükseltme dalı");
+    expect(branch).toContain("updated_at = now()");
+  });
+
+  it("hedef rol yoksa EN ÖNCE elenir — yanlış rol atanamaz", () => {
+    const body = k10aApplyVerified();
+    const nullCheck = body.indexOf("if v_role_id is null then");
+    const upgrade = body.indexOf("c_default_role_key then");
+
+    expect(nullCheck).toBeGreaterThan(-1);
+    expect(upgrade).toBeGreaterThan(-1);
+    expect(nullCheck).toBeLessThan(upgrade);
+  });
+
+  it("G13'ün kapalı grant matrisi ve ownership guard'ı AYNEN korunur", () => {
+    const body = k10aApplyVerified();
+
+    expect(body).toContain("set_config('group_status.via_rpc', 'on', true)");
+    expect(body).toContain("ownership = 'verified'");
+    expect(k10aCode()).toContain(
+      "revoke all on function public.group_claim_apply_verified(uuid)\n  from public, anon, authenticated, service_role;",
+    );
+  });
+
+  it("üç platform rolü eşlemesi bozulmadı", () => {
+    for (const role of ["Community_TelegramAdmin", "Community_DiscordAdmin", "Community_WhatsAppAdmin"]) {
+      expect(k10aApplyVerified(), role).toContain(role);
+    }
+  });
+});
+
+describe("K10a · bayatlama kapanı", () => {
+  it("fonksiyonu yeniden tanımlayan EN SON migration bu dosyadır", () => {
+    const redefiners = readdirSync(K10A_APPLIED_DIR)
+      .filter((file) => file.endsWith(".sql"))
+      .filter((file) => readFileSync(`${K10A_APPLIED_DIR}/${file}`, "utf8").includes(K10A_REDEFINE_ANCHOR))
+      .sort();
+
+    expect(redefiners.length).toBeGreaterThanOrEqual(2); // G13 + K10a
+    // Yeni bir redefine eklenirse BU test düşer ve sözleşmenin güncellenmesini zorlar.
+    expect(redefiners.at(-1)).toBe(K10A_MIGRATION);
   });
 });

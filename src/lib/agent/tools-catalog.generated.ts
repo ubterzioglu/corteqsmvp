@@ -3392,11 +3392,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-claim-role-upgrade.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/group-claims-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
