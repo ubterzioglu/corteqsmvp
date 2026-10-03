@@ -15,6 +15,7 @@ import {
   isPhysicalEventType,
 } from "@/lib/events-vocabulary";
 import { describeEventSchedule, formatEventDate, resolveViewerTimezone } from "@/lib/events-timezone";
+import { EVENTS_ACTIVE_LIMIT } from "@/lib/events-rules";
 import { buildEventShareUrl } from "@/lib/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
 
@@ -135,13 +136,28 @@ export function MyEventsPanel() {
       {isLoading && <p className="text-sm text-slate-600">Yükleniyor...</p>}
       {error && <p className="text-sm text-red-600">Etkinliklerin yüklenemedi.</p>}
 
+      {/* M06: limit ve onay kuralı kullanıcıya AÇIKÇA anlatılır — sessiz kota
+          ve "her etkinlik onaydan geçer" yanılgısı yok (kural: İLK etkinlik
+          onaydan geçer, sonrakiler otomatik; en fazla EVENTS_ACTIVE_LIMIT aktif). */}
+      {!isLoading && !error && events && (
+        <p
+          className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600"
+          data-testid="my-events-rule-note"
+        >
+          Kural: ilk etkinliğin yönetici onayından geçer, sonrakiler otomatik yayınlanır.
+          Aynı anda en fazla <strong>{EVENTS_ACTIVE_LIMIT}</strong> aktif etkinliğin olabilir
+          (şu an {events.filter((event) => event.status === "published" && event.event_date >= new Date().toISOString().slice(0, 10)).length} aktif).
+          Geçmiş etkinlikler limite sayılmaz.
+        </p>
+      )}
+
       {!isLoading && !error && events && events.length === 0 && (
         <div className="rounded-lg border border-dashed border-slate-300 bg-white p-10 text-center">
           <Calendar className="mx-auto mb-3 h-10 w-10 text-slate-400" />
           <h4 className="text-base font-semibold text-slate-700">Henüz etkinlik oluşturmadın</h4>
           <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. Gönderdiğin etkinlik yönetici
-            onayından sonra listede yayınlanır; onay sürecini buradan takip edersin.
+            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. İlk etkinliğin yönetici
+            onayından geçer; sonrakiler otomatik yayınlanır. Durumu buradan takip edersin.
           </p>
           <Button asChild className="mt-4 gap-1.5">
             <Link to="/events">

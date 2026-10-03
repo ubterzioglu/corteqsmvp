@@ -9,8 +9,8 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **37** (N 0 · W 8 · M 22 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M05 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
-> | **Kullanıcı eli bekleyen** | 9 (U bölümü — U10 ✅ 03.10) · **Karar** 6 (K — ✅ K03/K06/K09/K10 cevaplandı 03.10; Command Center arşivi ✅ **(C)** seçildi → ajan işi) · **Onay** 6 (P) |
+> | **Açık batch** | **36** (N 0 · W 8 · M 21 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M06 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -70,7 +70,12 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 ### A · Ajan yapar, karar gerekmez
 
-**Açık A batch'i YOK** — A14 01.10'da kapandı (↓ Kapananlar).
+| ID | Başlık | Boyut | Kapı | Not |
+|---|---|---|---|---|
+| **A15** | Cadde logosu yerleştirme — `caddelogo.png` geldi (03.10) | küçük | 🟢 | 🔴 dosya DEPO KÖKÜNDE → önce `public/` · 🔴 m151 kararı BİLEREK kaldırmıştı, geri ekleme gerekçesi commit'e yazılır |
+
+✅ A14 01.10'da kapandı, **Burak görsel onayını 03.10'da verdi** — kalan tek adım
+panelden REV-034 "Yapıldı" işareti (↓ Kapananlar / A14 bölümü).
 
 ### N · Admin menü numaraları + asistanın yönetici bağlamı
 
@@ -118,7 +123,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ · **M06–M07** | ✅ M02 (`create_event_v1`) · ✅ M03 (**T1 KAPANDI**) · ✅ M04 (`event_attendees`, smoke 7/7) · ✅ **M05 KAPANDI 03.10** (events-api RPC'ye geçti — doğrudan insert + userId kalktı; events-rules aynası; mutasyon 6/6) · kalan: katılım UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ · **M07** | ✅ M02 (`create_event_v1`) · ✅ M03 (**T1 KAPANDI**) · ✅ M04 (`event_attendees`) · ✅ M05 (events-api RPC + ayna) · ✅ **M06 KAPANDI 03.10** (katılım düğmesi + MyEventsPanel kural notu; mutasyon 6/6) · kalan: canlı doğrulama turu | 🟢 (onay 03.10) |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -173,7 +178,7 @@ traction ölçülecek.
 | **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) · ⏳ **kullanıcı 03.10'da üstlendi** | **G04–G05** |
 | **U07** | G11 eşleme CSV'si — 4 veri kararı (ekip) · ⏳ **kullanıcı 03.10'da üstlendi** | **G11** |
 | **U04** | Etkinlik planındaki 16 kanıtsız ✅ — kanıtla veya 🔒'ya döndür | — |
-| **U05** | Cadde logosu (Burak'tan dosya) | ~20 dk'lık UI işi |
+| ~~U05~~ | ✅ **DOSYA GELDİ 03.10** — `caddelogo.png` (Burak) | artık **ajan işi** (A15) · ~20 dk |
 | — | Command Center arşiv dalgası — ✅ **KARAR VERİLDİ 03.10: (C) en agresif** | ~1653 → **~150-200** kayıt · uygulama ajanda (⚠️ önce `docs/commandcenter/` notları) |
 | — | REPO-DIŞI ~50 maddenin toplu teyidi | panel durumları |
 | **U08** | G03 sonrası dönüşüm gözden geçirme — **2 hafta sonra** | takvim maddesi |
@@ -274,6 +279,11 @@ gh run list --limit 1         # push sonrası CI yeşil mi
 # AÇIK İŞLERİN AYRINTISI
 
 ## A — Ajan yapar (senin kararın gerekmez)
+
+### ✅✅ A14 · #REV-034 — **BURAK ONAYLADI 03.10, TAMAMEN KAPANDI**
+
+> ✅ Görsel onayı 03.10'da geldi. Kalan tek adım **panelden REV-034 "Yapıldı"**
+> işaretlemek (tamamlanma maili `#REV-034` numaralı gider — mekanizma U03(b)).
 
 ### ✅ A14 · #REV-034 — "Hangi Ülke Sana Uygun" sonuç grafikleri → kutulu renkli görsel
 
@@ -948,10 +958,34 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* events-api RPC geçişi + events-rules + ayna testi. **Kabul:** ayna test
   yeşil; `createEvent`'ten doğrudan `insert` çağrısı kalktı ✓.
 
-**M06 — Kod UI: katılım düğmesi + MyEventsPanel**
-- `src/components/events/EventAttendeeButton.tsx` (yeni).
-- `MyEventsPanel.tsx`: limit ve onay durumu kullanıcıya açıkça anlatılır.
-- **Kabul:** tsc/lint/test yeşil; etkinlik detayında katılım düğmesi çalışıyor.
+**~~M06~~ — ✅ KAPANDI 03.10** · Kod UI: katılım düğmesi + MyEventsPanel
+
+- **`src/components/events/EventAttendeeButton.tsx` (yeni)** — `EventDetailPage`'e mount:
+  yalnız `published` etkinlikte çizilir (ölü düğme yok) · anon → `/login` yönlendirmesi ·
+  katılmamış → "Etkinliğe katıl" (`joinEvent`) · katılmış → "Katılımdan ayrıl" (`leaveEvent`)
+  + "Katılımcı listesinde görünüyorsun" · kontenjan dolu → pasif "Kontenjan dolu" · sayaç
+  aggregate RPC'den ("X kişi katılıyor · kapasite Y") ve **İKİNCİL yüzey**: count null dönerse
+  düğme ÇALIŞMAYA DEVAM EDER, yalnız sayaç satırı gizlenir. Hatalar toast'ta Türkçe
+  (`resolveEventRpcErrorMessage` — kontenjan yarışı sunucuda kaybedilirse "Kontenjan dolu").
+- **`MyEventsPanel.tsx`:** kural notu eklendi (`my-events-rule-note`): "ilk etkinliğin yönetici
+  onayından geçer, sonrakiler otomatik yayınlanır · aynı anda en fazla {EVENTS_ACTIVE_LIMIT}
+  aktif (şu an N) · geçmiş etkinlikler limite sayılmaz" — limit **events-rules'tan** (elle
+  yazılmış ikinci sabit yok, ayna M05'te kilitli). Boş-durum metnindeki eski "her etkinlik
+  onaydan geçer" yanılgısı düzeltildi.
+- **Kabul:** tsc/lint/test yeşil; düğme davranışı 6 bileşen testiyle kilitli (katıl/ayrıl
+  mutation'ları RPC adlarıyla, dolu/pending/anon/null-count durumları) + MyEventsPanel notu
+  kaynak sözleşmesiyle.
+- **Kanıt:** **mutasyon 6/6** (her status'te çiz · anon kapısı · isFull dalı · join→leave
+  takası · null-count'ta gizleme [ikincil yüzey ihlali] · kural notu silme [M6 ilk koşuda
+  zayıf mutasyonla kaçtı — testid yeniden adlandırması alt dizi içeriyordu; gerçek silmeyle
+  tekil koşuda YAKALANDI]) · tam takım **427 dosya / 3523 test** · `tsc` 0 · lint 0 (32 problem
+  tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest` 58+0 · `verify:text` ✓ 1937.
+- 📌 **M07'ye devir (canlı doğrulama):** test hesabıyla ilk etkinlik → pending + approval
+  satırı · admin onayı · ikinci → published/auto · üçüncü aktif → `event_active_limit` ·
+  **PostgREST'e doğrudan `status='published'` POST → red** (T1 kanıtı M03'te ölçüldü, M07'de
+  RPC+UI zinciriyle tazelenir) · katılım: join/leave/kapak yarışsız.
+- *(özgün kapsam)* `EventAttendeeButton.tsx` + MyEventsPanel anlatımı. **Kabul:** tsc/lint/test
+  yeşil; etkinlik detayında katılım düğmesi çalışıyor (test kanıtı; canlı tur M07'de).
 
 **M07 — Faz 1 canlı doğrulama (elle) · kanıt zorunlu**
 - Test hesabıyla: **ilk** etkinlik → `pending` + `approval_requests` satırı → admin onayı;
@@ -2324,9 +2358,15 @@ orada). Başvurular oraya **5. madde** olarak girer.
   batch'i hâlâ **kanıtsız** ✅. Gerçekten yaptıysan kanıtı yaz; yapmadıysan 🔒'ya
   ("auth gerektiriyor, test hesabı gerekli") geri döndür.
 
-### U05 · Cadde logosu
+### ✅ U05 · Cadde logosu — DOSYA GELDİ 03.10 → **A15 olarak ajan işine döndü**
 
-- Dosya Burak'tan bekleniyor (T21). `CaddePage.tsx` başlığındaki kimlik şeridi 09.09'da
+> ✅ Burak `caddelogo.png` dosyasını verdi (03.10). U maddesi KAPANDI; kalan iş ajanda.
+> 🔴 **Dosya bugün DEPO KÖKÜNDE** (`./caddelogo.png`) — CLAUDE.md kuralı kökte yalnız
+>   `CLAUDE.md` + `README.md` + yapı dosyası ister. İlk adım `public/` altına taşımak.
+> 🔴 **Önce m151 kararını oku** — kimlik şeridi 09.09'da BİLEREK kaldırılmıştı; geri
+>   eklemek o kararı ters çevirmek demek, gerekçesi commit mesajına yazılır.
+
+- *(özgün not)* Dosya Burak'tan bekleniyor (T21). `CaddePage.tsx` başlığındaki kimlik şeridi 09.09'da
   (m151) **bilinçli** kaldırılmıştı — geri eklerken o kararı oku. Dosya gelince ~20 dk.
 
 ### U09 · WhatsApp Meta kimlik bilgileri — **W01'i açar** (30.09: bilgiler sende, hazır)
@@ -2411,11 +2451,11 @@ Mevcut 10 grup yeni veri modeline taşınırken karar gerekiyor (K08'in kalan te
 
 | # | Konu | Sahibi | Not |
 |---|---|---|---|
-| K01 | Cadde ana sayfa sıralaması | UBT + Burak | `CaddePage.tsx` yorumu (05.08) sağ kolon, T18 (27.08) akışın üstü diyor — çelişkili. **A06c bu karara bağlı değil** |
+| ~~K01~~ | ⏸️ **PARK EDİLDİ 03.10 (Burak)** → X bölümü | UBT + Burak | "Bunu parket, anlamadım." Soru yeniden ANLATILARAK sorulacak; şimdilik karar beklenmiyor. Çelişki kaydı: `CaddePage.tsx` yorumu (05.08) sağ kolon, T18 (27.08) akışın üstü |
 | K02 | SMS sağlayıcısı | UBT | Bütçe 20–25 € KESİNLEŞTİ (T21); `sms_provider=twilio` tanımlı ama kapalı; uygulama (M95) başlamadı. **Uygulama tarafı artık G04–G05'te.** ⚠️ 30.09 ölçümü: `sms_provider=twilio` iddiası **yalnız bu dosyada** geçiyor — `supabase/config.toml`'da `[auth]` bölümü YOK ve `auth.users`'da **0 telefon / 0 onaylı**. Panelden teyit et (bkz. U06) |
 | ~~K03~~ | ✅ **CEVAPLANDI 03.10: HAYIR** — özel alan adı alınmayacak | UBT + Burak | Pro plan + 10 $/ay eklenti. **Ön koşul karşılandı: Pro aktif (U02 kapandı)** — karar verilebilir. ⚠️ **03.10 ölçümü: özel alan adı YOK** — canlı `env-config.js` `injprdrsklkxgnaiixzh.supabase.co` veriyor, `auth/supabase/api/db.corteqs.net` 4/4 çözülmüyor. "Zaten var" sanma |
-| K04 | Cadde davet kodu kavramı | Burak | Ölçüldü (#1731): kullanıcının "kendi kodu" diye bir şey YOK; profildeki alan ters yönde çalışıyor |
-| K05 | Checkout / Stripe | Burak | Ödeme kodu SIFIR (yalnız `MockStripeCheckout`); abonelik 01.01.2027 · Kurucu 1000: 99 € |
+| ~~K04~~ | ⏸️ **PARK EDİLDİ 03.10 (Burak)** → X bölümü | Burak | "Bunu parket, anlamadım." ⚠️ Park, kusurun yok olduğu anlamına GELMEZ: ölçüldü (#1731) kullanıcının "kendi kodu" diye bir şey YOK, profildeki alan ters yönde çalışıyor — canlıda duruyor |
+| ~~K05~~ | ⏸️ **PARK EDİLDİ 03.10 (Burak): "sonra yapacağız"** → X bölümü | Burak | Ödeme kodu SIFIR (yalnız `MockStripeCheckout`); abonelik 01.01.2027 · Kurucu 1000: 99 €. ⚠️ Takvim sabit, iş sıfır — 2027 yaklaşırken bu park kalkmalı |
 | ~~K06~~ | ✅ **CEVAPLANDI 03.10: KALSIN** | UBT | `docs-admin` korpusu (4.214 iç doküman / 30 MB) silinmez; Pro ile bellek baskısı yok. Yeniden açma |
 | K07 | 25 Eylül transkriptinin son 25 dk'sı | UBT | yalnız ilk ~55/80 dk işlendi |
 | K08 | 5 grup karar mesajı | UBT → Burak | grup ekleme politikası · onay akışı · form alanları · şehir grupları · ekleme çağrısı. ✅ **CEVAPLANDI** — Dijital Gruplar politikası v1.1 (27.09) beşini de kapsıyor; kod karşılığı **G bölümü**. Kalan tek şey: G11 eşleme CSV'sindeki 4 veri kararı (U07) |
@@ -2430,6 +2470,29 @@ Mevcut 10 grup yeni veri modeline taşınırken karar gerekiyor (K08'in kalan te
 ---
 
 ## X — Büyük / ertelenen (batch'e bölmeden önce ayrı plan ister)
+
+### ⏸️ 03.10'da Burak'ın PARK ETTİKLERİ — **listenin EN SONU**
+
+> Bu üçü karar beklemiyor; sıraya girmeden önce **yeniden anlatılması** gerekiyor.
+> Ajan bunları kendiliğinden açmaz, kullanıcı söyleyene kadar dokunmaz.
+
+| Park | Burak'ın sözü | Ne gerekiyor |
+|---|---|---|
+| **K01** · Cadde ana sayfa sıralaması | "anlamadım" | Soru teknik yazılmış. Yeniden sorulurken iki seçeneğin EKRAN GÖRÜNTÜSÜ gösterilmeli |
+| **K04** · Cadde davet kodu | "anlamadım" | Bu aslında bir soru değil, bir KUSUR raporu: profildeki alan ters yönde çalışıyor (#1731). Önce kusur sade dille anlatılmalı, sonra "düzeltelim mi / kaldıralım mı" sorulmalı |
+| **K05** · Checkout / Stripe | "sonra yapacağız" | Takvim sabit (abonelik 01.01.2027, Kurucu 1000 = 99 €), kod SIFIR. Park kalkmazsa tarih kaçar |
+
+### ⏸️ İçerik işleri — **"bunlara motor yazacağız" (Burak, 03.10)** · EN SONA
+
+> Burak'ın kararı: bu içerikler elle yazılmayacak, **üreten bir motor** kurulacak.
+> Yani bunlar artık "içerik bekleyen" madde değil, **ayrı bir ürün planı** konusu.
+> ⚠️ Ölçülmüş gerçek: `/relocation`'daki **120 servisin 120'si demo** ve sayfa demo
+> rozetli; Rehberler'de en yeni yazı **13 Haziran**. Motor yazılana dek bu iki yüzey
+> kullanıcıya boş/bayat görünmeye devam eder — park bilinçlidir, unutulmuş değil.
+
+- RAG ülke/şehir/konu içeriği · Rehberler içeriği · taşınma planlayıcısının RAG'e bağlanması
+
+### Diğer ertelenenler
 
 Konuşmalı AI Search (özet + soru + makale önerisi) · RAG ülke/şehir/konu içeriği (Burak) ·
 taşınma planlayıcısının RAG'e bağlanması (**120 servisin 120'si demo**; `/relocation`

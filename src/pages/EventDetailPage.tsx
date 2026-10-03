@@ -14,6 +14,7 @@ import {
 } from "@/lib/events-timezone";
 import { buildEventShareUrl } from "@/lib/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
+import { EventAttendeeButton } from "@/components/events/EventAttendeeButton";
 
 function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
   if (type === "online") return "secondary";
@@ -194,6 +195,8 @@ export default function EventDetailPage() {
                   <span>Maks. {event.max_attendees} katılımcı</span>
                 </div>
               )}
+              {/* M06: katılım düğmesi — sayaç aggregate RPC'den, kapasite SQL'de. */}
+              <EventAttendeeButton eventId={event.id} eventStatus={event.status} />
               {event.price != null && event.price > 0 && (
                 <div className="flex items-center gap-3 text-sm">
                   <span className="font-medium">{event.price} EUR</span>
