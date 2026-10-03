@@ -2,10 +2,10 @@
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 59,
+    "total": 60,
     "edge_functions": 15,
     "workers": 2,
-    "ui_modules": 41
+    "ui_modules": 42
   },
   "tools": [
     {
@@ -1212,6 +1212,27 @@
       ],
       "rpcs": [],
       "evidence_path": "src/lib/interest-registrations-api.ts"
+    },
+    {
+      "tool_key": "module.invites_api",
+      "tool_name": "invites-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/invites-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "INVITE_QUERY_PARAM",
+        "buildInviteLink",
+        "fetchInviteLeaderboard",
+        "getOrCreateMyInviteCode",
+        "readInviteCodeFromSearch"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_invite_leaderboard",
+        "get_or_create_my_invite_code"
+      ],
+      "evidence_path": "src/lib/invites-api.ts"
     },
     {
       "tool_key": "module.member_profile_api",
@@ -3368,6 +3389,11 @@
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-claim-role-upgrade.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-claims-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3484,6 +3510,21 @@
     },
     {
       "path": "src/lib/internal-links.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/invites-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/invites-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/invites-badges.ts",
       "kind": "ts",
       "module_family": "lib"
     },

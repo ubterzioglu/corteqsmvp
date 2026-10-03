@@ -86,6 +86,8 @@ const NotificationPreferencesPage = lazyWithReload(() => import("@/pages/Notific
 const ContributorResourcesPage = lazyWithReload(() => import("@/pages/ContributorResourcesPage"));
 const EventsPage = lazyWithReload(() => import("@/pages/EventsPage"));
 const EventDetailPage = lazyWithReload(() => import("@/pages/EventDetailPage"));
+// M12: davet liderliği — ÜCRETSİZ rota, RequireFeature YOK (M01 kilidi).
+const LeaderboardPage = lazyWithReload(() => import("@/pages/LeaderboardPage"));
 const CreateEventPage = lazyWithReload(() => import("@/pages/CreateEventPage"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
@@ -208,6 +210,7 @@ const App = () => (
                     <Route path="/events" element={<EventsPage />} />
                     <Route path="/events/create" element={<RequireAuth><CreateEventPage /></RequireAuth>} />
                     <Route path="/events/:id" element={<EventDetailPage />} />
+                    <Route path="/liderlik" element={<LeaderboardPage />} />
                     <Route path="/associations" element={<Associations />} />
                     <Route path="/city-ambassadors" element={<CityAmbassadorsPage />} />
                     <Route path="/consultants" element={<ConsultantsPage />} />

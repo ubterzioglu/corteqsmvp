@@ -28,23 +28,39 @@ const renderCard = () =>
     </MemoryRouter>,
   );
 
-describe("QuickActionsCard · başlangıç listesi (M08)", () => {
-  it("tam olarak iki eylem: Etkinlik oluştur + Grup ekle (ölü link yok)", () => {
-    expect(COMMUNITY_QUICK_ACTIONS.map((action) => action.id)).toEqual(["create-event", "add-group"]);
-    expect(COMMUNITY_QUICK_ACTIONS.map((action) => action.to)).toEqual(["/events/create", "/addcom"]);
-    // M12/M20 eylemleri ŞİMDİDEN listeye sızmamalı (rotaları yok):
-    expect(COMMUNITY_QUICK_ACTIONS.some((action) => action.to.includes("liderlik"))).toBe(false);
+describe("QuickActionsCard · liste (M08 → M12'de BİLİNÇLİ genişletildi)", () => {
+  it("üç eylem: Etkinlik oluştur + Grup ekle + Davet et (ölü link yok)", () => {
+    // M12: /liderlik rotası eklendi → "Davet et" artık ÖLÜ LINK DEĞİL.
+    // M20'de "Tavsiye iste" eklenecek — bu test o gün yine bilinçli güncellenir.
+    expect(COMMUNITY_QUICK_ACTIONS.map((action) => action.id)).toEqual([
+      "create-event",
+      "add-group",
+      "invite",
+    ]);
+    expect(COMMUNITY_QUICK_ACTIONS.map((action) => action.to)).toEqual([
+      "/events/create",
+      "/addcom",
+      "/liderlik",
+    ]);
+    // Rotası OLMAYAN eylem sızmamalı (M20'nin rotası henüz yok):
     expect(COMMUNITY_QUICK_ACTIONS.some((action) => action.to.includes("tavsiye"))).toBe(false);
+    // Her eylemin rotası App.tsx'te GERÇEKTEN kayıtlı (ölü link kilidi):
+    const appSource = readFileSync("src/App.tsx", "utf8");
+    for (const action of COMMUNITY_QUICK_ACTIONS) {
+      expect(appSource, `rota kayıtlı olmalı: ${action.to}`).toContain(`path="${action.to}"`);
+    }
   });
 
-  it("kart iki eylemi doğru href'lerle çizer", () => {
+  it("kart üç eylemi doğru href'lerle çizer", () => {
     renderCard();
 
     expect(screen.getByTestId("quick-actions-card")).toBeInTheDocument();
     expect(screen.getByTestId("quick-action-create-event")).toHaveAttribute("href", "/events/create");
     expect(screen.getByTestId("quick-action-add-group")).toHaveAttribute("href", "/addcom");
+    expect(screen.getByTestId("quick-action-invite")).toHaveAttribute("href", "/liderlik");
     expect(screen.getByText("Etkinlik oluştur")).toBeInTheDocument();
     expect(screen.getByText("Grup ekle")).toBeInTheDocument();
+    expect(screen.getByText("Davet et")).toBeInTheDocument();
   });
 
   it("nav/button YOK — Link grid (premium nav kilidiyle çakışmaz)", () => {

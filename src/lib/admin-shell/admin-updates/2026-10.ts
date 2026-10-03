@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-davet-liderligi",
+    date: "3 Ekim 2026",
+    title: "Davet sistemi açıldı — /liderlik sayfası, davet kodu ve QR (deploy kuyruğunda)",
+    items: [
+      "LİDERLİK TABLOSU: Yeni herkese açık sayfa /liderlik — topluluğa en çok arkadaşını davet eden üyeler sıralanıyor. Giriş yapmadan da gezilebilir; liste dizinin görünürlük kurallarıyla aynıdır (yönetici, test ve yer tutucu kayıtlar SQL seviyesinde elenir — ekranda da doğrulandı).",
+      "DAVET KARTI: Girişli üye profilindeki hızlı işlemlerden veya /liderlik sayfasından davet kodunu alır: kod + paylaşılabilir link + QR kodu + tek tıkla kopyalama. Kod kişi başına tektir ve aynı kalır.",
+      "ROZETLER: Davet sayısıyla kazanılır (3+ · 10+ · 25+). Eşikler ayar tablosundan yönetiliyor — değiştirmek kod işi değil. Bir üye yalnız bir kez sayılır; kendi kodunu kullanmak reddedilir.",
+      "KANIT: Gerçek veriyle uçtan uca ölçüldü: davet kodu üretildi → ikinci üye kullandı → liste HTTP üzerinden anonim okundu (doğru üye göründü, YÖNETİCİ hesabı kullanımına rağmen görünmedi, yer tutucu başlık düşürüldü) → ölçüm satırları temizlendi, canlı başlangıç durumunda.",
+      "SIRADAKİ: Davet linkiyle gelen ziyaretçinin kayıt akışında otomatik sayılması (M13) — davet bonusu kaydı asla bloklamayacak şekilde bağlanıyor.",
+    ],
+  },
+  {
     id: "20261003-profil-baslangic-kartlari",
     date: "3 Ekim 2026",
     title: "Profilin ilk ekranına üç yeni kart geldi — hızlı işlemler, başlangıç adımları ve “yakında” vitrini (deploy kuyruğunda)",

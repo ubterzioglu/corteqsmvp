@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **32** (N 0 · W 8 · M 17 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M11 (**Faz 1 + Faz 5 TAMAM + M11 · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **31** (N 0 · W 8 · M 16 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M12 (**Faz 1 + Faz 5 TAMAM + M11/M12 · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -125,7 +125,7 @@ traction ölçülecek.
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
-| 3 | ~~M11~~ · **M12–M13** | ✅ **M11 KAPANDI 03.10** (davet tabloları + 3 RPC + `invite_settings`; sızıntı üçlüsü SQL'de; smoke 6/6 — admin/placeholder/görünmez-rol listede YOK; mutasyon 6/6) · kalan: `/liderlik` + InviteCard · kayıt akışı | 🟢 (onay 03.10) |
+| 3 | ~~M11~~ ~~M12~~ · **M13** | ✅ M11 03.10 (davet tabloları + 3 RPC; smoke 6/6) · ✅ **M12 KAPANDI 03.10** (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA doğrulandı — anon HTTP ile gerçek veri turu) · kalan: kayıt akışı redeem | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
@@ -1141,14 +1141,48 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* davet tabloları + 3 RPC + rozet ayarları. **Kabul:** SQL smoke — leaderboard
   çıktısında admin/test/placeholder YOK ✓ (üçü de ayrı senaryoda ölçüldü).
 
-**M12 — Kod: invites-api + LeaderboardPage + InviteCard**
-- `src/lib/invites-api.ts` · `src/lib/invites-badges.ts` (eşik → rozet) ·
-  `src/pages/LeaderboardPage.tsx` (`/liderlik`, `lazyWithReload`, **RequireFeature YOK**) ·
-  `src/components/invites/InviteCard.tsx` (link + kopyala + QR — `referral-qr.ts` yeniden).
-- Anonime açılacaksa: RPC'nin `anon` EXECUTE grant'i **ve gövdede auth kontrolü olmadığı**
-  ayrı ayrı doğrulanır. `community-quick-actions.ts`'e "Davet et" eklenir (M08).
-- Sitemap'e ancak CLAUDE.md'deki **3 kriter** doğrulanırsa girer. Veri bağımlı `useSeo` → `deps`.
-- **Kabul:** `/liderlik` canlıda; quick action linki çalışıyor.
+**~~M12~~ — ✅ KAPANDI 03.10** · Kod: invites-api + LeaderboardPage + InviteCard
+
+- **`/liderlik` herkese açık** (`LeaderboardPage`, `lazyWithReload`, **RequireFeature YOK** —
+  M01 kilidi otomatik denetledi; RequireAuth da yok: anon liste + giriş yönlendirmesi, girişliye
+  InviteCard). **Sitemap'e BİLEREK eklenmedi** (CLAUDE.md 3 kriterinden "thin content değil"
+  bugün sağlanmıyor — kayıt birikince değerlendirilir; karar sayfa başlığında yazılı).
+- **`src/lib/invites-api.ts`:** `fetchInviteLeaderboard` (anon RPC) · `getOrCreateMyInviteCode`
+  (idempotent) · hata haritası M11'e karşı çift yönlü kilitli · **taşıyıcı `?davet=KOD`**
+  (`buildInviteLink`/`readInviteCodeFromSearch` round-trip testli — M13 kayıt akışı bunu okuyacak;
+  normalizasyon `referral-qr.normalizeReferralCode` — ikinci alfabe UYDURULMADI).
+- **`src/lib/invites-badges.ts`:** eşik→rozet SAF hesap; modülde gömülü 3/10/25 YOK (kaynak
+  kilidi: sayı literalleri taranıyor) — tiers M11 RPC yanıtından (`invites.badge_tiers`).
+- **`src/components/invites/InviteCard.tsx`:** kod + link + kopyala + **QR (`referral-qr.ts`
+  YENİDEN — plan notu)**; QR üretilemezse link çalışmaya devam eder (ikincil süs); kod
+  alınamazsa GÖRÜNÜR hata + yeniden dene (KR08).
+- **quick actions'a "Davet et" EKLENDİ** (`community-quick-actions.ts` 3 eylem; rota App.tsx'te
+  kayıtlı olduğu için ölü-link kilidi bozulmadı — M08 testi BİLİNÇLİ güncellendi, her eylemin
+  rotasının App.tsx'te varlığı artık ayrıca kilitli). "Tavsiye iste" M20'ye dek YOK (rotasız).
+- ⚠️ Liderlik sayfası RPC çıktısını AYNEN çizer — **istemci tarafı filtre YOK** (sızıntı üçlüsü
+  SQL'in işi, M11; kaynak kilidi: `.filter(`/`is_admin`/`PLACEHOLDER` sayfada geçemez).
+- **Kabul (EKRANDA, gerçek veriyle — KR09 deseni: ölç, sonra temizle):** na1 kod `6ESL6F` +
+  na2 kullanımı + admin kod `NEJVJS` + na3 kullanımı + iki katalog bağı CANLI yazıldı →
+  **anon HTTP 200:** `entries:[{display_name:"smddnz",invite_count:1}]` — **admin kaydı
+  KULLANIMINA + katalog bağına RAĞMEN listede YOK** (is_admin filtresi ekranda kanıtlandı) ·
+  başlık `[PLACEHOLDER]` yapılınca entries `[]` · geri alınca title `smddnz` · temizlik sonrası
+  canlı baseline (invites 0 · redemptions 0 · title geri; mevcut 3 manager satırı dokunulmamış).
+- **Kanıt:** 26 yeni test (`invites-api` 10 · `LeaderboardPage`+`InviteCard` 10 · quick-actions
+  güncel 6) · **mutasyon 6/6 İLK TURDA** (RequireFeature ekleme · istemci filtresi · QR kırma ·
+  "Davet et" silme · `davet`→`ref` · `lazy()`) · tam takım: koşu#1 **434/435** (tek kızıl
+  `internal-links` 15.9s TIMEOUT — tekil koşuda yeşil) + koşu#2 407 + 2 forks-worker yarışlı
+  dosya tekil yeşil (G17/M04 sınıfı; makine bugün iki tam koşu + paralel oturumla doygun) ·
+  `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` **0/0/1001**
+  (⚠️ oturum başında A15'in `CaddeBrandMark.tsx`'i bayraklıydı — paralel oturum bağladı,
+  bu batch sonunda 0) · `check:migrations` 466/466 · `ingest:tools` **60** (+invites-api,
+  +invites-badges) · `verify:text` ✓ 1955.
+- 📌 **M13'e devir:** kayıt akışı `readInviteCodeFromSearch(location.search)` ile `?davet=`
+  okuyup `redeem_invite_code` çağıracak — davet bonusu KAYDI BLOKLAMAZ (fire-and-forget +
+  reportClientError). Kod OAuth dönüşünde kaybolmasın diye taşıyıcı localStorage'a da yazılmalı
+  (OAuth redirect query'yi düşürüyor — `startGoogleAuth` redirectTo ölçülecek).
+- *(özgün kapsam)* invites-api + badges + `/liderlik` + InviteCard + quick action. **Kabul:**
+  /liderlik açılıyor ✓ (rota + bileşen) · quick action linki çalışıyor ✓ · sızıntı üçlüsü
+  EKRANDA yok ✓ (anon HTTP çıktısı + placeholder düşüşü yukarıda).
 
 **M13 — Kayıt akışı + Faz 3 canlı doğrulama**
 - Kayıt akışında `redeem_invite_code` çağrısı (davet linkiyle gelen kullanıcı).

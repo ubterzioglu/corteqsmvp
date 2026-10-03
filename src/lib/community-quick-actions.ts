@@ -36,4 +36,13 @@ export const COMMUNITY_QUICK_ACTIONS: readonly CommunityQuickAction[] = [
     to: "/addcom",
     icon: "users",
   },
+  {
+    // M12: rota artık VAR (/liderlik) — "ölü link yok" kuralı bozulmadan eklendi.
+    // M08 test kilidi bu batch'te BİLİNÇLİ güncellendi (3 eylem).
+    id: "invite",
+    label: "Davet et",
+    description: "Davet kodunu paylaş, liderlik tablosunda yüksel.",
+    to: "/liderlik",
+    icon: "gift",
+  },
 ] as const;
