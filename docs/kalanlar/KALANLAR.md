@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **43** (N 0 · W 8 · M 27 · G 8 · KR 0) — G10+G12+G13+G15–G25 kapandı; G serisinde açık kalanlar: **G04–G07** (⛔ K09/U06) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c/G03c** (⛔ deploy) — **blokesiz G batch'i KALMADI** |
+> | **Açık batch** | **42** (N 0 · W 8 · M 27 · G 7 · KR 0) — G10+G12+G13+G15–G25+**G03c** kapandı (**SIZINTI KAPANDI 03.10**); G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -133,7 +133,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı | Bağımlılık |
 |---|---|---|---|---|
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
-| A | ~~G02~~ ~~G03a~~ ~~G03b~~ · **G03c** | ✅ G02 + G03a + G03b KAPANDI 01.10 · 🔴 **sızıntı G03c'ye kadar AÇIK** (taban tablo hâlâ anonime açık) | 🟢 | ⛔ G03b canlıda olmalı |
+| A | ~~G02~~ ~~G03a~~ ~~G03b~~ ~~G03c~~ | ✅ **SERİ TAMAM 03.10** — G02+G03a+G03b 01.10 · ✅ **G03c KAPANDI 03.10** (deploy sonrası uygulandı — **SIZINTI KAPANDI**: taban tablo anon 42501, kabul #5 dört yol 4/4 ölçüldü) | ✅ | — |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
 | B | **G06–G07** | Kurumsal doğrulama: şema + belge yükleme + admin inceleme | 🟢 | ✅ **K09 cevaplandı (a)** — mevcut katalog doğrulaması, yeni kolon YOK |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
@@ -166,9 +166,7 @@ traction ölçülecek.
 
 | ID | Konu | Neyi açar |
 |---|---|---|
-| **U10** | **Frontend deploy kuyruğu** (Coolify): G03b + G18 form + G19 dizin + G20 detay/claim + G21 panel — tek deploy hepsini canlandırır. **🟢 KULLANICI DEPLOY EDİYOR (03.10 ~07:10, soru-cevap turu).** Deploy sonrası sıra (ajanda): (1) `/addcom` ziyaretçi + girişli tur (dizin 10 grup + detay + yeni form), (2) **G03c migration'ı UYGULA** (kod zaten commit'li — sızıntıyı kapatan adım), (3) `groups.health_score_cron_enabled=true` — **onay 03.10 soru-cevap turunda verildi**
-   (soru metni bayrağı içeriyordu); yine de YALNIZ deploy doğrulandıktan ve ziyaretçi turu
-   geçtikten sonra açılır, (4) G10c'nin önü açılır | **G03c · G10c · health-score cron · yeni UI'ın tamamı** |
+| **U10** | ~~Frontend deploy kuyruğu~~ ✅ **KAPANDI 03.10** — kullanıcı deploy etti (index hash değişti + bundle'da `AdminGruplarPage` referansı doğrulandı). Deploy sonrası tur ajan tarafından koştu: (1) ziyaretçi turu data+bundle ✅ (view anon 10 satır motor kolonlarla · invite RPC 42501) · (2) **G03c uygulandı** (mig `20261003000000`, ledger 461/461 — **SIZINTI KAPANDI**, kabul #5 dört yol 4/4: taban anon 42501 · view link/contact/user_id 0 · catalog_items kolonu zaten yok · RPC 401; EK: anon'un INSERT/UPDATE/DELETE/TRUNCATE grant'ları da çekildi — authenticated grant'ları DURUYOR, admin moderasyon ekranı bozulmadı) · (3) **`health_score_cron_enabled=true`** (onay 03.10 soru-cevap turundaydı) + ilk hesap elle tetiklendi: **10/10 skor yazıldı** (35 = link 15 + reports 20 — dürüst taban), rozet 0, view anon'a skorlu dönüyor → kart "35 / 100"; günlük 04:31 cron bayrağı açık bulacak. **G17/G22 tuzağı RESMEN KAPANDI** | ~~G03c · health-score cron~~ ✅ bitti · **G10c artık yalnız G11/U07'ye bağlı** (deploy koşulu kalktı; kolon düşürme G11 veri göçünden ÖNCE yapılamaz) |
 | **U09** | WhatsApp Meta kimlik bilgileri (5 secret) — 30.09: "bilgiler hazır" | **W01–W08** |
 | **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) | A14 kapanış maili |
 | **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) | **G04–G05** |
@@ -1206,13 +1204,17 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 > ⚠️ **SIZINTI HÂLÂ AÇIK.** Bu batch istemciyi taşıdı; taban tablo anon'a hâlâ
 > açık. Kapanması **G03c** ile.
 
-**G03c — Taban tablonun anon yetkisi daraltılır (SIZINTIYI KAPATAN ADIM)** · migration
+**~~G03c~~ — ✅ KAPANDI 03.10** · Taban tablonun anon yetkisi daraltıldı (SIZINTI KAPANDI)
 
-> ⛔ **BLOKE: G03b CANLIYA DEPLOY EDİLMEDEN UYGULANAMAZ** (kullanıcı kararı 01.10).
-> Kod commit'li ama Coolify deploy'u kullanıcıda. Şimdi uygulanırsa canlıdaki ESKİ
-> frontend hâlâ taban tablodan okur → **dizin ziyaretçiye boş görünür.**
-> Sıra: (1) G03b deploy → (2) `/addcom` ziyaretçi olarak açılıp dizin + detay
-> çalışıyor mu doğrula → (3) bu migration.
+> Deploy 03.10'da gerçekleşti (U10 ✅); ziyaretçi turu (data + bundle) geçtikten sonra
+> mig `20261003000000_g03c_close_anon_base_table` uygulandı (ledger **461/461**).
+> **Kabul #5 dört yol 4/4 yeniden ölçüldü:** taban tablo anon → **42501 permission denied**
+> (01.10'da link 10/10 sızıyordu) · view anon → 10 satır, link/contact/user_id **0** ·
+> `catalog_items` → `whatsapp_link` kolonu ZATEN YOK (42703) · invite RPC anon → 401.
+> EK (KALANLAR'ın "ayrı karar" notu → karar: dahil): anon'un INSERT/UPDATE/DELETE/**TRUNCATE**
+> grant'ları da çekildi (RLS kapansa bile felaket sınıfı imkânsız); authenticated grant'ları
+> DURUYOR — admin moderasyon ekranı (`updateLanding`) ve editör akışları bozulmadı.
+> Geri alma SQL'i migration başlığında yazılı.
 
 **Uygulanacak SQL (hazır):**
 

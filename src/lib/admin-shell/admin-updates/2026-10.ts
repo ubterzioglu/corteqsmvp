@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-deploy-sonrasi-guvenlik-ve-skorlar",
+    date: "3 Ekim 2026",
+    title: "Deploy tamam: yeni grup ekranları canlıda, link sızıntısı KAPANDI, grup skorları görünür oldu",
+    items: [
+      "YENİ EKRANLAR CANLIDA: Grup ekleme formu, yeni dizin dili (Sahibi doğruladı / Üye önerisi / Yeni / Onaylı Grup rozetleri), grup detayı + “Bu grup sizin mi?” sahiplenme akışı, sahip paneli ve moderatör paneli (/admin/gruplar) artık sitede çalışıyor. Deploy sonrası ziyaretçi turu doğrulandı: dizin 10 grubu yeni kolonlarla dönüyor.",
+      "🔒 GÜVENLİK KUSURU KAPANDI: Grup davet linkleri ve yönetici iletişim bilgileri, eski tablo yetkisi yüzünden giriş yapmamış ziyaretçilere teknik olarak okunabiliyordu (ekranda gösterilmese bile). Deploy doğrulanır doğrulanmaz tablo yetkisi daraltıldı: giriş yapmayana tablo artık tamamen kapalı — linkler yalnız girişli kullanıcıya, grup sayfasında, tek kapıdan veriliyor. Dört yolun dördü de yeniden ölçüldü (4/4 temiz). Ek önlem: giriş yapmamış rolün tablo üzerindeki silme/biçme yetkileri de kaldırıldı.",
+      "SKORLAR GÖRÜNÜR OLDU: Günlük skor hesabının anahtarı (deploy bekliyordu) açıldı ve ilk hesap koştu: 10 grubun skoru yazıldı. Bugünkü taban 35/100 (çalışan link + şikayetsizlik kalemleri); profil, kurallar ve sahiplik doğrulandıkça skor ve “Onaylı Grup” rozeti kendiliğinden yükselecek. Kartlar artık doğru ölçekle “35 / 100” çiziyor.",
+      "ESKİ SİSTEM BOZULMADI: Admin moderasyon ekranı ve editör akışları aynen çalışıyor (yetki daraltması yalnız giriş yapmamış rolü etkiledi).",
+    ],
+  },
+  {
     id: "20261002-grup-motoru-kabul-testleri",
     date: "2 Ekim 2026",
     title: "Grup motorunun 13 kabul testi tek betikte — QA turu bir gerçek kusuru daha yakaladı",
