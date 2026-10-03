@@ -126,7 +126,7 @@ traction ölçülecek.
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
-| 6 | ~~M14~~ ~~M15~~ · **M16** | ✅ **M14 KAPANDI 03.10** (mig `20261003120000` canlıda, `check:migrations` 470/470; 5 metrik view — MATERIALIZED DEĞİL, `is_admin(auth.uid())` guard, anon grant YOK; **kabul K1–K13 13/13** + mutasyon 6/6) · ✅ **M15 KAPANDI 03.10** (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — menü numarası kaydı, Traction #2, admin-menu.json regen + ai-knowledge ingest 91 belge + embed 90; 12 test + mutasyon 6/6) · kalan: canlı doğrulama (M16) | 🟢 (onay 03.10) |
+| 6 | ~~M14~~ ~~M15~~ ~~M16~~ | ✅ **FAZ 6 TAMAM 03.10** — M14 (5 metrik view, mig `20261003120000`, kabul K1–K13 13/13 + mutasyon 6/6) · M15 (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — Traction #2, numaralar kaydı, ai-knowledge 91 belge + 90 embed; 12 test + mutasyon 6/6) · ✅ **M16 KAPANDI 03.10** (canlı doğrulama **8/8 ESLESTI**: WAU 6 · içerik 41 · cadde 30 · tavsiye available=false · davet 0 · dönüş cohort 166/5/%3.01; ayırt kanıtı — bozuk metrik 2 FARK verdi) | ✅ |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
@@ -1258,8 +1258,24 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   tsc 0 · lint 0 (32 problem tümü ekstre-motoru) · check:dead 0/0/**1006** · check:migrations 470/470 ·
   ingest:tools 61 (+admin-traction-api file_index) · verify:text ✓.
 
-**M16 — Faz 6 canlı doğrulama**
-- Her metrik için SQL çıktısı ile panel rakamı **elle** karşılaştırılır; beşi de kanıt satırına.
+**~~M16~~ — ✅ KAPANDI 03.10** · Faz 6 canlı doğrulama (kod YOK, ölçüm) — **FAZ 6 TAMAM**
+
+- **`supabase/qa/traction-metrics-live-verification.sql`** (geri alınan işlem, test admin'i ile
+  view'lar okunur): her metrik için PANEL rakamı (view çıktısı = AdminTractionPage'in gösterdiği)
+  BAĞIMSIZ doğrudan SQL sayımıyla karşılaştırıldı — **8/8 ESLESTI** (now() kayması olmasın diye
+  aynı işlemde):
+  - `weekly_active_users.active_7d`: panel **6** = SQL 6 (son 7g giriş VEYA içerik)
+  - `content_created` toplam (panel formülü): panel **41** = SQL 41 · `cadde_posts_total`: **30** = 30
+    (canlı içerik: 30 cadde + 10 grup + 1 etkinlik = 41)
+  - `recommendation_response_rate.available`: **false** = "tavsiye tablosu YOK" (M17 öncesi boş — normal)
+  - `invite_signups.total`: panel **0** = SQL 0 (davet baseline temiz, M13 rollback'inden)
+  - `30d_return_rate`: cohort **166** = 166 · returned **5** = 5 · rate **0.0301** = round(5/166,4) (≈%3)
+- 🔴 **AYIRT KANITI (vakum değil):** `cadde_posts_total` bilerek bozuldu (events'e baktırıldı) →
+  doğrulama **2 FARK** gösterdi (panel 12/1 ≠ SQL 41/30); migration yeniden uygulanınca **8/8'e döndü**.
+  Yani "TUMU ESLESTI" gerçek eşleşme, kör karşılaştırma değil.
+- Rollback sonrası canlı temiz (m16-admin kalıntı 0). check:migrations **470/470** (M16 migration
+  EKLEMEZ — saf ölçüm) · verify:text ✓ (yeni qa dosyası UTF-8).
+- 📌 **FAZ 6 TAMAM** (M14 view'lar + M15 panel + M16 canlı doğrulama). Sırada Faz 2 (M17–M23 Tavsiye).
 
 ### Faz 2 — Tavsiye İste (en büyük modül)
 
