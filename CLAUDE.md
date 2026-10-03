@@ -639,6 +639,30 @@ Sayfa **17 ilan + staj programı** taşır; başvurular kendi tablosunda toplan�
     kaynak yaratır ve yeni ilan eklendiği gün başvuruyu sessizce reddeder); yalnız
     biçim doğrulanır.
 
+## Topluluk Motoru — Ücretsiz topluluk işlevleri (M01, 2026-10-03)
+
+Kaynak plan: `docs/plans/2026-09-30-topluluk-motoru-ucretsiz-islevler-plani.md` (M01–M27,
+onaylandı 03.10). Ücretsiz yüzeyler: etkinlik (`/events`), grup dizini/ekleme (`/addcom`),
+Tavsiye İste (`/tavsiye`, M20), davet/liderlik (`/liderlik`, M12). Sözleşme kilidi:
+`src/lib/community-free-features.test.ts` — bu rotalara `RequireFeature` eklenirse test düşer.
+
+1. **T1 — Etkinlik onay kuyruğu bugün RLS'te ZORLANMIYOR.** Canlı politikalar
+   `Users can create own events` (WITH CHECK yalnız `auth.uid()=user_id`) ve
+   `Users can update own events` (USING aynı, WITH CHECK yok) — **hiçbirinde `status`
+   kısıtı yok**. `status:'pending'` yalnız istemcide (`events-api.ts`) yazılıyor;
+   PostgREST'e doğrudan `status='published'` POST atan onayı TAMAMEN atlar. "İlk etkinlik
+   onaydan geçer, sonrakiler otomatik" kuralı İSTEMCİDE yazılırsa kural hiç var olmamış
+   olur — **kural SQL'de olmalı** (M02 `create_event_v1` + M03 INSERT politikası/status
+   trigger'ı bunu kapatır; kapanana dek istemciye güvenme).
+2. **T2 — kuralı olmayan feature SESSİZCE herkese kapalıdır.** `events.create` ve
+   `offers.create` anahtarları `features.ts` + `profile-requestable-features.ts`'te
+   tanımlı ama `role_features`'ta **0 satır** (ölçüldü 30.09). Etkinlik bugün açık
+   ÇÜNKÜ rota bu flag'i KULLANMIYOR (yalnız `RequireAuth`). Bu rotaları `RequireFeature`
+   arkasına ALMA — telefon alanı vakasıyla birebir aynı sınıf. Ücretsiz kalması istenen
+   yüzeyde flag'e hiç dokunma; flag gerekiyorsa önce `role_features` kuralı yaz.
+3. Bilinçli istisna: **`cadde.access`** — Cadde rotaları flag arkasında KALIR (ürün
+   kararı; ücretsizlik kapsamı dışında). Test bu istisnayı ayrıca kilitler.
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce

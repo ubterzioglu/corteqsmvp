@@ -2843,6 +2843,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/community-free-features.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/contact-links.ts",
       "kind": "ts",
       "module_family": "lib"

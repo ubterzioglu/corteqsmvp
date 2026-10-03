@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **42** (N 0 · W 8 · M 27 · G 7 · KR 0) — G10+G12+G13+G15–G25+**G03c** kapandı (**SIZINTI KAPANDI 03.10**); G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **41** (N 0 · W 8 · M 26 · G 7 · KR 0) — G10+G12+G13+G15–G25+**G03c** kapandı (**SIZINTI KAPANDI 03.10**); G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -116,13 +116,13 @@ traction ölçülecek.
 
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
-| 0 | **M01** | Ücretsizliği kilitleyen sözleşme testi + CLAUDE.md bölümü | 🟡 |
-| 1 | **M02–M07** | Etkinlik: ilk-onay kuralı · RLS sıkılaştırma · katılım · UI · canlı doğrulama | 🟡 |
-| 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟡 |
-| 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟡 |
-| 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟡 |
-| 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟡 |
-| 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟡 |
+| 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
+| 1 | **M02–M07** | Etkinlik: ilk-onay kuralı · RLS sıkılaştırma · katılım · UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
+| 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
+| 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
+| 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
+| 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
 ### G · Dijital Gruplar Motoru
 
@@ -782,17 +782,24 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 ### Faz 0 — ücretsizliği kilitle
 
-**M01 — Sözleşme testi + CLAUDE.md bölümü** · küçük, kod+migration yok
-- `src/lib/community-free-features.test.ts` (yeni): `App.tsx` metninden `/events`,
-  `/events/create`, `/addcom`, `/tavsiye`, `/liderlik` rotalarının `RequireFeature`
-  **içermediğini** doğrular; `cadde.access`'in bilinçli korunduğunu belgeler.
-  Desen: `redirects.test.ts`. ⚠️ Çıplak `indexOf + slice` YASAK — `@/test/source-slice`
-  zorunlu (`test-source-slice-contract.test.ts` kilitler).
-- ⚠️ `/tavsiye` ve `/liderlik` rotaları henüz YOK (M20/M12'de eklenecek) — test, rota
-  yokken de yeşil kalmalı; "rota varsa guard'sız olmalı" biçiminde yaz.
-- `CLAUDE.md`'ye "Ücretsiz topluluk işlevleri" bölümü: T1 (RLS status zorlamıyor) ve
-  T2 (kuralı olmayan feature) tuzakları.
-- **Kabul:** test yeşil; M12/M20'de rota eklenince test değişmeden yeşil kalıyor.
+**~~M01~~ — ✅ KAPANDI 03.10** · Sözleşme testi + CLAUDE.md bölümü · kod+migration yok
+
+- `src/lib/community-free-features.test.ts` **8/8**: `/events · /events/create · /addcom ·
+  /tavsiye · /liderlik` rotaları `RequireFeature` ALAMAZ (T2 — kuralı olmayan feature
+  sessizce herkese kapalı); `/tavsiye`+`/liderlik` henüz yok → "rota varsa guard'sız
+  olmalı" biçimiyle yeşil kalıyor · `RequireAuth` serbest · **`cadde.access` bilinçli
+  istisna olarak AYRICA kilitli** · desen `redirects.test.ts` + `@/test/source-slice`
+  (çıplak indexOf+slice yok).
+- CLAUDE.md'ye "Topluluk Motoru — Ücretsiz topluluk işlevleri" bölümü: **T1** (etkinlik
+  onayı RLS'te zorlanmıyor — `status` kısıtı YOK, kural SQL'e M02/M03'te) + **T2**
+  (`events.create`/`offers.create` role_features 0 satır — flag'e dokunma).
+- **Kabul ÜÇ yönlü ölçüldü:** temel yeşil · `/tavsiye`+`/liderlik` guard'sız EKLENİNCE
+  test DEĞİŞMEDEN yeşil kaldı (M12/M20 kabulü simüle edildi) · guard EKLENİNCE kızardı
+  (mutasyon kanıtı; App.tsx her turda geri yüklendi, fc ile doğrulandı).
+- **Kanıt:** tam takım **422 dosya / 3480 test** · `tsc` 0 · lint 0 (32 problem tümü
+  `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest:tools` 58 + check 0 · `verify:text` ✓ 1930.
+- *(özgün kapsam)* sözleşme testi + CLAUDE.md bölümü. **Kabul:** test yeşil; M12/M20'de
+  rota eklenince test değişmeden yeşil kalıyor (ölçüldü ↑).
 
 ### Faz 1 — etkinlik: ilk-onay kuralı + katılım
 
