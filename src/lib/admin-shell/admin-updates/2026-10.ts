@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-traction-buyume-metrikleri-paneli",
+    date: "3 Ekim 2026",
+    title: "Admin paneline “Traction” panosu geldi — 5 büyüme metriği tek ekranda (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ: Yönetici menüsüne yeni bir “Traction” maddesi eklendi (Genel Bakış grubu, madde #2). Panel beş büyüme metriğini gösteriyor: haftalık aktif kullanıcı · üretilen toplam içerik (tür kırılımıyla) · tavsiye yanıt oranı · davetle gelen kayıt · 30 gün geri dönüş oranı.",
+      "VERİ CANLIDAN, UYDURMA YOK: Sayılar canlı veritabanındaki türetilmiş görünümlerden okunur (dün kurulan metrik altyapısı). Tavsiye yanıt oranı, tavsiye modülü (M17) gelene dek boş görünür — bu normaldir, yerine sahte bir sayı konmadı. Geri dönüş oranı da cohort boşsa “—” gösterir.",
+      "GÜVENLİK: Metrik görünümleri yalnız yöneticiye açıktır (sunucu tarafı yönetici kontrolü). Anonim ve yönetici-olmayan kullanıcı hiçbir sayı görmez — panel zaten yönetici kabuğunun (AdminLayout) içinde, çift katman.",
+      "MENÜ NUMARALARI KAYDI: Yönetici menüsüne yeni madde eklendiği için sonraki maddelerin sıra numaraları otomatik olarak birer kaydı (ör. “Kayıt Veritabanı” 2→3). Bot korpusu da aynı turda güncellendi (91 belge, 90 gömme) — asistan artık bayat numara söylemez.",
+      "KANIT: 12 test (7 veri katmanı + 5 bileşen) yeşil; kod 6 yerden bilerek bozuldu (mutasyon) ve testler her seferinde yakaladı. Tam test takımı 440 dosya / 3648 test yeşil.",
+      "KALAN: Her metriğin SQL çıktısıyla panel rakamının elle karşılaştırılması (M16 canlı doğrulama) sırada. Panel bir sonraki frontend deploy’ında canlıya çıkar.",
+    ],
+  },
+  {
     id: "20261003-kurumsal-dogrulama-basvuru-formu",
     date: "3 Ekim 2026",
     title: "Kurumsal doğrulama başvurusu artık ekranda — kuruluş kaydını belgeyle doğrulat (deploy kuyruğunda)",

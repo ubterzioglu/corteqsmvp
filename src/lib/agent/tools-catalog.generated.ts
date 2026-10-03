@@ -2305,6 +2305,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin/admin-traction-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/admin/admin-traction-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin/admin-types.ts",
       "kind": "ts",
       "module_family": "lib"

@@ -126,7 +126,7 @@ traction ölçülecek.
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
-| 6 | ~~M14~~ · **M15–M16** | ✅ **M14 KAPANDI 03.10** (mig `20261003120000` canlıda, `check:migrations` 470/470; 5 metrik view — MATERIALIZED DEĞİL, `is_admin(auth.uid())` guard, anon grant YOK; **kabul K1–K13 13/13** + mutasyon 6/6) · kalan: AdminTractionPage (M15) + canlı doğrulama (M16) | 🟢 (onay 03.10) |
+| 6 | ~~M14~~ ~~M15~~ · **M16** | ✅ **M14 KAPANDI 03.10** (mig `20261003120000` canlıda, `check:migrations` 470/470; 5 metrik view — MATERIALIZED DEĞİL, `is_admin(auth.uid())` guard, anon grant YOK; **kabul K1–K13 13/13** + mutasyon 6/6) · ✅ **M15 KAPANDI 03.10** (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — menü numarası kaydı, Traction #2, admin-menu.json regen + ai-knowledge ingest 91 belge + embed 90; 12 test + mutasyon 6/6) · kalan: canlı doğrulama (M16) | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
@@ -1235,11 +1235,28 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   guard sil→K7+K13 · M4 cadde_posts_total yanlış kaynak→K6 (view=1≠canlı=30) · M5 weekly guard sil→
   K8+K13 · M6 MATERIALIZED→K12+K7+K10+K13. Her mutasyon sonrası migration yeniden uygulandı (13/13'e döndü).
 
-**M15 — Kod: AdminTractionPage**
-- `src/lib/admin/admin-traction-api.ts` · `src/pages/admin/AdminTractionPage.tsx`
-  (`KpiCard` muhasebe deseni) · navigasyon satırı
-  `admin-navigation-registry/overview.ts`'e eklenir.
-- **Kabul:** sayfa admin nav'dan açılıyor; beş metrik kartı dolu.
+**~~M15~~ — ✅ KAPANDI 03.10** · Kod: AdminTractionPage + admin-traction-api + nav satırı
+
+- **`src/lib/admin/admin-traction-api.ts`:** `fetchTractionMetrics` (5 M14 view'ını paralel okur,
+  `maybeSingle` — non-admin 0 satır→null, hata değil) · `totalContentCreated` (5 tür toplamı) ·
+  `formatRatePercent` (null→"—", uydurma sayı YOK) · `as never` (regen borcu G12) · düz-nesne hata.
+- **`src/pages/admin/AdminTractionPage.tsx`:** KpiCard muhasebe deseni (shadcn Card + büyük değer +
+  alt başlık), 5 kart — WAU · Üretilen İçerik (toplam + tür kırılımı alt başlık) · Tavsiye Yanıt Oranı
+  (**available=false → "—" + "M17 ... boş (normal)"**) · Davetle Kayıt (toplam + 30g/7g) · 30 Gün Geri
+  Dönüş (oran + cohort/dönen alt başlık). `useQuery` + hata durumu görünür (sessiz boş panel YOK).
+- **Kablolama:** route `src/pages/admin/routes.tsx` (`/admin/traction`, lazy) · `admin-route-meta.ts`
+  ADMIN_ROUTE_PATTERNS · nav `admin-navigation-registry/overview.ts` (Genel Bakış grubu, `TrendingUp`).
+- 🔴 **N07 KOŞULDU (menü satırı → numaralar kayar):** `npm run ingest:admin-menu` (admin-menu.json
+  regen — Traction **#2**, sonraki tüm üst öğeler +1 kaydı: Kayıt Veritabanı 2→3, Toplu İçe Aktarma
+  3→4, Approval Queue 4→5, …) · `node scripts/ai-knowledge/ingest.mjs --source=admin-menu` (**91
+  belge: yeni 1 · güncel 89 · değişmedi 1**) · `node scripts/ai-knowledge/embed.mjs` (**90 satır
+  gömüldü, bekleyen 0, hatalı 0**) — bot artık BAYAT numara söylemez.
+- **Kabul:** sayfa admin nav'dan açılıyor (route + nav + registry tutarlılık testleri 33/33) · beş
+  metrik kartı dolu (API 7 + bileşen 5 = **12 test**). **Mutasyon 6/6:** M1 totalContentCreated tür
+  düşür→API · M2 formatRatePercent *100 yok→API · M3 yanlış view adı→API · M4 WAU=window_days→page ·
+  M5 isError bloğu sil→page · M6 content=events_total→page. Tam takım **440 dosya / 3648 test** yeşil ·
+  tsc 0 · lint 0 (32 problem tümü ekstre-motoru) · check:dead 0/0/**1006** · check:migrations 470/470 ·
+  ingest:tools 61 (+admin-traction-api file_index) · verify:text ✓.
 
 **M16 — Faz 6 canlı doğrulama**
 - Her metrik için SQL çıktısı ile panel rakamı **elle** karşılaştırılır; beşi de kanıt satırına.
