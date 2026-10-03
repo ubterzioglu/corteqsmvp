@@ -17,6 +17,8 @@ import { PROFILE_TYPE_TIP } from "@/lib/profile-attribute-keys";
 export type ProfilePremiumSections = {
   /** Gizli `<input type="file">` öğeleri — düzenin en üstünde kalmalıdır. */
   hiddenFileInputs: ReactNode;
+  /** M08: hızlı eylemler — hero'nun altında, sekmelerden BAĞIMSIZ görünür. */
+  quickActionsCard?: ReactNode;
   profileFieldsCard: ReactNode;
   interestsCard: ReactNode;
   badgesCard: ReactNode;
@@ -157,6 +159,7 @@ export default function ProfilePremiumLayout({
         onShowHelp={onShowHelp}
         onSignOut={onSignOut}
       />
+      {sections.quickActionsCard ?? null}
       {sections.contributorResourcesCard}
       <PremiumProfileTabs
         settingsContent={settingsContent}

@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **35** (N 0 · W 8 · M 20 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+**M01–M07 (FAZ 1 TAMAM, T1 KAPANDI)** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **34** (N 0 · W 8 · M 19 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M08 (**Faz 1 TAMAM · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -124,7 +124,7 @@ traction ölçülecek.
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
-| 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
+| 5 | ~~M08~~ · **M09–M10** | ✅ **M08 KAPANDI 03.10** (QuickActionsCard — tek kaynak liste, iki düzen, tüm roller; mutasyon 6/6) · kalan: GettingStartedCard · feature_interest + EventFeaturePromo | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
@@ -1013,12 +1013,28 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 ### Faz 5 — panel hızlı eylemleri + ilgi kaydı
 
-**M08 — QuickActionsCard**
-- `src/lib/community-quick-actions.ts` (yeni, tek kaynak liste) +
-  `src/components/profile/QuickActionsCard.tsx`; `ProfileSidebarLayout` ilk ekranı, tüm roller.
-- Başlangıçta: "Etkinlik oluştur" · "Grup ekle". **"Davet et" M12'de, "Tavsiye iste"
-  M20'de** listeye eklenir (rota yokken ölü link koyma).
-- **Kabul:** kart tüm rollerde görünüyor; iki eylem de hedefine gidiyor.
+**~~M08~~ — ✅ KAPANDI 03.10** · QuickActionsCard
+
+- **`src/lib/community-quick-actions.ts`** (TEK KAYNAK liste) + **`src/components/profile/QuickActionsCard.tsx`**:
+  başlangıçta iki eylem — "Etkinlik oluştur" → `/events/create` · "Grup ekle" → `/addcom`
+  (ikisi de `community-free-features.test.ts`'in kilitlediği ÜCRETSİZ rotalar). "Davet et" M12'de,
+  "Tavsiye iste" M20'de LİSTEYE EKLENECEK (ölü link yok — test bugünü kilitliyor, o gün bilinçli
+  güncellenecek). İkonlar anahtar olarak lib'te (TSX'siz), bileşen lucide'a eşler.
+- **TÜM ROLLERDE görünür (kabul):** sidebar yolunda `overview` içeriğinin EN ÜSTÜNDE
+  (`profile-sidebar-menu.tsx` — menü ÖĞESİ EKLENMEDİ, kilitli menü sırası bozulmadı) · premium
+  yolda (`ProfilePremiumLayout`, bireysel roller) hero'nun altında, sekmelerden bağımsız.
+  ⚠️ `<nav>`/`<button>` YOK — Link grid (ProfilePage.test'in premium "ilk nav boş" kilidiyle
+  çakışmaz; yapısal emsal `AdminQuickActions`).
+- **Kabul ölçüldü:** kart iki düzende de çiziliyor (kaynak sözleşmesi + bileşen testi) · iki
+  eylem doğru href'lerde (MemoryRouter) · tek kaynak liste (elle etiket sızması kilitli).
+- **Kanıt:** 7 yeni test · **mutasyon 6/6 İLK TURDA** (ölü link ekleme · rota kaydırma ·
+  overview sırası · premium'dan çıkarma · nav'a çevirme · elle etiket sızdırma) · tam takım
+  **428 dosya / 3528 test yeşil** (⚠️ ilk koşuda `test-source-slice-contract` yakaladı: testimde
+  çıplak `indexOf+slice` kullanmıştım → `sliceBetween`'e çevrildi — meta-sözleşme çalışıyor) ·
+  `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest` 58+0 ·
+  `verify:text` ✓ 1940.
+- *(özgün kapsam)* tek kaynak liste + kart; `ProfileSidebarLayout` ilk ekranı, tüm roller.
+  **Kabul:** kart tüm rollerde görünüyor; iki eylem de hedefine gidiyor ✓.
 
 **M09 — GettingStartedCard**
 - `src/components/profile/GettingStartedCard.tsx`: profili tamamla · ilk hizmet/ürün/etkinlik ·

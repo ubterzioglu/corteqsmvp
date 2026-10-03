@@ -79,6 +79,7 @@ import CaddeMyContentCard from "@/components/cadde/CaddeMyContentCard";
 import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
 import ProfileSidebarLayout from "@/components/profile/ProfileSidebarLayout";
 import { buildProfileSidebarMenu } from "@/components/profile/profile-sidebar-menu";
+import { QuickActionsCard } from "@/components/profile/QuickActionsCard";
 import { trUpper } from "@/lib/text-normalization";
 
 const ProfilePage = () => {
@@ -421,6 +422,10 @@ const ProfilePage = () => {
     </>
   );
 
+  // M08: hızlı eylemler — TÜM rollerde ilk ekranda (sidebar overview +
+  // premium düzen). Liste tek kaynak: community-quick-actions.ts.
+  const quickActionsCard = <QuickActionsCard />;
+
   const legacyHeroCard = (
     <ProfileLegacyHeroCard
       isIndividualProfile={isIndividualProfile}
@@ -695,6 +700,7 @@ const ProfilePage = () => {
       <ProfilePremiumLayout
         sections={{
           hiddenFileInputs,
+          quickActionsCard,
           profileFieldsCard,
           interestsCard,
           badgesCard,
@@ -744,6 +750,7 @@ const ProfilePage = () => {
   // Menü sırası ve koşullu öğeler `profile-sidebar-menu.tsx`'te; burada yalnız
   // hazır bölümler tek nesne olarak geçilir (A07c).
   const sidebarMenuItems = buildProfileSidebarMenu({
+    quickActionsCard,
     legacyHeroCard,
     legacySummaryCard,
     personalInfoSection,
