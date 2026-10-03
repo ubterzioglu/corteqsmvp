@@ -9,8 +9,9 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **39** (N 0 · W 8 · M 24 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01+M02+**M03 (T1 KAPANDI)** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
-> | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
+> | **Açık batch** | **38** (N 0 · W 8 · M 23 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M04 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Kullanıcı eli bekleyen** | 9 (U bölümü — U10 ✅ 03.10) · **Karar** 6 (K — ✅ K03/K06/K09/K10 cevaplandı 03.10; Command Center arşivi ✅ **(C)** seçildi → ajan işi) · **Onay** 6 (P) |
+> | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
 > | **Son devir notu** | [`docs/handover/2026-10-02-devir-notu.md`](../handover/2026-10-02-devir-notu.md) — 2 Ekim gece oturumu (KR01–KR10 + G08/G09) · [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) §7 tuzaklar + §9 ortam hâlâ geçerli |
@@ -117,7 +118,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | ~~M02~~ ~~M03~~ · **M04–M07** | ✅ M02 03.10 (`create_event_v1` + `event_settings`) · ✅ **M03 KAPANDI 03.10** (**T1 KAPANDI**: INSERT `status='pending'` zorunlu + `events_guard_status` trigger'ı; kabul DÖRT yolla ölçüldü, PostgREST gövdesi kanıt) · kalan: katılım tabloları/RPC · UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ ~~M03~~ ~~M04~~ · **M05–M07** | ✅ M02 03.10 (`create_event_v1`) · ✅ M03 03.10 (**T1 KAPANDI**, kabul 4 yol) · ✅ **M04 KAPANDI 03.10** (`event_attendees` + join/leave — kapak SQL'de `for update` kilitli, smoke 7/7, mutasyon 6/6) · kalan: events-api/rules · katılım UI · canlı doğrulama | 🟢 (onay 03.10) |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -167,20 +168,31 @@ traction ölçülecek.
 | ID | Konu | Neyi açar |
 |---|---|---|
 | **U10** | ~~Frontend deploy kuyruğu~~ ✅ **KAPANDI 03.10** — kullanıcı deploy etti (index hash değişti + bundle'da `AdminGruplarPage` referansı doğrulandı). Deploy sonrası tur ajan tarafından koştu: (1) ziyaretçi turu data+bundle ✅ (view anon 10 satır motor kolonlarla · invite RPC 42501) · (2) **G03c uygulandı** (mig `20261003000000`, ledger 461/461 — **SIZINTI KAPANDI**, kabul #5 dört yol 4/4: taban anon 42501 · view link/contact/user_id 0 · catalog_items kolonu zaten yok · RPC 401; EK: anon'un INSERT/UPDATE/DELETE/TRUNCATE grant'ları da çekildi — authenticated grant'ları DURUYOR, admin moderasyon ekranı bozulmadı) · (3) **`health_score_cron_enabled=true`** (onay 03.10 soru-cevap turundaydı) + ilk hesap elle tetiklendi: **10/10 skor yazıldı** (35 = link 15 + reports 20 — dürüst taban), rozet 0, view anon'a skorlu dönüyor → kart "35 / 100"; günlük 04:31 cron bayrağı açık bulacak. **G17/G22 tuzağı RESMEN KAPANDI** | ~~G03c · health-score cron~~ ✅ bitti · **G10c artık yalnız G11/U07'ye bağlı** (deploy koşulu kalktı; kolon düşürme G11 veri göçünden ÖNCE yapılamaz) |
-| **U09** | WhatsApp Meta kimlik bilgileri (5 secret) — 30.09: "bilgiler hazır" | **W01–W08** |
-| **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) | A14 kapanış maili |
-| **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) | **G04–G05** |
-| **U07** | G11 eşleme CSV'si — 4 veri kararı (ekip) | **G11** |
+| **U09** | WhatsApp Meta kimlik bilgileri (5 secret) — 30.09: "bilgiler hazır" · ⏳ **kullanıcı 03.10'da üstlendi** | **W01–W08** |
+| **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) · ⏳ **kullanıcı 03.10'da üstlendi** | A14 kapanış maili |
+| **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) · ⏳ **kullanıcı 03.10'da üstlendi** | **G04–G05** |
+| **U07** | G11 eşleme CSV'si — 4 veri kararı (ekip) · ⏳ **kullanıcı 03.10'da üstlendi** | **G11** |
 | **U04** | Etkinlik planındaki 16 kanıtsız ✅ — kanıtla veya 🔒'ya döndür | — |
 | **U05** | Cadde logosu (Burak'tan dosya) | ~20 dk'lık UI işi |
-| — | Command Center arşiv dalgası — **A/B/C kararı** | ~1653 → 150-200 kayıt |
+| — | Command Center arşiv dalgası — ✅ **KARAR VERİLDİ 03.10: (C) en agresif** | ~1653 → **~150-200** kayıt · uygulama ajanda (⚠️ önce `docs/commandcenter/` notları) |
 | — | REPO-DIŞI ~50 maddenin toplu teyidi | panel durumları |
 | **U08** | G03 sonrası dönüşüm gözden geçirme — **2 hafta sonra** | takvim maddesi |
 | **U01** | Service role anahtarı — **EN SONA** (3 edge function düşer) | — |
 
 ### K · Karar · P · Onay · X · Ertelenen
 
-- **K01–K07** — kod işi olmayan kararlar (K08 ✅ cevaplandı → G bölümü).
+- **K01 · K02 · K04 · K05 · K07** — kod işi olmayan kararlar (K03/K06 ✅ 03.10 · K08 ✅ → G bölümü).
+- ✅ **K06 CEVAPLANDI (03.10, kullanıcı): KALSIN.** `docs-admin` korpusu (4.214 iç
+  doküman / 30 MB) silinmez — Pro plana geçildiği için bellek baskısı yok. Bu soruyu
+  yeniden açma.
+- ✅ **K03 CEVAPLANDI (03.10, kullanıcı): HAYIR — özel alan adı ALINMAYACAK.** Google
+  onay ekranında ham Supabase adresi görünmeye devam edecek; 10 $/ay eklenti açılmaz.
+  Bu soruyu yeniden açma.
+- ⚠️ **K03 ölçümü (kayıt için): kullanıcının "şu an öyle görünüyor zaten" izlenimi
+  ÇÜRÜDÜ.** Canlı `https://corteqs.net/env-config.js` → `VITE_SUPABASE_URL` =
+  `https://injprdrsklkxgnaiixzh.supabase.co`; `auth./supabase./api./db.corteqs.net`
+  adlarının **hiçbiri çözülmüyor** (4/4 bağlantı yok). Yani özel alan adı **YOK** ve
+  Google onay ekranında bugün ham Supabase adresi yazıyor. Karar hâlâ AÇIK.
 - ✅ **K09 CEVAPLANDI (03.10, kullanıcı): (a) MEVCUT KATALOG DOĞRULAMASI.** Yeni
   `verification_level` kolonu AÇILMAZ; `catalog_items.verification_status` kullanılır ve
   politikanın dediği gibi kapı BAŞVURAN KİŞİYE bağlanır (kişi ↔ kuruluş bağlantısı G06'da
@@ -875,11 +887,39 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   RPC + `is_admin()`. **Kabul:** PostgREST'e doğrudan `status='published'` POST → reddedildi
   (gövde yukarıda birebir).
 
-**M04 — Migration 3: `event_attendees` + join/leave RPC'leri**
-- `event_attendees (event_id, user_id)` PK · `created_at` · `status` (`going|cancelled`).
-  RLS: kendi kaydını yazar/siler; sahip+admin okur; sayaç **aggregate RPC** ile (satırlar değil).
-- `join_event_v1`/`leave_event_v1`: `max_attendees` kontrolü **SQL'de** (istemcide yarış olur).
-- **Kabul:** SQL smoke — kontenjan dolunca join reddediliyor.
+**~~M04~~ — ✅ KAPANDI 03.10** · Migration 3: `event_attendees` + join/leave RPC'leri
+
+- Migration `20261003030000_event_attendees.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **464/464** sapmasız): `event_attendees` PK `(event_id,user_id)` ·
+  `status going|cancelled` (CHECK) · cascade'ler · `(event_id,status)` indeksi · RLS 4 politika
+  (okuma: kendi + sahip + admin · yazma: yalnız kendi, insert `status='going'`).
+- **RPC'ler:** `join_event_v1` — yalnız `published`; **kapasite SQL'de VE etkinlik satırı
+  `for update` KİLİTLİ** (plan: "istemcide yarış olur"); dolu kapakta raise ile TÜM işlem
+  geri döner (satır hiç kalmıyor — smoke'ta ölçüldü), `event_attendee_limit` **P0001**;
+  yeniden katılım upsert (cancelled satır canlanır). `leave_event_v1` — satır SİLİNMEZ
+  `cancelled` olur (denetim izi); katılmamış iptal → `event_attendee_not_joined` (sessiz
+  no-op değil). `event_attendee_count` — **aggregate RPC** (satır değil sayı: going_count ·
+  max · is_full · viewer_status), **anon'a açık** (detay ziyaretçiye açık — politika tutarlı).
+  Yeni kodlar: `event_not_found · event_not_published · event_attendee_limit ·
+  event_attendee_not_joined` (M05 haritası Türkçeleştirecek).
+- **Kabul (SQL smoke, geri alınan işlem — 7/7):** katılım → `{going_count:1, viewer:going}` ·
+  tekrar katılım idempotent (1) · kapak dolu (max=1) → na2 `event_attendee_limit` **P0001** +
+  satır YOK (raise tüm işi geri aldı) · ayrılma → 0, ikinci ayrılma → `not_joined` · yer
+  açılınca na2 katıldı · pending etkinlik → `event_not_published` · olmayan → `event_not_found` ·
+  anon: sayaç OK (`viewer_status:null`) + join `permission denied`. Rollback temiz (attendee 0).
+- **Kanıt:** sözleşme **10/10** (`event-attendees-schema.test.ts`) · **mutasyon 6/6 İLK TURDA**
+  (for-update kilidi · kapak kontrolü · leave→DELETE · published kontrolü · anon grant · PK) ·
+  tam takım **425 dosya / 3507 test** yeşil (⚠️ ilk koşuda 4 ilgisiz dosyada geçici forks-worker
+  hatası — G17'de belgelenen sınıf; tekil + tam yeniden koşu temiz) · `tsc` 0 · lint 0 (32 problem
+  tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest` 58+0 · `verify:text` ✓ 1933.
+- 📌 **M05'e devir:** `events-api.ts`'e `joinEvent/leaveEvent/fetchEventAttendeeCount` +
+  `createEvent` → `create_event_v1` geçişi; `events-rules.ts` hata haritası (M02+M04 kodları:
+  `event_auth_required · event_field_required · event_active_limit · event_not_found ·
+  event_not_published · event_attendee_limit · event_attendee_not_joined ·
+  event_status_direct_update_forbidden`).
+- *(özgün kapsam)* `event_attendees (event_id,user_id)` PK · created_at · status; RLS kendi
+  kaydını yazar/siler, sahip+admin okur, sayaç aggregate RPC; join/leave'de `max_attendees`
+  SQL'de. **Kabul:** SQL smoke — kontenjan dolunca join reddediliyor ✓ (P0001 ile).
 
 **M05 — Kod: events-api + events-rules + ayna sözleşme testi**
 - `src/lib/events-api.ts`: `createEvent` artık `create_event_v1` RPC'sini çağırır;
@@ -2287,7 +2327,13 @@ orada). Başvurular oraya **5. madde** olarak girer.
 - ⚠️ Token'lar sohbete/commit'e yazılmaz.
 - **Kabul:** beş secret'ın digest'i birbirinden farklı; W01 başlayabilir.
 
-### Command Center arşiv dalgası — A/B/C kararı
+### Command Center arşiv dalgası — ✅ **KARAR: (C) 03.10**
+
+> ✅ **Kullanıcı 03.10'da (C)'yi seçti** — ~1653 → **~150-200** kayıt. Bu artık bir
+> karar maddesi değil, **ajan işidir**; batch'e bölünüp sıraya alınacak.
+> 🔴 **İlk adım kod değil:** `docs/commandcenter/` gitignore'da ve 313 `[Denetim 28.09]`
+> notu YALNIZ orada. Export yeniden üretilirse notlar SİLİNİR → önce notları
+> repo-dışı bir yere kopyala, sonra arşivle.
 
 - Canlı 1653 kayıt (108'i zaten soft-delete). Seçenekler:
   **A)** 843 Baslanmadi `meeting_note` kaydını arşivle → ~810 kalır ·
@@ -2349,10 +2395,10 @@ Mevcut 10 grup yeni veri modeline taşınırken karar gerekiyor (K08'in kalan te
 |---|---|---|---|
 | K01 | Cadde ana sayfa sıralaması | UBT + Burak | `CaddePage.tsx` yorumu (05.08) sağ kolon, T18 (27.08) akışın üstü diyor — çelişkili. **A06c bu karara bağlı değil** |
 | K02 | SMS sağlayıcısı | UBT | Bütçe 20–25 € KESİNLEŞTİ (T21); `sms_provider=twilio` tanımlı ama kapalı; uygulama (M95) başlamadı. **Uygulama tarafı artık G04–G05'te.** ⚠️ 30.09 ölçümü: `sms_provider=twilio` iddiası **yalnız bu dosyada** geçiyor — `supabase/config.toml`'da `[auth]` bölümü YOK ve `auth.users`'da **0 telefon / 0 onaylı**. Panelden teyit et (bkz. U06) |
-| K03 | Google giriş özel alan adı | UBT + Burak | Pro plan + 10 $/ay eklenti. **Ön koşul karşılandı: Pro aktif (U02 kapandı)** — karar verilebilir |
+| ~~K03~~ | ✅ **CEVAPLANDI 03.10: HAYIR** — özel alan adı alınmayacak | UBT + Burak | Pro plan + 10 $/ay eklenti. **Ön koşul karşılandı: Pro aktif (U02 kapandı)** — karar verilebilir. ⚠️ **03.10 ölçümü: özel alan adı YOK** — canlı `env-config.js` `injprdrsklkxgnaiixzh.supabase.co` veriyor, `auth/supabase/api/db.corteqs.net` 4/4 çözülmüyor. "Zaten var" sanma |
 | K04 | Cadde davet kodu kavramı | Burak | Ölçüldü (#1731): kullanıcının "kendi kodu" diye bir şey YOK; profildeki alan ters yönde çalışıyor |
 | K05 | Checkout / Stripe | Burak | Ödeme kodu SIFIR (yalnız `MockStripeCheckout`); abonelik 01.01.2027 · Kurucu 1000: 99 € |
-| K06 | `docs-admin` korpusu | UBT | 4.214 iç doküman / 30 MB bilgi tabanında — silinsin mi? (Pro ile bellek baskısı azaldı ama çöp duruyor) |
+| ~~K06~~ | ✅ **CEVAPLANDI 03.10: KALSIN** | UBT | `docs-admin` korpusu (4.214 iç doküman / 30 MB) silinmez; Pro ile bellek baskısı yok. Yeniden açma |
 | K07 | 25 Eylül transkriptinin son 25 dk'sı | UBT | yalnız ilk ~55/80 dk işlendi |
 | K08 | 5 grup karar mesajı | UBT → Burak | grup ekleme politikası · onay akışı · form alanları · şehir grupları · ekleme çağrısı. ✅ **CEVAPLANDI** — Dijital Gruplar politikası v1.1 (27.09) beşini de kapsıyor; kod karşılığı **G bölümü**. Kalan tek şey: G11 eşleme CSV'sindeki 4 veri kararı (U07) |
 

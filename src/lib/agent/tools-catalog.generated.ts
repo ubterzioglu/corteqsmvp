@@ -3113,6 +3113,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/event-attendees-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/event-form-draft.test.ts",
       "kind": "ts",
       "module_family": "lib"
