@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
-import type { TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
+import type { TablesUpdate } from "@/integrations/supabase/types";
 import type { EventType } from "@/lib/events-vocabulary";
+import { resolveEventRpcErrorMessage } from "@/lib/events-rules";
 
 export type EventRow = {
   id: string;
@@ -110,7 +111,6 @@ export async function fetchAllEventsAdmin(): Promise<EventRow[]> {
 }
 
 export interface CreateEventInput {
-  userId: string;
   title: string;
   description: string;
   category: string;
@@ -133,34 +133,117 @@ export interface CreateEventInput {
   timezone: string | null;
 }
 
-export async function createEvent(input: CreateEventInput): Promise<EventRow> {
-  const payload: TablesInsert<"events"> = {
-    user_id: input.userId,
-    title: input.title,
-    description: input.description,
-    category: input.category,
-    type: input.type,
-    event_date: input.eventDate,
-    start_time: input.startTime,
-    end_time: input.endTime,
-    country: input.country,
-    city: input.city,
-    location: input.location,
-    online_url: input.onlineUrl,
-    price: input.price,
-    max_attendees: input.maxAttendees,
-    cover_image: input.coverImage,
-    tags: input.tags.length > 0 ? input.tags : null,
-    organizer_name: input.organizerName,
-    organizer_type: input.organizerType,
-    registration_url: input.registrationUrl,
-    timezone: input.timezone,
-    status: "pending",
-  };
+/** M05 · create_event_v1 sonucu (M02): ilk etkinlik pending, sonrası published+auto. */
+export type CreateEventResult = {
+  eventId: string;
+  status: "pending" | "published";
+  approvalSource: "auto" | null;
+};
 
-  const { data, error } = await supabase.from("events").insert(payload).select().single();
-  if (error) throw error;
-  return data as EventRow;
+/**
+ * M05: etkinlik oluşturma artık `create_event_v1` RPC'sinden — doğrudan insert
+ * YOK (M03 INSERT politikası zaten yalnız `pending` kabul ediyor; ilk-onay
+ * kuralı ve aktif limiti SQL'de). `userId` İSTEMCİDEN ALINMAZ — RPC auth.uid()
+ * kullanır (eski CreateEventInput.userId alanı kaldırıldı).
+ *
+ * ⚠️ types.ts regen BORCU (G12): RPC üretilmiş tiplerde YOK — `as never`
+ * deseni bilinçli (emsal: group-submit.ts). RPC hataları DÜZ NESNE (m75):
+ * `resolveEventRpcErrorMessage` ile Türkçeleştirilir.
+ */
+export async function createEvent(input: CreateEventInput): Promise<CreateEventResult> {
+  const { data, error } = await supabase.rpc("create_event_v1" as never, {
+    p_title: input.title,
+    p_description: input.description,
+    p_category: input.category,
+    p_type: input.type,
+    p_event_date: input.eventDate,
+    p_start_time: input.startTime,
+    p_end_time: input.endTime,
+    p_country: input.country,
+    p_city: input.city,
+    p_location: input.location,
+    p_online_url: input.onlineUrl,
+    p_price: input.price,
+    p_max_attendees: input.maxAttendees,
+    p_cover_image: input.coverImage,
+    p_tags: input.tags.length > 0 ? input.tags : null,
+    p_organizer_name: input.organizerName,
+    p_organizer_type: input.organizerType,
+    p_registration_url: input.registrationUrl,
+    p_timezone: input.timezone,
+  } as never);
+
+  if (error) throw new Error(resolveEventRpcErrorMessage(error, "Etkinlik oluşturulamadı."));
+
+  const result = data as { event_id: string; status: string; approval_source: string | null } | null;
+  if (!result?.event_id) throw new Error("Etkinlik oluşturulamadı.");
+  return {
+    eventId: result.event_id,
+    status: result.status === "published" ? "published" : "pending",
+    approvalSource: result.approval_source === "auto" ? "auto" : null,
+  };
+}
+
+// ── M04 katılım RPC'leri (kapasite SQL'de, yarış kilidi sunucuda) ───────────
+
+export type EventAttendeeSummary = {
+  goingCount: number;
+  maxAttendees: number | null;
+  isFull: boolean;
+  viewerStatus: "going" | "cancelled" | null;
+};
+
+/** Katılım durumu (aggregate RPC — istemci katılımcı satırlarını görmez). */
+export async function joinEvent(eventId: string): Promise<EventAttendeeSummary> {
+  const { data, error } = await supabase.rpc("join_event_v1" as never, {
+    p_event_id: eventId,
+  } as never);
+  if (error) throw new Error(resolveEventRpcErrorMessage(error, "Etkinliğe katılamadın."));
+  const result = data as { going_count: number; is_full: boolean };
+  return {
+    goingCount: result.going_count,
+    maxAttendees: null, // join yanıtı max taşımaz; tam özet count RPC'sinde
+    isFull: result.is_full,
+    viewerStatus: "going",
+  };
+}
+
+export async function leaveEvent(eventId: string): Promise<EventAttendeeSummary> {
+  const { data, error } = await supabase.rpc("leave_event_v1" as never, {
+    p_event_id: eventId,
+  } as never);
+  if (error) throw new Error(resolveEventRpcErrorMessage(error, "Katılım iptal edilemedi."));
+  const result = data as { going_count: number };
+  return {
+    goingCount: result.going_count,
+    maxAttendees: null,
+    isFull: false,
+    viewerStatus: "cancelled",
+  };
+}
+
+/**
+ * Sayaç + izleyici durumu. İKİNCİL yüzey (detaydaki katılım şeridi): hata
+ * FIRLATMAZ, null döner — şerit hiç çizilmez, sayfa çökmez (cadde ikincil
+ * yüzey kalıbı).
+ */
+export async function fetchEventAttendeeCount(eventId: string): Promise<EventAttendeeSummary | null> {
+  const { data, error } = await supabase.rpc("event_attendee_count" as never, {
+    p_event_id: eventId,
+  } as never);
+  if (error || !data) return null;
+  const result = data as {
+    going_count: number;
+    max_attendees: number | null;
+    is_full: boolean;
+    viewer_status: string | null;
+  };
+  return {
+    goingCount: result.going_count,
+    maxAttendees: result.max_attendees,
+    isFull: result.is_full,
+    viewerStatus: result.viewer_status === "going" || result.viewer_status === "cancelled" ? result.viewer_status : null,
+  };
 }
 
 export async function updateEvent(id: string, updates: TablesUpdate<"events">): Promise<void> {

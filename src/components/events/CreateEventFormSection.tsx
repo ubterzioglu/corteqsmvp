@@ -200,8 +200,10 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
     }
 
     try {
-      await createEventMutation.mutateAsync({
-        userId: user.id,
+      // M05: createEvent artık create_event_v1 RPC'si — userId İSTEMCİDEN
+      // GİTMEZ (sunucu auth.uid() kullanır); sonuç status'u ilk-onay kuralını
+      // yansıtır (ilk etkinlik pending, sonrası published).
+      const result = await createEventMutation.mutateAsync({
         title: title.trim(),
         description: description.trim(),
         category,
@@ -225,10 +227,19 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
         registrationUrl: registrationUrl || null,
       });
 
-      toast({
-        title: "Etkinliğiniz alındı",
-        description: "Admin onayından sonra listede yayınlanacak.",
-      });
+      // M05: ilk-onay kuralı kullanıcıya DOĞRU söylenir — otomatik yayında
+      // "onaydan sonra" demek yalan olurdu (M06 MyEventsPanel bunu detaylandırır).
+      toast(
+        result.status === "published"
+          ? {
+              title: "Etkinliğiniz yayınlandı",
+              description: "Listede görünüyor. İyi etkinlikler!",
+            }
+          : {
+              title: "Etkinliğiniz alındı",
+              description: "İlk etkinliğiniz admin onayından sonra listede yayınlanacak.",
+            },
+      );
 
       forgetEventFormDraft();
       setTitle("");

@@ -1125,9 +1125,12 @@ export const toolCatalog = {
         "deleteEvent",
         "escapeOrFilterValue",
         "fetchAllEventsAdmin",
+        "fetchEventAttendeeCount",
         "fetchEventById",
         "fetchMyEvents",
         "fetchPublishedEvents",
+        "joinEvent",
+        "leaveEvent",
         "publishEvent",
         "toggleFeaturedEvent",
         "unpublishEvent",
@@ -1136,7 +1139,12 @@ export const toolCatalog = {
       "tables_read_write": [
         "events"
       ],
-      "rpcs": [],
+      "rpcs": [
+        "create_event_v1",
+        "event_attendee_count",
+        "join_event_v1",
+        "leave_event_v1"
+      ],
       "evidence_path": "src/lib/events-api.ts"
     },
     {
@@ -3159,6 +3167,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/events-first-approval-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-first-approval.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/events-rules.ts",
       "kind": "ts",
       "module_family": "lib"
     },

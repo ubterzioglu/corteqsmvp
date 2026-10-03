@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **38** (N 0 · W 8 · M 23 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M04 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **37** (N 0 · W 8 · M 22 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M05 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 9 (U bölümü — U10 ✅ 03.10) · **Karar** 6 (K — ✅ K03/K06/K09/K10 cevaplandı 03.10; Command Center arşivi ✅ **(C)** seçildi → ajan işi) · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -118,7 +118,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | ~~M02~~ ~~M03~~ ~~M04~~ · **M05–M07** | ✅ M02 03.10 (`create_event_v1`) · ✅ M03 03.10 (**T1 KAPANDI**, kabul 4 yol) · ✅ **M04 KAPANDI 03.10** (`event_attendees` + join/leave — kapak SQL'de `for update` kilitli, smoke 7/7, mutasyon 6/6) · kalan: events-api/rules · katılım UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ · **M06–M07** | ✅ M02 (`create_event_v1`) · ✅ M03 (**T1 KAPANDI**) · ✅ M04 (`event_attendees`, smoke 7/7) · ✅ **M05 KAPANDI 03.10** (events-api RPC'ye geçti — doğrudan insert + userId kalktı; events-rules aynası; mutasyon 6/6) · kalan: katılım UI · canlı doğrulama | 🟢 (onay 03.10) |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -921,14 +921,32 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   kaydını yazar/siler, sahip+admin okur, sayaç aggregate RPC; join/leave'de `max_attendees`
   SQL'de. **Kabul:** SQL smoke — kontenjan dolunca join reddediliyor ✓ (P0001 ile).
 
-**M05 — Kod: events-api + events-rules + ayna sözleşme testi**
-- `src/lib/events-api.ts`: `createEvent` artık `create_event_v1` RPC'sini çağırır;
-  `joinEvent`/`leaveEvent`/`fetchEventAttendeeCount` eklenir.
-- `src/lib/events-rules.ts` (yeni): limit sabiti + hata kodu → Türkçe mesaj.
-- `src/lib/events-first-approval.test.ts` (yeni): migration metnindeki sabit ile
-  `events-rules.ts` sabiti birebir + hata kodları iki yönlü eşleşiyor (desen:
-  `cadde-rules.ts`). ⚠️ Yeni lib dosyaları → `ingest:tools`.
-- **Kabul:** ayna test yeşil; `createEvent`'ten doğrudan `insert` çağrısı kalktı.
+**~~M05~~ — ✅ KAPANDI 03.10** · Kod: events-api + events-rules + ayna sözleşme testi
+
+- **`src/lib/events-api.ts`:** `createEvent` artık **`create_event_v1` RPC'si** — doğrudan
+  `.from("events").insert` KALKTI (M05 kabulü); `CreateEventInput.userId` alanı SİLİNDİ
+  (RPC `auth.uid()` kullanır — istemci kimlik yüzeyi kapandı, form çağrısı güncellendi).
+  Dönüş tipi `CreateEventResult {eventId, status, approvalSource}` — form toast'u artık
+  status'a göre DOĞRU söylüyor ("yayınlandı" vs "ilk etkinliğiniz onaydan sonra"). Yeni:
+  `joinEvent` / `leaveEvent` / `fetchEventAttendeeCount` (M04 RPC'leri; sayaç İKİNCİL yüzey —
+  hata fırlatmaz null döner, şerit çizilmez).
+- **`src/lib/events-rules.ts` (yeni):** `EVENTS_ACTIVE_LIMIT=2` (event_settings seed aynası) +
+  `EVENT_RPC_ERROR_MESSAGES` (M02+M03+M04'ün 8 kodu) + `resolveEventRpcErrorMessage`
+  (DÜZ NESNE çözümleyici — m75/cadde deseni, `instanceof Error` YOK).
+- **`src/lib/events-first-approval.test.ts`:** hata haritası ÜÇ migration'a karşı **çift yönlü** ·
+  limit aynası seed'e karşı (`'events.active_limit', '2'`) · insert'e dönüş + userId sızması
+  kilitli · sayaç ikincil-yüzey kilidi.
+- **Kabul:** ayna test yeşil (14/14) · `createEvent`'te doğrudan insert YOK (test kilitli) ·
+  `ingest:tools` güncel (yeni lib dosyası).
+- **Kanıt:** **mutasyon 6/6 İLK TURDA** (limit 2→3 · haritadan kod düşürme · hayalet kod ·
+  RPC adı kaydırma · userId geri koyma · sayaç throw'a çevirme) · tam takım **426 dosya /
+  3516 test** · `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 ·
+  `ingest:tools:check` 0 · `verify:text` ✓ 1935.
+- 📌 **M06'ya devir:** katılım düğmesi `joinEvent/leaveEvent` + `fetchEventAttendeeCount`
+  üzerine kurulacak (viewer_status düğme durumu, is_full "Kontenjan dolu" pasif hâli);
+  MyEventsPanel limit + onay durumu anlatımı (`CreateEventResult.status` formda zaten ayrışıyor).
+- *(özgün kapsam)* events-api RPC geçişi + events-rules + ayna testi. **Kabul:** ayna test
+  yeşil; `createEvent`'ten doğrudan `insert` çağrısı kalktı ✓.
 
 **M06 — Kod UI: katılım düğmesi + MyEventsPanel**
 - `src/components/events/EventAttendeeButton.tsx` (yeni).
