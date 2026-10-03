@@ -5,6 +5,42 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-kurumsal-dogrulama-altyapisi",
+    date: "3 Ekim 2026",
+    title: "Kurumsal doğrulama altyapısı kuruldu — dernek/okul/kuruluş kayıtları için belgeli başvuru",
+    items: [
+      "NE GELDİ: Bir kuruluş kaydının “doğrulanmış” sayılabilmesi için belgeli başvuru altyapısı canlıda. Başvuran tüzük/yetki belgesini yüklüyor, kayıt yönetici kuyruğuna düşüyor. Onay kimin, ne zaman verdiği artık kayıt altında tutuluyor — eskiden bu iz hiç yoktu.",
+      "YENİ BİR “SEVİYE” ALANI AÇILMADI: Kayıtta zaten iki doğrulama alanı vardı; üçüncüsünü eklemek aynı bilginin birbirini tutmayan üç kopyasını üretirdi. “Seviye 2” artık mevcut doğrulama durumundan türetiliyor, ayrıca saklanmıyor.",
+      "ÖNEMLİ ÖLÇÜM — AKIŞ BUNA GÖRE KURGULANDI: 262 kurumsal kaydın 249’unda kaydı temsil eden hiçbir kişi bağı yok (bunlar toplu aktarılmış sahipsiz kayıtlar). Bu yüzden doğrulama başvurusu için önce kaydı sahiplenmek gerekiyor; sahipsiz bir kaydı doğrulatmak o kurumu temsil etmekle aynı şey değil.",
+      "BELGE GÜVENLİĞİ: Belgeler dışarıya tamamen kapalı özel bir alanda duruyor; yalnız belgeyi yükleyen kişi ve yöneticiler, o da süreli bağlantıyla açabiliyor. Başkasının klasörüne yazma ve başkasının belgesini kendi başvurusuna iliştirme yolları ayrı ayrı kapatıldı.",
+      "KANIT: 15 kabul kontrolü canlı veritabanında, geri alınan bir işlem içinde ölçüldü (başvuru açma, mükerrer başvurunun reddi, zaten doğrulanmış kayıt, kurumsal olmayan kayıt, yetkisiz klasör, belgesiz başvuru, oturumsuz erişim). Canlıda hiçbir iz bırakılmadı.",
+      "KALAN: Üyenin göreceği başvuru formu ve yöneticinin kullanacağı inceleme ekranı sırada. Bugün kurulan kısım altyapı — ekran gelmeden kullanıcıya görünmez.",
+    ],
+  },
+  {
+    id: "20261003-grup-sahipligi-rol-yukseltme",
+    date: "3 Ekim 2026",
+    title: "Grup sahipliğini doğrulayan üyeye artık rolü gerçekten veriliyor (sessiz kusur kapandı)",
+    items: [
+      "SORUN NEYDİ: Bir üye grubunun sahipliğini doğruladığında kendisine “WhatsApp/Telegram/Discord Yöneticisi” rolü verilmesi gerekiyordu. Ama sistem kimseye veremiyordu: kayıt olan herkese otomatik olarak varsayılan üye rolü atanıyor ve sistem “mevcut rolü ezme” kuralı yüzünden her seferinde atlıyordu. Hata vermiyordu — sadece olmuyordu.",
+      "ÇÖZÜM: Artık YALNIZ varsayılan üye rolü yükseltiliyor. Süper Admin, danışman, kuruluş ve özel roller eskisi gibi korunuyor — bir Süper Admin grubunu doğrulayınca Süper Adminliğini kaybetmiyor.",
+      "ÖLÇÜM: Sistemdeki 175 üyenin tamamının tek rolü var. 148’i varsayılan rolde (yükseltmeye açık), 27’si başka rollerde (korunuyor).",
+      "KANIT: 10 kontrolün tamamı canlıda, geri alınan işlem içinde ölçüldü — varsayılan rol yükseldi, Süper Admin ve danışman rolleri ezilmedi, rolü olmayan kullanıcıya rol atandı, kullanıcı başına tek rol kuralı korundu.",
+    ],
+  },
+  {
+    id: "20261003-cadde-kimlik-isareti",
+    date: "3 Ekim 2026",
+    title: "Cadde’ye kimlik işareti (logo) eklendi — deploy kuyruğunda",
+    items: [
+      "NE GELDİ: Burak’ın verdiği Cadde logosu, akışın filtre şeridinin sol ucuna küçük bir kimlik işareti olarak yerleşti.",
+      "SAYFADAN YER ÇALMIYOR: İşaret kendi şeridini açmıyor, var olan filtre satırının içinde duruyor ve satırın yüksekliğini değiştirmiyor. Akışın üstüne blok eklenmedi — paylaşım kutusunu aşağı iten eski düzen sorunu geri getirilmedi.",
+      "DOSYA DÜZELTİLDİ: Gelen görselin arka planı şeffaf değildi; olduğu gibi konsaydı koyu temada beyaz bir kutu olarak görünecekti. Arka plan gerçekten saydamlaştırıldı, kenar boşlukları kırpıldı ve dosya 3 MB’tan 220 KB’a indi (sayfa açılış hızı için önemli).",
+      "DEĞİŞMEYEN: Cadde’nin bronz kurumsal rengi aynen duruyor; logo renkli, arayüz rengi bronz — ikisi ayrı iştir.",
+      "NE ZAMAN GÖRÜNÜR: Bir sonraki frontend deploy’unda.",
+    ],
+  },
+  {
     id: "20261003-davet-liderligi",
     date: "3 Ekim 2026",
     title: "Davet sistemi açıldı — /liderlik sayfası, davet kodu ve QR (deploy kuyruğunda)",
