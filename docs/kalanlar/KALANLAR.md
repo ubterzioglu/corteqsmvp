@@ -124,7 +124,7 @@ traction ölçülecek.
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
 | 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
-| 5 | ~~M08~~ · **M09–M10** | ✅ **M08 KAPANDI 03.10** (QuickActionsCard — tek kaynak liste, iki düzen, tüm roller; mutasyon 6/6) · kalan: GettingStartedCard · feature_interest + EventFeaturePromo | 🟢 (onay 03.10) |
+| 5 | ~~M08~~ ~~M09~~ · **M10** | ✅ M08 03.10 (QuickActionsCard) · ✅ **M09 KAPANDI 03.10** (GettingStartedCard — satırlar gerçek veriden, davet satırı M13'e dek pasif; mutasyon 6/6) · kalan: feature_interest + EventFeaturePromo | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
 | 2 | **M17–M23** | Tavsiye İste (en büyük modül) · `/tavsiye` · kilitli gelen kutusu | 🟢 (onay 03.10) |
@@ -1036,12 +1036,37 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* tek kaynak liste + kart; `ProfileSidebarLayout` ilk ekranı, tüm roller.
   **Kabul:** kart tüm rollerde görünüyor; iki eylem de hedefine gidiyor ✓.
 
-**M09 — GettingStartedCard**
-- `src/components/profile/GettingStartedCard.tsx`: profili tamamla · ilk hizmet/ürün/etkinlik ·
-  3 davet. Tamamlanma **gerçek veriden** okunur (uydurma yüzde yok).
-- ⚠️ "3 davet" satırı M11–M13'e kadar veri kaynağı olmadığından pasif/ölçüsüz gösterilir
-  ya da sonraya bırakılır — sahte tamamlanma yazma.
-- **Kabul:** her satırın durumu ilgili tablodan okunuyor; elle SQL ile karşılaştırıldı.
+**~~M09~~ — ✅ KAPANDI 03.10** · GettingStartedCard
+
+- **`src/components/profile/GettingStartedCard.tsx`** — "Başlangıç · N/4 tamam" kartı; her
+  satır GERÇEK kaynaktan (uydurma yüzde/sayaç YOK): **Profili tamamla** → `profile.profileCompletion`
+  (hero kartıyla AYNI RPC verisi — `get_current_user_profile` required sayımı; `requiredTotal=0`
+  → tamam sayılır, SQL'in %100 kuralıyla birebir) · **İlk hizmet/ürün** → `carsi_items`
+  (`listMyCarsiItems`, `owner_user_id` + `deleted_at null`; CaddeCarsiPage ile AYNI query key —
+  ekstra istek yok) · **İlk etkinlik** → `useMyEvents` (paylaşımlı `["events","my",uid]`) ·
+  **3 davet → PASİF** (M11-M13'e dek veri kaynağı YOK — sahte tik yazılmaz;
+  `referral_code_usages` pazarlama kodudur, onunla ÖLÇÜLMEZ).
+- KARAR (03.10): "hizmet/ürün" = **Çarşı ilanı** — 25.09 kararı "Çarşı İLAN LİSTESİ profil
+  kartından kaldırıldı" der; bu kart liste GÖSTERMEZ, ilerleme satırı gösterir. `catalog_items`
+  üye/danışman DİZİN kaydıdır, hizmet/ürün değildir.
+- Kablolama M08 deseni: sidebar `overview` (quickActions → **gettingStarted** → hero → summary;
+  menü ÖĞESİ eklenmedi, kilitli sıra bozulmadı) + premium düzen (hero altı) — **tüm roller**.
+- **Kabul (elle SQL karşılaştırması):** 3 gerçek kullanıcıda `carsi_items`/`events` sayıları
+  SQL'den okundu (0/0/0) → kart formülü todo satırları üretir (bileşen testleri done/todo
+  geçişlerini mock verilerle kilitliyor: 2/4 alan → tik yok · total=0 → tamam · 2 etkinlik →
+  "2 etkinliğin var" · 1 ilan → "1 Çarşı ilanın var" · davet pasifken sayaç 0/4). Not:
+  `get_current_user_profile` test kullanıcılarında boş döndü (üye profil satırı yok — mevcut
+  davranış); kart bu durumda requiredTotal=0 → "tamam" çizer, yani RPC'nin SQL sözleşmesiyle
+  (total 0 → %100) tutarlı.
+- **Kanıt:** 7 yeni test · **mutasyon 6/6** (davete sahte tik · profil formülü gevşetme ·
+  total=0 dalı [M3 ilk koşuda Türkçe yorumlu eşleşme KONSOL KODLAMASI yüzünden uygulanamadı —
+  ASCII çıpayla tekil koşuda YAKALANDI; G20/G23 dersi 3. kez] · sidebar/premium çıkarma ·
+  Çarşı sayısını sabitleme) · tam takım **429 dosya / 3535 test yeşil** · `tsc` 0 · lint 0
+  (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest` 58+0 · `verify:text`
+  ✓ 1942 · ProfilePage.test'e iki mock eklendi (use-events + cadde-carsi-api — sayfa modül
+  grafı genişledi).
+- *(özgün kapsam)* profili tamamla · ilk hizmet/ürün/etkinlik · 3 davet; tamamlanma gerçek
+  veriden. **Kabul:** her satırın durumu ilgili tablodan okunuyor; elle SQL ile karşılaştırıldı ✓.
 
 **M10 — feature_interest + EventFeaturePromo (kilitli ücretli yüzey)**
 - Migration (küçük): `feature_interest (feature_key, user_id, created_at)` + RLS (kendi satırı).

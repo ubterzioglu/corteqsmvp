@@ -80,6 +80,7 @@ import CaddeTanitimPanel from "@/components/cadde/CaddeTanitimPanel";
 import ProfileSidebarLayout from "@/components/profile/ProfileSidebarLayout";
 import { buildProfileSidebarMenu } from "@/components/profile/profile-sidebar-menu";
 import { QuickActionsCard } from "@/components/profile/QuickActionsCard";
+import { GettingStartedCard } from "@/components/profile/GettingStartedCard";
 import { trUpper } from "@/lib/text-normalization";
 
 const ProfilePage = () => {
@@ -426,6 +427,18 @@ const ProfilePage = () => {
   // premium düzen). Liste tek kaynak: community-quick-actions.ts.
   const quickActionsCard = <QuickActionsCard />;
 
+  // M09: başlangıç kartı — tamamlanma GERÇEK veriden (profileCompletion
+  // RPC sayımı; uydurma yüzde yok). Davet satırı M13'e dek pasif.
+  const gettingStartedCard = (
+    <GettingStartedCard
+      userId={user?.id ?? null}
+      completion={{
+        requiredTotal: profile?.profileCompletion.requiredTotal ?? 0,
+        requiredCompleted: profile?.profileCompletion.requiredCompleted ?? 0,
+      }}
+    />
+  );
+
   const legacyHeroCard = (
     <ProfileLegacyHeroCard
       isIndividualProfile={isIndividualProfile}
@@ -701,6 +714,7 @@ const ProfilePage = () => {
         sections={{
           hiddenFileInputs,
           quickActionsCard,
+          gettingStartedCard,
           profileFieldsCard,
           interestsCard,
           badgesCard,
@@ -751,6 +765,7 @@ const ProfilePage = () => {
   // hazır bölümler tek nesne olarak geçilir (A07c).
   const sidebarMenuItems = buildProfileSidebarMenu({
     quickActionsCard,
+    gettingStartedCard,
     legacyHeroCard,
     legacySummaryCard,
     personalInfoSection,

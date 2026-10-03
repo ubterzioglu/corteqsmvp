@@ -82,6 +82,17 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
+// M09: GettingStartedCard bu iki kaynağı okuyor — sayfa testinde veri
+// yüzeyleri mock (client mock'unda `.from` yok; cadde-carsi-api ayrıca
+// `isSupabaseConfigured` import ediyor).
+vi.mock("@/hooks/use-events", () => ({
+  useMyEvents: () => ({ data: [], isLoading: false, error: null }),
+}));
+
+vi.mock("@/lib/cadde-carsi-api", () => ({
+  listMyCarsiItems: () => Promise.resolve([]),
+}));
+
 describe("ProfilePage", () => {
   beforeEach(() => {
     vi.clearAllMocks();

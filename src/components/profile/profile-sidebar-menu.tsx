@@ -28,6 +28,8 @@ import type { SidebarMenuItem } from "@/components/profile/ProfileSidebarLayout"
 export type ProfileSidebarSections = {
   /** M08: hızlı eylemler — ilk ekranın (overview) EN ÜSTÜNE çizilir. */
   quickActionsCard: ReactNode;
+  /** M09: başlangıç ilerleme kartı — hızlı eylemlerin altında. */
+  gettingStartedCard: ReactNode;
   legacyHeroCard: ReactNode;
   legacySummaryCard: ReactNode;
   personalInfoSection: ReactNode;
@@ -66,6 +68,7 @@ export function buildProfileSidebarMenu(sections: ProfileSidebarSections): Sideb
       content: (
         <div className="space-y-4">
           {sections.quickActionsCard}
+          {sections.gettingStartedCard}
           {sections.legacyHeroCard}
           {sections.legacySummaryCard}
         </div>

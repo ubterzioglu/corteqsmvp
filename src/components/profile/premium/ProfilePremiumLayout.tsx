@@ -19,6 +19,8 @@ export type ProfilePremiumSections = {
   hiddenFileInputs: ReactNode;
   /** M08: hızlı eylemler — hero'nun altında, sekmelerden BAĞIMSIZ görünür. */
   quickActionsCard?: ReactNode;
+  /** M09: başlangıç kartı — hızlı eylemlerin altında. */
+  gettingStartedCard?: ReactNode;
   profileFieldsCard: ReactNode;
   interestsCard: ReactNode;
   badgesCard: ReactNode;
@@ -160,6 +162,7 @@ export default function ProfilePremiumLayout({
         onSignOut={onSignOut}
       />
       {sections.quickActionsCard ?? null}
+      {sections.gettingStartedCard ?? null}
       {sections.contributorResourcesCard}
       <PremiumProfileTabs
         settingsContent={settingsContent}
