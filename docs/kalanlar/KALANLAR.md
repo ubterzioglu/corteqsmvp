@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **36** (N 0 · W 8 · M 21 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M06 (**T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **35** (N 0 · W 8 · M 20 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+**M01–M07 (FAZ 1 TAMAM, T1 KAPANDI)** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
@@ -123,7 +123,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ · **M07** | ✅ M02 (`create_event_v1`) · ✅ M03 (**T1 KAPANDI**) · ✅ M04 (`event_attendees`) · ✅ M05 (events-api RPC + ayna) · ✅ **M06 KAPANDI 03.10** (katılım düğmesi + MyEventsPanel kural notu; mutasyon 6/6) · kalan: canlı doğrulama turu | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ ~~M03~~ ~~M04~~ ~~M05~~ ~~M06~~ ~~M07~~ | ✅ **FAZ 1 TAMAM 03.10** — M02 (`create_event_v1`) · M03 (**T1 KAPANDI**) · M04 (`event_attendees`) · M05 (events-api RPC + ayna) · M06 (katılım düğmesi + kural notu) · ✅ **M07 KAPANDI 03.10** (tam zincir canlı 8/8: ilk-onay · limit P0001 · T1 iki katman · join/leave/kapak/cancelled · anon aggregate; rollback temiz) | ✅ | UI bir sonraki deploy'da canlanır |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -987,11 +987,29 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - *(özgün kapsam)* `EventAttendeeButton.tsx` + MyEventsPanel anlatımı. **Kabul:** tsc/lint/test
   yeşil; etkinlik detayında katılım düğmesi çalışıyor (test kanıtı; canlı tur M07'de).
 
-**M07 — Faz 1 canlı doğrulama (elle) · kanıt zorunlu**
-- Test hesabıyla: **ilk** etkinlik → `pending` + `approval_requests` satırı → admin onayı;
-  **ikinci** → doğrudan `published`, `approval_source='auto'`; **üçüncü aktif** →
-  `event_active_limit`; PostgREST doğrudan `status='published'` POST → red (M03 tekrar).
-- **Kabul:** dört ölçümün sonucu da bu batch'in kanıt satırında.
+**~~M07~~ — ✅ KAPANDI 03.10** · Faz 1 canlı doğrulama · kanıt (geri alınan işlem, tam zincir 8/8)
+
+- **C1** ilk etkinlik (`create_event_v1`, na1) → `{"status":"pending","approval_source":null}` +
+  `approval_requests('event_create', pending, target event)` satırı · **C2** admin onayı
+  (AdminEventsPage yolu: `is_admin` muaf UPDATE) → `published`, `approval_source` null
+  ("eski yol" — M08 damga basacak) · **C3** ikinci etkinlik → `{"status":"published",
+  "approval_source":"auto"}` · **C4** üçüncü aktif → **`event_active_limit` SQLSTATE P0001**.
+- **T1 iki katman (C5/C6):** authenticated rol + na1 claims ile doğrudan `INSERT status=
+  'published'` → **`42501 new row violates row-level security policy for table "events"`**
+  (yanıt gövdesi birebir) · doğrudan `UPDATE status` → **`event_status_direct_update_forbidden`**;
+  ikinci etkinlik `published` KALDI. ⚠️ İlk koşu ders: C5 `set role authenticated` OLMADAN
+  postgres rolünde geçti (RLS tablo sahibine uygulanmaz — insert "başarılı" göründü); rol
+  gerçek geçilince red ölçüldü. (M03'teki PostgREST-anon kanıtı 401 gövdesiyle ayrıca duruyor.)
+- **Katılım zinciri (C7):** na2 join → going 1 · `max_attendees=1` yapılınca na3 →
+  **`event_attendee_limit` P0001** (yarış kilidi sunucuda) · na2 leave → going 0 + satır
+  **`cancelled`** (silinmedi — denetim izi) · **C8** anon aggregate → `{going_count:0,
+  max_attendees:1, viewer_status:null}` (satır sızmaz).
+- **Rollback sonrası canlı dokunulmamış:** events 1 (eski satır) · M07/T1 satırı 0 ·
+  attendee 0 · yeni approval 0.
+- **Kabul:** dört ölçümün sonucu bu blokta (C1-C4) + T1 tekrar (C5/C6) + katılım (C7/C8).
+  📌 Faz 1 TAMAM — sıradaki: Faz 5 (M08-M10). Yeni ekranlar (katılım düğmesi, kural notu,
+  RPC'li form) **bir sonraki frontend deploy'unda** canlanır; DB kuralları şu an bile geçerli
+  (eski ekran `status:'pending'` insert ettiği için M03 politikasıyla uyumlu — kırılma yok).
 
 ### Faz 5 — panel hızlı eylemleri + ilgi kaydı
 

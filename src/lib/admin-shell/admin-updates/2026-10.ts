@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-etkinlik-motoru-faz1",
+    date: "3 Ekim 2026",
+    title: "Etkinlik motoru Faz 1 hazır — ilk-onay kuralı, kontenjan ve katılım düğmesi (arayüz deploy kuyruğunda)",
+    items: [
+      "İLK-ONAY KURALI ARTIK VERİTABANINDA: Bir üyenin İLK etkinliği yönetici onayına düşer; onaydan sonraki etkinlikleri otomatik yayınlanır. Bu kural eskiden yalnız ekran kodundaydı — isteyen teknik yoldan atlayabilirdi. Artık kural sunucuda: doğrudan “yayınlandı” yazmayı deneyen istek reddediliyor (ölçüldü), durum değişikliğini yalnız moderatör yapabiliyor.",
+      "KONTENJAN SINIRI: Etkinlik sahibi “maks. katılımcı” verdiyse kontenjan dolduğunda katılım SUNUCUDA kapanır — iki kişi aynı anda basarsa bile kontenjan aşılamaz (yarış kilidi veritabanında).",
+      "KATILIM DÜĞMESİ: Etkinlik detayına “Etkinliğe katıl / Katılımdan ayrıl” düğmesi geldi; kaç kişinin katıldığı ve kapasite yanında görünür. Kontenjan dolunca düğme “Kontenjan dolu” diye pasifleşir. Giriş yapmamış ziyaretçi önce girişe yönlendirilir. Katılanların listesi kimseye gösterilmez — yalnız sayı.",
+      "AKTİF ETKİNLİK LİMİTİ: Aynı anda en fazla 2 aktif (gelecek tarihli, yayında) etkinlik — geçmiş etkinlikler sayılmaz. Limit ayar tablosundan yönetiliyor.",
+      "ETKİNLİKLERİM PANELİ: Kural artık kullanıcıya açıkça anlatılıyor: “İlk etkinliğin onaydan geçer, sonrakiler otomatik yayınlanır; en fazla 2 aktif etkinliğin olabilir (şu an N).”",
+      "KANIT: Tam zincir canlıda geri alınan işlemle ölçüldü (8/8): ilk etkinlik onay kuyruğuna düştü → moderatör yayınladı → ikincisi otomatik yayın → üçüncüde limit reddi → doğrudan “yayınlandı” yazma denemeleri İKİ katmanda da reddedildi → katılım/ayrılma/kontenjan zinciri doğru → ziyaretçiye yalnız sayı göründü. İşlem geri alındığı için canlıda iz bırakmadı.",
+      "NOT: Veritabanı tarafı şu an bile geçerli (eski ekran da yeni kurallara uyuyor); katılım düğmesi ve yeni metinler bir sonraki frontend deploy'unda görünür olacak.",
+    ],
+  },
+  {
     id: "20261003-cadde-gonderi-duzenleme",
     date: "3 Ekim 2026",
     title: "Cadde'de paylaşım düzenleme açıldı — artık silmek zorunda değilsin",
