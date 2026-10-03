@@ -94,4 +94,35 @@ describe("CaddePostMenu — üç nokta menüsü (A11c)", () => {
     expect(await screen.findByRole("menuitem", { name: /Sil/ })).toBeInTheDocument();
     expect(screen.queryByRole("menuitem", { name: /Paylaş/ })).not.toBeInTheDocument();
   });
+
+  it("CD03: Düzenle maddesi onEdit'i çağırır — silme/paylaş RPC'lerine DOKUNMAZ", async () => {
+    const user = userEvent.setup();
+    const onEdit = vi.fn();
+    const onShare = vi.fn();
+    const client = new QueryClient({
+      defaultOptions: { mutations: { retry: false }, queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <CaddePostMenu postId="post-1" onShare={onShare} onEdit={onEdit} />
+      </QueryClientProvider>,
+    );
+
+    await user.click(screen.getByTestId("cadde-post-menu-trigger"));
+    await user.click(await screen.findByTestId("cadde-post-menu-edit"));
+
+    expect(onEdit).toHaveBeenCalledTimes(1);
+    expect(onShare).not.toHaveBeenCalled();
+    expect(deleteCaddePostMock).not.toHaveBeenCalled();
+  });
+
+  it("onEdit verilmeyince Düzenle maddesi hiç çizilmez", async () => {
+    const user = userEvent.setup();
+    renderMenu();
+
+    await user.click(screen.getByTestId("cadde-post-menu-trigger"));
+
+    expect(await screen.findByRole("menuitem", { name: /Sil/ })).toBeInTheDocument();
+    expect(screen.queryByRole("menuitem", { name: /Düzenle/ })).not.toBeInTheDocument();
+  });
 });

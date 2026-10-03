@@ -10,7 +10,7 @@
 // yedeğiyle yapılır.
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { MoreHorizontal, Share2, Trash2 } from "lucide-react";
+import { MoreHorizontal, Pencil, Share2, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 import {
@@ -43,9 +43,16 @@ export type CaddePostMenuProps = {
    * Yeni mekanizma YAZMA; çağıran FeedView'de mutation'ı geçirir.
    */
   onShare?: () => void;
+  /**
+   * CD03: "Düzenle" maddesi composer'ı edit moduna alır (startEditing +
+   * scrollToComposer FeedView'de). Yetkinin gerçek denetimi DB'de
+   * (update_cadde_post_v1: sahip veya admin/moderatör) — buradaki koşul
+   * A11c'deki gibi yalnız görünürlük.
+   */
+  onEdit?: () => void;
 };
 
-export default function CaddePostMenu({ postId, onShare }: CaddePostMenuProps) {
+export default function CaddePostMenu({ postId, onShare, onEdit }: CaddePostMenuProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -87,6 +94,12 @@ export default function CaddePostMenu({ postId, onShare }: CaddePostMenuProps) {
             <DropdownMenuItem onSelect={onShare}>
               <Share2 className="mr-2 h-4 w-4" aria-hidden="true" />
               Paylaş
+            </DropdownMenuItem>
+          ) : null}
+          {onEdit ? (
+            <DropdownMenuItem data-testid="cadde-post-menu-edit" onSelect={onEdit}>
+              <Pencil className="mr-2 h-4 w-4" aria-hidden="true" />
+              Düzenle
             </DropdownMenuItem>
           ) : null}
           <DropdownMenuItem

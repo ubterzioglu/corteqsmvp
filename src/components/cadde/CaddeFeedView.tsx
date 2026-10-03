@@ -85,7 +85,11 @@ export const CaddeFeedView = ({
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { composer, defaultComposerLocationLabel, postMutation, setComposer } = composerState;
+  const {
+    composer, defaultComposerLocationLabel, postMutation, setComposer,
+    // CD02/CD03: düzenleme modu — composerState hook'u genişletildi.
+    editingPostId, updateMutation, startEditing, cancelEditing,
+  } = composerState;
   const {
     commentDrafts, commentMutation, commentTextareaRef, commentsQuery, expandedComments,
     expandedCommentPostId, insertCommentEmoji, openReactionsPostId, reactionCloseTimerRef,
@@ -109,8 +113,10 @@ export const CaddeFeedView = ({
             <CaddeComposer
               value={composer}
               onChange={setComposer}
-              onSubmit={() => postMutation.mutate()}
-              isSubmitting={postMutation.isPending}
+              onSubmit={() => (editingPostId ? updateMutation.mutate() : postMutation.mutate())}
+              isSubmitting={postMutation.isPending || updateMutation.isPending}
+              editMode={Boolean(editingPostId)}
+              onCancelEdit={cancelEditing}
               countries={countriesQuery.data ?? []}
               cities={allCitiesQuery.data ?? []}
               defaultLocationLabel={defaultComposerLocationLabel}
@@ -548,6 +554,19 @@ export const CaddeFeedView = ({
                               body: item.post.body,
                             })
                           }
+                          onEdit={() => {
+                            // CD03: composer gönderi verisiyle edit moduna geçer.
+                            // T1: @anmalar buraya TAŞINMAZ (RPC null'da korur);
+                            // medya tam liste gider; konum tek hedef (T3).
+                            startEditing({
+                              id: item.post.id,
+                              body: item.post.body,
+                              media: item.post.media ?? [],
+                              country: item.post.country ?? "",
+                              city: item.post.city ?? "",
+                            });
+                            scrollToComposer();
+                          }}
                         />
                       ) : null}
                     </div>
