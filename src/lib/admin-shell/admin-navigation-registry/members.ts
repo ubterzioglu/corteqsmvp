@@ -3,6 +3,7 @@
 // (masterplan §4.3). Grup sırası ../admin-navigation-registry.ts'te belirlenir.
 
 import {
+  BadgeCheck,
   Bug,
   ClipboardList,
   Database,
@@ -51,6 +52,25 @@ export const membersNavGroup: AdminNavGroup = {
       accent: "sky",
       badge: "approval-count",
       aliases: ["onay", "approval", "claim", "bekleyen talepler"],
+    },
+    {
+      id: "org-verification",
+      label: "Kurumsal Doğrulama",
+      shortLabel: "Doğrulama",
+      description:
+        "Bekleyen Seviye 2 kurumsal doğrulama talepleri: belgeyi imzalı bağlantıyla önizle, onayla (kaydı verified yapar) veya sebeple reddet.",
+      to: "/admin/org-verification",
+      icon: BadgeCheck,
+      accent: "sky",
+      aliases: [
+        "kurumsal doğrulama",
+        "doğrulama",
+        "seviye 2",
+        "verification",
+        "belge inceleme",
+        "verified",
+        "dernek doğrulama",
+      ],
     },
     {
       id: "feature-overrides",

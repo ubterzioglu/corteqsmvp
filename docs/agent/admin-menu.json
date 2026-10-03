@@ -101,8 +101,29 @@
       "isInactive": false
     },
     {
-      "id": "feature-overrides",
+      "id": "org-verification",
       "number": "6",
+      "label": "Kurumsal Doğrulama",
+      "groupLabel": "Üyeler ve Dizin",
+      "parentId": null,
+      "to": "/admin/org-verification",
+      "href": null,
+      "description": "Bekleyen Seviye 2 kurumsal doğrulama talepleri: belgeyi imzalı bağlantıyla önizle, onayla (kaydı verified yapar) veya sebeple reddet.",
+      "aliases": [
+        "kurumsal doğrulama",
+        "doğrulama",
+        "seviye 2",
+        "verification",
+        "belge inceleme",
+        "verified",
+        "dernek doğrulama"
+      ],
+      "isExternal": false,
+      "isInactive": false
+    },
+    {
+      "id": "feature-overrides",
+      "number": "7",
       "label": "Feature Override",
       "groupLabel": "Üyeler ve Dizin",
       "parentId": null,
@@ -120,7 +141,7 @@
     },
     {
       "id": "audit-logs",
-      "number": "7",
+      "number": "8",
       "label": "Audit Logs",
       "groupLabel": "Üyeler ve Dizin",
       "parentId": null,
@@ -138,7 +159,7 @@
     },
     {
       "id": "client-errors",
-      "number": "8",
+      "number": "9",
       "label": "İstemci Hataları",
       "groupLabel": "Üyeler ve Dizin",
       "parentId": null,
@@ -158,7 +179,7 @@
     },
     {
       "id": "referral",
-      "number": "9",
+      "number": "10",
       "label": "Referans Kodları",
       "groupLabel": "Üyeler ve Dizin",
       "parentId": null,
@@ -176,7 +197,7 @@
     },
     {
       "id": "afs-overview",
-      "number": "10",
+      "number": "11",
       "label": "AFS Genel Bakış",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -195,7 +216,7 @@
     },
     {
       "id": "role-matrix",
-      "number": "11",
+      "number": "12",
       "label": "Roller AFS Matrisi",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -214,7 +235,7 @@
     },
     {
       "id": "durum-raporu",
-      "number": "12",
+      "number": "13",
       "label": "Durum Raporu",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -232,7 +253,7 @@
     },
     {
       "id": "database-tables",
-      "number": "13",
+      "number": "14",
       "label": "Veritabanı Tabloları",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -250,7 +271,7 @@
     },
     {
       "id": "system-guide",
-      "number": "14",
+      "number": "15",
       "label": "Sistem Kullanım Kılavuzu",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -269,7 +290,7 @@
     },
     {
       "id": "brainstorming",
-      "number": "15",
+      "number": "16",
       "label": "Brainstorming",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -288,7 +309,7 @@
     },
     {
       "id": "community-moderation",
-      "number": "16",
+      "number": "17",
       "label": "Grup Moderasyonu",
       "groupLabel": "Topluluklar",
       "parentId": null,
@@ -306,7 +327,7 @@
     },
     {
       "id": "community-landings",
-      "number": "17",
+      "number": "18",
       "label": "Topluluk Landingleri",
       "groupLabel": "Topluluklar",
       "parentId": null,
@@ -323,7 +344,7 @@
     },
     {
       "id": "community-editors",
-      "number": "18",
+      "number": "19",
       "label": "Topluluk Editörleri",
       "groupLabel": "Topluluklar",
       "parentId": null,
@@ -339,7 +360,7 @@
     },
     {
       "id": "community-guide",
-      "number": "19",
+      "number": "20",
       "label": "Topluluk Kılavuzu",
       "groupLabel": "Topluluklar",
       "parentId": null,
@@ -355,7 +376,7 @@
     },
     {
       "id": "consulates",
-      "number": "20",
+      "number": "21",
       "label": "Diplomatik Profiller",
       "groupLabel": "Topluluklar",
       "parentId": null,
@@ -372,7 +393,7 @@
     },
     {
       "id": "cadde",
-      "number": "21",
+      "number": "22",
       "label": "Cadde",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -388,7 +409,7 @@
     },
     {
       "id": "cadde-guide",
-      "number": "22",
+      "number": "23",
       "label": "Cadde Kural Kitabı",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -405,7 +426,7 @@
     },
     {
       "id": "surveys",
-      "number": "23",
+      "number": "24",
       "label": "Anketler",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -421,7 +442,7 @@
     },
     {
       "id": "marquee",
-      "number": "24",
+      "number": "25",
       "label": "Haber Bandı",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -437,7 +458,7 @@
     },
     {
       "id": "blog",
-      "number": "25",
+      "number": "26",
       "label": "Blog",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -456,7 +477,7 @@
     },
     {
       "id": "social-media",
-      "number": "26",
+      "number": "27",
       "label": "Sosyal Medya",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -472,7 +493,7 @@
     },
     {
       "id": "social-share-vault",
-      "number": "27",
+      "number": "28",
       "label": "Sosyal Medya Paylaşım Deposu",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -497,7 +518,7 @@
     },
     {
       "id": "vip-invitations",
-      "number": "28",
+      "number": "29",
       "label": "VIP Davetleri",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -515,7 +536,7 @@
     },
     {
       "id": "yenilik-rehberi",
-      "number": "29",
+      "number": "30",
       "label": "Yenilikler ve Test Rehberi",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -535,7 +556,7 @@
     },
     {
       "id": "customer-requests",
-      "number": "30",
+      "number": "31",
       "label": "Müşteri Talepleri",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -555,7 +576,7 @@
     },
     {
       "id": "advisor-profiles",
-      "number": "31",
+      "number": "32",
       "label": "Sosyal Link Profilleri",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -573,7 +594,7 @@
     },
     {
       "id": "advisors-consultant",
-      "number": "31.1",
+      "number": "32.1",
       "label": "Consultant",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": "advisor-profiles",
@@ -586,7 +607,7 @@
     },
     {
       "id": "advisors-influencer",
-      "number": "31.2",
+      "number": "32.2",
       "label": "Influencer",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": "advisor-profiles",
@@ -599,7 +620,7 @@
     },
     {
       "id": "advisors-contributor",
-      "number": "31.3",
+      "number": "32.3",
       "label": "Contributor",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": "advisor-profiles",
@@ -612,7 +633,7 @@
     },
     {
       "id": "workspace-home",
-      "number": "32",
+      "number": "33",
       "label": "Workspace",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -628,7 +649,7 @@
     },
     {
       "id": "command-center",
-      "number": "33",
+      "number": "34",
       "label": "Command Center",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -646,7 +667,7 @@
     },
     {
       "id": "revision-requests",
-      "number": "34",
+      "number": "35",
       "label": "Revizyon İstekleri",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -666,7 +687,7 @@
     },
     {
       "id": "member-feedback",
-      "number": "35",
+      "number": "36",
       "label": "Üye Geri Bildirimleri",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -685,7 +706,7 @@
     },
     {
       "id": "workspace-resources",
-      "number": "36",
+      "number": "37",
       "label": "Dosyalar ve Linkler",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -703,7 +724,7 @@
     },
     {
       "id": "contributor-resources",
-      "number": "37",
+      "number": "38",
       "label": "Contributor Kaynakları",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -721,7 +742,7 @@
     },
     {
       "id": "workspace-mvp",
-      "number": "38",
+      "number": "39",
       "label": "MVP Listesi",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -736,7 +757,7 @@
     },
     {
       "id": "workspace-docs",
-      "number": "39",
+      "number": "40",
       "label": "Dokümanlar",
       "groupLabel": "Operasyon Workspace",
       "parentId": null,
@@ -752,7 +773,7 @@
     },
     {
       "id": "workspace-doc-kortexdocs",
-      "number": "39.1",
+      "number": "40.1",
       "label": "Kortex — CTO, Pitch & PRD Dokümanları",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -765,7 +786,7 @@
     },
     {
       "id": "workspace-doc-roadmap",
-      "number": "39.2",
+      "number": "40.2",
       "label": "Roadmap",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -778,7 +799,7 @@
     },
     {
       "id": "workspace-doc-ambassador",
-      "number": "39.3",
+      "number": "40.3",
       "label": "Ambassador",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -791,7 +812,7 @@
     },
     {
       "id": "workspace-doc-captable",
-      "number": "39.4",
+      "number": "40.4",
       "label": "Cap Table V2 — Hisse Yapısı",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -804,7 +825,7 @@
     },
     {
       "id": "workspace-doc-ekip",
-      "number": "39.5",
+      "number": "40.5",
       "label": "Ekip ve Bütçe",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -817,7 +838,7 @@
     },
     {
       "id": "workspace-doc-dijitalpazarlama",
-      "number": "39.6",
+      "number": "40.6",
       "label": "Dijital Pazarlama",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -830,7 +851,7 @@
     },
     {
       "id": "workspace-doc-projetakibi",
-      "number": "39.7",
+      "number": "40.7",
       "label": "Proje Takibi Şablonu",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -843,7 +864,7 @@
     },
     {
       "id": "workspace-doc-captablev2",
-      "number": "39.8",
+      "number": "40.8",
       "label": "Cap Table V2",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -856,7 +877,7 @@
     },
     {
       "id": "workspace-doc-whatsappbot",
-      "number": "39.9",
+      "number": "40.9",
       "label": "WhatsApp Bot",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -869,7 +890,7 @@
     },
     {
       "id": "workspace-doc-out-of-order",
-      "number": "39.10",
+      "number": "40.10",
       "label": "Out of Order — Bekleyen Sistem Borçları",
       "groupLabel": "Operasyon Workspace",
       "parentId": "workspace-docs",
@@ -882,7 +903,7 @@
     },
     {
       "id": "workshop-cadde",
-      "number": "40",
+      "number": "41",
       "label": "Cadde",
       "groupLabel": "Workshop",
       "parentId": null,
@@ -903,7 +924,7 @@
     },
     {
       "id": "workshop-profil",
-      "number": "41",
+      "number": "42",
       "label": "Profil",
       "groupLabel": "Workshop",
       "parentId": null,
@@ -923,7 +944,7 @@
     },
     {
       "id": "muhasebe-dashboard",
-      "number": "42",
+      "number": "43",
       "label": "Muhasebe Dashboard",
       "groupLabel": "Muhasebe",
       "parentId": null,
@@ -939,7 +960,7 @@
     },
     {
       "id": "muhasebe-giderler",
-      "number": "43",
+      "number": "44",
       "label": "Giderler",
       "groupLabel": "Muhasebe",
       "parentId": null,
@@ -955,7 +976,7 @@
     },
     {
       "id": "muhasebe-gelirler",
-      "number": "44",
+      "number": "45",
       "label": "Gelirler",
       "groupLabel": "Muhasebe",
       "parentId": null,
@@ -970,7 +991,7 @@
     },
     {
       "id": "muhasebe-nakit-akisi",
-      "number": "45",
+      "number": "46",
       "label": "Nakit Akışı",
       "groupLabel": "Muhasebe",
       "parentId": null,
@@ -987,7 +1008,7 @@
     },
     {
       "id": "muhasebe-butce",
-      "number": "46",
+      "number": "47",
       "label": "Bütçe",
       "groupLabel": "Muhasebe",
       "parentId": null,
@@ -1005,7 +1026,7 @@
     },
     {
       "id": "service-finder-dashboard",
-      "number": "47",
+      "number": "48",
       "label": "Hizmet Bulucu",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1024,7 +1045,7 @@
     },
     {
       "id": "service-finder-jobs",
-      "number": "48",
+      "number": "49",
       "label": "Tarama İşleri",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1041,7 +1062,7 @@
     },
     {
       "id": "service-finder-providers",
-      "number": "49",
+      "number": "50",
       "label": "Sağlayıcılar",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1060,7 +1081,7 @@
     },
     {
       "id": "service-finder-templates",
-      "number": "50",
+      "number": "51",
       "label": "Meslek Şablonları",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1077,7 +1098,7 @@
     },
     {
       "id": "service-finder-costs",
-      "number": "51",
+      "number": "52",
       "label": "Maliyetler",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1095,7 +1116,7 @@
     },
     {
       "id": "service-finder-guide",
-      "number": "52",
+      "number": "53",
       "label": "Hizmet Bulucu Kılavuzu",
       "groupLabel": "Hizmet Bulucu",
       "parentId": null,
@@ -1113,7 +1134,7 @@
     },
     {
       "id": "relocation-ingestion-jobs",
-      "number": "53",
+      "number": "54",
       "label": "Toplama İşleri",
       "groupLabel": "Kullanıcı Araçları",
       "parentId": null,
@@ -1131,7 +1152,7 @@
     },
     {
       "id": "relocation-ingestion-candidates",
-      "number": "54",
+      "number": "55",
       "label": "Aday İnceleme",
       "groupLabel": "Kullanıcı Araçları",
       "parentId": null,
@@ -1148,7 +1169,7 @@
     },
     {
       "id": "relocation-tools-question-counts",
-      "number": "55",
+      "number": "56",
       "label": "Araç Soru Sayıları",
       "groupLabel": "Kullanıcı Araçları",
       "parentId": null,
@@ -1166,7 +1187,7 @@
     },
     {
       "id": "radar-queue",
-      "number": "56",
+      "number": "57",
       "label": "Moderasyon Kuyruğu",
       "groupLabel": "Radar Haber Pipeline",
       "parentId": null,
@@ -1184,7 +1205,7 @@
     },
     {
       "id": "radar-sources",
-      "number": "57",
+      "number": "58",
       "label": "Haber Kaynakları",
       "groupLabel": "Radar Haber Pipeline",
       "parentId": null,
@@ -1203,7 +1224,7 @@
     },
     {
       "id": "radar-runs",
-      "number": "58",
+      "number": "59",
       "label": "Tarama Geçmişi",
       "groupLabel": "Radar Haber Pipeline",
       "parentId": null,
@@ -1220,7 +1241,7 @@
     },
     {
       "id": "radar-guide",
-      "number": "59",
+      "number": "60",
       "label": "Radar Kural Kitabı",
       "groupLabel": "Radar Haber Pipeline",
       "parentId": null,
@@ -1238,7 +1259,7 @@
     },
     {
       "id": "kadro-liste",
-      "number": "60",
+      "number": "61",
       "label": "Kadro Listesi",
       "groupLabel": "Kadro",
       "parentId": null,
@@ -1255,7 +1276,7 @@
     },
     {
       "id": "kadro-matris",
-      "number": "61",
+      "number": "62",
       "label": "Pazarlama Matrisi",
       "groupLabel": "Kadro",
       "parentId": null,
@@ -1271,7 +1292,7 @@
     },
     {
       "id": "kadro-rutinler",
-      "number": "62",
+      "number": "63",
       "label": "Rutinler",
       "groupLabel": "Kadro",
       "parentId": null,
@@ -1287,7 +1308,7 @@
     },
     {
       "id": "kadro-ilanlar",
-      "number": "63",
+      "number": "64",
       "label": "İlan Metinleri",
       "groupLabel": "Kadro",
       "parentId": null,
@@ -1303,7 +1324,7 @@
     },
     {
       "id": "kadro-basvurular",
-      "number": "64",
+      "number": "65",
       "label": "Kariyer Başvuruları",
       "groupLabel": "Kadro",
       "parentId": null,
@@ -1321,7 +1342,7 @@
     },
     {
       "id": "links-overview",
-      "number": "65",
+      "number": "66",
       "label": "Linkler",
       "groupLabel": "Linkler",
       "parentId": null,
@@ -1340,7 +1361,7 @@
     },
     {
       "id": "external-site-traffic",
-      "number": "66",
+      "number": "67",
       "label": "Site Trafik Durumu",
       "groupLabel": "Linkler",
       "parentId": null,
@@ -1360,7 +1381,7 @@
     },
     {
       "id": "about",
-      "number": "67",
+      "number": "68",
       "label": "Ürün Güncellemeleri",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1378,7 +1399,7 @@
     },
     {
       "id": "notification-settings",
-      "number": "68",
+      "number": "69",
       "label": "Bildirim Ayarları",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1399,7 +1420,7 @@
     },
     {
       "id": "tools",
-      "number": "69",
+      "number": "70",
       "label": "Araç Kataloğu",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1420,7 +1441,7 @@
     },
     {
       "id": "agent-analytics",
-      "number": "70",
+      "number": "71",
       "label": "Agent Analitik",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1441,7 +1462,7 @@
     },
     {
       "id": "admin-guide",
-      "number": "71",
+      "number": "72",
       "label": "Admin Kullanım Kılavuzu",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1461,7 +1482,7 @@
     },
     {
       "id": "external-engine",
-      "number": "72",
+      "number": "73",
       "label": "Engine",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1476,7 +1497,7 @@
     },
     {
       "id": "external-globe",
-      "number": "73",
+      "number": "74",
       "label": "Globe",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1491,7 +1512,7 @@
     },
     {
       "id": "external-founders",
-      "number": "74",
+      "number": "75",
       "label": "Founders",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1507,7 +1528,7 @@
     },
     {
       "id": "external-drive",
-      "number": "75",
+      "number": "76",
       "label": "Drive Klasörü",
       "groupLabel": "Sistem",
       "parentId": null,
@@ -1527,7 +1548,7 @@
     },
     {
       "id": "roles-draft",
-      "number": "76",
+      "number": "77",
       "label": "Roller Taslak",
       "groupLabel": "Roller ve AFS",
       "parentId": null,
@@ -1543,7 +1564,7 @@
     },
     {
       "id": "may19-kelime",
-      "number": "77",
+      "number": "78",
       "label": "19 Mayıs Kelime",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,
@@ -1560,7 +1581,7 @@
     },
     {
       "id": "may19-ani",
-      "number": "78",
+      "number": "79",
       "label": "19 Mayıs Anı",
       "groupLabel": "İçerik ve Kampanyalar",
       "parentId": null,

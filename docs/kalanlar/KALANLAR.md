@@ -141,7 +141,7 @@ traction ölçülecek.
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
 | A | ~~G02~~ ~~G03a~~ ~~G03b~~ ~~G03c~~ | ✅ **SERİ TAMAM 03.10** — G02+G03a+G03b 01.10 · ✅ **G03c KAPANDI 03.10** (deploy sonrası uygulandı — **SIZINTI KAPANDI**: taban tablo anon 42501, kabul #5 dört yol 4/4 ölçüldü) | ✅ | — |
 | B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
-| B | ~~G06a~~ ~~G06b~~ · **G07** | ✅ **G06a KAPANDI 03.10** — mig `20261003100000` canlıda: iz kolonları · private kova `org-verification-docs` (15 MB · 4 MIME · 3 politika) · `is_level2_org_representative()` · `request_org_verification_v1` (tek yazma yolu). **Kabul 15/15** · **mutasyon 7/7**. ✅ **G06b KAPANDI 03.10** — `src/lib/org-verification-api.ts` (careers deseni: `<uid>/<itemId>/<güvenli-ad>` anahtarı, MIME UZANTIDAN, 15 MB=kova, `createSignedUrl` [getPublicUrl YOK], 9 kod çift yönlü harita, düz-nesne hata) + `OrgVerificationRequestCard` (bağlı sahip→belge formu · **bağı olmayan→"önce kaydı sahiplen"** · PublicProfileShell'e `isOrganization` ile bağlandı). **Sözleşme 17 + bileşen 9 test · mutasyon 6/6 · canlı kova doğrulandı** (private · 15728640 · 4 MIME · octet-stream YOK · RPC anonexecute=false/auth=true). | 🟢 | G07 ⛔ G06b'nin commit'i |
+| B | ~~G06a~~ ~~G06b~~ ~~G07~~ | ✅ **G06 KURUMSAL DOĞRULAMA TAMAM 03.10** — **G06a** (mig `20261003100000`: iz kolonları · private kova `org-verification-docs` · `is_level2_org_representative()` · `request_org_verification_v1`; kabul 15/15 · mutasyon 7/7) · **G06b** (`org-verification-api.ts` careers deseni + `OrgVerificationRequestCard`: bağlı sahip→belge formu, **bağı olmayan→"önce kaydı sahiplen"**; 26 test · mutasyon 6/6 · canlı kova doğrulandı) · ✅ **G07 KAPANDI 03.10** (mig `20261003130000`: `admin_list_org_verifications` + `review_org_verification_v1` [onay→`verification_status='verified'`+verified_at/by+claim approved/reviewed_*, ret→reason ZORUNLU] + `AdminOrgVerificationPage` kuyruk/önizleme[imzalı]/Onayla/Reddet; **kabul K1–K9 9/9** · sözleşme 10 + bileşen 7 test · **mutasyon 6/6** · **N07 koşulu** — Kurumsal Doğrulama #6, numaralar kaydı, ai-knowledge 92 belge + 87 embed). 🔴 Rozet/filtre yayılımı YOK (dizin/arama dokunulmadı). | ✅ | — |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
 | D | ~~G12~~ ~~G13~~ ~~G15~~ ~~G16~~ ~~G17~~ · **G14** | ✅ G12 02.10 (durum makinesi) · ✅ G13 02.10 (sahiplik + guard v2) · ✅ G15 02.10 (strike + yasak) · ✅ G16 02.10 (`group_posts` sıfırdan, §3.D 4 sınıf) · ✅ **G17 KAPANDI 02.10** (sağlık skoru + tavsiyeler + guard v3; skorlar cron'a kadar NULL — 🔴 G22 tuzağı aşağıda) · kalan: şikayet | 🟢 | ⛔ **G14: G04/U06** (kabul testi telefonu doğrulanmış hesap istiyor) |
@@ -1713,12 +1713,35 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 - **Kabul:** kurum belge yükleyip talep açabiliyor; belge anonime kapalı; **267** mevcut kurumsal
   kayıt `verification_level=0` ile tutarlı.
 
-**G07 — Kurumsal doğrulama admin inceleme ekranı** · kod
-- Kuyruk + belge önizleme + Onayla (→ seviye 2) / Reddet + sebep; karar
-  `catalog_item_claims.status`/`reviewed_by_user_id`/`reviewed_at`'a. Navigasyon satırı
-  `admin-navigation-registry/members.ts` (veya `roles-afs.ts`).
-- ⚠️ **Rozet/filtre yayılımı bu batch'te YOK** — dizin ve arama belgesine dokunulmaz (X listesi).
-- **Kabul:** onay sonrası `verification_level=2` canlıda ölçülüyor; log izi var.
+**~~G07~~ — ✅ KAPANDI 03.10** · Kurumsal doğrulama admin inceleme ekranı · **G06 TAMAM**
+
+- **Migration `20261003130000`** canlıda (`check:migrations` sapmasız): `admin_list_org_verifications(p_status)`
+  (kuyruk — belge yolları `evidence->documents` + künye, is_admin guard) · `review_org_verification_v1(p_claim_id,
+  p_approve, p_reason)` (ONAY → `catalog_items.verification_status='verified'` + `verified_at` + `verified_by_user_id`
+  + claim `approved`/`reviewed_*`; RET → claim `rejected` + `review_reason` evidence'a, **sebep ZORUNLU**).
+  claim_type/status İSTEMCİDEN ALINMAZ (gövdede `verification_level_2` + approved/rejected). 5 hata kodu
+  (`org_verification_review_auth_required/_claim_not_found/_not_verification/_already_reviewed/_reason_required`).
+  🔴 Depolama SELECT politikası DEĞİŞMEDİ — G06a `read_own_or_admin` zaten `is_admin` içerir (admin önizler).
+- **`src/lib/admin/org-verification-review-api.ts`:** `fetchOrgVerificationQueue` + `reviewOrgVerification` +
+  `openOrgVerificationDocumentUrl` (G06b createSignedUrl yeniden) · 5 kod çift yönlü harita · düz-nesne hata.
+- **`src/pages/admin/AdminOrgVerificationPage.tsx`:** kuyruk kartları · belge önizleme (imzalı bağlantı,
+  `window.open`) · Onayla / Reddet (sebep) · **Ret sebep ZORUNLU** (sebepsiz Ret pasif — migration
+  reason_required ile uyumlu) · boş kuyruk + hata durumu görünür.
+- **Kablolama:** route `/admin/org-verification` (routes.tsx + admin-route-meta) · nav
+  `admin-navigation-registry/members.ts` (Approval Queue sonrası, `BadgeCheck`).
+- 🔴 **N07 KOŞULDU:** `ingest:admin-menu` (Kurumsal Doğrulama **#6**, sonraki öğeler +1: Feature Override
+  6→7, Audit Logs 7→8, …) · `ai-knowledge ingest --source=admin-menu` (**92 belge: yeni 1 · güncel 86**) ·
+  `embed` (**87 satır, bekleyen 0**).
+- 🔴 **Rozet/filtre yayılımı YOK** — dizin/arama belgesine DOKUNULMADI (onay yalnız `catalog_items.verification_status`
+  set eder; üye rozeti/arama filtresi G07 kapsamı dışı, ayrı iş).
+- **Kabul (`supabase/qa/org-verification-review-acceptance.sql`, geri alınan işlem, K1–K9 9/9):** K1 admin
+  kuyruğu okur (pending + doc_paths) · K2 ONAY → item `verified` + verified_at + verified_by + claim approved/reviewed ·
+  K3 RET (sebeple) → rejected + review_reason · K4 RET sebepsiz → reason_required (TEK kod, fixture pending+verification
+  erken kontrole takılmaz) · K5 yeniden inceleme → already_reviewed · K6 editor_access claim → not_verification ·
+  K7 non-admin → auth_required · K8 olmayan claim → claim_not_found · K9 grant (anon YOK/auth VAR, 2 RPC). Rollback temiz.
+- **Kanıt:** sözleşme 10 + bileşen 7 = **17 test** · **mutasyon 6/6** (M1 kod sil→2 · M2 instanceof→3 · M3 getPublicUrl→1 ·
+  M4 Ret sebep zorunlu değil→1 · M5 Onayla yanlış arg→1 · M6 imzalı URL atla→1) · tam takım **442 dosya / 3665 test** yeşil ·
+  tsc 0 · lint 0 (32 problem tümü ekstre-motoru) · check:dead 0/0/**1008** · verify:text ✓ 1969.
 
 ### Faz C — spike ve veri modeli
 

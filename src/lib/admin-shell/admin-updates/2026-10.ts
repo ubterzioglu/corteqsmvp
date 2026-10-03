@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-kurumsal-dogrulama-inceleme-ekrani",
+    date: "3 Ekim 2026",
+    title: "Kurumsal doğrulama inceleme ekranı geldi — belgeyi önizle, onayla/reddet (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ: Yönetici menüsüne “Kurumsal Doğrulama” maddesi eklendi (Üyeler ve Dizin grubu, Approval Queue’nun hemen altında, madde #6). Ekranda bekleyen Seviye 2 doğrulama talepleri listeleniyor: kayıt adı, talep eden, notu ve yüklediği belgeler.",
+      "NASIL ÇALIŞIR: Yönetici belgeyi imzalı (süreli) bağlantıyla önizler, sonra “Onayla” ya da “Reddet” der. Onayda kayıt doğrulanmış (verified) olur — kimin, ne zaman onayladığı kayda işlenir. Reddin sebebi ZORUNLUDUR (talep sahibi neden reddedildiğini görür); sebepsiz Ret düğmesi pasiftir.",
+      "GÜVENLİK: İnceleme ekranı ve karar fonksiyonları yalnız yöneticiye açıktır (sunucu tarafı is_admin kontrolü). Belgeler dışarıya kapalı kovada durur; önizleme yalnız süreli imzalı bağlantıyla, herkese açık bağlantı üretilmez. Karar verisi (claim tipi/durumu) istemciden alınmaz, sunucuda zorlanır.",
+      "KAPSAM NOTU: Bu ekran yalnız inceleme + karar verir. Doğrulama rozetinin üye arama/dizin tarafına yayılması (filtre, “doğrulanmış” etiketi) BİLEREK bu işe KONMADI — ayrı bir adım olarak planlanıyor (katalog/arama belgesine dokunulmadı).",
+      "MENÜ NUMARALARI KAYDI: Yeni madde eklendiği için sonraki maddelerin numaraları birer kaydı (Feature Override 6→7, Audit Logs 7→8, …). Bot korpusu aynı turda güncellendi (92 belge, 87 gömme) — asistan bayat numara söylemez.",
+      "KANIT: Canlı kabul 9/9 (geri alınan işlem — onay kaydı gerçekten verified yapıyor, ret sebebi kaydediliyor, yetkisiz/olmayan/zaten-incelenmiş talepler doğru tek hatayla reddediliyor). 17 test (10 veri katmanı + 7 ekran) yeşil; kod 6 yerden bilerek bozuldu (mutasyon) ve testler her seferinde yakaladı. Tam takım 442 dosya / 3665 test yeşil.",
+      "KALAN: Doğrulama rozetinin üye tarafına yayılımı (arama filtresi + “doğrulanmış” etiketi) ayrı iş. Ekran bir sonraki frontend deploy’ında canlıya çıkar.",
+    ],
+  },
+  {
     id: "20261003-traction-buyume-metrikleri-paneli",
     date: "3 Ekim 2026",
     title: "Admin paneline “Traction” panosu geldi — 5 büyüme metriği tek ekranda (deploy kuyruğunda)",

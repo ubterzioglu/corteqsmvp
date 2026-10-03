@@ -84,6 +84,7 @@ const AdminBulkImportPage = lazyWithReload(() => import("@/pages/admin/AdminBulk
 const AdminLinksPage = lazyWithReload(() => import("@/pages/admin/AdminLinksPage"));
 const AdminEventsPage = lazyWithReload(() => import("@/pages/admin/AdminEventsPage"));
 const AdminTractionPage = lazyWithReload(() => import("@/pages/admin/AdminTractionPage"));
+const AdminOrgVerificationPage = lazyWithReload(() => import("@/pages/admin/AdminOrgVerificationPage"));
 
 // /admin alt ağacı — App.tsx'teki <Routes> içine {adminRoutes} olarak eklenir.
 export const adminRoutes = (
@@ -148,6 +149,7 @@ export const adminRoutes = (
     <Route path="links" element={<AdminLinksPage />} />
     <Route path="events" element={<AdminEventsPage />} />
     <Route path="traction" element={<AdminTractionPage />} />
+    <Route path="org-verification" element={<AdminOrgVerificationPage />} />
     <Route path="guide" element={<AdminGuidePage />} />
     <Route path="workspace" element={<AdminWorkspaceHomePage />} />
     <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />
