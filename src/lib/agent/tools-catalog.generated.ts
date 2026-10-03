@@ -3153,6 +3153,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/events-first-approval-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/events-timezone.test.ts",
       "kind": "ts",
       "module_family": "lib"

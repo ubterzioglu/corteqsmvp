@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **41** (N 0 · W 8 · M 26 · G 7 · KR 0) — G10+G12+G13+G15–G25+**G03c** kapandı (**SIZINTI KAPANDI 03.10**); G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **40** (N 0 · W 8 · M 25 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+**M01+M02** kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
 > | **Kullanıcı eli bekleyen** | 10 (U bölümü) · **Karar** 9 (K — **K10 yeni, 02.10**: rol modeli) · **Onay** 6 (P) |
 > | **Plan onayı (01.10)** | ✅ **N · G · KR onaylandı** · ⏳ M onay bekliyor |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
@@ -117,7 +117,7 @@ traction ölçülecek.
 | Faz | ID | Kapsam | Kapı |
 |---|---|---|---|
 | 0 | ~~M01~~ | ✅ **KAPANDI 03.10** — `community-free-features.test.ts` (8 test) + CLAUDE.md "Ücretsiz topluluk işlevleri" bölümü (T1/T2) | ✅ |
-| 1 | **M02–M07** | Etkinlik: ilk-onay kuralı · RLS sıkılaştırma · katılım · UI · canlı doğrulama | 🟢 (onay 03.10) |
+| 1 | ~~M02~~ · **M03–M07** | ✅ **M02 KAPANDI 03.10** (`create_event_v1` + `event_settings` + `approval_source`; smoke 7/7, mutasyon 6/6) · kalan: RLS sıkılaştırma (T1) · katılım · UI · canlı doğrulama | 🟢 (onay 03.10) |
 | 5 | **M08–M10** | Panel hızlı eylemleri · başlangıç kartı · `feature_interest` | 🟢 (onay 03.10) |
 | 3 | **M11–M13** | Davet tabloları/RPC · `/liderlik` · kayıt akışı | 🟢 (onay 03.10) |
 | 6 | **M14–M16** | 5 türetilmiş metrik view · AdminTractionPage · canlı doğrulama | 🟢 (onay 03.10) |
@@ -803,16 +803,42 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 ### Faz 1 — etkinlik: ilk-onay kuralı + katılım
 
-**M02 — Migration 1: `approval_source` + ayar tablosu + `create_event_v1`**
-- `events.approval_source text` (`'auto'|'admin'`).
-- Etkinlik ayar tablosu (`cadde_settings` deseni): aktif limit (=2) + bireysel dışı rol
-  muafiyeti — ürün kararı SQL update'i olsun, kod değişikliği değil.
-- **RPC `create_event_v1(...)` security definer — tek yazma yolu:** ilk etkinlik →
-  `pending` + `approval_requests`'e `event_create` satırı; sonrası → `published` +
-  `approval_source='auto'`; aynı anda en fazla 2 aktif (`published` ve
-  `event_date >= current_date`) → `errcode='P0001'`, mesaj `event_active_limit`.
-- **Kabul:** canlıya uygulandı + `applied/`'a taşındı; SQL smoke: ilk/ikinci/üçüncü
-  etkinlik senaryoları RPC üzerinden doğrulandı.
+**~~M02~~ — ✅ KAPANDI 03.10** · Migration 1: `approval_source` + ayar tablosu + `create_event_v1`
+
+- Migration `20261003010000_events_first_approval.sql` **canlıda** (`applied/` + kayıt,
+  `check:migrations` **462/462** sapmasız): `events.approval_source` ('auto'|'admin', null =
+  eski yol) · `event_settings` (cadde/group_settings deseni, RLS + istemciye kapalı; seed:
+  `events.active_limit=2` · `events.first_approval_bireysel_key="User_DiasporaMember"`) ·
+  **`create_event_v1` security definer — TEK yazma yolu:** ilk etkinlik (bireysel rol +
+  published yok) → `pending` + `approval_requests('event_create', target event)` · sonrası
+  veya bireysel-dışı rol → `published` + `approval_source='auto'` · aynı anda en fazla 2 aktif
+  (published && event_date ≥ bugün) → **`event_active_limit` (P0001)** · user_id YALNIZ
+  `auth.uid()` (istemciden kullanıcı parametresi YOK — mevcut istemcinin `userId` geçirme
+  yüzeyi RPC'de kapanır). ⚠️ İlk uygulama denemesi COMMENT/GRANT imzasındaki `time`/`text`
+  yazım hatasıyla transaction'dan düştü (ON_ERROR_STOP + ledger sırası dersi: ledger'ı
+  uygulamadan ÖNCE yazma — düzeltildi, yeniden uygulandı, 462/462 doğrulandı).
+- Sıra bilinçli: RPC önce kurulur (M02) → doğrudan PostgREST yazımı M03'te kapanır → istemci
+  M05'te RPC'ye geçer. Canlı form bu batch'te BOZULMAZ (eski insert yolu hâlâ açık).
+- **Kabul (SQL smoke, geri alınan işlem — 7/7):** S1 ilk etkinlik → `pending` + approval satırı
+  (payload'da başlık, target_entity_id) + user_id=auth.uid · S2 ilk onaylanınca ikinci →
+  `published`+`auto`, yeni approval satırı YOK · S3 üçüncü → `event_active_limit` **SQLSTATE
+  P0001** · S3b geçmişteki published limit YEMEZ → published · S4 bireysel-dışı role çevrilen
+  kullanıcı ilk etkinlikte bile `published` (muafiyet) · S5 anon → `permission denied` ·
+  S6 boş başlık/tarihsiz → `event_field_required`. Rollback sonrası canlı dokunulmamış
+  (events 1 eski satır · approval_requests'teki 2 `event_create` satırı 18.07/02.08'den kalma
+  ESKİ kayıtlar — sızıntı değil, ölçüldü).
+- **Kanıt:** sözleşme **10/10** (`events-first-approval-schema.test.ts`) · **mutasyon 6/6**
+  (limit sabitleme · approval satırını `if false`'a gömme [M2 ilk koşuda METİN kilidi yüzünden
+  kaçtı → KOŞUL kilidi eklendi, G21/G24 dersi üçüncü kez — tekil koşuda düştü] · herkes auto ·
+  P0001 silme · p_user_id ekleme · security definer silme) · tam takım **423 dosya / 3490 test** ·
+  `tsc` 0 · lint 0 (32 problem tümü `corteqs-ekstre-motoru/`) · `check:dead` 0/0 · `ingest` 58+0 ·
+  `verify:text` ✓ 1931.
+- 📌 **M03'e devir:** T1'in kapanışı (INSERT politikası `status='pending'` zorunlu + status
+  trigger'ı); mevcut istemci insert'i `status:'pending'` yazdığı için M03 canlı formu BOZMAZ.
+  Admin onay yolu (AdminEventsPage) trigger'da `is_admin` muafiyeti ister; onayda
+  `approval_source='admin'` yazılması M08'in işi (bugün null kalır = "eski yol").
+- *(özgün kapsam)* `approval_source` + ayar tablosu + `create_event_v1`. **Kabul:** canlıya
+  uygulandı + `applied/`'a taşındı; SQL smoke ilk/ikinci/üçüncü etkinlik RPC üzerinden ✓.
 
 **M03 — Migration 2: RLS sıkılaştırma + status trigger (T1'i kapatır)**
 - INSERT politikası `status='pending'` zorunlu; status değiştirmeyi engelleyen **trigger**
