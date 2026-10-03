@@ -8,6 +8,7 @@
 // Faz 2'de mutation'lar security-definer RPC'lere taşınacak.
 
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
 import { DEMO_POSTS } from "./cadde-demo-data";
 import {
@@ -23,9 +24,11 @@ import { mapActorContext, type CaddeActorContext } from "./cadde-rules";
 import {
   caddeCommentCreateSchema,
   caddePostCreateSchema,
+  caddePostUpdateSchema,
   caddeReactionSchema,
   caddeShareSchema,
   parseWithUserError,
+  type CaddePostUpdateInput,
 } from "./cadde-schemas";
 import { validatePostInterests } from "./cadde-targeting";
 export { listCaddeCities, listCaddeCountries, listCaddeFeed } from "./cadde-feed-location-api";
@@ -168,6 +171,37 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
 export async function deleteCaddePost(postId: string): Promise<void> {
   const { error } = await db.rpc("delete_cadde_post_v1", { p_post_id: postId });
   if (error) throw caddeWriteError("deleteCaddePost", error);
+}
+
+/**
+ * CD01 · Gönderi düzenleme (A11b RPC'si `update_cadde_post_v1`).
+ *
+ * NULL semantiği RPC'nin kendisiyle birebir: **verilmeyen alan payload'a hiç
+ * girmez** (`undefined` → RPC default null → "dokunma"). `p_mentions` HİÇBİR
+ * ZAMAN gönderilmez (T1: body düzenlemesi mevcut anmaları korur). Yetki
+ * (sahip veya admin/moderatör) DB'de enforce edilir — istemcide rol kontrolü
+ * YAPMA (A11c deseni). Hata kodları `cadde-rules.ts` haritasında zaten var
+ * (A11b: yeni kod yok).
+ */
+export async function updateCaddePost(input: CaddePostUpdateInput): Promise<void> {
+  const parsed = parseWithUserError(caddePostUpdateSchema, input);
+
+  // `undefined` alanlar JSON serileştirmede DÜŞER → RPC default null alır
+  // ("dokunma"). Bilerek tam typed nesne: wire'da yalnız verilen alanlar gider.
+  const rpcPayload = {
+    p_post_id: parsed.postId,
+    p_title: parsed.title,
+    p_body: parsed.body,
+    p_media: parsed.media as Json | undefined,
+    p_need_category: parsed.needCategory,
+    p_targets: parsed.targets?.map((target) => ({
+      country: target.country.trim(),
+      city: target.city?.trim() ?? "",
+    })) as Json | undefined,
+  };
+
+  const { error } = await db.rpc("update_cadde_post_v1", rpcPayload);
+  if (error) throw caddeWriteError("updateCaddePost", error);
 }
 
 // ── Akış erişimi (CaddeReachCard) ────────────────────────────────────────────

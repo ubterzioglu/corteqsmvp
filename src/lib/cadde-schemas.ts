@@ -234,6 +234,59 @@ export const caddeCafeJoinSchema = z.object({
 export type CaddePostCreateInput = z.infer<typeof caddePostCreateSchema>;
 export type CaddeCommentCreateInput = z.infer<typeof caddeCommentCreateSchema>;
 
+/**
+ * CD01 · Gönderi DÜZENLEME girdisi (`update_cadde_post_v1`, A11b).
+ *
+ * SEMANTİK (RPC ile birebir): alan `undefined` → **dokunma** (payload'a hiç
+ * girmez, RPC null alır) · `title`/`needCategory` boş string → TEMİZLE (RPC
+ * `nullif(trim(...),'')`) · `media: []` → medyayı temizle (`undefined` değil!).
+ *
+ * ⚠️ T1 (mentions): şemada mentions alanı YOK — RPC `p_mentions null` iken
+ * mevcut anmaları KORUR; body düzenlemesi anma satırlarını silmemeli.
+ * ⚠️ T3 (premium): targets max **1** — düzenlemede ek hedef eklenemez
+ * (`cadde_multi_target_premium_required` canlıda açık). Cafe gönderilerinde
+ * konum zaten RPC tarafında yok sayılır.
+ * post_type/is_bridge/cafe_id/diaspora_key/visibility RPC kapsamında DEĞİL
+ * (A11b başlığı) — şemada da yok.
+ */
+export const caddePostUpdateSchema = z
+  .object({
+    postId: z.string().min(1),
+    title: z.string().trim().max(160, "Başlık en fazla 160 karakter olabilir.").optional(),
+    body: z.string().trim().max(4000, "Paylaşım metni en fazla 4000 karakter olabilir.").optional(),
+    media: caddeMediaSchema.optional(),
+    needCategory: z.string().trim().optional(),
+    targets: z
+      .array(caddePostTargetSchema)
+      .max(1, "Düzenlemede ek hedef eklenemez (birden fazla hedef premium kapsamdadır).")
+      .optional(),
+  })
+  .superRefine((value, ctx) => {
+    const hasChange =
+      value.title !== undefined ||
+      value.body !== undefined ||
+      value.media !== undefined ||
+      value.needCategory !== undefined ||
+      value.targets !== undefined;
+    if (!hasChange) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Değişiklik yapılmadı — kaydedilecek bir alan yok.",
+      });
+      return;
+    }
+    // SQL cadde_invalid_body aynası: body boşaltılıyorsa medya dolu kalmalı.
+    if (value.body !== undefined && value.body.trim() === "" && (value.media?.length ?? 0) === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["body"],
+        message: "Paylaşım metnini temizlemek için medyayı da silmiş olmalısın — boş paylaşım olmaz.",
+      });
+    }
+  });
+
+export type CaddePostUpdateInput = z.infer<typeof caddePostUpdateSchema>;
+
 /** İlk Zod hatasını kullanıcıya gösterilebilir Error'a çevirir. */
 export function parseWithUserError<T>(schema: z.ZodType<T>, input: unknown): T {
   const result = schema.safeParse(input);

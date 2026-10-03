@@ -64,6 +64,8 @@ const CADDE_API_PUBLIC_EXPORTS = [
   "searchCaddeMentions",
   "searchCaddePeople",
   "toggleCaddeReaction",
+  // CD01: düzenleme RPC sarmalayıcısı (update_cadde_post_v1, A11b) — bilinçli genişletme.
+  "updateCaddePost",
 ] as const;
 
 describe("Cadde API facade", () => {

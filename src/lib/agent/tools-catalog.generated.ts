@@ -784,7 +784,8 @@ export const toolCatalog = {
         "deleteCaddePost",
         "getCaddeActorContext",
         "getCaddeFeedReach",
-        "listCaddePostComments"
+        "listCaddePostComments",
+        "updateCaddePost"
       ],
       "tables_read_write": [
         "cadde_post_comments"
@@ -792,7 +793,8 @@ export const toolCatalog = {
       "rpcs": [
         "delete_cadde_post_v1",
         "get_cadde_actor_context",
-        "get_cadde_feed_reach_v1"
+        "get_cadde_feed_reach_v1",
+        "update_cadde_post_v1"
       ],
       "evidence_path": "src/lib/cadde-api.ts"
     },
@@ -2362,6 +2364,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-api-support.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-api-update.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
