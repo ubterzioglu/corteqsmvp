@@ -25,6 +25,7 @@ import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import CaddeMediaGallery from "@/components/cadde/CaddeMediaGallery";
 import CaddePostBody from "@/components/cadde/CaddePostBody";
 import CaddePostMenu from "@/components/cadde/CaddePostMenu";
+import CaddeRecommendationCard from "@/components/cadde/CaddeRecommendationCard";
 import NotificationsBell from "@/components/cadde/NotificationsBell";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { Button } from "@/components/ui/button";
@@ -148,6 +149,13 @@ export const CaddeFeedView = ({
             onScopeChange={(scope) => updateFilters({ scope })}
             onClearHashtag={() => updateFilters({ hashtag: "" })}
           />
+
+          {/* M21 · Tavsiye modülü görünürlüğü — 🔴 KARAR 2: bant/skor sıralamasına
+              ve hedeflemeye BULAŞMAZ. Kart feedWithSponsor kompozisyonunun DIŞINDA,
+              sabit konumda; kendi query anahtarıyla çalışır, hata durumunda CTA'ya
+              düşer ve akışı asla bloklamaz. Gövde metni çizilmez (iletişim sızıntısı
+              yüzeyi kapalı — kilit: CaddeRecommendationCard.test.tsx). */}
+          <CaddeRecommendationCard />
 
           <div className="space-y-4">
             {newPostCount > 0 ? (

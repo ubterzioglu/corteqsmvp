@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-cadde-akisinda-tavsiye-karti",
+    date: "4 Ekim 2026",
+    title: "Cadde akışında “Tavsiye İste” kartı — topluluk tavsiyeleri artık akışta görünür (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ: Cadde akışının üstünde (kapsam şeridi ile paylaşımların arasında) yeni bir “Tavsiye İste” kartı var. En yeni 3 açık tavsiye talebini başlık + şehirle listeler, tıklayınca talep detayına (/tavsiye/:id) gider; “Tüm tavsiyelere git” düğmesi /tavsiye listesini açar. Kart giriş yapmamış ziyaretçiye de görünür.",
+      "GİZLİLİK: Kartta talebin GÖVDE metni BİLEREK gösterilmez — yalnız başlık ve şehir. Sebep: gövde serbest metin olduğundan kullanıcı yanlışlıkla telefon/e-posta yazabilir; akışta bu metin çizilseydi iletişim sızıntı yüzeyi açılırdı. Test kilidi var: gövdeye yazılmış telefon/e-posta DOM’a sızarsa test düşer.",
+      "CADDE SIRALAMASI DEĞİŞMEDİ (ölçüldü): Kart yalnız görünürlük sağlar — Cadde’nin bant/skor sıralamasına ve hedefleme kurallarına dokunmaz. Sıralama/kompozisyon dosyaları bu işte DEĞİŞMEDİ; kart akış listesinin dışında sabit konumda durur ve bunu kaynak kilidi testleri doğruluyor. Cadde karakterizasyon testlerinin tamamı değişmeden yeşil.",
+      "DAYANIKLILIK: Kart kendi verisini kendi çeker; tavsiye servisi hata verse ya da yavaşlasa bile Cadde akışını BLOKLAMAZ — bu durumda kart yalnız “Tüm tavsiyelere git” bağlantısına düşer.",
+      "KANIT: 8 yeni test (4 davranış + 4 bulaşmazlık kilidi); kod 6 yerden bilerek bozuldu (mutasyon) — gövde sızıntısı, hata çökmesi, kartın akış listesine taşınması/silinmesi, link bozma, liste gizleme — testler her seferinde yakaladı. Tam test takımı 447 dosya / 3698 test yeşil.",
+      "KALAN: Kilitli profesyonel gelen kutusu (M22) ve Faz 2 canlı doğrulama (M23) sırada. Kart bir sonraki frontend deploy’unda canlıya çıkar.",
+    ],
+  },
+  {
     id: "20261004-dogrulama-rozeti-tek-kaynaga-baglandi",
     date: "4 Ekim 2026",
     title: "Doğrulama rozeti tek kaynağa bağlandı — kurumsal onaylar artık dizine gerçekten yansıyor",
