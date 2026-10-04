@@ -171,7 +171,7 @@ bu bir kurulum işi değil, yeni geliştirme (W04 migration + W05 yeni edge func
 |---|---|---|---|---|
 | **W01** | Beş secret'ı gir + webhook doğrula (kod yok) | küçük | 🔴 | ⛔ **U09** |
 | **W02** | İnsan yanıtıyla uçtan uca doğrulama (kod yok) | küçük | 🔴 | ⛔ W01 · gerçek telefon |
-| **W03** | Graph gönderim yolunu `_shared`'a çıkar | küçük | 🟢 | ⛔ W02 (sıra bağlayıcı) |
+| **W03** | Graph gönderim yolunu `_shared`'a çıkar — 📋 **PLAN HAZIR:** [`docs/plans/2026-10-04-w03-graph-gonderim-yolu-plani.md`](../plans/2026-10-04-w03-graph-gonderim-yolu-plani.md) (başka ajan uygular) | küçük | 🟢 **AÇIK** | ✅ sıra kilidi gevşedi (§2.0 karar 1) — bloke DEĞİL |
 | **W04** | Migration: bot yanıtı + kill-switch + hız limiti | orta | 🟢 | ⛔ W03 |
 | **W05** | `whatsapp-autoreply` fonksiyonu (beyin) | orta | 🟢 | ⛔ W04 |
 | **W06** | Webhook'tan tetikleme + deploy | küçük | 🟢 | ⛔ W05 |
