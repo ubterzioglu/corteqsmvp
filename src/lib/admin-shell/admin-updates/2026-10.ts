@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-dogrulama-rozeti-tek-kaynaga-baglandi",
+    date: "4 Ekim 2026",
+    title: "Doğrulama rozeti tek kaynağa bağlandı — kurumsal onaylar artık dizine gerçekten yansıyor",
+    items: [
+      "BULUNAN KUSUR: Kayıtlarda doğrulama bilgisi İKİ ayrı alanda tutuluyordu. Yönetici ekranları ve yeni kurumsal doğrulama akışı birini yazıyordu, herkese açık dizin rozetini ise ÖTEKİ alan çiziyordu. Sonuç: bir yönetici kurumsal doğrulamayı onayladığında dizinde HİÇBİR ŞEY değişmiyordu — hata da vermiyordu, sadece olmuyordu.",
+      "İKİNCİ KUSUR: İki grup kaydı dizinde “doğrulanmış” rozetiyle görünüyordu ama aslında kimse onları doğrulamamıştı; değer eski içe aktarmadan kalmıştı. Rozetleri kaldırıldı. Gerçekten doğrulanmış 7 kayıt aynen korundu.",
+      "KÖK NEDEN: Rozeti besleyen alanı sistemde YAZAN kimse yoktu (ne bir ekran, ne bir fonksiyon). Yani içe aktarma gününden donmuş bir değerdi ve herkese açık dizin ona güveniyordu.",
+      "ÇÖZÜM: O alan artık türetiliyor — doğrulama durumu neyse rozet de odur, elle değiştirilemez. Bir daha ayrışması yapısal olarak mümkün değil.",
+      "ETKİ: Bundan sonra yönetici bir kurumsal doğrulamayı onayladığında rozet dizinde anında görünür. Ayrışan kayıt sayısı: 0.",
+    ],
+  },
+  {
     id: "20261004-komuta-merkezi-arsiv-dalgasi",
     date: "4 Ekim 2026",
     title: "Komuta Merkezi temizlendi — 1.635 kayıt 495’e indi (hiçbir şey silinmedi)",
