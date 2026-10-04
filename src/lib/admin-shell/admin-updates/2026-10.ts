@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-komuta-merkezi-disariya-kapatildi",
+    date: "4 Ekim 2026",
+    title: "Güvenlik: Komuta Merkezi’nin tamamı dışarıya açıkmış — kapatıldı (1.761 kayıt)",
+    items: [
+      "NE OLDU: Komuta Merkezi tablosunda, herkese tam yetki veren iki eski erişim kuralı kalmış. Sonuç: iç yol haritamız, toplantı notlarımız, görev detaylarımız ve sorumluları GİRİŞ YAPMADAN okunabiliyordu — ve aynı kural yüzünden değiştirilebilir, silinebilir durumdaydı.",
+      "KAPSAM: 1.761 kaydın tamamı (495 aktif + 1.158 arşiv). Başlık, açıklama metni ve atanan kişi dahil.",
+      "DOĞRULAMA — ÖNCE: Gerçek anonim istek 1.761 kaydın tamamını listeledi ve örnek bir kaydın başlığını, açıklamasını, sorumlusunu döndürdü. Yazma denemesi de reddedilmedi.",
+      "DOĞRULAMA — SONRA: Aynı okuma isteği artık 0 kayıt döndürüyor. Yazma denemesi “erişim kuralı ihlali” hatası veriyor ve hiçbir kayıt oluşmuyor. Özet görünümü de dışarıya kapandı.",
+      "NEDEN AÇIK KALMIŞ: Tabloda hem doğru yönetici kuralları hem de eski “herkese açık” kuralları bir arada duruyordu. Bu kurallar birbirini TAMAMLAR, kısıtlamaz — yani açık olan kural, yönetici kurallarını tamamen anlamsız kılıyordu.",
+      "PANEL BOZULMADI: Yönetici hesabıyla ölçüldü, 1.761 kaydın tamamı görünmeye devam ediyor. Sıradan bir üye ise hiçbir kayıt göremiyor.",
+    ],
+  },
+  {
     id: "20261004-tavsiye-faz2-canli-dogrulama",
     date: "4 Ekim 2026",
     title: "Tavsiye modülü canlıda doğrulandı — gönderilen “M23 doğrulama talebi” maili gerçek bir testtir",
