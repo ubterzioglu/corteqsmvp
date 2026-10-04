@@ -93,8 +93,15 @@ function toBase64Lines(value: string): string {
 
 /** Başlık değeri ASCII dışı karakter içeriyorsa RFC 2047 UTF-8/B ile kodlar (Türkçe konular). */
 function encodeHeaderValue(value: string): string {
-  if (![...value].some((character) => (character.codePointAt(0) ?? 0) > 0x7f)) return value;
-  return `=?UTF-8?B?${bytesToBase64(encoder.encode(value))}?=`;
+  // 🔴 HEADER INJECTION KİLİDİ (inceleme CRITICAL): kullanıcı metni subject'e
+  // girer (ör. tavsiye başlığı); salt-ASCII değer RFC2047'lenMEDEN ham yazılır
+  // ve MIME başlıkları \r\n ile birleşir → CRLF taşıyan ASCII başlık Reply-To/
+  // Cc gibi SAHTE başlık satırları üretirdi. Kontrol karakterleri burada TEK
+  // NOKTADAN çıkarılır (tüm şablonları korur; şablon tarafı ayrıca kırpar).
+  // eslint-disable-next-line no-control-regex -- kontrol karakterlerini SİLMEK işin kendisi (header injection kilidi)
+  const safe = value.replace(/[\u0000-\u001f\u007f]/g, "");
+  if (![...safe].some((character) => (character.codePointAt(0) ?? 0) > 0x7f)) return safe;
+  return `=?UTF-8?B?${bytesToBase64(encoder.encode(safe))}?=`;
 }
 
 /** SMTP oturumu: tek bağlantı, komut/yanıt sırası, komut başına zaman sınırı. */

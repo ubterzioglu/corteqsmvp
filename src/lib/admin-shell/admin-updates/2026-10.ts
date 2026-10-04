@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-tavsiye-inceleme-duzeltmeleri",
+    date: "4 Ekim 2026",
+    title: "Tavsiye modülünde bağımsız inceleme turu: 1 kritik güvenlik kusuru + 8 mantık kusuru kapatıldı",
+    items: [
+      "GÜVENLİK (kritik, kapatıldı): Tavsiye eşleşme mailinin konusu, talep başlığını HAM taşıyordu — başlığa gizli satır-sonu karakterleri gömen bir kullanıcı, profesyonellere giden maile sahte “Yanıtla:” adresi gibi başlıklar enjekte edebilirdi (oltalama vektörü). İki katmanlı kilit kondu: şablon ve mail altyapısı kontrol karakterlerini tek noktadan siliyor; saldırı senaryolu test eklendi. Düzeltme canlıya deploy edildi.",
+      "KURAL NETLEŞTİ: Talep SAHİBİ kendi talebini artık yanıtlayamaz (veritabanı kuralı + form sahibiye hiç çizilmiyor). Sebep: sahibin kendi “yanıtı” talebi ‘yanıtlanmış’a çevirip listeden düşürüyordu — kimse gerçekten yanıtlamadan. Yeni hata kodu tek Türkçe mesajla eşleşiyor.",
+      "ROZET DÜRÜSTLÜĞÜ: Yanıtlardaki “Profesyonel” rozeti artık dizin-görünürlük kurallarıyla birebir aynı süzgeçten geçiyor — dizin dışında kalmış (ör. özel görünürlüklü veya yönetici/test) hesaplar herkese açık rozet ALAMIYOR. Canlı kabul, ayırt edici fixture ile ölçüldü (14/14).",
+      "FORM DÜZELTMELERİ: Tavsiye formuna Kategori alanı eklendi (eşleştirmenin en güçlü sinyali formdan toplanmıyordu — ölüydü) ve Ülke alanı serbest metinden kod seçiciye çevrildi (“Almanya” yazısı eşleştirmede asla tutmuyordu; artık Almanya=DE). Hata mesajları kullanıcının dilinde kalıyor (teknik katmanda kaybolup genel mesaja düşme kusuru giderildi).",
+      "PERFORMANS/GÜRÜLTÜ: Eşleşen profesyoneller sorgusu anonim ziyaretçide hiç açılmıyor (üyelere özel fonksiyon için garantili hata + gereksiz tekrar denemeleri üretiliyordu).",
+      "KANIT: Bağımsız inceleme 4 commit’i taradı (güvenlik/performans/iş mantığı/dağıtım/kopya/ölü kod — 6 uzman geçişi); düzeltmeler sonrası 6 mutasyon 6/6 yakalandı, canlı SQL kabulü 14/14, tam test takımı 453 dosya / 3741 test yeşil. İncelemenin 7 düşük öncelikli önerisi KALANLAR’a borç satırı olarak işlendi (bilinçli erteleme).",
+    ],
+  },
+  {
     id: "20261004-ozgecmis-dosyalari-silindi",
     date: "4 Ekim 2026",
     title: "Üç özgeçmiş dosyası yedeklenip kalıcı olarak silindi — hiçbir kayıt onlara işaret etmiyordu",

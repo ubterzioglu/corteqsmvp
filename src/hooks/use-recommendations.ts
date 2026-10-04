@@ -2,6 +2,7 @@
 // Liste/detay/eşleşme sorguları + create/answer mutasyonları (başarıda invalidate).
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useAuth } from "@/components/auth/useAuth";
 import {
   answerRecommendation,
   createRecommendationRequest,
@@ -35,10 +36,16 @@ export function useRecommendationDetail(id: string) {
 }
 
 export function useMatchedProfessionals(requestId: string, limit?: number) {
+  // 🔴 match RPC authenticated-only (anon EXECUTE YOK — M18 grant ölçümü):
+  // anonim ziyaretçide sorgu HİÇ AÇILMAZ. Aksi halde her anonim /tavsiye/:id
+  // görüntülemesi garantili 42501 × retry fırtınası üretiyordu (inceleme WARNING).
+  // İzin hatası retry edilmez (retry:false).
+  const { user } = useAuth();
   return useQuery({
     queryKey: [...matchKey(requestId), limit ?? 25],
     queryFn: () => matchRecommendationProfessionals(requestId, limit),
-    enabled: !!requestId,
+    enabled: !!requestId && !!user,
+    retry: false,
   });
 }
 

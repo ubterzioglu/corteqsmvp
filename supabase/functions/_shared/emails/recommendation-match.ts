@@ -39,7 +39,11 @@ const ACCENT = "#0d9488";
 const DEFAULT_SITE_URL = "https://corteqs.net";
 
 function asText(value: unknown): string {
-  return typeof value === "string" && value.trim() !== "" ? value.trim() : "";
+  // 🔴 Kontrol karakterleri (CR/LF dahil) ÇIKARILIR: başlık talep sahibinden
+  // gelir ve SMTP subject'ine girer — smtp.ts encodeHeaderValue ikinci savunma,
+  // tek noktaya güvenilmez (inceleme CRITICAL: header injection).
+  // eslint-disable-next-line no-control-regex -- kontrol karakterlerini SİLMEK işin kendisi (subject header injection kilidi)
+  return typeof value === "string" ? value.replace(/[\u0000-\u001f\u007f]/g, " ").trim() : "";
 }
 
 /**

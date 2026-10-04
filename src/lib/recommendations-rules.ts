@@ -35,6 +35,9 @@ export const RECOMMENDATION_RPC_ERROR_MESSAGES: Record<string, string> = {
   recommendation_invalid_body: `Açıklama zorunlu ve en fazla ${RECOMMENDATION_BODY_MAX} karakter olmalı.`,
   recommendation_request_not_found: "Tavsiye talebi bulunamadı.",
   recommendation_request_closed: "Bu talep kapatılmış; yeni yanıt kabul etmiyor.",
+  // İnceleme W3 (mig 20261004220000): sahip kendi talebini yanıtlayamaz —
+  // kendi yanıtı open→answered çevirip talebi varsayılan listeden düşürüyordu.
+  recommendation_self_answer: "Kendi talebine yanıt yazamazsın.",
 };
 
 const RECOMMENDATION_GENERIC_ERROR = "İşlem tamamlanamadı. Lütfen tekrar dene.";

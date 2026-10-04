@@ -25,6 +25,11 @@ import {
 const MIGRATIONS = [
   "20261003140000_recommendation_requests.sql",
   "20261003150000_match_recommendation_professionals.sql",
+  // 🔴 inceleme W8: create RPC'yi YENİDEN tanımlayan migration'lar da aynaya
+  // GİRMEK ZORUNDA — canlı tanım sonuncusudur; yalnız M17'yi okumak ölü kopyayı
+  // kilitler (sabitler/kodlar sessizce ayrışabilirdi).
+  "20261004110000_recommendation_match_notification.sql",
+  "20261004220000_recommendation_answer_self_guard.sql",
 ];
 
 const readMigration = (name: string) => {
@@ -43,7 +48,8 @@ const raisedCodes = () =>
 describe("M19 · hata haritası iki migration'a karşı çift yönlü", () => {
   it("migration'lardan kod toplayabiliyor (tarama boşa düşmesin)", () => {
     // Bu kapan olmazsa aşağıdaki iddialar çıpasızdır (events dersi).
-    expect(raisedCodes().size).toBeGreaterThanOrEqual(7);
+    // 8 kod: M17 (7) + inceleme düzeltmesi self_answer (20261004220000).
+    expect(raisedCodes().size).toBeGreaterThanOrEqual(8);
   });
 
   it("migration'lardaki HER recommendation_* kodu haritada", () => {
@@ -101,5 +107,46 @@ describe("M19 · sabit aynaları (migration metniyle birebir)", () => {
     expect(RECOMMENDATION_RPC_ERROR_MESSAGES.recommendation_invalid_body).toContain(
       `${RECOMMENDATION_BODY_MAX}`,
     );
+  });
+});
+
+/**
+ * İnceleme W7 · SKORER AYNASI: eşleştirme skoru İKİ migration'da kopya
+ * (M18 match RPC + M22 bildirim enqueue). Ağırlık/normalize/görünürlük
+ * kümesinden biri TEK tarafta değişirse görüntülenen eşleşme listesi ile
+ * bildirilen küme SESSİZCE ayrışır — bu blok iki dosyayı birbirine kilitler.
+ */
+describe("M18↔M22 · skorlayıcı aynası (drift kilidi)", () => {
+  const m18 = () => readMigration("20261003150000_match_recommendation_professionals.sql").replace(/\s+/g, " ");
+  const m22 = () => readMigration("20261004110000_recommendation_match_notification.sql").replace(/\s+/g, " ");
+
+  const sharedClauses = [
+    "then 100 else 0 end", // kategori ağırlığı
+    "then 30 else 0 end", // şehir ağırlığı
+    "then 15 else 0 end", // ülke ağırlığı
+    "ci.item_type = 'member'",
+    "ci.status = 'published'",
+    "ci.visibility = 'public'",
+    "coalesce(ci.is_placeholder, false) = false",
+    "rl.is_directory_visible = true",
+    "public.catalog_search_normalize(",
+  ];
+
+  it("aynı ağırlık + görünürlük + normalize kümesi İKİ dosyada da birebir var", () => {
+    for (const clause of sharedClauses) {
+      expect(m18(), `M18 eksik: ${clause}`).toContain(clause);
+      expect(m22(), `M22 eksik: ${clause}`).toContain(clause);
+    }
+  });
+
+  it("BİLİNÇLİ ASİMETRİ kararı: bildirim banlıyı+sahibi ELER, görüntüleme listesi ELEMEZ", () => {
+    // KARAR (inceleme W7): ban CADDE-yazma kapsamıdır; banlı kullanıcının
+    // DİZİN kaydı herkese açık kalır (eşleşme listesi dizin görünürlüğünü
+    // yansıtır), ama platform ona mail GÖNDERMEZ. Asimetri bilinçli ve burada
+    // kilitli: M22'de is_cadde_banned + requester dışlaması VAR, M18'de YOK —
+    // biri "düzeltme" adına kaydırırsa bu test düşer ve karar tartışmaya açılır.
+    expect(m22()).toContain("is_cadde_banned(cim.user_id)");
+    expect(m22()).toContain("cim.user_id <> v_uid");
+    expect(m18()).not.toContain("is_cadde_banned");
   });
 });

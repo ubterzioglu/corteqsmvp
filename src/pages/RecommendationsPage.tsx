@@ -7,6 +7,7 @@
 // schemas) tüketir — check:dead üretim tüketicisi ister.
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { MessageSquareHeart, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
+import { listGeoCountries } from "@/lib/geo";
 import {
   useCreateRecommendation,
   useRecommendations,
@@ -23,7 +25,6 @@ import {
 import {
   RECOMMENDATION_BODY_MAX,
   RECOMMENDATION_TITLE_MAX,
-  resolveRecommendationRpcErrorMessage,
 } from "@/lib/recommendations-rules";
 import type { CreateRecommendationInput } from "@/lib/recommendations-schemas";
 
@@ -56,6 +57,14 @@ export default function RecommendationsPage() {
 
   const listQuery = useRecommendations({ status });
   const createMutation = useCreateRecommendation();
+  // 🔴 Ülke ISO KODU olarak gönderilir (inceleme W5): eşleştirme katalogdaki
+  // `country_code` (örn. 'DE') ile karşılaştırır — serbest metin "Almanya"
+  // asla eşleşmezdi. Seçenekler geo_countries'ten (tek kaynak).
+  const countriesQuery = useQuery({
+    queryKey: ["geo", "countries"],
+    queryFn: listGeoCountries,
+    enabled: showForm && !!user,
+  });
 
   const rows = listQuery.data ?? [];
 
@@ -70,7 +79,12 @@ export default function RecommendationsPage() {
         setShowForm(false);
         setForm({ title: "", body: "", category_slug: "", country: "", city: "", diaspora_key: "tr" });
       },
-      onError: (error: unknown) => setFormError(resolveRecommendationRpcErrorMessage(error)),
+      // 🔴 TEK çözüm: api katmanı RPC hatasını zaten Türkçe'ye çevirip Error
+      // olarak fırlatır — burada YENİDEN resolveRecommendationRpcErrorMessage
+      // ÇAĞRILMAZ (çift çözüm haritayı öldürüp her hatayı genel mesaja
+      // düşürüyordu — inceleme WARNING).
+      onError: (error: unknown) =>
+        setFormError(error instanceof Error ? error.message : "İşlem tamamlanamadı. Lütfen tekrar dene."),
     });
   };
 
@@ -144,6 +158,19 @@ export default function RecommendationsPage() {
                   placeholder="Ne arıyorsun? Kısa ve net yaz."
                 />
               </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="rec-category">Kategori</Label>
+                {/* 🔴 inceleme W4: kategori SİNYALİ (100 puan — eşleştirmenin en
+                    güçlü ayağı) bu formdan toplanmadan ÖLÜYDÜ; alan eklendi.
+                    Serbest metin yeter: eşleştirme iki tarafı da
+                    catalog_search_normalize ile katlar (Terzi~terzi). */}
+                <Input
+                  id="rec-category"
+                  value={form.category_slug ?? ""}
+                  onChange={(e) => setForm((f) => ({ ...f, category_slug: e.target.value }))}
+                  placeholder="Örn. terzi, doktor, usta"
+                />
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label htmlFor="rec-city">Şehir</Label>
@@ -155,11 +182,19 @@ export default function RecommendationsPage() {
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="rec-country">Ülke</Label>
-                  <Input
+                  <select
                     id="rec-country"
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
                     value={form.country ?? ""}
                     onChange={(e) => setForm((f) => ({ ...f, country: e.target.value }))}
-                  />
+                  >
+                    <option value="">Ülke seç…</option>
+                    {(countriesQuery.data ?? []).map((c) => (
+                      <option key={c.code} value={c.code}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
               {formError ? <p className="text-sm text-destructive">{formError}</p> : null}

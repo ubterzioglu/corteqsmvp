@@ -13,6 +13,7 @@ create temp table t(k text primary key, v uuid) on commit drop;
 insert into auth.users (id, email) values
   (gen_random_uuid(),'m17-author@test.local'),
   (gen_random_uuid(),'m17-answerer@test.local'),
+  (gen_random_uuid(),'m17-answerer2@test.local'),
   (gen_random_uuid(),'m17-banned@test.local'),
   (gen_random_uuid(),'m17-admin@test.local');
 insert into t select split_part(email,'@',1), id from auth.users where email like 'm17-%@test.local';
@@ -31,9 +32,10 @@ do $x$
 declare
   u_author   uuid := (select v from t where k='m17-author');
   u_answerer uuid := (select v from t where k='m17-answerer');
+  u_answerer2 uuid := (select v from t where k='m17-answerer2');
   u_banned   uuid := (select v from t where k='m17-banned');
-  v_req uuid; v_req2 uuid; v_ans uuid;
-  v_status text; v_prof boolean; v_expected_prof boolean; n int;
+  v_req uuid; v_req2 uuid; v_ans uuid; v_ans2 uuid;
+  v_status text; v_prof boolean; v_prof2 boolean; v_expected_prof boolean; n int;
 begin
   -- K1: banlı-olmayan üye talep oluşturur -> satır, status='open', diaspora korunur.
   perform set_config('request.jwt.claims', json_build_object('sub',u_author)::text, true);
@@ -72,8 +74,9 @@ begin
   select status into v_status from recommendation_requests where id=v_req;
   select exists (
     select 1 from catalog_item_managers m join catalog_items ci on ci.id=m.item_id
+    join roles rl on rl.key = ci.platform_role_key and rl.is_directory_visible = true
     where m.user_id=u_answerer and m.status='active' and ci.item_type='member'
-      and ci.status='published' and coalesce(ci.is_placeholder,false)=false
+      and ci.status='published' and ci.visibility='public' and coalesce(ci.is_placeholder,false)=false
   ) into v_expected_prof;
   insert into r select 5,'K5 yanit -> satir + is_professional KATALOGDAN türetildi + open->answered',
     case when v_ans is not null and v_prof = v_expected_prof and v_status='answered'
@@ -122,6 +125,36 @@ begin
     insert into r select 9,'K9 gecersiz diaspora -> recommendation_invalid_diaspora',
       case when sqlerrm like '%recommendation_invalid_diaspora%' then 'GECTI' else '!!! DUSTU: '||sqlerrm end;
   end;
+
+  -- K12 (inceleme W3): SAHİP kendi talebini yanıtlayamaz -> recommendation_self_answer.
+  -- Fixture AYIRT edici: talep AÇIK (closed'a takılmaz) ve yanıtlayan SAHİBİN kendisi
+  -- (not_found/self sırası doğru ölçülür). Self-guard olmasaydı bu yanıt talebi
+  -- open->answered çevirip varsayılan listeden düşürürdü.
+  perform set_config('request.jwt.claims', json_build_object('sub',u_author)::text, true);
+  begin
+    perform public.answer_recommendation_v1(v_req,'Kendi talebime kendiyanitim');
+    insert into r select 12,'K12 sahip kendi talebini YANITLAYAMAZ -> recommendation_self_answer','!!! DUSTU: gecti';
+  exception when others then
+    insert into r select 12,'K12 sahip kendi talebini YANITLAYAMAZ -> recommendation_self_answer',
+      case when sqlerrm like '%recommendation_self_answer%' then 'GECTI' else '!!! DUSTU: '||sqlerrm end;
+  end;
+  -- Self-answer reddi durumu DEGISTIRMEDI (talep hala 'answered' — K5'teki gerçek yanıt).
+  select status into v_status from recommendation_requests where id=v_req;
+  insert into r select 13,'K13 self-answer reddi durum degistirmadi (talep answered kaldi)',
+    case when v_status='answered' then 'GECTI' else '!!! DUSTU: '||coalesce(v_status,'null') end;
+
+  -- K14 (inceleme W6 AYIRT fixturesi): dizin-DISI hesap "Profesyonel" rozeti
+  -- ALAMAZ. answerer2'nin otomatik kataloğu 'unlisted'e çevrilir -> güçlü
+  -- yükleme (visibility='public' + directory-visible rol) FALSE vermeli.
+  -- Zayıf türetme (visibility filtresiz) TRUE verirdi — rozet sapması ölçülür.
+  update catalog_items set visibility='unlisted'
+   where id in (select item_id from catalog_item_managers where user_id=u_answerer2);
+  perform set_config('request.jwt.claims', json_build_object('sub',u_answerer2)::text, true);
+  v_ans2 := public.answer_recommendation_v1(v_req,'Ikinci cevap — rozet testi');
+  select is_professional into v_prof2 from recommendation_answers where id=v_ans2;
+  insert into r select 14,'K14 dizin-disi (unlisted) hesap Profesyonel rozeti ALAMAZ',
+    case when v_prof2=false then 'GECTI'
+         else '!!! DUSTU: prof=true (visibility/dizin filtresi eksik)' end;
 end $x$;
 
 -- K4: RPC-only yazma — authenticated'ın doğrudan INSERT/UPDATE/DELETE grant'i YOK.
@@ -151,7 +184,7 @@ insert into r select 11,'K11 diaspora CHECK (tr/in/cn/ph) — cadde ile aynı k�
   ) then 'GECTI' else '!!! DUSTU' end;
 
 \echo ''
-\echo '================= M17 KABUL (K1-K11) ================='
+\echo '================= M17 KABUL (K1-K14) ================='
 select * from r order by no;
 select case when count(*) filter (where sonuc like 'GECTI%')=count(*)
             then 'TUMU GECTI: '||count(*)::text

@@ -17,10 +17,7 @@ import {
   useMatchedProfessionals,
   useRecommendationDetail,
 } from "@/hooks/use-recommendations";
-import {
-  RECOMMENDATION_BODY_MAX,
-  resolveRecommendationRpcErrorMessage,
-} from "@/lib/recommendations-rules";
+import { RECOMMENDATION_BODY_MAX } from "@/lib/recommendations-rules";
 
 export default function RecommendationDetailPage() {
   const { id = "" } = useParams();
@@ -53,7 +50,10 @@ export default function RecommendationDetailPage() {
     }
     answerMutation.mutate(answer, {
       onSuccess: () => setAnswer(""),
-      onError: (error: unknown) => setAnswerError(resolveRecommendationRpcErrorMessage(error)),
+      // 🔴 TEK çözüm: api katmanı hatayı zaten Türkçe Error olarak fırlatır —
+      // burada yeniden resolver ÇAĞRILMAZ (çift çözüm genel mesaja düşürüyordu).
+      onError: (error: unknown) =>
+        setAnswerError(error instanceof Error ? error.message : "İşlem tamamlanamadı. Lütfen tekrar dene."),
     });
   };
 
@@ -166,7 +166,19 @@ export default function RecommendationDetailPage() {
 
           {request.status === "closed" ? (
             <p className="text-sm text-muted-foreground">Bu talep kapatılmış; yeni yanıt kabul etmiyor.</p>
-          ) : user ? (
+          ) : !user ? (
+            <Link to="/auth">
+              <Button variant="outline" className="rounded-full">
+                Yanıtlamak için giriş yap
+              </Button>
+            </Link>
+          ) : user.id === request.user_id ? (
+            // 🔴 Sahip kendi talebini YANITLAYAMAZ (SQL: recommendation_self_answer —
+            // inceleme W3). Form hiç çizilmez; UI ile SQL kuralı aynı.
+            <p className="text-sm text-muted-foreground">
+              Bu senin talebin — kendi talebine yanıt yazamazsın.
+            </p>
+          ) : (
             <div className="space-y-2">
               <Textarea
                 value={answer}
@@ -186,12 +198,6 @@ export default function RecommendationDetailPage() {
                 {answerMutation.isPending ? "Gönderiliyor…" : "Yanıtla"}
               </Button>
             </div>
-          ) : (
-            <Link to="/auth">
-              <Button variant="outline" className="rounded-full">
-                Yanıtlamak için giriş yap
-              </Button>
-            </Link>
           )}
         </section>
       </div>

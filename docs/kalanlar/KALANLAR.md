@@ -1453,6 +1453,51 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - 📌 **FAZ 2 TAMAM** (M17 tablolar+RPC · M18 eşleştirme · M19+M20 lib+sayfalar · M21 Cadde kartı ·
   M22 bildirim+kilitli kutu · M23 canlı doğrulama). Sırada Faz 4 (M24–M27 haftalık şehir özeti).
 
+**Faz 2 İNCELEME DÜZELTME TURU — ✅ 04.10** (`/review` 4 commit: c41624ce+5d273888+250ebc2d+2e59f427 · 1 CRITICAL + 8 WARNING düzeltildi, 7 SUGGESTION borç satırında)
+
+- 🔴 **CRITICAL — mail başlık enjeksiyonu kapatıldı:** talep başlığı (kullanıcı metni) SMTP
+  subject'ine ham giriyordu; `encodeHeaderValue` salt-ASCII'yi RFC2047'leMEDİĞİ için CRLF'li ASCII
+  başlık sahte `Reply-To`/`Cc` satırı üretebilirdi (zincir CANLI: RPC authenticated'a açık + edge
+  deploy'lu). Çift kilit: şablon `asText` kontrol karakterlerini kırpar + `smtp.ts encodeHeaderValue`
+  TEK NOKTADAN kırpar (career-application dahil TÜM şablonlar korunur). CRLF fixture'lı test + MF1.
+- **W3 self-answer:** sahip kendi talebini yanıtlayamaz — mig `20261004220000` (canlıda, `check:migrations`
+  **486/486**): yeni TEK kod `recommendation_self_answer` (TS harita + ayna güncel) · UI da formu
+  SAHİBE ÇİZMEZ (SQL ile aynı kural) · kabul K12+K13 (ret + durum değişmedi).
+- **W6 is_professional sapması:** türetme M18/M22 aday kümesiyle AYNI Hizaya getirildi
+  (+`visibility='public'` + directory-visible rol join) — admin/test/unlisted hesaplar herkese açık
+  "Profesyonel" rozeti ALAMAZ · kabul **K14** AYIRT fixture'ı (answerer2'nin otomatik kataloğu
+  'unlisted' → prof=false; zayıf türetme true verirdi) · M17 kabulü **14/14**.
+- **W2 çift error çözümü:** api zaten Türkçe `Error` fırlatıyordu, sayfalar YENİDEN resolve edip
+  her hatayı genel mesaja düşürüyordu (harita kullanıcıya ölü) — iki sayfa `error.message` tüketir,
+  F2 testleri tam metni kilitler.
+- **W4 kategori sinyali:** form `category_slug` TOPLAMIYORDU (100 puanlık sinyal UI'dan ölü) —
+  Kategori alanı eklendi (serbest metin yeterli: eşleştirme iki tarafı normalize eder).
+- **W5 ülke ISO:** serbest metin "Almanya" ≠ katalog `country_code='DE'` — ülke alanı
+  `listGeoCountries` seçicisine çevrildi (value=ISO kodu); submit testi kodu kilitler.
+- **W7 skorlayıcı kopyaları:** M18↔M22 ayna testi (ağırlık 100/30/15 + normalize + 5 görünürlük
+  koşulu İKİ dosyada birebir) + **BİLİNÇLİ ASİMETRİ kararı kilitlendi:** görüntülenen eşleşme listesi
+  DİZİN görünürlüğünü yansıtır (banlı hesabın dizin kaydı herkese açık kalır — ban Cadde-YAZMA
+  kapsamıdır), BİLDİRİM banlıyı+sahibi ELER. MF4 (tek taraf 30→31) aynayı düşürdü.
+- **W8 ölü ayna:** rules testinin MIGRATIONS listesi M22+fix migration'ları da okur (canlı tanım
+  sonuncusudur; yalnız M17'yi okumak ölü kopyayı kilitlerdi). Kod sayısı ≥8.
+- **W9 anon fırtınası:** `useMatchedProfessionals` `!!user` gate + `retry:false` (match RPC
+  authenticated-only; anonim /tavsiye/:id her görüntülemede garantili 42501×4 üretiyordu) · hook testi.
+- **Mutasyon 6/6:** MF1 CRLF strip sil→CRITICAL testi · MF2 self-guard sil→K12 · MF3 visibility sil→K14 ·
+  MF4 tek taraflı ağırlık→ayna · MF5 çift çözüm etkisi→F2 · MF6 anon gate sil→hook (2 test).
+  MF2/MF3 canlı fonksiyon üzerinde koşuldu, migration yeniden uygulandı (kabul 14/14'e döndü).
+- Kanıt: tam takım **453 dosya / 3741 test** · tsc 0 · lint 0 (3 `no-control-regex` GEREKÇELİ
+  istisna — kontrol karakteri silmek işin kendisi) · check:dead 0/0/1018 · verify:text ✓ ·
+  ingest:tools:check güncel · smtp.ts DEĞİŞTİ → **edge yeniden deploy GEREKİR** (commit ≠ canlı).
+- 📋 **BORÇ (inceleme SUGGESTION'ları, kullanıcı kararıyla bu turda YAPILMADI):** (F10) recommendation
+  sorgularına `staleTime` (cadde-query-cache deseni) · (F11) ikinci yanıtta ham 23505 yerine
+  `recommendation_already_answered` ön-kontrolü + "yanıtın gönderildi" UI durumu · (F12) text/plain
+  mailde `.filter(line!=="")` paragraf ayracı boş satırları da siliyor · (F13) rollout kuralı: yeni
+  event_type'ta edge ÖNCE deploy, migration SONRA (+ edge'de bilinmeyen anahtar → pending bırak) ·
+  (F14) ölü exportlar: `answerRecommendationInputSchema`/`AnswerRecommendationInput`/`RecommendationStatus` ·
+  (F15) `fetchRecommendations` diaspora/category/country/city filtre dalları + 2 M17 indeksi çağıransız
+  (filtre UI'ı gelince canlanır ya da budanır) · (F16) match queryKey'deki çıplak `25` →
+  `RECOMMENDATION_MATCH_DEFAULT_LIMIT`.
+
 ### Faz 4 — haftalık şehir özeti
 
 **M24 — Migration 1: `user_city_follows` + outbox CHECK genişletme**

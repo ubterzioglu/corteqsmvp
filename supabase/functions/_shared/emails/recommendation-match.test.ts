@@ -55,6 +55,21 @@ describe("tavsiye eşleşme maili", () => {
     expect(mail.html).toContain("&lt;script&gt;");
   });
 
+  it("🔴 CRLF başlık enjeksiyonu: subject/header satırı KIRILAMAZ (inceleme CRITICAL)", () => {
+    const mail = buildRecommendationMatchEmail(
+      { ...payload, request_title: "Merhaba\r\nBcc: kurban@evil.example\r\nReply-To: saldirgan@evil.example" },
+      "https://corteqs.net",
+    );
+    const combined = `${mail.subject}\n${mail.html}\n${mail.text}`;
+
+    // Subject tek satır kalır — CR/LF ve kontrol karakteri İÇERMEZ:
+    // eslint-disable-next-line no-control-regex -- test: kontrol karakteri YOKLUĞUNU ölçüyor
+    expect(mail.subject).not.toMatch(/[\r\n\u0000-\u001f\u007f]/);
+    expect(combined).not.toContain("Bcc: kurban@evil.example\r\n");
+    // Enjekte metin düz veri olarak bile subject'te satır sonu üretemez:
+    expect(mail.subject.split(/[\r\n]/)).toHaveLength(1);
+  });
+
   it("eksik alanlarda çöker gibi davranmaz: başlık fallback + /tavsiye kökü", () => {
     const mail = buildRecommendationMatchEmail({}, null);
 

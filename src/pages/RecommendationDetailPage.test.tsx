@@ -139,10 +139,38 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
     expect(await screen.findByText(/Yanıtlamak için giriş yap/i)).toBeInTheDocument();
     expect(screen.queryByTestId("pro-locked-inbox-card-stub")).not.toBeInTheDocument();
 
-    // Talep sahibi (user.id === request.user_id)
+    // Talep sahibi (user.id === request.user_id) — kilitli kart GÖRÜNMEZ
+    // (kendi iletişim kartı anlamsız). F3 sonrası sahip yanıt formu da görmez;
+    // onun kilidi ayrı testte ("F3 UI: SAHİP yanıt formu GÖRMEZ").
     mockUser = { id: "u9" };
     renderPage();
-    expect(await screen.findByPlaceholderText(/Bir tavsiye ver/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Bu senin talebin/i)).toBeInTheDocument();
     expect(screen.queryByTestId("pro-locked-inbox-card-stub")).not.toBeInTheDocument();
+  });
+
+  it("F3 UI: SAHİP yanıt formu GÖRMEZ (SQL self_answer kuralıyla aynı)", async () => {
+    mockUser = { id: "u9" }; // request.user_id ile aynı — sahip
+    detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
+    matchMock.mockReturnValue({ data: [] });
+    renderPage();
+
+    expect(await screen.findByText(/Bu senin talebin — kendi talebine yanıt yazamazsın/i)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/Bir tavsiye ver/i)).not.toBeInTheDocument();
+  });
+
+  it("F2: api'den gelen Türkçe hata AYNEN gösterilir (genel mesaja düşmez)", async () => {
+    detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
+    matchMock.mockReturnValue({ data: [] });
+    answerMutate.mockImplementation((_body: string, opts?: { onError?: (e: unknown) => void }) => {
+      opts?.onError?.(new Error("Bu talep kapatılmış; yeni yanıt kabul etmiyor."));
+    });
+    renderPage();
+
+    fireEvent.change(await screen.findByPlaceholderText(/Bir tavsiye ver/i), {
+      target: { value: "Deneme yanıtı" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: /Yanıtla/i }));
+
+    expect(await screen.findByText("Bu talep kapatılmış; yeni yanıt kabul etmiyor.")).toBeInTheDocument();
   });
 });
