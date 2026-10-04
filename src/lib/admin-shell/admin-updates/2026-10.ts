@@ -5,6 +5,32 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-veri-sizintisi-kapatildi",
+    date: "4 Ekim 2026",
+    title: "Güvenlik: anonim erişime açık kalmış bir tablo kapatıldı (938 kayıt)",
+    items: [
+      "NE OLDU: Haziran ayındaki üye veri taşımasından kalan bir denetim günlüğü tablosu, satır güvenliği açılmadan ve dışarıya kapatılmadan kalmış. Sonuç: 938 kaydın tamamı, sitenin herkese açık anahtarıyla GİRİŞ YAPMADAN okunabiliyordu.",
+      "SIZAN VERİ: Üye kimlik numaraları ve kayıt e-postaları. ⚠️ Bu e-postaların bir kısmı WhatsApp kayıtlarından geliyor ve biçimleri gereği TELEFON NUMARASI içeriyor. Ayrıca anonim kullanıcı bu tabloya yazabiliyor ve kayıt silebiliyordu.",
+      "DOĞRULAMA: Varsayım değil, ölçüm. Kapatmadan önce gerçek bir anonim istek atıldı: 938 satırın tamamı döndü. Kapattıktan sonra aynı istek “yetki yok” hatası veriyor; yazma denemesi de reddediliyor.",
+      "YAPILAN: Tablo SİLİNMEDİ (bir göçün denetim izi, neden-niçin sorusunun cevabı orada). Erişim yalnız sunucu tarafına indirildi: satır güvenliği açıldı, hiçbir erişim kuralı tanımlanmadı, dışarıya verilen yetkiler geri alındı. Uygulamada bu tabloyu kullanan hiçbir kod yok, yani hiçbir şey bozulmadı.",
+      "NEDEN GÖZDEN KAÇMIŞ: Tablo tek seferlik, geçici bir iş ürünü olarak açılmış. Geçici tabloların da dışarıdan görünür olduğu düşünülmemiş.",
+      "TEKRARLAMAMASI İÇİN: Artık kalıcı bir tarama betiği var. Veritabanındaki 285 tablodan 284’ü korumalı; geriye kalan tek tablo harita koordinat sistemleri referansı (hassas veri yok, 0 satır). Benzer bir tablo açılırsa bu tarama onu gösterir.",
+    ],
+  },
+  {
+    id: "20261004-tavsiye-eslesme-bildirimi-ve-kilitli-pro-karti",
+    date: "4 Ekim 2026",
+    title: "Tavsiyede eşleşme bildirimi çalışıyor + kilitli “Pro” iletişim kartı (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ (bildirim): Üye bir tavsiye talebi açtığında, uzmanlık alanı/konumu taleple EŞLEŞEN profesyonellere (en iyi 5) otomatik e-posta bildirimi gidiyor: “Sana uyan bir tavsiye talebi var” + talebin adı, şehri ve bağlantısı. Bildirim hattının beş parçası da (kuyruk kısıtı, ayar anahtarı, gönderim eşlemesi, şablon, alıcı çözümü) tek işte kuruldu — parça eksikliği yüzünden sessizce mail gitmeme riski kapatıldı.",
+      "KİME GİTMEZ: Talebi açanın kendisine, erişimi kısıtlanmış (banlı) kullanıcılara ve taleple HİÇ eşleşmeyen (skor 0) üyelere bildirim gitmez — eşleşmeyeni spamlemiyoruz. Ölçüldü: canlı kabul 13/13 (geri alınan işlem).",
+      "GİZLİLİK: Bildirim maili talep sahibinin iletişim bilgisini TAŞIMAZ — mail yalnız talebin kimliğini taşır. Doğrudan iletişim, talebin sayfasındaki KİLİTLİ kartın arkasında: “Talep sahibine doğrudan ulaş — ücretli yüzey yakında”.",
+      "NE GELDİ (kilitli kart): Tavsiye detayında, giriş yapmış ve talebin sahibi olmayan kullanıcı kilitli iletişim kartını görür. “İlgileniyorum” deyince ilgi kaydı düşer (feature_interest ‘pro.inbox’). FİYAT/ÖDEME UYDURULMADI (Stripe işi parkta) — hangi ücretli özelliğin önce yapılacağına bu ilgi birikimi karar verecek; aynı kişi iki kez sayılmaz, kanıt satırı silinmez.",
+      "KANIT: Canlı kabul 13/13 + M17 geri-dönüş kontrolü 11/11 (talep açma davranışı bozulmadı) · 6 mutasyon (bildirim dışlamaları, beyaz liste, kart anahtarı, yerleşim) testlerce yakalandı · tam test takımı 449 dosya / 3709 test yeşil. Bir mutasyon kabul betiğinin çökme zafiyetini ortaya çıkardı: “betik patladı” ile “iddia düştü” ayrıştırıldı, kabul çökme-dayanımlı hale getirildi.",
+      "KALAN: M23 — Faz 2 uçtan uca canlı doğrulama (anonim liste → talep → bildirim GERÇEKTEN gönderildi: outbox satırında status='sent' + dolu sent_at ölçülecek, “kuyruğa yazıldı” kanıt sayılmayacak). Kart ve bildirim bir sonraki deploy’da canlıda.",
+    ],
+  },
+  {
     id: "20261004-cadde-akisinda-tavsiye-karti",
     date: "4 Ekim 2026",
     title: "Cadde akışında “Tavsiye İste” kartı — topluluk tavsiyeleri artık akışta görünür (deploy kuyruğunda)",
