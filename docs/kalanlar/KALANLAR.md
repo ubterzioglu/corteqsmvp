@@ -1277,6 +1277,32 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   EKLEMEZ — saf ölçüm) · verify:text ✓ (yeni qa dosyası UTF-8).
 - 📌 **FAZ 6 TAMAM** (M14 view'lar + M15 panel + M16 canlı doğrulama). Sırada Faz 2 (M17–M23 Tavsiye).
 
+**Faz 6 follow-up — tavsiye metrikleri CANLI veriye bağlandı · ✅ 04.10** (mig `20261004250000`, `check:migrations` **488/488**)
+
+- **Bütünlük süpürmesi buldu:** Faz 2 kapanışı sonrası 10 kabul dosyasının canlı yeniden koşusunda
+  M16 satır 4 "!!! FARK" verdi — M14'ün `metrics_recommendation_response_rate` placeholder'ı
+  (`available=false`, "M17 öncesi boş — normal") ve `content_created.recommendations_total=0`
+  Faz 2 canlıya çıkınca BAYATLADI. Plan ertelemesi kapandı: response_rate artık GERÇEK
+  `recommendation_requests/answers` verisi (yanıtlanan = EN AZ BİR yanıtı olan talep, EXISTS —
+  status'a değil yanıta bakar; closed'a dönmüş talepte de doğru) · content_created.tavsiye gerçek sayı.
+  Kurallar korundu: MATERIALIZED değil · `is_admin(auth.uid())` guard · kolon ad/tip/sıra BİREBİR
+  (`count(*)::integer` — create-or-replace tip kısıtı) · grant'lar otomatik korunur · metrik YALNIZ
+  SAYI döner (içerik/iletişim view'a girmez).
+- **M16 doğrulama dosyası güncellendi (8→9 satır):** tavsiye karşılaştırmaları artık İŞLEM İÇİ
+  TOHUMLA ayırt edici (canlıda 0 taleple 0=0 vakum geçerdi — M18-M1 dersi): 2 talep + 1 yanıt
+  tohumlanır → `available=true · total/responded 2/1 · rate 0.5000` panel==SQL **9/9 ESLESTI** ·
+  content toplamı 43=43 · rollback temiz (tohum kalıntısı da sorgulanır). M14 kabul regresyonu **13/13**.
+- **Mutasyon 4/4 (değişen yüzeyin TAMAMI):** MUT1 available=false→satır 4+9 · MUT2 responded=total
+  (EXISTS sil)→satır 4 · MUT3 rate hep null→satır 9 · MUT4 recommendations_total=0→satır 2 (41≠43).
+  Her mutasyon sonrası migration yeniden uygulandı (9/9'a döndü).
+- Frontend DEĞİŞMEDİ: `AdminTractionPage` available=true dalını zaten çiziyordu (`formatRatePercent`
+  + "X/Y talep yanıtlandı"); null rate → "—" (uydurma yüzde yok). Tam takım **453/3748** · tsc 0 ·
+  verify:text ✓ 1995.
+- 📌 **GÖZLEM (bilinçli KAPSAM DIŞI bırakıldı):** `metrics_weekly_active_users` union'ı tavsiye
+  aktivitesini SAYMAZ (M14 tasarımı events/carsi/cadde/group_posts sayar; M17 sonra geldi). Yalnız
+  tavsiye yazan üye WAU'ya girmez — küçük metrik eksiği, ayrı karar (WAU tanımı değişirse M16
+  satır 1 ground-truth'u da güncellenmeli).
+
 ### Faz 2 — Tavsiye İste (en büyük modül)
 
 **~~M17~~ — ✅ KAPANDI 03.10** · Migration 1: tablolar + RPC-only yazma + ban kill-switch · mig `20261003140000` canlıda (`check:migrations` **472/472** sapmasız)

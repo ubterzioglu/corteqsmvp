@@ -9,6 +9,11 @@
 -- 🔴 now() kayması olmasın diye view okuma ve ground-truth AYNI işlemde (tek now()).
 -- 🔴 WAU ground-truth'u view'ın union mantığının BAĞIMSIZ yeniden yazımı; içerik/
 --    davet/geri-dönüş doğrudan tablo sayımı (view alanlarıyla karşılaştırılır).
+-- 📌 04.10 GÜNCELLEME (mig 20261004250000): Faz 2 canlı — recommendation metriği
+--    available=true + GERÇEK total/responded; content_created.recommendations_total
+--    gerçek sayı. Tavsiye karşılaştırmaları İŞLEM İÇİ tohumla AYIRT EDİCİ (canlıda
+--    0 taleple 0=0 vakum geçerdi). İlk koşunun "available=false (M17 öncesi)"
+--    ölçümü tarihsel olarak doğruydu; dünya değişti, kanıt dosyası dünyayla güncel.
 \set ON_ERROR_STOP on
 begin;
 
@@ -31,6 +36,19 @@ declare
 begin
   perform set_config('request.jwt.claims', json_build_object('sub',u_admin)::text, true);
 
+  -- Faz 2 SONRASI tohum: M16'nın ilk koşusu M17 ÖNCESİ dünyayı ölçmüştü
+  -- (recommendation available=false + tablo YOK). Tavsiye metrikleri mig
+  -- 20261004250000 ile canlı veriye bağlandı; canlıda 0 talep varken
+  -- karşılaştırmalar VAKUM kalırdı (0=0 hep geçer). İşlem İÇİNDE 2 talep +
+  -- 1 yanıt tohumlanır (rollback'de silinir) → karşılaştırmalar AYIRT EDİCİ
+  -- (panel formülü bozulsa FARK görünür — M18-M1 dersi).
+  insert into public.recommendation_requests (user_id, title, body, status, diaspora_key)
+  values (u_admin, 'M16 tohum talep 1', 'tohum govde', 'open', 'tr'),
+         (u_admin, 'M16 tohum talep 2', 'tohum govde', 'open', 'tr');
+  insert into public.recommendation_answers (request_id, user_id, body, is_professional)
+  select id, u_admin, 'tohum yanit', false
+  from public.recommendation_requests where title = 'M16 tohum talep 1';
+
   -- 1) weekly_active_users.active_7d — panel vs bağımsız union
   select active_7d into p_num from public.metrics_weekly_active_users;
   select count(distinct uid) into g_num from (
@@ -51,7 +69,7 @@ begin
        + (select count(*) from public.carsi_items)
        + (select count(*) from public.whatsapp_landings)
        + (select count(*) from public.group_posts)
-       + 0 into g_num;  -- tavsiye M17'ye dek 0
+       + (select count(*) from public.recommendation_requests) into g_num;  -- Faz 2 sonrası GERÇEK tavsiye sayısı (mig 20261004250000)
   insert into r select 2,'content_created toplam (panel formulu)', p_num::text, g_num::text,
     case when p_num is not distinct from g_num then 'ESLESTI' else '!!! FARK' end;
 
@@ -61,12 +79,20 @@ begin
   insert into r select 3,'content_created.cadde_posts_total', p_num::text, g_num::text,
     case when p_num is not distinct from g_num then 'ESLESTI' else '!!! FARK' end;
 
-  -- 3) recommendation_response_rate.available — M17 tavsiye tablosu YOK -> false
-  select available::text into p_txt from public.metrics_recommendation_response_rate;
-  insert into r select 4,'recommendation.available (M17 oncesi)', p_txt, 'false (tavsiye tablosu YOK)',
-    case when p_txt='false'
-          and not exists (select 1 from information_schema.tables
-                          where table_schema='public' and table_name in ('recommendations','recommendation_requests','user_recommendations'))
+  -- 3) recommendation_response_rate — Faz 2 SONRASI CANLI (mig 20261004250000):
+  --    available=true + total/responded DOĞRUDAN sayımla birebir (tohumlu →
+  --    ayırt edici; M16'nın ilk koşusu M17 öncesi 'false'u ölçmüştü).
+  select available::text, total, responded into p_txt, p_num, g_num
+    from public.metrics_recommendation_response_rate;
+  insert into r select 4,'recommendation available=true + total/responded = dogrudan sayim (tohumlu)',
+    p_txt||' '||coalesce(p_num::text,'?')||'/'||coalesce(g_num::text,'?'),
+    'true '||(select count(*) from public.recommendation_requests)||'/'||
+      (select count(*) from public.recommendation_requests rq
+        where exists (select 1 from public.recommendation_answers a where a.request_id=rq.id)),
+    case when p_txt='true'
+          and p_num = (select count(*) from public.recommendation_requests)
+          and g_num = (select count(*) from public.recommendation_requests rq
+                        where exists (select 1 from public.recommendation_answers a where a.request_id=rq.id))
          then 'ESLESTI' else '!!! FARK' end;
 
   -- 4) invite_signups.total vs doğrudan redemption sayımı
@@ -91,6 +117,23 @@ begin
     case when (g_cohort=0 and p_rate is null)
               or (g_cohort>0 and p_rate = round(g_returned::numeric/g_cohort,4))
          then 'ESLESTI' else '!!! FARK' end;
+
+  -- 6) Faz 2 sonrası: recommendation response_rate TUTARLILIĞI (tohumla total≥2
+  --    → rate non-null; formül responded/total, total=0 ise NULL — uydurma yok).
+  insert into r select 9,'recommendation.response_rate tutarli (responded/total, total=0 ise NULL)',
+    coalesce((select response_rate::text from public.metrics_recommendation_response_rate),'NULL'),
+    case when (select count(*) from public.recommendation_requests)=0 then 'NULL'
+         else round(
+           (select count(*) from public.recommendation_requests rq
+             where exists (select 1 from public.recommendation_answers a where a.request_id=rq.id))::numeric
+           / (select count(*) from public.recommendation_requests), 4)::text end,
+    case when (select response_rate from public.metrics_recommendation_response_rate) is not distinct from
+         (case when (select count(*) from public.recommendation_requests)=0 then null
+               else round(
+                 (select count(*) from public.recommendation_requests rq
+                   where exists (select 1 from public.recommendation_answers a where a.request_id=rq.id))::numeric
+                 / (select count(*) from public.recommendation_requests), 4) end)
+         then 'ESLESTI' else '!!! FARK' end;
 end $x$;
 
 \echo ''
@@ -102,6 +145,8 @@ select case when count(*) filter (where sonuc='ESLESTI')=count(*)
 from r;
 rollback;
 \echo '== ROLLBACK =='
-select 'CANLI temiz (m16-admin kalinti=0)' as ad,
+select 'CANLI temiz (m16-admin + tohum kalinti=0)' as ad,
   case when (select count(*) from auth.users where email='m16-admin@test.local')=0
+        and (select count(*) from public.recommendation_requests where title like 'M16 tohum%')=0
+        and (select count(*) from public.recommendation_answers where body='tohum yanit')=0
        then 'GECTI' else '!!! DUSTU' end as sonuc;
