@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-erisim-logu-incelemesi",
+    date: "4 Ekim 2026",
+    title: "Kapatılan güvenlik açıkları kötüye kullanılmış mı? 90 günlük erişim logu tarandı — kanıt YOK",
+    items: [
+      "SONUÇ: 90 günde (6 Temmuz – 4 Ekim) 2.167.303 isteğin tamamı tarandı. Sızdırılan üye verisi tablosuna giden 39 isteğin HEPSİNİN hesabı çıktı ve hiçbiri dışarıdan değil. Anonim erişim izi YOK.",
+      "39 İSTEĞİN DÖKÜMÜ: 25'i Supabase panelinden tabloya bakılması (beş ayrı seferde, her biri birebir aynı imza — önce satır sayımı, sonra 50'şerlik dört sayfa, hepsi bir saniye içinde) · 1'i Supabase'in kendi yedekleme servisi (kimliği user-agent'ında yazıyor) · 1'i bir envanter taraması · 12'si 3 Ekim'deki kendi güvenlik doğrulamamız.",
+      "ÜRKÜTÜCÜ GÖRÜNÜP AYDINLANAN BULGU: 26 Eylül'deki tek istek ilk bakışta hedefli bir okuma gibi duruyordu. Çevresine bakılınca üç dakikada 301 istekle veritabanındaki HER tabloyu ve HER fonksiyonu alfabetik sırayla gezen bir tarama olduğu görüldü — sızan tablo hedeflenmemiş, sıradaki kalem olarak bir kez okunmuş. İçinde harita eklentisinin iç fonksiyonları bile var; bir saldırgan bunları taramaz. Ayrıca istekler ayrıcalıklı değildi (10 tanesi reddedildi), yani 'neye erişilebiliyor' diye bakan bir denetim profili.",
+      "ÖZGEÇMİŞLER: Aynı taramada özgeçmiş/kariyer deseni de sayıldı — 114 isteğin tamamı 1 ve 3 Ekim'de, yani kariyer modülünün geliştirildiği günlerde. Dışarıdan erişim izi çıkmadı.",
+      "⚠️ BU İNCELEMENİN SINIRI (abartmamak için): Loglar en fazla 90 gün geriye gidiyor. Söz konusu tablo 9 Haziran'da yaratıldı, yani ilk ~27 gün kapsam DIŞINDA ve o dönem hakkında hiçbir şey söylenemez. Ayrıca log satırları IP veya anahtar kimliği taşımıyor; teşhisler desen kanıtına dayanıyor. Yani 'kesinlikle sızmadı' denemez — ama bildirim gerektiren bir ihlal bulgusu da YOKTUR.",
+      "📌 TEK AÇIK SORU: 26 Eylül akşamı 19:11 (Berlin) civarında bir envanter/şema taraması çalıştırdınız mı, ya da Supabase panelinde API dokümanları sayfasını açtınız mı? Hatırlarsanız son belirsizlik de kapanır. Ayrıntılı rapor: docs/operations/2026-10-04-erisim-logu-incelemesi.md",
+    ],
+  },
+  {
     id: "20261004-tavsiye-inceleme-duzeltmeleri",
     date: "4 Ekim 2026",
     title: "Tavsiye modülünde bağımsız inceleme turu: 1 kritik güvenlik kusuru + 8 mantık kusuru kapatıldı",
