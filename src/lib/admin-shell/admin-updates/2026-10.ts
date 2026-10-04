@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-eski-pano-tablolari-kapatildi",
+    date: "4 Ekim 2026",
+    title: "Güvenlik: eski pano tablolarının tamamı dışarıya kapatıldı (~1.650 kayıt, 15 tablo)",
+    items: [
+      "NE OLDU: Komuta Merkezi kapatıldıktan sonra aynı desen tarandı ve Komuta Merkezi ÖNCESİ “eski pano” tablolarının tamamının aynı durumda olduğu görüldü — her birinde doğru çalışan kuralın yanında, herkese okuma veren eski bir kural duruyordu.",
+      "KAPSAM: ~1.650 kayıt, 15 tablo. Toplantı notları (470), eski eşleme kayıtları (592), kaynak girdileri (221 — kişi adları, LinkedIn adresleri, dosya yolları), iç yol haritası (188), görevler (122+9), özgeçmiş kayıtları (3 — ad, soyad, rol, dosya yolu).",
+      "⚠️ İKİSİNDE YAZMA DA AÇIKMIŞ: Görevler ve eski eşleme tablosuna anonim olarak kayıt eklenebiliyor, değiştirilebiliyordu. Bunlardan birinin kural adı “sadece girişli kullanıcı” anlamına geliyordu ama kapsamı anonimi de içeriyordu — ad yanıltıcıydı.",
+      "DOĞRULAMA: Kapatmadan önce 17 açık kural vardı. Sonrasında anonim okuma altı tabloda da 0 kayıt döndürüyor, yazma denemesi “erişim kuralı ihlali” hatası veriyor.",
+      "HİÇBİR ŞEY BOZULMADI: 15 tablonun tamamının tek kullanıcısı yönetici panelidir. Girişli kullanıcı davranışı aynen korundu (ölçüldü) ve beş genel sayfa kontrol edildi, hepsi normal açılıyor.",
+      "AÇIK KALAN: Bu tabloları girişli HERKES görebiliyor — yalnız yöneticiler değil. Bunu daraltmak ayrı bir karar: hangi yönetici sayfalarının yönetici olmayan ekip üyelerince kullanıldığı ölçülmeden daraltmak paneli düşürebilir.",
+    ],
+  },
+  {
     id: "20261004-haftalik-sehir-ozeti-takip-yonetimi",
     date: "4 Ekim 2026",
     title: "Haftalık şehir özeti hazırlığı: şehir takibi yönetimi Bildirim Tercihleri'nde (gönderim şimdilik KAPALI)",
