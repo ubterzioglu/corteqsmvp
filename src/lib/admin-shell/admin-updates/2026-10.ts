@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-g04-g05-telefon-otp",
+    date: "4 Ekim 2026",
+    title: "Telefon doğrulama altyapısı hazır — SMS sağlayıcı bekleniyor (U06)",
+    items: [
+      "G04 — DOĞRULAMA AYNAKLAMA: Auth.users'daki phone_confirmed_at değişimini user_verifications tablosuna aynalayan trigger kuruldu. Telefon doğrulandığında is_phone_verified() otomatik true döner. Phone-only kayıt (email YOK, phone VAR) reddedilir — telefonla giriş/kayıt yolu kapalı.",
+      "G05 — DOĞRULAMA ARAYÜZÜ: Profil sayfasında PhoneVerificationCard eklendi. Kullanıcı telefonunu girer → SMS kodu alır → kodu doğrular. Native Supabase Auth yolu kullanılır (updateUser → verifyOtp).",
+      "HIZ SINIRI KARARI: Auth'un yerleşik sınırları (30/gün proje geneli) geçerli. DB'de otp_send_attempts tablosu ile gözlem yapılır ama enforcement YOK. Kullanıcı başına 5/gün, 3/saat politikası ENFORCED değil — bunun için edge function gerekir (KARAR GEREKİR, kullanıcı-adımları dosyasında yazılı).",
+      "⚠️ U06 BEKLENİYOR: SMS sağlayıcı kimlikleri (Twilio account_sid, auth_token, message_service_sid) Supabase panelinde girilmeden gerçek SMS gönderilemez. external_phone_enabled=true açılmalı.",
+      "KANIT: G04 kabul K1–K9 9/9 (geri alınan işlem) · G05 API 12 test · tam suite 455 dosya / 3772 test · tsc 0 · check:dead 0 · check:migrations 490/490 sapmasız.",
+    ],
+  },
+  {
     id: "20261004-w03-whatsapp-graph-ortak-modul",
     date: "4 Ekim 2026",
     title: "WhatsApp Graph gönderim yolu ortak modüle taşındı — davranış değişmedi",

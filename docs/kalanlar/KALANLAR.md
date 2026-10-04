@@ -92,7 +92,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 | # | Karar |
 |---|---|
-| 5 | **P03: web sitesi anonime AÇIK, kişisel veri KAPALI.** Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone + 1 appointment_url). Website anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. Dizin aramasındaki ilkenin aynısı. |
+| 5 | **P03: web sitesi anonime AÇIK, kişisel veri KAPALI.** Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone) + **1 appointment_url** (kişisel değil, iş bağlantısı → website gibi AÇIK sayılır; yine de rapora yazılır). Website + appointment_url anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. (312+11+1+1+1 = 326 ✓ — ilk yazımda "13" ile 4 türü yan yana yazmıştım, toplam tutmuyordu.) Dizin aramasındaki ilkenin aynısı. |
 | 6 | ✅ **UYGULANDI 04.10** — haftalık şehir özeti anahtarı **AÇILDI**: `email.weekly_city_digest.enabled` `false`→`true` (`UPDATE 1` canlıda doğrulandı) · cron `weekly-city-digest` pzt 05:00 UTC **aktif**. Ölçüm: şehir takip eden üye **0** — ilk hafta kimse mail almaz, özellik duyuruldukça akar. |
 | 7 | **U04: 16 kanıtsız ✅ → 🔒'ya döndürülecek** ("auth gerektiriyor, test hesabı gerekli"). Kullanıcı yaptığını hatırlamıyor; **yalan yeşil kırmızıdan tehlikelidir**. |
 | 8 | **SG (SEO/GEO) serisi listeye GİRSİN — ama `index.html` JSON-LD'ye DOKUNULMAZ.** CLAUDE.md'deki "yalnız raporla, DEĞİŞTİRME" yasağı **aynen geçerli**. Canonical/sitemap/hreflang güvenle koşar. |
@@ -203,7 +203,7 @@ traction ölçülecek.
 |---|---|---|---|---|
 | A | ~~G01~~ | ✅ **KAPANDI 01.10** — `docs/dijital-gruplar/` + CLAUDE.md bölümü + kök temiz | ✅ | — |
 | A | ~~G02~~ ~~G03a~~ ~~G03b~~ ~~G03c~~ | ✅ **SERİ TAMAM 03.10** — G02+G03a+G03b 01.10 · ✅ **G03c KAPANDI 03.10** (deploy sonrası uygulandı — **SIZINTI KAPANDI**: taban tablo anon 42501, kabul #5 dört yol 4/4 ölçüldü) | ✅ | — |
-| B | **G04–G05** | Telefon OTP (Auth native + `user_verifications` aynası) + arayüz | 🟢 | ⛔ **U06** |
+| B | ~~G04~~ ~~G05~~ | ✅ **G04+G05 KAPANDI 04.10** — G04: mig `20261004270000` canlıda (auth.users AFTER UPDATE trigger → user_verifications aynalama + BEFORE INSERT guard phone-only kayıt reddet + otp_send_attempts gözlem tablosu) · kabul K1–K9 9/9 (geri alınan işlem) · G05: `phone-verification-api.ts` + `PhoneVerificationCard.tsx` (native Auth yolu: updateUser → verifyOtp) · 12 API sözleşme testi · tam suite **455 dosya / 3772 test** · tsc 0 · check:migrations 490/490 · ⚠️ **U06 bekleniyor** (SMS sağlayıcı kimlikleri) · ⚠️ **KARAR GEREKİR**: Kullanıcı başına 5/gün, 3/saat ENFORCED edilmeliyse edge function (spike: docs/plans/2026-10-04-g04-g05-telefon-otp-spike.md) | ✅ | — |
 | B | ~~G06a~~ ~~G06b~~ ~~G07~~ | ✅ **G06 KURUMSAL DOĞRULAMA TAMAM 03.10** — **G06a** (mig `20261003100000`: iz kolonları · private kova `org-verification-docs` · `is_level2_org_representative()` · `request_org_verification_v1`; kabul 15/15 · mutasyon 7/7) · **G06b** (`org-verification-api.ts` careers deseni + `OrgVerificationRequestCard`: bağlı sahip→belge formu, **bağı olmayan→"önce kaydı sahiplen"**; 26 test · mutasyon 6/6 · canlı kova doğrulandı) · ✅ **G07 KAPANDI 03.10** (mig `20261003130000`: `admin_list_org_verifications` + `review_org_verification_v1` [onay→`verification_status='verified'`+verified_at/by+claim approved/reviewed_*, ret→reason ZORUNLU] + `AdminOrgVerificationPage` kuyruk/önizleme[imzalı]/Onayla/Reddet; **kabul K1–K9 9/9** · sözleşme 10 + bileşen 7 test · **mutasyon 6/6** · **N07 koşulu** — Kurumsal Doğrulama #6, numaralar kaydı, ai-knowledge 92 belge + 87 embed). 🔴 Rozet/filtre yayılımı YOK (dizin/arama dokunulmadı). | ✅ | — |
 | C | ~~G08~~ | ✅ **KAPANDI 01.10** — spike raporu yazıldı ([`docs/dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md`](../dijital-gruplar/2026-10-01-g08-davet-sayfasi-spike.md)) | ✅ | — |
 | C | ~~G09~~ ~~G10~~ · **G10c** · **G11** | ✅ G09 KAPANDI 01.10 (`group_settings` canlıda) · ✅ **G10 KAPANDI 02.10** (mig `20261002020000` canlıda, salt ekleme, sync 10/10) · kalan: eski kolonların düşürülmesi (G10c) + 10 grubun göçü (G11) | 🟢 | ⛔ G10c: **G03b deploy** · G11: **U07** |
@@ -1996,30 +1996,33 @@ zaten temiz ölçüldü, G03c'den sonra yeniden doğrulanacak:
 
 ### Faz B — ön koşul altyapıları (iki kararın gerektirdiği; pakette YOK)
 
-**G04 — Telefon OTP: Supabase Auth native + `user_verifications` aynası** · migration + kod
-- **Native yol:** `updateUser({phone})` → SMS OTP → `verifyOtp({type:'phone_change'})` →
-  `auth.users.phone_confirmed_at`; trigger `user_verifications`'a aynalar.
-  ⚠️ Tasarımın adını verdiği `send-phone-otp`/`verify-phone-otp` edge function'larını **YAZMA** —
-  şema zaten ayna olarak tasarlanmış. Native başarısız olursa özel fonksiyona düşülür.
-- ⚠️ **GÜVENLİK:** sağlayıcıyı açmak telefonla **giriş/kayıt** yolunu da açabilir. Amaç yalnız
-  mevcut hesaba telefon eklemek → phone **sign-in ve sign-up KAPALI** kalmalı.
-- ⚠️ **Ülke telefon alan kodundan TÜRETİLMEZ.** `phone_country_code` dolsa bile profil ülkesi
-  olmaz; `phone-country-derivation.test.ts` `src/`'i tarar ve `countryFromPhone`/`dialCode`/
-  `callingCode`/`libphonenumber` girerse **DÜŞER**. E.164 doğrulaması `profile-phone.ts`'de var.
-- ⚠️ `phone` attribute `private_storage` ve aktif — sözleşme bozulmaz.
-- **Ön koşul:** sağlayıcı teyidi (U listesi — K02 `sms_provider=twilio` iddiası yalnız bu
-  dosyada geçiyor, `config.toml`'da `[auth]` bölümü YOK).
-- **Kabul:** `user_verifications` ≥1 gerçek satır; `is_phone_verified()` `true`; telefonla giriş
-  denemesi **reddediliyor**.
+**~~G04~~ — ✅ KAPANDI 04.10** · Telefon OTP: Supabase Auth native + `user_verifications` aynası
 
-**G05 — Telefon doğrulama arayüzü + hız sınırı** · kod + migration
-- Profil/ayarlarda doğrulama kartı; yeniden gönderme bekleme süresi, deneme sınırı.
-- ⚠️ **SMS ÜCRETLİ (bütçe 20–25 €, T21) → hız sınırı zorunlu**, yoksa fatura riski. Sınırlar
-  `group_settings`'te, sayım **DB'de** (istemcide değil).
-- **Kabul:** sınır aşımında Türkçe mesaj; sınır DB'de sayılıyor.
-- 🔴 **G09'dan devredilen karar:** `groups.otp_rate_limits` satırı canlıda **ajan ihtiyatıyla**
-  dolduruldu (günde 5 · saatte 3 · 60 sn bekleme · 5 doğrulama denemesi). Pakette sayı YOK;
-  bu batch'te kullanıcıyla teyit edilir. Değiştirmek kod değil, tek satır SQL `update`'idir.
+- **Migration `20261004270000`** canlıda (`check:migrations` 490/490 sapmasız):
+  - auth.users AFTER UPDATE trigger → user_verifications aynalama (phone_confirmed_at değişimi)
+  - auth.users BEFORE INSERT guard → phone-only kayıt reddet (email gerekli)
+  - otp_send_attempts gözlem tablosu (enforcement YOK, Auth sınırları geçerli)
+- **Kabul** (`supabase/qa/phone-otp-acceptance.sql`, geri alınan işlem, K1–K9 9/9):
+  K1 phone_confirmed_at NULL → user_verifications satırı YOK · K2 phone_confirmed_at yazılınca
+  trigger aynalar (phone_e164 + phone_verified_at) · K3 phone_confirmed_at NULL'a çekilince
+  güncellenir · K4 phone-only INSERT reddedilir · K5 email+normal INSERT reddedilmez ·
+  K6 otp_send_attempts gözlem tablosu çalışır · K7 otp_send_attempts RLS authenticated erişemez ·
+  K8 user_verifications RLS hâlâ kapalı · K9 grant service_role.
+- ⚠️ **Gerçek SMS gönderilemez** (U06 bekliyor) — "uçtan uca doğrulandı" YAZILMAZ.
+- Spike notu: `docs/plans/2026-10-04-g04-g05-telefon-otp-spike.md`
+
+**~~G05~~ — ✅ KAPANDI 04.10** · Telefon doğrulama arayüzü + hız sınırı
+
+- **`src/lib/phone-verification-api.ts`**: fetchPhoneVerificationStatus + sendPhoneVerificationCode
+  (updateUser({phone}) → Auth SMS) + verifyPhoneVerificationCode (verifyOtp phone_change).
+- **`src/components/profile/PhoneVerificationCard.tsx`**: profil sayfasında doğrulama kartı
+  (durum gösterimi → telefon gir → kod gönder → kodu doğrula → başarı).
+- **12 API sözleşme testi** (auth_required · invalid_phone · same_phone · rate_limited ·
+  verifyOtp çağrısı · ülke türetme yasağı sözleşmesi).
+- **HIZ SINIRI KARARI** (spike): Auth yerleşik sınırları (30/gün proje geneli) geçerli.
+  DB'de otp_send_attempts ile GÖZLEM yapılır, enforcement YOK. Kullanıcı başına 5/gün, 3/saat
+  politikası ENFORCED değil — bunun için edge function gerekir (KARAR GEREKİR).
+- ⚠️ **U06 bekleniyor**: SMS sağlayıcı kimlikleri + external_phone_enabled=true.
 
 **G06 — Kurumsal doğrulama seviyesi: şema + belge yükleme** · 🔴 **K09 KARARI BEKLİYOR**
 
@@ -3166,6 +3169,7 @@ DB erişim notu: db.<ref> IPv6-only (rota düşünce kopuyor) → pooler
 
 | İş | Kanıt (tek satır) |
 |---|---|
+| G04+G05 · Telefon OTP altyapısı + doğrulama arayüzü | G04: mig `20261004270000` canlıda (`check:migrations` **490/490** sapmasız) — auth.users AFTER UPDATE trigger → user_verifications aynalama + BEFORE INSERT guard phone-only kayıt reddet + otp_send_attempts gözlem tablosu · **kabul K1–K9 9/9** (geri alınan işlem: phone_confirmed_at aynalama · phone-only INSERT reddi · otp_send_attempts RLS · grant) · G05: `phone-verification-api.ts` + `PhoneVerificationCard.tsx` (native Auth yolu: updateUser → verifyOtp) · **12 API sözleşme testi** (auth_required · invalid_phone · same_phone · rate_limited · verifyOtp · ülke türetme yasağı) · tam suite **455 dosya / 3772 test** · tsc 0 · check:dead 0 · ⚠️ **Gerçek SMS gönderilemez** (U06 bekliyor) — "uçtan uca doğrulandı" YAZILMAZ · ⚠️ **KARAR GEREKİR**: Kullanıcı başına 5/gün, 3/saat ENFORCED edilmeliyse edge function (spike: docs/plans/2026-10-04-g04-g05-telefon-otp-spike.md) |
 | W03 · Graph gönderim yolu `_shared`'a çıkarıldı | `_shared/whatsapp-graph.ts` (46 satır) + `_shared/whatsapp-graph.test.ts` (12 test) · `whatsapp-reply/index.ts` 114→90 satır (Graph çağrısı → `sendGraphMessage(graphConfig, payload)`) · **12 test yeşil** · **mutasyon 6/6** (M1 Authorization · M2 encodeURIComponent · M3 wamid öneki · M4 regex ^ · M5 sır sızıntısı · M6 tek-istemci kilidi) · tam suite **454 dosya / 3760 test** · `tsc` 0 · `check:dead` 0 · `verify:text` 1998 · ⚠️ Meta'ya gerçek gönderim U09'a kadar doğrulanamadı (yer tutucu sırlar) · 🔍 **BAĞIMSIZ İNCELEME (04.10, ayrı oturum):** kod plana sadık (gövde birebir, sürüm çözümü aynı sonucu veriyor) · testler 23/23 kendi koşumumda · **kendi mutasyon kümem 6/6** (`^` ve `$` ayrı ayrı dahil) · 🔴 **BOŞLUK BULUNDU ve KAPATILDI:** "tek istemci" kilidi yalnız `index.ts` tarıyordu; oysa W05 mantığı `_shared/whatsapp-autoreply.ts` gibi bir `_shared` dosyasında yaşayacak — ikinci bir Graph istemcisi tam orada saklanabilirdi. Kilit artık test hariç TÜM `supabase/functions/**/*.ts`'i tarıyor + boş-küme koruması; **mutasyon: `_shared`'a gizli sahte istemci → yakalandı, `index.ts`'e geri yazma → yakalandı** · 🚀 **CANLI:** `whatsapp-reply` **v18→v19** deploy edildi (`whatsapp-graph.ts` pakete girdi) · `verify_jwt=true` ÖLÇÜLDÜ · smoke (anon): boş gövde **400 invalid_request** · geçerli gövde **409 reply_not_allowed** (403 DEĞİL — KS03 sonrası anon'un EXECUTE'u yok) · Authorization'sız **401** · `whatsapp_customer_messages` **0→0** (yazım yok) · `check:functions` **15/15 sapmasız** · ⚠️ Meta'ya gerçek gönderim hâlâ U09'a kadar doğrulanamadı |
 | KS08 · eski pano tabloları `authenticated` → `is_admin()` daraltıldı (KS07'nin açık maddesi KAPANDI) | mig `20261004210000` canlıda (`check:migrations` **484/484**) · 15 tabloda koşulsuz `*_all_authenticated` (qual=true) politikası düşürüldü, yerine `*_admin_all` (`is_admin(auth.uid())`) kondu · **Ölçüm:** 175 kullanıcının **2'si** admin → 173 sıradan üye, arayüzde göremediği hâlde API'den ~1.650 satıra erişebiliyordu · **Neden güvenli:** rotalar `adminRoutes` ile bağlı ve arayüz kapısı `AdminAccessGate` → `userIsAdmin()` → **`is_admin()` RPC**; DB kuralı arayüz kapısıyla aynı hizaya getirildi · kabul `supabase/qa/legacy-dashboard-admin-only-acceptance.sql` **7/7** (sıradan üye `meeting_notes` **0** + `user_cvs` **0**, admin **470**; anon politikası geri gelmedi; satırlar korundu) · 📌 Artık `command_center_items` (KS06) ile TUTARLI — iki ayrı seviye bırakmak "hangi tablo hangi seviyede" sorusunu sürekli yeniden sordurur |
 | 🔴 KS07 · eski pano tablolarından anon erişimi kaldırıldı (15 tablo · ~1.650 satır) | mig `20261004180000` canlıda · KS06'dan sonra AYNI desen tarandı: her tabloda çalışan `*_all_authenticated` politikasının yanında koşulsuz `*_select_public` ({anon,authenticated}, qual=true) duruyordu · **Gerçek `count(*)`:** `command_center_legacy_map` 592 · `meeting_notes` 470 · `resource_entries` 221 (kişi adı + LinkedIn + dosya yolu) · `mvp_items` 188 · `todo_items` 122 · `links` 45 · `gorevler` 9 · `social_media_links` 4 · `user_cvs` 3 (ad/soyad/rol/file_path) · `draft_notlar` 2 · `arge_links` 2 · 3 tablo boş · ⚠️ **İkisinde anon YAZABİLİYORDU:** `todo_items_all_open` ve `command_center_legacy_map_all_authenticated` — ikincisi **adına rağmen** anon içeriyordu (politika adına güvenme, `roles` sütununu oku) · **Kanıt SONRA:** 6 tabloda anon `GET` → `*/0` · anon `POST` → `42501` HTTP 401 · 5 genel sayfa 200 · kabul `supabase/qa/legacy-dashboard-rls-acceptance.sql` **7/7** (17 anon politikası → 0, her tabloda authenticated politikası DURUYOR, girişli kullanıcı hâlâ okuyor) · ⚠️ `doc_categories`'in TEK politikası public idi — düşürülünce kimse okuyamazdı, yerine authenticated politikası kondu · ⏳ **Açık kalan (bilinçli):** bu tabloları girişli HERKES görüyor, yalnız admin değil. Admin'e daraltmak AYRI karar — hangi yönetici sayfasının admin olmayan ekipçe kullanıldığı ölçülmeli |
