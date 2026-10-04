@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-tavsiye-faz2-canli-dogrulama",
+    date: "4 Ekim 2026",
+    title: "Tavsiye modülü canlıda doğrulandı — gönderilen “M23 doğrulama talebi” maili gerçek bir testtir",
+    items: [
+      "NE YAPILDI: Faz 2’nin uçtan uca canlı doğrulaması tamamlandı. (1) Anonim ziyaretçi tavsiye listesini iletişim bilgisi OLMADAN okuyabiliyor (HTTP 200, sıfır iletişim kolonu ölçüldü). (2) Test üyesi canlıda talep açtı — talep BİLEREK hiçbir üyeyle eşleşmeyen konumla açıldı, gerçek üyelere bildirim GİTMEDİ (yan etki 0 ölçüldü). (3) Eşleşme bildirimi GERÇEK gönderim hattından geçti: mail Burak’ın adresine ulaştı, kuyruk satırı status=sent + dolu sent_at + boş hata ile ölçüldü. (4) Kilitli Pro iletişim kartının ilgi kaydı canlıda satır üretti.",
+      "BUGÜN GELEN MAIL: “Sana uyan bir tavsiye talebi: M23 doğrulama talebi” konulu mail bu doğrulamanın TEST gönderimidir — gerçek bir talep değildir, ölçümden sonra tüm test verisi silindi (kalıntı 0 doğrulandı).",
+      "BULUNAN EKSİK (kapatıldı): İlk gönderim denemesi düştü — canlıdaki edge function ESKİ sürümdü (dünkü kod commit’lenmiş ama deploy edilmemişti). `supabase functions deploy` koşuldu, ikinci denemede mail gitti. Ders: “commit ≠ canlı”; bildirim hattı artık gerçek gönderimle kanıtlı.",
+      "KANIT: 4/4 ölçüm + temizlik 6/6 kalıntı sıfır. Kuyruk satırında attempts=2 dürüst tarihi durur (1. deneme deploy öncesi düştü, 2. deneme sent). Faz 2 (M17–M23) bu turla TAMAM.",
+      "KALAN: Ön yüz (liste/talep/yanıt sayfaları + Cadde kartı + kilitli kart) frontend deploy’uyla canlıya çıkar; bildirim hattı ÇALIŞIYOR (deploy edildi). Sırada Faz 4: haftalık şehir özeti (M24–M27).",
+    ],
+  },
+  {
     id: "20261004-ozgecmis-kovalari-kapatildi",
     date: "4 Ekim 2026",
     title: "Özgeçmiş dosyaları artık herkese açık değil (Eylül’de raporlanan risk kapatıldı)",
