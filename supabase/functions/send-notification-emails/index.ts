@@ -43,6 +43,7 @@ import {
   type GroupNotificationEventType,
 } from "../_shared/emails/group-notifications.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
+import { buildRecommendationMatchEmail } from "../_shared/emails/recommendation-match.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
 const ALLOWED_ORIGINS = new Set([
@@ -77,6 +78,9 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   group_link_dead: "email.group_link_dead.enabled",
   group_score_badge: "email.group_score_badge.enabled",
   group_strike_warning: "email.group_strike_warning.enabled",
+  // M22 · tavsiye eşleşme bildirimi — transactional, alıcı payload.email
+  // (eşleşen profesyonel); anahtar mig 20261004110000'de seed edildi.
+  recommendation_match: "email.recommendation_match.enabled",
 };
 
 type EventType =
@@ -89,6 +93,7 @@ type EventType =
   | "relocation_tool_abandonment"
   | "radar_scan_digest"
   | "career_application"
+  | "recommendation_match"
   | GroupNotificationEventType;
 
 type OutboxRow = {
@@ -216,6 +221,9 @@ function buildEmail(row: OutboxRow): BuiltEmail {
       return buildRelocationToolAbandonmentEmail(row.payload, resolveSiteUrl());
     case "career_application":
       return buildCareerApplicationEmail(row.payload, resolveSiteUrl());
+    // M22 · tavsiye eşleşmesi — eşleşen profesyonele transactional mail.
+    case "recommendation_match":
+      return buildRecommendationMatchEmail(row.payload, resolveSiteUrl());
     // G23 · tasarım §9 — 8 grup bildirimi tek şablonda (metinler §9'dan birebir).
     case "group_submission_received":
     case "group_published":
@@ -412,6 +420,7 @@ Deno.serve(async (request) => {
         "member_welcome",
         "relocation_tool_report",
         "relocation_tool_abandonment",
+        "recommendation_match",
         "group_submission_received",
         "group_published",
         "group_rejected",
@@ -458,6 +467,7 @@ Deno.serve(async (request) => {
           const directRecipient = row.event_type === "member_welcome"
             || row.event_type === "relocation_tool_report"
             || row.event_type === "relocation_tool_abandonment"
+            || row.event_type === "recommendation_match"
             || row.event_type.startsWith("group_");
           const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin

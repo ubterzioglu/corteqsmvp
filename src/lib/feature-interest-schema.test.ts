@@ -21,25 +21,35 @@ import { FEATURE_INTEREST_KEYS, FEATURE_INTEREST_ERROR_MESSAGES } from "@/lib/fe
 import { sliceBetween } from "@/test/source-slice";
 
 const MIGRATION = "20261003040000_feature_interest.sql";
+// M22: register_feature_interest GÜNCEL gövdesi burada (beyaz liste pro.inbox
+// ile genişledi). Tablo DDL/politika/grant değişmedi — onlar M10 dosyasında.
+const MIGRATION_V2 = "20261004110000_recommendation_match_notification.sql";
 
-const migrationSql = () => {
-  const candidates = [`supabase/migrations/applied/${MIGRATION}`, `supabase/migrations/${MIGRATION}`];
+const readMigrationFile = (name: string) => {
+  const candidates = [`supabase/migrations/applied/${name}`, `supabase/migrations/${name}`];
   const path = candidates.find((candidate) => existsSync(candidate));
-  if (!path) throw new Error(`${MIGRATION} bulunamadı (applied/ altında yaşamalı).`);
+  if (!path) throw new Error(`${name} bulunamadı (applied/ altında yaşamalı).`);
   return readFileSync(path, "utf8");
 };
 
-const code = () =>
-  migrationSql()
+const migrationSql = () => readMigrationFile(MIGRATION);
+const migrationV2Sql = () => readMigrationFile(MIGRATION_V2);
+
+const stripComments = (sql: string) =>
+  sql
     .split("\n")
     .filter((line) => !line.trimStart().startsWith("--"))
     .join("\n");
 
+const code = () => stripComments(migrationSql());
+const codeV2 = () => stripComments(migrationV2Sql());
+
 const flat = () => code().replace(/\s+/g, " ");
 
+// GÜNCEL RPC gövdesi M22 dosyasından dilimlenir (create or replace orada).
 const rpc = () =>
   sliceBetween(
-    code(),
+    codeV2(),
     "create or replace function public.register_feature_interest",
     "comment on function public.register_feature_interest",
     "register_feature_interest",
@@ -82,8 +92,11 @@ describe("M10 · beyaz liste İKİ YÖNLÜ birebir (migration ↔ istemci)", () 
     expect([...FEATURE_INTEREST_KEYS].sort()).toEqual(migrationKeys());
   });
 
-  it("M20 genişletmesi bilinçli olacak: bugün TAM OLARAK iki anahtar var", () => {
-    expect(migrationKeys()).toEqual(["event.featured", "event.ticketing"]);
+  it("M22 genişletmesi BİLİNÇLİ yapıldı: TAM OLARAK üç anahtar var (pro.inbox eklendi)", () => {
+    // M10 kilidi "iki anahtar" idi ve "M20/M22 pro.inbox eklerken İKİSİ birden
+    // güncellenmek zorunda" diyordu — bu satır o bilinçli güncellemedir
+    // (mig 20261004110000 + FEATURE_INTEREST_KEYS aynı batch'te).
+    expect(migrationKeys()).toEqual(["event.featured", "event.ticketing", "pro.inbox"]);
   });
 
   it("bilinmeyen anahtar reddedilir + hata haritası kodları karşılar", () => {

@@ -19,6 +19,11 @@ vi.mock("@/hooks/use-recommendations", () => ({
   useMatchedProfessionals: () => matchMock(),
   useAnswerRecommendation: () => ({ mutate: answerMutate, isPending: false }),
 }));
+// M22: kilitli kart kendi test dosyasında ölçülür; burada YALNIZ yerleşim kilidi
+// (girişli + talep sahibi DEĞİL → görünür; anonim/sahip → görünmez).
+vi.mock("@/components/recommendations/ProLockedInboxCard", () => ({
+  default: () => <div data-testid="pro-locked-inbox-card-stub" />,
+}));
 
 import RecommendationDetailPage from "./RecommendationDetailPage";
 
@@ -114,5 +119,30 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
     renderPage();
 
     expect(await screen.findByText(/Tavsiye talebi bulunamadı/i)).toBeInTheDocument();
+  });
+
+  it("M22 yerleşim: kilitli kart girişli + talep sahibi OLMAYANA görünür", async () => {
+    detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
+    matchMock.mockReturnValue({ data: [] });
+    renderPage();
+
+    // mockUser u1, request.user_id u9 → kart görünür
+    expect(await screen.findByTestId("pro-locked-inbox-card-stub")).toBeInTheDocument();
+  });
+
+  it("M22 yerleşim: kilitli kart ANONİME ve talep SAHİBİNE görünmez", async () => {
+    // Anonim
+    mockUser = null;
+    detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
+    matchMock.mockReturnValue({ data: [] });
+    renderPage();
+    expect(await screen.findByText(/Yanıtlamak için giriş yap/i)).toBeInTheDocument();
+    expect(screen.queryByTestId("pro-locked-inbox-card-stub")).not.toBeInTheDocument();
+
+    // Talep sahibi (user.id === request.user_id)
+    mockUser = { id: "u9" };
+    renderPage();
+    expect(await screen.findByPlaceholderText(/Bir tavsiye ver/i)).toBeInTheDocument();
+    expect(screen.queryByTestId("pro-locked-inbox-card-stub")).not.toBeInTheDocument();
   });
 });

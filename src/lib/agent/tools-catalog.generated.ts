@@ -4805,6 +4805,16 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/emails/recommendation-match.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/recommendation-match.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/relocation-tool-abandonment.test.ts",
       "kind": "ts",
       "module_family": "edge"

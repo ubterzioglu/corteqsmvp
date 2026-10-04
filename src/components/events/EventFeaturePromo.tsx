@@ -26,7 +26,7 @@ const PROMO_META: Record<FeatureInterestKey, {
   label: string;
   description: string;
   icon: typeof Sparkles;
-}> = {
+} | null> = {
   "event.featured": {
     label: "Öne çıkar",
     description: "Etkinliğin dizinde ve akışta öne çıksın. Ücretli yüzey yakında — ilgi kaydı planlamayı belirleyecek.",
@@ -37,6 +37,11 @@ const PROMO_META: Record<FeatureInterestKey, {
     description: "Etkinliğine bilet/aidat topla. Ücretli yüzey yakında — ödeme altyapısı ayrı planda.",
     icon: Ticket,
   },
+  // M22: pro.inbox bu panelde ÇİZİLMEZ (etkinlik yüzeyi değil) — kendi kartı
+  // ProLockedInboxCard, /tavsiye/:id detayında. Record EXHAUSTIVE kalır:
+  // FEATURE_INTEREST_KEYS'e yeni anahtar gelirse buraya meta ya da bilinçli
+  // null EKLEMEK zorunlu (derleme zamanı aynası korunur).
+  "pro.inbox": null,
 };
 
 const INTERESTS_KEY = "feature-interests-mine";
@@ -73,6 +78,8 @@ export function EventFeaturePromo() {
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {FEATURE_INTEREST_KEYS.map((key) => {
           const meta = PROMO_META[key];
+          // M22: null meta = bu panelin yüzeyi değil (pro.inbox → ProLockedInboxCard).
+          if (!meta) return null;
           const Icon = meta.icon;
           const isRegistered = registered.has(key);
           return (

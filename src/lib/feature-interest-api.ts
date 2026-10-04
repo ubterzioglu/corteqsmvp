@@ -10,10 +10,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Beyaz liste — migration `register_feature_interest` ile BİREBİR (ayna testi
- * iki yönü de kilitler). M20 `pro.inbox`'ı EKLERKEN burayı da genişletir.
+ * iki yönü de kilitler). M22 `pro.inbox`'ı EKLEDİ (mig 20261004110000 — kilitli
+ * profesyonel gelen kutusu ilgisi, ProLockedInboxCard).
  * ⚠️ ajan ihtiyatı: anahtar adları planın Türkçe yüzey adlarından türetildi.
  */
-export const FEATURE_INTEREST_KEYS = ["event.featured", "event.ticketing"] as const;
+export const FEATURE_INTEREST_KEYS = ["event.featured", "event.ticketing", "pro.inbox"] as const;
 export type FeatureInterestKey = (typeof FEATURE_INTEREST_KEYS)[number];
 
 export const FEATURE_INTEREST_ERROR_MESSAGES: Record<string, string> = {

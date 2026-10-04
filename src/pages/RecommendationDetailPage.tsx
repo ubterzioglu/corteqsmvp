@@ -9,6 +9,7 @@ import { ArrowLeft, BadgeCheck, MessageSquareHeart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import ProLockedInboxCard from "@/components/recommendations/ProLockedInboxCard";
 import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
 import {
@@ -133,6 +134,11 @@ export default function RecommendationDetailPage() {
             </ul>
           </section>
         ) : null}
+
+        {/* M22 · kilitli "talep sahibine doğrudan ulaş" yüzeyi — girişli ve
+            talebin SAHİBİ OLMAYAN kullanıcıya (kendi iletişim kartın anlamsız).
+            İletişim ÇİZİLMEZ; ilgi kaydı feature_interest 'pro.inbox'. */}
+        {user && user.id !== request.user_id ? <ProLockedInboxCard /> : null}
 
         <section className="space-y-3">
           <h2 className="text-sm font-medium">Yanıtlar ({answers.length})</h2>
