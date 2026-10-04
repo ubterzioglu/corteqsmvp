@@ -94,7 +94,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 |---|---|
 | 5 | **P03: web sitesi anonime AÇIK, kişisel veri KAPALI.** Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone) + **1 appointment_url** (kişisel değil, iş bağlantısı → website gibi AÇIK sayılır; yine de rapora yazılır). Website + appointment_url anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. (312+11+1+1+1 = 326 ✓ — ilk yazımda "13" ile 4 türü yan yana yazmıştım, toplam tutmuyordu.) Dizin aramasındaki ilkenin aynısı. |
 | 6 | ✅ **UYGULANDI 04.10** — haftalık şehir özeti anahtarı **AÇILDI**: `email.weekly_city_digest.enabled` `false`→`true` (`UPDATE 1` canlıda doğrulandı) · cron `weekly-city-digest` pzt 05:00 UTC **aktif**. Ölçüm: şehir takip eden üye **0** — ilk hafta kimse mail almaz, özellik duyuruldukça akar. |
-| 7 | **U04: 16 kanıtsız ✅ → 🔒'ya döndürülecek** ("auth gerektiriyor, test hesabı gerekli"). Kullanıcı yaptığını hatırlamıyor; **yalan yeşil kırmızıdan tehlikelidir**. |
+| 7 | ✅ **UYGULANDI 04.10** — U04: 16 kanıtsız ✅ → 🔒'ya döndürüldü. `docs/plans/2026-09-20-etkinlik-modulu-plani.md` Batch 1 + 2a-8b gerçek tarayıcıda QA yapılmadı (kalan-isler.md §2 çapraz kontrol). |
 | 8 | **SG (SEO/GEO) serisi listeye GİRSİN — ama `index.html` JSON-LD'ye DOKUNULMAZ.** CLAUDE.md'deki "yalnız raporla, DEĞİŞTİRME" yasağı **aynen geçerli**. Canonical/sitemap/hreflang güvenle koşar. |
 
 ### D · Stripe (U11'in cevaplanan kısmı)
@@ -241,7 +241,7 @@ traction ölçülecek.
 | **U03** | İki gerçek mail testi (e-posta doğrulama · revizyon tamamlanma) · ⏳ **kullanıcı 03.10'da üstlendi** | A14 kapanış maili |
 | **U06** | Telefon/SMS sağlayıcısı teyidi (panelden) · ⏳ **kullanıcı 03.10'da üstlendi** | **G04–G05** |
 | ~~U07~~ | ✅ **CEVAPLANDI 04.10** — 4 veri kararı verildi ve yüksek güvenli olanlar uygulandı (mig `20261004230000`). ⏳ İKİ madde bilerek kullanıcıda: **AI Legion kategorisi** (`meslek-kariyer` mi `hobi-kultur` mu) · **TED InnoVenture konumu** (Türkiye mi global mi) | **G11 kısmen açıldı** (↓ G11b) |
-| **U04** | Etkinlik planındaki 16 kanıtsız ✅ — kanıtla veya 🔒'ya döndür | — |
+| ~~U04~~ | ✅ **KAPANDI 04.10** — 16 kanıtsız ✅ → 🔒'ya döndürüldü (`b1b0cbae`). Batch 1 + 2a-8b gerçek tarayıcıda QA yapılmadı (kalan-isler.md §2). Test hesabı + canlı deploy gerekli. | — |
 | ~~U05~~ | ✅ **DOSYA GELDİ 03.10** — `caddelogo.png` (Burak) | artık **ajan işi** (A15) · ~20 dk |
 | — | Command Center arşivi — ✅ **TAMAMEN KAPANDI 04.10** (A+B 1635→495, **C 495→56**) | karar verildi ve uygulandı (↓ CC02) |
 | — | REPO-DIŞI ~50 maddenin toplu teyidi | panel durumları |
