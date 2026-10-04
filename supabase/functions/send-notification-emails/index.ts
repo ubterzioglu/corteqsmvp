@@ -424,21 +424,18 @@ Deno.serve(async (request) => {
      * admin aboneliğine bakmaz (transactional).
      */
     const resolveRecipients = async (row: OutboxRow): Promise<string[]> => {
-      // M26 · weekly_city_digest: payload BİLEREK email taşımaz (M25 kuralı) —
-      // adres GÖNDERİM ANINDA auth.admin'den çözülür (kuyrukta bayatlamaz).
-      if (row.event_type === "weekly_city_digest") {
-        const userId = typeof row.payload.user_id === "string" ? row.payload.user_id : "";
-        if (!userId) return [];
-        const { data, error } = await admin.auth.admin.getUserById(userId);
-        const email = data?.user?.email?.trim() ?? "";
-        return error || email === "" ? [] : [email];
-      }
-
+      // M27 · weekly_city_digest alıcısı payload.email'dir — SQL'de ENQUEUE
+      // ANINDA çözülür (G23 deseni, mig 20261004180000). Önceki tasarım (auth
+      // admin API'sinden kullanıcı çözümü) CANLIDA düştü: sb_secret anahtarı
+      // GoTrue admin uçlarında 401 veriyor — satır no_recipient_email skip'ine
+      // düştü, M27 drenajında ölçüldü. Kaynak kilidi bu dosyada o API adını
+      // yorumda bile yasaklar (G06b dersi).
       const directEvents = new Set<string>([
         "member_welcome",
         "relocation_tool_report",
         "relocation_tool_abandonment",
         "recommendation_match",
+        "weekly_city_digest",
         "group_submission_received",
         "group_published",
         "group_rejected",

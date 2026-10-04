@@ -27,9 +27,13 @@ describe("weekly_city_digest · edge kablolaması (5 parça)", () => {
     expect(edgeSource).toContain("buildWeeklyCityDigestEmail(row.payload, resolveSiteUrl())");
   });
 
-  it("alıcı payload.user_id'den auth.admin ile çözülür (payload email TAŞIMAZ)", () => {
-    expect(edgeSource).toContain('row.event_type === "weekly_city_digest"');
-    expect(edgeSource).toContain("admin.auth.admin.getUserById(userId)");
+  it("alıcı payload.email'den (directEvents — SQL'de enqueue anında çözülür, M27)", () => {
+    // M27 ölçümü: getUserById dalı CANLIDA düştü (sb_secret anahtarı GoTrue
+    // admin API'sinde 401) — G23 desenine geçildi: email payload'da gelir.
+    const idx = edgeSource.indexOf("const directEvents = new Set<string>([");
+    const slice = edgeSource.slice(idx, idx + 500);
+    expect(slice).toContain('"weekly_city_digest"');
+    expect(edgeSource).not.toContain("getUserById");
   });
 
   it("skip sebebi directRecipient dalında (no_recipient_email, no_subscribers DEĞİL)", () => {

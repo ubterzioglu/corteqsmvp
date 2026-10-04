@@ -1,6 +1,8 @@
 // Haftalık şehir özeti — ÜYENİN KENDİSİNE gider (transactional; alıcı
-// payload.user_id'den edge tarafında çözülür — M25 payload'ına email KONMAZ,
-// gönderim anındaki güncel adres kullanılır).
+// payload.email — ENQUEUE ANINDA SQL'de auth.users'tan çözülür, G23 deseni,
+// mig 20261004180000. M27 ölçümü: edge'in auth.admin API'si sb_secret
+// anahtarıyla 401 veriyor; getUser çözümü SQL'e taşındı). Şablon email'i
+// ÇİZMEZ — yalnız gönderim alıcısı olarak kullanılır.
 //
 // Tetikleyici: pg_cron 'weekly-city-digest' (pazartesi 05:00 UTC) →
 // enqueue_weekly_city_digest() (mig 20261004130000) kullanıcı başına TEK satır
@@ -23,6 +25,8 @@ import { escapeHtml } from "./html.ts";
 
 /** notification_email_outbox.payload içeriği (enqueue_weekly_city_digest yazar). */
 export type WeeklyCityDigestPayload = {
+  /** M27: alıcı adresi (SQL'de çözülür) — şablon bunu ÇİZMEZ, sızıntı testi kilitler. */
+  email?: unknown;
   user_id?: unknown;
   week?: unknown;
   cities?: unknown;

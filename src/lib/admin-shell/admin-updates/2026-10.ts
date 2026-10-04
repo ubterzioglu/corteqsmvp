@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-haftalik-sehir-ozeti-canli-dogrulama",
+    date: "4 Ekim 2026",
+    title: "Haftalık şehir özeti canlıda kanıtlandı — gerçek mail gitti; gönderim anahtarı KARARINIZI bekliyor",
+    items: [
+      "BUGÜN GELEN MAIL: “Haftalık şehir özeti (2026-W40): Dortmund — 1 yeni içerik” konulu mail bu doğrulamanın GERÇEK gönderimidir (test kutusuna plus-adresle düştü). Kuyruk satırı ölçüldü: status=sent + dolu sent_at + boş hata + alıcı 1. Test verisi (üye/takip/talep/satır) ölçümden sonra silindi, kalıntı 0 doğrulandı.",
+      "BULUNAN GERÇEK KUSUR (kapatıldı): İlk denemede mail GİTMEDİ — satır “alıcı yok” diye atlandı. Sebep ölçüldü: gönderim işlevi alıcı adresini kullanıcı yönetim API’sinden çözmeye çalışıyordu ve ortamdaki yeni tip gizli anahtar o API’de reddediliyor (401). Kanıtlı grup bildirimi desenine geçildi: adres artık kuyruğa yazım anında veritabanından çözülüyor; adresi olmayana satır hiç açılmıyor. İşlev yeniden deploy edildi ve mail ikinci denemede gitti. Bu, canlı doğrulama turlarının neden “kod yazıldı” ile yetinmediğinin ders kitabı örneği: birim testler yeşilken hat gerçek gönderimde ortaya çıktı.",
+      "📌 KARAR BEKLİYOR: Haftalık özetin GENEL gönderim anahtarı doğrulanmış olmasına rağmen KAPALI bırakıldı (otomatik hat kapalı doğar kuralı). Açarsanız: her pazartesi 05:00’te, YALNIZ takip ettiği şehirde o hafta yeni etkinlik/tavsiye olan üyelere tek özet maili gider (içeriği olmayana mail YOK, boş özet YOK, hafta başına kullanıcı başına en fazla 1). Şu an takip eden gerçek üye 0 — açsanız da ilk hafta kimse mail almaz; özellik duyurulup takipler oluştukça özetler başlar.",
+      "KANIT: elle tetikleme → 1 satır (ikinci çağrı 0 — hafta dedupe’si) · gerçek drenaj → sent:1 · yeni kabul K1–K6 6/6 (adres çözümü, adressize satır yok, dedupe, anahtar kapalıyken 0, içeriksiz şehre 0) · M25 kabulü temiz canlıda 10/10 (geriye dönük bozulma yok) · 6 mutasyon 6/6 yakalandı · tam test takımı 452 dosya / 3731 test yeşil.",
+      "FAZ 4 BÖYLECE TAMAM: takip tablosu + kuyruk tipi (M24) · kuyruğa yazma + haftalık cron (M25) · takip yönetimi ekranı + mail şablonu + gönderim kablolaması (M26) · uçtan uca canlı kanıt (M27). Sırada blokeli işler var: WhatsApp (U09 sırları), SMS (U06 sağlayıcı), grup içe aktarma (U07 CSV) — hepsi kullanıcı girdisi bekliyor.",
+    ],
+  },
+  {
     id: "20261004-eski-pano-yalniz-yoneticiye",
     date: "4 Ekim 2026",
     title: "Eski pano tabloları artık yalnız yöneticilere açık (173 üyenin erişimi kaldırıldı)",
