@@ -7,7 +7,9 @@ import { RECOMMENDATION_DIASPORA_KEYS } from "@/lib/recommendations-rules";
 
 /** Talep durumu (M17 CHECK: open|answered|closed). */
 export const recommendationStatusSchema = z.enum(["open", "answered", "closed"]);
-export type RecommendationStatus = z.infer<typeof recommendationStatusSchema>;
+// F14 (inceleme borcu): `RecommendationStatus` type export'u ÖLÜYDÜ (sıfır
+// ithalatçı) — silindi; şema row şemasında yaşıyor. Tip gerekirse z.infer ile
+// satır tipinden türetilir (ölü export yüzeyi bırakılmaz).
 
 /** `recommendation_requests` satırı (liste/detay). */
 export const recommendationRequestRowSchema = z.object({
@@ -63,8 +65,6 @@ export const createRecommendationInputSchema = z.object({
 });
 export type CreateRecommendationInput = z.infer<typeof createRecommendationInputSchema>;
 
-/** Yanıt formu girdisi. */
-export const answerRecommendationInputSchema = z.object({
-  body: z.string().trim().min(1, "Yanıt boş olamaz."),
-});
-export type AnswerRecommendationInput = z.infer<typeof answerRecommendationInputSchema>;
+// F14 (inceleme borcu): `answerRecommendationInputSchema` + `AnswerRecommendationInput`
+// ÖLÜ export'tu (sıfır ithalatçı — detay sayfası yanıt gövdesini inline doğruluyor:
+// maxLength + trim kontrolü). Silindi; yanıt formu şemaya bağlanırsa yeniden eklenir.

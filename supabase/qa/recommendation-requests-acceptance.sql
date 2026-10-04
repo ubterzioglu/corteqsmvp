@@ -83,14 +83,16 @@ begin
          then 'GECTI (prof='||v_prof||' = katalog)'
          else '!!! DUSTU: prof='||coalesce(v_prof::text,'null')||' expected='||coalesce(v_expected_prof::text,'null')||' status='||coalesce(v_status,'null') end;
 
-  -- K6: aynı kullanıcı aynı talebe 2. yanıt -> unique (çift yanıt yok).
+  -- K6: aynı kullanıcı aynı talebe 2. yanıt -> TEK kod recommendation_already_answered
+  -- (F11 ön kontrol; unique constraint İKİNCİ savunma — ham 23505 kullanıcıya
+  -- genel "tekrar dene" mesajıyla sızıyordu, artık tek Türkçe kod).
   begin
     perform public.answer_recommendation_v1(v_req,'Ikinci yanit denemesi');
-    insert into r select 6,'K6 ayni kullanicidan 2. yanit -> unique ihlali','!!! DUSTU: gecti';
+    insert into r select 6,'K6 ayni kullanicidan 2. yanit -> recommendation_already_answered (TEK kod)','!!! DUSTU: gecti';
   exception when others then
-    insert into r select 6,'K6 ayni kullanicidan 2. yanit -> unique ihlali',
-      case when sqlerrm like '%recommendation_answers_unique_per_user%' or sqlerrm like '%duplicate key%'
-           then 'GECTI' else '!!! DUSTU: '||sqlerrm end;
+    insert into r select 6,'K6 ayni kullanicidan 2. yanit -> recommendation_already_answered (TEK kod)',
+      case when sqlerrm like '%recommendation_already_answered%' then 'GECTI'
+           else '!!! DUSTU: '||sqlerrm end;
   end;
 
   -- K7: KAPALI talebe yanıt -> recommendation_request_closed (ayrı talep, fixture erken kontrole takılmaz).

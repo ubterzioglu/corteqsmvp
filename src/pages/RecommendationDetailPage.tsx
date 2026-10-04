@@ -85,6 +85,9 @@ export default function RecommendationDetailPage() {
 
   const answers = detailQuery.data?.answers ?? [];
   const matches = matchQuery.data ?? [];
+  // F11: kullanıcının yanıtı VARSA form çizilmez (SQL zaten recommendation_already_answered
+  // ile reddeder; UI davetkâr boş form göstermez — "yanıtın gönderildi" durumu).
+  const myAnswered = user ? answers.some((a) => a.user_id === user.id) : false;
 
   return (
     <div className="min-h-screen bg-background py-10">
@@ -177,6 +180,12 @@ export default function RecommendationDetailPage() {
             // inceleme W3). Form hiç çizilmez; UI ile SQL kuralı aynı.
             <p className="text-sm text-muted-foreground">
               Bu senin talebin — kendi talebine yanıt yazamazsın.
+            </p>
+          ) : myAnswered ? (
+            // F11: yanıtını vermiş kullanıcıya davetkâr boş form GÖSTERİLMEZ —
+            // SQL zaten recommendation_already_answered ile reddeder.
+            <p className="text-sm text-muted-foreground" data-testid="already-answered-note">
+              Yanıtın gönderildi — bu talebe bir kez yanıt verebilirsin.
             </p>
           ) : (
             <div className="space-y-2">

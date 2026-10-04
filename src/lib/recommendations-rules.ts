@@ -38,6 +38,10 @@ export const RECOMMENDATION_RPC_ERROR_MESSAGES: Record<string, string> = {
   // İnceleme W3 (mig 20261004220000): sahip kendi talebini yanıtlayamaz —
   // kendi yanıtı open→answered çevirip talebi varsayılan listeden düşürüyordu.
   recommendation_self_answer: "Kendi talebine yanıt yazamazsın.",
+  // İnceleme F11 (mig 20261004240000): ikinci yanıt ön kontrolde TEK kodla
+  // reddedilir — ham 23505 genel "tekrar dene" mesajına düşüp retry'a davet
+  // ediyordu (unique constraint ikinci savunma hattı olarak duruyor).
+  recommendation_already_answered: "Bu talebe yanıtını zaten gönderdin.",
 };
 
 const RECOMMENDATION_GENERIC_ERROR = "İşlem tamamlanamadı. Lütfen tekrar dene.";

@@ -17,6 +17,7 @@ import { describe, expect, it } from "vitest";
 import {
   RECOMMENDATION_BODY_MAX,
   RECOMMENDATION_DIASPORA_KEYS,
+  RECOMMENDATION_MATCH_DEFAULT_LIMIT,
   RECOMMENDATION_TITLE_MAX,
   RECOMMENDATION_RPC_ERROR_MESSAGES,
   resolveRecommendationRpcErrorMessage,
@@ -30,6 +31,7 @@ const MIGRATIONS = [
   // kilitler (sabitler/kodlar sessizce ayrışabilirdi).
   "20261004110000_recommendation_match_notification.sql",
   "20261004220000_recommendation_answer_self_guard.sql",
+  "20261004240000_recommendation_already_answered.sql",
 ];
 
 const readMigration = (name: string) => {
@@ -48,8 +50,8 @@ const raisedCodes = () =>
 describe("M19 · hata haritası iki migration'a karşı çift yönlü", () => {
   it("migration'lardan kod toplayabiliyor (tarama boşa düşmesin)", () => {
     // Bu kapan olmazsa aşağıdaki iddialar çıpasızdır (events dersi).
-    // 8 kod: M17 (7) + inceleme düzeltmesi self_answer (20261004220000).
-    expect(raisedCodes().size).toBeGreaterThanOrEqual(8);
+    // 9 kod: M17 (7) + self_answer (20261004220000) + already_answered (20261004240000).
+    expect(raisedCodes().size).toBeGreaterThanOrEqual(9);
   });
 
   it("migration'lardaki HER recommendation_* kodu haritada", () => {
@@ -98,6 +100,12 @@ describe("M19 · sabit aynaları (migration metniyle birebir)", () => {
       expect(sql, `${key} migration'da yok`).toContain(`'${key}'`);
     }
     expect(RECOMMENDATION_DIASPORA_KEYS).toEqual(["tr", "in", "cn", "ph"]);
+  });
+
+  it("F16: match varsayılan limiti M18 imzasıyla birebir (queryKey sabiti kaymasın)", () => {
+    const m18 = readMigration("20261003150000_match_recommendation_professionals.sql");
+    expect(m18).toContain(`p_limit integer default ${RECOMMENDATION_MATCH_DEFAULT_LIMIT}`);
+    expect(RECOMMENDATION_MATCH_DEFAULT_LIMIT).toBe(25);
   });
 
   it("uzunluk mesajları sabiti kullanıyor (elle yazılmış ikinci sayı yok)", () => {

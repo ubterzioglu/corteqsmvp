@@ -158,6 +158,25 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
     expect(screen.queryByPlaceholderText(/Bir tavsiye ver/i)).not.toBeInTheDocument();
   });
 
+  it("F11 UI: yanıtı OLAN kullanıcı form GÖRMEZ — 'Yanıtın gönderildi' durumu", async () => {
+    // mockUser u1; answers'ta u1'in yanıtı var → myAnswered=true
+    detailMock.mockReturnValue({
+      data: {
+        request: request(),
+        answers: [
+          { id: "a1", request_id: "r1", user_id: "u1", body: "Benim yanıtım.", is_professional: false, created_at: "2026-10-04T11:00:00Z" },
+        ],
+      },
+      isLoading: false,
+    });
+    matchMock.mockReturnValue({ data: [] });
+    renderPage();
+
+    expect(await screen.findByTestId("already-answered-note")).toBeInTheDocument();
+    expect(screen.getByText(/Yanıtın gönderildi/i)).toBeInTheDocument();
+    expect(screen.queryByPlaceholderText(/Bir tavsiye ver/i)).not.toBeInTheDocument();
+  });
+
   it("F2: api'den gelen Türkçe hata AYNEN gösterilir (genel mesaja düşmez)", async () => {
     detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
     matchMock.mockReturnValue({ data: [] });

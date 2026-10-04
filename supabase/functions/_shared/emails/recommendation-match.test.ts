@@ -29,6 +29,8 @@ describe("tavsiye eşleşme maili", () => {
     expect(mail.html).toContain("Dortmund");
     expect(mail.text).toContain("Talebi gör ve yanıtla");
     expect(mail.text.length).toBeGreaterThan(0);
+    // F12: paragraf AYRAÇLARI korunur (text sürümü tek bloka düşmez).
+    expect(mail.text).toContain("\n\n");
   });
 
   it("🔴 talep sahibinin İLETİŞİMİ sızamaz — payload'a fazladan alan konsa bile çizilmez", () => {

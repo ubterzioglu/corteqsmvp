@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-tavsiye-inceleme-borcu-kapatildi",
+    date: "4 Ekim 2026",
+    title: "Tavsiye incelemesinin ertelenen 7 önerisi aynı gün kapatıldı — “borç satırı” kalmadı",
+    items: [
+      "DÜZELTME: Bir önceki kayıtta incelemenin 7 düşük öncelikli önerisinin borç olarak ertelendiği yazıyordu — tamamı bu turda KAPATILDI, KALANLAR’daki borç satırı boşaltıldı.",
+      "KULLANICIYA GÖRÜNEN: (1) Yanıtını göndermiş üye artık boş form görmüyor — “Yanıtın gönderildi” durumu çiziliyor; ikinci yanıt denemesi teknik hata yerine tek Türkçe mesajla reddediliyor (“Bu talebe yanıtını zaten gönderdin”). (2) Bildirim maillerinin düz-metin sürümünde paragraf araları geri geldi (tek blok yazı düzeldi).",
+      "ALTYAPI: Mail kuyruğu artık TANIMADIĞI olay tipinde satırı yakmıyor — işleme almayı bırakıp beklemeye alıyor ve gönderim kodu güncellenince satır KENDİLİĞİNDEN gidiyor (geçmişte yaşanan “sessizce hiç gitmedi” sınıfına karşı oto-onarım). Kalıcı kural kayda geçti: yeni olay tipinde önce gönderim kodu dağıtılır, sonra veritabanı değişikliği.",
+      "TEMİZLİK: Ölçüsüz yeniden-yenileme yapan sorgulara açık önbellek pencereleri kondu (sekme odağında gereksiz veritabanı taraması kesildi); hiç kullanılmayan dışa-aktarımlar ve çağıransız filtre dalları budandı; önbellek anahtarındaki çıplak sayı tek sabite bağlandı (kayma testiyle kilitli).",
+      "KANIT: SQL kabulü 14/14 (ikinci yanıt artık TEK kodla) · 6 mutasyon 6/6 yakalandı · tam test takımı 453 dosya / 3748 test yeşil · mail kuyruğu dağıtımı canlıya yenilendi.",
+    ],
+  },
+  {
     id: "20261004-erisim-logu-incelemesi",
     date: "4 Ekim 2026",
     title: "Kapatılan güvenlik açıkları kötüye kullanılmış mı? 90 günlük erişim logu tarandı — kanıt YOK",

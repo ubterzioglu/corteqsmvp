@@ -19,12 +19,12 @@ import type {
   RecommendationRequestRow,
 } from "@/lib/recommendations-schemas";
 
+// F15 (inceleme borcu): diasporaKey/categorySlug/country/city filtre dalları
+// ÇAĞIRANSIZDI (iki üretim tüketicisi de yalnız `status` geçiriyor) — ölü yüzey
+// budandı. Filtre UI'ı gelirse dallar GERÇEK tüketiciyle birlikte geri gelir
+// (M17'nin diaspora/category indeksleri o güne kadar boşta durur, zararsız).
 export type RecommendationFilters = {
   status?: string;
-  diasporaKey?: string;
-  categorySlug?: string;
-  country?: string;
-  city?: string;
 };
 
 /**
@@ -76,18 +76,8 @@ export async function fetchRecommendations(
   if (filters?.status && filters.status !== "all") {
     query = query.eq("status" as never, filters.status as never);
   }
-  if (filters?.diasporaKey && filters.diasporaKey !== "all") {
-    query = query.eq("diaspora_key" as never, filters.diasporaKey as never);
-  }
-  if (filters?.categorySlug) {
-    query = query.eq("category_slug" as never, filters.categorySlug as never);
-  }
-  if (filters?.country) {
-    query = query.eq("country" as never, filters.country as never);
-  }
-  if (filters?.city) {
-    query = query.eq("city" as never, filters.city as never);
-  }
+  // F15: diaspora/category/country/city dalları budandı (çağıransız ölü yüzey —
+  // filtre UI'ı gelirse gerçek tüketiciyle birlikte geri gelir).
 
   const { data, error } = await query;
   if (error) throw new Error(resolveRecommendationRpcErrorMessage(error));

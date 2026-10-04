@@ -150,12 +150,14 @@ export function buildWeeklyCityDigestEmail(
     "",
     `Yeni tavsiye talepleri (${recommendations.length}):`,
     ...itemLines(recommendations, "/tavsiye", base),
-    unmatched.length > 0 ? `\n${unmatched.join(", ")} için bu hafta yeni içerik yok.` : "",
+    unmatched.length > 0 ? `\n${unmatched.join(", ")} için bu hafta yeni içerik yok.` : null,
     "",
     `Takiplerini yönet: ${base}/settings/notifications`,
     "Bu özet yalnız takip ettiğin şehirlerde yeni içerik olduğunda gönderilir.",
   ]
-    .filter((line) => line !== "")
+    // F12: YALNIZ koşullu satır null ile düşer; "" AYRAÇLARI korunur (eski
+    // global filter(line !== "") paragraf boşluklarını da siliyordu).
+    .filter((line): line is string => line !== null)
     .join("\n");
 
   return { subject, html, text };

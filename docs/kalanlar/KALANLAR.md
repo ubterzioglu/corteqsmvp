@@ -1488,15 +1488,41 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - Kanıt: tam takım **453 dosya / 3741 test** · tsc 0 · lint 0 (3 `no-control-regex` GEREKÇELİ
   istisna — kontrol karakteri silmek işin kendisi) · check:dead 0/0/1018 · verify:text ✓ ·
   ingest:tools:check güncel · smtp.ts DEĞİŞTİ → **edge yeniden deploy GEREKİR** (commit ≠ canlı).
-- 📋 **BORÇ (inceleme SUGGESTION'ları, kullanıcı kararıyla bu turda YAPILMADI):** (F10) recommendation
-  sorgularına `staleTime` (cadde-query-cache deseni) · (F11) ikinci yanıtta ham 23505 yerine
-  `recommendation_already_answered` ön-kontrolü + "yanıtın gönderildi" UI durumu · (F12) text/plain
-  mailde `.filter(line!=="")` paragraf ayracı boş satırları da siliyor · (F13) rollout kuralı: yeni
-  event_type'ta edge ÖNCE deploy, migration SONRA (+ edge'de bilinmeyen anahtar → pending bırak) ·
-  (F14) ölü exportlar: `answerRecommendationInputSchema`/`AnswerRecommendationInput`/`RecommendationStatus` ·
-  (F15) `fetchRecommendations` diaspora/category/country/city filtre dalları + 2 M17 indeksi çağıransız
-  (filtre UI'ı gelince canlanır ya da budanır) · (F16) match queryKey'deki çıplak `25` →
-  `RECOMMENDATION_MATCH_DEFAULT_LIMIT`.
+- 📋 **BORÇ KAPATILDI 04.10 (aynı gün, ayrı batch):** inceleme SUGGESTION'ları F10–F16 aşağıdaki
+  borç-kapatma turunda kapatıldı.
+
+**İnceleme BORÇ KAPATMA turu (F10–F16) — ✅ 04.10** · mig `20261004240000` canlıda (`check:migrations` **487/487**)
+
+- **F11 → `recommendation_already_answered`:** `answer_recommendation_v1` yeniden — ikinci yanıt ÖN
+  KONTROLLE TEK kodla reddedilir (öncesi: ham 23505 → genel "tekrar dene" mesajı, retry'a davet).
+  Unique constraint İKİNCİ SAVUNMA olarak durur (yarışta son söz onun). Sıra: auth→ban→not_found→
+  self→closed→**already_answered**→body. UI: yanıtı olan kullanıcıya form ÇİZİLMEZ, "Yanıtın
+  gönderildi" durumu (SQL ile aynı kural). M17 kabulü K6 TEK koda güncellendi → **14/14**.
+- **F10 staleTime:** üç sorgu da açık pencere taşır (liste/detay 60sn · eşleşme 5dk — match RPC tam
+  katalog tarar); hook testi "staleTime'sız sorgu bırakılmaz" + "eşleşme penceresi liste'den UZUN"
+  kilitleri (cadde-query-cache B4 dersi — App QueryClient çıplak).
+- **F12 mail paragrafları:** her iki şablonda (recommendation-match + weekly-city-digest) koşullu
+  satır `null` ile düşer, `""` AYRAÇLARI korunur (eski global `filter(line!=="")` text sürümünü tek
+  bloğa indiriyordu) · `"\n\n"` testleri iki şablonda.
+- **F13 rollout self-heal:** edge `knownEventTypes` kümesi (outbox CHECK ile **birebir ayna testi**,
+  19 değer çift yönlü) — BİLİNMEYEN tip satırı TERMINAL yakmaz: claim geri bırakılır (attempts iade,
+  claimed_at null) → PENDING kalır, edge güncellenince KENDİLİĞİNDEN gider (M22 penceresinin sessiz
+  kayıp sınıfı kapanır). `deferred` yanıt alanında. ⚠️ `radar_scan_digest` BİLEREK kümede: ayar
+  anahtarı YOK ama bilinen tip (SETTING_KEY üyeliği bilinirlik ölçütü OLAMAZ). Edge **DEPLOY EDİLDİ**.
+  📌 KURAL (kalıcı): yeni `event_type` rollout'unda **edge ÖNCE, migration SONRA** (yeni edge eski
+  DB durumuyla geriye uyumlu — sıfır boşluk); F13 bu sırayı bozan pencereyi de kendini-onarır yapar.
+- **F14 ölü exportlar silindi:** `RecommendationStatus` tipi · `answerRecommendationInputSchema` +
+  `AnswerRecommendationInput` (sıfır ithalatçı; yanıt formu inline doğruluyor).
+- **F15 ölü filtre dalları budandı:** `RecommendationFilters` → `{status?}`; diaspora/category/
+  country/city dalları çağıransızdı (filtre UI'ı gelirse GERÇEK tüketiciyle geri gelir; M17'nin iki
+  indeksi o güne kadar boşta, zararsız).
+- **F16 queryKey sabiti:** `limit ?? RECOMMENDATION_MATCH_DEFAULT_LIMIT` (çıplak `25` literal'i
+  sabit kayarsa anahtarı yalan söylerdi) + ayna: M18 imzası `p_limit integer default 25` ↔ sabit.
+- **Kabul/kanıt:** M17 kabulü **14/14** (K6 TEK kod) · etkilenen 7 test dosyası **58/58** ·
+  **mutasyon 6/6:** DM1 ön kontrol sil (CANLI)→K6 ham duplicate · DM2 text filtresi geri→"\n\n" ·
+  DM3 myAnswered gate sil→F11 UI · DM4 staleTime sil→hook (2) · DM5 knownEventTypes'tan düşür→ayna ·
+  DM6 limit 26→F16 aynası. Tam takım **453 dosya / 3748 test** · tsc 0 · lint 0 · check:dead 0/0/1018 ·
+  verify:text ✓ · ingest:check güncel · edge deploy çıktısı alındı.
 
 ### Faz 4 — haftalık şehir özeti
 

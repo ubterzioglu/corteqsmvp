@@ -456,6 +456,35 @@ Deno.serve(async (request) => {
     let sent = 0;
     let skipped = 0;
     let failed = 0;
+    let deferred = 0;
+
+    // F13 (rollout self-heal, inceleme borcu): bu edge'in BİLDİĞİ event tipleri —
+    // outbox CHECK'i (mig 20261004120000, 19 değer) ve buildEmail kollarıyla AYNI
+    // küme (kilit: weekly-city-digest.test.ts "bilinen tip kümesi" sözleşmesi).
+    // ⚠️ radar_scan_digest BİLEREK burada: ayar anahtarı YOK ama bilinen tip
+    // (isEventEnabled anahtarsız tipe true der) — SETTING_KEY_BY_EVENT üyeliği
+    // bilinirlik ölçütü OLAMAZ.
+    const knownEventTypes = new Set<string>([
+      "new_member",
+      "admin_update",
+      "member_welcome",
+      "revision_request",
+      "revision_request_completed",
+      "relocation_tool_report",
+      "relocation_tool_abandonment",
+      "radar_scan_digest",
+      "career_application",
+      "recommendation_match",
+      "weekly_city_digest",
+      "group_submission_received",
+      "group_published",
+      "group_rejected",
+      "group_ownership_verified",
+      "group_post_pending",
+      "group_link_dead",
+      "group_score_badge",
+      "group_strike_warning",
+    ]);
 
     // admin_update ve radar_scan_digest satırları TEK özet mailde birleşir (aşağıdaki blok);
     // kalan tipler satır başına ayrı mail olarak gider.
@@ -465,6 +494,22 @@ Deno.serve(async (request) => {
 
     for (const row of singleRows) {
       try {
+        // F13 (rollout self-heal): BİLİNMEYEN event_type — DB-first rollout'ta
+        // migration yeni tipi ekledi ama bu edge HENÜZ güncellenmedi. Satırı
+        // TERMINAL yakma (skipped/failed): claim'i GERİ BIRAK (attempts iade,
+        // claimed_at null) → PENDING kalır, edge güncellenince KENDİLİĞİNDEN
+        // gönderilir. (M22 penceresinde ölçülen sessiz kayıp sınıfı: eski edge
+        // recommendation_match'i tanımayıp terminal düşürseydi, claim yalnız
+        // pending okuduğu için satırlar bir daha asla denenmezdi.)
+        if (!knownEventTypes.has(row.event_type)) {
+          await admin
+            .from("notification_email_outbox")
+            .update({ claimed_at: null, attempts: Math.max(0, (row.attempts ?? 1) - 1) })
+            .eq("id", row.id);
+          deferred += 1;
+          continue;
+        }
+
         if (!(await isEventEnabled(row.event_type))) {
           await admin
             .from("notification_email_outbox")
@@ -671,7 +716,10 @@ Deno.serve(async (request) => {
       }
     }
 
-    return jsonResponse({ processed: rows.length, sent, skipped, failed }, 200, corsHeaders);
+    // F13: `deferred` = edge'in TANIMADIĞI event tipleri (claim geri bırakıldı,
+    // PENDING kaldı — edge güncellenince kendiliğinden gönderilir). Yanıt
+    // şeklindeki ek alan geriye dönük uyumlu (eski çağıranlar bilmez).
+    return jsonResponse({ processed: rows.length, sent, skipped, failed, deferred }, 200, corsHeaders);
   } catch (error: unknown) {
     console.error("send-notification-emails error:", error);
     return jsonResponse({ error: "internal_server_error" }, 500, corsHeaders);

@@ -107,13 +107,16 @@ export function buildRecommendationMatchEmail(
     "",
     "Sana uyan yeni bir tavsiye talebi yayınlandı:",
     `Talep: ${title}`,
-    location ? `Konum: ${location}` : "",
+    location ? `Konum: ${location}` : null,
     "",
     `Talebi gör ve yanıtla: ${requestUrl}`,
     "",
     "Talep sahibine doğrudan iletişim ileride Pro özellik olarak açılacak.",
   ]
-    .filter((line) => line !== "")
+    // F12: YALNIZ koşullu satır null ile düşer; "" AYRAÇLARI korunur — eski
+    // global filter(line !== "") paragraf boşluklarını da siliyordu ve text
+    // sürümü tek blok çıkıyordu (career-application deseni: ayraca dokunma).
+    .filter((line): line is string => line !== null)
     .join("\n");
 
   return { subject, html, text };

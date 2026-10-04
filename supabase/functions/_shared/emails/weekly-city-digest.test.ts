@@ -43,6 +43,53 @@ describe("weekly_city_digest · edge kablolaması (5 parça)", () => {
   });
 });
 
+/**
+ * F13 kilidi (rolout self-heal): edge'in BİLDİĞİ tip kümesi, outbox CHECK
+ * kümesiyle BİREBİR aynı olmalı. CHECK'te olup edge'in bilmediği tip → satır
+ * pending'de kalır (self-heal çalışır ama mail gitmez); edge'de olup CHECK'te
+ * olmayan → DB satırı zaten yazamaz (imkânsız). İki küme birlikte kayar.
+ */
+describe("edge · F13 knownEventTypes ↔ outbox CHECK aynası", () => {
+  const checkSql = readFileSync(
+    "supabase/migrations/applied/20261004120000_user_city_follows.sql",
+    "utf8",
+  );
+
+  const checkValues = (): string[] => {
+    const start = checkSql.indexOf("add constraint notification_email_outbox_event_type_check");
+    const block = checkSql.slice(start, checkSql.indexOf("));", start));
+    return [...block.matchAll(/'([a-z_]+)'/g)].map((m) => m[1]);
+  };
+
+  const knownValues = (): string[] => {
+    const start = edgeSource.indexOf("const knownEventTypes = new Set<string>([");
+    expect(start, "knownEventTypes bloğu bulunamadı").toBeGreaterThan(-1);
+    const block = edgeSource.slice(start, edgeSource.indexOf("]);", start));
+    return [...block.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]);
+  };
+
+  it("CHECK değerleri toplanabiliyor (tarama boşa düşmesin)", () => {
+    expect(checkValues().length).toBeGreaterThanOrEqual(19);
+  });
+
+  it("iki küme BİREBİR aynı (çift yönlü)", () => {
+    expect([...knownValues()].sort()).toEqual([...checkValues()].sort());
+  });
+
+  it("bilinmeyen tip TERMINAL düşmez — claim geri bırakılır (attempts iade)", () => {
+    const idx = edgeSource.indexOf("if (!knownEventTypes.has(row.event_type))");
+    expect(idx, "deferral dalı yok").toBeGreaterThan(-1);
+    // Dilim YALNIZ deferral dalı: ilk `continue;` sınırına kadar (sonrasındaki
+    // skip/fail blokları bu dalın parçası değil — geniş dilim yanlış pozitif üretir).
+    const end = edgeSource.indexOf("continue;", idx);
+    const slice = edgeSource.slice(idx, end);
+    expect(slice).toContain("claimed_at: null");
+    expect(slice).toContain("attempts");
+    expect(slice).not.toContain('"skipped"');
+    expect(slice).not.toContain('"failed"');
+  });
+});
+
 const payload = {
   user_id: "11111111-2222-3333-4444-555555555555",
   week: "2026-W40",
@@ -64,6 +111,8 @@ describe("haftalık şehir özeti maili", () => {
     expect(mail.html).toContain("Dortmund Tanışma Pikniği");
     expect(mail.text).toContain("https://corteqs.net/tavsiye/r1");
     expect(mail.text.length).toBeGreaterThan(0);
+    // F12: paragraf AYRAÇLARI korunur (text sürümü tek bloka düşmez).
+    expect(mail.text).toContain("\n\n");
   });
 
   it("eşleşmeyen şehir GÖRÜNÜR kalır (unmatched_cities sessizce yutulmaz)", () => {
