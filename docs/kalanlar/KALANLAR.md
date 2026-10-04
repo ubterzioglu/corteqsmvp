@@ -14,7 +14,7 @@
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
 > | **Canlı erişim kararı (01.10)** | Ajan migration'ı `psql -f` ile **kendi uygular**, `applied/` altına taşır, `schema_migrations` kaydını atar ve edge function'ı **kendi deploy eder**; her batch sonunda kanıtla rapor verir |
-> | **Son devir notu** | [`docs/handover/2026-10-02-devir-notu.md`](../handover/2026-10-02-devir-notu.md) — 2 Ekim gece oturumu (KR01–KR10 + G08/G09) · [`2026-10-01-devir-notu.md`](../handover/2026-10-01-devir-notu.md) §7 tuzaklar + §9 ortam hâlâ geçerli |
+> | **Son devir notu** | [`docs/handover/2026-10-04-devir-notu.md`](../handover/2026-10-04-devir-notu.md) — 4 Ekim (16 commit: M21–M26 + ALTI güvenlik düzeltmesi ~4.350 satır) · 🔴 **27 commit PUSH'LANMADI, CI hiç koşmadı** · ⚠️ M27 yarıda, ağaçta · 12 yeni tuzak §4'te (damga çakışması · pathspec paylaşılan dosyada korumaz · PATCH 204 yazma kanıtı değil · CDN önbelleği) |
 > | **Kalıcı operasyon dersleri** | [`docs/operations/2026-09-30-kalici-operasyon-dersleri.md`](../operations/2026-09-30-kalici-operasyon-dersleri.md) |
 
 ---
