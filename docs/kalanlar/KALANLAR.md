@@ -9,7 +9,7 @@
 > |---|---|
 > | **Son yapısal düzenleme** | 1 Ekim 2026 |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
-> | **Açık batch** | **31** (N 0 · W 8 · M 16 · G 7 · KR 0) — G10+G12+G13+G15–G25+G03c+M01–M12 (**Faz 1 + Faz 5 TAMAM + M11/M12 · T1 KAPANDI**) kapandı; G serisinde açık kalanlar: **G04–G05** (⛔ U06) · **G06–G07** (✅ K09 cevaplandı — bloke DEĞİL) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11) |
+> | **Açık batch** | **13** (A 0 · N 0 · W 8 · M 0 · G 5 · KR 0 · CD 0) — ölçüldü 04.10 akşam. **M serisi (M01–M27) TAMAMEN KAPANDI**, G06/G07 de kapandı; eski "31" rakamı bayattı. Açık kalanlar: **W01–W08** (⛔ U09; W03–W06 kodu hazır ama sıra bağlayıcı) · **G04–G05** (⛔ U06) · **G11** (⛔ U07) · **G14** (⛔ G04/U06) · **G10c** (⛔ G11). 🔴 **BLOKESİZ AJAN İŞİ YOK** — 13'ün 13'ü kullanıcı girdisine bağlı |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
 > | **Kullanıcının 03.10'da üstlendiği U maddeleri** | **U09** (WhatsApp 5 secret) · **U06** (SMS sağlayıcısı) · **U07** (10 grubun 4 veri kararı) · **U03** (iki mail testi) — dördü de kullanıcıda, ajan beklemez |
 > | **Plan onayı (01.10 → 03.10)** | ✅ **N · G · KR onaylandı** · ✅ **M ONAYLANDI (03.10 soru-cevap turu, M01'den başla)** · ✅ CD planı onaylandı ve KAPANDI (03.10) |
