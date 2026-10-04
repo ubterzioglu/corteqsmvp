@@ -45,4 +45,13 @@ export const COMMUNITY_QUICK_ACTIONS: readonly CommunityQuickAction[] = [
     to: "/liderlik",
     icon: "gift",
   },
+  {
+    // M20: rota artık VAR (/tavsiye) — "ölü link yok" kuralı bozulmadan eklendi.
+    // QuickActionsCard.test.ts kilidi bu batch'te BİLİNÇLİ güncellendi (4 eylem).
+    id: "request-recommendation",
+    label: "Tavsiye iste",
+    description: "Topluluktan güvenilir esnaf/sağlık/danışman tavsiyesi iste.",
+    to: "/tavsiye",
+    icon: "message-heart",
+  },
 ] as const;

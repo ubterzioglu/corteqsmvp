@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261003-tavsiye-iste-modulu",
+    date: "3 Ekim 2026",
+    title: "“Tavsiye İste” modülü geldi — topluluktan güvenilir esnaf/sağlık/danışman tavsiyesi (deploy kuyruğunda)",
+    items: [
+      "NE GELDİ: Yeni ücretsiz topluluk işlevi — /tavsiye. Üyeler tavsiye talebi açar (ör. “Dortmund’da güvenilir terzi”), topluluk ve eşleşen profesyoneller yanıtlar. Talep listesi ANONİM ziyaretçiye de açık (giriş yapmadan okunur); talep açmak ve yanıtlamak giriş ister.",
+      "NEREDE: Üye panelindeki hızlı eylemlere “Tavsiye iste” eklendi (Etkinlik oluştur · Grup ekle · Davet et’in yanında, 4. eylem). Ayrıca /tavsiye adresinden doğrudan erişilir. Talep detayında (/tavsiye/:id) yanıtlar ve kategori+şehir/ülkeye göre SIRALANMIŞ eşleşen profesyoneller görünür.",
+      "EŞLEŞME NASIL: Bir talep için profesyoneller kategori + şehir + ülkeye göre skorla sıralanır (en alakalı önce). Eşleşme ELEMEZ, SIRALAR — kısmi eşleşen (ör. sadece aynı şehir) de listede kalır, alt sırada. Türkçe duyarsız katlama kullanılır (İstanbul/ISTANBUL aynı).",
+      "GÜVENLİ/GİZLİLİK: 🔴 Eşleşen profesyoneller listesinde İLETİŞİM BİLGİSİ GÖSTERİLMEZ (e-posta/telefon sızdıran arama alanı bilinçli olarak OKUNMAZ) — yalnız herkese açık dizin adı/şehir. Kilitli profesyonel gelen kutusu (iletişim + ilgi kaydı) ayrı bir adım (M22). Yazma yalnız sunucu tarafı fonksiyonlarla (doğrudan kayıt yok); banlı kullanıcı tek noktadan (Cadde ban sistemi) otomatik reddedilir.",
+      "KANIT: SQL kabul M17 11/11 + M18 9/9 (canlı, geri alınan işlem) · 25 kod testi · mutasyon 8/8 · tam test takımı 446 dosya / 3690 test yeşil. Tam suite bir gerçek kusuru yakaladı (detay sayfası SEO başlığı veri gelince güncellenmiyordu) — düzeltildi.",
+      "KALAN: M21 (Cadde akışında tavsiye kartı + bileşenler) · M22 (kilitli profesyonel gelen kutusu + ilgi kaydı) · M23 (Faz 2 canlı doğrulama). Liste/talep/yanıt bu deploy’da canlıya çıkar.",
+    ],
+  },
+  {
     id: "20261003-kurumsal-dogrulama-inceleme-ekrani",
     date: "3 Ekim 2026",
     title: "Kurumsal doğrulama inceleme ekranı geldi — belgeyi önizle, onayla/reddet (deploy kuyruğunda)",

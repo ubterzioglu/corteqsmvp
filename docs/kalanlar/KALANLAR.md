@@ -127,7 +127,7 @@ traction ölçülecek.
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
 | 6 | ~~M14~~ ~~M15~~ ~~M16~~ | ✅ **FAZ 6 TAMAM 03.10** — M14 (5 metrik view, mig `20261003120000`, kabul K1–K13 13/13 + mutasyon 6/6) · M15 (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — Traction #2, numaralar kaydı, ai-knowledge 91 belge + 90 embed; 12 test + mutasyon 6/6) · ✅ **M16 KAPANDI 03.10** (canlı doğrulama **8/8 ESLESTI**: WAU 6 · içerik 41 · cadde 30 · tavsiye available=false · davet 0 · dönüş cohort 166/5/%3.01; ayırt kanıtı — bozuk metrik 2 FARK verdi) | ✅ |
-| 2 | ~~M17~~ ~~M18~~ · **M19–M23** | ✅ **M17 KAPANDI 03.10** (mig `20261003140000`; `recommendation_requests`+`recommendation_answers`, RPC-only yazma, **ban kill-switch `is_cadde_banned` tek nokta**, diaspora CHECK, is_professional katalogdan; **kabul K1–K11 11/11** + mutasyon 6/6) · ✅ **M18 KAPANDI 03.10** (mig `20261003150000`; `match_recommendation_professionals` — **eşleşme ELER DEĞİL SIRALAR** [skor kategori100/şehir30/ülke15], `catalog_search_normalize` katlama, **search_text OKUNMAZ** [iletişim sızıntısı yok]; **kabul K1–K9 9/9** + mutasyon 6/6 — M1 kabulün yeniden-sıralama kusurunu yakaladı, `over()` geliş sırasına düzeltildi) · kalan: M19 kod lib · M20 /tavsiye · M21 bileşen+Cadde kartı · M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
+| 2 | ~~M17~~ ~~M18~~ ~~M19~~ ~~M20~~ · **M21–M23** | ✅ **M17** (mig `20261003140000`; tablolar + RPC-only yazma + ban kill-switch `is_cadde_banned`; kabul K1–K11 11/11 + mut 6/6) · ✅ **M18** (mig `20261003150000`; `match_recommendation_professionals` — **eler değil sıralar**, `search_text` OKUNMAZ; kabul K1–K9 9/9 + mut 6/6) · ✅ **M19+M20 KAPANDI 03.10 (BİRLEŞİK** — check:dead lib'i üretim tüketicisi ister): lib (rules 7 kod çift yönlü ayna · schemas Zod userId YOK · api RPC-only · hook) + `/tavsiye` & `/tavsiye/:id` sayfaları (anonime açık, **RequireFeature YOK**, eşleşen profesyoneller İLETİŞİMSİZ) + quick-action "Tavsiye iste" + `useSeo` deps. **25 test · mutasyon 8/8** · tam suite **446/3690** yeşil (seo-deps-contract'ı tam suite yakaladı, deps eklendi)) · kalan: M21 bileşen+Cadde kartı · M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
 | 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
 
 ### G · Dijital Gruplar Motoru
@@ -1337,18 +1337,36 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
   şehir/ülke sinyaliyle sıralar; kategori sinyali category_slugs doldukça güçlenir (fonksiyon doğru,
   veri seyrek). İletişim sızıntısı YOK (search_text okunmuyor).
 
-**M19 — Kod lib: api + schemas + rules + hook**
-- `src/lib/recommendations-api.ts` · `recommendations-schemas.ts` (Zod + z.infer) ·
-  `recommendations-rules.ts` (hata → Türkçe; SQL ile aynalı + ayna testi) ·
-  `src/hooks/use-recommendations.ts` (React Query). `ingest:tools`.
-- **Kabul:** ayna test yeşil; modül `muhasebe` desenini izliyor.
+**~~M19 + M20~~ — ✅ KAPANDI 03.10 (BİRLEŞİK batch)** · Kod lib + /tavsiye sayfaları
 
-**M20 — Kod sayfalar: /tavsiye + detay + rotalar**
-- `src/pages/RecommendationsPage.tsx` (`/tavsiye`) · `RecommendationDetailPage.tsx`
-  (`/tavsiye/:id`) · `App.tsx`'e `lazyWithReload` ile ekle, **RequireFeature YOK**.
-- Türkçe arama `trIncludes`/`trCompare` (`text-normalization.ts`). `useSeo` → `deps`.
-  `community-quick-actions.ts`'e "Tavsiye iste" eklenir (M08).
-- **Kabul:** M01 sözleşme testi değişmeden yeşil; anonim ziyaretçi listeyi görüyor.
+> 🔴 **NEDEN BİRLEŞİK:** `check:dead` üretim dosyasını ÜRETİM grafiğinden ister —
+> M19 lib'i (api/rules/schemas/hook) yalnız M20 sayfası tüketince erişilebilir olur.
+> Lib'i tek başına commit'lemek "4 yeni erişilemez dosya" ile check:dead'i düşürdü
+> (G06b dersi). Bu yüzden lib + sayfa TEK batch/commit (plan M19/M20'yi ayırmıştı;
+> araç birlikte sevk etmeyi zorunlu kılıyor).
+
+- **M19 lib:** `recommendations-rules.ts` (7 hata kodu → Türkçe, M17+M18 çift yönlü
+  ayna + sabit aynaları TITLE_MAX 160/BODY_MAX 4000/diaspora tr-in-cn-ph) ·
+  `recommendations-schemas.ts` (Zod + z.infer; CreateInput'ta **userId YOK**) ·
+  `recommendations-api.ts` (**RPC-only yazma**: create/answer RPC, doğrudan insert YOK;
+  okuma public RLS; match RPC M18; `as never` regen borcu; düz-nesne hata) ·
+  `use-recommendations.ts` (React Query: liste/detay/match sorguları + create/answer mutasyon).
+- **M20 sayfalar:** `RecommendationsPage` (`/tavsiye` — liste ANONİME açık + girişliye
+  "Tavsiye iste" formu) · `RecommendationDetailPage` (`/tavsiye/:id` — talep + yanıtlar +
+  yanıt formu + **eşleşen profesyoneller İLETİŞİMSİZ** [M18 search_text okumaz]).
+  Rotalar `App.tsx` `lazyWithReload`, **RequireFeature YOK** (M01/T2). `community-quick-actions.ts`'e
+  "Tavsiye iste" (#4, `/tavsiye`) eklendi + `QuickActionsCard.test` BİLİNÇLİ güncellendi.
+  `useSeo` DetailPage'de **deps taşır** (`[id, request?.title, request?.body]` — seo-deps-contract).
+- **Kabul:** M01 sözleşme testi DEĞİŞMEDEN yeşil (/tavsiye guard'sız) · anonim listeyi görür ·
+  ayna test yeşil (7 kod çift yönlü + sabitler migration'la birebir). **16 lib + 9 sayfa = 25 test.**
+- **Mutasyon 8/8:** lib M1 kod sil→ayna · M2 TITLE_MAX boz→ayna · M3 instanceof Error→düz-nesne ·
+  M4 hayalet kod→ters yön · M5 create→insert (RPC-only ihlali)→kaynak · M6 schema'ya userId→sızıntı ·
+  sayfa PM1 kapalı-talep kapısı sil→yanıt formu · PM2 auth kapısı sil→anonim form.
+- 🔴 **Tam takım ilk koşuda 1 DÜŞTÜ:** `use-seo-deps-contract` — DetailPage useSeo'su veri
+  bağımlı ama deps'sizdi (head bayat başlıkta kalırdı). Tam suite yakaladı, deps eklendi →
+  **446 dosya / 3690 test yeşil**. (Tek-dosya koşuları bunu GÖRMEZDİ — tam suite'in değeri.)
+- Kanıt: tsc 0 · lint 0 (32 problem tümü ekstre-motoru) · check:dead 0/0/**1014** ·
+  check:migrations 473/473 · ingest:tools **62** (+recommendations_api) · verify:text ✓.
 
 **M21 — Kod bileşenler + Cadde kartı**
 - `src/components/recommendations/*` (form, kart, yanıt listesi) ·

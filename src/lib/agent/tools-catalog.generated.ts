@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 61,
+    "total": 62,
     "edge_functions": 15,
     "workers": 2,
-    "ui_modules": 43
+    "ui_modules": 44
   },
   "tools": [
     {
@@ -1447,6 +1447,31 @@ export const toolCatalog = {
         "get_catalog_item_public_page_v2"
       ],
       "evidence_path": "src/lib/public-catalog-profile-api.ts"
+    },
+    {
+      "tool_key": "module.recommendations_api",
+      "tool_name": "recommendations-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/recommendations-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "answerRecommendation",
+        "createRecommendationRequest",
+        "fetchRecommendationDetail",
+        "fetchRecommendations",
+        "matchRecommendationProfessionals"
+      ],
+      "tables_read_write": [
+        "recommendation_answers",
+        "recommendation_requests"
+      ],
+      "rpcs": [
+        "answer_recommendation_v1",
+        "create_recommendation_request_v1",
+        "match_recommendation_professionals"
+      ],
+      "evidence_path": "src/lib/recommendations-api.ts"
     },
     {
       "tool_key": "module.relocation_admin_api",
@@ -4066,6 +4091,31 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/radarNewsPipeline.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recommendations-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recommendations-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recommendations-rules.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recommendations-rules.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/recommendations-schemas.ts",
       "kind": "ts",
       "module_family": "lib"
     },
