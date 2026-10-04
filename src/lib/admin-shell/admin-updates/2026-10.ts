@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-eski-pano-yalniz-yoneticiye",
+    date: "4 Ekim 2026",
+    title: "Eski pano tabloları artık yalnız yöneticilere açık (173 üyenin erişimi kaldırıldı)",
+    items: [
+      "NE DEĞİŞTİ: Bugün erken saatte bu tablolar anonim erişime kapatılmıştı, ama GİRİŞLİ HERKES hâlâ görebiliyordu. Artık yalnız yöneticiler görüyor.",
+      "ÖLÇÜM: Sistemde 175 kullanıcı var, bunların 2’si yönetici. Yani 173 sıradan üye, arayüzde göremedikleri hâlde teknik yoldan ~1.650 kayda (toplantı notları, yol haritası, kişi adları, özgeçmiş kayıtları) erişebiliyordu.",
+      "NEDEN GÜVENLİ: Bu sayfalara arayüzden zaten yalnız yönetici girebiliyordu. Yapılan şey, veritabanı kuralını arayüz kapısıyla aynı yere getirmek — davranış değişmedi, yalnız arka kapı kapandı.",
+      "DOĞRULAMA: Sıradan bir üye kimliğiyle ölçüldü, toplantı notlarında ve özgeçmiş kayıtlarında 0 satır görüyor. Yönetici kimliğiyle 470 toplantı notunun tamamı görünüyor.",
+      "TUTARLILIK: Komuta Merkezi zaten bu seviyedeydi; eski pano tabloları da onunla aynı hizaya getirildi. Artık “hangi tablo hangi seviyede” diye sormak gerekmiyor.",
+    ],
+  },
+  {
     id: "20261004-eski-pano-tablolari-kapatildi",
     date: "4 Ekim 2026",
     title: "Güvenlik: eski pano tablolarının tamamı dışarıya kapatıldı (~1.650 kayıt, 15 tablo)",
