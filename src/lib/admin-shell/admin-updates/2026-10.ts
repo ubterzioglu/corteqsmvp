@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-ozgecmis-kovalari-kapatildi",
+    date: "4 Ekim 2026",
+    title: "Özgeçmiş dosyaları artık herkese açık değil (Eylül’de raporlanan risk kapatıldı)",
+    items: [
+      "NE DEĞİŞTİ: İçinde 3 özgeçmiş bulunan eski dosya alanı “herkese açık” işaretliydi. Bağlantısı eline geçen herkes, giriş yapmadan özgeçmiş indirebiliyordu. Kapatıldı.",
+      "⚠️ BU RİSK EYLÜL AYINDA RAPORLANMIŞTI ama kapatılmamıştı (“taşımadan önce kapatılmalı” notuyla). Bugün kapatıldı.",
+      "SIZINTI DEĞİLDİ: Dosya listesi dışarıya kapalıydı, yani dosya adları tahmin edilemiyordu. Risk, bağlantının bir şekilde paylaşılması durumundaydı — tarayıcı geçmişi, sunucu kaydı, ekran paylaşımı.",
+      "DOĞRULAMA: Kapatmadan önce gerçek anonim istek 1,5 MB’lık PDF’i indirdi. Kapattıktan sonra üç dosyanın üçü de “hatalı istek” veriyor.",
+      "HİÇBİR EKRAN BOZULMADI: Uygulama bu dosyaları zaten süreli imzalı bağlantıyla açıyordu; o yöntem kapalı alanlarda da çalışır. Boş olan iki alan (özgeçmiş ve ARGE) da şimdiden kapatıldı ki ileride yüklenen ilk dosya açıkta kalmasın.",
+      "⚠️ AÇIK KALAN TEK NOKTA: Daha önce indirilmiş veya önbelleğe alınmış kopyalar, dağıtım ağının saklama süresi dolana kadar erişilebilir kalabilir. Bu bağlantılar dışarıyla paylaşıldıysa dosyaların yeni adla yeniden yüklenmesi gerekir.",
+      "DOKUNULMAYANLAR: Profil fotoğrafları, Cadde görselleri, haber görselleri gibi gerçekten herkese açık olması gereken alanlar aynen kaldı.",
+    ],
+  },
+  {
     id: "20261004-veri-sizintisi-kapatildi",
     date: "4 Ekim 2026",
     title: "Güvenlik: anonim erişime açık kalmış bir tablo kapatıldı (938 kayıt)",
