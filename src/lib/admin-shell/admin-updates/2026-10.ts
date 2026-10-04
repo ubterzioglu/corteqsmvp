@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-ozgecmis-dosyalari-silindi",
+    date: "4 Ekim 2026",
+    title: "Üç özgeçmiş dosyası yedeklenip kalıcı olarak silindi — hiçbir kayıt onlara işaret etmiyordu",
+    items: [
+      "NE YAPILDI: Eski özgeçmiş alanındaki 3 PDF önce güvenli bir yere indirildi (3/3 doğrulandı: dosya boyutları ve PDF imzaları birebir eşleşti), sonra depolamadan kalıcı olarak silindi. Alan artık tamamen boş.",
+      "NEDEN SİLME, NEDEN SADECE AD DEĞİŞTİRME DEĞİL: Ölçüm teşhisi değiştirdi. Bu dosyalara işaret eden CANLI hiçbir kayıt yok — kaynak listesindeki 221 kaydın tamamı 'Link' türünde ve hiçbirinde depolama yolu yazmıyor. Yani dosyalar öksüzdü: kimse açamıyor, hiçbir ekran kullanmıyordu. Adını değiştirmek eski bağlantıyı öldürürdü ama üç gerçek kişinin özgeçmişi depoda kalmaya devam ederdi.",
+      "RİSK NEYDİ: Bu alan bir süre herkese açık işaretliydi ve 2026-09'da raporlanmış ama kapatılmamıştı. Bugün erken saatte kapatıldı; ancak hızlandırma katmanındaki kopyalar süresi dolana kadar erişilebilir kalıyordu ve bağlantı dışarıyla paylaşıldıysa çalışmaya devam edebilirdi. Dosya silinince o kopyaların da bir değeri kalmadı.",
+      "HİÇBİR ŞEY BOZULMADI: Dosyaları gösteren ekran yok, indirme yolu yok, referans veren kayıt yok — ölçülerek doğrulandı. Silme sonrası üç adresin üçü de erişilemez döndü (önbellek atlatılarak kontrol edildi).",
+      "YEDEK NEREDE: Dosyalar repo DIŞINDA, yerel bir klasörde duruyor. Repoya veya buluta konmadı; kişisel veri taşıdıkları için bilerek böyle yapıldı. Gerekirse geri yüklenebilir.",
+    ],
+  },
+  {
     id: "20261004-haftalik-sehir-ozeti-canli-dogrulama",
     date: "4 Ekim 2026",
     title: "Haftalık şehir özeti canlıda kanıtlandı — gerçek mail gitti; gönderim anahtarı KARARINIZI bekliyor",
