@@ -127,8 +127,8 @@ traction ölçülecek.
 | 5 | ~~M08~~ ~~M09~~ ~~M10~~ | ✅ **FAZ 5 TAMAM 03.10** — M08 (QuickActionsCard) · M09 (GettingStartedCard, gerçek veri) · ✅ **M10 KAPANDI 03.10** (`feature_interest` beyaz liste + EventFeaturePromo kilitli kartlar; kabul DB 6/6, mutasyon 6/6) | ✅ | — |
 | 3 | ~~M11~~ ~~M12~~ ~~M13~~ | ✅ **FAZ 3 TAMAM 03.10** — M11 (davet tabloları + 3 RPC; smoke 6/6) · M12 (`/liderlik` + InviteCard + "Davet et" quick action; sızıntı üçlüsü EKRANDA) · ✅ **M13 KAPANDI 03.10** (kayıt akışı redeem: `?davet=` taşıyıcısı + `useInviteRedemption` fire-and-forget; **kabul K1–K5 canlı 5/5** + grant 2/2 + rollback temiz · **mutasyon 6/6** · 14 test) | ✅ |
 | 6 | ~~M14~~ ~~M15~~ ~~M16~~ | ✅ **FAZ 6 TAMAM 03.10** — M14 (5 metrik view, mig `20261003120000`, kabul K1–K13 13/13 + mutasyon 6/6) · M15 (`/admin/traction` + AdminTractionPage 5 kart + admin-traction-api; **N07 koşulu** — Traction #2, numaralar kaydı, ai-knowledge 91 belge + 90 embed; 12 test + mutasyon 6/6) · ✅ **M16 KAPANDI 03.10** (canlı doğrulama **8/8 ESLESTI**: WAU 6 · içerik 41 · cadde 30 · tavsiye available=false · davet 0 · dönüş cohort 166/5/%3.01; ayırt kanıtı — bozuk metrik 2 FARK verdi) | ✅ |
-| 2 | ~~M17~~ ~~M18~~ ~~M19~~ ~~M20~~ ~~M21~~ · **M22–M23** | ✅ **M17** (mig `20261003140000`; tablolar + RPC-only yazma + ban kill-switch `is_cadde_banned`; kabul K1–K11 11/11 + mut 6/6) · ✅ **M18** (mig `20261003150000`; `match_recommendation_professionals` — **eler değil sıralar**, `search_text` OKUNMAZ; kabul K1–K9 9/9 + mut 6/6) · ✅ **M19+M20 KAPANDI 03.10 (BİRLEŞİK** — check:dead lib'i üretim tüketicisi ister): lib (rules 7 kod çift yönlü ayna · schemas Zod userId YOK · api RPC-only · hook) + `/tavsiye` & `/tavsiye/:id` sayfaları (anonime açık, **RequireFeature YOK**, eşleşen profesyoneller İLETİŞİMSİZ) + quick-action "Tavsiye iste" + `useSeo` deps. **25 test · mutasyon 8/8** · tam suite **446/3690** yeşil (seo-deps-contract'ı tam suite yakaladı, deps eklendi)) · ✅ **M21 KAPANDI 04.10** (`CaddeRecommendationCard` — scope bar ile liste arası sabit konum, **KARAR 2: bant/skor + hedeflemeye BULAŞMAZ ölçüldü** [ranking/kompozisyon dosyaları değişmedi + kaynak kilitleri]; YALNIZ başlık+şehir, **gövde çizilmez** [iletişim sızıntısı kilitli]; hata→CTA akış bloklanmaz; 8 test · **mut 6/6** · cadde karakterizasyonu DEĞİŞMEDEN yeşil, tam suite **447/3698**) · kalan: M22 kilitli gelen kutusu · M23 canlı doğrulama | 🟢 (onay 03.10) |
-| 4 | **M24–M27** | Haftalık şehir özeti · `user_city_follows` · pg_cron | 🟢 (onay 03.10) |
+| 2 | ~~M17~~ ~~M18~~ ~~M19~~ ~~M20~~ ~~M21~~ ~~M22~~ · **M23** | ✅ **M17** (mig `20261003140000`; tablolar + RPC-only yazma + ban kill-switch `is_cadde_banned`; kabul K1–K11 11/11 + mut 6/6) · ✅ **M18** (mig `20261003150000`; `match_recommendation_professionals` — **eler değil sıralar**, `search_text` OKUNMAZ; kabul K1–K9 9/9 + mut 6/6) · ✅ **M19+M20 KAPANDI 03.10 (BİRLEŞİK** — check:dead lib'i üretim tüketicisi ister): lib (rules 7 kod çift yönlü ayna · schemas Zod userId YOK · api RPC-only · hook) + `/tavsiye` & `/tavsiye/:id` sayfaları (anonime açık, **RequireFeature YOK**, eşleşen profesyoneller İLETİŞİMSİZ) + quick-action "Tavsiye iste" + `useSeo` deps. **25 test · mutasyon 8/8** · tam suite **446/3690** yeşil (seo-deps-contract'ı tam suite yakaladı, deps eklendi)) · ✅ **M21 KAPANDI 04.10** (`CaddeRecommendationCard` — scope bar ile liste arası sabit konum, **KARAR 2: bant/skor + hedeflemeye BULAŞMAZ ölçüldü** [ranking/kompozisyon dosyaları değişmedi + kaynak kilitleri]; YALNIZ başlık+şehir, **gövde çizilmez** [iletişim sızıntısı kilitli]; hata→CTA akış bloklanmaz; 8 test · **mut 6/6** · cadde karakterizasyonu DEĞİŞMEDEN yeşil, tam suite **447/3698**) · ✅ **M22 KAPANDI 04.10** (mig `20261004110000`: outbox CHECK +`recommendation_match` · settings seed · `pro.inbox` beyaz liste · create RPC eşleşen pro'ya [skor>0, en iyi 5] bildirim yazar — SAHİBE/BANLIya/skor-0'a YOK, payload iletişimsiz; `ProLockedInboxCard` /tavsiye detayında [fiyat UYDURULMAZ]; bildirim hattı BEŞ parça tek batch'te; kabul **K1–K13 13/13** + M17 regresyon 11/11 · **mut 6/6** — SM4 kabulün çökme zafiyetini yakaladı, çağrılar sarmallandı) · kalan: M23 canlı doğrulama | 🟢 (onay 03.10) |
+| 4 | ~~M24~~ · **M25–M27** | ✅ **M24 KAPANDI 04.10** (paralel oturum) — mig `20261004120000` canlıda, `check:migrations` **476/476** sapmasız · `user_city_follows` (PK `user_id,city_id`; **şehir `geo_cities`'e FK — serbest metin DEĞİL**, ülke türetilir) + ters indeks + RLS 3 politika (**UPDATE BİLEREK YOK**) · outbox CHECK **18→19** (`weekly_city_digest`) · `email.weekly_city_digest.enabled=false` (**KAPALI doğar**, G22 deseni) + `weekly_city_digest.max_follows_per_user=10` · kabul `supabase/qa/user-city-follows-acceptance.sql` **14/14**, mutasyon **7/7** · ⚠️ planın "outbox CHECK 7 değere kilitli" rakamı BAYATTI (canlıda 18 idi) · ⚠️ **damga çakışması yaşandı:** diğer oturumun M22 migration'ı aynı `20261004110000` damgasını kullanmıştı; benimki `...120000`'a kaydırıldı | 🟢 (onay 03.10) |
 
 ### G · Dijital Gruplar Motoru
 
@@ -1395,10 +1395,35 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - Kanıt: tsc 0 · lint 0 (32 tümü ekstre-motoru) · check:dead 0/0/**1015** · ingest:tools:check güncel ·
   verify:text ✓ (pretest).
 
-**M22 — Kilitli profesyonel gelen kutusu**
-- Eşleşen profesyonele bildirim düşer ama iletişim detayı `ProLockedInboxCard` ile
-  **kilitli** → `feature_interest` kaydı (M10). Desen: `MessagesInbox.tsx`.
-- **Kabul:** profesyonel test hesabında kilitli kart + ilgi satırı (DB ölçümü).
+**~~M22~~ — ✅ KAPANDI 04.10** · Kilitli profesyonel gelen kutusu + eşleşme bildirimi · mig `20261004110000` canlıda (`check:migrations` **475/475**)
+
+- **Bildirim hattı BEŞ parça, HEPSİ tek batch'te** (biri eksikse hata vermez, mail gitmez):
+  ① outbox CHECK +`recommendation_match` (18 event — 🔴 CHECK'siz insert 23514 + SESSİZ kaybolur,
+  KR09 radar dersi) · ② `notification_settings` seed `email.recommendation_match.enabled=true` ·
+  ③ edge `SETTING_KEY_BY_EVENT` + `EventType` · ④ `buildEmail` kolu + `directEvents` (transactional,
+  alıcı `payload.email`) · ⑤ şablon `_shared/emails/recommendation-match.ts` (+5 test).
+- **`create_recommendation_request_v1` YENİDEN tanımlandı:** talep oluşunca M18 skoruyla eşleşen
+  profesyonellere (skor>0, en iyi 5) outbox satırı. 🔴 Talep SAHİBİNE yok (`<> v_uid`) · 🔴 BANLI
+  pro'ya yok (kill-switch bildirimi KAPSAR) · 🔴 skor 0'a yok (spam yok) · payload talep sahibinin
+  İLETİŞİMİNİ TAŞIMAZ (şablon da bilinen alan dışını çizmez — 'fazladan alan sızmaz' testi).
+- **`ProLockedInboxCard`** (`/tavsiye/:id`, girişli + talep sahibi OLMAYAN): iletişim KİLİTLİ
+  (istemciye zaten gelmez), fiyat/ödeme UYDURULMAZ (K05 PARK) → "İlgileniyorum" = `feature_interest`
+  **'pro.inbox'** (beyaz liste MİG+TS aynı batch'te genişledi, M10 ayna testi BİLİNÇLİ güncellendi:
+  TAM OLARAK 3 anahtar). İdempotent (already:true) · kanıt satırı silinmez · `EventFeaturePromo`
+  Record'ı exhaustive kaldı (pro.inbox: null — etkinlik panelinde çizilmez).
+- **Kabul (`supabase/qa/recommendation-match-notification-acceptance.sql`, geri alınan işlem,
+  K1–K13 13/13):** CHECK içerir · seed true · pro.inbox registered+TEK satır · ikinci kayıt
+  already:true · uydurma anahtar reddi · eşleşen pro'ya satır (payload.email doğru) · SAHİBE satır
+  YOK (fixture AYIRT edici: requester'ın kataloğu DA Dortmund — dışlama silinirse satır düşer,
+  vakum değil) · BANLI almaz · skor-0 almaz · payload iletişimsiz · eşleşmeyen talep 0 satır ·
+  M17 banlı-create regresyonu KORUNDU · grant anon YOK. **M17 kabulü yeniden: 11/11.**
+- **Mutasyon 6/6:** SM1 `<> v_uid` sil→K7 · SM2 ban filtresi sil→K8 · SM3 skor>0→>=0→K11 (5 satır) ·
+  SM4 pro.inbox beyaz listeden sil→K3+K4 · FM1 kart yanlış anahtar→2 test · FM2 kart talep sahibine
+  görünür→yerleşim kilidi. 🔴 **SM4 ilk koşuda kabulü ÇÖKERTTİ (özet basılmadı)** — "betik patladı ≠
+  iddia düştü" kuralı: tüm çıplak RPC çağrıları exception sarmalına alındı, SM4 yeniden koşuldu →
+  "!!! 2 DUSTU" ÖZETİYLE yakalandı.
+- Kanıt: tam takım **449 dosya / 3709 test** · tsc 0 · lint 0 (32 tümü ekstre-motoru) ·
+  check:dead 0/0/**1016** · ingest:tools **62** (+2 edge dosyası, yabancı yok) · verify:text ✓.
 
 **M23 — Faz 2 canlı doğrulama**
 - Anonim `/tavsiye` listesini görür → üye talep açar → eşleşen profesyonele bildirim düşer
