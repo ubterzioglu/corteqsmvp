@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-komuta-merkezi-arsiv-dalgasi",
+    date: "4 Ekim 2026",
+    title: "Komuta Merkezi temizlendi — 1.635 kayıt 495’e indi (hiçbir şey silinmedi)",
+    items: [
+      "NE DEĞİŞTİ: Komuta Merkezi’nde 1.635 aktif kayıt vardı ve içinde bir şey bulmak pratik olarak imkânsızdı. Başlanmamış toplantı notları ve tamamlanmış işler arşive alındı; panoda artık 495 kayıt var.",
+      "SİLME DEĞİL, ARŞİV: Hiçbir satır silinmedi. Arşivlenenler kendi listesinde duruyor ve tek tek geri alınabilir. Toplam arşiv 1.158 kayda çıktı.",
+      "DOKUNULMAYANLAR: “Devam ediyor” durumundaki her kayıt ve ACİL işaretli her kayıt yerinde bırakıldı — bunlar açık iş. Ölçüldü: bu turda yanlışlıkla arşivlenen acil/devam eden kayıt sayısı SIFIR.",
+      "PANODA KALAN: 451 bekleyen toplantı notu · 19 bekleyen/başlanmamış todo · 14 devam eden iş.",
+      "SIRADAKİ KARAR: Kalan 451 bekleyen toplantı notunun ne olacağı ayrı bir karar. Planda “~150-200 kayıt kalsın” yazıyordu ama ölçüm bunun mümkün olmadığını gösterdi: kayıtların tamamı eski (en yenisi 27 Eylül, en eskisi 17 Nisan), yani “son şu kadar günü koru” diye bir ayar noktası yok. Ya hepsi arşivlenir (33 kalır) ya da olduğu gibi durur.",
+      "GÜVENLİK: Arşivden önce yerel denetim notlarının (313 adet) yedeği alındı ve doğrulandı — bu notlar depoya dâhil değil ve yeniden üretim sırasında kaybolabilirdi.",
+    ],
+  },
+  {
     id: "20261003-tavsiye-iste-modulu",
     date: "3 Ekim 2026",
     title: "“Tavsiye İste” modülü geldi — topluluktan güvenilir esnaf/sağlık/danışman tavsiyesi (deploy kuyruğunda)",
