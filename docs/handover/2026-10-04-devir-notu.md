@@ -8,20 +8,20 @@
 
 ---
 
-## 0 · ÖNCE BUNU YAP — 27 commit PUSH'LANMADI
+## 0 · ✅ KAPANDI — 30 commit push'landı (04.10 akşam)
 
 ```
-git status -sb   →   ## main...origin/main [ahead 27]
+git push origin main   →   b3648782..47bf51a3   (branch artık origin/main ile EŞİT)
 ```
 
-Bugünkü **16 commit** dahil, toplam 27 commit **yalnız bu makinede**. Sonuç:
+Bu bölüm "27 commit push'lanmadı" diyordu; **artık geçerli değil.** Push
+öncesi tam takım yerelde koşturuldu, hepsi yeşil (ölçümler §5'te). Push'a
+dahil olanlar: bugünkü 16 commit + M27 (`771e2886`) + devir notu +
+KALANLAR bağlantı düzeltmesi (`47bf51a3`).
 
-- **CI hiç koşmadı** — `ingest:tools:check`, `check:dead`, tam takım hiçbiri
-  doğrulanmadı. Yeşil olduğunu VARSAYMA.
-- Altı güvenlik düzeltmesi dahil her şey yedeksiz.
-
-⚠️ Push etmeden önce tam takımı yerelde koş (`npm run test`) — paralel iki
-oturumun commit'leri birbirine karışmış olabilir.
+⚠️ Hâlâ geçerli olan tek uyarı: **lint yerelde KIRMIZI** (29 hata), ama
+hepsi git'e girmemiş `corteqs-ekstre-motoru/` alt projesinde — izlenen
+kaynakta 0 sorun. Bu alt proje commit'lenirse lint'i önce düzelt.
 
 ---
 
@@ -57,29 +57,21 @@ Hiçbiri planda yoktu; RLS/yetki yüzeyi sistematik taranınca çıktılar.
 
 ---
 
-## 2 · YARIDA KALAN — M27 (A oturumu)
+## 2 · ✅ KAPANDI — M27 commit'lendi (`771e2886`)
 
-Çalışma ağacında duruyor, **commit'lenmedi**:
+Bu bölüm M27'yi "çalışma ağacında, commit'lenmedi" diye anlatıyordu; **artık
+geçerli değil.** M27 = Faz 4 canlı doğrulama, 4/4 geçti ve gerçek bir kusur
+kapatıldı: edge alıcı çözümü `sb_secret` ile 401 veriyordu, SQL'e taşındı
+(mig `20261004180000`). **FAZ 4 TAMAM.**
 
-```
- M supabase/functions/_shared/emails/weekly-city-digest.ts (+ .test.ts)
- M supabase/functions/send-notification-emails/index.ts
-?? supabase/migrations/applied/20261004180000_weekly_city_digest_recipient_email.sql
-?? supabase/qa/m27-canli-part1.sql
-?? supabase/qa/m27-canli-part2-temizlik.sql
-?? supabase/qa/m27-recipient-email-acceptance.sql
-```
-
-M27 = Faz 4 canlı doğrulama. 🔴 **"cron yeşil" KANIT DEĞİLDİR** (Radar dersi):
-kanıt = gerçek outbox satırı + dolu `sent_at`. Kill switch
-`email.weekly_city_digest.enabled` hâlâ **`false`** — M27 kanıtlanınca İNSAN açar.
+🔴 Hâlâ geçerli: kill switch `email.weekly_city_digest.enabled` **`false`**
+ve öyle KALIR — açmak İNSAN kararıdır, ajan açmaz.
 
 ---
-
 ## 3 · Açık işler
 
-**Blokesiz:** M27 (yarıda) · G14 (⛔ G04'e bağlı) yok sayılırsa G serisinde
-blokesiz iş kalmadı.
+**Blokesiz:** YOK. M27 kapandı (§2); G14 (⛔ G04'e bağlı) yok sayılırsa
+G serisinde de blokesiz iş kalmadı. Sıradaki iş kullanıcı kararı gerektirir.
 
 **Kullanıcıyı bekleyen (bloke):**
 - **U09** WhatsApp 5 secret → W01–W08 (8 batch)
@@ -146,15 +138,23 @@ diye işaretli — SG serisine onaysız girme.
 
 ## 5 · Ölçüm tabanı (04.10 akşam)
 
+Push öncesi yeniden ölçüldü (04.10 akşam, tam takım yerelde):
+
 ```text
-check:migrations  484 dosya · 484 canlı kayıt · sapma YOK (2 bilinen eski çift damga)
+npm run test      452 dosya · 3.731 test · HEPSİ YEŞİL
 tsc               0 hata
-verify:text       ✓ 1991 dosya
+verify:text       ✓ 1992 dosya
+check:dead        0 yeni erişilemez · 0 bilinen borç · 1.018 erişilebilir kaynak
+check:migrations  484 dosya · 484 canlı kayıt · sapma YOK (2 bilinen eski çift damga)
+ingest:tools      katalog güncel
+lint              ⚠️ 29 hata — HEPSİ izlenmeyen corteqs-ekstre-motoru/ içinde
 admin-updates     30/30
 RLS               285 tablodan 284'ü RLS'li; tek istisna spatial_ref_sys (PostGIS, 0 satır)
 anon yüzeyi       admin_* RPC'de anon EXECUTE = 0 · eski pano tablolarında anon politika = 0
-push              ⚠️ origin/main'in 27 commit GERİSİNDE
+push              ✅ origin/main ile EŞİT (47bf51a3)
 ```
+
+⚠️ Eski tabandaki "1991 dosya" ve "27 commit gerisinde" rakamları bayattır.
 
 **Kalıcı tripwire'lar (silme, gevşetme):**
 - `supabase/qa/public-exposure-tripwire.sql` — RLS'siz + anon erişimli tablo tarar
