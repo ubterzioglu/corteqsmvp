@@ -44,6 +44,7 @@ import {
 } from "../_shared/emails/group-notifications.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { buildRecommendationMatchEmail } from "../_shared/emails/recommendation-match.ts";
+import { buildWeeklyCityDigestEmail } from "../_shared/emails/weekly-city-digest.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
 const ALLOWED_ORIGINS = new Set([
@@ -81,6 +82,9 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   // M22 · tavsiye eşleşme bildirimi — transactional, alıcı payload.email
   // (eşleşen profesyonel); anahtar mig 20261004110000'de seed edildi.
   recommendation_match: "email.recommendation_match.enabled",
+  // M24–M27 · haftalık şehir özeti — kill switch M24'te KAPALI doğdu; M27
+  // kanıtından sonra İNSAN kararıyla açılır (G22/G17 dersi).
+  weekly_city_digest: "email.weekly_city_digest.enabled",
 };
 
 type EventType =
@@ -94,6 +98,7 @@ type EventType =
   | "radar_scan_digest"
   | "career_application"
   | "recommendation_match"
+  | "weekly_city_digest"
   | GroupNotificationEventType;
 
 type OutboxRow = {
@@ -224,6 +229,9 @@ function buildEmail(row: OutboxRow): BuiltEmail {
     // M22 · tavsiye eşleşmesi — eşleşen profesyonele transactional mail.
     case "recommendation_match":
       return buildRecommendationMatchEmail(row.payload, resolveSiteUrl());
+    // M26 · haftalık şehir özeti — üyenin KENDİSİNE (payload.user_id'den çözülür).
+    case "weekly_city_digest":
+      return buildWeeklyCityDigestEmail(row.payload, resolveSiteUrl());
     // G23 · tasarım §9 — 8 grup bildirimi tek şablonda (metinler §9'dan birebir).
     case "group_submission_received":
     case "group_published":
@@ -416,6 +424,16 @@ Deno.serve(async (request) => {
      * admin aboneliğine bakmaz (transactional).
      */
     const resolveRecipients = async (row: OutboxRow): Promise<string[]> => {
+      // M26 · weekly_city_digest: payload BİLEREK email taşımaz (M25 kuralı) —
+      // adres GÖNDERİM ANINDA auth.admin'den çözülür (kuyrukta bayatlamaz).
+      if (row.event_type === "weekly_city_digest") {
+        const userId = typeof row.payload.user_id === "string" ? row.payload.user_id : "";
+        if (!userId) return [];
+        const { data, error } = await admin.auth.admin.getUserById(userId);
+        const email = data?.user?.email?.trim() ?? "";
+        return error || email === "" ? [] : [email];
+      }
+
       const directEvents = new Set<string>([
         "member_welcome",
         "relocation_tool_report",
@@ -468,6 +486,7 @@ Deno.serve(async (request) => {
             || row.event_type === "relocation_tool_report"
             || row.event_type === "relocation_tool_abandonment"
             || row.event_type === "recommendation_match"
+            || row.event_type === "weekly_city_digest"
             || row.event_type.startsWith("group_");
           const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin

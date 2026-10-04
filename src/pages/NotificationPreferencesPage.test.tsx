@@ -14,6 +14,19 @@ vi.mock("@/lib/relocation-reminders-api", () => ({
   setRelocationReminderOptOut: vi.fn(),
 }));
 vi.mock("@/lib/seo", () => ({ useSeo: vi.fn() }));
+// M26: sayfa artık CityFollowCard'ı da çiziyor — kartın veri kaynakları
+// BİLİNÇLİ mock'lanır (kendi testleri CityFollowCard.test.tsx'te).
+vi.mock("@/lib/city-follows-api", () => ({
+  CITY_FOLLOWS_MAX_PER_USER: 10,
+  fetchMyCityFollows: vi.fn().mockResolvedValue([]),
+  listCityOptionsForCountry: vi.fn().mockResolvedValue([]),
+  filterCityOptions: (options: unknown[]) => options,
+  addCityFollow: vi.fn(),
+  removeCityFollow: vi.fn(),
+}));
+vi.mock("@/lib/geo", () => ({
+  listGeoCountries: vi.fn().mockResolvedValue([]),
+}));
 
 const getMock = vi.mocked(getRelocationReminderPreference);
 const setMock = vi.mocked(setRelocationReminderOptOut);
@@ -50,5 +63,14 @@ describe("NotificationPreferencesPage", () => {
     fireEvent.click(toggle);
 
     await waitFor(() => expect(setMock).toHaveBeenCalledWith(true, expect.anything()));
+  });
+
+  it("M26: haftalık şehir özeti bölümü (CityFollowCard) sayfada çizilir", async () => {
+    getMock.mockResolvedValue({ opted_out: false, global_enabled: false });
+    renderPage();
+
+    expect(await screen.findByTestId("city-follow-card")).toBeInTheDocument();
+    // Dürüst metin: platform geneli anahtarın KAPALI olduğu açıkça yazar.
+    expect(screen.getByText(/doğrulama aşamasında KAPALI/i)).toBeInTheDocument();
   });
 });

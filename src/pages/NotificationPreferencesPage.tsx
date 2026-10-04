@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bell, Loader2 } from "lucide-react";
 
+import CityFollowCard from "@/components/profile/CityFollowCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -72,6 +73,14 @@ export default function NotificationPreferencesPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* M26 · haftalık şehir özeti — kullanıcının aç/kapası TAKİP LİSTESİNİN
+          kendisidir (takip yoksa özet yok); sahte toggle UYDURULMAZ. Platform
+          geneli anahtar şu an KAPALI (M24'te kapalı doğdu, M27 kanıtından sonra
+          insan kararıyla açılır) — kart bunu dürüstçe söyler. */}
+      <div className="mt-6">
+        <CityFollowCard />
+      </div>
     </div>
   );
 }

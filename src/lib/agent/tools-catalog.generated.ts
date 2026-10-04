@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 62,
+    "total": 63,
     "edge_functions": 15,
     "workers": 2,
-    "ui_modules": 44
+    "ui_modules": 45
   },
   "tools": [
     {
@@ -1096,6 +1096,30 @@ export const toolCatalog = {
         "admin_review_catalog_import"
       ],
       "evidence_path": "src/lib/catalog-import-api.ts"
+    },
+    {
+      "tool_key": "module.city_follows_api",
+      "tool_name": "city-follows-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/city-follows-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "CITY_FOLLOWS_ERROR_MESSAGES",
+        "CITY_FOLLOWS_MAX_PER_USER",
+        "addCityFollow",
+        "fetchMyCityFollows",
+        "filterCityOptions",
+        "listCityOptionsForCountry",
+        "removeCityFollow"
+      ],
+      "tables_read_write": [
+        "geo_cities",
+        "geo_countries",
+        "user_city_follows"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/city-follows-api.ts"
     },
     {
       "tool_key": "module.current_user_api",
@@ -2951,6 +2975,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/city-ambassador-program.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/city-follows-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/city-follows-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4856,6 +4890,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/smtp.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/weekly-city-digest.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/weekly-city-digest.ts",
       "kind": "ts",
       "module_family": "edge"
     },

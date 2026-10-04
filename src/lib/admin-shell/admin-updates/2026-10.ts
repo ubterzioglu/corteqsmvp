@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-haftalik-sehir-ozeti-takip-yonetimi",
+    date: "4 Ekim 2026",
+    title: "Haftalık şehir özeti hazırlığı: şehir takibi yönetimi Bildirim Tercihleri'nde (gönderim şimdilik KAPALI)",
+    items: [
+      "NE GELDİ: /settings/notifications sayfasına “Haftalık şehir özeti” kartı eklendi. Üye, geo kataloğundan şehir seçip takip eder (ülke → şehir arama, Türkçe duyarsız filtre); takiplerini çip olarak görür ve tek tıkla kaldırır. Tavan üye başına 10 şehir (eşik veritabanı ayarından gelir, koda sabit gömülü değil; ayna testi kilitliyor).",
+      "DÜRÜST AÇ/KAPA: Kartta ÇALIŞMAYAN bir aç/kapa düğmesi YOK — özetin kullanıcının gözündeki anahtarı takip listesinin kendisi: takip varsa özet var, takip yoksa özet yok (içeriği olmayana mail zaten gönderilmiyor). Platform geneli gönderim anahtarı şu an KAPALI ve kart bunu AÇIKÇA yazıyor; canlı uçtan uca kanıt (M27) tamamlandığında İNSAN kararıyla açılacak — otomatik hat kapalı doğar kuralı.",
+      "MAIL ŞABLONU HAZIR: Özet maili hafta + şehirler + yeni etkinlik/tavsiye bağlantılarını taşır; YALNIZ başlık ve link çizer, payload’a sızabilecek iletişim alanları bilinçli olarak çizilmez (sızıntı testiyle kilitli). Eşleşmeyen şehirler mailde görünür kalır (Münih↔München gibi sözlük farkları sessizce yutulmaz, görünür ki veri onarılsın).",
+      "GÖNDERİM HATTI: Alıcı adresi kuyruğa YAZILMAZ — gönderim anında kullanıcı kimliğinden çözülür (kuyrukta bayat adres riski yok). Hat beş parça (kuyruk kısıtı · ayar anahtarı · eşleme · şablon · alıcı çözümü) ve beşi de aynı işte kuruldu; edge function DEPLOY EDİLDİ (dünkü ders: commit ≠ canlı). Pazartesi 05:00 UTC cron işi M25’te kurulmuştu, anahtar kapalı olduğu için etkisiz.",
+      "KANIT: 22 yeni test (7 api sözleşme + 5 kart + 9 şablon/kablolama + 1 entegrasyon); kod 6 yerden bilerek bozuldu (mutasyon: tavan sırası, kimlik kaynağı, eşik aynası, tavan kapısı, şablon sızıntısı, ayar eşlemesi) ve testler her seferinde yakaladı. Tam test takımı 452 dosya / 3731 test yeşil.",
+      "KALAN: M27 canlı uçtan uca kanıt — takip + taze içerik tohumlanır, özet elle tetiklenir, kuyruk satırında status='sent' + dolu sent_at ölçülür (“cron yeşil” kanıt sayılmaz); kanıttan sonra gönderim anahtarının açılması kullanıcı kararına sunulur.",
+    ],
+  },
+  {
     id: "20261004-komuta-merkezi-disariya-kapatildi",
     date: "4 Ekim 2026",
     title: "Güvenlik: Komuta Merkezi’nin tamamı dışarıya açıkmış — kapatıldı (1.761 kayıt)",
