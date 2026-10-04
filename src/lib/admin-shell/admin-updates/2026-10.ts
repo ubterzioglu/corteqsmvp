@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-grup-verisi-tamamlandi",
+    date: "4 Ekim 2026",
+    title: "Grup dizini verisi tamamlandı — iki grup geçici olarak dizinden çıktı (davet linkleri boş)",
+    items: [
+      "DİZİNDE NE DEĞİŞTİ: Herkese açık grup dizini 10 yerine 8 grup gösteriyor. 'HCD - Bilinç Çözümleme' ve 'SHAMAN Koçluk' gizlendi: ikisinin de davet linki hiç girilmemişti, yani dizinde görünseler de kimse katılamıyordu.",
+      "BU BİR SİLME DEĞİL: Gruplar sistemde duruyor, yalnız yayından alındı. Davet linki girilince yeniden yayına alınabilirler. Sahiplerinden link istemek ayrı bir iş ve insan eliyle yapılacak.",
+      "GÖNDERENLERE OTOMATİK MAİL GİTMEDİ — bilerek: Normalde bir grup 'link ölü' sebebiyle gizlenince gönderene bildirim maili gider. Bunu ölçtük: kapatmasaydık bu iki kişiye 'linkiniz çalışmıyor' maili gidecekti. Oysa bu gruplar hiç link almamıştı, yani mail yanlış bir şey söylerdi ve gerçek kişilere otomatik mail atmak kararlaştırılmamıştı. Geri alınan bir deneyle doğrulandı: koruma olmadan 1 mail kuyruğa düşüyor, koruma ile 0.",
+      "DİĞER İKİ KARAR UYGULANDI: 'AI Legion' artık 'Meslek & Kariyer' kategorisinde. 'TED InnoVenture' Türkiye (ülke geneli) olarak işaretlendi; Ankara Koleji/TED mezun tabanı Türkiye merkezli kabul edildi.",
+      "KALAN DURUM: 10 grubun hiçbiri artık 'Diğer' kategorisinde değil; 4 grup bilerek ülkesiz (gerçekten global). Eski ülke/şehir metin alanlarına dokunulmadı. Kabul testi 10/10 yeşil; testin boş olmadığı da uygulamadan önce 9 maddenin kırmızı düşmesiyle kanıtlandı.",
+    ],
+  },
+  {
     id: "20261004-tavsiye-inceleme-borcu-kapatildi",
     date: "4 Ekim 2026",
     title: "Tavsiye incelemesinin ertelenen 7 önerisi aynı gün kapatıldı — “borç satırı” kalmadı",
