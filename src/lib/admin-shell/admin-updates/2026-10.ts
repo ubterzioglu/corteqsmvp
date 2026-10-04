@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261004-w03-whatsapp-graph-ortak-modul",
+    date: "4 Ekim 2026",
+    title: "WhatsApp Graph gönderim yolu ortak modüle taşındı — davranış değişmedi",
+    items: [
+      "ALTYAPI: whatsapp-reply fonksiyonundaki Meta Graph API çağrısı (satır 65–90) ve sürüm doğrulaması (satır 15–16) yeni _shared/whatsapp-graph.ts modülüne taşındı. Davranış birebir aynı; W05'te yazılacak whatsapp-autoreply aynı yolu kullanacak, ikinci Graph istemcisi yazılmayacak.",
+      "TEST BOŞLUĞU KAPATILDI: Graph yanıtını ayrıştıran 26 satır bugün HİÇ test edilmiyordu (whatsapp-reply.test.ts dört testi sendMessage'i sahte vi.fn() ile değiştiriyordu). Artık 12 karakterizasyon testiyle kilitli: URL biçimi, phoneNumberId kodlaması, wamid öneki, HTTP/hata kodları, sürüm çözümü, sır sızıntısı yokluğu ve tek-istemci kilidi.",
+      "⚠️ Meta'ya gerçek gönderim sırlar girilene dek doğrulanamadı (U09 bekliyor). Fonksiyon açılıyor ve handler'a ulaşıyor; deploy sonrası iki smoke çağrısıyla (400 + 409) kanıtlanabilir.",
+      "KANIT: 12 test yeşil · 6 mutasyon 6/6 yakalandı · tam test takımı 454 dosya / 3760 test yeşil · TypeScript temiz · check:dead 0 · verify:text 1998 dosya.",
+    ],
+  },
+  {
     id: "20261004-grup-verisi-tamamlandi",
     date: "4 Ekim 2026",
     title: "Grup dizini verisi tamamlandı — iki grup geçici olarak dizinden çıktı (davet linkleri boş)",

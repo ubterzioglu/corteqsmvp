@@ -1,8 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
+import { resolveGraphVersion, sendGraphMessage } from "../_shared/whatsapp-graph.ts";
 import {
   createWhatsAppReplyHandler,
-  type MetaReplyPayload,
   type PreparedWhatsAppReply,
   type WhatsAppReplyInput,
 } from "../_shared/whatsapp-reply.ts";
@@ -12,12 +12,13 @@ const anonKey = Deno.env.get("SUPABASE_ANON_KEY");
 const accessToken = Deno.env.get("WHATSAPP_ACCESS_TOKEN");
 const phoneNumberId = Deno.env.get("WHATSAPP_PHONE_NUMBER_ID");
 const appSecret = Deno.env.get("WHATSAPP_APP_SECRET");
-const graphVersionCandidate = Deno.env.get("WHATSAPP_GRAPH_API_VERSION") ?? "v26.0";
-const graphVersion = /^v\d+\.\d+$/.test(graphVersionCandidate) ? graphVersionCandidate : "v26.0";
+const graphVersion = resolveGraphVersion(Deno.env.get("WHATSAPP_GRAPH_API_VERSION"));
 
 if (!supabaseUrl || !anonKey || !accessToken || !phoneNumberId || !appSecret) {
   throw new Error("whatsapp-reply: required server configuration is missing");
 }
+
+const graphConfig = { accessToken: accessToken!, phoneNumberId: phoneNumberId!, graphVersion };
 
 function userClient(authorization: string) {
   return createClient(supabaseUrl!, anonKey!, {
@@ -62,32 +63,7 @@ const handler = createWhatsAppReplyHandler({
       templateLanguage: row.template_language,
     } as PreparedWhatsAppReply;
   },
-  sendMessage: async (payload: MetaReplyPayload) => {
-    const response = await fetch(
-      `https://graph.facebook.com/${graphVersion}/${encodeURIComponent(phoneNumberId)}/messages`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      },
-    );
-    const responseBody: unknown = await response.json().catch(() => null);
-    if (!response.ok || typeof responseBody !== "object" || responseBody === null) {
-      throw new Error(`meta_http_${response.status}`);
-    }
-    const messages = (responseBody as { messages?: unknown }).messages;
-    const first = Array.isArray(messages) ? messages[0] : null;
-    const providerMessageId = typeof first === "object" && first !== null && "id" in first
-      ? (first as { id?: unknown }).id
-      : null;
-    if (typeof providerMessageId !== "string" || !providerMessageId.startsWith("wamid.")) {
-      throw new Error("meta_response_invalid");
-    }
-    return providerMessageId;
-  },
+  sendMessage: (payload) => sendGraphMessage(graphConfig, payload),
   finalizeReply: async (authorization, result) => {
     const { error } = await userClient(authorization).rpc("admin_finalize_whatsapp_reply", {
       p_message_id: result.messageId,
