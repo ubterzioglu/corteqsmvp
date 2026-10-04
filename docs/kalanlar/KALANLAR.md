@@ -92,7 +92,7 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 | # | Karar |
 |---|---|
-| 5 | **P03: web sitesi anonime AÇIK, kişisel veri KAPALI.** Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone) + **1 appointment_url** (kişisel değil, iş bağlantısı → website gibi AÇIK sayılır; yine de rapora yazılır). Website + appointment_url anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. (312+11+1+1+1 = 326 ✓ — ilk yazımda "13" ile 4 türü yan yana yazmıştım, toplam tutmuyordu.) Dizin aramasındaki ilkenin aynısı. |
+| 5 | ✅ **UYGULANDI 04.10** — P03: web sitesi anonime AÇIK, kişisel veri KAPALI. `get_catalog_item_public_page_v2` fonksiyonu `auth.role()` ile rol bazlı filtre uyguluyor: anon → website + appointment_url (313 kayıt), authenticated → tümü (326 kayıt). Migration `20261004280000`, kabul testi 2/2 başarılı. Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone) + **1 appointment_url** (kişisel değil, iş bağlantısı → website gibi AÇIK sayılır; yine de rapora yazılır). Website + appointment_url anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. (312+11+1+1+1 = 326 ✓ — ilk yazımda "13" ile 4 türü yan yana yazmıştım, toplam tutmuyordu.) Dizin aramasındaki ilkenin aynısı. |
 | 6 | ✅ **UYGULANDI 04.10** — haftalık şehir özeti anahtarı **AÇILDI**: `email.weekly_city_digest.enabled` `false`→`true` (`UPDATE 1` canlıda doğrulandı) · cron `weekly-city-digest` pzt 05:00 UTC **aktif**. Ölçüm: şehir takip eden üye **0** — ilk hafta kimse mail almaz, özellik duyuruldukça akar. |
 | 7 | ✅ **UYGULANDI 04.10** — U04: 16 kanıtsız ✅ → 🔒'ya döndürüldü. `docs/plans/2026-09-20-etkinlik-modulu-plani.md` Batch 1 + 2a-8b gerçek tarayıcıda QA yapılmadı (kalan-isler.md §2 çapraz kontrol). |
 | 8 | **SG (SEO/GEO) serisi listeye GİRSİN — ama `index.html` JSON-LD'ye DOKUNULMAZ.** CLAUDE.md'deki "yalnız raporla, DEĞİŞTİRME" yasağı **aynen geçerli**. Canonical/sitemap/hreflang güvenle koşar. |
@@ -3103,6 +3103,7 @@ Mevcut 10 grup yeni veri modeline taşınırken karar gerekiyor (K08'in kalan te
 
 - **P02–P07:** `.kilo/plans/1790537630793-tidy-cactus.md` (clean-code planının canlı
   DB/deploy/ürün kararı gerektiren maddeleri). **P01 uygulandı** (28.09 — bkz. Kapananlar).
+  **✅ P03 uygulandı** (04.10 — anon iletişim filtresi, mig `20261004280000`).
 
 ---
 
