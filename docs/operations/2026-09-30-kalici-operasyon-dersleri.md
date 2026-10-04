@@ -4,7 +4,7 @@
 > damıtılan, **hâlâ geçerli** operasyon bilgisi. Yeni oturum başka hiçbir şey
 > okumasa bile buradan deploy/DB/secret/tuzak temellerini alır. Tarihçe ve
 > gerekçeler: `docs/archive/2026-09-30-kapanan-is-dokumanlari/` + git geçmişi.
-> Güncel iş listesi: `docs/kalanlar/2026-09-27-KALANLAR.md`. Agent kuralları: kök
+> Güncel iş listesi: `docs/kalanlar/KALANLAR.md`. Agent kuralları: kök
 > `CLAUDE.md` · mimari: `docs/ARCHITECTURE.md` · hızlı bağlam: `docs/AGENT_CONTEXT.md`.
 >
 > Bu dosya **yaşayan belgedir**: kalıcı bir ders çıktığında buraya eklenir,

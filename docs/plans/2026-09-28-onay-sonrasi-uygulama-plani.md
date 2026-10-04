@@ -3,7 +3,7 @@
 > **Bu plan, 28.09'da alınan kararların uygulama adımlarıdır.** Kararlar verildi,
 > uygulama YAPILMADI (kullanıcı "dur" dedi). Sıradaki oturum buradan devam eder.
 >
-> Bağlam: `docs/kalanlar/2026-09-27-KALANLAR.md` → "DEVİR NOTU — 28.09".
+> Bağlam: `docs/kalanlar/KALANLAR.md` (eski ad: `2026-09-27-KALANLAR.md`) → "DEVİR NOTU — 28.09".
 > Onaysız zincir (S01–S09 · G01–G03h · C00–C06) **tamamen bitti**, 22 batch push'lu.
 
 ## ✅ Bu turda kapanan

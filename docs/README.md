@@ -107,7 +107,7 @@ Denetim → plan → uygulama → kapanış zinciri. Sıra bu; okumaya denetimle
 1. Yeni oturum/bağlam → **[`AGENT_CONTEXT.md`](AGENT_CONTEXT.md)**
    · operasyon temeli (deploy/DB/secret/tuzaklar) →
    **[`operations/2026-09-30-kalici-operasyon-dersleri.md`](operations/2026-09-30-kalici-operasyon-dersleri.md)**
-   · güncel kalan işler → **[`kalanlar/2026-09-27-KALANLAR.md`](kalanlar/2026-09-27-KALANLAR.md)**
+   · güncel kalan işler → **[`kalanlar/KALANLAR.md`](kalanlar/KALANLAR.md)**
 2. Mimari soru → **[`ARCHITECTURE.md`](ARCHITECTURE.md)**
 3. Proje durumu / ne bitti ne açık → **[`status/rapor.html`](status/rapor.html)**
 4. Cadde 3.0 detayı → `cadde-300/change-report.md`

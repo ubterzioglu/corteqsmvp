@@ -2,7 +2,7 @@
 
 Buradaki dosyalar **silinmedi, donduruldu** (`git mv`, geçmiş kesintisiz:
 `git log --follow <dosya>`). Anlattıkları iş ya tamamlandı ya da
-`docs/kalanlar/2026-09-27-KALANLAR.md` master'ının devraldığı eski turların
+`docs/kalanlar/KALANLAR.md` master'ının devraldığı eski turların
 devir notu / plan / durum raporu kalıntıları.
 
 ## Taşıma ölçütü (2026-09-20 dalgasıyla aynı)
@@ -12,7 +12,7 @@ devir notu / plan / durum raporu kalıntıları.
    klasörleri hariç). İki tur ölçüldü: ilk turda atıf alan adaylar listeden
    çıkarıldı, ikinci turda kalan 33 dosyanın **0 atıf aldığı** doğrulandı.
 2. **Anlattığı iş bitti ya da aşıldı** — güncel durum tek kaynak olarak
-   `docs/kalanlar/2026-09-27-KALANLAR.md` + `CLAUDE.md` + `docs/ARCHITECTURE.md`'de.
+   `docs/kalanlar/KALANLAR.md` + `CLAUDE.md` + `docs/ARCHITECTURE.md`'de.
 
 ## Ölçüt sağlanmadığı için taşınMAYANlar (ezberleme, teyit et)
 
@@ -41,7 +41,7 @@ devir notu / plan / durum raporu kalıntıları.
 | `2026-07-28-muhasebe-butce-sekmesi.md` (handover) | İş bitti; `superpowers/plans/2026-07-28-muhasebe-butce-sekmesi.md` + design spec'i uygulanmış |
 | `2026-08-30-limit-sprint-final-handoff.md` · `2026-08-31-codex-limit-sprint-ozet.md` (handover) | Limit sprinti kapandı; A-serisi batch'leri 27–30.09'da tamamlandı (bkz. KALANLAR Kapananlar tablosu) |
 | `2026-09-04-t19-profil-workshop-ve-tip-borcu.md` · `2026-09-06-olu-kod-temizligi-ve-kalan-is-envanteri.md` (handover) | T19–T22 ve ölü kod temizliği kapandı (Kapananlar: "Eski tamamlananlar") |
-| `2026-09-20-kalan-isler.md` (handover) | Master `docs/kalanlar/2026-09-27-KALANLAR.md` devraldı |
+| `2026-09-20-kalan-isler.md` (handover) | Master `docs/kalanlar/KALANLAR.md` devraldı |
 | `2026-08-30-bundle-ve-route-yukleme-raporu.md` · `cadde-acceptance.md` · `limit-sprint-baseline.md` · `member-welcome-rollout.md` · `relocation-abandonment-reminders.md` · `relocation-report-location.md` (status) | 30.08 durum anlık görüntüleri; sayılar 30.09 ölçüm tabanıyla aşıldı |
 | `AFS_Done.md` · `AFS_hadi.md` · `AFS_new.md` · `AFS_new_2.md` · `mainplan.md` · `corteqs_codex_*` (plans) | AFS/catalog rebuild Haziran'da kapandı (`docs/catalog-role-afs-rebuild/` kapanış raporları canlı) |
 | `CorteQS_Radar_Admin_Onayli_Haber_Pipeline_E2E_AI_Agent.md` (plans) | Radar pipeline kuruldu ve A99-R2 ile 30.09'da canlı doğrulandı; güncel operasyon bilgisi KALANLAR + `docs/modules/radar/`'da |
