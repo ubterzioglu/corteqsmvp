@@ -66,6 +66,69 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 
 ---
 
+## 2.0 · 🔴 4 EKİM KARAR TURU — 16 karar verildi (YAN AJANIN TEK KAYNAĞI)
+
+> Kullanıcı 04.10'da **tüm açık kararları** tek oturumda verdi. Aşağıdaki hiçbir
+> madde için yeniden onay İSTEME — verilmiş karardır. Çelişki görürsen bu bölüm
+> kazanır; alttaki eski satırlar bayat olabilir.
+
+### A · Sıra kilitleri GEVŞEDİ — 6 batch açıldı
+
+| # | Karar |
+|---|---|
+| 1 | **W03–W06 ŞİMDİ yazılsın.** "Sıra bağlayıcı" kuralı gevşedi; Meta secret'ları beklemeden kod yazılır. W01/W02 doğrulama turu secret gelince koşar. ⚠️ Gerçek webhook davranışı görülmeden yazıldığı için **düzeltme turu beklenmelidir** — bilinçli kabul edilmiş risktir. |
+| 2 | **G04–G05 ŞİMDİ yazılsın.** Kod sağlayıcıdan bağımsız; uçtan uca doğrulama U06 gelince. G14 ardından sıraya girer. |
+
+### B · G11 veri soruları (K11) — CEVAPLANDI
+
+| # | Karar |
+|---|---|
+| 3 | **AI Legion → `meslek-kariyer`** (SEO & GEO ile tutarlı). |
+| 4 | **TED InnoVenture → Türkiye, ülke geneli**: `country_code='TR'`, şehir YOK, `is_global=false`. |
+
+→ Bu ikisi uygulanınca **G11 kapanır**, ardından G10c sıraya girer (ama ↓ karar 11).
+
+### C · Ürün kararları
+
+| # | Karar |
+|---|---|
+| 5 | **P03: web sitesi anonime AÇIK, kişisel veri KAPALI.** Ölçüm: 326 `is_public` kaydın **312'si website**; gerçek kişisel veri **13** (11 whatsapp + 1 email + 1 phone + 1 appointment_url). Website anonime döner; whatsapp/email/phone **yalnız girişli üyeye**. Dizin aramasındaki ilkenin aynısı. |
+| 6 | ✅ **UYGULANDI 04.10** — haftalık şehir özeti anahtarı **AÇILDI**: `email.weekly_city_digest.enabled` `false`→`true` (`UPDATE 1` canlıda doğrulandı) · cron `weekly-city-digest` pzt 05:00 UTC **aktif**. Ölçüm: şehir takip eden üye **0** — ilk hafta kimse mail almaz, özellik duyuruldukça akar. |
+| 7 | **U04: 16 kanıtsız ✅ → 🔒'ya döndürülecek** ("auth gerektiriyor, test hesabı gerekli"). Kullanıcı yaptığını hatırlamıyor; **yalan yeşil kırmızıdan tehlikelidir**. |
+| 8 | **SG (SEO/GEO) serisi listeye GİRSİN — ama `index.html` JSON-LD'ye DOKUNULMAZ.** CLAUDE.md'deki "yalnız raporla, DEĞİŞTİRME" yasağı **aynen geçerli**. Canonical/sitemap/hreflang güvenle koşar. |
+
+### D · Stripe (U11'in cevaplanan kısmı)
+
+| # | Karar |
+|---|---|
+| 9 | 🔴 **ÜRÜN MODELİ `/pricing` SAYFASIDIR, "Kurucu 1000 = 99 €" DEĞİL.** Ölçüm (`src/pages/Pricing.tsx`): üç kademe × aylık/yıllık = **6 fiyat noktası** + 3 Freemium — Danışman Pro **25/20 €** · Kuruluş Pro **50/40 €** · İşletme Pro **75/60 €**. **Hepsi yinelenen abonelik.** K05 notundaki "99 €" ölçülmemiş bir rakamdı; Kurucu 1000 ayrı kampanya olarak SONRA ele alınır. |
+| 10 | **Yalnız EUR · kapsam AB + Türkiye.** Tek para birimi = tek vergi kurgusu. |
+
+⛔ S01 (hesap doğrulama) ve S02 (vergi rejimi) HÂLÂ kullanıcıda/profesyonelde — bkz. U11.
+
+### E · Sıra ve kapsam
+
+| # | Karar |
+|---|---|
+| 11 | **G10c AYRI ONAY ister.** G11 bitince otomatik devam ETME — ölçümü göster, onay al. Kolon düşürmek geri alınamaz. |
+| 12 | **U01: önce 3 edge function yeni anahtar düzenine taşınır, SONRA rotasyon.** Kesintisiz yol. |
+| 13 | **P02 · P04 · P05 · P06 · P07 — HEPSİ ONAYLANDI**, yan ajan koşar. Deploy gerektiren tek madde P04; uygularken ölçüp raporlar. |
+| 14 | **K01 + K04: yan ajan HAZIRLIK DOSYASI yazar** (sade dil + ekran görüntüsü/örnek). **Kod değiştirmez.** ⚠️ K04 aslında soru değil, canlıda duran bir kusurdur — dosyada bu açıkça yazılmalı. |
+| 15 | ✅ **UYGULANDI 04.10** — `caddelogo.png` → `docs/archive/kaynak-gorseller/caddelogo-ozgun.png` (3.169.732 bayt korundu). ⚠️ Kökte **`maillogo.png`**, `ROADMAP.md` ve `sunuekleglobalSKILL.md` hâlâ duruyor — bu turda SORULMADI, dokunulmadı. |
+
+### F · 🔴 DEVİR BİÇİMİ — yan ajan bunu uygular
+
+| # | Karar |
+|---|---|
+| 16 | **Kullanıcı elini gerektiren maddeye gelince DURMA — atla, devam et.** Yapabildiğin her işi bitir; yapamadıklarını **tek bir dosyada**, kanıt ve adım adım talimatla bırak. Kullanıcı hasta; iş durmamalı. |
+
+⛔ **Karar verilemeyen 9 madde** (bunlar için onay arama, sadece listeye yaz):
+**U09** 5 Meta secret'ı · **U06** SMS sağlayıcısı paneli · **U03** iki gerçek mail testi ·
+**W02 / W07** gerçek telefon · **W08** panel erişimi · **S01** Stripe hesap doğrulaması ·
+**S02** vergi rejimi (profesyonel) · **K07** 25 Eylül transkripti (dosya kullanıcıda) ·
+repo dışı ~50 maddenin teyidi.
+
+---
 ## 2 · DURUM PANOSU — açık batch'lerin tamamı
 
 ### A · Ajan yapar, karar gerekmez
