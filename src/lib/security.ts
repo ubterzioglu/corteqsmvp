@@ -6,6 +6,7 @@ const ALLOWED_FILE_EXTENSIONS = new Set([
 
 const CV_ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);
 const PRESENTATION_ALLOWED_EXTENSIONS = new Set(["pdf", "ppt", "pptx", "key"]);
+const LICENSE_ALLOWED_EXTENSIONS = new Set(["pdf", "jpg", "jpeg", "png"]);
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const ARGE_MAX_FILE_SIZE = 50 * 1024 * 1024;
 const DANGEROUS_URL_SCHEMES = /^(javascript|data|vbscript|blob):/i;
@@ -64,6 +65,14 @@ export function validatePresentationFile(file: File): string | null {
   return validateFile(file, {
     allowedExtensions: PRESENTATION_ALLOWED_EXTENSIONS,
     maxSize: ARGE_MAX_FILE_SIZE,
+  });
+}
+
+/** A12: Ruhsat/lisans dosyası doğrulaması (pdf/jpg/png, 20MB). */
+export function validateLicenseFile(file: File): string | null {
+  return validateFile(file, {
+    allowedExtensions: LICENSE_ALLOWED_EXTENSIONS,
+    maxSize: MAX_FILE_SIZE,
   });
 }
 
