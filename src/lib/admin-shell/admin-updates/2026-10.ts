@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261005-rol-yapisi-karari",
+    date: "5 Ekim 2026",
+    title: "Rol yapısı kararı: Mevcut yapı korunacak, sektör etiketleri eklenecek",
+    items: [
+      "KARAR: Rol yapısı için 'Ana Rol → Alt Rol → Uzmanlık' seçici ŞİMDİLİK yapılmayacak. Doktor, Diş Hekimi, İK, Güzellik gibi mesleklerin alt dalları (Kardiyoloji, Nöroloji vb.) henüz hazır değil.",
+      "MEVCUT YAPI KORUNACAK: 82 rol düz liste halinde kalacak (Consultant_LawTax, Business_RestaurantCafe vb.). Kod değişikliği yok, risk yok.",
+      "SEKTÖR ETİKETLERİ EKLENECEK: Meslek gruplarına sektör etiketi eklenecek. Örnek: Doktor/Diş Hekimi/Psikolog = 'Sağlık', Restoran/Kafe/Pastane = 'Gastronomi'. Kullanıcılar sektöre göre filtreleyebilecek.",
+      "UZMANLIK İÇİN AYRI ROL YOK: 'Kardiyoloji' gibi uzmanlıklar ayrı rol satırı açılmayacak, mevcut etiket sistemi yeterli. Doktor rolünün etiketi olarak kalacak.",
+      "GELECEKTE DEĞİŞEBİLİR: Bu karar şimdiki kolaylık için. İleride hiyerarşik yapıya geçilirse 82 rol + binlerce kullanıcı kaydı göç edilmeli (büyük iş).",
+    ],
+  },
+  {
     id: "20261005-gunun-ozeti-whatsapp-otp-seo-gizli-anahtar",
     date: "5 Ekim 2026",
     title: "5 Ekim’in tamamı: WhatsApp botu, telefon doğrulama, SEO düzeltmeleri, açığa çıkmış gizli anahtar",
