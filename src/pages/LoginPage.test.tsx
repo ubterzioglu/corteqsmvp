@@ -298,4 +298,66 @@ describe("LoginPage", () => {
 
     expect(await screen.findByText("Profile Page")).toBeInTheDocument();
   });
+
+  // GV3: SG10 — next parametresi güvenlik testleri
+  it("rejects //evil.com in next parameter (open redirect)", async () => {
+    useAuthMock.mockReturnValue({
+      session: null,
+      isLoading: false,
+    });
+    signInWithOAuthMock.mockResolvedValue({ error: null });
+
+    render(
+      <MemoryRouter initialEntries={["/login?next=//evil.com"]}>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<div>Profile Page</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /google ile giriş yap/i }));
+
+    await waitFor(() => {
+      expect(signInWithOAuthMock).toHaveBeenCalledTimes(1);
+    });
+
+    // //evil.com reddedilmeli, /profile'a yönlendirilmeli
+    expect(signInWithOAuthMock).toHaveBeenCalledWith({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/login`,
+      },
+    });
+  });
+
+  it("rejects /\\evil.com in next parameter (backslash redirect)", async () => {
+    useAuthMock.mockReturnValue({
+      session: null,
+      isLoading: false,
+    });
+    signInWithOAuthMock.mockResolvedValue({ error: null });
+
+    render(
+      <MemoryRouter initialEntries={[`/login?next=%2F%5Cevil.com`]}>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /google ile giriş yap/i }));
+
+    await waitFor(() => {
+      expect(signInWithOAuthMock).toHaveBeenCalledTimes(1);
+    });
+
+    // /\evil.com reddedilmeli
+    expect(signInWithOAuthMock).toHaveBeenCalledWith({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/login`,
+      },
+    });
+  });
 });
