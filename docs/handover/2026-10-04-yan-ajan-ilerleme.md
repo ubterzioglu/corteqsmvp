@@ -184,10 +184,11 @@ where cic.item_id = v_item.id
 ## ⏳ Devam Eden / Kalan İşler
 
 ### 7. G14 — Şikayet akışı
-**Durum:** Başlanmadı  
-**Karmaşıklık:** Orta (migration + UI + G20 entegrasyonu)  
-**Bağımlılıklar:** G04 tamamlandı (telefon doğrulama)  
-**Tahmini süre:** 2-3 saat
+**Durum:** ✅ **TAMAMLANDI** (ea40f63e + 3bf47622 inceleme düzeltmeleri)  
+**Migration:** `20261005200000_group_reports.sql` (CANLIDA) + `20261005300000` deadlock/ASCII fix  
+**Kabul:** 13/13 (group-motor-acceptance.sql)  
+**KALAN (bu turda YAPILMAYACAK):** G16 güvenilir üye kuralı ve G17 sağlık skoru hâlâ `group_reports`'a bakmıyor — ayrı küçük batch  
+**KALAN (karar bekliyor):** G14'ün 4 tasarım kararı `docs/handover/2026-10-05-g14-kullanici-adimlari.md`'de
 
 ---
 
@@ -294,22 +295,31 @@ where cic.item_id = v_item.id
 
 ---
 
-## 🎯 Oturum Özeti (5 Ekim 2026, ~11:30 UTC)
+## 🎯 Oturum Özeti (5 Ekim 2026, ~12:45 UTC)
 
-**Tamamlanan:**
+**Tamamlanan (önceki oturum):**
 - ✅ U04: 16 kanıtsız ✅ → 🔒 (b1b0cbae)
 - ✅ P02+P03: Anon iletişim filtresi (20dd0b56, mig 20261004280000)
 - ✅ W04: WhatsApp bot foundation (ac9d5ec7, mig 20261005100000)
 - ✅ W05: WhatsApp autoreply edge function (b2fdc356)
 - ✅ W06: Webhook triggers autoreply (a5888025)
+- ✅ G14: Grup şikayet sistemi (ea40f63e, mig 20261005200000)
 
-**Toplam:** 6 batch, 8 commit, 2 migration (canlı), 2 kabul testi (14/14 başarılı)
+**Bu oturumda yapılan:**
+- ✅ G14 inceleme düzeltmeleri (3bf47622, mig 20261005300000): deadlock + ASCII + error type
+  - Kabul 13/13 hâlâ yeşil · tam takım 459/3839 · tsc 0 · check:migrations 494/494 sapmasız
 
-**Kalan:** 8 batch (G14, P04-P07, K01+K04, SG, U01, Stripe, G10c, kullanıcı-adımları)
+**Notlar:**
+- W04 migration'ının (`20261005100000`) `schema_migrations` satırı eksikti → G14 ajanı elle ekledi
+- G16 güvenilir üye kuralı ve G17 sağlık skoru hâlâ `group_reports`'a bakmıyor → KALAN (ayrı batch)
 
-**Sonraki ajan için:** G14 ile başla (prompt hazır: docs/handover/2026-10-05-ajan-prompt-g14.md)
+**Toplam:** 8 batch, 10 commit, 4 migration (canlı), 3 kabul testi (hepsi yeşil)
+
+**Kalan:** 7 batch (P04-P07, K01+K04, SG, U01, Stripe, G10c, kullanıcı-adımları)
+
+**Sonraki ajan için:** Stripe (§2.1) → K01+K04 (§2.2) → P04-P07 (§2.3) sırası
 
 ---
 
-**Raporu yazan:** Yan ajan (Claude Sonnet 5.5)  
-**Tarih:** 5 Ekim 2026, ~11:30 UTC
+**Raporu güncelleyen:** İkinci ajan (Claude Sonnet 5.5)  
+**Tarih:** 5 Ekim 2026, ~12:45 UTC
