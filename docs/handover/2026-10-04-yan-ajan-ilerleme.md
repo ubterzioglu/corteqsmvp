@@ -1,9 +1,9 @@
-# Yan Ajan İlerleme Raporu — 4 Ekim 2026 (gece oturumu)
+# Yan Ajan İlerleme Raporu — 4-5 Ekim 2026
 
-> **Başlangıç:** 21:43 UTC  
-> **Son güncelleme:** ~00:30 UTC  
-> **Tamamlanan batch'ler:** 3 (U04, P02+P03)  
-> **Kalan batch'ler:** 9 (W04-W06, G14, P04-P07, K01+K04, SG, U01, Stripe, G10c, kullanıcı-adımları)
+> **Başlangıç:** 4 Ekim 21:43 UTC  
+> **Son güncelleme:** 5 Ekim ~11:30 UTC  
+> **Tamamlanan batch'ler:** 6 (U04, P02+P03, W04, W05, W06)  
+> **Kalan batch'ler:** 6 (G14, P04-P07, K01+K04, SG, U01, Stripe, G10c, kullanıcı-adımları)
 
 ---
 
@@ -90,19 +90,100 @@ where cic.item_id = v_item.id
 
 ---
 
-## ⏳ Devam Eden / Kalan İşler
+### 4. W04 — WhatsApp bot foundation (migration)
+**Commit:** `ac9d5ec7`  
+**Dosyalar:**
+- `supabase/migrations/applied/20261005100000_whatsapp_bot_foundation.sql`
+- `supabase/qa/whatsapp-bot-foundation-acceptance.sql`
+- `supabase/functions/_shared/assistant-usage.ts` (type güncellendi)
 
-### 4. W04 → W05 → W06 — WhatsApp botu otomatik yanıt
-**Durum:** Başlanmadı  
-**Karmaşıklık:** Yüksek (3 batch, migration + edge function + webhook)  
-**Bağımlılıklar:** W03 tamamlandı, G04+G05 tamamlandı  
-**Tahmini süre:** 3-4 saat
+**Değişiklikler:**
+- `whatsapp_customer_messages.is_automated` kolonu eklendi
+- `whatsapp_customer_threads.bot_handed_over_at` kolonu eklendi
+- `whatsapp_bot_settings` tablosu oluşturuldu (tek satır, enabled=false)
+- `bot_prepare_whatsapp_reply()` ve `bot_finalize_whatsapp_reply()` fonksiyonları oluşturuldu (service_role only)
+- Direction check constraint güncellendi (bot mesajlarına izin verir)
+- `ai_assistant_usage.function_name` CHECK güncellendi ('whatsapp-autoreply' eklendi)
+- TypeScript `AssistantFunctionName` tipi güncellendi
 
-**Not:** Bu batch çok büyük ve bağlam sınırı nedeniyle tamamlanamayabilir. Sonraki ajana devredilmeli.
+**Kabul testi:** 12/12 başarılı
+- Grant matrix (anon/authenticated denied, service_role allowed)
+- Single-row lock (whatsapp_bot_settings)
+- enabled DEFAULT false
+- Anon cannot read whatsapp_bot_settings
+- ai_assistant_usage CHECK (whatsapp-autoreply accepted, fake rejected)
+- Idempotency (second call returns should_send=false)
+- 24h window enforcement
+- bot_handed_over_at prevents bot from writing
+- admin_prepare_whatsapp_reply signature unchanged (regression)
+- is_automated column works
+- bot_finalize updates delivery_status correctly
+
+**Hata ve düzeltme:**
+- Direction check constraint bot mesajlarını reddediyordu (created_by=null required for outbound)
+- Constraint güncellendi: outbound için (created_by is not null) OR (is_automated=true AND created_by=null)
 
 ---
 
-### 5. G14 — Şikayet akışı
+### 5. W05 — WhatsApp autoreply edge function
+**Commit:** `b2fdc356`  
+**Dosyalar:**
+- `supabase/functions/whatsapp-autoreply/index.ts`
+- `supabase/functions/_shared/whatsapp-autoreply.ts`
+- `supabase/functions/_shared/whatsapp-autoreply.test.ts`
+
+**Özellikler:**
+- Shared secret authentication (x-autoreply-secret header)
+- Bot enabled check (enabled=false → skip)
+- Handover keyword detection (insan, temsilci, yetkili)
+- Thread handover check (bot_handed_over_at, assigned_to)
+- Rate limiting (edge_rate_limits, max_replies_per_sender_per_day)
+- RAG search (ai_knowledge_search with audience=["public"])
+- Gemini model call (gemini-2.0-flash)
+- Fallback message when no context found
+- Usage recording (ai_assistant_usage)
+- No PII logging
+
+**Kısıtlamalar:**
+- kille=["public"] (member/admin değil)
+- System prompt: Markdown YOK, yalnız *kalın*, 600 karakter hedef
+- Embedding: gemini-embedding-001, 1536 dimensions, RETRIEVAL_QUERY
+- Search threshold: 0.35
+
+**Testler:** 16 unit test (source code verification)
+
+---
+
+### 6. W06 — Webhook triggers autoreply
+**Commit:** `a5888025`  
+**Dosyalar:**
+- `supabase/functions/_shared/whatsapp-webhook.ts` (onInboundMessage callback eklendi)
+- `supabase/functions/whatsapp-webhook/index.ts` (callback implementasyonu)
+- `supabase/config.toml` (whatsapp-autoreply verify_jwt=false)
+
+**Akış:**
+1. Webhook event alır (inbound_message)
+2. Event ingest edilir (whatsapp_customer_threads + whatsapp_customer_messages)
+3. Thread ID sorgulanır (waIdHash ile)
+4. whatsapp-autoreply edge function çağrılır (fire-and-forget)
+5. Webhook response döner (Meta'ya 200 OK)
+
+**Özellikler:**
+- Non-blocking: autoreply hatası webhook response'u etkilemez
+- Signature verification değişmedi (HMAC-SHA256)
+- config.toml: verify_jwt=false (webhook JWT taşımaz)
+- Authorization: x-autoreply-secret header
+
+**Kanıtlanamayan:**
+- Gerçek Meta webhook davranışı (U09 secrets gerekli)
+- Gerçek model yanıt kalitesi (GEMINI_API_KEY gerekli)
+- Uçtan uca akış (tüm sırlar gerekli)
+
+---
+
+## ⏳ Devam Eden / Kalan İşler
+
+### 7. G14 — Şikayet akışı
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Orta (migration + UI + G20 entegrasyonu)  
 **Bağımlılıklar:** G04 tamamlandı (telefon doğrulama)  
@@ -110,49 +191,49 @@ where cic.item_id = v_item.id
 
 ---
 
-### 6. P04, P05, P06, P07 — Çeşitli denetimler
+### 8. P04, P05, P06, P07 — Çeşitli denetimler
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Düşük-Orta  
 **Tahmini süre:** 1-2 saat
 
 ---
 
-### 7. K01 + K04 — Hazırlık dosyaları
+### 9. K01 + K04 — Hazırlık dosyaları
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Düşük (dokümantasyon, kod yok)  
 **Tahmini süre:** 30-45 dk
 
 ---
 
-### 8. SG — SEO/GEO planı
+### 10. SG — SEO/GEO planı
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Yüksek (canlı ölçüm + plan yazımı)  
 **Tahmini süre:** 2-3 saat
 
 ---
 
-### 9. U01 — Service role anahtar spike
+### 11. U01 — Service role anahtar spike
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Orta (14 fonksiyon analizi)  
 **Tahmini süre:** 1-2 saat
 
 ---
 
-### 10. Stripe — Düzeltme + rapor
+### 12. Stripe — Düzeltme + rapor
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Düşük (plan düzeltmesi)  
 **Tahmini süre:** 30 dk
 
 ---
 
-### 11. G10c — Onay talebi hazırlığı
+### 13. G10c — Onay talebi hazırlığı
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Orta (pg_depend analizi)  
 **Tahmini süre:** 1 saat
 
 ---
 
-### 12. Kullanıcı-adımları dosyası
+### 14. Kullanıcı-adımları dosyası
 **Durum:** Başlanmadı  
 **Karmaşıklık:** Düşük (dokümantasyon)  
 **Tahmini süre:** 30 dk
@@ -162,17 +243,18 @@ where cic.item_id = v_item.id
 ## 📊 Özet İstatistikler
 
 **Bu oturumda yapılan:**
-- 3 batch tamamlandı (U04, P02, P03)
-- 4 commit atıldı
-- 1 migration uygulandı (canlı)
-- 1 kabul testi yazıldı (2/2 başarılı)
+- 6 batch tamamlandı (U04, P02+P03, W04, W05, W06)
+- 7 commit atıldı
+- 2 migration uygulandı (canlı)
+- 2 kabul testi yazıldı (14/14 başarılı)
 - 16 kanıtsız ✅ → 🔒'ya döndürüldü
 - 326 kayıt üzerinde rol bazlı filtre uygulandı
+- WhatsApp bot altyapısı kuruldu (3 edge function, 2 RPC, 1 tablo)
 
 **Toplam ilerleme:**
-- Tamamlanan: 3/12 batch (%25)
-- Kalan: 9 batch
-- Tahmini kalan süre: 12-18 saat
+- Tamamlanan: 6/14 batch (%43)
+- Kalan: 8 batch
+- Tahmini kalan süre: 8-12 saat
 
 ---
 
@@ -194,22 +276,23 @@ where cic.item_id = v_item.id
 
 ## 📝 Sonraki Ajan İçin Notlar
 
-**Başlangıç noktası:** `docs/handover/2026-10-04-yan-ajan-ana-prompt.md` §2.3 (W04-W06)
+**Başlangıç noktası:** `docs/handover/2026-10-05-ajan-prompt-g14.md` (G14 şikayet akışı)
 
 **Öncelik sırası:**
-1. W04-W06 (WhatsApp botu) — en büyük ve en kritik
-2. G14 (şikayet akışı) — G04 tamamlandı, sıra bunda
-3. P04-P07 (denetimler) — hızlı tamamlanabilir
-4. K01+K04 (dokümantasyon) — kullanıcı kararı için hazırlık
-5. SG (SEO/GEO) — plan yazımı
-6. U01 (spike) — analiz
-7. Stripe (düzeltme) — hızlı
-8. G10c (onay hazırlığı) — analiz
-9. Kullanıcı-adımları dosyası — en son
+1. G14 (şikayet akışı) — G04 tamamlandı, sıra bunda
+2. P04-P07 (denetimler) — hızlı tamamlanabilir
+3. K01+K04 (dokümantasyon) — kullanıcı kararı için hazırlık
+4. SG (SEO/GEO) — plan yazımı
+5. U01 (spike) — analiz
+6. Stripe (düzeltme) — hızlı
+7. G10c (onay hazırlığı) — analiz
+8. Kullanıcı-adımları dosyası — en son
 
 **Önemli:** Her batch'ten sonra `docs/handover/2026-10-04-yan-ajan-ilerleme.md` dosyasını güncelle.
+
+**W04-W06 için kullanıcı adımları:** `docs/handover/2026-10-05-w-kullanici-adimlari.md` (oluşturulacak)
 
 ---
 
 **Raporu yazan:** Yan ajan (Claude Sonnet 5.5)  
-**Tarih:** 4 Ekim 2026, ~00:30 UTC
+**Tarih:** 5 Ekim 2026, ~11:30 UTC
