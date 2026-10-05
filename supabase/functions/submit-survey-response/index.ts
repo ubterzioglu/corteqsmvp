@@ -154,7 +154,13 @@ Deno.serve(async (req) => {
     }
 
     const ip = getClientIp(req);
-    const ipHashInput = `${ip}:${Deno.env.get("SURVEY_IP_HASH_SALT") ?? "default-salt"}`;
+    // O5: Salt yoksa fail-closed (güvenlik)
+    const salt = Deno.env.get("SURVEY_IP_HASH_SALT");
+    if (!salt) {
+      console.error("SURVEY_IP_HASH_SALT not configured");
+      return json({ error: "Service not configured" }, 500);
+    }
+    const ipHashInput = `${ip}:${salt}`;
     const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ipHashInput));
     const ipHash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 
@@ -198,8 +204,16 @@ Deno.serve(async (req) => {
 
     const answers = Array.isArray(payload.answers) ? payload.answers : [];
     const answerMap = new Map<string, unknown>();
+    // O5: Tekrar eden questionId reddet
+    const seenQuestionIds = new Set<string>();
     for (const answer of answers) {
-      if (answer?.questionId) answerMap.set(answer.questionId, answer.value);
+      if (answer?.questionId) {
+        if (seenQuestionIds.has(answer.questionId)) {
+          return json({ error: "Duplicate questionId", questionId: answer.questionId }, 400);
+        }
+        seenQuestionIds.add(answer.questionId);
+        answerMap.set(answer.questionId, answer.value);
+      }
     }
 
     for (const question of questions ?? []) {

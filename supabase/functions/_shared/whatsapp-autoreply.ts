@@ -222,6 +222,23 @@ export async function handleWhatsAppAutoReply(
       .eq("id", request.threadId);
   }
 
+  // O6: Çıktı filtresi — zararlı içerik kontrolü
+  const harmfulPatterns = [
+    /https?:\/\/[^\s]+/i, // URL'ler (phishing önleme)
+    /\b\d{10,}\b/, // 10+ haneli sayılar (telefon, kredi kartı)
+    /\b(password|şifre|parola|secret|anahtar)\b/i, // Hassas kelimeler
+  ];
+  for (const pattern of harmfulPatterns) {
+    if (pattern.test(responseText)) {
+      responseText = settings.fallback_message;
+      await supabase
+        .from("whatsapp_customer_threads")
+        .update({ bot_handed_over_at: new Date().toISOString(), status: "new" })
+        .eq("id", request.threadId);
+      break;
+    }
+  }
+
   // 8. Decrypt recipient
   let recipientPhone: string;
   try {
@@ -255,7 +272,8 @@ export async function handleWhatsAppAutoReply(
       status: "error",
       httpStatus: 500,
     });
-    return { success: false, error: prepareError?.message || "prepare_failed" };
+    // O6: Ham hata mesajı dönülmez
+    return { success: false, error: "prepare_failed" };
   }
 
   const prepareResult = prepareData[0];
