@@ -121,3 +121,55 @@ kadar güncel ağaçta duruyordu. "Anahtar dışarı sızmadı" varsayımı **ge
 - Anahtarın **kötüye kullanılıp kullanılmadığı** ölçülmedi (Auth/REST erişim günlüğü
   incelemesi ayrı iş; 04.10 erişim logu raporu K12 ile ilişkili olabilir).
 - Tarama desen tabanlıdır; kısa (<16 karakter) veya biçimsiz sırları kaçırabilir.
+
+---
+
+## P06 · Türkçe collate ölçümü
+
+**Sonuç: canlı ölçüm bu oturumda YAPILAMADI** — canlı DB'ye `psql` çağrısı oturumun izin
+denetçisi tarafından reddedildi (salt-okunur SQL olmasına rağmen). Yeniden denenmedi,
+dolanılmadı. Yerine: önceki ölçümün yöntemi incelendi ve yerel ICU ile sınandı.
+
+### 🔴 A08c'nin "tr-TR-x-icu gerekmiyor" sonucu büyük olasılıkla YANLIŞ
+
+A08c (`7e79be4`, 29.09) canlıda yalnız **tek harf çiftlerini** ölçtü:
+`c<ç<d · g<ğ<h · h<ı<i<j · I<İ<J · o<ö<p · s<ş<t · u<ü<v` → "7/7 doğru". Bu yöntem kusuru
+ayırt EDEMEZ: ICU `en_US` Türkçe harfleri ayrı harf değil, **aksanlı varyant** (ikincil
+fark) sayar. Tek harfte ikincil fark sırayı yine doğru verir; **kelimede** birincil fark
+(sonraki harf) önce gelir ve sıra bozulur.
+
+Yerel ölçüm (Node `Intl.Collator`, ICU 78.2 / CLDR 48 — Postgres ICU ile aynı CLDR kuralları,
+farklı sürüm):
+
+| Çift (Türkçede SOL < SAĞ) | `en-US` | `tr` |
+|---|---|---|
+| `c` / `ç` | ✅ | ✅ |
+| `Cuma` / `Çay` | ❌ (Çay önce) | ✅ |
+| `Su` / `Şeker` | ❌ | ✅ |
+| `Ok` / `Ödül` | ❌ | ✅ |
+| `Uzun` / `Ümit` | ❌ | ✅ |
+| `Gaz` / `Ğa` | ❌ | ✅ |
+| `ılık` / `ip` | ❌ (ı'yı i'den sonra koyar) | ✅ |
+| `Isparta` / `İzmir` | ✅ | ✅ |
+
+13 kelimelik liste: `en-US` → `Çay < Cuma < Iğdır < ip < Isparta < İzmir < ılık < Ödül < Ok
+< Şeker < Su < Ümit < Uzun` · `tr` → `Cuma < Çay < Iğdır < ılık < Isparta < ip < İzmir < Ok <
+Ödül < Su < Şeker < Uzun < Ümit`. **Tek harf testi geçiyor, kelime testi 6/7 düşüyor.**
+
+### Etki (kod okuması)
+
+Sunucu sıralaması bugün `src/lib/dashboard/command-center-items/queries.ts:70`
+(`query.order(order.column, …)`) üzerinden — A08b'nin sıralanabilir başlıkları. Başlık/metin
+kolonuna göre sıralanan Komuta Merkezi listesi Ç/Ş/Ö/Ü/Ğ/ı ile başlayan kayıtları yanlış
+yere koyar. Kullanıcıya veri kaybı yok, yalnız sıra; **önem: düşük-orta.**
+
+### Yapılan / kalan
+
+- Hazır ölçüm dosyası: `docs/operations/2026-10-05-p06-turkce-collate-olcum.sql`
+  (salt-okunur; 7 kelime çifti × varsayılan/`tr-TR-x-icu` + 54 satırlık `cadde_cities`
+  ayrışma sayısı). **Kullanıcı ya da DB izni olan oturum koşmalı.**
+- Canlı ölçüm `varsayilan_dogru = false` gösterirse düzeltme seçenekleri (karar + migration
+  gerektirir, bu batch'te YAPILMADI): (a) sıralanan metin kolonlarına
+  `collate "tr-TR-x-icu"` (kolon tanımı veya sıralı view), (b) PostgREST `.order()`
+  collate desteklemediği için sıralamayı bir RPC/view'a taşımak.
+- KALANLAR'daki A08c satırı ("tr-TR-x-icu gerekmedi") bu ölçüm koşulana dek **şüpheli**.
