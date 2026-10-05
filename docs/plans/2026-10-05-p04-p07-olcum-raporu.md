@@ -173,3 +173,22 @@ yere koyar. Kullanıcıya veri kaybı yok, yalnız sıra; **önem: düşük-orta
   `collate "tr-TR-x-icu"` (kolon tanımı veya sıralı view), (b) PostgREST `.order()`
   collate desteklemediği için sıralamayı bir RPC/view'a taşımak.
 - KALANLAR'daki A08c satırı ("tr-TR-x-icu gerekmedi") bu ölçüm koşulana dek **şüpheli**.
+
+---
+
+## P07 · A09a · A10b · A11a/b · A12b · A99 — tanımlar ve durum
+
+**Sonuç: P07 listesi BAYAT.** Planın (`tidy-cactus.md`, 28.09) saydığı beş maddenin beşi
+de 28–30.09'da kapanmış; KALANLAR "Kapananlar" tablosunda kanıtlarıyla duruyor. Yeni iş
+YOK; yalnız bugün yeniden ölçülebilenler ölçüldü.
+
+| Madde | Tanım (kaynak) | Kapanış kanıtı (git) | 05.10 yeniden ölçüm |
+|---|---|---|---|
+| **A09a** bucket MIME | `revision-attachments` kovasına belge MIME'ları (KALANLAR Kapananlar) | `1a3a5ea` (29.09) mig `20260929120000` `applied/`'da · A09b `7624e78` · A09c `c8ed5ff` | ❌ yapılamadı — kova ayarı yalnız service anahtarı/DB ile okunur, DB çağrısı bu oturumda izinsiz |
+| **A10b** | ⚠️ KALANLAR'da **tanımı YOK** (yalnız A10 satırı). Tanım geçmişte: `70201ec9` → "A10b · Forma bağla + URL alanını değiştir (~20 dk)" (etkinlik kapağı) | `96abd0a6` (28.09) "kapak gorseli yukleme - ham URL kutusu kaldirildi (A10a+A10b)" · kova `cf8db1a` | kod ağaçta (`EventCoverUpload.tsx`); canlı ekran denenmedi |
+| **A11a/b** cadde sil/düzenle RPC | `delete_cadde_post_v1` + `update_cadde_post_v1` | `9044dfd` mig `20260929130000` · `908170d` mig `20260929140000` (ikisi de `applied/`'da) · CD04 (03.10) canlı kabul 10/10 | ❌ `prosecdef` yeniden ölçülemedi (DB izni) |
+| **A12b** site-assistant sayfa bağlamı | `askSiteAssistant(messages, pageContext)` | `299608c` (30.09) | ✅ `site-assistant` **v22 ACTIVE `verify_jwt=true`** (Management API, 05.10) — A12b'deki v19'dan sonra 3 deploy daha olmuş (N05 vb.) |
+| **A99** Radar | bayat kilit + `verify_jwt` düzeltmesi | `f6b5c6f` (28.09) · `86c1f63` (30.09) · 30.09 08:39 uçtan uca 125 aday | ✅ `radar-news-scan` **v36 ACTIVE `verify_jwt=false`** (30.09 07:36 UTC) · ❌ son koşu/aday sayısı yeniden ölçülemedi (admin tablosu, DB izni) |
+
+**Kanıtlanamayan:** Bu oturumda canlı DB okunamadığı için A09a/A11 ve Radar'ın **bugün**
+de sağlıklı olduğu yeniden kanıtlanmadı; kanıt 28–30.09 ölçümleridir.
