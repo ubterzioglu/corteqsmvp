@@ -134,7 +134,7 @@ export function buildProfileSidebarMenu(sections: ProfileSidebarSections): Sideb
     },
     {
       id: "access",
-      label: "Erişim & Talepler",
+      label: "Rol Talepleri",
       icon: <KeyRound className="h-4 w-4" />,
       content: sections.accessCard,
     },
