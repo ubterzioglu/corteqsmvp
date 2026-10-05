@@ -53,6 +53,7 @@ import { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTab
 import { ProfileAccessCard } from "@/components/profile/ProfileAccessCard";
 import { ProfileDocumentCard } from "@/components/profile/ProfileDocumentCard";
 import { ProfileFieldsCard } from "@/components/profile/ProfileFieldsCard";
+import { PhoneVerificationCard } from "@/components/profile/PhoneVerificationCard";
 import { ProfileHelpCard } from "@/components/profile/ProfileHelpCard";
 import { ProfileLegacyHeroCard } from "@/components/profile/ProfileLegacyHeroCard";
 import { ProfileLegacySummaryCard } from "@/components/profile/ProfileLegacySummaryCard";
@@ -495,6 +496,9 @@ const ProfilePage = () => {
     />
   ) : null;
 
+  // G05: ilgi alanları kartı alanlar kartının HEMEN altında kalmalı (test) → doğrulama ikisinin altında.
+  const phoneVerificationCard = displayNameAttribute ? <PhoneVerificationCard /> : null;
+
   const badgesCard = featureToggleCards.length ? (
     <Card className={GOOGLE_SOFT_CARD_GREEN_SECTION}>
       <CardHeader className="pb-2">
@@ -534,6 +538,7 @@ const ProfilePage = () => {
     <div className="flex flex-col gap-4">
       {profileFieldsCard}
       {interestsCard}
+      {phoneVerificationCard}
     </div>
   );
 
@@ -717,6 +722,7 @@ const ProfilePage = () => {
           gettingStartedCard,
           profileFieldsCard,
           interestsCard,
+          phoneVerificationCard,
           badgesCard,
           caddeCards,
           socialMediaCard,

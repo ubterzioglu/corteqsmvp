@@ -2,6 +2,22 @@ import type { MetaReplyPayload } from "./whatsapp-reply.ts";
 
 export const DEFAULT_GRAPH_VERSION = "v26.0";
 
+/** AUTHENTICATION şablonu (kod gövde + "Copy code" butonu); bkz. phone-otp-hook.ts. */
+export type OtpTemplatePayload = {
+  messaging_product: "whatsapp";
+  recipient_type: "individual";
+  to: string;
+  type: "template";
+  template: {
+    name: string;
+    language: { code: string };
+    components: Array<
+      | { type: "body"; parameters: Array<{ type: "text"; text: string }> }
+      | { type: "button"; sub_type: "url"; index: "0"; parameters: Array<{ type: "text"; text: string }> }
+    >;
+  };
+};
+
 export interface GraphSendConfig {
   accessToken: string;
   phoneNumberId: string;
@@ -19,7 +35,7 @@ export function buildGraphMessagesUrl(config: GraphSendConfig): string {
 
 export async function sendGraphMessage(
   config: GraphSendConfig,
-  payload: MetaReplyPayload,
+  payload: MetaReplyPayload | OtpTemplatePayload,
   fetchImpl: typeof fetch = fetch,
 ): Promise<string> {
   const response = await fetchImpl(buildGraphMessagesUrl(config), {

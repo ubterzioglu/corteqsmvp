@@ -23,6 +23,8 @@ export type ProfilePremiumSections = {
   gettingStartedCard?: ReactNode;
   profileFieldsCard: ReactNode;
   interestsCard: ReactNode;
+  /** G05: telefon doğrulama (WhatsApp OTP) — ilgi alanları kartının altında. */
+  phoneVerificationCard?: ReactNode;
   badgesCard: ReactNode;
   caddeCards: ReactNode;
   socialMediaCard: ReactNode;
@@ -108,6 +110,7 @@ export default function ProfilePremiumLayout({
         <div className="flex min-w-0 flex-col gap-4 lg:col-span-8">
           {sections.profileFieldsCard}
           {sections.interestsCard}
+          {sections.phoneVerificationCard}
           {sections.badgesCard}
           {sections.caddeCards}
           {sections.socialMediaCard}

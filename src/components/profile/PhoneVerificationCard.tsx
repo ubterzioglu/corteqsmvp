@@ -1,9 +1,9 @@
 // G05 · Telefon doğrulama kartı — profil sayfasında telefon doğrulama akışı.
 //
 // 🔴 AMAÇ: Mevcut hesaba telefon eklemek + doğrulamak. Phone sign-up/sign-in KAPALI.
-// 🔴 Akış: Telefon gir → Kod gönder → Kodu doğrula → user_verifications'a aynalanır.
-// 🔴 HIZ SINIRI: Auth'un yerleşik sınırları geçerli. DB'de gözlem yapılır, enforcement YOK.
-//    Kullanıcı başına 5/gün, 3/saat politikası ENFORCED değil — KARAR GEREKİR.
+// 🔴 Akış: Telefon gir → Kod WhatsApp'a gider → Kodu doğrula → user_verifications'a aynalanır.
+// 🔴 HIZ SINIRI sunucuda (Send SMS hook + group_settings otp_rate_limits satırı); bu kart
+//    yalnız sonucu gösterir.
 
 import { useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -20,6 +20,8 @@ import {
   PHONE_VERIFICATION_ERROR_MESSAGES,
 } from "@/lib/phone-verification-api";
 
+const RESEND_COOLDOWN_SECONDS = 60;
+
 export interface PhoneVerificationCardProps {
   className?: string;
 }
@@ -33,6 +35,7 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [codeSent, setCodeSent] = useState(false);
+  const [resendLeft, setResendLeft] = useState(0);
 
   const { data: status, isLoading } = useQuery({
     queryKey: ["phone-verification-status"],
@@ -48,6 +51,13 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
     }
   }, [status?.isVerified]);
 
+  // Sunucudaki yeniden gönderme beklemesiyle (60 sn) aynı süre: düğme boşuna sınıra çarpmasın.
+  useEffect(() => {
+    if (resendLeft <= 0) return undefined;
+    const timer = setTimeout(() => setResendLeft((current) => current - 1), 1000);
+    return () => clearTimeout(timer);
+  }, [resendLeft]);
+
   const handleSendCode = async () => {
     setError(null);
     setSuccess(null);
@@ -56,7 +66,8 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
     try {
       await sendPhoneVerificationCode(phoneInput);
       setCodeSent(true);
-      setSuccess("Doğrulama kodu gönderildi. Telefonunu kontrol et.");
+      setResendLeft(RESEND_COOLDOWN_SECONDS);
+      setSuccess("Doğrulama kodu WhatsApp'a gönderildi. WhatsApp'ını kontrol et.");
       await queryClient.invalidateQueries({ queryKey: ["phone-verification-status"] });
     } catch (err) {
       setError(err instanceof Error ? err.message : PHONE_VERIFICATION_ERROR_MESSAGES.send_failed);
@@ -135,10 +146,10 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
           <div className="space-y-3">
             <div className="rounded-lg bg-blue-50 p-3 dark:bg-blue-950/20">
               <p className="text-xs text-blue-900 dark:text-blue-100">
-                <strong>{phoneInput}</strong> numarasına doğrulama kodu gönderildi.
+                <strong>{phoneInput}</strong> numarasına WhatsApp ile doğrulama kodu gönderildi.
               </p>
               <p className="mt-1 text-xs text-blue-700 dark:text-blue-300">
-                Kodu aşağıya gir.
+                Kodu aşağıya gir. Kodun süresi kısadır; dolarsa yeniden gönderebilirsin.
               </p>
             </div>
             <div className="space-y-2">
@@ -169,6 +180,15 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
                 İptal
               </Button>
             </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full"
+              onClick={handleSendCode}
+              disabled={isSending || isVerifying || resendLeft > 0}
+            >
+              {resendLeft > 0 ? `Kodu tekrar gönder (${resendLeft} sn)` : "Kodu tekrar gönder"}
+            </Button>
           </div>
         ) : (
           <div className="space-y-3">
@@ -179,7 +199,7 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
                   Telefonun henüz doğrulanmamış.
                 </p>
                 <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
-                  Doğrulamak için telefon numaranı gir, sana SMS ile kod göndereceğiz.
+                  Doğrulamak için telefon numaranı gir, sana WhatsApp ile kod göndereceğiz.
                 </p>
               </div>
             </div>

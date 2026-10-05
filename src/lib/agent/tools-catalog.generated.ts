@@ -5,8 +5,8 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 66,
-    "edge_functions": 16,
+    "total": 67,
+    "edge_functions": 17,
     "workers": 2,
     "ui_modules": 47
   },
@@ -476,6 +476,36 @@ export const toolCatalog = {
         "zod": null
       },
       "evidence_path": "supabase/functions/send-notification-emails/index.ts"
+    },
+    {
+      "tool_key": "edge.send_phone_otp_hook",
+      "tool_name": "send-phone-otp-hook",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/send-phone-otp-hook/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "claim_phone_otp_send",
+        "finish_phone_otp_send"
+      ],
+      "limits": {},
+      "http_statuses": [
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/send-phone-otp-hook/index.ts"
     },
     {
       "tool_key": "edge.send_submission_email",
@@ -1489,11 +1519,11 @@ export const toolCatalog = {
       "exports": [
         "PHONE_VERIFICATION_ERROR_MESSAGES",
         "fetchPhoneVerificationStatus",
+        "formatRetryHint",
         "sendPhoneVerificationCode",
         "verifyPhoneVerificationCode"
       ],
       "tables_read_write": [
-        "otp_send_attempts",
         "user_verifications"
       ],
       "rpcs": [],
@@ -5018,6 +5048,21 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/phone-otp-claim-contract.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/phone-otp-hook.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/phone-otp-hook.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/providers-contract.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -5214,6 +5259,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/send-notification-emails/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/send-phone-otp-hook/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

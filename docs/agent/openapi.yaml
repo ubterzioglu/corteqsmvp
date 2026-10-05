@@ -271,6 +271,15 @@ paths:
           description: Yöntem desteklenmiyor
         "500":
           description: Sunucu hatası
+  /functions/v1/send-phone-otp-hook:
+    post:
+      summary: send-phone-otp-hook aracını çalıştır
+      operationId: execute_send_phone_otp_hook
+      x-tool-key: edge.send_phone_otp_hook
+      x-status: active
+      responses:
+        "500":
+          description: Sunucu hatası
   /functions/v1/send-submission-email:
     post:
       summary: send-submission-email aracını çalıştır

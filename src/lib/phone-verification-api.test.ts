@@ -104,6 +104,27 @@ describe("phone-verification-api", () => {
     });
   });
 
+  describe("fetchPhoneVerificationStatus: biçim", () => {
+    it("GoTrue'nun '+'sız sakladığı numarayı '+'lı gösterir", async () => {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({ data: { user: { id: "user-123" } }, error: null } as never);
+      mockSupabase.from = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({
+              data: { phone_e164: "491701234567", phone_verified_at: "2026-10-04T12:00:00Z" },
+              error: null,
+            }),
+          }),
+        }),
+      }) as never;
+
+      const status = await fetchPhoneVerificationStatus();
+
+      expect(status.phone).toBe("+491701234567");
+      expect(status.isVerified).toBe(true);
+    });
+  });
+
   describe("sendPhoneVerificationCode", () => {
     it("giriş yapmamış kullanıcı için hata fırlatır", async () => {
       mockSupabase.auth.getUser.mockResolvedValueOnce({
@@ -194,11 +215,123 @@ describe("phone-verification-api", () => {
       });
       mockSupabase.from = fromMock as never;
 
-      const rateLimitError = new Error("rate limit exceeded");
-      mockSupabase.auth.updateUser.mockRejectedValueOnce(rateLimitError);
+      // GoTrue'nun gerçek sınır yolu: updateUser FIRLATMAZ, `status: 429` taşıyan hata DÖNER.
+      mockSupabase.auth.updateUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: "For security purposes, you can only request this after 52 seconds.", status: 429, code: "over_sms_send_rate_limit" },
+      } as never);
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
         PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited
+      );
+    });
+
+    it("alakasız 'too many requests' hatasını 'çok fazla deneme' saymaz (yanlış pozitif yok)", async () => {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+        error: null,
+      } as never);
+      mockSupabase.from = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+          }),
+        }),
+      }) as never;
+      mockSupabase.auth.updateUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: "Too many requests from this smtp relay", status: 500 },
+      } as never);
+
+      await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
+        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed
+      );
+    });
+
+    it("hook'un retry_after ipucunu kullanıcıya okunur süre olarak iletir", async () => {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+        error: null,
+      } as never);
+      mockSupabase.from = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+          }),
+        }),
+      }) as never;
+      mockSupabase.auth.updateUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: "phone_otp_rate_limited: retry_after=1200" },
+      } as never);
+
+      await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(/20 dk sonra/);
+    });
+
+    it("GoTrue'nun '+'sız sakladığı doğrulanmış numarayı da 'zaten doğrulanmış' sayar", async () => {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+        error: null,
+      } as never);
+      mockSupabase.from = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            // Trigger auth.users.phone'u olduğu gibi yazar: '+'sız.
+            maybeSingle: vi.fn().mockResolvedValue({ data: { phone_e164: "491701234567" }, error: null }),
+          }),
+        }),
+      }) as never;
+
+      await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
+        PHONE_VERIFICATION_ERROR_MESSAGES.same_phone
+      );
+      expect(mockSupabase.auth.updateUser).not.toHaveBeenCalled();
+    });
+
+    function mockNoCurrentPhone() {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123" } },
+        error: null,
+      } as never);
+      mockSupabase.from = vi.fn().mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          eq: vi.fn().mockReturnValue({
+            maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+          }),
+        }),
+      }) as never;
+    }
+
+    it("Send SMS hook'un 429 kodu (hata nesnesi olarak dönse de) 'çok fazla deneme' mesajına eşlenir", async () => {
+      mockNoCurrentPhone();
+      mockSupabase.auth.updateUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: "phone_otp_rate_limited: retry_after=1200" },
+      } as never);
+
+      await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
+        PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited
+      );
+    });
+
+    it("hook'un gönderim hatası (WhatsApp reddi) WhatsApp'a özgü mesajla bildirilir", async () => {
+      mockNoCurrentPhone();
+      mockSupabase.auth.updateUser.mockResolvedValueOnce({
+        data: { user: null },
+        error: { message: "phone_otp_send_failed" },
+      } as never);
+
+      const rejection = sendPhoneVerificationCode("+491701234567");
+      await expect(rejection).rejects.toThrow(PHONE_VERIFICATION_ERROR_MESSAGES.send_failed);
+      await expect(rejection).rejects.toThrow(/WhatsApp/);
+    });
+
+    it("bilinmeyen Auth hatası 'rate limit' sayılmaz, gönderim hatası olarak bildirilir", async () => {
+      mockNoCurrentPhone();
+      mockSupabase.auth.updateUser.mockRejectedValueOnce(new Error("network down"));
+
+      await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
+        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed
       );
     });
   });
@@ -240,6 +373,22 @@ describe("phone-verification-api", () => {
       });
     });
 
+    it("doğrulanacak numara olarak bekleyen new_phone'u kullanır (phone eski/boş kalır)", async () => {
+      mockSupabase.auth.getUser.mockResolvedValueOnce({
+        data: { user: { id: "user-123", phone: "", new_phone: "491701234567" } },
+        error: null,
+      } as never);
+      mockSupabase.auth.verifyOtp.mockResolvedValueOnce({ data: { user: { id: "user-123" } }, error: null } as never);
+
+      await verifyPhoneVerificationCode("123456");
+
+      expect(mockSupabase.auth.verifyOtp).toHaveBeenCalledWith({
+        type: "phone_change",
+        token: "123456",
+        phone: "491701234567",
+      });
+    });
+
     it("hatalı kod için Türkçe mesaj fırlatır", async () => {
       mockSupabase.auth.getUser.mockResolvedValueOnce({
         data: { user: { id: "user-123", phone: "+491701234567" } },
@@ -259,6 +408,18 @@ describe("phone-verification-api", () => {
       await expect(verifyPhoneVerificationCode("wrong")).rejects.toThrow(
         PHONE_VERIFICATION_ERROR_MESSAGES.verify_failed
       );
+    });
+  });
+
+  describe("sözleşme: kota defteri sunucudadır", () => {
+    it("istemci otp_send_attempts'e yazmaz (RLS yazdırmaz; defteri Send SMS hook işletir)", async () => {
+      const { readFileSync } = await import("node:fs");
+      const { resolve } = await import("node:path");
+
+      const apiSource = readFileSync(resolve(__dirname, "phone-verification-api.ts"), "utf8");
+      // Başlık yorumu tabloyu ADIYLA anabilir; yasak olan istemciden sorgulamaktır.
+      expect(apiSource).not.toMatch(/\.from\(\s*["']otp_send_attempts/);
+      expect(apiSource).not.toMatch(/recordOtpAttempt/);
     });
   });
 

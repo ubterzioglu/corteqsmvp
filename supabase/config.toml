@@ -65,3 +65,8 @@ verify_jwt = true
 # deseni). Aynı desen: send-notification-emails, radar-news-scan.
 [functions.group-link-health]
 verify_jwt = false
+# G05: Supabase "Send SMS" Auth Hook -> WhatsApp OTP. Auth hook cagrisi kullanici JWT'si
+# tasimaz; kapi Standard Webhooks imzasidir (SEND_SMS_HOOK_SECRET). verify_jwt=true olursa
+# Auth hook istekleri 401 alir ve hicbir kod gonderilemez.
+[functions.send-phone-otp-hook]
+verify_jwt = false
