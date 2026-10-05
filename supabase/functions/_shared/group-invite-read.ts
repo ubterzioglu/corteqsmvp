@@ -17,6 +17,10 @@
 //
 // ⚠️ Türkçe metin bozulmaz (repo kuralı): og:title HTML varlık kodlu gelir
 // (`Mezunlar&#x131;` → `Mezunları`) — `decodeHtmlEntities` şart (G08 §WhatsApp 2).
+//
+// GV1: SSRF koruması eklendi — safe-invite-fetch.ts kullanılır.
+
+import { safeFetch, safeReadText, SSRFError } from "./safe-invite-fetch.ts";
 
 /** HTML varlık kodlarını çözer: sayısal (dec + hex) + yaygın adlandırılmışlar. */
 export function decodeHtmlEntities(input: string): string {
@@ -115,12 +119,14 @@ type FetchLike = (url: string, init?: { headers?: Record<string, string>; signal
 /**
  * Platforma özel okuma. `invalid` = link kesin ölü; `unknown` = okunamadı
  * (ağ/biçim) — ikisi de doğrulamada deneme SAYMAZ (G08 kural 5).
- * Süre aşımı 15 sn → unknown.
+ * Süre aşımı 10 sn → unknown.
+ *
+ * GV1: SSRF koruması — safe-invite-fetch.ts kullanılır.
  */
 export async function readInvitePage(
   url: string,
   platform: string,
-  fetchImpl: FetchLike = globalThis.fetch as unknown as FetchLike,
+  _fetchImpl?: FetchLike, // Artık kullanılmıyor (safeFetch kullanılıyor)
 ): Promise<InviteRead> {
   const unknown: InviteRead = { result: "unknown", name: null, description: null, image: null };
 
@@ -128,10 +134,11 @@ export async function readInvitePage(
     const code = extractDiscordInviteCode(url);
     if (!code) return unknown;
     try {
-      const response = await fetchImpl(`https://discord.com/api/v10/invites/${code}?with_counts=true`, {
-        headers: { "User-Agent": BROWSER_UA },
-        signal: AbortSignal.timeout(15_000),
-      });
+      // Discord API — safeFetch kullan
+      const response = await safeFetch(
+        `https://discord.com/api/v10/invites/${code}?with_counts=true`,
+        { headers: { "User-Agent": BROWSER_UA } },
+      );
       if (response.status === 404) return { result: "invalid", name: null, description: null, image: null };
       if (!response.ok) return unknown;
       const payload = (await response.json()) as {
@@ -146,19 +153,23 @@ export async function readInvitePage(
       return name
         ? { result: "ok", name, description: null, image }
         : unknown;
-    } catch {
+    } catch (error) {
+      // SSRF hatası veya ağ hatası
+      if (error instanceof SSRFError) {
+        console.warn("readInvitePage SSRF blocked:", error.message);
+      }
       return unknown;
     }
   }
 
   // WhatsApp + Telegram: HTML og:title (Discord dışında API yok)
   try {
-    const response = await fetchImpl(url, {
-      headers: { "User-Agent": BROWSER_UA },
-      signal: AbortSignal.timeout(15_000),
-    });
+    // safeFetch kullan — SSRF koruması ile
+    const response = await safeFetch(url, { headers: { "User-Agent": BROWSER_UA } });
     if (!response.ok) return unknown;
-    const html = await response.text();
+    
+    // safeReadText ile güvenli okuma (gövde boyut tavanı)
+    const html = await safeReadText(response);
     const name = parseOgMeta(html, "og:title");
     const description = parseOgMeta(html, "og:description");
     const image = parseOgMeta(html, "og:image"); // G18: ön doldurma görseli
@@ -180,7 +191,11 @@ export async function readInvitePage(
     }
 
     return unknown; // tanınmayan platform
-  } catch {
+  } catch (error) {
+    // SSRF hatası veya ağ hatası
+    if (error instanceof SSRFError) {
+      console.warn("readInvitePage SSRF blocked:", error.message);
+    }
     return unknown;
   }
 }
