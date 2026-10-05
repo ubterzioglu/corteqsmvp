@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 63,
-    "edge_functions": 15,
+    "total": 66,
+    "edge_functions": 16,
     "workers": 2,
-    "ui_modules": 45
+    "ui_modules": 47
   },
   "tools": [
     {
@@ -613,6 +613,36 @@ export const toolCatalog = {
       "evidence_path": "supabase/functions/submit-survey-response/index.ts"
     },
     {
+      "tool_key": "edge.whatsapp_autoreply",
+      "tool_name": "whatsapp-autoreply",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/whatsapp-autoreply/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [],
+      "limits": {},
+      "http_statuses": [
+        200,
+        400,
+        401,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "gemini"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": null,
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/whatsapp-autoreply/index.ts"
+    },
+    {
       "tool_key": "edge.whatsapp_reply",
       "tool_name": "whatsapp-reply",
       "family": "edge_function",
@@ -653,7 +683,9 @@ export const toolCatalog = {
         "validation": "manual",
         "fields": []
       },
-      "tables_read_write": [],
+      "tables_read_write": [
+        "whatsapp_customer_threads"
+      ],
       "rpcs": [
         "claim_whatsapp_webhook_rate_limit",
         "ingest_whatsapp_webhook_event"
@@ -1225,6 +1257,33 @@ export const toolCatalog = {
       "evidence_path": "src/lib/germany-citizenship-api.ts"
     },
     {
+      "tool_key": "module.group_reports_api",
+      "tool_name": "group-reports-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/group-reports-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "GROUP_REPORT_NOTE_MAX",
+        "GROUP_REPORT_REASONS",
+        "fetchGroupReportQueue",
+        "fetchGroupReportState",
+        "groupReportInputSchema",
+        "groupReportReasonLabel",
+        "reviewGroupReport",
+        "submitGroupReport",
+        "toGroupReportError"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_list_group_reports",
+        "group_report_state_v1",
+        "review_group_report_v1",
+        "submit_group_report_v1"
+      ],
+      "evidence_path": "src/lib/group-reports-api.ts"
+    },
+    {
       "tool_key": "module.interest_registrations_api",
       "tool_name": "interest-registrations-api",
       "family": "ui_module",
@@ -1419,6 +1478,26 @@ export const toolCatalog = {
         "get_current_profile_onboarding_activation"
       ],
       "evidence_path": "src/lib/pending-onboarding-api.ts"
+    },
+    {
+      "tool_key": "module.phone_verification_api",
+      "tool_name": "phone-verification-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/phone-verification-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "PHONE_VERIFICATION_ERROR_MESSAGES",
+        "fetchPhoneVerificationStatus",
+        "sendPhoneVerificationCode",
+        "verifyPhoneVerificationCode"
+      ],
+      "tables_read_write": [
+        "otp_send_attempts",
+        "user_verifications"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/phone-verification-api.ts"
     },
     {
       "tool_key": "module.public_catalog_api",
@@ -3559,6 +3638,21 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-reports-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-reports-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group-reports-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-scheduled-tasks-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3940,6 +4034,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/phone-country-derivation.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/phone-verification-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/phone-verification-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4934,6 +5038,26 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/whatsapp-autoreply.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-autoreply.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-graph.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/whatsapp-graph.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/whatsapp-reply.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -5110,6 +5234,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/submit-survey-response/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/whatsapp-autoreply/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

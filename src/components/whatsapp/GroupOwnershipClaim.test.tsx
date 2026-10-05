@@ -7,8 +7,10 @@
  *   • Kod yolu: kod + talimat + "Kontrol et"; verified → onVerified + tasarımın
  *     "Kodu artık silebilirsin" cümlesi; exhausted → ekran görüntüsü yolu AÇILIR.
  *   • Bekleyen talep sayfa açılışında geri yüklenir (kod/screenshot ayrımıyla).
- *   • "Şikayet et" YOK — backend'i G14'te (ölü düğme çizilmez).
+ *   • "Şikayet et" bu bileşende değil — G14'te ayrı `GroupReportButton` (VAR).
  */
+import { readFileSync } from "node:fs";
+
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -90,10 +92,16 @@ describe("GroupOwnershipClaim · görünürlük", () => {
     expect(screen.getByText("Bu grup sizin mi?")).toBeInTheDocument();
   });
 
-  it("'Şikayet et' YOK — backend G14'te, ölü düğme çizilmez", () => {
+  it("G14: 'Şikayet et' bu bileşende DEĞİL — ayrı GroupReportButton'da VAR ve sayfaya bağlı", () => {
     renderClaim();
 
+    // Sahiplik bölümü şikayet düğmesi taşımaz (iki akış ayrı yuvalarda)...
     expect(screen.queryByText(/Şikayet/i)).not.toBeInTheDocument();
+    // ...düğme kendi bileşeninde VAR ve detay sayfası onu reportSlot'a enjekte ediyor.
+    expect(readFileSync("src/components/whatsapp/GroupReportButton.tsx", "utf8")).toContain("Şikayet et");
+    const page = readFileSync("src/pages/AddWhatsAppPage.tsx", "utf8");
+    expect(page).toContain("reportSlot={");
+    expect(page).toContain("<GroupReportButton");
   });
 });
 

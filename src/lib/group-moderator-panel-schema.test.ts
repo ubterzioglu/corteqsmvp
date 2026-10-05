@@ -8,12 +8,13 @@
  *      G09 doktrini ("eşikler ürün kararıdır, SQL update ister") panelden
  *      delinir — eşikler moderatör ekranından sessizce değişir.
  *   2. **Admin kapısının kalkması** (is_admin → raise).
- *   3. **Şikayet kuyruğu için şema uydurulması.** `group_reports` YOK (G14 ⛔) —
- *      summary'de sayaç sabit 0 döner; tabloya referans G14'ten önce gelemez.
+ *   3. **Şikayet sayacının bayatlaması.** G24'te `group_reports` yoktu (sabit 0);
+ *      G14 tabloyu kurup summary'yi yeniden tanımladı → test EN SON tanımın gerçek
+ *      sayaç olduğunu kilitler (G24 metnine bakmak bayat sonuç verirdi).
  *   4. **cron.job_run_details'ın istemciye doğrudan açılması** (özet RPC'si
  *      security definer olmalı; cron şeması grant'sız kalır).
  */
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
@@ -108,15 +109,27 @@ describe("G24 · group_moderator_summary — üst şerit", () => {
     expect(fn).toContain("group_setting_bool('groups.fast_lane_enabled'");
   });
 
-  it("şikayet sayacı G14'e dek SABİT 0 — group_reports TABLOSUNA bakamaz", () => {
-    const fn = summaryFn();
+  it("G14 ÇEVRİLDİ: şikayet sayacı artık GERÇEK — summary'yi en son G14 tanımlar ve group_reports'tan sayar", () => {
+    // G24 tanımı tarihsel olarak sabit 0'dı (tablo yoktu). G14 fonksiyonu yeniden
+    // tanımladı; bu test G24 metnine değil EN SON tanıma bakar (bayatlama kapanı).
+    expect(summaryFn()).toContain("'pending_reports', 0");
+    const applied = "supabase/migrations/applied/";
+    const definers = readdirSync(applied)
+      .filter((name) => name.endsWith(".sql"))
+      .sort()
+      .filter((name) => readFileSync(applied + name, "utf8").includes("create or replace function public.group_moderator_summary"));
+    const latest = definers.at(-1) ?? "";
 
-    expect(fn).toContain("'pending_reports', 0");
-    // COMMENT metninde "group_reports YOK" ANLATIMI geçer (yasak olan TABLO
-    // ERİŞİMİ): from/join/select kaynağı olarak geçemez.
-    expect(code()).not.toMatch(/from\s+public\.group_reports/i);
-    expect(code()).not.toMatch(/join\s+public\.group_reports/i);
-    expect(code()).not.toMatch(/create table[^;]*group_reports/i);
+    expect(latest).toBe("20261005200000_group_reports.sql");
+    const latestFn = sliceBetween(
+      readFileSync(applied + latest, "utf8"),
+      "create or replace function public.group_moderator_summary",
+      "comment on function public.group_moderator_summary",
+      "G14 summary",
+    );
+    expect(latestFn).toMatch(/from public\.group_reports where status = 'open'/);
+    expect(latestFn).toContain("'pending_reports', v_pending_reports");
+    expect(latestFn).not.toContain("'pending_reports', 0");
   });
 
   it("görev koşuları cron.job_run_details'tan (security definer — istemci cron şemasına erişemez)", () => {

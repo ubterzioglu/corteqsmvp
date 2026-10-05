@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261005-g14-grup-sikayet-sistemi",
+    date: "5 Ekim 2026",
+    title: "Grup şikayet sistemi kuruldu — telefon doğrulaması açılınca kullanılabilecek",
+    items: [
+      "NE GELDİ: Grup sayfasına “Şikayet et” bölümü eklendi. Üye, politikadaki 7 kırmızı çizgiden birini (ölü link, vize/randevu satışı, kripto/MLM, kişisel veri isteme, nefret/taciz, doğrulanmamış çocuk grubu, siyasi kampanya) ya da “Diğer”i seçer; “Diğer”de kısa açıklama zorunlu. Şikayet edenin kimliği grup sahibine hiçbir yoldan gösterilmez — yalnız yöneticiler görür.",
+      "KİM ŞİKAYET EDEBİLİR: Giriş yapmış, telefonu doğrulanmış ve hesabı en az 7 günlük üye. Aynı kişi aynı gruba 30 gün içinde yalnız bir kez şikayet edebilir. Kendi eklediği ya da sahibi olduğu gruba şikayet edemez (bu kişilere düğme hiç gösterilmez). Kurala uymayan şikayet sayılmaz ve saklanmaz.",
+      "EŞİK: Üç farklı uygun hesaptan şikayet gelince grup otomatik olarak dizinden gizlenir ve moderasyon kuyruğuna düşer. Eşik ve diğer sayılar ayarlardan gelir, kodda sabit değildir.",
+      "MODERASYON: /admin/gruplar sayfasındaki “Şikayetler” sekmesi artık dolu: grup bazında sebep dağılımı, kaç farklı kişinin şikayet ettiği, notlar. Onaylanırsa uyarı merdiveni işler (tek onay = tek ihlal; vize satışı, kişisel veri isteme ve çocuk grubu maddeleri ilk seferde kalıcı kaldırma). Reddedilirse ve başka açık şikayet kalmadıysa grup yeniden yayına döner. Kısayollar (A onayla, R reddet, J/K gez) bu sekmede de çalışıyor.",
+      "⚠️ BUGÜN KİMSE ŞİKAYET EDEMEZ: Telefon doğrulaması için SMS sağlayıcısı (Twilio) kimlikleri hâlâ girilmedi; bu yüzden hiçbir üye telefonunu doğrulayamıyor ve sayfada dürüstçe “Şikayet için telefon doğrulaması gerekir” yazıyor. Kimlikler girilip telefon doğrulama kartı profil sayfasına bağlanınca sistem kendiliğinden açılır.",
+      "SİZDEN BEKLEYENLER: (1) SMS sağlayıcı kimlikleri, (2) eşikle gizlenen grubun sahibine ve şikayetçiye mail gitsin mi (bugün gitmiyor), (3) uyarı (1. ihlal) onaylandığında grup otomatik yayına dönsün mü (bugün gizli kalıyor), (4) sebep ↔ kırmızı çizgi eşlemesinin teyidi. Ayrıntı: docs/handover/2026-10-05-g14-kullanici-adimlari.md.",
+      "KANIT: canlı kabul testi 13/13 (geri alınan işlemde gerçek senaryo: 3 uygun hesap grubu gizledi, 2 hesap gizlemedi, 6 günlük ve telefonsuz hesabın şikayeti sayılmadı); aynı kişinin eşzamanlı iki şikayetinden yalnız biri kaydedildi (ölçüldü); kuralı bozan 7 kasıtlı değişikliğin 7'si de testlerce yakalandı; tam test takımı yeşil.",
+    ],
+  },
+  {
     id: "20261004-gunun-ozeti-sade-dille",
     date: "4 Ekim 2026",
     title: "4 Ekim’in tamamı sade dille: ne yapıldı, ne bekliyor",

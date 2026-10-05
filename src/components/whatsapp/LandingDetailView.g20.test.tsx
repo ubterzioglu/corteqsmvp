@@ -5,7 +5,7 @@
  * kaynak dahil) görünmüyor." G03b bunu veri katmanında kapattı (view null +
  * RPC tek kapı); bu test SON kullanıcı yüzeyini kilitler: render edilen DOM'da
  * davet linki izi olamaz. Ek kilitler: boş "Grup koşulları" gizlenir (plan G20)
- * ve "Şikayet et" G14'e kadar çizilmez.
+ * ve "Şikayet et" (G14) yalnız reportSlot yuvasından çizilir.
  */
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
@@ -100,10 +100,29 @@ describe("G20 · plan kapsamı kilitleri", () => {
     expect(screen.getByText("Grup koşulları")).toBeInTheDocument();
   });
 
-  it("'Şikayet et' G14'e kadar çizilmez (ölü düğme yok)", () => {
-    renderDetail({ kind: "signed_out" });
-
+  it("G14: reportSlot verilince 'Şikayet et' bölümü ÇİZİLİR; verilmezse çizilmez", () => {
+    const { unmount } = renderDetail({ kind: "signed_out" });
     expect(screen.queryByText(/Şikayet/i)).not.toBeInTheDocument();
+    unmount();
+
+    render(
+      <MemoryRouter>
+        <TooltipProvider>
+          <LandingDetailView
+            loading={false}
+            landing={landing()}
+            canEdit={false}
+            copied={false}
+            invite={{ kind: "signed_out" }}
+            onBackToList={vi.fn()}
+            onShare={vi.fn()}
+            onRequestSignIn={vi.fn()}
+            reportSlot={<button type="button">Şikayet et</button>}
+          />
+        </TooltipProvider>
+      </MemoryRouter>,
+    );
+    expect(screen.getByRole("button", { name: "Şikayet et" })).toBeInTheDocument();
   });
 
   it("ownershipClaim yuvası verilen bileşeni çizer", () => {

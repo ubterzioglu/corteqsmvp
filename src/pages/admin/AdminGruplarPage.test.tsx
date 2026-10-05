@@ -2,8 +2,8 @@
  * G24 · M5 Moderatör paneli sayfa sözleşmesi (KR08 kalıbı).
  *
  * Kilitler: rota · navigasyon · route-meta ÜÇÜ birden kayıtlı (N03 bayatlama
- * kapanı) · dört kuyruk + kısayollar (A/R/J/K) · şikayet kuyruğu G14'e dek
- * bilinçli boş (uydurma şema yok) · hızlı şerit anahtarı group_settings'e yazar
+ * kapanı) · dört kuyruk + kısayollar (A/R/J/K) · şikayet kuyruğu (G14) dolu ve
+ * kararlar review_group_report_v1'e gider · hızlı şerit anahtarı group_settings'e yazar
  * · yükleme hatası GÖRÜNÜR (KR08: sessiz boş liste "kuyruk boş" sanılır).
  */
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
@@ -42,6 +42,18 @@ vi.mock("@/lib/admin-shell/group-moderation-api", async (importOriginal) => {
     recordStrike: (...args: unknown[]) => strikeSpy(...args),
     setFastLaneEnabled: (...args: unknown[]) => fastLaneSpy(...args),
     createClaimScreenshotUrl: (...args: unknown[]) => screenshotSpy(...args),
+  };
+});
+
+const reportQueueSpy = vi.fn();
+const reviewReportSpy = vi.fn();
+
+vi.mock("@/lib/group-reports-api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group-reports-api")>();
+  return {
+    ...actual,
+    fetchGroupReportQueue: () => reportQueueSpy(),
+    reviewGroupReport: (...args: unknown[]) => reviewReportSpy(...args),
   };
 });
 
@@ -103,6 +115,22 @@ const postRow = {
   group_name: "Test Grup",
 };
 
+const reportItem = {
+  landing_id: "55555555-5555-5555-5555-555555555555",
+  slug: "sikayetli-grup",
+  group_name: "Sikayetli Grup",
+  listing_status: "hidden",
+  hidden_reason: "reports",
+  open_count: 2,
+  distinct_reporters: 2,
+  first_report_at: new Date().toISOString(),
+  reason_counts: { hate_violence_adult: 1, diger: 1 },
+  reports: [
+    { id: "r-1", reason: "hate_violence_adult", note: null, reporter_id: "66666666-6666-6666-6666-666666666666", created_at: new Date().toISOString() },
+    { id: "r-2", reason: "diger", note: "Surekli reklam", reporter_id: "77777777-7777-7777-7777-777777777777", created_at: new Date().toISOString() },
+  ],
+};
+
 const renderPage = async () => {
   const page = await import("@/pages/admin/AdminGruplarPage");
   const AdminGruplarPage = page.default;
@@ -121,6 +149,15 @@ beforeEach(() => {
   strikeSpy.mockResolvedValue("warning");
   fastLaneSpy.mockResolvedValue(undefined);
   screenshotSpy.mockResolvedValue("https://signed.example/kanit");
+  reportQueueSpy.mockResolvedValue([reportItem]);
+  reviewReportSpy.mockResolvedValue({
+    report_id: "r-1",
+    decision: "upheld",
+    closed_reports: 2,
+    strike: { outcome: "warning" },
+    group_republished: false,
+    listing_status: "hidden",
+  });
 });
 
 describe("G24 · kayıt üçlüsü (rota · navigasyon · route-meta)", () => {
@@ -159,12 +196,57 @@ describe("G24 · dört kuyruk tek ekranda", () => {
     expect(await screen.findByText("işaret: vize")).toBeInTheDocument();
   });
 
-  it("şikayet kuyruğu G14'e dek BİLİNÇLİ boş (uydurma şema yok)", async () => {
+  it("G14 ÇEVRİLDİ: şikayet kuyruğu DOLU — grup bazlı, sebep/not/şikayetçi sayısı + kimlik (admin)", async () => {
+    const user = userEvent.setup();
+    summarySpy.mockResolvedValue(summary({ pending_reports: 2 }));
+    await renderPage();
+
+    await user.click(await screen.findByRole("tab", { name: /Şikayetler \(2\)/ }));
+    expect(screen.getByText("Sikayetli Grup")).toBeInTheDocument();
+    expect(screen.getByText("2 farklı şikayetçi")).toBeInTheDocument();
+    expect(screen.getByText("şikayet eşiğiyle gizlendi")).toBeInTheDocument();
+    expect(screen.getByText("Surekli reklam")).toBeInTheDocument();
+    expect(screen.getByText(/şikayetçi: 66666666/)).toBeInTheDocument();
+    expect(screen.queryByText(/G14 batch'inde açılacak/)).not.toBeInTheDocument();
+  });
+
+  it("şikayet: A kısayolu onaylar (tek karar — ilk açık şikayet üzerinden)", async () => {
     const user = userEvent.setup();
     await renderPage();
 
     await user.click(await screen.findByRole("tab", { name: /Şikayetler/ }));
-    expect(screen.getByText(/group_reports.*henüz yok|G14 batch'inde açılacak/)).toBeInTheDocument();
+    await screen.findByText("Sikayetli Grup");
+    fireEvent.keyDown(window, { key: "a" });
+    await waitFor(() => expect(reviewReportSpy).toHaveBeenCalledWith("r-1", "upheld"));
+    expect(reviewReportSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it("şikayet: R → red notu → grubun TÜM açık şikayetleri sırayla reddedilir", async () => {
+    const user = userEvent.setup();
+    await renderPage();
+
+    await user.click(await screen.findByRole("tab", { name: /Şikayetler/ }));
+    await screen.findByText("Sikayetli Grup");
+    fireEvent.keyDown(window, { key: "r" });
+    fireEvent.change(await screen.findByLabelText(/Not \(bildirime/), { target: { value: "Asilsiz" } });
+    fireEvent.click(screen.getByRole("button", { name: /Reddi onayla/ }));
+
+    await waitFor(() => expect(reviewReportSpy).toHaveBeenCalledTimes(2));
+    expect(reviewReportSpy).toHaveBeenNthCalledWith(1, "r-1", "rejected", "Asilsiz");
+    expect(reviewReportSpy).toHaveBeenNthCalledWith(2, "r-2", "rejected", "Asilsiz");
+  });
+
+  it("şikayet: 'Yalnız bunu reddet' tek şikayeti reddeder", async () => {
+    const user = userEvent.setup();
+    await renderPage();
+
+    await user.click(await screen.findByRole("tab", { name: /Şikayetler/ }));
+    const singles = await screen.findAllByRole("button", { name: /Yalnız bunu reddet/ });
+    fireEvent.click(singles[1]);
+    fireEvent.click(screen.getByRole("button", { name: /Reddi onayla/ }));
+
+    await waitFor(() => expect(reviewReportSpy).toHaveBeenCalledWith("r-2", "rejected", undefined));
+    expect(reviewReportSpy).toHaveBeenCalledTimes(1);
   });
 
   it("görev koşuları şeritte — 'succeeded' ETKİ kanıtı değil notu ile", async () => {

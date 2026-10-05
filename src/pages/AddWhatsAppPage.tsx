@@ -12,6 +12,7 @@ import { AddCommunityHero } from "@/components/whatsapp/AddCommunityHero";
 import { CommunityFilters } from "@/components/whatsapp/CommunityFilters";
 import { GroupOwnershipClaim } from "@/components/whatsapp/GroupOwnershipClaim";
 import { GroupOwnerPanel } from "@/components/whatsapp/GroupOwnerPanel";
+import { GroupReportButton } from "@/components/whatsapp/GroupReportButton";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
 import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
 import {
@@ -365,7 +366,7 @@ export default function AddWhatsAppPage() {
    * akışı dönüşte formu açmalı (`openGroupForm=1`), grup KATILMA akışı ise
    * bulunduğu grubun sayfasında kalmalı.
    */
-  const ensureSignedIn = async (intent: "submit_group" | "join_group" | "claim_group") => {
+  const ensureSignedIn = async (intent: "submit_group" | "join_group" | "claim_group" | "report_group") => {
     if (user) return true;
 
     toast({
@@ -375,7 +376,9 @@ export default function AddWhatsAppPage() {
           ? "Grup eklemek için önce üye olmalısınız. Google ile giriş yapılıyor..."
           : intent === "claim_group"
             ? "Sahiplik doğrulaması için önce üye olmalısınız. Google ile giriş yapılıyor..."
-            : "Davet linkini görmek için önce üye olmalısınız. Google ile giriş yapılıyor...",
+            : intent === "report_group"
+              ? "Şikayet için önce üye olmalısınız. Google ile giriş yapılıyor..."
+              : "Davet linkini görmek için önce üye olmalısınız. Google ile giriş yapılıyor...",
     });
 
     const nextParams = new URLSearchParams(searchParams);
@@ -627,6 +630,16 @@ export default function AddWhatsAppPage() {
                 onVerified={() => setLandingRefreshKey((key) => key + 1)}
               />
             </>
+          ) : null
+        }
+        reportSlot={
+          selectedLanding ? (
+            // G14: girişsiz → giriş (dönüş aynı grup sayfasına) · kendi grubunda çizilmez.
+            <GroupReportButton
+              landing={selectedLanding}
+              isSignedIn={Boolean(user)}
+              onRequestSignIn={() => void ensureSignedIn("report_group")}
+            />
           ) : null
         }
       />

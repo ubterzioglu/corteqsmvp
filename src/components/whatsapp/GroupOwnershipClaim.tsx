@@ -36,9 +36,8 @@ interface GroupOwnershipClaimProps {
  *   2. EKRAN GÖRÜNTÜSÜ (yedek): private kovaya kendi klasörüne yükler →
  *      moderatör kuyruğu (`claim_pending`).
  *
- * ⚠️ "Şikayet et" BU BATCH'TE YOK: `group_reports` canlıda yok (G14 ⛔ G04/U06)
- * — backend'i olmayan buton çizilmez (ölü düğme dark pattern'dir). G14 gelince
- * bu bileşenin yanına eklenecek (sözleşme testi bugünü kilitler).
+ * "Şikayet et" bu bileşende DEĞİL: G14'te ayrı `GroupReportButton` olarak
+ * detay sayfasının `reportSlot` yuvasına, bu bölümün yanına eklendi.
  */
 export function GroupOwnershipClaim({
   landing,

@@ -1,7 +1,7 @@
 // G24 · M5 Moderatör paneli — tasarım §10: TEK ekran, dört kuyruk.
 //
 //   Yeni gruplar (pending_review) · Sahiplik talepleri (ekran görüntüsü yöntemi)
-//   · Şikayetler (⚠️ G14'e dek boş — group_reports YOK, şema uydurulmaz)
+//   · Şikayetler (G14 — admin_list_group_reports, grup bazlı; karar review_group_report_v1)
 //   · Gönderiler (pending_platform)
 //
 // Kısayollar: J/K sonraki-önceki · A onayla · R reddet (hazır sebep listesi).
@@ -55,8 +55,15 @@ import {
   type PendingGroupRow,
   type PendingPostRow,
 } from "@/lib/admin-shell/group-moderation-api";
+import {
+  fetchGroupReportQueue,
+  reviewGroupReport,
+  type GroupReportQueueItem,
+  type GroupReportQueueReport,
+} from "@/lib/group-reports-api";
 import { getCategoryMeta } from "@/lib/whatsapp-landing-presentation";
 import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+import { AdminGruplarPageReportsTab } from "@/pages/admin/AdminGruplarPageReportsTab";
 
 type QueueTab = "groups" | "claims" | "reports" | "posts";
 
@@ -65,6 +72,7 @@ type RejectTarget =
   | { kind: "group"; row: PendingGroupRow }
   | { kind: "claim"; row: PendingClaimRow }
   | { kind: "post"; row: PendingPostRow }
+  | { kind: "reports"; row: GroupReportQueueItem; only?: GroupReportQueueReport }
   | null;
 
 /** Uyarı (strike) akışı: G15 merdiveni — gerekçe + opsiyonel kırmızı çizgi. */
@@ -83,6 +91,7 @@ export default function AdminGruplarPage() {
   const [groups, setGroups] = useState<PendingGroupRow[]>([]);
   const [claims, setClaims] = useState<PendingClaimRow[]>([]);
   const [posts, setPosts] = useState<PendingPostRow[]>([]);
+  const [reports, setReports] = useState<GroupReportQueueItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [tab, setTab] = useState<QueueTab>("groups");
@@ -103,16 +112,18 @@ export default function AdminGruplarPage() {
     try {
       // ⚠️ KR08 dersi: RLS yetkisiz kullanıcıya hata döner — SESSİZ YUTMA YOK,
       // catch kullanıcıya YAZAR (boş liste "kuyruk boş" sanılır).
-      const [summaryData, groupRows, claimRows, postRows] = await Promise.all([
+      const [summaryData, groupRows, claimRows, postRows, reportRows] = await Promise.all([
         fetchGroupModeratorSummary(),
         fetchPendingGroups(),
         fetchPendingClaims(),
         fetchPendingPosts(),
+        fetchGroupReportQueue(),
       ]);
       setSummary(summaryData);
       setGroups(groupRows);
       setClaims(claimRows);
       setPosts(postRows);
+      setReports(reportRows);
     } catch (error) {
       const message = getErrorMessage(error, "Moderasyon verileri okunamadı.");
       setLoadError(message);
@@ -130,8 +141,8 @@ export default function AdminGruplarPage() {
     if (tab === "groups") return groups.length;
     if (tab === "claims") return claims.length;
     if (tab === "posts") return posts.length;
-    return 0; // reports: G14'e dek her zaman boş
-  }, [tab, groups, claims, posts]);
+    return reports.length;
+  }, [tab, groups, claims, posts, reports]);
 
   useEffect(() => {
     setSelected(0);
@@ -167,6 +178,23 @@ export default function AdminGruplarPage() {
     [load, refreshSummary],
   );
 
+  // G14 · şikayet onayı: TEK karar = TEK ihlal (sunucu grubun açık şikayetlerini
+  // birlikte kapatır). Uyarı grubu yayına döndürmez — sonuç moderatöre yazılır.
+  const upholdReports = useCallback(
+    (item: GroupReportQueueItem) => {
+      const first = item.reports[0];
+      if (!first) return;
+      void runDecision(async () => {
+        const result = await reviewGroupReport(first.id, "upheld");
+        toast.info(`Uyarı sonucu: ${result.strike?.outcome ?? "—"} · kapanan şikayet: ${result.closed_reports}`);
+        if (result.listing_status === "hidden") {
+          toast.info("Grup gizli kaldı: onaylanan şikayet grubu otomatik yayına döndürmez.");
+        }
+      }, `"${item.group_name}" şikayeti onaylandı — uyarı merdiveni işledi.`);
+    },
+    [runDecision],
+  );
+
   const approveSelected = useCallback(() => {
     if (busy) return;
     if (tab === "groups") {
@@ -178,15 +206,19 @@ export default function AdminGruplarPage() {
     } else if (tab === "posts") {
       const row = posts[selected];
       if (row) void runDecision(() => decidePost(row.id, "approve"), "Gönderi yayınlandı.");
+    } else if (tab === "reports") {
+      const row = reports[selected];
+      if (row) upholdReports(row);
     }
-  }, [busy, tab, groups, claims, posts, selected, runDecision]);
+  }, [busy, tab, groups, claims, posts, reports, selected, runDecision, upholdReports]);
 
   const openRejectForSelected = useCallback(() => {
     if (busy) return;
     if (tab === "groups" && groups[selected]) setRejectTarget({ kind: "group", row: groups[selected] });
     else if (tab === "claims" && claims[selected]) setRejectTarget({ kind: "claim", row: claims[selected] });
     else if (tab === "posts" && posts[selected]) setRejectTarget({ kind: "post", row: posts[selected] });
-  }, [busy, tab, groups, claims, posts, selected]);
+    else if (tab === "reports" && reports[selected]) setRejectTarget({ kind: "reports", row: reports[selected] });
+  }, [busy, tab, groups, claims, posts, reports, selected]);
 
   // Tasarım §10 kısayolları: A onayla · R reddet · J/K sonraki/önceki.
   useEffect(() => {
@@ -239,6 +271,17 @@ export default function AdminGruplarPage() {
       void runDecision(() => decidePendingGroup(rejectTarget.row.id, "reject", note), "Grup reddedildi — ekleyene bildirim gitti.");
     } else if (rejectTarget.kind === "claim") {
       void runDecision(() => decideClaim(rejectTarget.row.id, "reject", note), "Sahiplik talebi reddedildi.");
+    } else if (rejectTarget.kind === "reports") {
+      const targets = rejectTarget.only ? [rejectTarget.only] : rejectTarget.row.reports;
+      void runDecision(async () => {
+        let republished = false;
+        // Sırayla: son açık şikayetin reddi grubu (gizliyse) yayına döndürür.
+        for (const report of targets) {
+          const result = await reviewGroupReport(report.id, "rejected", note);
+          republished = republished || result.group_republished;
+        }
+        if (republished) toast.info("Grup yeniden yayında (açık şikayet kalmadı).");
+      }, targets.length > 1 ? `${targets.length} şikayet reddedildi.` : "Şikayet reddedildi.");
     } else {
       void runDecision(() => decidePost(rejectTarget.row.id, "reject", note), "Gönderi reddedildi.");
     }
@@ -414,7 +457,7 @@ export default function AdminGruplarPage() {
           <TabsList>
             <TabsTrigger value="groups">Yeni gruplar ({groups.length})</TabsTrigger>
             <TabsTrigger value="claims">Sahiplik ({claims.length})</TabsTrigger>
-            <TabsTrigger value="reports">Şikayetler (0)</TabsTrigger>
+            <TabsTrigger value="reports">Şikayetler ({summary?.pending_reports ?? 0})</TabsTrigger>
             <TabsTrigger value="posts">Gönderiler ({posts.length})</TabsTrigger>
           </TabsList>
 
@@ -545,15 +588,17 @@ export default function AdminGruplarPage() {
             ))}
           </TabsContent>
 
-          {/* ── Kuyruk 3: şikayetler (G14'e dek boş) ── */}
+          {/* ── Kuyruk 3: şikayetler (G14 — grup bazlı) ── */}
           <TabsContent value="reports">
-            <Card>
-              <CardContent className="pt-6 text-sm text-muted-foreground">
-                Şikayet altyapısı G14 batch'inde açılacak — `group_reports` tablosu henüz yok
-                (telefon doğrulaması G04/U06 kararına bağlı). Bu kuyruk o güne kadar bilinçli
-                olarak boş; sayaç da 0 döner.
-              </CardContent>
-            </Card>
+            <AdminGruplarPageReportsTab
+              reports={reports}
+              selected={selected}
+              busy={busy}
+              onSelect={setSelected}
+              onUphold={upholdReports}
+              onReject={(row) => setRejectTarget({ kind: "reports", row })}
+              onRejectSingle={(row, report) => setRejectTarget({ kind: "reports", row, only: report })}
+            />
           </TabsContent>
 
           {/* ── Kuyruk 4: platform gönderi kuyruğu ── */}

@@ -156,6 +156,10 @@ describe("group_settings sözleşmesi", () => {
       // tarafta da kilitli). Bu, kaynak ağacındaki TEK meşru çıplak anahtardır;
       // okuma yolu DEĞİL (okumalar group_setting_* fonksiyonlarından).
       "src/lib/admin-shell/group-moderation-api.ts",
+      // G14: şikayet sözleşme testi G09'da tohumlanan dört şikayet anahtarının
+      // migration'da OKUNDUĞUNU kilitler (report_threshold · report_min_account_age_days
+      // · report_require_phone · report_same_group_cooldown_days).
+      "src/lib/group-reports-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;

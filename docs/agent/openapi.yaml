@@ -362,6 +362,21 @@ paths:
           description: Çok fazla istek (rate limit)
         "500":
           description: Sunucu hatası
+  /functions/v1/whatsapp-autoreply:
+    post:
+      summary: whatsapp-autoreply aracını çalıştır
+      operationId: execute_whatsapp_autoreply
+      x-tool-key: edge.whatsapp_autoreply
+      x-status: active
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "500":
+          description: Sunucu hatası
   /functions/v1/whatsapp-reply:
     post:
       summary: whatsapp-reply aracını çalıştır
@@ -377,6 +392,7 @@ paths:
       operationId: execute_whatsapp_webhook
       x-tool-key: edge.whatsapp_webhook
       x-status: active
+      x-tables: [whatsapp_customer_threads]
       responses:
         "500":
           description: Sunucu hatası

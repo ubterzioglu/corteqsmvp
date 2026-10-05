@@ -45,9 +45,15 @@ interface LandingDetailViewProps {
   /**
    * G20 · sahiplik akışı yuvası — sayfa `GroupOwnershipClaim` bileşenini buradan
    * enjekte eder (veri/tazeleme sayfada, sunum burada). `null` ise bölüm hiç
-   * çizilmez. "Şikayet et" G14'e dek YOK (backend'siz buton çizilmez).
+   * çizilmez.
    */
   ownershipClaim?: ReactNode;
+  /**
+   * G14 · "Şikayet et" yuvası — sayfa `GroupReportButton`'ı buradan enjekte eder.
+   * `null` ise bölüm çizilmez (bileşen kendi grubunda/yayında olmayan grupta da
+   * kendini gizler).
+   */
+  reportSlot?: ReactNode;
 }
 
 export function LandingDetailView({
@@ -60,6 +66,7 @@ export function LandingDetailView({
   onShare,
   onRequestSignIn,
   ownershipClaim,
+  reportSlot,
 }: LandingDetailViewProps) {
   const conditionItems = useMemo(
     () =>
@@ -211,6 +218,9 @@ export function LandingDetailView({
 
             {/* G20 · "Bu grup sizin mi?" — verified grupta bileşen kendini gizler. */}
             {ownershipClaim ?? null}
+
+            {/* G14 · "Şikayet et" — sahiplik bölümünün yanında. */}
+            {reportSlot ?? null}
 
             {conditionItems.length > 0 ? (
               <section className="rounded-[1.75rem] border border-border bg-card p-2 md:p-3">
