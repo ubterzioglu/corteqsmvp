@@ -85,7 +85,10 @@ const AdminUserOverridesPage = () => {
 
   const scopedFeatures = useMemo(() => {
     if (!selectedUser) return [];
-    return features.filter((feature) => feature.scope_role === selectedUser.profile_type);
+    // scope_role='*' olan yetkiler tüm roller için görünür (admin override ile açılabilir)
+    return features.filter(
+      (feature) => feature.scope_role === selectedUser.profile_type || feature.scope_role === "*"
+    );
   }, [features, selectedUser]);
 
   const filteredOverrides = useMemo(() => {

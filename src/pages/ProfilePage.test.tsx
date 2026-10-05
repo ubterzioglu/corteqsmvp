@@ -1255,7 +1255,7 @@ describe("ProfilePage", () => {
         "Bağlantılar",
         "Belgeler",
         "Rol Detayları",
-        "Erişim & Talepler",
+        "Rol Talepleri",
         "Yardım",
       ]);
     });
