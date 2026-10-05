@@ -55,3 +55,69 @@ W05/W06 "bitti" diye kapandı ama W06 kabulünün "deploy sonrası 16/16" maddes
 Etkisi bugün sıfır (`whatsapp_bot_settings.enabled=false`; webhook'un ateşlediği çağrı
 404 alır, `waitUntil` ile beklenmediği için Meta yanıtı bozulmaz) ama bot açılmadan önce
 deploy + paylaşımlı secret kontrolü şart → kullanıcı-adımları dosyasına yazıldı.
+
+---
+
+## P05 · Git geçmişi sır taraması
+
+**Sonuç: 🔴 1 KRİTİK gerçek bulgu.** Legacy `service_role` JWT'si **herkese açık
+GitHub deposunun** (`ubterzioglu/corteqsmvp`, `visibility=PUBLIC` — `gh repo view` ile
+ölçüldü) `origin/main` geçmişinde ve **güncel ağacında** duruyor (bu batch yerelde
+temizledi, push edilmedi → GitHub'daki `main` hâlâ taşıyor), ve anahtar **bugün GEÇERLİ**.
+
+### Yöntem
+
+`gitleaks`/`trufflehog` makinede yok. Yerine betik: `git log --all -p -U0` (1.533 commit)
+üzerinde 10 desen (JWT · `sb_secret_` · `sb_publishable_` · `sk_live/test` · `AIza` ·
+`gh*_` · `EAA…` Meta · `sbp_` Supabase PAT · parolalı postgres URL · PEM özel anahtar) +
+`.env.local`'daki her gerçek değerin geçmişte **birebir** geçip geçmediği. Çıktı yalnız
+tür · parmak izi · commit · dosya; değer hiçbir yere yazılmadı. JWT'lerin yalnız `role`
+iddiası çözüldü. Geçerlilik yalnız **HTTP durum koduyla** ölçüldü.
+
+### Bulgular
+
+| # | Tür (parmak izi) | Nerede | Uzakta mı | Bugün geçerli mi | Düzeltilmeli mi |
+|---|---|---|---|---|---|
+| 1 | 🔴 JWT `service_role` / `injprdrsklkxgnaiixzh` (`2526e534`) | `deployerror.txt` (`3c937293`, 07.06 "oh") + `deployment-…-all-logs-….txt` (`f5927714`, 07.06) → `c025a763` (11.06) dosyayı `docs/archive/root-2026-06-11/deployerror.txt`'e TAŞIDI, **silmedi** | **EVET** — `origin/main` + `origin/codex/limit-sprint-2026-08-30` | **EVET** — `auth/v1/admin/users` **200**, `rest/v1/` **200** | **EVET, ACİL** — bkz. aşağı |
+| 2 | JWT `anon` / `injprdrsklkxgnaiixzh` (`1181fa29`) | aynı iki dosya + `.env.local` | evet | — | Hayır — anon anahtar zaten frontend paketinde herkese açık |
+| 3 | JWT `anon` / `azrxqgzfryzpaqchhrkk` (`83fafb4b`) | `docs/reference/global-network-bridge/vite.config.ts` | evet | — | Hayır — başka projenin anon anahtarı (herkese açık tür) |
+| 4 | `.env.local` dosyasının TAMAMI (`52e6faf4`, 30.05 "first") — service_role JWT, 2 `sbp_` PAT, Meta `ACCESS_TOKEN` | yalnız `refs/original/refs/heads/main` + `refs/original/refs/stash` (filter-branch yedek ref'leri) | **HAYIR** — hiçbir uzak dalda yok | 2 PAT: **401/401** (ölü) · Meta token: W01'de ölü ölçülmüştü (190/467) · service_role: #1 ile aynı anahtar | Yerel temizlik önerilir (`refs/original` silinmeli) — kullanıcı kararı |
+| 5 | Meta `EAA…` deseni ×~100 | `info-*.html`, `CLAUDE.md`, kariyer arşivi | evet | — | **Yanlış pozitif** — base64 gömülü görsel verisi (önceki bağlam `…AAAQhAAAIQgAAEIAABC…`) |
+| 6 | Parolalı postgres URL | `scripts/migration/restore-selfhost.mjs` | evet | — | **Yanlış pozitif** — yardım metnindeki 6 harfli örnek kelime |
+
+`.env.local`'daki bugünkü değerlerin geçmişte birebir geçişi: `SUPABASE_SERVICE_ROLE_KEY`
+(bugün `sb_secret_` türünde) **0** · `SUPABASE_ACCESS_TOKEN` **0** · `WHATSAPP_ACCESS_TOKEN`
+**0** · `WHATSAPP_APP_SECRET` **0** · `NOTIFY_DISPATCH_SECRET` **0** · `RADAR_NEWS_CRON_SECRET`
+**0** · `GEMINI_*` **0** · `TAVILY_*` **0** · `SERPAPI` **0** · `ZOHO_SMTP_PASSWORD` (eşik altı,
+taranmadı — kısa değer). Geçenler yalnız açık türden: proje kimliği, anon/publishable anahtar,
+e-posta adresleri, Meta telefon/işletme kimlikleri.
+
+### 🔴 Ölçümün çürüttüğü öncül
+
+KALANLAR U01: *"anahtar bir ara diske yazılmıştı (`aeb2ea8` geçmişten temizledi; ölçüldü —
+`origin`'e hiç ulaşmadı)"*. Bu **o tek olay için** doğru olabilir, ama legacy service_role
+JWT projede tektir ve **7 Haziran'dan beri** herkese açık depoda, iki dalda, ve 5 Ekim'e
+kadar güncel ağaçta duruyordu. "Anahtar dışarı sızmadı" varsayımı **geçersiz.**
+
+### Bu batch'te yapılan (geri alınabilir)
+
+- `docs/archive/root-2026-06-11/deployerror.txt` içindeki **2 service_role JWT**
+  `<REDACTED: service_role JWT - P05 05.10>` ile değiştirildi (anon olanlar dokunulmadı,
+  CRLF korundu). **Bu yalnız güncel ağacı temizler; geçmiş ve GitHub'daki eski commit'ler
+  anahtarı taşımaya devam eder.** Push edilmedi.
+
+### Gerçek düzeltme (kullanıcıda — bkz. U01 spike + kullanıcı-adımları)
+
+1. Legacy JWT anahtarlarını **iptal etmek** tek gerçek çözüm: Supabase panelinde
+   *"Disable JWT-based API keys"* (veya JWT secret rotasyonu). 🔴 Bunu ajan YAPMAZ ve
+   önce edge function'ların yeni anahtar düzenine taşındığı doğrulanmalı (U01 spike).
+2. Geçmişi yeniden yazmak (`git filter-repo`) herkese açık depoda **yetmez** — anahtar
+   4 aydır açıkta; fork/önbellek olabilir. Yine de istenirse ayrı karardır (force-push).
+3. Yerel `refs/original/*` yedek ref'leri `.env.local`'ın tamamını taşıyor; uzakta değil,
+   ama makine paylaşılırsa risk. Silinmesi kullanıcı kararı.
+
+### Kanıtlanamayan
+
+- Anahtarın **kötüye kullanılıp kullanılmadığı** ölçülmedi (Auth/REST erişim günlüğü
+  incelemesi ayrı iş; 04.10 erişim logu raporu K12 ile ilişkili olabilir).
+- Tarama desen tabanlıdır; kısa (<16 karakter) veya biçimsiz sırları kaçırabilir.
