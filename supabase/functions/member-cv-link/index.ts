@@ -108,11 +108,24 @@ Deno.serve(async (req) => {
     }
 
     // 4. Hedef kullanıcının paylaşım izni var mı?
-    const { data: shareAttr, error: shareError } = await supabaseAdmin
-      .from("profile_attributes")
-      .select("value")
-      .eq("user_id", target_user_id)
+    // A5.2: user_profile_attributes tablosunda attribute_id FK ile saklanıyor.
+    // Önce afs_attributes'tan id'yi bul, sonra user_profile_attributes'tan değeri oku.
+    const { data: attrDef, error: attrDefError } = await supabaseAdmin
+      .from("afs_attributes")
+      .select("id")
       .eq("key", SHARE_ATTRIBUTE_KEY)
+      .single();
+
+    if (attrDefError || !attrDef) {
+      console.error("Attribute definition error:", attrDefError);
+      return jsonResponse({ error: "Paylaşım anahtarı tanımlı değil" }, 500, corsHeaders);
+    }
+
+    const { data: shareAttr, error: shareError } = await supabaseAdmin
+      .from("user_profile_attributes")
+      .select("value_json")
+      .eq("user_id", target_user_id)
+      .eq("attribute_id", attrDef.id)
       .maybeSingle();
 
     if (shareError) {
@@ -121,7 +134,7 @@ Deno.serve(async (req) => {
     }
 
     // Varsayılan KAPALI: anahtar yoksa veya false ise reddet
-    const shareEnabled = shareAttr?.value === true || shareAttr?.value === "true";
+    const shareEnabled = shareAttr?.value_json === true || shareAttr?.value_json === "true";
     if (!shareEnabled) {
       return jsonResponse({ error: "Kullanıcı CV paylaşımını devre dışı bırakmış" }, 403, corsHeaders);
     }
@@ -139,12 +152,24 @@ async function generateSignedUrl(
   supabaseAdmin: ReturnType<typeof createClient>,
   corsHeaders: Record<string, string>
 ): Promise<Response> {
-  // Hedefin CV'sini bul
-  const { data: cvAttr, error: cvError } = await supabaseAdmin
-    .from("profile_attributes")
-    .select("value")
-    .eq("user_id", targetUserId)
+  // A5.2: cv_doc attribute'ünü afs_attributes'tan bul
+  const { data: cvAttrDef, error: cvAttrDefError } = await supabaseAdmin
+    .from("afs_attributes")
+    .select("id")
     .eq("key", CV_ATTRIBUTE_KEY)
+    .single();
+
+  if (cvAttrDefError || !cvAttrDef) {
+    console.error("CV attribute definition error:", cvAttrDefError);
+    return jsonResponse({ error: "CV anahtarı tanımlı değil" }, 500, corsHeaders);
+  }
+
+  // Hedefin CV'sini bul (user_profile_attributes'tan)
+  const { data: cvAttr, error: cvError } = await supabaseAdmin
+    .from("user_profile_attributes")
+    .select("value_json")
+    .eq("user_id", targetUserId)
+    .eq("attribute_id", cvAttrDef.id)
     .maybeSingle();
 
   if (cvError) {
@@ -152,14 +177,14 @@ async function generateSignedUrl(
     return jsonResponse({ error: "CV kontrolü başarısız" }, 500, corsHeaders);
   }
 
-  if (!cvAttr?.value) {
+  if (!cvAttr?.value_json) {
     return jsonResponse({ error: "CV bulunamadı" }, 404, corsHeaders);
   }
 
   // cv_doc JSON'dan path'i çıkar
   let cvRecord: { path?: string };
   try {
-    cvRecord = typeof cvAttr.value === "object" ? cvAttr.value : JSON.parse(cvAttr.value as string);
+    cvRecord = typeof cvAttr.value_json === "object" ? cvAttr.value_json : JSON.parse(cvAttr.value_json as string);
   } catch {
     return jsonResponse({ error: "CV verisi bozuk" }, 500, corsHeaders);
   }
