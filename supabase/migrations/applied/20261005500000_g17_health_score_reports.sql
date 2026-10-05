@@ -35,6 +35,7 @@ declare
   v_min_days integer;
   v_cap integer;
   v_queue_days integer;
+  v_report_days integer;
   v_profile boolean;
   v_rules boolean;
   v_moderation boolean;
@@ -54,6 +55,10 @@ begin
   v_min_days := public.group_setting_int('groups.health_score_min_days_published', 7);
   v_cap := public.group_setting_int('groups.health_score_recommendation_cap', 10);
   v_queue_days := public.group_setting_int('groups.health_score_queue_window_days', 90);
+  -- Şikayet penceresi KUYRUK penceresinden BAĞIMSIZ bir ayardır: ikisi aynı sayıda (90) başlasa da
+  -- ayrı kararlardır; kuyruk penceresini oynatmak şikayet kalemini sessizce değiştirmemeli.
+  -- Satır tohumlanmadı: yoksa varsayılan 90 (politika §7 madde 6) devreye girer.
+  v_report_days := public.group_setting_int('groups.health_score_report_window_days', 90);
 
   -- Kalem 1 (15): açıklama ve kategori dolu ve (şehir seçili veya is_global).
   v_profile := (
@@ -95,7 +100,7 @@ begin
     from public.group_reports
     where landing_id = v_landing.id
       and status = 'upheld'
-      and reviewed_at >= now() - make_interval(days => v_queue_days)
+      and reviewed_at >= now() - make_interval(days => v_report_days)
   );
 
   -- İlk 7 gün skor null (kabul #11). published_at hiç dolmadıysa da null.

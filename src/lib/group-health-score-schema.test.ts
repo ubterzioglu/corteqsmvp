@@ -190,7 +190,9 @@ describe("G17 · formül tasarım §5 birebir", () => {
     expect(fn).toContain("gp.post_status = 'pending_platform' and gp.reviewed_by is null");
   });
 
-  it("G14'ten önce group_reports'a BAKAMAZ (şema uydurma yasağı)", () => {
+  it("ESKİ tanım (G14 öncesi, 20261002070000) group_reports'a BAKAMAZ — güncel tanım aşağıdaki G17b bloğunda", () => {
+    // Bu test GEÇMİŞ migration'ı kilitler: o dosya canlıya o hâliyle uygulandı ve değişmez.
+    // Fonksiyonun GÜNCEL hâli 20261005500000'dadır ve ayrıca kilitlidir.
     expect(computeFn()).not.toContain("group_reports");
   });
 
@@ -301,6 +303,106 @@ describe("G17 · yazma yetkisi ve guard v3", () => {
     expect(guard).toContain("group_status_direct_update_forbidden");
     expect(guard).toContain("group_ownership_direct_update_forbidden");
     expect(guard).toContain("group_engine_field_direct_update_forbidden");
+  });
+});
+
+// ── G17b · şikayet kalemi (mig 20261005500000) ─────────────────────────────
+// compute'u yeniden tanımlayan GÜNCEL migration. Eski dosyayı okuyan yukarıdaki testler bu
+// tanımı GÖRMEZ; bu blok olmasa canlıya gidecek fonksiyonu hiçbir sözleşme korumazdı.
+const REPORTS_MIGRATION = "supabase/migrations/applied/20261005500000_g17_health_score_reports.sql";
+const REPORTS_TABLE_MIGRATION = "supabase/migrations/applied/20261005200000_group_reports.sql";
+
+const commentless = (sql: string) =>
+  sql
+    .split("\n")
+    .filter((line) => !line.trimStart().startsWith("--"))
+    .join("\n");
+
+const newComputeFn = () =>
+  sliceBetween(
+    commentless(readFileSync(REPORTS_MIGRATION, "utf8")),
+    "create or replace function public.group_health_score_compute",
+    "comment on function public.group_health_score_compute",
+    "compute (G17b)",
+  );
+
+describe("G17b · şikayet kalemi group_reports'u okur (mig 20261005500000)", () => {
+  it("compute'u yeniden tanımlayan EN SON migration budur (bayatlama kapanı)", async () => {
+    const { readdirSync } = await import("node:fs");
+    const redefining = readdirSync("supabase/migrations/applied")
+      .filter((file) => file.endsWith(".sql"))
+      .filter((file) =>
+        readFileSync(`supabase/migrations/applied/${file}`, "utf8").includes(
+          "create or replace function public.group_health_score_compute",
+        ),
+      )
+      .sort();
+
+    expect(redefining.length).toBeGreaterThanOrEqual(2);
+    // Daha yeni bir migration fonksiyonu yeniden tanımlarsa bu test BİLEREK kırılır:
+    // o dosyayı yukarıdaki sabite taşı, yoksa güncel tanım sessizce kilitsiz kalır.
+    expect(redefining.at(-1)).toBe("20261005500000_g17_health_score_reports.sql");
+  });
+
+  it("yalnız onaylanmış (upheld) şikayeti ve reviewed_at penceresini sayar; open/rejected sayılmaz", () => {
+    // Yalnız şikayet ifadesi: fonksiyonun başka yerinde (kuyruk kalemi) created_at meşru geçer.
+    const statement = sliceBetween(newComputeFn(), "v_reports := not exists", "v_in_grace :=", "v_reports");
+
+    expect(statement).toContain("from public.group_reports");
+    expect(statement).toContain("landing_id = v_landing.id");
+    expect(statement).toContain("status = 'upheld'");
+    expect(statement).toContain("reviewed_at >= now() - make_interval(days => v_report_days)");
+    expect(statement).not.toContain("'open'");
+    expect(statement).not.toContain("'rejected'");
+    expect(statement).not.toContain("created_at");
+  });
+
+  it("şikayet penceresi KUYRUK penceresinden bağımsız ayardır (v_queue_days şikayete bulaşmaz)", () => {
+    const fn = newComputeFn();
+
+    expect(fn).toContain("group_setting_int('groups.health_score_report_window_days', 90)");
+    // sliceBetween çıpa bulunamazsa FIRLATIR (sessiz boş dilim yok), bu yüzden test sahte geçemez.
+    const reportStatement = sliceBetween(fn, "v_reports := not exists", "v_in_grace :=", "v_reports");
+    expect(reportStatement).toContain("v_report_days");
+    expect(reportStatement).not.toContain("v_queue_days");
+  });
+
+  it("kullandığı sütunlar ve 'upheld' değeri G14 tablosunda GERÇEKTEN var (şema uydurma yasağı)", () => {
+    const table = readFileSync(REPORTS_TABLE_MIGRATION, "utf8");
+
+    expect(table).toContain("landing_id uuid not null references public.whatsapp_landings(id)");
+    expect(table).toContain("reviewed_at timestamptz");
+    expect(table).toContain("check (status in ('open', 'upheld', 'rejected'))");
+  });
+
+  it("diğer beş kalem ESKİ tanımla satır satır AYNI (yalnız `v_reports := true` değişti)", () => {
+    const oldBody = computeFn()
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0 && !/^v_reports := true;/.test(line));
+    const newFlat = newComputeFn().replace(/\s+/g, " ");
+
+    expect(oldBody.length).toBeGreaterThan(40);
+    const missing = oldBody.filter((line) => !newFlat.includes(line.replace(/\s+/g, " ")));
+    expect(missing).toEqual([]);
+  });
+
+  it("imza, güvenlik ve yetkiler eski tanımla aynı (stable + security definer, çıktı anahtarları)", () => {
+    const fn = newComputeFn();
+
+    expect(fn).toContain("returns jsonb");
+    expect(fn).toContain("security definer");
+    expect(fn).toContain("set search_path = public");
+    for (const key of ["'score'", "'in_grace'", "'recommendation_count'", "'components'", "'reports'"]) {
+      expect(fn).toContain(key);
+    }
+  });
+
+  it("migration salt ekleme: tablo/kolon düşürmez, yalnız create or replace", () => {
+    const sql = commentless(readFileSync(REPORTS_MIGRATION, "utf8"));
+
+    expect(sql).not.toMatch(/drop\s+(table|column|function)/i);
+    expect(sql).not.toMatch(/\balter\s+table\b/i);
   });
 });
 
