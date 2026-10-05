@@ -8,9 +8,19 @@
 
 ## 0 · Neden şimdi
 
-Takvim sabit: **abonelik 01.01.2027**, Kurucu 1000 paketi **99 €**. Bugün 4 Ekim 2026
-— yaklaşık **13 hafta** kaldı. K05 03.10'da "sonra yapacağız" diye parka alınmıştı;
-04.10'da kullanıcı "önce plan çıkar, kod yazma" dedi.
+Takvim sabit: **abonelik 01.01.2027**. Bugün 4 Ekim 2026 — yaklaşık **13 hafta** kaldı.
+K05 03.10'da "sonra yapacağız" diye parka alınmıştı; 04.10'da kullanıcı "önce plan
+çıkar, kod yazma" dedi.
+
+> **⚠️ DÜZELTME (05.10, karar 9):** Ürün modeli **"Kurucu 1000 = 99 € DEĞİL"**.
+> `/pricing` sayfası = 3 kademe × aylık/yıllık = **6 abonelik fiyatı** + 3 Freemium:
+> - **Danışman Pro:** 25 €/ay · 20 €/ay (yıllık)
+> - **Kuruluş Pro:** 50 €/ay · 40 €/ay (yıllık)
+> - **İşletme Pro:** 75 €/ay · 60 €/ay (yıllık)
+>
+> **Hepsi yinelenen abonelik.** "Kurucu 1000 = 99 €" ayrı bir kampanya olarak SONRA
+> ele alınır (Faz 1 veri modeli recurring + 6 price; 99 € tek seferlik kampanya için
+> ayrı faz). Karar 10: **yalnız EUR, AB + Türkiye.**
 
 ## 1 · ÖLÇÜLEN başlangıç noktası (04.10, ezberleme — yeniden ölç)
 
@@ -43,9 +53,9 @@ Haziran'da yapılmış ve bugün canlıda çalışıyor. Bu ayrımı yapmadan pl
 "ödeme başarılı" görüyor ve hiçbir tahsilat olmuyor. Gerçek entegrasyonda bu iki
 çağrı yerinin ikisi de değişmeli; biri unutulursa sahte akış canlıda kalır.
 
-🔴 **Talep sinyali sıfır.** 99 €'luk paketi 175 kişiye satmayı planlıyoruz ama
-ilgi kaydı toplayan mekanizma (`feature_interest`) **hiç satır üretmemiş**. Fiyat
-ve paket kararı veriyi değil varsayımı temel alıyor.
+🔴 **Talep sinyali sıfır.** 3 kademeli abonelik modelini 175 kişiye satmayı
+planlıyoruz ama ilgi kaydı toplayan mekanizma (`feature_interest`) **hiç satır
+üretmemiş**. Fiyat ve paket kararı veriyi değil varsayımı temel alıyor.
 
 ## 2 · Fazlar
 
@@ -57,7 +67,7 @@ Her faz ayrı batch, ayrı commit, ayrı onay. Sıra bağlayıcıdır.
 |---|---|---|
 | S01 | Stripe hesabı açık mı, doğrulanmış mı? Canlı anahtarlar alınabilir durumda mı? | Hiçbir teknik faz bu olmadan doğrulanamaz |
 | S02 | **Vergi rejimi netleşsin** — L.L.C. üzerinden AB'li müşteriye dijital hizmet satışı KDV/VAT doğurur. Stripe Tax açılacak mı, yoksa elle mi? | Yanlış kurgu geriye dönük düzeltilemez; fatura şekli buna bağlı |
-| S03 | Ürün/fiyat kararı: "Kurucu 1000 = 99 €" tek seferlik mi, yıllık mı? İade koşulu ne? | Veri modeli buna göre kurulur |
+| S03 | ✅ **CEVAPLANDI (karar 9, 05.10):** 3 kademe × aylık/yıllık = 6 abonelik fiyatı (Danışman Pro 25/20 € · Kuruluş Pro 50/40 € · İşletme Pro 75/60 €), hepsi yinelenen abonelik. "Kurucu 1000 = 99 €" ayrı kampanya (SONRA). İade koşulu `/legal/refund-cancellation` sayfasında. | Veri modeli buna göre kurulur |
 | S04 | Para birimi ve ülke kapsamı (yalnız EUR mu?) | Fiyat nesneleri buna göre açılır |
 
 ⚠️ **S02 profesyonel teyit ister.** Bu plan vergi tavsiyesi vermez.
@@ -119,4 +129,46 @@ S01 olmadan hiçbir şey doğrulanamaz.
 
 ⚠️ **Ayrı ve daha erken bir soru:** `MockStripeCheckout` bugün canlıda iki yerde
 "ödeme başarılı" diyor. Gerçek entegrasyon 2027'ye kalacaksa bile, bu ekranların
-bugün kullanıcıya ne söylediği **şimdi** gözden geçirilmeli.
+bugün kullanıcıya ne söylediği **şimdi** gözlenmiş.
+
+---
+
+## 4 · RAPOR: MockStripeCheckout'un canlıdaki iki yerde kullanıcıya ne gösterdiği
+*(05.10, kod değiştirilmedi — yalnız gözlem)*
+
+### Yer 1: `ServiceRequestForm.tsx` (Hizmet Talebi Başvurusu)
+
+**Tutar:** `SERVICE_REQUEST_FEE = 19` → **€19.00**
+
+**Kullanıcı akışı:**
+1. Formu doldurur → "Ödemeye Geç · €19" düğmesine tıklar
+2. Dialog açılır:
+   - **Üst şerit (mor, Stripe-benzeri):** "Ödeme · Hizmet Talebi Başvurusu" + e-posta + "Stripe ile güvenli ödeme" + büyük "€19.00"
+   - **DEMO uyarısı (sarı, kesikli kenarlı):** "Demo / Test ödemesi. Bu ekran göstermeliktir; gerçek para tahsil edilmez. Test kartı `4242…` ön-doludur."
+   - Kart formu (ön-dolu: `4242 4242 4242 4242`, `12/34`, `123`)
+   - Düğme: "€19.00 Öde"
+3. "Öde"ye tıklar → 1.6 sn "Ödeme işleniyor…" (dönen ikon + "Test modu" rozeti)
+4. **Başarı ekranı:** Yeşil daire içinde onay ikonu + **"Ödeme Başarılı"** + "€19.00 tutarındaki demo ödemeniz onaylandı."
+5. 1.1 sn sonra dialog kapanır, `submitRequest()` çağrılır → talep kaydedilir
+
+**Gözlem:** DEMO uyarısı VAR ama başarı ekranında "demo ödemeniz onaylandı" yazıyor.
+Kullanıcı hızlı geçiyorsa "Ödeme Başarılı" başlığı baskın çıkabilir. Ancak uyarı
+metni açıkça "gerçek para tahsil edilmez" diyor — tamamen aldatıcı değil.
+
+### Yer 2: `PremiumProfileTabs.tsx` (Hizmet Taleplerim sekmesi)
+
+Bu bileşen `ServiceRequestsPanel` içinde `ServiceRequestForm`'u render eder.
+Dolayısıyla **aynı akış** — yukarıdaki Yer 1'in aynısı.
+
+**Gözlem:** İki yerde aynı MockStripeCheckout kullanılıyor; farklı tutar/ürün adı
+yok. Biri unutulursa sahte akış canlıda kalır riski YOK (ikisi de aynı bileşeni
+çağırıyor).
+
+### Sonuç
+
+- **Kod değiştirilmedi** (karar: gerçek Stripe entegrasyonu Faz 5'te).
+- **DEMO uyarısı mevcut** — tamamen sessiz sahte ödeme YOK.
+- **Risk:** Kullanıcı "Ödeme Başarılı" başlığını görünce gerçek tahsilat olduğunu
+  sanabilir (ama uyarı metni koruyor).
+- **Faz 5'te:** MockStripeCheckout'un iki çağrı yeri de gerçek checkout edge
+  function'a geçirilecek. Mock dosyası silinmez, açıkça işaretlenir.
