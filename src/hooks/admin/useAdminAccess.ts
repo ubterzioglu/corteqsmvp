@@ -4,7 +4,7 @@
 // yalnızca durum makinesi ve auth aksiyonlarını sunar.
 // Bkz: docs/plans/2026-06-10-admin-panel-v2-masterplan.md §11.2, Faz 2
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -33,12 +33,34 @@ export type AdminAccessState = {
 export function useAdminAccess(): AdminAccessState {
   const [status, setStatus] = useState<AdminAccessStatus>("loading");
   const [session, setSession] = useState<Session | null>(null);
+  const statusRef = useRef<AdminAccessStatus>(status);
+  const sessionRef = useRef<Session | null>(session);
+
+  // Ref'leri güncel tut
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
+
+  useEffect(() => {
+    sessionRef.current = session;
+  }, [session]);
 
   const syncSession = useCallback(async (nextSession: Session | null) => {
+    const previousUserId = sessionRef.current?.user?.id;
+    const nextUserId = nextSession?.user?.id;
+
     setSession(nextSession);
 
     if (!nextSession?.user) {
       setStatus("unauthenticated");
+      return;
+    }
+
+    // A11: Aynı kullanıcı zaten "authorized" ise checking'e DÜŞME.
+    // Token yenilenmesi veya aynı kullanıcı için SIGNED_IN olayı paneli sökmez.
+    // Farklı kullanıcı veya çıkış durumunda eski davranış (checking → authorized/denied).
+    if (previousUserId === nextUserId && statusRef.current === "authorized") {
+      // Oturum güncellendi ama kullanıcı aynı ve zaten yetkili → durum değişmez
       return;
     }
 
