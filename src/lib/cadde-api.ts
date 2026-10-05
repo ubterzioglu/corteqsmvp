@@ -64,6 +64,8 @@ import type {
   CaddeCommentPage,
   CaddeCommentRow,
   CaddePostInput,
+  CaddePostReactor,
+  CaddeReactionType,
 } from "./cadde-types";
 
 export async function getCaddeActorContext(): Promise<CaddeActorContext | null> {
@@ -228,5 +230,38 @@ export async function getCaddeFeedReach(): Promise<CaddeFeedReach | null> {
     // çizilmez; fırlatmak akışı düşürürdü.
     reportCaddeApiError("getCaddeFeedReach", error);
     return null;
+  }
+}
+
+// ── Reaksiyon aktörleri ("kimler beğendi" popover) ───────────────────────────
+
+/**
+ * Belirli bir post'a belirli bir reaksiyonu veren kullanıcıların listesi.
+ * "Kimler beğendi?" popover'ı için kullanılır.
+ *
+ * @param postId - Post ID
+ * @param reactionType - Reaksiyon tipi (like, support, unsure)
+ * @param limit - Max kullanıcı sayısı (varsayılan 50, max 100)
+ */
+export async function listCaddePostReactors(
+  postId: string,
+  reactionType: CaddeReactionType,
+  limit = 50,
+): Promise<CaddePostReactor[]> {
+  if (!postId || !reactionType) return [];
+  if (!isSupabaseConfigured) return [];
+
+  try {
+    const { data, error } = await db.rpc("list_cadde_post_reactors_v1" as never, {
+      p_post_id: postId,
+      p_reaction_type: reactionType,
+      p_limit: limit,
+    } as never);
+    if (error) throw error;
+    return (data ?? []) as CaddePostReactor[];
+  } catch (error: unknown) {
+    // İKİNCİL yüzey: popover çizilemezse sessizce boş liste döner.
+    reportCaddeApiError("listCaddePostReactors", error);
+    return [];
   }
 }

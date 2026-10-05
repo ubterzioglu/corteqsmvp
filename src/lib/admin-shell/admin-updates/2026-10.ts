@@ -5,6 +5,53 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261005-b8-canli-islemler",
+    date: "5 Ekim 2026",
+    title: "Canlıda yapılacak işlemler kararları",
+    items: [
+      "1. ETKİNLİKLER OTOMATİK YAYINLANMASIN: İlk etkinlik admin onayından geçer, sonrakiler otomatik yayında. (A13 geri alındı)",
+      "2. HAFTALIK ŞEHİR ÖZETİ: Admin panelinde açma/kapama tuşu eklendi. Varsayılan KAPALI.",
+      "3. HESAP SİLME: Test hesabı üzerinde denenecek (§B9'da).",
+    ],
+  },
+  {
+    id: "20261005-b11-b12-kararlar",
+    date: "5 Ekim 2026",
+    title: "B11-B12 kararları + atlanan işler",
+    items: [
+      "B11 CADDE 'KİMLER BEĞENDİ?': Ayrı iş olarak kaydedildi. Ban filtresi eklendikten sonra commit edilecek.",
+      "B12 VERİ/DIŞ SİSTEM:",
+      "  ✓ AI Legion = 'Hobi & Kültür' kategorisi (doğru)",
+      "  ✓ TED InnoVenture = 'Global' konumu (doğru)",
+      "  ✗ Mail testi: İPTAL",
+      "  ✗ U08 gözden geçirme: HAYIR",
+      "  ✗ WhatsApp botu: HAZIR DEĞİL (Meta webhook + gerçek telefon gerekli)",
+      "  ✓ Rehberler: Bilgi tabanına eklenecek (Burak sonra düzeltir)",
+      "",
+      "ATLANAN İŞLER (sonra yapılacak):",
+      "  • B1: Secret rotasyonu + git geçmiş temizliği (kullanıcı yapacak)",
+      "  • B2: Stripe / gerçek Premium (vergi rejimi kararı gerekli)",
+      "  • B4: Güvenlik kapıları (5 madde karar bekliyor)",
+      "  • B5: SMS/WhatsApp OTP (Meta Business Verification gerekli)",
+      "  • B9: Canlı DB / Deploy (psql erişimi gerekli)",
+      "  • B10: Küçük onaylar (G10c, K01, K04, K05, K07)",
+    ],
+  },
+  {
+    id: "20261005-b6-grup-sikayet-karari",
+    date: "5 Ekim 2026",
+    title: "Grup şikayet sistemi kararları tamamlandı",
+    items: [
+      "KARARLAR (6 madde, hepsi onaylandı):",
+      "1. Kendi grubuna şikayet EDILEMEZ (mantıksız).",
+      "2. Tek onay = TEK ihlal (aksi halde grup hemen kapatılır).",
+      "3. Onay sonrası grup GİZLİ KALIR, admin görünür yapabilir.",
+      "4. Grup sahibine BİLDİRİM gider (mail değil, uygulama içi).",
+      "5. Şikayet sebepleri doğru (7 kırmızı çizgi + Diğer).",
+      "6. 'Şikayet almamış üye' = gruba karşı şikayet (üyeye karşı değil).",
+    ],
+  },
+  {
     id: "20261005-rol-yapisi-karari",
     date: "5 Ekim 2026",
     title: "Rol yapısı kararı: Mevcut yapı korunacak, sektör etiketleri eklenecek",

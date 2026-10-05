@@ -272,6 +272,15 @@ export type CaddeComment = {
   createdAt: string;
 };
 
+/** list_cadde_post_reactors_v1 çıktısı — "kimler beğendi" popover'ı için. */
+export type CaddePostReactor = {
+  user_id: string;
+  display_name: string;
+  avatar_url: string | null;
+  role_label: string | null;
+  reacted_at: string;
+};
+
 export type CaddeCommentCursor = string | null;
 
 export type CaddeCommentPage = {
