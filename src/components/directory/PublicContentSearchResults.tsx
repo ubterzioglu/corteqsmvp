@@ -1,4 +1,4 @@
-import { BookOpen, Calendar, Wrench } from "lucide-react";
+import { BookOpen, Calendar, MessageSquare, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { PublicContentSearchResult } from "@/lib/public-content-search";
@@ -35,8 +35,8 @@ const PublicContentSearchResults = ({ results, isLoading, error }: PublicContent
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {results.map((result) => {
-          const Icon = result.type === "tool" ? Wrench : result.type === "event" ? Calendar : BookOpen;
-          const typeLabel = result.type === "tool" ? "Araç" : result.type === "event" ? "Etkinlik" : "Rehber yazısı";
+          const Icon = result.type === "tool" ? Wrench : result.type === "event" ? Calendar : result.type === "cadde" ? MessageSquare : BookOpen;
+          const typeLabel = result.type === "tool" ? "Araç" : result.type === "event" ? "Etkinlik" : result.type === "cadde" ? "Cadde" : "Rehber yazısı";
           return (
             <Link
               key={`${result.type}-${result.id}`}
