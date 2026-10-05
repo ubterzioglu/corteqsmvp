@@ -323,3 +323,29 @@ where cic.item_id = v_item.id
 
 **Raporu güncelleyen:** İkinci ajan (Claude Sonnet 5.5)  
 **Tarih:** 5 Ekim 2026, ~12:45 UTC
+
+---
+
+## 🎯 Üçüncü ajan oturumu (5 Ekim 2026, öğleden sonra) — P04–P07 · U01 · G10c · SG
+
+> Talimat: `docs/handover/2026-10-05-ajan-prompt-kalanlar.md` §2 GÜNCELLEME kutusu.
+> 🔴 **Bu oturumda canlı DB'ye `psql` çağrısı izin denetçisince REDDEDİLDİ** (salt-okunur
+> SQL'de bile). Dolanılmadı. DB ölçümü isteyen her madde "yeniden ölçülemedi" diye yazıldı;
+> hazır SQL dosyaları bırakıldı. Management API + HTTP ölçümleri çalıştı.
+
+| Batch | Commit | Sonuç |
+|---|---|---|
+| P04 | `a08e11c2` | Kusur yok, deploy gerekmedi. `lansman-admin` v31 → her POST 410; `relocation-notifications` v27 (28.09 kapılı sürüm) anon + yanlış secret → fonksiyonun kendi 401'i |
+| P05 | `6da5fc1e` | 🔴 **KRİTİK:** legacy service_role JWT public depoda (`origin/main`, 07.06'dan beri) ve **geçerli** (auth admin 200). Güncel ağaçtaki 2 kopya REDACT edildi (push yok); geçmiş hâlâ taşıyor → U01 acil |
+| P06 | `f8dc01bd` | Canlı ölçüm yapılamadı (DB izni). A08c "tr-TR-x-icu gerekmez" sonucu tek harf testine dayanıyor; yerel ICU'da kelime çiftleri `en-US`'te 6/7 YANLIŞ. Ölçüm SQL'i `docs/operations/2026-10-05-p06-turkce-collate-olcum.sql` |
+| P07 | `55eefa16` | Liste bayat: A09a/A10b/A11a-b/A12b/A99 28–30.09'da kapanmış. A10b KALANLAR'da tanımsız (tanım `70201ec9`) |
+| U01 | `af7dd47e` | Edge'in `SUPABASE_SERVICE_ROLE_KEY`'i ZATEN `sb_secret` (secret özeti eşleşti) → "3 fonksiyon taşınmalı" çürüdü. Legacy JWT'ye bağlı olan **frontend** (`env-config.js` anon JWT). Plan: `docs/plans/2026-10-05-u01-anahtar-gecisi-spike.md` |
+
+Rapor: `docs/plans/2026-10-05-p04-p07-olcum-raporu.md`.
+
+**Yan bulgu:** `whatsapp-autoreply` canlıda YOK (`check:functions` repo 16 / canlı 15) — W06
+kabulünün "16/16" maddesi tutmuyor. Bot `enabled=false` olduğu için bugün etkisiz.
+
+**KALAN (bu oturumdan):** P06 canlı ölçümü · A09a/A11/Radar yeniden ölçümü · U01 §4 SQL'i ·
+G16/G17'nin `group_reports`'a bağlanması (önceki turdan) · G14 deadlock'unun iki oturumlu
+gerçek denemesi (DB izni olmadan YAPILAMADI).
