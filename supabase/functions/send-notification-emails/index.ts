@@ -44,6 +44,7 @@ import {
 } from "../_shared/emails/group-notifications.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { buildRecommendationMatchEmail } from "../_shared/emails/recommendation-match.ts";
+import { buildEventPublishedEmail, type EventPublishedDetails } from "../_shared/emails/event-published.ts";
 import { buildWeeklyCityDigestEmail } from "../_shared/emails/weekly-city-digest.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
 
@@ -82,6 +83,9 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   // M22 · tavsiye eşleşme bildirimi — transactional, alıcı payload.email
   // (eşleşen profesyonel); anahtar mig 20261004110000'de seed edildi.
   recommendation_match: "email.recommendation_match.enabled",
+  // A15 · etkinlik yayınlanma bildirimi — transactional, alıcı etkinlik sahibi;
+  // anahtar mig 202610051000000'de seed edildi.
+  event_published: "email.event_published.enabled",
   // M24–M27 · haftalık şehir özeti — kill switch M24'te KAPALI doğdu; M27
   // kanıtından sonra İNSAN kararıyla açılır (G22/G17 dersi).
   weekly_city_digest: "email.weekly_city_digest.enabled",
@@ -98,6 +102,7 @@ type EventType =
   | "radar_scan_digest"
   | "career_application"
   | "recommendation_match"
+  | "event_published"
   | "weekly_city_digest"
   | GroupNotificationEventType;
 
@@ -212,7 +217,7 @@ function resolveReplyTo(eventType: EventType, mailReplyTo: string | undefined): 
 }
 
 // admin_update ve radar_scan_digest bu fonksiyona GELMEZ — o satırlar aşağıdaki toplu özet yolunda birleşir.
-function buildEmail(row: OutboxRow): BuiltEmail {
+async function buildEmail(row: OutboxRow, admin: ReturnType<typeof createClient>): Promise<BuiltEmail> {
   switch (row.event_type) {
     case "member_welcome":
       return buildWelcomeEmail(row.payload);
@@ -229,6 +234,30 @@ function buildEmail(row: OutboxRow): BuiltEmail {
     // M22 · tavsiye eşleşmesi — eşleşen profesyonele transactional mail.
     case "recommendation_match":
       return buildRecommendationMatchEmail(row.payload, resolveSiteUrl());
+    // A15 · etkinlik yayınlanma bildirimi — etkinlik sahibine transactional mail.
+    // Etkinlik detaylarını DB'den çeker.
+    case "event_published": {
+      const eventId = typeof row.payload.event_id === "string" ? row.payload.event_id : "";
+      if (!eventId) {
+        throw new Error("event_published payload missing event_id");
+      }
+      const { data: event, error } = await admin
+        .from("events")
+        .select("title, event_date, city, country, description")
+        .eq("id", eventId)
+        .single();
+      if (error || !event) {
+        throw new Error(`event_published event not found: ${eventId}`);
+      }
+      const details: EventPublishedDetails = {
+        title: event.title,
+        event_date: event.event_date,
+        city: event.city,
+        country: event.country,
+        description: event.description,
+      };
+      return buildEventPublishedEmail(row.payload, details, resolveSiteUrl());
+    }
     // M26 · haftalık şehir özeti — üyenin KENDİSİNE (payload.user_id'den çözülür).
     case "weekly_city_digest":
       return buildWeeklyCityDigestEmail(row.payload, resolveSiteUrl());
@@ -435,6 +464,7 @@ Deno.serve(async (request) => {
         "relocation_tool_report",
         "relocation_tool_abandonment",
         "recommendation_match",
+        "event_published",
         "weekly_city_digest",
         "group_submission_received",
         "group_published",
@@ -475,6 +505,7 @@ Deno.serve(async (request) => {
       "radar_scan_digest",
       "career_application",
       "recommendation_match",
+      "event_published",
       "weekly_city_digest",
       "group_submission_received",
       "group_published",
@@ -539,7 +570,7 @@ Deno.serve(async (request) => {
           continue;
         }
 
-        const { subject, html, text } = buildEmail(row);
+        const { subject, html, text } = await buildEmail(row, admin);
 
         // Alıcılar birbirinin adresini görmesin diye tek tek gönderilir.
         for (const recipient of recipients) {
