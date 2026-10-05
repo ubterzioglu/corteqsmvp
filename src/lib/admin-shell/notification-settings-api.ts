@@ -24,6 +24,7 @@ export const NOTIFICATION_SETTING_KEYS = {
   memberWelcome: "email.member_welcome.enabled",
   revisionRequest: "email.revision_request.enabled",
   radarScanDigest: "email.radar_scan_digest.enabled",
+  weeklyCityDigest: "email.weekly_city_digest.enabled",
 } as const;
 
 export type NotificationSettingKey =
@@ -73,6 +74,7 @@ export type AdminNotificationState = {
   memberWelcomeEnabled: boolean;
   revisionRequestEnabled: boolean;
   radarScanDigestEnabled: boolean;
+  weeklyCityDigestEnabled: boolean;
   myNewMemberEmail: boolean;
   myAdminUpdateEmail: boolean;
   myRevisionRequestEmail: boolean;
@@ -99,6 +101,7 @@ type RawState = {
   memberWelcomeEnabled?: unknown;
   revisionRequestEnabled?: unknown;
   radarScanDigestEnabled?: unknown;
+  weeklyCityDigestEnabled?: unknown;
   myNewMemberEmail?: unknown;
   myAdminUpdateEmail?: unknown;
   myRevisionRequestEmail?: unknown;
@@ -174,6 +177,7 @@ export function mapNotificationState(raw: unknown): AdminNotificationState {
     memberWelcomeEnabled: toBoolean(state.memberWelcomeEnabled),
     revisionRequestEnabled: toBoolean(state.revisionRequestEnabled),
     radarScanDigestEnabled: toBoolean(state.radarScanDigestEnabled),
+    weeklyCityDigestEnabled: toBoolean(state.weeklyCityDigestEnabled),
     myNewMemberEmail: toBoolean(state.myNewMemberEmail),
     myAdminUpdateEmail: toBoolean(state.myAdminUpdateEmail),
     myRevisionRequestEmail: toBoolean(state.myRevisionRequestEmail),

@@ -214,6 +214,17 @@ const AdminNotificationSettingsPage = () => {
               setGlobal(SETTING_KEYS.radarScanDigest, checked)
             }
           />
+
+          <ToggleRow
+            title="Haftalık şehir özeti açık"
+            description="Her hafta Pazar akşamı üyelere bulundukları şehrin etkinlik ve duygu özeti maili gider. Kapalıyken kimse almaz."
+            checked={state.weeklyCityDigestEnabled}
+            disabled={!state.isAdmin || settingsBusy}
+            label="Haftalık şehir özeti açık"
+            onCheckedChange={(checked) =>
+              setGlobal(SETTING_KEYS.weeklyCityDigest, checked)
+            }
+          />
         </section>
 
         <section className="space-y-3">

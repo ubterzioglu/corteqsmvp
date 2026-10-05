@@ -158,13 +158,13 @@ export function MyEventsPanel() {
       {isLoading && <p className="text-sm text-slate-600">Yükleniyor...</p>}
       {error && <p className="text-sm text-red-600">Etkinliklerin yüklenemedi.</p>}
 
-      {/* A13: İlk-onay kuralı KALDIRILDI — tüm etkinlikler otomatik yayında. */}
+      {/* B8: İlk onay kuralı geri alındı — ilk etkinlik admin onayından geçer */}
       {!isLoading && !error && events && (
         <p
           className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600"
           data-testid="my-events-rule-note"
         >
-          Etkinlikleriniz oluşturulduktan sonra otomatik olarak yayında olur.
+          Kural: ilk etkinliğin yönetici onayından geçer, sonrakiler otomatik yayınlanır.
           Aynı anda en fazla <strong>{EVENTS_ACTIVE_LIMIT}</strong> aktif etkinliğiniz olabilir
           (şu an {events.filter((event) => event.status === "published" && event.event_date >= new Date().toISOString().slice(0, 10)).length} aktif).
           Geçmiş etkinlikler limite sayılmaz.
@@ -176,7 +176,8 @@ export function MyEventsPanel() {
           <Calendar className="mx-auto mb-3 h-10 w-10 text-slate-400" />
           <h4 className="text-base font-semibold text-slate-700">Henüz etkinlik oluşturmadın</h4>
           <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. Etkinlikler oluşturulduktan sonra otomatik olarak yayında olur.
+            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. İlk etkinliğin yönetici
+            onayından geçer; sonrakiler otomatik yayınlanır. Durumu buradan takip edersin.
           </p>
           <Button asChild className="mt-4 gap-1.5">
             <Link to="/events">
