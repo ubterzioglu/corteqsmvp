@@ -147,9 +147,21 @@ const writeRuntimeConfig = async () => {
 const normalizeRequestPath = (requestUrl) => {
   const pathname = new URL(requestUrl, "http://localhost").pathname;
   const decodedPath = decodeURIComponent(pathname);
+  
+  // SG8: Windows backslash traversal koruması
+  if (decodedPath.includes("\\")) {
+    return null;
+  }
+  
   const normalizedPath = path.posix.normalize(decodedPath);
 
   if (normalizedPath.startsWith("/..")) {
+    return null;
+  }
+
+  // SG8: distDir dışında dosya erişimini engelle
+  const resolvedPath = path.resolve(distDir, "." + normalizedPath);
+  if (!resolvedPath.startsWith(path.resolve(distDir))) {
     return null;
   }
 

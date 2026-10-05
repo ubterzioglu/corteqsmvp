@@ -65,6 +65,9 @@ server {
   listen 80 default_server;
   server_name _;
 
+  # SG8: nginx versiyonunu gizle
+  server_tokens off;
+
   root /usr/share/nginx/html;
   index index.html;
 
@@ -134,7 +137,8 @@ server {
   # (App.tsx'teki WhatsAppGroupDetailRedirect ile aynı davranış.)
   # Regex location'lar tanımlama sırasına göre değerlendirilir; bu yüzden aşağıdaki
   # genel `~* \.[a-z0-9]+$` bloğundan ÖNCE durmalı.
-  location ~ ^/whatsapp-groups/(.+)$ { return 301 /addcom?group=$1; }
+  # SG8: Gevşek (.+) yerine güvenli karakter sınıfı
+  location ~ ^/whatsapp-groups/([A-Za-z0-9_-]+)$ { return 301 /addcom?group=$1; }
 
   location = /env-config.js {
     add_header X-Frame-Options "DENY" always;

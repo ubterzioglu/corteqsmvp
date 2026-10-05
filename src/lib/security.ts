@@ -13,12 +13,8 @@ const DANGEROUS_URL_SCHEMES = /^(javascript|data|vbscript|blob):/i;
 const MAX_TITLE_LENGTH = 500;
 const MAX_CONTENT_LENGTH = 50000;
 
-export function sanitizeHtml(dirty: string): string {
-  return dirty
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/\son\w+="[^"]*"/gi, "")
-    .replace(/\son\w+='[^']*'/gi, "");
-}
+// SG10: sanitizeHtml kaldırıldı — zayıf regex, kullanılmıyordu.
+// HTML temizliği gerekiyorsa DOMPurify gibi kütüphane kullan.
 
 export function sanitizeUrl(url: string): string {
   if (!url) return "";

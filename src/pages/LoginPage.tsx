@@ -41,7 +41,11 @@ const LoginPage = () => {
 
   const nextPath = useMemo(() => {
     const rawNext = searchParams.get("next")?.trim() ?? searchParams.get("redirect")?.trim();
-    return rawNext?.startsWith("/") ? rawNext : "/profile";
+    // SG10: //evil.com veya \\evil.com gibi çift slash'li URL'leri reddet
+    if (rawNext && /^\/(?![/\\])/.test(rawNext)) {
+      return rawNext;
+    }
+    return "/profile";
   }, [searchParams]);
 
   const redirectTo = useMemo(() => {

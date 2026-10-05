@@ -220,10 +220,35 @@ Deno.serve(async (req) => {
       throw new Error("Missing one of SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY or GEMINI_API_KEY");
     }
 
+    // SG7: Kimlik doğrulama zorunlu
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return jsonResponse({ error: "Missing authorization" }, 401, corsHeaders);
+    }
+    const token = authHeader.slice(7);
+    const authClient = createClient(supabaseUrl, supabaseUrl.includes("localhost") ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0" : serviceKey);
+    const { data: { user }, error: authError } = await authClient.auth.getUser(token);
+    if (authError || !user) {
+      return jsonResponse({ error: "Invalid token" }, 401, corsHeaders);
+    }
+
     const supabase = createClient(supabaseUrl, serviceKey);
     await enforceRateLimit(supabase, req, "find-matches", RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_SECONDS);
 
     const payload = RequestSchema.parse(await readJsonWithLimit(req, MAX_BODY_BYTES));
+
+    // SG7: persist=true ise yalnız kullanıcının kendi submissions'ına yazabilir
+    if (payload.persist && payload.sourceSubmissionId) {
+      const { data: ownSubmission } = await supabase
+        .from("submissions")
+        .select("id")
+        .eq("id", payload.sourceSubmissionId)
+        .eq("user_id", user.id)
+        .single();
+      if (!ownSubmission) {
+        return jsonResponse({ error: "Cannot persist: not your submission" }, 403, corsHeaders);
+      }
+    }
 
     let query = supabase
       .from("submissions")
