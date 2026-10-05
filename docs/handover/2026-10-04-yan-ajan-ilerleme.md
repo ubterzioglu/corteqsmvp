@@ -279,7 +279,7 @@ where cic.item_id = v_item.id
 **Başlangıç noktası:** `docs/handover/2026-10-05-ajan-prompt-g14.md` (G14 şikayet akışı)
 
 **Öncelik sırası:**
-1. G14 (şikayet akışı) — G04 tamamlandı, sıra bunda
+1. **G14 (şikayet akışı)** — G04 tamamlandı, sıra bunda. Migration + TS + UI + kabul testi.
 2. P04-P07 (denetimler) — hızlı tamamlanabilir
 3. K01+K04 (dokümantasyon) — kullanıcı kararı için hazırlık
 4. SG (SEO/GEO) — plan yazımı
@@ -290,7 +290,24 @@ where cic.item_id = v_item.id
 
 **Önemli:** Her batch'ten sonra `docs/handover/2026-10-04-yan-ajan-ilerleme.md` dosyasını güncelle.
 
-**W04-W06 için kullanıcı adımları:** `docs/handover/2026-10-05-w-kullanici-adimlari.md` (oluşturulacak)
+**W04-W06 için kullanıcı adımları:** `docs/handover/2026-10-05-w-kullanici-adimlari.md` (oluşturuldu)
+
+---
+
+## 🎯 Oturum Özeti (5 Ekim 2026, ~11:30 UTC)
+
+**Tamamlanan:**
+- ✅ U04: 16 kanıtsız ✅ → 🔒 (b1b0cbae)
+- ✅ P02+P03: Anon iletişim filtresi (20dd0b56, mig 20261004280000)
+- ✅ W04: WhatsApp bot foundation (ac9d5ec7, mig 20261005100000)
+- ✅ W05: WhatsApp autoreply edge function (b2fdc356)
+- ✅ W06: Webhook triggers autoreply (a5888025)
+
+**Toplam:** 6 batch, 8 commit, 2 migration (canlı), 2 kabul testi (14/14 başarılı)
+
+**Kalan:** 8 batch (G14, P04-P07, K01+K04, SG, U01, Stripe, G10c, kullanıcı-adımları)
+
+**Sonraki ajan için:** G14 ile başla (prompt hazır: docs/handover/2026-10-05-ajan-prompt-g14.md)
 
 ---
 
