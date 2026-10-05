@@ -1,3 +1,9 @@
+-- ═══ GEÇMİŞ TANIM — A13 (20261005900000) ile GEÇERSİZ KILINDI ═══
+-- Bu migration'ın create_event_v1 tanımı artık kullanılmıyor.
+-- Güncel tanım: A13 — tüm etkinlikler otomatik published (ilk-onay kuralı YOK).
+-- Bu dosya YALNIZCA kolon/ayar altyapısını korur (approval_source, event_settings).
+-- ═══════════════════════════════════════════════════════════════════════════════
+--
 -- M02 · Topluluk Motoru Faz 1: etkinlik ilk-onay kuralı + ayarlar + create_event_v1
 --
 -- ═══ KAPSAM (plan Faz 1, madde 1-2 + T1) ═══
