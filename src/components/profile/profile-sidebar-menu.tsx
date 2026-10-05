@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import {
+  AlertTriangle,
   Award,
   BookOpen,
   Briefcase,
@@ -43,6 +44,8 @@ export type ProfileSidebarSections = {
   accessCard: ReactNode;
   /** Boş/`null` ise "Contributor Kaynakları" öğesi hiç eklenmez. */
   contributorResourcesCard: ReactNode;
+  /** A4.4: Tehlikeli Bölge (hesap silme) — en altta, kırmızı uyarı. */
+  dangerZoneCard: ReactNode;
   helpCard: ReactNode;
 };
 
@@ -148,6 +151,12 @@ export function buildProfileSidebarMenu(sections: ProfileSidebarSections): Sideb
           } as SidebarMenuItem,
         ]
       : []),
+    {
+      id: "danger",
+      label: "Tehlikeli Bölge",
+      icon: <AlertTriangle className="h-4 w-4" />,
+      content: sections.dangerZoneCard,
+    },
     {
       id: "help",
       label: "Yardım",

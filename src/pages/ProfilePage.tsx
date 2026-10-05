@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
+  AlertTriangle,
+  BookOpen,
   Briefcase,
   Globe2,
   HelpCircle,
@@ -705,6 +707,52 @@ const ProfilePage = () => {
     />
   );
 
+  // A4.4: Tehlikeli Bölge — hesap silme
+  const dangerZoneCard = (
+    <Card className="border-2 border-red-200 bg-red-50/50">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-red-700">
+          <AlertTriangle className="h-5 w-5" />
+          Tehlikeli Bölge
+        </CardTitle>
+        <CardDescription>
+          Bu işlemler geri alınamaz. Lütfen dikkatli olun.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="rounded-lg border border-red-300 bg-white p-4">
+          <h4 className="mb-2 font-semibold text-red-700">Hesabı Kalıcı Olarak Sil</h4>
+          <p className="mb-3 text-sm text-slate-600">
+            Hesabınızı sildiğinizde tüm kişisel verileriniz kalıcı olarak silinir.
+            Cadde'deki gönderileriniz ve grup içerikleriniz "Silinmiş Üye" olarak kalır.
+          </p>
+          <ul className="mb-4 space-y-1 text-sm text-slate-600">
+            <li>• Kişisel bilgiler (ad, e-posta, telefon, foto)</li>
+            <li>• Profil belgeleri (CV, sunum, ruhsat)</li>
+            <li>• Özel mesajlar ve bildirimler</li>
+          </ul>
+          <p className="mb-4 text-xs text-slate-500">
+            <strong>KVKK/GDPR:</strong> Silme işlemi sonrası verileriniz 30 gün içinde tüm sistemlerden temizlenir.
+            Yasal yükümlülükler nedeniyle bazı kayıtlar (finansal işlemler) 6 yıl saklanabilir.
+          </p>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              // TODO: A4.4 — Hesap silme modal'ı aç
+              // - Yazılı onay ("SİL" yaz)
+              // - Yeniden doğrulama (şifre)
+              // - Engel kontrolü (check_account_deletion_blocks_v1)
+              // - Edge function çağrısı (delete-account)
+              alert("Hesap silme özelliği yakında aktif olacak.");
+            }}
+          >
+            Hesabımı Sil
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   // Premium düzenin yerleşimi `ProfilePremiumLayout`'ta; burada yalnız hazır
   // kartlar ve durum gruplu olarak geçilir (A07d).
   if (isPremiumPilot) {
@@ -777,6 +825,7 @@ const ProfilePage = () => {
     roleSpecificCard,
     accessCard,
     contributorResourcesCard,
+    dangerZoneCard,
     helpCard,
   });
 

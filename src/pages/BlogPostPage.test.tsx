@@ -74,3 +74,34 @@ describe("BlogPostPage SEO", () => {
     expect(robotsContent()).not.toBe("noindex, follow");
   });
 });
+
+// SE2 · "Tüm yazılar" ve "Rehberler'e dön" bağlantıları /radar/rehberler'e yönlendirilmeli
+// (301 redirect yerine doğrudan doğru URL'ye link verilir — SEO için daha iyi)
+describe("BlogPostPage navigation (SE2)", () => {
+  it("bulunamayan yazıda 'Rehberler'e dön' bağlantısı /radar/rehberler'e yönlendirir", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(null);
+    renderAt("/blog/olmayan-yazi");
+
+    const link = await screen.findByRole("link", { name: /rehberler'e dön/i });
+    expect(link).toHaveAttribute("href", "/radar/rehberler");
+  });
+
+  it("bulunan yazıda 'Tüm yazılar' bağlantısı /radar/rehberler'e yönlendirir", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue({
+      slug: "var",
+      title: "Var olan yazı",
+      excerpt: "Özet",
+      content: "",
+      cover_image: null,
+      published_at: "2026-10-01T00:00:00Z",
+      created_at: "2026-10-01T00:00:00Z",
+      updated_at: "2026-10-01T00:00:00Z",
+      category: "genel",
+      country_label: null,
+    });
+    renderAt("/blog/var");
+
+    const link = await screen.findByRole("link", { name: /tüm yazılar/i });
+    expect(link).toHaveAttribute("href", "/radar/rehberler");
+  });
+});
