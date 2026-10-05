@@ -141,6 +141,18 @@ const Footer = () => {
         {" · "}
         Son güncelleme: 19.09.2026
       </div>
+
+      {/* A9: CorteQS Global linki */}
+      <div className="mt-2.5 text-center">
+        <a
+          href="https://corteqsglobal.qualtronsinclair.com/?utm_source=corteqs.net&utm_medium=footer"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-muted-foreground underline underline-offset-[3px] hover:text-foreground transition-colors"
+        >
+          🌍 CorteQS Global – Coming to every diaspora →
+        </a>
+      </div>
     </footer>
   );
 };
