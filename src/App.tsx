@@ -92,6 +92,9 @@ const LeaderboardPage = lazyWithReload(() => import("@/pages/LeaderboardPage"));
 const RecommendationsPage = lazyWithReload(() => import("@/pages/RecommendationsPage"));
 const RecommendationDetailPage = lazyWithReload(() => import("@/pages/RecommendationDetailPage"));
 const CreateEventPage = lazyWithReload(() => import("@/pages/CreateEventPage"));
+// A8: İş ilanı sayfaları
+const JobListingsPage = lazyWithReload(() => import("@/pages/JobListingsPage"));
+const JobListingDetailPage = lazyWithReload(() => import("@/pages/JobListingDetailPage"));
 
 // Admin route ağacı (lazy importlar dahil) — bkz. src/pages/admin/routes.tsx
 import { adminRoutes } from "@/pages/admin/routes";
@@ -225,6 +228,9 @@ const App = () => (
                     <Route path="/liderlik" element={<LeaderboardPage />} />
                     <Route path="/tavsiye" element={<RecommendationsPage />} />
                     <Route path="/tavsiye/:id" element={<RecommendationDetailPage />} />
+                    {/* A8: İş ilanı sayfaları */}
+                    <Route path="/ilanlar" element={<JobListingsPage />} />
+                    <Route path="/ilanlar/:id" element={<JobListingDetailPage />} />
                     <Route path="/associations" element={<Associations />} />
                     <Route path="/city-ambassadors" element={<CityAmbassadorsPage />} />
                     <Route path="/consultants" element={<ConsultantsPage />} />

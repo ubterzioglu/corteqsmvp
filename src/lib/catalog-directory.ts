@@ -191,6 +191,12 @@ export type UnifiedDirectoryRow = {
   isVerified: boolean;
   isClaimable: boolean;
   itemType: string;
+  /** B10: Gelecek etkinlik bilgisi (PII-free, anon'a açık). */
+  nextEvent?: {
+    title: string;
+    event_date: string;
+    city: string | null;
+  } | null;
 };
 
 const legacyCountryToCode: Record<string, string> = {

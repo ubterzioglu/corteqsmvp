@@ -6,7 +6,7 @@
 // ise kartta boş duruyor. Bu yüzden `recordType` başına iki ayrı yüzey var:
 // catalog_item → bu kart, member → DirectoryResultRow.
 
-import { ArrowUpRight, MapPin, ShieldCheck, Star } from "lucide-react";
+import { ArrowUpRight, Calendar, MapPin, ShieldCheck, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
@@ -69,6 +69,20 @@ export const DirectoryResultCard = ({ row }: DirectoryResultCardProps) => {
 
       {row.description ? (
         <p className="line-clamp-3 text-sm leading-relaxed text-muted-foreground">{row.description}</p>
+      ) : null}
+
+      {row.nextEvent ? (
+        <div className="flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/60 px-3 py-2 text-xs">
+          <Calendar className="h-3.5 w-3.5 shrink-0 text-emerald-600" />
+          <span className="min-w-0 flex-1">
+            <span className="font-semibold text-emerald-700">Etkinliği var:</span>{" "}
+            <span className="line-clamp-1 text-foreground/80">{row.nextEvent.title}</span>
+            <span className="ml-1 text-muted-foreground">
+              · {new Date(row.nextEvent.event_date).toLocaleDateString("tr-TR", { day: "numeric", month: "short" })}
+              {row.nextEvent.city ? ` · ${row.nextEvent.city}` : ""}
+            </span>
+          </span>
+        </div>
       ) : null}
 
       <div className="mt-auto flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-muted-foreground">
