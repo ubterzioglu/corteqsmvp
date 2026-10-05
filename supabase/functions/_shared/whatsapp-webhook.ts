@@ -24,6 +24,7 @@ export type WhatsAppWebhookDependencies = {
   appSecret: string;
   claimRateLimit: (requesterHash: string) => Promise<boolean>;
   ingestEvent: (event: StoredWhatsAppWebhookEvent) => Promise<boolean>;
+  onInboundMessage?: (event: StoredWhatsAppWebhookEvent) => Promise<void>;
 };
 
 const MAX_BODY_BYTES = 1_000_000;
@@ -276,7 +277,19 @@ export function createWhatsAppWebhookHandler(dependencies: WhatsAppWebhookDepend
         messageStatus: event.messageStatus,
         providerTimestamp: event.providerTimestamp,
       };
-      if (await dependencies.ingestEvent(storedEvent)) inserted += 1;
+      if (await dependencies.ingestEvent(storedEvent)) {
+        inserted += 1;
+        
+        // Trigger autoreply for inbound messages (non-blocking)
+        if (event.eventType === "inbound_message" && event.messageText && dependencies.onInboundMessage) {
+          try {
+            await dependencies.onInboundMessage(storedEvent);
+          } catch (error) {
+            // Log but don't fail the webhook response
+            console.error("whatsapp-webhook: autoreply trigger failed", error);
+          }
+        }
+      }
     }
 
     return json({ received: events.length, inserted }, 200);

@@ -44,6 +44,12 @@ verify_jwt = false
 [functions.whatsapp-reply]
 verify_jwt = true
 
+# W06: whatsapp-autoreply is called by whatsapp-webhook (internal edge-to-edge call).
+# verify_jwt=false because the webhook doesn't have a user JWT. Authorization is
+# handled by x-autoreply-secret header (constant-time comparison).
+[functions.whatsapp-autoreply]
+verify_jwt = false
+
 # A12b kuyruğu (A99-R2 dersi): site-assistant kullanıcı JWT'si İSTER (üyeler-only,
 # anon 401 — fonksiyonun kendi denetimi). Canlı durum zaten doğru (v19,
 # verify_jwt=true ölçüldü 30.09); buraya YAZILMA sebebi, gelecekteki bir CLI

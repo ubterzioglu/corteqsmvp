@@ -44,6 +44,53 @@ const handler = createWhatsAppWebhookHandler({
     if (error) throw new Error("webhook_ingest_failed");
     return data === true;
   },
+  onInboundMessage: async (event: StoredWhatsAppWebhookEvent) => {
+    // Trigger whatsapp-autoreply edge function (non-blocking)
+    // This is fire-and-forget; errors are logged but don't affect webhook response
+    try {
+      const autoreplyUrl = `${supabaseUrl}/functions/v1/whatsapp-autoreply`;
+      const autoreplySecret = Deno.env.get("WHATSAPP_AUTOREPLY_SECRET");
+      
+      if (!autoreplySecret) {
+        console.error("whatsapp-webhook: WHATSAPP_AUTOREPLY_SECRET not configured");
+        return;
+      }
+
+      // Query thread ID using waIdHash
+      const { data: threadData, error: threadError } = await admin
+        .from("whatsapp_customer_threads")
+        .select("id")
+        .eq("wa_id_hash", event.waIdHash)
+        .single();
+
+      if (threadError || !threadData) {
+        console.error("whatsapp-webhook: failed to find thread for autoreply", threadError);
+        return;
+      }
+
+      // Call autoreply function
+      const response = await fetch(autoreplyUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-autoreply-secret": autoreplySecret,
+        },
+        body: JSON.stringify({
+          threadId: threadData.id,
+          messageId: event.providerMessageId,
+          waIdHash: event.waIdHash,
+          waIdCiphertext: event.waIdCiphertext,
+          messageText: event.messageText,
+        }),
+      });
+
+      if (!response.ok) {
+        console.error("whatsapp-webhook: autoreply failed", response.status, await response.text());
+      }
+    } catch (error) {
+      console.error("whatsapp-webhook: autoreply trigger error", error);
+    }
+  },
 });
 
 Deno.serve(async (request) => {
