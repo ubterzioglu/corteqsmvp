@@ -28,6 +28,9 @@ dist-ssr
 # Secrets
 secret.md
 secret_ignore.md
+
+# SG1: DB dump'ları — PII + auth hash'leri içerir (S1)
+docs/archive/backups/
 remote.env.generated
 
 # Coverage
