@@ -1,9 +1,10 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, MapPin, Monitor, Users, Globe, ExternalLink, Share2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useEvent } from "@/hooks/use-events";
+import { useAuth } from "@/components/auth/useAuth";
 import { useSeo } from "@/lib/seo";
 import { eventTypeLabel, isOnlineEventType, isPhysicalEventType } from "@/lib/events-vocabulary";
 import {
@@ -24,7 +25,13 @@ function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
 
 export default function EventDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const { data: event, isLoading, error } = useEvent(id ?? "");
+
+  // A14: ?share=1 ile gelen sahibe paylaşım bölümünü vurgula
+  const isOwner = user && event && event.user_id === user.id;
+  const highlightShare = searchParams.get("share") === "1" && isOwner && event?.status === "published";
 
   // Paylaşım adresi `window.location.href` DEĞİL: o, adrese yapışmış sorgu
   // parametrelerini (utm_*, ?ref=...) de paylaşıma taşır.
@@ -230,10 +237,19 @@ export default function EventDetailPage() {
               </div>
             )}
 
-            <div className="border-t pt-4">
+            <div className={`border-t pt-4 ${highlightShare ? "mt-6 scroll-mt-24" : ""}`} id={highlightShare ? "share-section" : undefined}>
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
                 <Share2 className="h-4 w-4" /> Paylaş
               </h3>
+              {/* A14: ?share=1 ile gelen sahibe vurgulu kutu */}
+              {highlightShare && (
+                <div
+                  className="mb-3 rounded-lg border border-emerald-200 bg-emerald-100 px-3 py-2 text-sm font-medium text-emerald-900"
+                  data-testid="share-highlight-banner"
+                >
+                  ✨ Etkinliğiniz yayında — aşağıdaki butonlarla paylaşın!
+                </div>
+              )}
               {/* Onay bekleyen etkinliği paylaşmak üyeyi zor durumda bırakır:
                   RLS yalnız `published` kaydı herkese gösterir, bağlantıyı açan
                   herkes "Etkinlik bulunamadı" görür. Aynı kural
@@ -244,8 +260,7 @@ export default function EventDetailPage() {
                 />
               ) : (
                 <p className="text-sm text-slate-500">
-                  Etkinlik yönetici onayından sonra paylaşılabilir — şu anda bağlantıyı yalnız sen
-                  görebilirsin.
+                  Etkinlik henüz yayında değil — bağlantıyı yalnız sen görebilirsin.
                 </p>
               )}
             </div>

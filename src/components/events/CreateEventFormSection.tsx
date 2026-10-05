@@ -227,19 +227,11 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
         registrationUrl: registrationUrl || null,
       });
 
-      // M05: ilk-onay kuralı kullanıcıya DOĞRU söylenir — otomatik yayında
-      // "onaydan sonra" demek yalan olurdu (M06 MyEventsPanel bunu detaylandırır).
-      toast(
-        result.status === "published"
-          ? {
-              title: "Etkinliğiniz yayınlandı",
-              description: "Listede görünüyor. İyi etkinlikler!",
-            }
-          : {
-              title: "Etkinliğiniz alındı",
-              description: "İlk etkinliğiniz admin onayından sonra listede yayınlanacak.",
-            },
-      );
+      // A13: Tüm etkinlikler otomatik published (ilk-onay kuralı KALDIRILDI).
+      toast({
+        title: "Etkinliğiniz yayınlandı",
+        description: "Listede görünüyor. İyi etkinlikler!",
+      });
 
       forgetEventFormDraft();
       setTitle("");
@@ -263,6 +255,11 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
       setOrganizerName(profile?.full_name ?? "");
       setRegistrationUrl("");
       onOpenChange(false);
+
+      // A13: Etkinlik detay sayfasına yönlendir
+      if (result.eventId) {
+        window.location.href = `/events/${result.eventId}?share=1`;
+      }
     } catch (error) {
       toast({
         title: "Gönderilemedi",
@@ -293,7 +290,7 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
             <div className="mb-5">
               <h3 className="text-left text-xl font-bold text-slate-900">Etkinlik Ekle</h3>
               <p className="mt-1 text-left text-sm text-slate-600">
-                Aşağıdaki bilgileri doldur. Etkinlik admin onayından sonra listede görünecek.
+                Aşağıdaki bilgileri doldur. Etkinlik hemen yayında olacak.
               </p>
             </div>
 
