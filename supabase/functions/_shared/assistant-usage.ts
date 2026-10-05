@@ -1,4 +1,4 @@
-export type AssistantFunctionName = "site-assistant" | "relocation-assistant";
+export type AssistantFunctionName = "site-assistant" | "relocation-assistant" | "whatsapp-autoreply";
 export type AssistantUsageStatus = "success" | "quota_exceeded" | "error";
 
 export type UsageWriter = {
