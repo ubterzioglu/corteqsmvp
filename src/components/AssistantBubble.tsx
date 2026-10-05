@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 
+import { useAuth } from "@/components/auth/useAuth";
 import ChatBot from "@/components/chat/ChatBot";
 
 // A12a — 29.09 kullanıcı kararı: asistan HER sayfada yüzen balon olarak durur
@@ -18,8 +19,49 @@ const BASE_BOTTOM = "max(0.75rem, calc(env(safe-area-inset-bottom) + 0.75rem))";
 const BUBBLE_BOTTOM = `calc(${BASE_BOTTOM} + 3.75rem)`;
 const PANEL_BOTTOM = `calc(${BASE_BOTTOM} + 7.75rem)`;
 
+// A10 — Karşılama ipucu balonu: ~2 sn sonra gösterilir, oturum başına bir kez.
+// Panel OTOMATİK AÇILMAZ — yalnız küçük bir ipucu balonu gösterilir.
+// sessionStorage try/catch: bazı tarayıcılarda gizli modda storage devre dışı.
+const WELCOME_SHOWN_KEY = "corteqs_assistant_welcome_shown";
+const HINT_DELAY_MS = 2000;
+const HINT_AUTO_CLOSE_MS = 5000; // İpucu 5 sn sonra otomatik kapanır
+
 const AssistantBubble = () => {
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+
+  // A10: Oturum başına bir kez ipucu gösterimi (~2 sn sonra).
+  useEffect(() => {
+    try {
+      if (sessionStorage.getItem(WELCOME_SHOWN_KEY)) return;
+    } catch {
+      // sessionStorage erişilemezse sessizce çık (gizli mod, storage devre dışı)
+      return;
+    }
+
+    const showTimer = setTimeout(() => {
+      setShowHint(true);
+      try {
+        sessionStorage.setItem(WELCOME_SHOWN_KEY, "1");
+      } catch {
+        // Yazma başarısız olsa bile sessizce devam et
+      }
+    }, HINT_DELAY_MS);
+
+    return () => clearTimeout(showTimer);
+  }, []);
+
+  // A10: İpucu 5 sn sonra otomatik kapanır.
+  useEffect(() => {
+    if (!showHint) return;
+
+    const hideTimer = setTimeout(() => {
+      setShowHint(false);
+    }, HINT_AUTO_CLOSE_MS);
+
+    return () => clearTimeout(hideTimer);
+  }, [showHint]);
 
   useEffect(() => {
     if (!open) return;
@@ -30,11 +72,36 @@ const AssistantBubble = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const handleBubbleClick = () => {
+    setShowHint(false); // İpucu gizlenir
+    setOpen((value) => !value);
+  };
+
+  const handleHintClick = () => {
+    setShowHint(false);
+    setOpen(true);
+  };
+
   return (
     <>
+      {/* A10: İpucu balonu */}
+      {showHint && !open && (
+        <button
+          type="button"
+          onClick={handleHintClick}
+          data-testid="assistant-hint"
+          className="fixed z-40 max-w-[min(70vw,16rem)] rounded-2xl bg-card border border-border shadow-lg px-4 py-3 text-sm text-foreground transition-all duration-300 opacity-100 scale-100 hover:shadow-xl cursor-pointer text-left"
+          style={{ right: RIGHT, bottom: `calc(${BUBBLE_BOTTOM} + 4.5rem)` }}
+        >
+          {user
+            ? "Platform hakkında soracakların olursa buradayım! 👋"
+            : "Giriş yap, sorularını yanıtlayayım"}
+        </button>
+      )}
+
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={handleBubbleClick}
         aria-label={open ? "Bilgi asistanını kapat" : "Bilgi asistanını aç"}
         aria-expanded={open}
         data-testid="assistant-bubble"
