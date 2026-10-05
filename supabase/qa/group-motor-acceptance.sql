@@ -563,7 +563,7 @@ begin
   select id into v_id from public.group_reports where landing_id = C and reason = 'diger';
   r := public.review_group_report_v1(v_id, 'upheld', null);
   assert r->'strike'->>'outcome' = 'warning', '#6 S9 diger uyarı: ' || r::text;
-  assert exists (select 1 from public.group_strikes where landing_id = C and redline_number is null and reason = 'Onaylanan şikayet'), '#6 S9 diger → redline NULL';
+  assert exists (select 1 from public.group_strikes where landing_id = C and redline_number is null and reason = 'Onaylanan sikayet'), '#6 S9 diger → redline NULL';
   assert (select listing_status from public.whatsapp_landings where id = C) = 'published', '#6 S9 uyarı grubu düşürdü';
 
   -- özet son durumu yansıtır
