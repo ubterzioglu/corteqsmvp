@@ -22,6 +22,7 @@ export const GENERIC_FEATURE_KEYS = {
   profileWebsiteCard: "profile.website_card",
   profileCvUpload: "profile.cv_upload",
   profilePresentationUpload: "profile.presentation_upload",
+  profileLicenseUpload: "profile.license_upload",
   caddeAccess: "cadde.access",
   directoryVisible: "directory.visible",
   directoryFeatured: "directory.featured",
@@ -35,6 +36,8 @@ export const GENERIC_FEATURE_KEYS = {
   cityManage: "city.manage",
   adminRequiresApproval: "admin.requires_approval",
   whatsappLandingEditAssigned: "whatsapp_landing.edit_assigned",
+  careerCvView: "career.cv.view",
+  careerListingViewUnlimited: "career.listing.view_unlimited",
 } as const;
 
 export type GenericFeatureKey = (typeof GENERIC_FEATURE_KEYS)[keyof typeof GENERIC_FEATURE_KEYS];
@@ -170,6 +173,13 @@ export const GENERIC_FEATURES: FeatureMeta<GenericFeatureKey>[] = [
     subcategory: "📋 Profil Yönetimi",
   },
   {
+    key: GENERIC_FEATURE_KEYS.profileLicenseUpload,
+    label: "Ruhsat/Lisans Yükleme",
+    description: "Kullanıcı işletme ruhsatı veya meslek lisansı yükleyebilir",
+    category: "generic",
+    subcategory: "📋 Profil Yönetimi",
+  },
+  {
     key: GENERIC_FEATURE_KEYS.directoryVisible,
     label: "Directory Görünürlüğü",
     description: "Public directory içerisinde listelenebilir",
@@ -259,6 +269,20 @@ export const GENERIC_FEATURES: FeatureMeta<GenericFeatureKey>[] = [
     description: "İlgili akış admin onayı gerektirir",
     category: "generic",
     subcategory: "⚙️ Sistem",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.careerCvView,
+    label: "CV Görüntüleme",
+    description: "Başka üyelerin CV dosyalarını görüntüleme yetkisi (Premium)",
+    category: "generic",
+    subcategory: "💼 Kariyer",
+  },
+  {
+    key: GENERIC_FEATURE_KEYS.careerListingViewUnlimited,
+    label: "Sınırsız İş İlanı Görüntüleme",
+    description: "İş ilanı detaylarını sınırsız görüntüleme (Free: 5 ilan)",
+    category: "generic",
+    subcategory: "💼 Kariyer",
   },
 ];
 
