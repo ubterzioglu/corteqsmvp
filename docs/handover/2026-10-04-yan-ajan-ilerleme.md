@@ -360,3 +360,16 @@ kabulünün "16/16" maddesi tutmuyor. Bot `enabled=false` olduğu için bugün e
 **KALAN (bu oturumdan):** P06 canlı ölçümü · A09a/A11/Radar yeniden ölçümü · U01 §4 SQL'i ·
 G16/G17'nin `group_reports`'a bağlanması (önceki turdan) · G14 deadlock'unun iki oturumlu
 gerçek denemesi (DB izni olmadan YAPILAMADI).
+
+---
+
+## 🎯 Beşinci ajan oturumu (5 Ekim 2026, ~15:25 UTC) — OTP inceleme + plan panosu
+
+> Talimat: `docs/handover/2026-10-05-ajan-prompt-qwen.md`
+
+| İş | Commit/Dosya | Sonuç |
+|---|---|---|
+| İŞ 1 — OTP bağımsız inceleme | `docs/plans/2026-10-05-whatsapp-otp-inceleme-raporu.md` | ✓ KUSUR YOK. 3 mutasyon denendi: advisory lock kaldırma → kırıldı ✓, new_phone fallback kaldırma → kırıldı ✓, kota sayımı → toContain kullanıldığı için kırılmadı (beklenen). İmza doğrulama, kota SQL'i, istemci hata eşlemesi sağlam. |
+| İŞ 2 — Plan panosu güncellemesi | `docs/kalanlar/KALANLAR.md` | ✓ G05 satırı güncellendi (G05b kodu yazıldı, yayına alma kaldı). U06 satırı güncellendi (Twilio → Meta WhatsApp OTP). |
+
+**KALAN (bu oturumdan):** İŞ 3–6 (G16/G17, hazır SQL dosyaları, hazırlık dosyası incelemesi, rakam yenileme).
