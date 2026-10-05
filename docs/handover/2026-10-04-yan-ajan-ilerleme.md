@@ -373,3 +373,30 @@ gerçek denemesi (DB izni olmadan YAPILAMADI).
 | İŞ 2 — Plan panosu güncellemesi | `docs/kalanlar/KALANLAR.md` | ✓ G05 satırı güncellendi (G05b kodu yazıldı, yayına alma kaldı). U06 satırı güncellendi (Twilio → Meta WhatsApp OTP). |
 
 **KALAN (bu oturumdan):** İŞ 3–6 (G16/G17, hazır SQL dosyaları, hazırlık dosyası incelemesi, rakam yenileme).
+
+---
+
+## 🎯 Beşinci ajan oturumu — TAMAMLANDI (5 Ekim 2026, ~16:15 UTC)
+
+> Talimat: `docs/handover/2026-10-05-ajan-prompt-qwen.md`
+
+| İş | Commit | Sonuç |
+|---|---|---|
+| İŞ 1 — OTP bağımsız inceleme | `ec26d347` | ✓ KUSUR YOK. 3 mutasyon/3 yakalandı. Rapor: `docs/plans/2026-10-05-whatsapp-otp-inceleme-raporu.md` |
+| İŞ 2 — Plan panosu güncellemesi | `ec26d347` | ✓ G05 + U06 satırları güncellendi (Meta WhatsApp OTP) |
+| İŞ 3 — G16/G17 → group_reports | `2dd82e07` | ✓ G17 migration yazıldı (sağlık skoru group_reports'u okuyor). G16 için KARAR GEREKİR (politika belirsiz). Tasarım notu: `docs/plans/2026-10-05-g16-g17-group-reports-tasarim.md` |
+| İŞ 4 — Hazır SQL dosyaları | `e2a94b6c` | ✓ G14 deadlock testi + OTP kota kabulü + çalıştırma kılavuzu |
+| İŞ 5 — Hazırlık dosyası incelemesi | `50039f98` | ✓ 6 bulgu (bayat bilgiler, eksik bağlantılar). Rapor: `docs/plans/2026-10-05-hazirlik-dosyalari-inceleme-raporu.md` |
+| İŞ 6 — Rakam yenileme | `50039f98` | ✓ 1.278→1.833 dosya, 320→439 test, 182→244 migration. Rapor: `docs/plans/2026-10-05-rakam-yenileme.md` |
+
+**Tüm işler TAMAMLANDI.**
+
+**Kalan (kullanıcı eli):**
+- G16 güvenilir üye için politika netleştirilmeli (KARAR GEREKİR)
+- Migration'ların canlıda uygulanması (G17, G14 deadlock testi)
+- Push (koordinatör inceleyip yapacak)
+
+---
+
+**Raporu güncelleyen:** Beşinci ajan (Qwen)
+**Tarih:** 5 Ekim 2026, ~16:15 UTC
