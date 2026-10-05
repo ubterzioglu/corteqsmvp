@@ -198,6 +198,29 @@ describe("nginx yapısal bütünlük", () => {
     expect(wwwBlok, "301 dönen blok default_server olamaz").not.toMatch(/default_server/);
   });
 
+  // SG03 (2026-10-05 ölçümü): nginx vekilin arkasında 80'i dinler; mutlak Location
+  // `http://` yazıyordu ve canlıda http:// 404 döner.
+  it("yönlendirmeler göreli Location üretir (absolute_redirect off)", () => {
+    expect(nginxConf).toMatch(/^\s*absolute_redirect off;/m);
+  });
+
+  // SG01/SG02: dist'te aynı adlı dizini olan rotalar dizin 301'ine düşmemeli
+  // (/commercial'da meta refresh ile SONSUZ döngü vardı).
+  it("/lansman ve /commercial dizin yönlendirmesini atlar, prerender kapısını korur", () => {
+    for (const [rota, hedef] of [
+      ["/lansman", "/lansman/index.html"],
+      ["/commercial", "/index.html"],
+    ] as const) {
+      const kacis = rota.replace(/\//g, "\\/");
+      const blok = nginxConf.match(new RegExp(`location = ${kacis} \\{[\\s\\S]*?\\n  \\}`))?.[0] ?? "";
+
+      expect(blok, `${rota} tam eşleşme bloğu yok`).not.toBe("");
+      expect(blok).toMatch(/if \(\$prerender_target != 0\) \{\s*rewrite \^ \/__prerender_internal last;/);
+      expect(blok).toContain(`rewrite ^ ${hedef} last;`);
+      expect(blok, "kendi add_header'ı olursa güvenlik başlıkları düşer").not.toMatch(/add_header/);
+    }
+  });
+
   it("prerender /admin ve /api'yi dışlar", () => {
     const map = nginxConf.match(/map \$uri \$prerender_excluded \{[^}]*\}/s)?.[0] ?? "";
 

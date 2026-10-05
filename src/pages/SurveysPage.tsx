@@ -10,6 +10,8 @@ export default function SurveysPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  useSeo(PAGE_SEO.surveys, []);
+
   useEffect(() => {
     let cancelled = false;
     const load = async () => {

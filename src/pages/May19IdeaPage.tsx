@@ -7,6 +7,8 @@ import { useSeo } from "@/lib/seo";
 const heroLandmarks = "/denemeremake.png";
 
 export default function May19IdeaPage() {
+  useSeo(PAGE_SEO.may19Idea, []);
+
   return (
     <May19CampaignShell
       eyebrow="19 MAYIS ATATÜRK'Ü ANMA, GENÇLİK VE SPOR BAYRAMI"

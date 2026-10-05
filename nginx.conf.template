@@ -68,6 +68,13 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  # SG03 (2026-10-05): nginx TLS'i sonlandıran vekilin ARKASINDA 80'i dinler; varsayılan
+  # absolute_redirect, Location'ı `http://` ile mutlak yazıyordu (ölçüldü:
+  # /blog → http://corteqs.net/radar/rehberler). http:// ise canlıda 404 döner — HSTS'i
+  # uygulamayan istemci ilk ziyarette kırık sayfaya düşer. Göreli Location, istemcinin
+  # şemasını (https) korur. Silme.
+  absolute_redirect off;
+
   # ── GÜVENLİK BAŞLIKLARI — TEKRARLAR KOPYA DEĞİLDİR, SİLME ──────────────────
   #
   # nginx'te add_header KALITILMAZ: kendi add_header'ı olan bir location, üst
@@ -175,6 +182,29 @@ server {
 
   location ~* \.[a-z0-9]+$ {
     try_files $uri =404;
+  }
+
+  # ── Dist'te AYNI ADLI DİZİNİ olan iki rota (SG01/SG02, 2026-10-05) ──────────
+  # `try_files $uri $uri/` dizini bulunca 301 ile sona "/" ekler. dist/lansman/ (ayrı
+  # vite girişi) ve dist/commercial/ (legacy *.html stub'ları) yüzünden:
+  #   /lansman    → 301 /lansman/   (sayfanın canonical'ı ve sitemap /lansman der)
+  #   /commercial → 301 /commercial/ → commercial/index.html = meta refresh /commercial
+  #                → tekrar 301 … SONSUZ DÖNGÜ; SPA'daki CommercialIndexPage hiç açılmıyordu.
+  # Bu iki tam eşleşme dizin yönlendirmesini atlar. Prerender kapısı `location /` ile
+  # AYNIDIR. Kendi add_header'ları YOKTUR → server bloğundaki güvenlik başlıklarını
+  # miras alırlar; buraya add_header eklersen güvenlik bloğunu da kopyala.
+  location = /lansman {
+    if ($prerender_target != 0) {
+      rewrite ^ /__prerender_internal last;
+    }
+    rewrite ^ /lansman/index.html last;
+  }
+
+  location = /commercial {
+    if ($prerender_target != 0) {
+      rewrite ^ /__prerender_internal last;
+    }
+    rewrite ^ /index.html last;
   }
 
   # Prerender (SEO/GEO): bot + __PRERENDER_URL__ doluysa, isteği prerender servisine

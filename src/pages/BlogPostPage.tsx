@@ -44,6 +44,16 @@ const BlogPostPage = () => {
     };
   }, [slug]);
 
+  // SG07: bulunamayan yazı 200 + "index, follow" ile soft-404 oluyordu (05.10 ölçümü).
+  useEffect(() => {
+    if (state !== "notfound") return;
+    return applySeo({
+      title: `Yazı bulunamadı | ${SEO_SITE_NAME}`,
+      description: "Aradığınız yazı yayından kaldırılmış veya adresi değişmiş olabilir.",
+      robots: "noindex, follow",
+    });
+  }, [state]);
+
   useEffect(() => {
     if (!post) return;
     const canonicalPath = `/blog/${post.slug}`;

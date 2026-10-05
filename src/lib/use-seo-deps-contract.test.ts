@@ -146,6 +146,21 @@ describe("useSeo dinamik çağrılarda deps sözleşmesi", () => {
     expect(args[1].startsWith("[")).toBe(true);
   });
 
+  it("useSeo'yu import eden her sayfa onu GERÇEKTEN çağırır (SG06)", () => {
+    // `ab29c80b` /anket'i "kapatıldı" diye raporladı ama SurveysPage'e yalnız
+    // import eklendi, çağrı yazılmadı: sayfa canlıda ana sayfa başlığıyla ve
+    // canonical'sız servis edildi (05.10 ölçümü). Import tek başına hiçbir şey yazmaz.
+    const importedButNotCalled = files
+      .filter((file) => {
+        const source = stripComments(readFileSync(file, "utf8"));
+        return /import\s*\{[^}]*\buseSeo\b[^}]*\}\s*from\s*["']@\/lib\/seo["']/.test(source)
+          && !/\buseSeo\s*\(/.test(source);
+      })
+      .map((file) => file.replace(process.cwd(), "").replace(/\\/g, "/"));
+
+    expect(importedButNotCalled, "useSeo import edilmiş ama çağrılmamış").toEqual([]);
+  });
+
   it("veri bağımlı her useSeo çağrısı deps taşır", () => {
     const offenders = findDynamicSeoWithoutDeps(files).map(
       ({ file, line }) => `${file.replace(process.cwd(), "").replace(/\\/g, "/")}:${line}`,
