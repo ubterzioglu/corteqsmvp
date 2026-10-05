@@ -1,4 +1,4 @@
-import { BookOpen, Wrench } from "lucide-react";
+import { BookOpen, Calendar, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import type { PublicContentSearchResult } from "@/lib/public-content-search";
@@ -6,11 +6,20 @@ import type { PublicContentSearchResult } from "@/lib/public-content-search";
 type PublicContentSearchResultsProps = {
   results: PublicContentSearchResult[];
   isLoading: boolean;
+  error?: string | null;
 };
 
-const PublicContentSearchResults = ({ results, isLoading }: PublicContentSearchResultsProps) => {
+const PublicContentSearchResults = ({ results, isLoading, error }: PublicContentSearchResultsProps) => {
   if (isLoading) {
     return <p className="mb-6 text-sm text-muted-foreground">İçerikler aranıyor...</p>;
+  }
+  // A16: Arama hatası kullanıcıya gösterilir
+  if (error) {
+    return (
+      <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4">
+        <p className="text-sm text-amber-900">{error}</p>
+      </div>
+    );
   }
   if (results.length === 0) return null;
 
@@ -26,7 +35,8 @@ const PublicContentSearchResults = ({ results, isLoading }: PublicContentSearchR
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {results.map((result) => {
-          const Icon = result.type === "tool" ? Wrench : BookOpen;
+          const Icon = result.type === "tool" ? Wrench : result.type === "event" ? Calendar : BookOpen;
+          const typeLabel = result.type === "tool" ? "Araç" : result.type === "event" ? "Etkinlik" : "Rehber yazısı";
           return (
             <Link
               key={`${result.type}-${result.id}`}
@@ -35,7 +45,7 @@ const PublicContentSearchResults = ({ results, isLoading }: PublicContentSearchR
             >
               <span className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary">
                 <Icon className="h-3.5 w-3.5" />
-                {result.type === "tool" ? "Araç" : "Rehber yazısı"}
+                {typeLabel}
               </span>
               <h3 className="font-semibold text-foreground">{result.title}</h3>
               {result.description ? (

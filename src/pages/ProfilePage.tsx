@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import {
-  BookOpen,
   Briefcase,
-  FileText,
   Globe2,
   HelpCircle,
   ImagePlus,
@@ -29,10 +27,12 @@ import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
 import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
 import { getMyReferralCodeUsage, type MyReferralCodeUsage } from "@/lib/member-profile-api";
 import { getAttributeStringValue } from "@/lib/member-profile";
-import { formatDocumentMeta, readBooleanAttributeValue } from "@/lib/profile-attribute-drafts";
+import { readBooleanAttributeValue } from "@/lib/profile-attribute-drafts";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
+  CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY,
   JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY,
+  LICENSE_DOCUMENT_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
   MOVING_SOON_OPT_IN_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
@@ -51,7 +51,6 @@ import { supabase } from "@/integrations/supabase/client";
 import ProfilePremiumLayout from "@/components/profile/premium/ProfilePremiumLayout";
 import { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";
 import { ProfileAccessCard } from "@/components/profile/ProfileAccessCard";
-import { ProfileDocumentCard } from "@/components/profile/ProfileDocumentCard";
 import { ProfileFieldsCard } from "@/components/profile/ProfileFieldsCard";
 import { PhoneVerificationCard } from "@/components/profile/PhoneVerificationCard";
 import { ProfileHelpCard } from "@/components/profile/ProfileHelpCard";
@@ -69,9 +68,7 @@ import {
   GOOGLE_SOFT_ACTION_PANEL,
   GOOGLE_SOFT_CARD_BLUE_SECTION,
   GOOGLE_SOFT_CARD_GREEN_SECTION,
-  GOOGLE_SOFT_CARD_RED_SECTION,
   GOOGLE_SOFT_CARD_SUBTLE,
-  GOOGLE_SOFT_CARD_YELLOW_SECTION,
   GOOGLE_SOFT_SUCCESS_PANEL,
   GOOGLE_SOFT_WARNING_PANEL,
 } from "@/components/profile/profile-card-styles";
@@ -83,6 +80,7 @@ import { buildProfileSidebarMenu } from "@/components/profile/profile-sidebar-me
 import { QuickActionsCard } from "@/components/profile/QuickActionsCard";
 import { GettingStartedCard } from "@/components/profile/GettingStartedCard";
 import { trUpper } from "@/lib/text-normalization";
+import { ProfileDocumentsSection } from "./ProfileDocumentsSection";
 
 const ProfilePage = () => {
   const { user } = useAuth();
@@ -139,6 +137,7 @@ const ProfilePage = () => {
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const cvInputRef = useRef<HTMLInputElement | null>(null);
   const presentationInputRef = useRef<HTMLInputElement | null>(null);
+  const licenseInputRef = useRef<HTMLInputElement | null>(null);
 
   const roleMeta = useMemo(
     () => getRoleMeta(getUiProfileType(profile?.profileType ?? type)),
@@ -188,9 +187,13 @@ const ProfilePage = () => {
   const movingSoonOptInAttribute = attributeMap.get(MOVING_SOON_OPT_IN_ATTRIBUTE_KEY) ?? null;
   const volunteerMentorshipOptInAttribute = attributeMap.get(VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY) ?? null;
   const cvDocumentAttribute = attributeMap.get(CV_DOCUMENT_ATTRIBUTE_KEY) ?? null;
+  const cvShareAttribute = attributeMap.get(CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY) ?? null;
+  const cvShareEnabled = readBooleanAttributeValue(cvShareAttribute?.valueJson, false);
   const presentationDocumentAttribute = attributeMap.get(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY) ?? null;
+  const licenseDocumentAttribute = attributeMap.get(LICENSE_DOCUMENT_ATTRIBUTE_KEY) ?? null;
   const cvDocument = parseProfileDocumentRecord(cvDocumentAttribute?.valueJson);
   const presentationDocument = parseProfileDocumentRecord(presentationDocumentAttribute?.valueJson);
+  const licenseDocument = parseProfileDocumentRecord(licenseDocumentAttribute?.valueJson);
 
   const isIndividualProfile = roleMeta?.canonicalSlug === "individual";
   const jobSeekingFeatureEnabled = isFeatureEnabled(INDIVIDUAL_FEATURE_KEYS.jobSeekingBadge);
@@ -200,6 +203,7 @@ const ProfilePage = () => {
   const websiteCardEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileWebsiteCard);
   const cvUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileCvUpload);
   const presentationUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profilePresentationUpload);
+  const licenseUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileLicenseUpload);
   const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
   const displayNameLabel = roleMeta?.displayNameLabel ?? "Görünen İsim";
   const shortBio = readAttributeValue("bio_short");
@@ -248,9 +252,10 @@ const ProfilePage = () => {
     openingDocumentKey,
     handleCvFileChange,
     handlePresentationFileChange,
+    handleLicenseFileChange,
     handleOpenDocument,
     handleRemoveDocument,
-  } = useProfileDocuments({ userId: user?.id, cvDocument, presentationDocument, refreshProfile });
+  } = useProfileDocuments({ userId: user?.id, cvDocument, presentationDocument, licenseDocument, refreshProfile });
 
   const roleRequests = useProfileRoleRequests({
     isAccessCardOpen,
@@ -420,6 +425,14 @@ const ProfilePage = () => {
         accept=".pdf,.ppt,.pptx,.key,application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/x-iwork-keynote-sffkey"
         className="hidden"
         onChange={(event) => void handlePresentationFileChange(event)}
+      />
+      {/* A12: Ruhsat/lisans yükleme */}
+      <input
+        ref={licenseInputRef}
+        type="file"
+        accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+        className="hidden"
+        onChange={(event) => void handleLicenseFileChange(event)}
       />
     </>
   );
@@ -606,43 +619,24 @@ const ProfilePage = () => {
   );
 
   const documentsGrid = (
-    <div className="grid gap-4 lg:grid-cols-2">
-      {cvUploadEnabled ? (
-        <ProfileDocumentCard
-          cardClassName={GOOGLE_SOFT_CARD_YELLOW_SECTION}
-          title="CV / Özgeçmiş"
-          description="Private bucket içinde saklanır. Sadece sen ve admin erişebilir."
-          icon={FileText}
-          document={cvDocument}
-          acceptLabel="PDF, DOC, DOCX"
-          statusLabel={formatDocumentMeta(cvDocument)}
-          isUploading={uploadingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
-          isRemoving={removingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
-          isOpening={openingDocumentKey === CV_DOCUMENT_ATTRIBUTE_KEY}
-          onUploadClick={() => cvInputRef.current?.click()}
-          onOpenClick={() => void handleOpenDocument(CV_DOCUMENT_ATTRIBUTE_KEY, cvDocument)}
-          onRemoveClick={() => void handleRemoveDocument(CV_DOCUMENT_ATTRIBUTE_KEY, cvDocument)}
-        />
-      ) : null}
-
-      {presentationUploadEnabled ? (
-        <ProfileDocumentCard
-          cardClassName={GOOGLE_SOFT_CARD_RED_SECTION}
-          title="Sunum / Tanıtım"
-          description="Private bucket içinde saklanır. Public profile linklerine eklenmez."
-          icon={BookOpen}
-          document={presentationDocument}
-          acceptLabel="PDF, PPT, PPTX, KEY"
-          statusLabel={formatDocumentMeta(presentationDocument)}
-          isUploading={uploadingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
-          isRemoving={removingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
-          isOpening={openingDocumentKey === PRESENTATION_DOCUMENT_ATTRIBUTE_KEY}
-          onUploadClick={() => presentationInputRef.current?.click()}
-          onOpenClick={() => void handleOpenDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, presentationDocument)}
-          onRemoveClick={() => void handleRemoveDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, presentationDocument)}
-        />
-      ) : null}
-    </div>
+    <ProfileDocumentsSection
+      cvUploadEnabled={cvUploadEnabled}
+      presentationUploadEnabled={presentationUploadEnabled}
+      licenseUploadEnabled={licenseUploadEnabled}
+      cvDocument={cvDocument}
+      presentationDocument={presentationDocument}
+      licenseDocument={licenseDocument}
+      cvShareEnabled={cvShareEnabled}
+      uploadingDocumentKey={uploadingDocumentKey}
+      removingDocumentKey={removingDocumentKey}
+      openingDocumentKey={openingDocumentKey}
+      cvInputRef={cvInputRef}
+      presentationInputRef={presentationInputRef}
+      licenseInputRef={licenseInputRef}
+      onOpenDocument={(key, doc) => void handleOpenDocument(key, doc)}
+      onRemoveDocument={(key, doc) => void handleRemoveDocument(key, doc)}
+      onRefreshProfile={refreshProfile}
+    />
   );
 
   const roleSpecificCard = (

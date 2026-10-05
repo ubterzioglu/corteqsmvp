@@ -5,8 +5,10 @@ import { updateProfileAttribute } from "@/lib/member-profile-api";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
+  LICENSE_DOCUMENT_ATTRIBUTE_KEY,
   PROFILE_CV_BUCKET,
   PROFILE_PRESENTATION_BUCKET,
+  PROFILE_LICENSE_BUCKET,
 } from "@/lib/profile-attribute-keys";
 import {
   getProfileDocumentAccessUrl,
@@ -14,12 +16,13 @@ import {
   uploadProfileDocument,
   type ProfileDocumentRecord,
 } from "@/lib/profile-documents";
-import { validateCvFile, validatePresentationFile } from "@/lib/security";
+import { validateCvFile, validatePresentationFile, validateLicenseFile } from "@/lib/security";
 
 export type UseProfileDocumentsParams = {
   userId: string | undefined;
   cvDocument: ProfileDocumentRecord | null;
   presentationDocument: ProfileDocumentRecord | null;
+  licenseDocument: ProfileDocumentRecord | null;
   refreshProfile: () => Promise<void>;
 };
 
@@ -29,15 +32,17 @@ export type UseProfileDocumentsResult = {
   openingDocumentKey: string | null;
   handleCvFileChange: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
   handlePresentationFileChange: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
+  handleLicenseFileChange: (event: ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleOpenDocument: (documentKey: string, document: ProfileDocumentRecord | null) => Promise<void>;
   handleRemoveDocument: (attributeKey: string, document: ProfileDocumentRecord | null) => Promise<void>;
 };
 
-/** CV ve sunum belgelerinin private bucket akışı (yükle / aç / kaldır). */
+/** CV, sunum ve ruhsat belgelerinin private bucket akışı (yükle / aç / kaldır). */
 export const useProfileDocuments = ({
   userId,
   cvDocument,
   presentationDocument,
+  licenseDocument,
   refreshProfile,
 }: UseProfileDocumentsParams): UseProfileDocumentsResult => {
   const { toast } = useToast();
@@ -118,6 +123,24 @@ export const useProfileDocuments = ({
     await handleUploadDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, PROFILE_PRESENTATION_BUCKET, file, presentationDocument);
   };
 
+  const handleLicenseFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    const validationError = validateLicenseFile(file);
+    if (validationError) {
+      toast({
+        title: "Ruhsat yüklenemedi",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    await handleUploadDocument(LICENSE_DOCUMENT_ATTRIBUTE_KEY, PROFILE_LICENSE_BUCKET, file, licenseDocument);
+  };
+
   const handleOpenDocument = async (documentKey: string, document: ProfileDocumentRecord | null) => {
     if (!document) return;
     setOpeningDocumentKey(documentKey);
@@ -166,6 +189,7 @@ export const useProfileDocuments = ({
     openingDocumentKey,
     handleCvFileChange,
     handlePresentationFileChange,
+    handleLicenseFileChange,
     handleOpenDocument,
     handleRemoveDocument,
   };

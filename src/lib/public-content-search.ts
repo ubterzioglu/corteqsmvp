@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { STANDALONE_TOOLS } from "@/lib/standalone-tools";
 
 export type PublicContentSearchResult = {
-  type: "blog" | "tool";
+  type: "blog" | "tool" | "event";
   id: string;
   title: string;
   description: string | null;
@@ -67,25 +67,45 @@ export async function searchPublicContent(
   });
   if (error) throw error;
 
-  const blogResults = (data ?? []).flatMap((row) => {
-    if (
-      row.content_type !== "blog" ||
-      typeof row.external_id !== "string" ||
-      typeof row.title !== "string" ||
-      typeof row.href !== "string" ||
-      !row.href.startsWith("/blog/")
-    ) {
-      return [];
+  const contentResults: PublicContentSearchResult[] = (data ?? []).flatMap((row): PublicContentSearchResult[] => {
+    // Blog sonuçları
+    if (row.content_type === "blog") {
+      if (
+        typeof row.external_id !== "string" ||
+        typeof row.title !== "string" ||
+        typeof row.href !== "string" ||
+        !row.href.startsWith("/blog/")
+      ) {
+        return [];
+      }
+      return [{
+        type: "blog" as const,
+        id: row.external_id,
+        title: row.title,
+        description: typeof row.description === "string" ? row.description : null,
+        href: row.href,
+      }];
     }
-
-    return [{
-      type: "blog" as const,
-      id: row.external_id,
-      title: row.title,
-      description: typeof row.description === "string" ? row.description : null,
-      href: row.href,
-    }];
+    // A16: Etkinlik sonuçları
+    if (row.content_type === "event") {
+      if (
+        typeof row.external_id !== "string" ||
+        typeof row.title !== "string" ||
+        typeof row.href !== "string" ||
+        !row.href.startsWith("/events/")
+      ) {
+        return [];
+      }
+      return [{
+        type: "event" as const,
+        id: row.external_id,
+        title: row.title,
+        description: typeof row.description === "string" ? row.description : null,
+        href: row.href,
+      }];
+    }
+    return [];
   });
 
-  return [...blogResults, ...toolResults].slice(0, boundedLimit);
+  return [...contentResults, ...toolResults].slice(0, boundedLimit);
 }

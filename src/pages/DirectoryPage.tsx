@@ -24,6 +24,7 @@ import {
   searchPublicContent,
   type PublicContentSearchResult,
 } from "@/lib/public-content-search";
+import { reportClientError } from "@/lib/client-error-reports";
 const mascot = "/lmaskot.png";
 
 // Supabase RPC errors are plain objects ({ message, code, details }), not Error
@@ -54,6 +55,7 @@ const DirectoryPage = () => {
   const [resultTotal, setResultTotal] = useState<number | null>(null);
   const [contentResults, setContentResults] = useState<PublicContentSearchResult[]>([]);
   const [isContentLoading, setIsContentLoading] = useState(false);
+  const [contentError, setContentError] = useState<string | null>(null);
 
   // Kurum kaydı kart, kişi kaydı satır olarak çizilir (revizyon 32ae55b9).
   const { catalogItems, members } = useMemo(() => groupDirectoryResults(rows), [rows]);
@@ -202,14 +204,24 @@ const DirectoryPage = () => {
 
     let isMounted = true;
     setIsContentLoading(true);
+    setContentError(null);
 
     void searchPublicContent(searchText)
       .then((results) => {
         if (isMounted) setContentResults(results);
       })
-      .catch(() => {
-        // İçerik araması yardımcı bir yüzeydir; hatası dizin sonuçlarını düşürmez.
-        if (isMounted) setContentResults([]);
+      .catch((error) => {
+        // A16: Arama hatası sessizce yutulmaz — kullanıcıya gösterilir + telemetri.
+        // Kaynak "unhandled" (client_error_reports CHECK kısıtı).
+        reportClientError({
+          source: "unhandled",
+          context: "directory_search_public_content",
+          error: error instanceof Error ? error : new Error(String(error)),
+        });
+        if (isMounted) {
+          setContentResults([]);
+          setContentError("Arama şu anda çalışmıyor. Lütfen daha sonra tekrar deneyin.");
+        }
       })
       .finally(() => {
         if (isMounted) setIsContentLoading(false);
@@ -365,6 +377,7 @@ const DirectoryPage = () => {
             <PublicContentSearchResults
               results={contentResults}
               isLoading={isContentLoading}
+              error={contentError}
             />
 
             {isLoading ? (

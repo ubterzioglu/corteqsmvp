@@ -18,7 +18,9 @@ export const JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY = "job_seeking_opt_in";
 export const MOVING_SOON_OPT_IN_ATTRIBUTE_KEY = "moving_soon_opt_in";
 export const VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY = "volunteer_mentorship_opt_in";
 export const CV_DOCUMENT_ATTRIBUTE_KEY = "cv_doc";
+export const CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY = "cv_share_with_premium";
 export const PRESENTATION_DOCUMENT_ATTRIBUTE_KEY = "presentation_doc";
+export const LICENSE_DOCUMENT_ATTRIBUTE_KEY = "business_license_doc";
 export const REFERRAL_CODE_ATTRIBUTE_KEY = "referral_code";
 export const REFERRAL_SOURCE_ATTRIBUTE_KEY = "referral_source";
 
@@ -44,6 +46,7 @@ export const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
   VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
   CV_DOCUMENT_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
+  LICENSE_DOCUMENT_ATTRIBUTE_KEY,
 ]);
 
 // WS1 madde 2 (T19): profil tipi kullanıcıya net görünsün — çip + açıklama.
@@ -52,3 +55,4 @@ export const PROFILE_TYPE_TIP =
 
 export const PROFILE_CV_BUCKET = "profile-cv-files";
 export const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";
+export const PROFILE_LICENSE_BUCKET = "profile-license-files";
