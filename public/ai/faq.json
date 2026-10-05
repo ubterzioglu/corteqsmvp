@@ -1,0 +1,30 @@
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "CorteQS nedir?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CorteQS, diaspora için iş birliği ve mentorluk platformudur. Danışmanlık, işletme dizini, etkinlikler ve topluluk özellikleri sunar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Nasıl üye olabilirim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ana sayfadan 'Kayıt Ol' butonuna tıklayarak e-posta adresinizle kayıt olabilirsiniz. Kayıt ücretsizdir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Premium üyelik ne sağlar?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Premium üyelik ile sınırsız iş ilanı görüntüleme, CV paylaşımı, öncelikli destek ve ek özelliklere erişim sağlarsınız."
+      }
+    }
+  ]
+}

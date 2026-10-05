@@ -1,0 +1,21 @@
+User-Agent: *
+Allow: /
+
+# CorteQS AI keşif dosyası
+# Bu dosya AI asistanlarının site içeriğini keşfetmesi için tasarlanmıştır.
+
+Sitemap: https://corteqs.net/sitemap.xml
+
+# Ana sayfalar
+# https://corteqs.net/ - Ana sayfa
+# https://corteqs.net/directory - İşletme ve danışman dizini
+# https://corteqs.net/events - Etkinlikler
+# https://corteqs.net/cadde - Cadde (topluluk akışı)
+# https://corteqs.net/pricing - Fiyatlandırma
+
+# Hakkında
+CorteQS, diaspora için iş birliği ve mentorluk platformudur.
+Danışmanlık, işletme dizini, etkinlikler ve topluluk özellikleri sunar.
+
+# İletişim
+info@corteqs.net
