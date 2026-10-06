@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261006-aciklamalar-iyilestirildi-notu",
+    date: "6 Ekim 2026",
+    title: "Not: Güncelleme açıklamaları iyileştirildi — son 7 günün özetleri sade dille yeniden gönderildi",
+    items: [
+      "NE DEĞİŞTİ: Yönetici paneline ve maillere düşen güncelleme açıklamaları, yazılımcı olmayan biri de anlayabilsin diye yeniden yazıldı. Teknik terimler açık cümlelerle değiştirildi; her kayıt “kısaca ne oldu, ne değişti, sizden ne bekleniyor” sırasıyla anlatıyor.",
+      "NEDEN BU MAİLİ ALDINIZ: 29 Eylül – 6 Ekim arasındaki işlerin sade özetleri (bir genel özet ve her güne ait bir özet) bu mailin içinde yeniden yer alıyor. Önceki mailde gelenlerle aynı işleri anlatıyorlar; yeni bir iş eklenmedi, yalnızca anlatım iyileştirildi.",
+      "NEREDE OKURSUNUZ: Aynı açıklamalar panelde Güncellemeler menüsünde de duruyor. Eski teknik kayıtlar silinmedi; merak edenler için ayrıntı orada.",
+      "GERİ BİLDİRİM: Hâlâ anlaşılmayan bir yer ya da eklenmesini istediğiniz bir açıklama olursa söylemeniz yeterli; bir sonraki kayıtta düzeltilir.",
+    ],
+  },
+  {
     id: "20261006-hafta-ozeti-sade",
     date: "6 Ekim 2026",
     title: "Son 7 günün özeti (29 Eylül – 6 Ekim): ne yapıldı, ne bekliyor — teknik terimsiz",
