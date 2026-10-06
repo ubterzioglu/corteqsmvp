@@ -3,13 +3,20 @@ import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, BookOpen } from "lucide-react";
 
 import BlogMarkdown from "@/components/blog/BlogMarkdown";
-import { blogCategoryLabels, getPublishedBlogPostBySlug, type BlogPostRow } from "@/lib/blog";
 import {
-  applySeo,
-  SEO_CANONICAL_ORIGIN,
-  SEO_DEFAULT_OG_IMAGE,
-  SEO_SITE_NAME,
-} from "@/lib/seo";
+  blogCategoryLabels,
+  getPublishedBlogPostBySlug,
+  listPublishedBlogPostSummaries,
+  type BlogPostRow,
+} from "@/lib/blog";
+import {
+  buildBlogBreadcrumbJsonLd,
+  buildBlogPostingJsonLd,
+  formatBlogDate,
+  pickRelatedPosts,
+  type BlogPostSummary,
+} from "@/lib/blog-seo";
+import { applySeo, SEO_DEFAULT_OG_IMAGE, SEO_SITE_NAME } from "@/lib/seo";
 
 type LoadState = "loading" | "ready" | "notfound";
 
@@ -17,6 +24,7 @@ const BlogPostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPostRow | null>(null);
   const [state, setState] = useState<LoadState>("loading");
+  const [related, setRelated] = useState<BlogPostSummary[]>([]);
 
   useEffect(() => {
     if (!slug) {
@@ -56,44 +64,39 @@ const BlogPostPage = () => {
 
   useEffect(() => {
     if (!post) return;
-    const canonicalPath = `/blog/${post.slug}`;
-    const description = post.excerpt || post.title;
     const ogImage = post.cover_image || SEO_DEFAULT_OG_IMAGE;
 
     // GEO: yapılandırılmış veri — AI cevap motorları (ChatGPT, Perplexity, Google AI
-    // Overviews) BlogPosting şemasından beslenir.
-    const jsonLd: Record<string, unknown> = {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      headline: post.title,
-      description,
-      inLanguage: "tr",
-      url: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
-      mainEntityOfPage: `${SEO_CANONICAL_ORIGIN}${canonicalPath}`,
-      image: ogImage,
-      datePublished: post.published_at ?? post.created_at,
-      dateModified: post.updated_at,
-      author: { "@type": "Organization", name: SEO_SITE_NAME, url: SEO_CANONICAL_ORIGIN },
-      publisher: {
-        "@type": "Organization",
-        name: SEO_SITE_NAME,
-        logo: { "@type": "ImageObject", url: `${SEO_CANONICAL_ORIGIN}/logocorteqsbig.png` },
-      },
-      ...(post.country_label
-        ? { about: { "@type": "Thing", name: post.country_label } }
-        : {}),
-      articleSection: blogCategoryLabels[post.category],
-    };
-
+    // Overviews) BlogPosting şemasından, kırıntı ise site yapısından beslenir.
     return applySeo({
       title: `${SEO_SITE_NAME} Blog | ${post.title}`,
-      description,
-      canonicalPath,
+      description: post.excerpt || post.title,
+      canonicalPath: `/blog/${post.slug}`,
       ogImage,
       ogType: "article",
-      jsonLd,
+      jsonLd: [buildBlogPostingJsonLd(post, ogImage), buildBlogBreadcrumbJsonLd(post)],
     });
   }, [post]);
+
+  // İlgili yazılar İKİNCİL içeriktir: okunamazsa yazının kendisi yine görünür, bölüm çizilmez.
+  useEffect(() => {
+    if (!post) return;
+    let mounted = true;
+    listPublishedBlogPostSummaries()
+      .then((all) => {
+        if (mounted) setRelated(pickRelatedPosts(all, post));
+      })
+      .catch((error: unknown) => {
+        console.warn("İlgili yazılar yüklenemedi", error);
+        if (mounted) setRelated([]);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [post]);
+
+  const publishedLabel = post ? formatBlogDate(post.published_at ?? post.created_at) : null;
+  const updatedLabel = post ? formatBlogDate(post.updated_at) : null;
 
   return (
     <main className="min-h-screen bg-background">
@@ -143,6 +146,16 @@ const BlogPostPage = () => {
               {post.excerpt && (
                 <p className="text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
               )}
+              {publishedLabel && (
+                <p className="text-sm text-muted-foreground">
+                  Yayın: <time dateTime={post.published_at ?? post.created_at}>{publishedLabel}</time>
+                  {updatedLabel && updatedLabel !== publishedLabel && (
+                    <>
+                      {" · "}Güncelleme: <time dateTime={post.updated_at}>{updatedLabel}</time>
+                    </>
+                  )}
+                </p>
+              )}
             </header>
 
             {post.cover_image && (
@@ -154,6 +167,24 @@ const BlogPostPage = () => {
             )}
 
             <BlogMarkdown content={post.content_markdown} />
+
+            {related.length > 0 && (
+              <nav aria-label="İlgili yazılar" className="space-y-3 border-t border-border pt-6">
+                <h2 className="text-lg font-bold text-foreground">İlgili yazılar</h2>
+                <ul className="space-y-3">
+                  {related.map((item) => (
+                    <li key={item.slug}>
+                      <Link to={`/blog/${item.slug}`} className="font-semibold text-primary hover:underline">
+                        {item.title}
+                      </Link>
+                      {item.excerpt && (
+                        <p className="line-clamp-2 text-sm text-muted-foreground">{item.excerpt}</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            )}
           </article>
         )}
       </div>

@@ -90,6 +90,31 @@ export async function listPublishedBlogPosts(): Promise<BlogPostRow[]> {
   return (data ?? []) as BlogPostRow[];
 }
 
+/** İlgili yazı seçimi için gereken en küçük kolon kümesi (tam markdown çekilmez). */
+export type BlogPostSummary = Pick<
+  BlogPostRow,
+  "id" | "slug" | "title" | "excerpt" | "country" | "country_label" | "category" | "sort_order" | "published_at"
+>;
+
+const BLOG_SUMMARY_COLUMNS =
+  "id, slug, title, excerpt, country, country_label, category, sort_order, published_at";
+
+// PostgREST varsayılan olarak 1000 satırda SESSİZCE keser (CLAUDE.md "Değişmez sözleşmeler" md.5);
+// sınır burada AÇIKÇA yazılır. Yayınlanmış yazı sayısı bunun çok altındadır.
+const BLOG_SUMMARY_LIMIT = 200;
+
+export async function listPublishedBlogPostSummaries(): Promise<BlogPostSummary[]> {
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(BLOG_SUMMARY_COLUMNS)
+    .eq("published", true)
+    .order("sort_order", { ascending: true })
+    .order("published_at", { ascending: false })
+    .limit(BLOG_SUMMARY_LIMIT);
+  if (error) throw error;
+  return (data ?? []) as BlogPostSummary[];
+}
+
 export async function getPublishedBlogPostBySlug(slug: string): Promise<BlogPostRow | null> {
   const { data, error } = await supabase
     .from(TABLE)

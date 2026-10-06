@@ -8,10 +8,12 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const getPublishedBlogPostBySlug = vi.fn();
+const listPublishedBlogPostSummaries = vi.fn();
 
 vi.mock("@/lib/blog", () => ({
-  blogCategoryLabels: {},
+  blogCategoryLabels: { genel: "Genel" },
   getPublishedBlogPostBySlug: (slug: string) => getPublishedBlogPostBySlug(slug),
+  listPublishedBlogPostSummaries: () => listPublishedBlogPostSummaries(),
 }));
 
 vi.mock("@/components/blog/BlogMarkdown", () => ({ default: () => null }));
@@ -35,6 +37,9 @@ function renderAt(path: string) {
 beforeEach(() => {
   document.head.innerHTML = "";
   getPublishedBlogPostBySlug.mockReset();
+  // Varsayılan: ilgili yazı yok. Mevcut SEO testleri bu çağrıyı umursamaz.
+  listPublishedBlogPostSummaries.mockReset();
+  listPublishedBlogPostSummaries.mockResolvedValue([]);
 });
 
 describe("BlogPostPage SEO", () => {
@@ -103,5 +108,100 @@ describe("BlogPostPage navigation (SE2)", () => {
 
     const link = await screen.findByRole("link", { name: /tüm yazılar/i });
     expect(link).toHaveAttribute("href", "/radar/rehberler");
+  });
+});
+
+// S7 · GEO: kırıntı şeması, görünür tarih, ilgili yazı bağlantıları.
+describe("BlogPostPage GEO zenginleştirmesi (S7)", () => {
+  const post = {
+    id: "p1",
+    slug: "almanya-giris",
+    title: "Almanya'ya Giriş Rehberi",
+    excerpt: "Özet metni",
+    content_markdown: "",
+    country: "almanya",
+    country_label: "Almanya",
+    cover_image: null,
+    published_at: "2026-06-12T12:00:00Z",
+    created_at: "2026-06-01T12:00:00Z",
+    updated_at: "2026-06-20T12:00:00Z",
+    category: "genel",
+  };
+
+  const summary = (slug: string, over: Record<string, unknown> = {}) => ({
+    id: slug,
+    slug,
+    title: `Yazı ${slug}`,
+    excerpt: `Özet ${slug}`,
+    country: "almanya",
+    country_label: "Almanya",
+    category: "genel",
+    sort_order: 0,
+    published_at: "2026-01-01T12:00:00Z",
+    ...over,
+  });
+
+  const jsonLdTypes = (): string[] =>
+    [...document.head.querySelectorAll('script[type="application/ld+json"]')].map(
+      (script) => JSON.parse(script.textContent ?? "{}")["@type"] as string,
+    );
+
+  it("BlogPosting ile BİRLİKTE BreadcrumbList şemasını yazar", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(post);
+    renderAt("/blog/almanya-giris");
+
+    await waitFor(() => expect(jsonLdTypes()).toContain("BreadcrumbList"));
+    expect(jsonLdTypes()).toContain("BlogPosting");
+  });
+
+  it("yayın ve güncelleme tarihini GÖRÜNÜR yazar", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(post);
+    renderAt("/blog/almanya-giris");
+
+    expect(await screen.findByText("12 Haziran 2026")).toBeInTheDocument();
+    expect(screen.getByText("20 Haziran 2026")).toBeInTheDocument();
+    expect(screen.getByText(/Güncelleme:/)).toBeInTheDocument();
+  });
+
+  it("güncelleme tarihi yayın tarihiyle aynıysa 'Güncelleme' satırını tekrarlamaz", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue({ ...post, updated_at: post.published_at });
+    renderAt("/blog/almanya-giris");
+
+    await screen.findByText("12 Haziran 2026");
+    expect(screen.queryByText(/Güncelleme:/)).not.toBeInTheDocument();
+  });
+
+  it("aynı ülkeden ilgili yazıları /blog/<slug> bağlantısıyla listeler, mevcut yazıyı hariç tutar", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(post);
+    listPublishedBlogPostSummaries.mockResolvedValue([
+      summary("almanya-giris"), // kendisi: önerilmemeli
+      summary("almanya-vize"),
+      summary("hollanda-genel", { country: "hollanda", country_label: "Hollanda" }), // aynı kategori
+    ]);
+    renderAt("/blog/almanya-giris");
+
+    const nav = await screen.findByRole("navigation", { name: "İlgili yazılar" });
+    const hrefs = [...nav.querySelectorAll("a")].map((a) => a.getAttribute("href"));
+
+    expect(hrefs).toEqual(["/blog/almanya-vize", "/blog/hollanda-genel"]);
+  });
+
+  it("ilgili yazı yoksa bölümü HİÇ çizmez", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(post);
+    listPublishedBlogPostSummaries.mockResolvedValue([]);
+    renderAt("/blog/almanya-giris");
+
+    await screen.findByText("12 Haziran 2026");
+    expect(screen.queryByRole("navigation", { name: "İlgili yazılar" })).not.toBeInTheDocument();
+  });
+
+  it("ilgili yazılar yüklenemezse yazının KENDİSİ yine görünür (ikincil bölüm)", async () => {
+    getPublishedBlogPostBySlug.mockResolvedValue(post);
+    listPublishedBlogPostSummaries.mockRejectedValue(new Error("ağ hatası"));
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    renderAt("/blog/almanya-giris");
+
+    expect(await screen.findByRole("heading", { level: 1, name: "Almanya'ya Giriş Rehberi" })).toBeInTheDocument();
+    expect(screen.queryByRole("navigation", { name: "İlgili yazılar" })).not.toBeInTheDocument();
   });
 });
