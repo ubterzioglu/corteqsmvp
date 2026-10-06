@@ -35,42 +35,51 @@ grep -r "8,8 milyon" public/ai/
 
 ### /ai/ ve /.well-known/ SPA fallback'e düşüyor mu?
 
-**EVET — düşüyor.**
+> ⚠️ **DÜZELTME (6 Ekim 2026):** Bu bölümün ilk hâli "EVET — düşüyor" diyordu ve özel
+> location önerisi yapıyordu. İkisi de yanlıştı; aşağıdaki öneri **UYGULANMAMALIDIR**.
 
-nginx.conf.template'te `/ai/` ve `/.well-known/` için özel location bloğu YOK. Genel SPA fallback:
+**HAYIR — düşmez.** Uzantılı yollar için `nginx.conf.template`'te zaten ayrı bir blok var:
 
 ```nginx
-location / {
-  ...
-  try_files $uri $uri/ /index.html;
+location ~* \.[a-z0-9]+$ {
+  try_files $uri =404;
 }
 ```
 
-Bu, `/ai/summary.json` ve `/.well-known/ai.txt` istekleri:
-1. Önce dosyayı arar (`$uri`)
-2. Bulamazsa dizin olarak arar (`$uri/`)
-3. O da yoksa `/index.html`'e yönlendirir
+`/ai/summary.json`, `/ai/faq.json` ve `/.well-known/ai.txt` bir dosya uzantısıyla bittiği için
+`location /` (SPA fallback: `try_files $uri $uri/ /index.html`) yerine **bu blok** eşleşir:
 
-**Sorun:** Dosyalar dist/'de var ama nginx `try_files` sırasıyla önce dosyayı bulmalı. Eğer dosya varsa SPA fallback'e düşmez.
+- dosya `dist/`'te varsa doğrudan sunulur,
+- yoksa **404** döner (`/index.html`'e DÜŞMEZ — uzantılı eksik dosya "200 + HTML" olmaz).
 
-**Test gerekli:** Deploy sonrası `curl -I https://corteqs.net/ai/summary.json` ile kontrol edilmeli.
+Bu blokta kendi `add_header`'ı olmadığı için server bloğundaki 8 güvenlik başlığı **miras alınır**.
+`Content-Type` nginx'in `mime.types`'ından gelir (`.json` → `application/json`,
+`.txt` → `text/plain`).
 
-### Değişiklik Önerisi (gerekirse)
+**Test hâlâ gerekli (deploy sonrası):** `curl -I https://corteqs.net/ai/summary.json` →
+`200` + `Content-Type: application/json` + güvenlik başlıkları; eksik bir dosya (`/ai/yok.json`) → `404`.
 
-Eğer SPA fallback'e düşüyorsa, özel location blokları eklenebilir:
+### ❌ Önceki "Değişiklik Önerisi" — UYGULAMA
 
 ```nginx
+# YAPMA
 location /ai/ {
   add_header Content-Type application/json;
   try_files $uri =404;
 }
-
-location /.well-known/ {
-  try_files $uri =404;
-}
 ```
 
-**Uygulama:** §B9'da deploy sonrası test edilecek, gerekirse eklenecek.
+Neden zararlı:
+
+1. **nginx'te `add_header` KALITILMAZ** (CLAUDE.md "Değişmez sözleşmeler" md.2): kendi `add_header`'ı olan bir
+   location üst bloktaki **tüm** güvenlik başlıklarını (CSP, X-Frame-Options, HSTS…) iptal eder. `/ai/`
+   yanıtları başlıksız çıkardı. `src/lib/redirects.test.ts` bu sınıfı artık yakalar (add_header içeren her
+   location 8 başlığı tam taşımalı).
+2. `add_header Content-Type …` ayrıca ikinci bir `Content-Type` başlığı ekler (mime.types'ın verdiğine ek).
+3. Gerek yok: yukarıdaki mevcut blok işi zaten yapıyor.
+
+Charset gerekiyorsa (`llms.txt`/`ai.txt` Türkçe karakter) çözüm **server bloğunda `charset utf-8;`**
+direktifidir (`add_header` değil) — bkz. `docs/plans/2026-10-06-seo-geo-cleancode-kalan-plan.md` S8.
 
 ---
 
