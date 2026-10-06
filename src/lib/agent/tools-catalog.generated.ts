@@ -5,10 +5,10 @@ export const toolCatalog = {
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 67,
-    "edge_functions": 17,
+    "total": 70,
+    "edge_functions": 19,
     "workers": 2,
-    "ui_modules": 47
+    "ui_modules": 48
   },
   "tools": [
     {
@@ -70,6 +70,37 @@ export const toolCatalog = {
         "warm:prerender"
       ],
       "evidence_path": "package.json"
+    },
+    {
+      "tool_key": "edge.delete_account",
+      "tool_name": "delete-account",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/delete-account/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "manual",
+        "fields": []
+      },
+      "tables_read_write": [],
+      "rpcs": [
+        "check_account_deletion_blocks_v1"
+      ],
+      "limits": {},
+      "http_statuses": [
+        401,
+        403,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": null
+      },
+      "evidence_path": "supabase/functions/delete-account/index.ts"
     },
     {
       "tool_key": "edge.directory_search",
@@ -140,7 +171,6 @@ export const toolCatalog = {
         ]
       },
       "tables_read_write": [
-        "edge_rate_limits",
         "matches",
         "submissions"
       ],
@@ -153,6 +183,7 @@ export const toolCatalog = {
       "http_statuses": [
         200,
         400,
+        401,
         403,
         405,
         413,
@@ -324,6 +355,46 @@ export const toolCatalog = {
       "evidence_path": "supabase/functions/lansman-admin/index.ts"
     },
     {
+      "tool_key": "edge.member_cv_link",
+      "tool_name": "member-cv-link",
+      "family": "edge_function",
+      "status": "active",
+      "entrypoint": "supabase/functions/member-cv-link/index.ts",
+      "interface_kind": "http",
+      "input_schema": {
+        "validation": "zod",
+        "fields": [
+          "target_user_id"
+        ]
+      },
+      "tables_read_write": [
+        "afs_attributes",
+        "role_features",
+        "user_profile_attributes",
+        "user_role_assignments"
+      ],
+      "rpcs": [],
+      "limits": {},
+      "http_statuses": [
+        200,
+        400,
+        401,
+        403,
+        404,
+        500
+      ],
+      "http_method": "POST",
+      "dependencies": [
+        "@supabase/supabase-js@2.108.2",
+        "zod@3.25.76"
+      ],
+      "version_pins": {
+        "@supabase/supabase-js": "2.108.2",
+        "zod": "3.25.76"
+      },
+      "evidence_path": "supabase/functions/member-cv-link/index.ts"
+    },
+    {
       "tool_key": "edge.radar_news_scan",
       "tool_name": "radar-news-scan",
       "family": "edge_function",
@@ -451,6 +522,7 @@ export const toolCatalog = {
         "fields": []
       },
       "tables_read_write": [
+        "events",
         "notification_email_outbox"
       ],
       "rpcs": [
@@ -521,7 +593,6 @@ export const toolCatalog = {
         ]
       },
       "tables_read_write": [
-        "edge_rate_limits",
         "submissions"
       ],
       "rpcs": [],
@@ -607,7 +678,6 @@ export const toolCatalog = {
         "fields": []
       },
       "tables_read_write": [
-        "edge_rate_limits",
         "survey_answers",
         "survey_questions",
         "survey_responses",
@@ -847,6 +917,7 @@ export const toolCatalog = {
         "getCaddeActorContext",
         "getCaddeFeedReach",
         "listCaddePostComments",
+        "listCaddePostReactors",
         "updateCaddePost"
       ],
       "tables_read_write": [
@@ -856,6 +927,7 @@ export const toolCatalog = {
         "delete_cadde_post_v1",
         "get_cadde_actor_context",
         "get_cadde_feed_reach_v1",
+        "list_cadde_post_reactors_v1",
         "update_cadde_post_v1"
       ],
       "evidence_path": "src/lib/cadde-api.ts"
@@ -1354,6 +1426,31 @@ export const toolCatalog = {
         "redeem_invite_code"
       ],
       "evidence_path": "src/lib/invites-api.ts"
+    },
+    {
+      "tool_key": "module.job_listings_api",
+      "tool_name": "job-listings-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/job-listings-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getJobListingDetail",
+        "getMyListingQuota",
+        "jobListingKeys",
+        "listJobListings",
+        "resolveJobListingError",
+        "useJobListingDetail",
+        "useJobListings",
+        "useMyListingQuota"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_job_listing_detail_v1",
+        "get_my_listing_quota_v1",
+        "list_job_listings_public"
+      ],
+      "evidence_path": "src/lib/job-listings-api.ts"
     },
     {
       "tool_key": "module.member_profile_api",
@@ -3768,6 +3865,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/job-listings-api.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/job-listings-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/kadro/kadro-ad-text.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4074,6 +4181,21 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/phone-verification-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/plans.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/plans.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/profile-attribute-drafts.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4638,12 +4760,27 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/role-structure.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/route-seo-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/rpc-error-text.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
       "path": "src/lib/rpc-error-text.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/security.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4943,6 +5080,11 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/emails/event-published.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/emails/group-notifications.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -5083,6 +5225,16 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/safe-invite-fetch.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/safe-invite-fetch.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/whatsapp-autoreply.test.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -5123,6 +5275,11 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/delete-account/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/directory-search/index.ts",
       "kind": "ts",
       "module_family": "edge"
@@ -5149,6 +5306,11 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/lansman-admin/index.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/member-cv-link/index.ts",
       "kind": "ts",
       "module_family": "edge"
     },

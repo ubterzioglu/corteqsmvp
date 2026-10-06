@@ -11,6 +11,19 @@ servers:
   - url: https://injprdrsklkxgnaiixzh.supabase.co
     description: Supabase Edge Functions
 paths:
+  /functions/v1/delete-account:
+    post:
+      summary: delete-account aracını çalıştır
+      operationId: execute_delete_account
+      x-tool-key: edge.delete_account
+      x-status: active
+      responses:
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "500":
+          description: Sunucu hatası
   /functions/v1/directory-search:
     post:
       summary: directory-search aracını çalıştır
@@ -59,7 +72,7 @@ paths:
       operationId: execute_find_matches
       x-tool-key: edge.find_matches
       x-status: active
-      x-tables: [edge_rate_limits, matches, submissions]
+      x-tables: [matches, submissions]
       requestBody:
         required: true
         content:
@@ -90,6 +103,8 @@ paths:
           description: Başarılı
         "400":
           description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
         "403":
           description: Origin'e izin verilmedi
         "405":
@@ -181,6 +196,35 @@ paths:
           description: Kullanımdan kaldırıldı (deprecated)
         "500":
           description: Sunucu hatası
+  /functions/v1/member-cv-link:
+    post:
+      summary: member-cv-link aracını çalıştır
+      operationId: execute_member_cv_link
+      x-tool-key: edge.member_cv_link
+      x-status: active
+      x-tables: [afs_attributes, role_features, user_profile_attributes, user_role_assignments]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_user_id:
+                  type: string
+      responses:
+        "200":
+          description: Başarılı
+        "400":
+          description: Geçersiz istek (payload doğrulama hatası)
+        "401":
+          description: Yanıt
+        "403":
+          description: Origin'e izin verilmedi
+        "404":
+          description: Bulunamadı
+        "500":
+          description: Sunucu hatası
   /functions/v1/radar-news-scan:
     post:
       summary: radar-news-scan aracını çalıştır
@@ -259,7 +303,7 @@ paths:
       operationId: execute_send_notification_emails
       x-tool-key: edge.send_notification_emails
       x-status: active
-      x-tables: [notification_email_outbox]
+      x-tables: [events, notification_email_outbox]
       responses:
         "200":
           description: Başarılı
@@ -286,7 +330,7 @@ paths:
       operationId: execute_send_submission_email
       x-tool-key: edge.send_submission_email
       x-status: active
-      x-tables: [edge_rate_limits, submissions]
+      x-tables: [submissions]
       requestBody:
         required: true
         content:
@@ -351,7 +395,7 @@ paths:
       operationId: execute_submit_survey_response
       x-tool-key: edge.submit_survey_response
       x-status: active
-      x-tables: [edge_rate_limits, survey_answers, survey_questions, survey_responses, surveys]
+      x-tables: [survey_answers, survey_questions, survey_responses, surveys]
       responses:
         "200":
           description: Başarılı
