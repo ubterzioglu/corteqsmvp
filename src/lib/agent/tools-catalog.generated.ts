@@ -5190,6 +5190,16 @@ export const toolCatalog = {
       "module_family": "edge"
     },
     {
+      "path": "supabase/functions/_shared/http.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/http.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
       "path": "supabase/functions/_shared/phone-otp-claim-contract.test.ts",
       "kind": "ts",
       "module_family": "edge"
