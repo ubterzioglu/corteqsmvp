@@ -146,3 +146,24 @@ WhatsApp webhook HMAC (ham gövde, sabit-zamanlı) · `send-phone-otp-hook` imza
 
 ## Sınırlar
 Canlı DB/site taranmadı; grant'ler baseline+migration'lardan çıkarıldı (canlıda doğrula). RLS politikalarının tamamı satır satır değil, ayrıcalık yükselten desenlere göre tarandı. Edge function'larda Deno bağımlılık denetimi çalıştırılamadı.
+
+## Uygulama Sırası (6 Ekim 2026)
+
+**Tamamlanan (✓):**
+1. SG1 — DB dump'ları izlenenden çıkarıldı
+2. SG2 — İç RPC'lerden anon/authenticated EXECUTE kaldırıldı
+3. SG3 — catalog_items kolon guard + tetikleyici
+4. SG4 — whatsapp_landings INSERT/UPDATE guard + host CHECK
+5. SG5 — Açık RLS politikaları kapatıldı (SG6 ile birlikte)
+6. SG6 — advisor_social_media_links, notifications, command_center_hot_fixes, todos, job_listings
+7. SG7 — SSRF koruması (safe-invite-fetch.ts + testler)
+8. SG8 — server.mjs path traversal, LoginPage open redirect, safeHref, CI SHA, nginx
+9. SG9 — Atomik rate-limit, submit-survey-response (fail-closed salt, duplicate questionId), whatsapp-autoreply (çıktı filtresi)
+10. SG10 — 7 düşük/bilgi maddesi düzeltildi, 14 madde §B4'e düştü
+
+**Açık (§B — karar/hesap/izin bekleyen):**
+1. **§B1 (XL 🔴)** — Secret rotasyonu + git geçmişi temizliği (S1, S4)
+2. **§B4 (L)** — 14 düşük/bilgi maddesi + O4 (send-submission-email) + O7 (Deno)
+3. **§B9 (M)** — Canlı deploy + doğrulama
+
+**Önerilen sıra:** §B1 → §B4 kararları → §B9 deploy

@@ -46,3 +46,20 @@ PostgREST INSERT politikası hâlâ açık. Kapanana dek istemciye güvenme.
 - `approval_requests` yazımı kaldırıldı.
 - İlk-onay kuralı artık yok → CLAUDE.md'deki "İlk etkinlik onaydan geçer" ifadesi yanlış.
 - T1 (PostgREST INSERT açığı) hâlâ geçerli — M03 bekliyor.
+
+---
+
+## Öneri 3 — SG2 `alter default privileges` notu (GV4, 6 Ekim 2026)
+
+**Eklenecek bölüm:** Güvenlik / RPC yetkilendirme
+
+```
+SG2 (20261006000000) ile iç SECURITY DEFINER RPC'lerden anon/authenticated EXECUTE kaldırıldı.
+`alter default privileges in schema public revoke execute on functions from public, anon`
+**gelecekteki** fonksiyonları da etkiler → yeni RPC yazan herkes açıkça `grant execute on
+function ... to authenticated` (veya `service_role`) ister. Aksi halde fonksiyon çağrılamaz.
+```
+
+**Gerekçe:**
+- SG2 migration'ı `alter default privileges` ile yeni fonksiyonlar için otomatik revoke koydu.
+- Unutulursa: yeni RPC deploy sonrası "permission denied" verir.
