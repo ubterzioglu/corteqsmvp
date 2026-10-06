@@ -278,6 +278,29 @@ export function recordCarsiContact(itemId: string): void {
  * `carsiCategoryHref` ile aynı sabitten link üretir. Adı burada değişirse iki taraf
  * birden uyar — rozet "görünür ama işe yaramaz" duruma düşemez.
  */
+/** Admin listesi satırı: moderasyon ve silinme durumunu da taşır. */
+export type AdminCarsiRow = CarsiItemRow & { deleted_at: string | null };
+
+const ADMIN_ITEM_SELECT_COLUMNS =
+  "id, owner_user_id, category_key, title, description, price_amount, price_currency, country_id, city_id, image_urls, contact_mode, status, moderation_status, expires_at, created_at, deleted_at";
+
+/**
+ * Admin: tüm çarşı ilanları (admin RLS her durumu görür), en yeni 200.
+ *
+ * Okunamazsa **fırlatır** — boş liste DÖNMEZ. Admin ekranında boş liste "ilan yok" demektir;
+ * oysa sorgu düşmüştür ve moderatör bunu fark etmez. Çağıran (React Query) hata durumunu çizer.
+ */
+export async function listAllCarsiItemsForAdmin(): Promise<AdminCarsiRow[]> {
+  if (!isSupabaseConfigured) return [];
+  const { data, error } = await db
+    .from("carsi_items")
+    .select(ADMIN_ITEM_SELECT_COLUMNS)
+    .order("created_at", { ascending: false })
+    .limit(200);
+  if (error) throw caddeReadError("listAllCarsiItemsForAdmin", error);
+  return (data ?? []) as AdminCarsiRow[];
+}
+
 export const CARSI_CATEGORY_PARAM = "kategori";
 
 /**

@@ -994,6 +994,7 @@ export const toolCatalog = {
         "getCarsiItem",
         "getCarsiPaidMode",
         "getCarsiVisible",
+        "listAllCarsiItemsForAdmin",
         "listCarsiCategories",
         "listCarsiItems",
         "listMyCarsiItems",
@@ -2786,6 +2787,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/cadde-cafe-themes.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
+      "path": "src/lib/cadde-carsi-admin-api.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },

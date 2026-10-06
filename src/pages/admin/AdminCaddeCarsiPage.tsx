@@ -12,13 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { isSupabaseConfigured } from "@/integrations/supabase/client";
-import { db, reportCaddeApiError } from "@/lib/cadde-internal";
 import { moderateCaddeEntity } from "@/lib/cadde-moderation-api";
-import { formatCarsiPrice } from "@/lib/cadde-carsi-api";
-import type { CarsiItemRow, CarsiItemStatus } from "@/lib/cadde-types";
-
-type AdminCarsiRow = CarsiItemRow & { deleted_at: string | null };
+import { formatCarsiPrice, listAllCarsiItemsForAdmin } from "@/lib/cadde-carsi-api";
+import type { CarsiItemStatus } from "@/lib/cadde-types";
 
 const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   draft: "Taslak",
@@ -27,22 +23,6 @@ const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   expired: "Süresi doldu",
 };
 
-async function listAllCarsiItems(): Promise<AdminCarsiRow[]> {
-  if (!isSupabaseConfigured) return [];
-  try {
-    const { data, error } = await db
-      .from("carsi_items")
-      .select("id, owner_user_id, category_key, title, description, price_amount, price_currency, country_id, city_id, image_urls, contact_mode, status, moderation_status, expires_at, created_at, deleted_at")
-      .order("created_at", { ascending: false })
-      .limit(200);
-    if (error) throw error;
-    return (data ?? []) as AdminCarsiRow[];
-  } catch (error: unknown) {
-    reportCaddeApiError("listAllCarsiItems", error);
-    return [];
-  }
-}
-
 const AdminCaddeCarsiPage = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -50,7 +30,7 @@ const AdminCaddeCarsiPage = () => {
 
   const itemsQuery = useQuery({
     queryKey: ["cadde", "carsi", "admin-all"],
-    queryFn: listAllCarsiItems,
+    queryFn: listAllCarsiItemsForAdmin,
   });
 
   const moderateMutation = useMutation({
@@ -105,6 +85,14 @@ const AdminCaddeCarsiPage = () => {
         </CardHeader>
       </Card>
 
+      {itemsQuery.isError ? (
+        <Card>
+          <CardContent className="p-8 text-center text-red-700">
+            İlanlar yüklenemedi. Sayfayı yenileyip tekrar deneyin; sorun sürerse Hata Kayıtları ekranına bakın.
+          </CardContent>
+        </Card>
+      ) : null}
+
       {items.map((item) => (
         <Card key={item.id}>
           <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
@@ -133,7 +121,7 @@ const AdminCaddeCarsiPage = () => {
         </Card>
       ))}
 
-      {!itemsQuery.isLoading && items.length === 0 ? (
+      {!itemsQuery.isLoading && !itemsQuery.isError && items.length === 0 ? (
         <Card>
           <CardContent className="p-8 text-center text-slate-500">Bu filtrede ilan yok.</CardContent>
         </Card>
