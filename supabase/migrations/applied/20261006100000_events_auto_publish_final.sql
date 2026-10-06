@@ -1,15 +1,11 @@
--- A13 · Etkinlik otomatik onay — ilk-onay kuralı kaldırıldı
+-- Etkinlik: otomatik yayın (limit 2) — kesin hâl
 --
--- Kaynak: docs/plans/2026-10-05-plan-8-urun-istegi.md A13
--- Değişiklik: Tüm etkinlikler otomatik published olur (ilk-onay kuralı YOK).
--- approval_requests(event_create) yazımı kaldırıldı.
--- Aktif limit (2) ve event_date >= current_date kuralı aynen kalır.
+-- Karar: 6 Ekim 2026 (Soru 7). Canlıda events.first_approval_required=true kalmıştı
+-- (B8 taslağı). Ayar false'a çekilir; create_event_v1 otomatik yayın sürümüne döner;
+-- bekleyen etkinlikler mail atılmadan (approval_source='backfill_auto') yayınlanır.
 
 begin;
 
--- ── 1. Ayar: events.first_approval_required = false ──────────────────────────
--- 6 Ekim 2026 kararı (Soru 7): herkesin etkinliği otomatik yayınlanır (limit 2).
--- Ürün anahtarı: SQL update ile geri alınabilir.
 insert into public.event_settings (key, value)
 values ('events.first_approval_required', 'false'::jsonb)
 on conflict (key) do update
@@ -105,13 +101,9 @@ comment on function public.create_event_v1(text, text, text, text, date, time, t
 revoke all on function public.create_event_v1(text, text, text, text, date, time, time, text, text, text, text, numeric, integer, text, text[], text, text, text, text) from public, anon;
 grant execute on function public.create_event_v1(text, text, text, text, date, time, time, text, text, text, text, numeric, integer, text, text[], text, text, text, text) to authenticated;
 
--- ── 3. Canlıda hâlâ pending kalan events satırları ────────────────────────────
--- Backfill UPDATE bu migration'da YOK — ayrı operasyon SQL'i:
--- docs/operations/2026-10-05-etkinlik-bekleyenleri-yayinla.sql
--- (A1.5: migration'dan çıkarıldı, manuel çalıştırma §B8)
-
-comment on column public.events.approval_source is
-  'A13: auto = otomatik onay (create_event_v1), backfill_auto = migration ile geriye dönük yayınlama, '
-  'admin = yönetici onayı (eski akış).';
+-- Bekleyen eski etkinlikler: mail atılmadan yayınla (A15 tetikleyicisi backfill_auto'yu atlar).
+update public.events
+set status = 'published', approval_source = 'backfill_auto'
+where status = 'pending';
 
 commit;

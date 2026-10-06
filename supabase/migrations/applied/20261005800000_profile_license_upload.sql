@@ -100,17 +100,17 @@ set
 -- ── 4. role_attributes: 78 aktif rol için kural ──────────────────────────────
 -- CLAUDE.md profil formu md.1: kuralı olmayan alan sessizce çizilmez.
 -- Tüm aktif rollere is_enabled=true ile eklenir.
-insert into public.role_attributes (role_id, attribute_key, is_enabled, is_required, visibility_default)
-select r.id, 'business_license_doc', true, false, 'private'
+insert into public.role_attributes
+  (role_id, attribute_id, is_enabled, is_required, is_public_default, user_can_edit, user_can_hide)
+select r.id, a.id, true, false, false, true, true
 from public.roles r
+cross join public.afs_attributes a
 where r.is_active = true
-on conflict (role_id, attribute_key) do update
-set
-  is_enabled = true,
-  is_required = false,
-  visibility_default = 'private',
-  updated_at = now();
-
+  and a.key = 'business_license_doc'
+  and not exists (
+    select 1 from public.role_attributes ra
+    where ra.role_id = r.id and ra.attribute_id = a.id
+  );
 -- ── 5. Feature: profile.license_upload ───────────────────────────────────────
 -- A4'teki career yetkileri gibi, bu yetki de tüm aktif rollere is_enabled=true ile eklenir.
 -- Kapalı bırakırsan herkese gizlenir.
@@ -145,7 +145,6 @@ on conflict (role_id, feature_key) do update
 set is_enabled = true, updated_at = now();
 
 -- ── 6. Yorumlar ──────────────────────────────────────────────────────────────
-comment on column storage.objects.bucket_id is
-  'A12: profile-license-files bucket''ı işletme ruhsatı/meslek lisansı belgelerini saklar. Private, yalnız sahip + admin erişir.';
+-- (storage.objects uzerine COMMENT kaldirildi: sahibi olmadigimiz iliski, canlida 42501)
 
 commit;

@@ -7,14 +7,15 @@
 
 begin;
 
--- Etkinlikler için trgm index (published + gelecek etkinlikler)
+-- Etkinlikler için trgm index (published). Tarih koşulu İNDEKS ŞARTINDA OLAMAZ:
+-- current_date IMMUTABLE değildir (canlıda 42P17); gelecek filtresi RPC içinde.
 create index if not exists events_public_search_trgm_idx
   on public.events using gin (
     public.catalog_search_normalize(
       title || ' ' || coalesce(description, '') || ' ' || coalesce(city, '') || ' ' || coalesce(country, '')
     ) gin_trgm_ops
   )
-  where status = 'published' and event_date >= current_date;
+  where status = 'published';
 
 -- search_public_content RPC'sini genişlet: event türü ekle
 create or replace function public.search_public_content(

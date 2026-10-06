@@ -154,7 +154,7 @@ begin
   -- Premium kontrolü: career.listing.view_unlimited açık mı?
   select exists (
     select 1 from public.get_current_user_features()
-    where key = 'career.listing.view_unlimited' and is_enabled = true
+    where feature_key = 'career.listing.view_unlimited' and is_enabled = true
   ) into v_has_unlimited;
 
   -- Premium veya daha önce açılmışsa → detay döner, hak harcanmaz
@@ -220,7 +220,7 @@ as $$
     ) - (select count(distinct listing_id) from public.job_listing_views where user_id = auth.uid()) as remaining,
     exists (
       select 1 from public.get_current_user_features()
-      where key = 'career.listing.view_unlimited' and is_enabled = true
+      where feature_key = 'career.listing.view_unlimited' and is_enabled = true
     ) as has_unlimited;
 $$;
 

@@ -147,3 +147,6 @@ docs/commandcenter/
 
 # Gecici commit mesaji taslagi
 commit-msg.txt
+
+# Yerel ajan beceri kilidi (2026-10-06 karar)
+skills-lock.json

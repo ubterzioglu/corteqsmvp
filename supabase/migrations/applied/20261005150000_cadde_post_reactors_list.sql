@@ -44,7 +44,7 @@ as $$
     -- Rol etiketi: roles.label
     (select r2.label from public.user_role_assignments ura
      join public.roles r2 on r2.id = ura.role_id
-     where ura.user_id = r.user_id and ura.status = 'active'
+     where ura.user_id = r.user_id
      limit 1) as role_label,
     r.created_at as reacted_at
   from public.cadde_post_reactions r
@@ -52,6 +52,9 @@ as $$
   where r.post_id = p_post_id
     and r.reaction_type = p_reaction_type
     and p.status = 'published'
+    -- A1.9: banli uye popover'da gorunmez; Cadde erisimi olmayan arayan liste goremez.
+    and not public.is_cadde_banned(r.user_id)
+    and public.has_cadde_feature(auth.uid(), 'cadde.access')
   order by r.created_at desc
   limit least(greatest(p_limit, 1), 100);
 $$;
