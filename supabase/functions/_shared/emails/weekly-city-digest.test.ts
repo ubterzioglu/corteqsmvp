@@ -7,7 +7,7 @@
  * eşleşmeyen şehirler GÖRÜNÜR kalır (M25 unmatched_cities — sözlük farkı
  * sessizce yutulmaz) · XSS kaçışı.
  */
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
@@ -50,10 +50,18 @@ describe("weekly_city_digest · edge kablolaması (5 parça)", () => {
  * olmayan → DB satırı zaten yazamaz (imkânsız). İki küme birlikte kayar.
  */
 describe("edge · F13 knownEventTypes ↔ outbox CHECK aynası", () => {
-  const checkSql = readFileSync(
-    "supabase/migrations/applied/20261004120000_user_city_follows.sql",
-    "utf8",
-  );
+  // GEÇERLİ CHECK = constraint'i tanımlayan EN SON migration. Eskiden tek bir migration
+  // dosyası sabit yazılıydı; sonradan event tipi ekleyen migration'lar (örn. event_published)
+  // yeni bir CHECK tanımladığında test eski listeyi okuyup düşüyordu (20 ≠ 19).
+  const MIGRATION_DIR = "supabase/migrations/applied";
+  const CHECK_MARKER = "add constraint notification_email_outbox_event_type_check";
+  const latestCheckMigration = readdirSync(MIGRATION_DIR)
+    .filter((file) => file.endsWith(".sql"))
+    .filter((file) => readFileSync(`${MIGRATION_DIR}/${file}`, "utf8").includes(CHECK_MARKER))
+    .sort()
+    .at(-1);
+  expect(latestCheckMigration, "outbox event_type CHECK'ini tanımlayan migration bulunamadı").toBeDefined();
+  const checkSql = readFileSync(`${MIGRATION_DIR}/${latestCheckMigration}`, "utf8");
 
   const checkValues = (): string[] => {
     const start = checkSql.indexOf("add constraint notification_email_outbox_event_type_check");
