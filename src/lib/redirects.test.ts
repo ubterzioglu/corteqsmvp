@@ -211,6 +211,24 @@ describe("nginx güvenlik başlıkları", () => {
     expect(eksikBasliklar(sunucuDuzeyi), "server düzeyinde eksik güvenlik başlığı").toEqual([]);
   });
 
+  // S8a: `.txt` dosyaları (llms.txt, .well-known/ai.txt) charset'siz `text/plain` dönerse
+  // istemci Latin-1 varsayabilir ve Türkçe karakterler bozulur. Çözüm `charset` DİREKTİFİdir;
+  // `add_header Content-Type` DEĞİL — o hem ikinci bir Content-Type ekler hem de bulunduğu
+  // location'da üst bloktaki 8 güvenlik başlığını iptal eder (add_header kalıtılmaz).
+  it("server düzeyinde charset utf-8 tanımlıdır ve add_header ile YAPILMAZ", () => {
+    const sunucuDuzeyi = (() => {
+      let metin = yorumsuzNginx;
+      for (const blok of locationBloklari(yorumsuzNginx).reverse()) {
+        metin = metin.slice(0, blok.start) + metin.slice(blok.end);
+      }
+      return metin;
+    })();
+
+    expect(sunucuDuzeyi, "server düzeyinde `charset utf-8;` yok").toMatch(/^\s*charset\s+utf-8\s*;/m);
+    // Hiçbir yerde Content-Type'ı add_header ile ezme girişimi olmamalı.
+    expect(yorumsuzNginx).not.toMatch(/add_header\s+Content-Type\b/i);
+  });
+
   it("X-Robots-Tag blanket header'ı geri eklenmemiştir", () => {
     // Sayfa seviyesindeki meta robots yeterli; blanket "index, follow" 404 kabuğunda
     // NotFound'un noindex'ini gölgeliyordu (bkz. Batch 3).

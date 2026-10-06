@@ -71,6 +71,13 @@ server {
   root /usr/share/nginx/html;
   index index.html;
 
+  # S8a (2026-10-06): charset direktifi (add_header DEĞİL — add_header kalıtılmaz ve güvenlik
+  # başlıklarını iptal eder). Varsayılan `charset_types` text/html, text/plain, text/xml,
+  # application/javascript vb. içerir: llms.txt ve .well-known/ai.txt artık
+  # `text/plain; charset=utf-8` döner, Türkçe karakterler Latin-1 sanılıp bozulmaz.
+  # JSON zaten UTF-8 tanımlıdır, `charset_types`'a eklenmesi gerekmez.
+  charset utf-8;
+
   # SG03 (2026-10-05): nginx TLS'i sonlandıran vekilin ARKASINDA 80'i dinler; varsayılan
   # absolute_redirect, Location'ı `http://` ile mutlak yazıyordu (ölçüldü:
   # /blog → http://corteqs.net/radar/rehberler). http:// ise canlıda 404 döner — HSTS'i
