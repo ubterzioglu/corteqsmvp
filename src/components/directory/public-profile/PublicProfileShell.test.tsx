@@ -113,6 +113,39 @@ describe("PublicProfileShell", () => {
     expect(screen.getByRole("link", { name: /Dizine Dön/i })).toHaveAttribute("href", "/directory");
   });
 
+  // S7b: şema tipi profil türüne göre. Eskiden her kayıt Person'dı; katalogdaki konsolosluk/dernek
+  // gibi kurumsal kayıtlar kişi sanılıyordu.
+  const profileJsonLdType = (): string | undefined => {
+    const script = document.head.querySelector('script[type="application/ld+json"]');
+    return script ? JSON.parse(script.textContent ?? "{}")["@type"] : undefined;
+  };
+
+  it("üye profilinde JSON-LD tipi Person'dır", async () => {
+    renderShell(makePayload());
+
+    await waitFor(() => expect(profileJsonLdType()).toBe("Person"));
+  });
+
+  it("kurumsal kayıtta (itemType=organization) JSON-LD tipi Organization'dır", async () => {
+    renderShell(
+      makePayload({
+        item: { ...makePayload().item, itemType: "organization", roleKey: "Organization_Consulate", roleLabel: "Konsolosluk" },
+      }),
+    );
+
+    await waitFor(() => expect(profileJsonLdType()).toBe("Organization"));
+  });
+
+  it("Organization_ rol anahtarı itemType'a bakılmadan da kurumsal sayılır", async () => {
+    renderShell(
+      makePayload({
+        item: { ...makePayload().item, itemType: "member", roleKey: "Organization_Association" },
+      }),
+    );
+
+    await waitFor(() => expect(profileJsonLdType()).toBe("Organization"));
+  });
+
   it("renders avatar image with alt text when available", () => {
     renderShell(
       makePayload({

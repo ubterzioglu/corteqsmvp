@@ -4383,6 +4383,16 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/public-profile-jsonld.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/public-profile-jsonld.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/radar-guides.test.ts",
       "kind": "ts",
       "module_family": "lib"

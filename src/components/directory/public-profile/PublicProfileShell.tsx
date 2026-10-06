@@ -8,6 +8,7 @@ import { usePublicProfileOwnership } from "@/hooks/usePublicProfileOwnership";
 import { useSubmitCatalogClaim } from "@/hooks/useSubmitCatalogClaim";
 import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profile-schemas";
 import { buildPublicCatalogProfileViewModel } from "@/lib/public-catalog-profile-view-model";
+import { buildPublicProfileJsonLd } from "@/lib/public-profile-jsonld";
 import { useSeo } from "@/lib/seo";
 
 import PublicProfileBreadcrumb from "./PublicProfileBreadcrumb";
@@ -56,18 +57,16 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
       description: seoDescription,
       canonicalPath: profilePath,
       ogImage: viewModel.hero.avatarUrl ?? undefined,
-      jsonLd: {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        name: viewModel.hero.title,
+      // Kurumsal kayıt (konsolosluk/dernek/işletme) Organization, üye/danışman Person olur.
+      jsonLd: buildPublicProfileJsonLd({
+        title: viewModel.hero.title,
         description: seoDescription,
-        image: viewModel.hero.avatarUrl ?? undefined,
-        jobTitle: viewModel.hero.roleLabel ?? undefined,
-        address: viewModel.hero.locationLabel
-          ? { "@type": "PostalAddress", addressLocality: viewModel.hero.locationLabel }
-          : undefined,
-        url: `https://corteqs.net${profilePath}`,
-      },
+        avatarUrl: viewModel.hero.avatarUrl,
+        roleLabel: viewModel.hero.roleLabel,
+        locationLabel: viewModel.hero.locationLabel,
+        path: profilePath,
+        isOrganization: viewModel.claim.isOrganization,
+      }),
     },
     [viewModel.claim.slug],
   );
