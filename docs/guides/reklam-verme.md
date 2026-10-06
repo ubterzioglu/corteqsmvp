@@ -1,5 +1,19 @@
 # Reklamımı Nasıl Veririm?
 
+> ⛔ **DOĞRULANMADI — ÜYELERE GÖSTERİLMEZ, BOT BİLGİ TABANINA (`ai:ingest`) ALINMAZ.**
+> 6 Ekim 2026'da bu taslak koda karşı kontrol edildi ve aşağıdaki iddialar **kaynakta bulunamadı**.
+> Burak/ürün sahibi gerçek akışı doğrulayıp metni düzeltmeden kullanılmamalıdır.
+>
+> **Kaynakta olmayan arayüz öğeleri:** "Tanıtım Paneli" düğmesi · "Yeni Gönderi" düğmesi ·
+> "Promosyonlar" sekmesi ve "Yeni Promosyon" düğmesi · "Emin Değil" reaksiyon adı.
+>
+> **Yanlış sayılar:** Gönderi başlığı en çok **160**, metni **4000** karakterdir
+> (`src/lib/cadde-schemas.ts`); taslaktaki 100/2000, Çarşı **ilanı** sınırlarıdır. Bir paylaşıma en
+> fazla 4 görsel ve 1 video eklenir; en fazla 3 etiket seçilir.
+>
+> **Doğrulanan:** gönderi menüsünde **"Düzenle"** vardır (`CaddePostMenu.tsx`); Cadde'ye erişim
+> role/özelliğe bağlıdır (girişsiz ziyaretçi Cadde'yi göremez).
+
 Bu rehber, Cadde üzerinde tanıtım/reklam gönderisi oluşturmayı açıklar.
 
 ## Cadde Tanıtım Paneli

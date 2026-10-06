@@ -1,5 +1,20 @@
 # Etkinliği Nasıl Paylaşırım?
 
+> ⛔ **KISMEN DOĞRULANDI — ÜYELERE GÖSTERİLMEZ, BOT BİLGİ TABANINA (`ai:ingest`) ALINMAZ.**
+> 6 Ekim 2026'da bu taslak koda karşı kontrol edildi. Burak düzeltmeden kullanılmamalıdır.
+>
+> **Kaynakta olmayan iddialar (silinmeli ya da gerçek karşılığı yazılmalı):**
+> "Cadde'de Paylaş" düğmesi · Telegram paylaşım düğmesi · görüntüleme/paylaşım sayısı istatistiği ·
+> katılımcılara hatırlatma/değişiklik/silinme e-postası · "Düzenleyici adı" alanı · QR kod.
+>
+> **Düzeltilmesi gerekenler:** kapak görseli biçimleri **JPG, PNG, WebP veya AVIF** (taslak yalnız JPG/PNG
+> diyor; sınır 5 MB doğru). `email.event_published.enabled` bir **iç ayar anahtarıdır**; üyeye
+> gösterilecek metinde yer almamalı.
+>
+> **Doğrulanan:** profilde **"Etkinliklerim"** bölümü · **"Yeni Etkinlik"** / **"Etkinlik Oluştur"** ·
+> aynı anda en fazla **2 aktif etkinlik** (geçmiş etkinlikler sayılmaz) · "Bağlantı kopyalandı"
+> bildirimi · "Etkinliği paylaş" düğmesi · kayıt bağlantısı ve azami katılımcı alanları.
+
 Bu rehber, etkinlik oluşturmayı, yönetmeyi ve paylaşmayı açıklar.
 
 ## Etkinlik Oluşturma

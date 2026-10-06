@@ -1,60 +1,58 @@
 # Belgelerimi Nereye Yüklerim?
 
-Bu rehber, profilinize CV, sunum ve ruhsat/lisans belgesi yüklemeyi açıklar.
+Bu rehber, profilinize CV, sunum ve ruhsat/lisans belgesi yüklemeyi anlatır.
 
-## CV / Özgeçmiş Yükleme
+> **Doğrulama notu (6 Ekim 2026):** Bu rehberdeki ekran adları ve düğme etiketleri kaynak koddaki
+> (`ProfileDocumentsSection.tsx`, `ProfileDocumentCard.tsx`) metinlerle birebir karşılaştırıldı; dosya
+> sınırları ve biçimleri `src/lib/security.ts` doğrulayıcılarından alındı. "CV'mi Premium üyeler
+> görebilsin" paylaşımı **henüz canlıda çalışmadığı için** bu rehberde anlatılmaz; özellik açılınca
+> eklenecektir.
 
-1. Profil sayfanıza gidin (sol üstteki profil ikonuna tıklayın)
-2. Sol menüden **"Belgeler"** sekmesini seçin
-3. **"CV / Özgeçmiş"** kartındaki **"Yükle"** butonuna tıklayın
-4. Dosyanızı seçin (PDF, DOC, DOCX formatları desteklenir, max 5 MB)
-5. Yükleme tamamlandıktan sonra belgeniz **private bucket**'ta güvenle saklanır
+## Belgelerinize nereden ulaşırım?
 
-### Kim görebilir?
+1. Profil sayfanızı açın.
+2. Sol menüden **"Belgeler"** bölümüne girin.
+3. Karşınıza, rolünüze göre şu kartlardan biri ya da birkaçı çıkar:
+   - **CV / Özgeçmiş**
+   - **Sunum / Tanıtım**
+   - **İşletme Ruhsatı / Meslek Lisansı**
 
-- **Varsayılan**: Sadece siz ve admin erişebilir
-- **Premium üyelerle paylaşım**: CV'nizi Premium üyelerin görebilmesini istiyorsanız:
-  1. CV yükledikten sonra belgenin altında çıkan **"CV'mi Premium üyeler görebilsin"** anahtarını açın
-  2. Bu anahtar **varsayılan olarak kapalıdır** — siz açmadığınız sürece kimse CV'nizi göremez
-  3. Anahtarı istediğiniz zaman kapatabilirsiniz
+Bir kartı göremiyorsanız, o belge türü rolünüz için açık değil demektir. Rolünüzü değiştirmek için
+**"Rol Talepleri"** bölümünden başvuru yapabilirsiniz.
 
-## Sunum / Tanıtım Yükleme
+## Her kartta neler yapabilirsiniz?
 
-1. **"Belgeler"** sekmesinde **"Sunum / Tanıtım"** kartına gidin
-2. **"Yükle"** butonuna tıklayın
-3. Dosyanızı seçin (PDF, PPT, PPTX, KEY formatları desteklenir, max 10 MB)
-4. Sunumunuz public profil sayfanıza **eklenmez** — yalnızca siz ve admin erişebilir
+| Düğme | Ne yapar |
+|---|---|
+| **Dosya Yükle** | Dosya seçip yüklersiniz. Dosya zaten yüklüyse düğmenin adı **Dosyayı Değiştir** olur. |
+| **Dosyayı Aç** | Yüklediğiniz dosyayı açar. Dosya yoksa pasiftir. |
+| **Dosyayı Kaldır** | Yüklediğiniz dosyayı siler. Dosya yoksa pasiftir. |
 
-## İşletme Ruhsatı / Meslek Lisansı Yükleme
+Yükleme sürerken düğmede **"Yükleniyor..."** yazar; işlem bitene kadar başka bir işlem yapamazsınız.
 
-1. **"Belgeler"** sekmesinde **"İşletme Ruhsatı / Meslek Lisansı"** kartına gidin
-2. **"Yükle"** butonuna tıklayın
-3. Dosyanızı seçin (PDF, JPG, PNG formatları desteklenir, max 5 MB)
-4. Belgeniz **yalnızca siz ve admin** tarafından görülebilir
+## Desteklenen biçimler ve boyutlar
 
-## Sık Sorulan Sorular
+| Belge | Biçimler | En büyük boyut |
+|---|---|---|
+| CV / Özgeçmiş | PDF, DOC, DOCX | 20 MB |
+| Sunum / Tanıtım | PDF, PPT, PPTX, KEY | 50 MB |
+| İşletme Ruhsatı / Meslek Lisansı | PDF, JPG, PNG | 20 MB |
 
-### Belgelerim güvende mi?
+Desteklenmeyen biçimde ya da büyük bir dosya seçerseniz ekranda bir uyarı görürsünüz
+(örneğin **"Dosya boyutu 20MB sınırını aşıyor."**) ve dosya yüklenmez.
 
-Evet. Tüm belgeler **private bucket**'ta saklanır ve yalnızca siz (ve admin) erişebilir. Storage RLS politikaları ile korunur.
+## Kimler görebilir?
 
-### CV'mi sildiğimde ne olur?
+- **CV / Özgeçmiş:** Kartta yazdığı gibi, şu an yalnızca **siz ve yöneticiler** erişebilir.
+- **Sunum / Tanıtım:** Herkese açık profil bağlantılarınıza **eklenmez**.
+- **İşletme Ruhsatı / Meslek Lisansı:** Yalnızca **siz ve yöneticiler** erişebilir.
 
-CV'nizi kaldırdığınızda hem profil attribute kaydı hem de storage'daki dosya silinir. Geri getirilemez.
+## Dosyamı kaldırırsam ne olur?
 
-### Premium üyeler CV'mi görebilir mi?
+**"Dosyayı Kaldır"** dediğinizde dosya silinir. Geri getirilemez; gerekirse yeniden yüklemeniz gerekir.
 
-Yalnızca **"CV'mi Premium üyeler görebilsin"** anahtarını açarsanız. Bu anahtar varsayılan olarak kapalıdır. Açtığınızda, `career.cv.view` yetkisine sahip Premium üyeler kısa ömürlü (5 dk) signed URL ile CV'nizi görüntüleyebilir.
+## Sorun yaşıyorsanız
 
-### Belge yükleme butonu görünmüyor
-
-Belge yükleme özelliği rolünüze bağlıdır. Bireysel profillerde CV yükleme varsayılan olarak açıktır. Eğer buton görünmüyorsa rolünüz bu özelliği içermiyor olabilir — rol başvurusu yaparak değiştirebilirsiniz.
-
-## Sorun mu yaşıyorsunuz?
-
-Belge yükleme sırasında hata alıyorsanız:
-- Dosya boyutunun 5 MB (CV/ruhsat) veya 10 MB (sunum) altında olduğundan emin olun
-- Dosya formatının desteklenen formatlardan biri olduğunu kontrol edin
-- Tarayıcınızın güncel olduğundan emin olun
-
-Sorun devam ederse **info@corteqs.net** adresine e-posta gönderin.
+- Dosyanın biçimini ve boyutunu yukarıdaki tabloyla karşılaştırın.
+- Tarayıcınızı güncelleyip sayfayı yenileyin.
+- Sorun sürerse **info@corteqs.net** adresine yazın.
