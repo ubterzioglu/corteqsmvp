@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
+    id: "20260930-sade-gunun-ozeti",
+    date: "30 Eylül 2026",
+    title: "30 Eylül, sade dille: Radar haber taramasının neden durduğu bulundu, Cadde’de paylaşım silme geldi",
+    items: [
+      "KISACA: Bugün dört iş vardı: Radar (otomatik haber tarama) onarıldı, Cadde’de kendi paylaşımınızı silebilir hâle geldiniz, site asistanı hangi sayfada olduğunuzu öğrendi ve görünmeyen bir bakım yapıldı.",
+      "RADAR: Haber tarama 14 Eylül’den beri çalışmıyordu. 28 Eylül gecesi bir onarım yayınlanmıştı ama sabah ölçülünce hâlâ ölüydü. Gerçek sebep: aynı akşamki yayın servisin kapı kilidini yanlışlıkla kapatmıştı; zamanlanmış görev kapıdan geri çevriliyor, içerideki onarım koduna hiç ulaşamıyordu. Kilit ayarı düzeltildi. Ayrıca “DW Deutschland” haber kaynağı 20 Temmuz’dan beri hiç çalışmamıştı çünkü adresi geçersizdi; doğru adres bulunup değiştirildi.",
+      "RADAR’DA YANILTICI İŞARET: “Zamanlanmış görev başarılı görünüyor” 14 gün boyunca yanıltıcıydı ve kanıt sayılmaz. Gerçek doğrulama 1 Ekim sabahına bırakıldı: yeni bir tarama satırı açılmalı, takılı kalan eski satır kendiliğinden “başarısız”a düşmeli ve son 24 saatte yeni haber gelmeli. Bu doğrulamanın sonucu bu kayıtta yazılı değil.",
+      "CADDE’DE PAYLAŞIM SİLME: Kendi paylaşımınızın üç nokta menüsünde “Paylaş” ve “Sil” var. Sil, onay kutusu açıyor, yanlışlıkla silinmiyor. Silinen paylaşım akıştan ve aramalardan kaybolur ama veritabanında gizli olarak durur; gerekirse yönetici geri açabilir. Başkasının paylaşımını yalnızca sahibi veya yönetici silebilir ve bu kontrol sunucuda yapılıyor.",
+      "SİTE ASİSTANI: Asistan artık hangi sayfada olduğunuzu biliyor; “bu sayfada” ya da “buradaki” derseniz o sayfanın konusuna göre cevap veriyor. Bu bilgi yalnız konum bilgisi olarak kullanılıyor, asla talimat olarak yorumlanmıyor.",
+      "GÖRÜNMEYEN BAKIM: Cadde sayfasının kodu daha küçük dosyalara bölündü, profil kısayolları sadeleşti ve veritabanı tip kataloğu yenilendi. Kullanıcıya görünen hiçbir şey değişmedi; 372 dosyada 2.882 test sorunsuz geçti.",
+    ],
+  },
+  {
     id: "20260930-radar-kapisi-duzeltildi",
     date: "30 Eylül 2026",
     title: "Radar'ı kilitleyen asıl kapı bulundu ve açıldı — kesin doğrulama yarın sabah",
@@ -49,6 +62,18 @@ export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
       "PROFİL KISAYOLLARI: Beş tekrarlayan kopya blok tek tabloya indirildi (C07). Refaktörden önce eski davranışı kilitleyen 6 karakterizasyon testi yazıldı — 44/44 geçti.",
       "KATALOG YENİLEME: Veritabanı tip kataloğu yeniden üretildi (yeni paylaşım sil/düzenle servisleri tipe girdi), araç kataloğu güncellendi (55 araç).",
       "GÜN SONU ÖLÇÜMÜ: tip hatası 0 · 372 dosyada 2.882 test yeşil · ölü kod 0 · migration kayıtları sapmasız.",
+    ],
+  },
+  {
+    id: "20260929-sade-gunun-ozeti",
+    date: "29 Eylül 2026",
+    title: "29 Eylül, sade dille: revizyon taleplerine belge eklenebiliyor, “Şifremi unuttum” geldi, asistan her sayfada",
+    items: [
+      "KISACA: Bugün dört küçük ama kullanıcıya görünen iş yapıldı.",
+      "REVİZYON TALEPLERİ: Revizyon talebine ve yorumlarına eskiden yalnız görsel eklenebiliyordu. Artık PDF, Word, Excel ve PowerPoint belgeleri de eklenebiliyor (boyut sınırı aynı, 15 MB). Belgeler kırık görsel gibi görünmüyor; ad, tür ikonu ve boyutla bir kart olarak çiziliyor ve tıklayınca açılıyor. Çalıştırılabilir ya da tehlikeli dosya türleri kabul edilmiyor.",
+      "KOMUTA MERKEZİ SIRALAMA: Listedeki Öncelik, Başlık, Kim, Durum ve Eklenme başlıklarına tıklayarak sıralama yapılabiliyor, ikinci tık yönü ters çevirir. Sıralama sunucuda yapıldığı için sayfa 2’ye geçince sıra bozulmuyor. Türkçe harflerin (ç, ğ, ı, İ, ö, ş, ü) doğru sıralandığı canlıda ölçüldü.",
+      "ŞİFREMİ UNUTTUM: Giriş ekranındaki bağlantı artık ayrı bir şifre sıfırlama sayfası açıyor. E-posta sistemde kayıtlı olsun olmasın aynı mesaj gösteriliyor; böylece kimin üye olduğu bu ekrandan anlaşılamıyor.",
+      "SİTE ASİSTANI HER SAYFADA: Asistan her sayfada yüzen bir balon olarak görünüyor; avatarı CorteQS maskotu oldu. Asistan para harcadığı için giriş yapmamış ziyaretçiler kullanamıyor: tarayıcıdan istek bile gitmiyor ve sunucu da girişsiz isteği reddediyor.",
     ],
   },
   {
