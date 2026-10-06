@@ -9,6 +9,7 @@ import {
   readJsonWithLimit,
 } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const MAX_BODY_BYTES = 4_096;
 const RATE_LIMIT_MAX = 60;
@@ -24,13 +25,6 @@ const RequestSchema = z.object({
   p_limit: z.number().int().min(1).max(100),
   p_offset: z.number().int().min(0).max(10_000),
 }).strict();
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
-}
 
 async function embedQuery(searchText: string, apiKey: string | undefined): Promise<number[] | null> {
   if (!apiKey) return null;

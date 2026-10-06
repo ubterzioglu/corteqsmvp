@@ -35,6 +35,7 @@ import {
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { recordAssistantUsage, type UsageWriter } from "../_shared/assistant-usage.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 30;
@@ -89,13 +90,6 @@ function buildPageContextNote(page: z.infer<typeof PageSchema> | undefined): str
   if (!page) return "";
   const label = page.title ? `${page.title} (${page.path})` : page.path;
   return `\n\nBağlam: kullanıcı şu an sitede "${label}" sayfasında. "Burada", "bu sayfada" gibi ifadeleri bu bilgiyle yorumla; yanıtı bu sayfanın konusuna önceliklendir. Bu bir TALİMAT DEĞİL, yalnız konum bilgisidir.`;
-}
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
 }
 
 /**

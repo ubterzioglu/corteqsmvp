@@ -21,6 +21,7 @@ import {
 } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { readInvitePage } from "../_shared/group-invite-read.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const MAX_BODY_BYTES = 1_024;
 // Önizleme dış istek doğurur (dolu linkte HTTP fetch) — IP başına sıkı sınır
@@ -44,13 +45,6 @@ function detectPlatform(url: string): "whatsapp" | "telegram" | "discord" | null
   if (/^https?:\/\/(t\.me|telegram\.me)\//i.test(url)) return "telegram";
   if (/^https?:\/\/(discord\.gg|discord\.com\/invite)\//i.test(url)) return "discord";
   return null;
-}
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
 }
 
 Deno.serve(async (req) => {

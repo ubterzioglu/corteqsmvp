@@ -23,6 +23,7 @@ import {
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts";
 import { recordAssistantUsage, type UsageWriter } from "../_shared/assistant-usage.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 20;
@@ -56,13 +57,6 @@ Kurallar:
    teyit et" uyarısını ekle.
 5. Hukuki, vergisel veya tıbbi konularda kesin hüküm verme; yönlendirme yap.
 6. Kullanıcının hane durumuna ve hedef ülkesine göre kişiselleştir.`;
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
-}
 
 Deno.serve(async (req) => {
   const corsHeaders = buildAssistantCorsHeaders(req);

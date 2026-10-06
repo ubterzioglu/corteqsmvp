@@ -24,6 +24,7 @@ import {
 } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { findClaimCode, readInvitePage } from "../_shared/group-invite-read.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const MAX_BODY_BYTES = 1_024;
 // Claim başına deneme zaten 3 (group_settings); bu sınır IP başına — G08:
@@ -36,13 +37,6 @@ const RequestSchema = z
     claim_id: z.string().uuid(),
   })
   .strict();
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
-}
 
 Deno.serve(async (req) => {
   const corsHeaders = buildAssistantCorsHeaders(req);

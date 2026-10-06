@@ -17,6 +17,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed } from "../_shared/edge-security.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -28,13 +29,6 @@ const SHARE_ATTRIBUTE_KEY = "cv_share_with_premium";
 const RequestSchema = z.object({
   target_user_id: z.string().uuid(),
 });
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
-}
 
 Deno.serve(async (req) => {
   const corsHeaders = buildAssistantCorsHeaders(req);

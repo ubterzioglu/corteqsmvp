@@ -2,6 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
 
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
@@ -81,16 +82,6 @@ function buildCorsHeaders(req: Request): Record<string, string> {
   }
 
   return headers;
-}
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: {
-      ...corsHeaders,
-      "Content-Type": "application/json; charset=utf-8",
-    },
-  });
 }
 
 async function readJsonWithLimit(req: Request, maxBytes: number) {

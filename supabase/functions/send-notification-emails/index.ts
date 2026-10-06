@@ -47,6 +47,7 @@ import { buildRecommendationMatchEmail } from "../_shared/emails/recommendation-
 import { buildEventPublishedEmail, type EventPublishedDetails } from "../_shared/emails/event-published.ts";
 import { buildWeeklyCityDigestEmail } from "../_shared/emails/weekly-city-digest.ts";
 import { resolveZohoSmtpConfig, sendMailViaZohoSmtp } from "../_shared/emails/smtp.ts";
+import { jsonResponse } from "../_shared/http.ts";
 
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
@@ -131,13 +132,6 @@ function buildCorsHeaders(req: Request): Record<string, string> {
   }
 
   return headers;
-}
-
-function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>) {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },
-  });
 }
 
 /** Uzunluk sızdırmayan sabit zamanlı karşılaştırma. */
