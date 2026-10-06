@@ -35,6 +35,7 @@ const makeState = (overrides: Partial<AdminNotificationState> = {}): AdminNotifi
   memberWelcomeEnabled: false,
   revisionRequestEnabled: true,
   radarScanDigestEnabled: true,
+  weeklyCityDigestEnabled: false,
   myNewMemberEmail: false,
   myAdminUpdateEmail: false,
   myRevisionRequestEmail: false,

@@ -6,7 +6,8 @@ import { BookOpen, FileText } from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
 import { updateProfileAttribute } from "@/lib/member-profile-api";
-import { formatDocumentMeta, type ProfileDocumentRecord } from "@/lib/profile-attribute-drafts";
+import { formatDocumentMeta } from "@/lib/profile-attribute-drafts";
+import type { ProfileDocumentRecord } from "@/lib/profile-documents";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
   CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY,

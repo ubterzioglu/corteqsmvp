@@ -190,7 +190,7 @@ const ProfilePage = () => {
   const volunteerMentorshipOptInAttribute = attributeMap.get(VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY) ?? null;
   const cvDocumentAttribute = attributeMap.get(CV_DOCUMENT_ATTRIBUTE_KEY) ?? null;
   const cvShareAttribute = attributeMap.get(CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY) ?? null;
-  const cvShareEnabled = readBooleanAttributeValue(cvShareAttribute?.valueJson, false);
+  const cvShareEnabled = readBooleanAttributeValue(cvShareAttribute);
   const presentationDocumentAttribute = attributeMap.get(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY) ?? null;
   const licenseDocumentAttribute = attributeMap.get(LICENSE_DOCUMENT_ATTRIBUTE_KEY) ?? null;
   const cvDocument = parseProfileDocumentRecord(cvDocumentAttribute?.valueJson);
