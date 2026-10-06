@@ -103,15 +103,34 @@ export function validateUrl(url: string): URL {
  * - Zaman aşımı (10 sn)
  * - Gövde boyut tavanı (256 KB)
  */
+/** Okuyucuların ihtiyaç duyduğu en küçük yanıt biçimi — gerçek `Response` bunu karşılar. */
+export interface SafeFetchResponse {
+  ok: boolean;
+  status: number;
+  body?: ReadableStream<Uint8Array> | null;
+  text: () => Promise<string>;
+  json: () => Promise<unknown>;
+}
+
+export type SafeFetchImpl = (
+  url: string,
+  init: { headers?: Record<string, string>; redirect: "manual"; signal: AbortSignal },
+) => Promise<SafeFetchResponse>;
+
+/**
+ * `fetchImpl` yalnız TEST DİKİŞİDİR (ağa çıkmadan okuyucu mantığını sınamak için). Üretim
+ * çağrıları vermez. Enjekte edilen sürüm de `validateUrl`'i ATLAYAMAZ: doğrulama her zaman
+ * önce çalışır ve yönlendirme reddi yanıt üzerinde uygulanır.
+ */
 export async function safeFetch(
   url: string,
-  options: { headers?: Record<string, string> } = {},
-): Promise<Response> {
-  // URL doğrulama
+  options: { headers?: Record<string, string>; fetchImpl?: SafeFetchImpl } = {},
+): Promise<SafeFetchResponse> {
+  // URL doğrulama (her zaman, enjekte edilen fetchImpl olsa bile)
   validateUrl(url);
 
-  // Fetch
-  const response = await fetch(url, {
+  const send = options.fetchImpl ?? (fetch as unknown as SafeFetchImpl);
+  const response = await send(url, {
     headers: options.headers,
     redirect: "manual", // Yönlendirme takibi kapalı
     signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -128,9 +147,17 @@ export async function safeFetch(
 /**
  * Güvenli text okuma — gövde boyut tavanı ile.
  */
-export async function safeReadText(response: Response): Promise<string> {
+export async function safeReadText(response: SafeFetchResponse): Promise<string> {
   const reader = response.body?.getReader();
-  if (!reader) return "";
+  if (!reader) {
+    // Akışı olmayan yanıt (test sahtesi ya da gövdesiz): metni oku, AYNI tavanı uygula.
+    // Gövdesiz gerçek Response'ta text() "" döner.
+    const text = await response.text();
+    if (new TextEncoder().encode(text).byteLength > MAX_BODY_BYTES) {
+      throw new SSRFError(`Gövde çok büyük (>${MAX_BODY_BYTES} byte)`);
+    }
+    return text;
+  }
 
   const chunks: Uint8Array[] = [];
   let totalBytes = 0;

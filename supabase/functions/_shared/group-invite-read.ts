@@ -126,7 +126,9 @@ type FetchLike = (url: string, init?: { headers?: Record<string, string>; signal
 export async function readInvitePage(
   url: string,
   platform: string,
-  _fetchImpl?: FetchLike, // Artık kullanılmıyor (safeFetch kullanılıyor)
+  // Test dikişi: ağa çıkmadan okuyucu mantığını sınar. Üretimde verilmez. Verilse bile
+  // safeFetch önce validateUrl çalıştırır — SSRF doğrulaması atlanamaz.
+  fetchImpl?: FetchLike,
 ): Promise<InviteRead> {
   const unknown: InviteRead = { result: "unknown", name: null, description: null, image: null };
 
@@ -137,7 +139,7 @@ export async function readInvitePage(
       // Discord API — safeFetch kullan
       const response = await safeFetch(
         `https://discord.com/api/v10/invites/${code}?with_counts=true`,
-        { headers: { "User-Agent": BROWSER_UA } },
+        { headers: { "User-Agent": BROWSER_UA }, fetchImpl },
       );
       if (response.status === 404) return { result: "invalid", name: null, description: null, image: null };
       if (!response.ok) return unknown;
@@ -165,9 +167,9 @@ export async function readInvitePage(
   // WhatsApp + Telegram: HTML og:title (Discord dışında API yok)
   try {
     // safeFetch kullan — SSRF koruması ile
-    const response = await safeFetch(url, { headers: { "User-Agent": BROWSER_UA } });
+    const response = await safeFetch(url, { headers: { "User-Agent": BROWSER_UA }, fetchImpl });
     if (!response.ok) return unknown;
-    
+
     // safeReadText ile güvenli okuma (gövde boyut tavanı)
     const html = await safeReadText(response);
     const name = parseOgMeta(html, "og:title");
