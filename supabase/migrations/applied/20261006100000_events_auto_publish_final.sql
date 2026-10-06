@@ -2,7 +2,7 @@
 --
 -- Karar: 6 Ekim 2026 (Soru 7). Canlıda events.first_approval_required=true kalmıştı
 -- (B8 taslağı). Ayar false'a çekilir; create_event_v1 otomatik yayın sürümüne döner;
--- bekleyen etkinlikler mail atılmadan (approval_source='backfill_auto') yayınlanır.
+-- bekleyen etkinlik admin panelinden yayınlanır (SQL ile değil, bkz. alt not).
 
 begin;
 
@@ -101,9 +101,8 @@ comment on function public.create_event_v1(text, text, text, text, date, time, t
 revoke all on function public.create_event_v1(text, text, text, text, date, time, time, text, text, text, text, numeric, integer, text, text[], text, text, text, text) from public, anon;
 grant execute on function public.create_event_v1(text, text, text, text, date, time, time, text, text, text, text, numeric, integer, text, text[], text, text, text, text) to authenticated;
 
--- Bekleyen eski etkinlikler: mail atılmadan yayınla (A15 tetikleyicisi backfill_auto'yu atlar).
-update public.events
-set status = 'published', approval_source = 'backfill_auto'
-where status = 'pending';
+-- NOT: Bekleyen eski etkinlikler (canlıda 1 test kaydı) SQL ile toplu yayınlanmaz:
+-- SG3 katalog koruması (catalog_items_guard_privileged_columns) oturumsuz yolu da
+-- engeller ve gevşetilmez. Yayınlama admin panelinden (is_admin → serbest) yapılır.
 
 commit;
