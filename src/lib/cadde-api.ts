@@ -260,7 +260,9 @@ export async function listCaddePostReactors(
     if (error) throw error;
     return (data ?? []) as CaddePostReactor[];
   } catch (error: unknown) {
-    // İKİNCİL yüzey: popover çizilemezse sessizce boş liste döner.
+    // BİLEREK boş döner: "kimler beğendi" popover'ı İKİNCİL yüzeydir (feed'in kendisi değil);
+    // okunamazsa popover boş kalır, sayfa hata kartına düşmez. Hata sessiz DEĞİL —
+    // reportCaddeApiError onu istemci hata kaydına yazar.
     reportCaddeApiError("listCaddePostReactors", error);
     return [];
   }

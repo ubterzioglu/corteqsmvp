@@ -49,7 +49,7 @@ export default function CaddeReactionActorsPopover({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20" onClick={onClose}>
       <div
-        className="relative max-h-[70vh] w-full max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl"
+        className="relative max-h-[70vh] w-full max-w-sm overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Başlık */}
@@ -58,7 +58,7 @@ export default function CaddeReactionActorsPopover({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+            className="rounded-full p-1 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
             aria-label="Kapat"
           >
             <X className="h-4 w-4" />

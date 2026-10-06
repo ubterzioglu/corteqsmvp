@@ -54,6 +54,7 @@ const CADDE_API_PUBLIC_EXPORTS = [
   "listCaddeFeed",
   "listCaddeInterestCatalog",
   "listCaddePostComments",
+  "listCaddePostReactors",
   "listMyCaddeCafes",
   "listMyCaddeInterests",
   "listTrendingCaddeHashtags",

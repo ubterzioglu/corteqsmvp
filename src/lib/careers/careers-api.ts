@@ -81,6 +81,12 @@ export const CAREER_ERROR_MESSAGES: Record<string, string> = {
   career_invalid_presentation_path: "Sunum dosyası bu başvuruya bağlanamadı. Dosyayı yeniden yükleyin.",
   career_email_daily_limit: "Bu e-posta ile bugün çok fazla başvuru yapıldı. Yarın tekrar deneyin.",
   career_intake_rate_limited: "Şu anda çok yoğun başvuru alıyoruz. Birazdan tekrar deneyin.",
+  // İş ilanı detayı (A7 `get_job_listing_detail_v1`). Limit `cadde_settings.jobs.free_view_limit`
+  // ayarından gelir; sayı mesaja YAZILMAZ (ürün kararı SQL'de değişir, metin bayatlamasın).
+  career_login_required: "İlanın ayrıntılarını görmek için giriş yapmalısınız.",
+  career_listing_not_found: "Bu ilan bulunamadı ya da artık yayında değil.",
+  career_listing_limit_reached:
+    "Ücretsiz üyelikte açabileceğiniz ilan sayısına ulaştınız. Daha fazla ilan için Premium üyelik gerekir.",
 };
 
 const CAREER_GENERIC_ERROR = "Başvuru gönderilemedi. Lütfen tekrar deneyin.";

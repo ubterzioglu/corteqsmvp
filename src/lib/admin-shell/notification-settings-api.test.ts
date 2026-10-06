@@ -160,6 +160,8 @@ describe("mapNotificationState", () => {
       memberWelcomeEnabled: false,
       revisionRequestEnabled: false,
       radarScanDigestEnabled: false,
+      // Haftalık şehir özeti (F13): açıkça true gelmedikçe KAPALI — mail güvenli varsayılan.
+      weeklyCityDigestEnabled: false,
       myNewMemberEmail: false,
       myAdminUpdateEmail: false,
       myRevisionRequestEmail: false,
