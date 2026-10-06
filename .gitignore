@@ -150,3 +150,8 @@ commit-msg.txt
 
 # Yerel ajan beceri kilidi (2026-10-06 karar)
 skills-lock.json
+
+# Yerel ajan araç/oturum dizinleri (2026-10-06): .agents = ajan becerileri (skills-lock.json ile aynı sınıf),
+# .superpowers = oturum çıktıları. İkisi de makineye özeldir, repoya girmez.
+.agents/
+.superpowers/
