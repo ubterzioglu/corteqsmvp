@@ -4,8 +4,20 @@
 > Kural: her batch ayrı commit, `git commit -- <dosyalar>`, push yok, Türkçe mesaj. Kapı: `tsc` · `vitest --maxWorkers=2` · `check:dead` · `verify:text`.
 > Rakamları komutla ölç.
 
-## Bitti
-- ✅ **S1** `redirects.test.ts` drift kilidi onarıldı · ✅ **S2** `/kurulus/<olmayan>` soft-404 noindex + test (commit `2247e5fc`, push'lanmadı).
+## Bitti (6 Ekim — hepsi commit'li, **push'lanmadı**; her batch'te mutasyon turu yapıldı)
+- ✅ **T0** `tsc` 4 → 0 (CV paylaşım anahtarı hep kapalı çiziliyordu: gerçek hata) · `safeHref("   ")` düzeltildi · tam paketteki 7 kırmızı test düzeltildi (474 dosya)
+- ✅ **S1** redirects drift kilidi · **S2** kuruluş soft-404 noindex · **S3** rota↔SEO, sitemap↔canonical ve nginx başlık kalıtımı sözleşmeleri
+- ✅ **S4** sitemap küçülme koruması + uydurma `lastmod` kaldırıldı · **S5** `faq.json` betikle üretiliyor (3 → 12 soru)
+- ✅ **S6** prerender/SPA fallback dokümanları · **S7a** blog `BreadcrumbList` + görünür tarih + ilgili yazılar · **S7b** kurumsal profil `Organization`
+- ✅ **S8a** nginx `charset utf-8` (⚠️ çalışan nginx'te denenmedi)
+- ✅ **C1** `.gitignore` · **C2** rate-limit tek kaynak (3 fonksiyon) · **C3** `jsonResponse` tek kaynak (10 fonksiyon) · **C4** ölü kod baseline'ı · **C6a** AdminCaddeCarsiPage veri katmanı
+- ✅ **Bonus:** GV1 SSRF testleri hiç çalışmıyordu (Deno) → vitest'e çevrildi + test dikişi onarıldı · A15 migration'ı `weekly_city_digest`'i CHECK'ten düşürmüştü → düzeltme migration'ı **yazıldı, UYGULANMADI**
+- ✅ **K10** rehberler koda karşı doğrulandı (1 düzeltildi, 2 "doğrulanmadı" işaretlendi) · **K11** 4 migration incelemesi: `2026-10-06-k11-migration-inceleme.md` · **C1b** CLAUDE.md önerileri: `2026-10-06-claude-md-guncelleme-onerileri.md`
+
+## Yapılmadı (neden)
+- **S8 kalanı** (`service.json`, `llms-full.txt`, `index.html` `<noscript>`): `<noscript>` onay ister (61 rotanın kabuğu); diğer ikisi doğrulanamayan skor kazancı için içerik/iddia riski taşıyor.
+- **C5** dev fonksiyon ayrıştırmaları, **C6b** `types.ts` yeniden üretimi (135 `as never`), **C7** küçük tekrarlar, boolean-bayraklı `set…AsAdmin` yeniden adlandırması (RPC sözleşmesine dokunma riski): ayrı oturumlar.
+- **B8 "Stripe mock riski":** KALANLAR'daki iddia abartılı çıktı — mock ekran zaten "Demo / Test ödemesi, gerçek para tahsil edilmez" uyarısı taşıyor.
 
 ## Önce: tsc borcu (planda yoktu, bugün bulundu)
 CLAUDE.md "tsc 0 hata" diyor; bugün **4 hata** var (A-batch / B8 işlerinden). Kapı kırmızı kaldıkça sonraki her batch'in `tsc` kanıtı bulanır.
