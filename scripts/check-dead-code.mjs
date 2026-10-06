@@ -39,7 +39,21 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 // ⚠️ Buraya yeni satır eklemek SON çare olmalı: bu liste "ölü ama şimdilik
 // dursun" demektir ve kolayca kalıcı hâle gelir. Eklemeden önce dosyayı silmeyi
 // dene; eklerken SİLECEK batch'i adıyla yaz.
-export const KNOWN_DEAD_FILES = new Set([]);
+//
+// ⏳ 06.10: üç dosya TÜKETİCİSİNDEN ÖNDE (başka oturumların planlı işleri; silmek planı yok
+// ederdi). Her biri bağlanınca denetleyici "bayat baseline kaydı" der ve satır silinir.
+//   • plans.ts — fiyat/kampanya sabitleri için "tek kaynak"; Pricing.tsx henüz kendi
+//     yerel sabitlerini kullanıyor. 🔴 Kim siler: Pricing'i plans.ts'e bağlayan batch
+//     (Stripe Faz 1 / A2 devamı).
+//   • role-structure.ts — Excel'den üretilmiş rol yapısı verisi. 🔴 Kim siler: A3.4 · R4
+//     3 adımlı rol seçici arayüzü (docs/plans/2026-10-05-birlesik-uygulama-plani.md).
+//   • CaddeReactionActorsPopover.tsx — "kimler beğendi" arayüzü; RPC + API (listCaddePostReactors)
+//     canlı, bileşen henüz bir reaksiyon çubuğuna bağlanmadı. 🔴 Kim siler: B11 bağlama batch'i.
+export const KNOWN_DEAD_FILES = new Set([
+  "src/lib/plans.ts",
+  "src/lib/role-structure.ts",
+  "src/components/cadde/CaddeReactionActorsPopover.tsx",
+]);
 
 // Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir
 // dosya üretim grafiğinden değil, TEST grafiğinden erişilebilir olmalıdır.
