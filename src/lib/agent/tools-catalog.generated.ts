@@ -20,6 +20,8 @@ export const toolCatalog = {
       "interface_kind": "cli",
       "commands": [
         "ai:embed",
+        "ai:faq",
+        "ai:faq:check",
         "ai:ingest",
         "build",
         "build:dev",
