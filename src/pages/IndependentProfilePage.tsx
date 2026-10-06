@@ -63,8 +63,11 @@ const IndependentProfilePage = () => {
           description: profile.description || `${profile.title} — ${profile.city}, ${profile.country}`,
           canonicalPath: `/kurulus/${profile.slug}`,
         }
-      : { canonicalPath: `/kurulus/${slug}` },
-    [profile?.slug],
+      : isLoading
+        ? { canonicalPath: `/kurulus/${slug}` }
+        : // Yükleme bitti ve profil yok: sayfa 200 döner ama içerik yoktur (soft-404).
+          { canonicalPath: `/kurulus/${slug}`, robots: "noindex, follow" },
+    [profile?.slug, isLoading],
   );
 
   return (
