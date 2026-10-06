@@ -125,6 +125,92 @@ describe("nginx güvenlik başlıkları", () => {
     expect(connectSrc).toContain("https://*.supabase.co");
   });
 
+  // --- add_header kalıtım sözleşmesi (S3-c) -------------------------------------
+  // Yukarıdaki CSP testi satırları SAYIYOR. Yeni bir location yalnız `Cache-Control`
+  // add_header'ı ile (CSP'siz) eklenirse CSP sayısı DEĞİŞMEZ ve test geçer — oysa o
+  // yolda CSP, clickjacking ve HSTS sessizce düşer (2026-08-04'te /robots.txt'te 8
+  // başlık vardı, `/` adresinde 0). Bu test her add_header'lı location'ı tek tek okur.
+  const GUVENLIK_BASLIKLARI = [
+    "X-Frame-Options",
+    "X-Content-Type-Options",
+    "Strict-Transport-Security",
+    "Referrer-Policy",
+    "Permissions-Policy",
+    "Cross-Origin-Opener-Policy",
+    "Cross-Origin-Resource-Policy",
+    "Content-Security-Policy",
+  ];
+
+  type NginxLocation = { header: string; body: string; start: number; end: number };
+
+  const yorumsuzNginx = nginxConf
+    .split(/\r?\n/)
+    .map((line) => line.replace(/#.*$/, ""))
+    .join("\n");
+
+  /** `location … { … }` bloklarını süslü parantez dengesiyle çıkarır. */
+  function locationBloklari(text: string): NginxLocation[] {
+    const bloklar: NginxLocation[] = [];
+    const baslangic = /location\s+[^{;]+\{/g;
+    let eslesme: RegExpExecArray | null;
+
+    while ((eslesme = baslangic.exec(text)) !== null) {
+      let derinlik = 1;
+      let i = baslangic.lastIndex;
+      while (i < text.length && derinlik > 0) {
+        if (text[i] === "{") derinlik += 1;
+        else if (text[i] === "}") derinlik -= 1;
+        i += 1;
+      }
+      bloklar.push({
+        header: eslesme[0].slice(0, -1).trim(),
+        body: text.slice(baslangic.lastIndex, i - 1),
+        start: eslesme.index,
+        end: i,
+      });
+      baslangic.lastIndex = i;
+    }
+    return bloklar;
+  }
+
+  const eksikBasliklar = (govde: string) =>
+    GUVENLIK_BASLIKLARI.filter((ad) => !new RegExp(`add_header\\s+${ad}\\s`).test(govde));
+
+  it("ayrıştırıcı çalışıyor: bilinen add_header'lı location'lar bulundu", () => {
+    // Çıpa kayarsa aşağıdaki testler boş listede sessizce geçer.
+    const basliklilar = locationBloklari(yorumsuzNginx)
+      .filter((blok) => /add_header/.test(blok.body))
+      .map((blok) => blok.header);
+
+    for (const beklenen of KENDI_ADD_HEADERI_OLAN_LOCATIONLAR) {
+      expect(basliklilar, `${beklenen} bulunamadı`).toContain(beklenen);
+    }
+  });
+
+  it("add_header içeren HER location 8 güvenlik başlığının tamamını taşır", () => {
+    const ihlaller = locationBloklari(yorumsuzNginx)
+      .filter((blok) => /add_header/.test(blok.body))
+      .map((blok) => ({ blok: blok.header, eksik: eksikBasliklar(blok.body) }))
+      .filter(({ eksik }) => eksik.length > 0)
+      .map(({ blok, eksik }) => `${blok} → eksik: ${eksik.join(", ")}`);
+
+    expect(
+      ihlaller,
+      `add_header KALITILMAZ — bu location'larda güvenlik başlıkları sessizce düşer: ${ihlaller.join(" | ")}`,
+    ).toEqual([]);
+  });
+
+  it("server düzeyinde (location dışında) 8 güvenlik başlığı tanımlıdır", () => {
+    // Kendi add_header'ı olmayan location'lar (/lansman, /commercial, `/`, 301'ler)
+    // başlıkları BURADAN miras alır; silinirse hepsi birden düşer.
+    let sunucuDuzeyi = yorumsuzNginx;
+    for (const blok of locationBloklari(yorumsuzNginx).reverse()) {
+      sunucuDuzeyi = sunucuDuzeyi.slice(0, blok.start) + sunucuDuzeyi.slice(blok.end);
+    }
+
+    expect(eksikBasliklar(sunucuDuzeyi), "server düzeyinde eksik güvenlik başlığı").toEqual([]);
+  });
+
   it("X-Robots-Tag blanket header'ı geri eklenmemiştir", () => {
     // Sayfa seviyesindeki meta robots yeterli; blanket "index, follow" 404 kabuğunda
     // NotFound'un noindex'ini gölgeliyordu (bkz. Batch 3).
