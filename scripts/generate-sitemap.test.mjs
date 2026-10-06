@@ -14,7 +14,16 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { STATIC_ROUTES, escapeXml, qualifiesForSitemap, renderUrl } from "./generate-sitemap.mjs";
+import { sliceFrom } from "../src/test/source-slice";
+import {
+  MIN_KEEP_RATIO,
+  STATIC_ROUTES,
+  countSitemapUrls,
+  escapeXml,
+  evaluateSitemapWrite,
+  qualifiesForSitemap,
+  renderUrl,
+} from "./generate-sitemap.mjs";
 
 const appSource = readFileSync(resolve(process.cwd(), "src/App.tsx"), "utf8");
 
@@ -106,27 +115,42 @@ describe("XML üretimi", () => {
     expect(escapeXml(`a&b<c>d"e'f`)).toBe("a&amp;b&lt;c&gt;d&quot;e&apos;f");
   });
 
-  it("renderUrl verilen tarihi kullanır — çıktı deterministiktir", () => {
-    const bir = renderUrl({ path: "/x", priority: "0.5", changefreq: "weekly" }, "2026-08-04");
-    const iki = renderUrl({ path: "/x", priority: "0.5", changefreq: "weekly" }, "2026-08-04");
+  it("renderUrl çıktısı deterministiktir — bugünün tarihine bağlı değildir", () => {
+    const bir = renderUrl({ path: "/x", priority: "0.5", changefreq: "weekly" });
+    const iki = renderUrl({ path: "/x", priority: "0.5", changefreq: "weekly" });
 
     expect(bir).toBe(iki);
-    expect(bir).toContain("<lastmod>2026-08-04</lastmod>");
     expect(bir).toContain("<loc>https://corteqs.net/x</loc>");
   });
 
-  it("entry kendi lastmod'unu taşıyorsa onu tercih eder", () => {
-    const xml = renderUrl(
-      { path: "/y", priority: "0.5", changefreq: "weekly", lastmod: "2026-01-01" },
-      "2026-08-04",
-    );
+  it("gerçek lastmod'u bilinmeyen kayda <lastmod> YAZMAZ (build günü uydurulmaz)", () => {
+    // Eskiden bilinmeyen tarih yerine build günü basılıyordu: tüm statik sayfalar her
+    // build'de "bugün değişti" görünüyor, Google lastmod'u güvenilmez sayıp yok sayıyordu.
+    const xml = renderUrl({ path: "/x", priority: "0.5", changefreq: "weekly" });
+
+    expect(xml).not.toContain("<lastmod>");
+  });
+
+  it("entry kendi lastmod'unu taşıyorsa onu yazar", () => {
+    const xml = renderUrl({
+      path: "/y",
+      priority: "0.5",
+      changefreq: "weekly",
+      lastmod: "2026-01-01",
+    });
 
     expect(xml).toContain("<lastmod>2026-01-01</lastmod>");
   });
 
+  it("hiçbir statik rota sabit lastmod taşımaz — tarih yalnız dinamik kaynaktan gelir", () => {
+    const tarihli = STATIC_ROUTES.filter((r) => r.lastmod).map((r) => r.path);
+
+    expect(tarihli, `statik rotada elle yazılmış lastmod (bayatlar): ${tarihli.join(", ")}`).toEqual([]);
+  });
+
   it("yalnız kök sayfaya image bloğu ekler", () => {
-    const kok = renderUrl({ path: "/", priority: "1.0", changefreq: "weekly" }, "2026-08-04");
-    const digeri = renderUrl({ path: "/founders", priority: "0.8", changefreq: "monthly" }, "2026-08-04");
+    const kok = renderUrl({ path: "/", priority: "1.0", changefreq: "weekly" });
+    const digeri = renderUrl({ path: "/founders", priority: "0.8", changefreq: "monthly" });
 
     expect(kok).toContain("<image:image>");
     expect(digeri).not.toContain("<image:image>");
@@ -168,5 +192,71 @@ describe("qualifiesForSitemap — katalog kapsam kuralı (22.09)", () => {
       qualifiesForSitemap(row({ headline: "   ", short_description: "  ", city: " " })),
     ).toBe(false);
     expect(qualifiesForSitemap(row({ long_description: "   " }))).toBe(false);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Küçülme koruması
+// ---------------------------------------------------------------------------
+// Dinamik kaynaklar env yokken / tablo 5xx verirken HATA FIRLATMAZ, boş döner. Dockerfile'da
+// VITE_SUPABASE_* build argümanı yoksa üretim sitemap'i ~413 URL yerine ~45 URL'ye
+// SESSİZCE iner ve sağlam dosyanın üstüne yazılırdı.
+
+const xmlWith = (n) =>
+  `<urlset>${Array.from({ length: n }, (_, i) => `<url><loc>https://corteqs.net/${i}</loc></url>`).join("")}</urlset>`;
+
+describe("sitemap küçülme koruması", () => {
+  it("countSitemapUrls <loc> sayar", () => {
+    expect(countSitemapUrls(xmlWith(0))).toBe(0);
+    expect(countSitemapUrls(xmlWith(7))).toBe(7);
+  });
+
+  it("413 → 45 (env düştü) YAZILMAZ", () => {
+    const karar = evaluateSitemapWrite(45, xmlWith(413));
+
+    expect(karar.write).toBe(false);
+    expect(karar.reason).toContain("SITEMAP_ALLOW_SHRINK=1");
+  });
+
+  it("eşik oranı anlamlı aralıkta: ne her küçülmeyi engeller ne de çöküşü geçirir", () => {
+    // Aşağıdaki eşik testleri oranı BU sabitten türetir; oran gevşetilirse onlar yine
+    // geçer. Bu test oranın kendisini sabitler. %50 altı: 413→250 gibi gerçek kayıp geçer;
+    // %90 üstü: günlük dalgalanma build'i boşuna engeller.
+    expect(MIN_KEEP_RATIO).toBeGreaterThanOrEqual(0.5);
+    expect(MIN_KEEP_RATIO).toBeLessThanOrEqual(0.9);
+  });
+
+  it("eşiğin hemen altı yazılmaz, hemen üstü yazılır", () => {
+    const mevcut = 100;
+    const esik = mevcut * MIN_KEEP_RATIO; // 70
+
+    expect(evaluateSitemapWrite(esik - 1, xmlWith(mevcut)).write).toBe(false);
+    expect(evaluateSitemapWrite(esik, xmlWith(mevcut)).write).toBe(true);
+  });
+
+  it("büyüme ve küçük dalgalanma yazılır", () => {
+    expect(evaluateSitemapWrite(430, xmlWith(413)).write).toBe(true);
+    expect(evaluateSitemapWrite(400, xmlWith(413)).write).toBe(true);
+  });
+
+  it("mevcut dosya yoksa/boşsa her zaman yazar (ilk üretim, temiz klon)", () => {
+    expect(evaluateSitemapWrite(45, null).write).toBe(true);
+    expect(evaluateSitemapWrite(45, xmlWith(0)).write).toBe(true);
+  });
+
+  it("bilinçli küçülme (allowShrink) yazılabilir", () => {
+    expect(evaluateSitemapWrite(45, xmlWith(413), { allowShrink: true }).write).toBe(true);
+  });
+
+  it("main() yazmadan ÖNCE korumayı çağırır (yalnız fonksiyonun varlığı yetmez)", () => {
+    // Fonksiyon testleri, main() ona hiç bağlanmasa da yeşil kalırdı.
+    const source = readFileSync(resolve(process.cwd(), "scripts/generate-sitemap.mjs"), "utf8");
+    const main = sliceFrom(source, "async function main()", "generate-sitemap main()");
+    const koruma = main.indexOf("evaluateSitemapWrite(");
+    const yazma = main.indexOf("writeFile(OUTPUT");
+
+    expect(koruma, "main() içinde evaluateSitemapWrite çağrısı yok").toBeGreaterThan(-1);
+    expect(yazma, "main() içinde writeFile(OUTPUT çağrısı yok").toBeGreaterThan(-1);
+    expect(koruma).toBeLessThan(yazma);
   });
 });

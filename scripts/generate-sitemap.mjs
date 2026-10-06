@@ -409,25 +409,71 @@ function escapeXml(value) {
   );
 }
 
-function renderUrl(entry, today) {
+/**
+ * <lastmod> YALNIZ kaydın gerçek değişiklik tarihi biliniyorsa yazılır.
+ *
+ * Eskiden bilinmeyen tarih yerine build günü basılıyordu: statik sayfaların hepsi her
+ * build'de "bugün değişti" görünüyordu (repodaki sitemap'te 51 URL aynı güne sabitlenmişti).
+ * Google, güvenilmez lastmod'u tümden yok sayar ve bu da gerçek (blog/etkinlik) tarihlerin
+ * sinyalini de boşa çıkarır. Bilinmeyen tarih için alanı atlamak doğru olandır.
+ */
+function renderUrl(entry) {
   const loc = `${SITE_ORIGIN}${entry.path}`;
-  const lastmod = entry.lastmod ?? today;
+  const lastmod = entry.lastmod ? `\n    <lastmod>${entry.lastmod}</lastmod>` : "";
   const image =
     entry.path === "/"
       ? `\n    <image:image>\n      <image:loc>${OG_IMAGE}</image:loc>\n      <image:title>CorteQS Diaspora Connect</image:title>\n    </image:image>`
       : "";
   return `  <url>
-    <loc>${escapeXml(loc)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <loc>${escapeXml(loc)}</loc>${lastmod}
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>${image}
   </url>`;
 }
 
+// ---------------------------------------------------------------------------
+// Küçülme koruması
+// ---------------------------------------------------------------------------
+// Dinamik kaynaklar (blog, katalog, kuruluş, etkinlik…) Supabase'ten gelir. Env yoksa
+// ya da bir tablo 5xx verirse ilgili get*Routes() HATA FIRLATMAZ, boş dizi döner (build
+// kırılmasın diye). Sonuç: `Dockerfile`'da VITE_SUPABASE_* build argümanı yoksa üretim
+// sitemap'i ~413 URL yerine ~45 URL'ye (yalnız statik + commercial) SESSİZCE iner ve
+// commit'li sağlam dosyanın üstüne yazılır. Bu koruma, yeni sayının mevcut dosyanın
+// belli bir oranının altına düşmesini yazma aşamasında reddeder.
+
+const MIN_KEEP_RATIO = 0.7;
+
+/** Üretilmiş sitemap XML'indeki <loc> sayısı. */
+function countSitemapUrls(xml) {
+  return (xml.match(/<loc>/g) ?? []).length;
+}
+
+/**
+ * Yeni sitemap yazılmalı mı?
+ *
+ * @param {number} newCount yeni üretilen URL sayısı
+ * @param {string | null} existingXml mevcut dosyanın içeriği (yoksa null)
+ * @param {{ allowShrink?: boolean }} [options] allowShrink: bilinçli küçülme (SITEMAP_ALLOW_SHRINK=1)
+ * @returns {{ write: boolean, reason: string }}
+ */
+function evaluateSitemapWrite(newCount, existingXml, { allowShrink = false } = {}) {
+  const existingCount = existingXml ? countSitemapUrls(existingXml) : 0;
+  if (existingCount === 0) return { write: true, reason: "mevcut sitemap yok/boş" };
+  if (allowShrink) return { write: true, reason: "SITEMAP_ALLOW_SHRINK=1" };
+  if (newCount < existingCount * MIN_KEEP_RATIO) {
+    return {
+      write: false,
+      reason:
+        `${newCount} URL, mevcut ${existingCount} URL'nin %${MIN_KEEP_RATIO * 100}'inin altında — ` +
+        "büyük olasılıkla Supabase env/ağ sorunu (dinamik kaynaklar boş döndü). " +
+        "Bilinçli küçülme ise SITEMAP_ALLOW_SHRINK=1 ile yeniden çalıştır.",
+    };
+  }
+  return { write: true, reason: "sayı korunuyor" };
+}
+
 async function main() {
   await loadEnvLocal();
-  // SITE_DATE env ile sabitlenebilir; yoksa bugünün tarihi (deterministik build için).
-  const today = process.env.SITE_DATE ?? new Date().toISOString().slice(0, 10);
 
   const [
     commercialRoutes,
@@ -463,9 +509,19 @@ async function main() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-${unique.map((e) => renderUrl(e, today)).join("\n")}
+${unique.map((e) => renderUrl(e)).join("\n")}
 </urlset>
 `;
+
+  const existingXml = await readFile(OUTPUT, "utf8").catch(() => null);
+  const karar = evaluateSitemapWrite(unique.length, existingXml, {
+    allowShrink: process.env.SITEMAP_ALLOW_SHRINK === "1",
+  });
+  if (!karar.write) {
+    // Build kırılmaz (exit 0) ama sağlam dosya KORUNUR ve uyarı açıkça görünür.
+    console.warn(`[sitemap] ⚠️ YAZILMADI, mevcut sitemap.xml korunuyor: ${karar.reason}`);
+    return;
+  }
 
   await writeFile(OUTPUT, xml, "utf8");
   console.log(
@@ -494,4 +550,13 @@ if (calistirilanDosya === buDosya) {
 }
 
 // Test yüzeyi — bkz. scripts/generate-sitemap.test.mjs
-export { STATIC_ROUTES, escapeXml, renderUrl, fetchAllRows, PAGE_SIZE };
+export {
+  STATIC_ROUTES,
+  escapeXml,
+  renderUrl,
+  fetchAllRows,
+  PAGE_SIZE,
+  MIN_KEEP_RATIO,
+  countSitemapUrls,
+  evaluateSitemapWrite,
+};
