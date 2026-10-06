@@ -18,7 +18,17 @@ export async function enforceRateLimit(
   supabase: ReturnType<typeof createClient>, req: Request, scope: string, maxRequests: number, windowSeconds: number,
   userId?: string,
 ) {
-  const clientKey = getClientKey(req, userId);
+  await enforceRateLimitForKey(supabase, scope, getClientKey(req, userId), maxRequests, windowSeconds);
+}
+
+/**
+ * Anahtarı çağıranın kendisi hazırladığı durumlar için (örn. anket: tuzlanmış IP hash'i,
+ * anket başına kapsam). `enforceRateLimit` ile AYNI atomik RPC'yi kullanır; select+update
+ * kopyaları yazma, yarış durumuna açıktır.
+ */
+export async function enforceRateLimitForKey(
+  supabase: ReturnType<typeof createClient>, scope: string, clientKey: string, maxRequests: number, windowSeconds: number,
+) {
   const windowMs = windowSeconds * 1000;
   const windowStartMs = Math.floor(Date.now() / windowMs) * windowMs;
   const windowStartedAt = new Date(windowStartMs).toISOString();

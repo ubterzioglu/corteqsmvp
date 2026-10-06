@@ -1,6 +1,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
 
+import { enforceRateLimit } from "../_shared/rate-limit.ts";
+
 const ALLOWED_ORIGINS = new Set([
   "https://corteqs.net",
   "https://www.corteqs.net",
@@ -91,17 +93,6 @@ function jsonResponse(body: unknown, status: number, corsHeaders: Record<string,
   });
 }
 
-function getClientKey(req: Request): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0]?.trim() || "unknown";
-  }
-
-  return req.headers.get("cf-connecting-ip")
-    ?? req.headers.get("x-real-ip")
-    ?? "unknown";
-}
-
 async function readJsonWithLimit(req: Request, maxBytes: number) {
   const text = await req.text();
   if (new TextEncoder().encode(text).length > maxBytes) {
@@ -109,51 +100,6 @@ async function readJsonWithLimit(req: Request, maxBytes: number) {
   }
 
   return JSON.parse(text);
-}
-
-async function enforceRateLimit(supabase: ReturnType<typeof createClient>, req: Request, scope: string, maxRequests: number, windowSeconds: number) {
-  const clientKey = getClientKey(req);
-  const now = Date.now();
-  const windowMs = windowSeconds * 1000;
-  const windowStartedAt = new Date(Math.floor(now / windowMs) * windowMs).toISOString();
-
-  const { data: existing, error: fetchError } = await supabase
-    .from("edge_rate_limits")
-    .select("request_count, window_started_at")
-    .eq("scope", scope)
-    .eq("client_key", clientKey)
-    .maybeSingle();
-
-  if (fetchError) throw fetchError;
-
-  if (!existing) {
-    const { error: insertError } = await supabase.from("edge_rate_limits").insert({
-      scope,
-      client_key: clientKey,
-      window_started_at: windowStartedAt,
-      request_count: 1,
-    });
-    if (insertError) throw insertError;
-    return;
-  }
-
-  const sameWindow = existing.window_started_at === windowStartedAt;
-  const nextCount = sameWindow ? Number(existing.request_count ?? 0) + 1 : 1;
-
-  if (sameWindow && nextCount > maxRequests) {
-    throw new Error("RATE_LIMITED");
-  }
-
-  const { error: updateError } = await supabase
-    .from("edge_rate_limits")
-    .update({
-      request_count: nextCount,
-      window_started_at: windowStartedAt,
-    })
-    .eq("scope", scope)
-    .eq("client_key", clientKey);
-
-  if (updateError) throw updateError;
 }
 
 function tokenize(text: string): string[] {
@@ -233,7 +179,15 @@ Deno.serve(async (req) => {
     }
 
     const supabase = createClient(supabaseUrl, serviceKey);
-    await enforceRateLimit(supabase, req, "find-matches", RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_SECONDS);
+    // SG9: kimliği doğrulanmış kullanıcıda sınır user.id'ye göre (IP sahte başlıkla değişebilir).
+    await enforceRateLimit(
+      supabase,
+      req,
+      "find-matches",
+      RATE_LIMIT_MAX,
+      RATE_LIMIT_WINDOW_SECONDS,
+      user.id,
+    );
 
     const payload = RequestSchema.parse(await readJsonWithLimit(req, MAX_BODY_BYTES));
 

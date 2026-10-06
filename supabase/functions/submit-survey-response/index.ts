@@ -1,5 +1,7 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
+import { enforceRateLimitForKey } from "../_shared/rate-limit.ts";
+
 type QuestionType = "short_text" | "long_text" | "single_choice" | "multiple_choice" | "rating" | "yes_no" | "email";
 
 type SubmitPayload = {
@@ -164,34 +166,23 @@ Deno.serve(async (req) => {
     const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ipHashInput));
     const ipHash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
 
-    const windowMs = RATE_LIMIT_WINDOW_SECONDS * 1000;
-    const windowStartedAt = new Date(Math.floor(now / windowMs) * windowMs).toISOString();
     const rateLimitMax = survey.allow_multiple_submissions ? RATE_LIMIT_MAX_MULTI_SUBMISSION : RATE_LIMIT_MAX_SINGLE_SUBMISSION;
 
-    const { data: existingRl } = await supabase
-      .from("edge_rate_limits")
-      .select("id,request_count,window_started_at")
-      .eq("scope", `survey-submit:${survey.id}`)
-      .eq("client_key", ipHash)
-      .maybeSingle();
-
-    if (!existingRl) {
-      await supabase.from("edge_rate_limits").insert({
-        scope: `survey-submit:${survey.id}`,
-        client_key: ipHash,
-        request_count: 1,
-        window_started_at: windowStartedAt,
-      });
-    } else {
-      const sameWindow = existingRl.window_started_at === windowStartedAt;
-      const nextCount = sameWindow ? Number(existingRl.request_count ?? 0) + 1 : 1;
-      if (sameWindow && nextCount > rateLimitMax) {
+    // SG9: atomik tek kaynak. Eskiden select+update ayrıydı (yarış durumu) ve veritabanı
+    // hataları sessizce yutuluyordu; artık altyapı hatası dış catch'e düşer (500).
+    try {
+      await enforceRateLimitForKey(
+        supabase,
+        `survey-submit:${survey.id}`,
+        ipHash,
+        rateLimitMax,
+        RATE_LIMIT_WINDOW_SECONDS,
+      );
+    } catch (rateLimitError) {
+      if (rateLimitError instanceof Error && rateLimitError.message === "RATE_LIMITED") {
         return json({ error: "Too many requests" }, 429);
       }
-      await supabase
-        .from("edge_rate_limits")
-        .update({ request_count: nextCount, window_started_at: windowStartedAt })
-        .eq("id", existingRl.id);
+      throw rateLimitError;
     }
 
     const { data: questions, error: questionsError } = await supabase
