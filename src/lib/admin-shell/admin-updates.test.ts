@@ -577,4 +577,16 @@ describe("ADMIN_UPDATES", () => {
     // Sızan alanların ne olduğu yazılı kalmalı — "link sızdı" sanılmasın.
     expect(detail).toContain("TELEFON NUMARASI");
   });
+
+  it("doküman düzenlemesi kaydı sitede değişiklik OLMADIĞINI ve silinenle taşınanı ayırır", () => {
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20261006-dokuman-duzenleme");
+    const detail = update?.items.join(" ") ?? "";
+
+    expect(update?.date).toBe("6 Ekim 2026");
+    // Yöneticiler "site değişti mi?" diye soracak; cevap kayıtta açık olmalı.
+    expect(detail).toContain("hiçbir şey değişmedi");
+    // Silinen (log dosyaları) ile silinmeden taşınan (ROADMAP.md) karıştırılmamalı.
+    expect(detail).toContain("352 eski çıktı kaydı");
+    expect(detail).toContain("silinmeden arşive taşındı");
+  });
 });

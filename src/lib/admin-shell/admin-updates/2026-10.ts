@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261006-dokuman-duzenleme",
+    date: "6 Ekim 2026",
+    title: "Doküman düzenlemesi: depo kökü ve docs klasörü toparlandı — sitede hiçbir şey değişmedi",
+    items: [
+      "KISACA: Projenin dosya klasörleri çok karışmıştı. Bugün yalnızca dokümanlar ve artık çıktılar toparlandı. Sitenin kendisine, üyelere ya da yönetici paneline görünen hiçbir şey değişmedi.",
+      "NE YAPILDI: (1) Ana klasörde birikmiş 352 eski çıktı kaydı (deneme ve kontrol çalıştırmalarının log dosyaları) silindi; hiçbiri projenin parçası değildi, gerektiğinde yeniden üretilir. (2) Ana klasörde duran Lansman Hazırlık Planı, planların durduğu yere taşındı. (3) Başka bir projeye ait görünen yol haritası dosyası ile bir tasarım rehberi kopyası silinmeden arşive taşındı. (4) Dokümanların giriş sayfası (docs/README.md) baştan yazıldı: artık hangi klasörde ne olduğunu ve yeni bir dokümanın nereye konacağını kısaca söylüyor. Eskiden sürekli uzayan ve bayat rakamlarla dolu olan eski hali silinmedi, geçmiş klasörüne taşındı. (5) Arşiv klasörü için de bir dizin yazıldı.",
+      "SİZDEN BEKLENEN: Bir şey beklenmiyor. Taşınan ROADMAP.md dosyası bu projeye ait değilse docs/archive/root-2026-10-06 klasöründen silebilirsiniz; karar sizin, o yüzden dokunulmadı.",
+      "BİLMENİZ GEREKEN: Eski devir notları taşınan iki dosyayı hâlâ ana klasörde sayıyor. Bunlar geçmiş günün kaydı olduğu için düzeltilmedi. Henüz yapılmayanlar: CLAUDE.md dosyasının başındaki rakam bloklarının yenilenmesi ve docs içindeki yaklaşık 70 dosyalık planlar klasörünün ayıklanması; ayrı bir turda ele alınabilir.",
+    ],
+  },
+  {
     id: "20261006-aciklamalar-iyilestirildi-notu",
     date: "6 Ekim 2026",
     title: "Not: Güncelleme açıklamaları iyileştirildi — son 7 günün özetleri sade dille yeniden gönderildi",
