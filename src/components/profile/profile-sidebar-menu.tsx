@@ -50,6 +50,17 @@ export type ProfileSidebarSections = {
 };
 
 /**
+ * "Tehlikeli Bölge" (hesap silme) öğesi KAPALI: arkadaki işlev henüz yok —
+ * `delete-account` edge function'ı yer tutucu, onay penceresi ve anonimleştirme
+ * yazılmadı. Kart ise "verileriniz 30 gün içinde silinir" diye KVKK/GDPR sözü
+ * veriyor; çalışmayan bir özelliğin sözünü üyeye göstermek yanlıştır.
+ * Silme akışı tamamlanıp canlıda gerçek test hesabıyla doğrulanınca `true` yap ve
+ * `ProfilePage.test.tsx` menü sırasına "Tehlikeli Bölge"yi ("Rol Talepleri" ile
+ * "Yardım" arasına) ekle. Kart kodu (`dangerZoneCard`) bilerek silinmedi.
+ */
+export const ACCOUNT_DELETION_MENU_ENABLED = false;
+
+/**
  * Kurumsal/danışman düzenindeki yan panel menüsünü kurar.
  *
  * Öğe sırası ürün kararıdır ve `ProfilePage.test.tsx` içindeki
@@ -151,12 +162,16 @@ export function buildProfileSidebarMenu(sections: ProfileSidebarSections): Sideb
           } as SidebarMenuItem,
         ]
       : []),
-    {
-      id: "danger",
-      label: "Tehlikeli Bölge",
-      icon: <AlertTriangle className="h-4 w-4" />,
-      content: sections.dangerZoneCard,
-    },
+    ...(ACCOUNT_DELETION_MENU_ENABLED
+      ? [
+          {
+            id: "danger",
+            label: "Tehlikeli Bölge",
+            icon: <AlertTriangle className="h-4 w-4" />,
+            content: sections.dangerZoneCard,
+          } as SidebarMenuItem,
+        ]
+      : []),
     {
       id: "help",
       label: "Yardım",
