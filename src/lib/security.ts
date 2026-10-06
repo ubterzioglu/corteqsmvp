@@ -27,6 +27,8 @@ export function sanitizeUrl(url: string): string {
 export function safeHref(url: string | null | undefined): string {
   if (!url) return "#";
   const trimmed = url.trim();
+  // Boşluktan ibaret girdi trim sonrası boş kalır; aksi halde `https://` (hedefsiz bağlantı) üretilirdi.
+  if (!trimmed) return "#";
   if (DANGEROUS_URL_SCHEMES.test(trimmed)) return "#";
   if (!/^https?:\/\//i.test(trimmed)) return `https://${trimmed}`;
   return trimmed;
