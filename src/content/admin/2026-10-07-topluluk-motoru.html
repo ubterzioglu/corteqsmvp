@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Topluluk Motoru — Ücretsiz Özellikler | 7 Ekim 2026</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec;
+    --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74;
+    --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac;
+    --code-bg: #f1f5f9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a;
+      --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309;
+      --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d;
+      --code-bg: #1c222a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code, kbd {
+    background: var(--code-bg); border-radius: 4px; padding: 1px 5px;
+    font: 0.88em ui-monospace, "Cascadia Code", Consolas, monospace; word-break: break-word;
+  }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .bad  { background: var(--bad-bg);  border-color: var(--bad-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em;
+         padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+  @media print { body { background: #fff; color: #000; } .box { break-inside: avoid; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Topluluk Motoru — Ücretsiz Özellikler</h1>
+  <p class="lede">
+    7 Ekim 2026 · CorteQS'in ücretsiz topluluk yüzeyleri: etkinlik, tavsiye, davet, haftalık özet ve iş ilanları.
+    Bu dosya <strong>siteye yüklenmez</strong> — yalnız kod deposunda durur, internetten açılamaz.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#etkinlik">Etkinlik sistemi</a></li>
+    <li><a href="#tavsiye">Tavsiye İste</a></li>
+    <li><a href="#davet">Davet ve Liderlik</a></li>
+    <li><a href="#ozet">Haftalık Şehir Özeti</a></li>
+    <li><a href="#ilanlar">İş İlanları</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="etkinlik">1. Etkinlik sistemi</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık kendi etkinliklerini oluşturabiliyor. Her üye aynı anda en fazla <strong>2 etkinlik</strong>
+  yayınlayabilir. İlk etkinlik yönetici onayından geçer; onaydan sonra gelen etkinlikler otomatik yayında.
+  Etkinliklerde kategori, tarih, konum, kayıt bağlantısı ve katılımcı sınırı belirtilebilir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> <code>/events</code> (etkinlik listesi), <code>/events/new</code> (yeni oluştur)</li>
+  <li><strong>Admin tarafı:</strong> <code>/admin/events</code> (onay kuyruğu + liste)</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>Dikkat — ilk etkinlik onaylı.</strong></p>
+  <p>
+    Üyenin ilk etkinliği "beklemede" durumuna düşer ve admin onayı bekler. Admin onaylarsa etkinlik
+    yayınlanır ve bildirim e-postası gider. Bekleyen etkinlikler <code>/admin/events</code> ekranında
+    "Onay bekleyenler" sekmesinde görünür.
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye <code>/events/new</code> sayfasına gider, etkinlik başlığı, açıklaması, tarihi, konumu ve kayıt bağlantısını doldurur.</li>
+  <li>"Oluştur" butonuna tıklar. İlk etkinliği ise durum <strong>"Beklemede"</strong> olur.</li>
+  <li>Admin <code>/admin/events</code> ekranında etkinliği görür, detayına bakar, onaylar veya reddeder.</li>
+  <li>Onaylanınca etkinlik otomatik yayınlanır ve katılımcılara e-posta gider.</li>
+  <li>Üyenin ikinci etkinliği artık onaysız doğrudan yayınlanır.</li>
+</ol>
+
+<h2 id="tavsiye">2. Tavsiye İste</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık belirli bir konuda tavsiye isteyebilir. Örneğin "Berlin'de avukat arıyorum" veya
+  "Münih'te çocuk bakıcısı önerin" gibi talepler oluşturulur. Diğer üyeler bu taleplere yanıt verebilir.
+  Bu özellik <strong>tüm üyelere açık</strong> — Premium gerektirmez.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> <code>/tavsiye</code> (talep listesi + yeni oluşturma)</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye <code>/tavsiye</code> sayfasına gider, "Tavsiye İste" butonuna tıklar.</li>
+  <li>Başlık, açıklama ve şehir seçer. Şehir seçimi zorunludur — tavsiye o şehirdeki üyelere gösterilir.</li>
+  <li>Diğer üyeler <code>/tavsiye</code> sayfasında talebi görür ve "Yanıtla" butonuyla iletişim bilgilerini paylaşır.</li>
+  <li>Talep sahibi yanıt geldiğinde bildirim alır.</li>
+</ol>
+
+<div class="ok box">
+  <p><strong>Ücretsiz özellik.</strong></p>
+  <p>
+    Tavsiye İste, topluluğun ücretsiz yüzeylerinden biridir. Premium üyelik gerektirmez ve
+    <code>RequireFeature</code> arkasında değildir — rota doğrudan <code>RequireAuth</code> ile korunur.
+  </p>
+</div>
+
+<h2 id="davet">3. Davet ve Liderlik</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Her üyenin artık kişisel bir davet bağlantısı var. Bu bağlantıyı paylaşan üye, davet ettiği kişi
+  kayıt olduğunda puan kazanır. <code>/liderlik</code> sayfası en çok davet eden üyeleri sıralar ve
+  rozetler gösterir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> <code>/liderlik</code> (sıralama tablosu), profil sayfasında "Davet Linkim" kartı</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye profil sayfasında "Davet Linkimi Kopyala" butonuna tıklar.</li>
+  <li>Bağlantıyı arkadaşlarıyla paylaşır.</li>
+  <li>Davet edilen kişi bağlantıya tıklayıp kayıt olunca, davet eden üyenin puanı artar.</li>
+  <li><code>/liderlik</code> sayfasında en çok davet eden üyeler sıralanır.</li>
+</ol>
+
+<div class="warn box">
+  <p><strong>Anonim ziyaretçilere açık.</strong></p>
+  <p>
+    Liderlik sayfası giriş yapmadan da görülebilir — bu bilinçli bir büyüme kararıdır. Ancak admin
+    hesapları, placeholder kayıtlar ve gizli rol sahipleri sıralamaya dahil edilmez.
+  </p>
+</div>
+
+<h2 id="ozet">4. Haftalık Şehir Özeti</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık belirli şehirleri takip edebilir ve o şehirlerle ilgili etkinlik, tavsiye ve içeriklerin
+  haftalık özetini e-posta olarak alabilir. Örneğin bir üye Berlin'i takip ederse, her Pazartesi
+  Berlin'deki yeni etkinlikleri ve tavsiyeleri içeren bir e-posta alır.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> Bildirim ayarları sayfasında "Haftalık Şehir Özeti" toggle'ı</li>
+  <li><strong>Admin tarafı:</strong> <code>/admin/notifications</code> (abone sayısı + son gönderim logu)</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye bildirim ayarlarına gider, "Haftalık Şehir Özeti" seçeneğini açar.</li>
+  <li>Takip etmek istediği şehirleri seçer (profil sayfasından veya şehir sayfalarından).</li>
+  <li>Her Pazartesi sabahı, takip ettiği şehirlerdeki yeni içeriklerin özetini içeren e-posta alır.</li>
+  <li>Admin <code>/admin/notifications</code> ekranında abone sayısını ve son gönderim durumunu görebilir.</li>
+</ol>
+
+<h2 id="ilanlar">5. İş İlanları</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  <code>/ilanlar</code> sayfası artık gerçek iş ilanlarını gösteriyor. İlan türü (tam zamanlı, yarı zamanlı,
+  sözleşmeli, staj), konum türü (ofis/uzaktan/hibrit) ve son başvuru tarihi görüntülenir. Ücretsiz
+  üyeler en fazla <strong>6 ilan</strong> oluşturabilir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> <code>/ilanlar</code> (ilan listesi), <code>/ilanlar/:id</code> (ilan detayı)</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>Demo ilanlar var.</strong></p>
+  <p>
+    Şu anda panoda 6 örnek ilan var. Bunlar <code>[DEMO]</code> etiketiyle işaretli ve gerçek veri değildir.
+    Gerçek ilanlar girildiğinde demo ilanlar kaldırılacaktır.
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye <code>/ilanlar</code> sayfasına gider, mevcut ilanları listeler.</li>
+  <li>Bir ilana tıklar → detay sayfası açılır (pozisyon, şirket, konum, başvuru bağlantısı).</li>
+  <li>"İlan Ver" butonuyla yeni ilan oluşturabilir (limit: 6 aktif ilan).</li>
+</ol>
+
+<h2 id="test">6. Adım adım test listesi</h2>
+
+<h3>T1 — Etkinlik oluşturma (ilk etkinlik)</h3>
+<ol class="steps">
+  <li>Üye hesabıyla giriş yap, <code>/events/new</code> aç.</li>
+  <li>Başlık: "Test Etkinliği", tarih: gelecek bir tarih, konum: Berlin.</li>
+  <li>"Oluştur" → <strong>Beklenen:</strong> "Etkinliğiniz onay bekliyor" mesajı.</li>
+  <li>Admin olarak giriş yap, <code>/admin/events</code> aç.</li>
+  <li><strong>Beklenen:</strong> "Onay bekleyenler" sekmesinde etkinlik görünür.</li>
+  <li>Onayla → <strong>Beklenen:</strong> Etkinlik <code>/events</code> sayfasında yayınlanır.</li>
+</ol>
+
+<h3>T2 — Tavsiye İste</h3>
+<ol class="steps">
+  <li>Üye hesabıyla <code>/tavsiye</code> aç.</li>
+  <li>"Tavsiye İste" → başlık: "Berlin'de avukat arıyorum", şehir: Berlin.</li>
+  <li><strong>Beklenen:</strong> Talep listede görünür, şehir rozeti "Berlin" olmalı.</li>
+  <li>Farklı bir hesapla giriş yap, aynı sayfaya git.</li>
+  <li>"Yanıtla" butonuna tıkla → iletişim bilgisi gir.</li>
+  <li><strong>Beklenen:</strong> Talep sahibine bildirim gider.</li>
+</ol>
+
+<h3>T3 — Davet linki ve liderlik</h3>
+<ol class="steps">
+  <li>Üye profil sayfasını aç, "Davet Linkim" kartını bul.</li>
+  <li>"Kopyala" butonuna tıkla → bağlantı panoya kopyalanır.</li>
+  <li><code>/liderlik</code> aç.</li>
+  <li><strong>Beklenen:</strong> Sıralama tablosu görünür, en az bir üye listelenir.</li>
+  <li>Gizli sekmede <code>/liderlik</code> aç (giriş yapmadan).</li>
+  <li><strong>Beklenen:</strong> Sayfa yine görünür (anonim erişim açık).</li>
+</ol>
+
+<h3>T4 — Haftalık Şehir Özeti toggle</h3>
+<ol class="steps">
+  <li>Üye bildirim ayarlarına git.</li>
+  <li>"Haftalık Şehir Özeti" toggle'ını bul.</li>
+  <li>Aç/kapat → <strong>Beklenen:</strong> Durum kaydedilir, sayfa yenilendiğinde doğru görünür.</li>
+  <li>Admin <code>/admin/notifications</code> aç.</li>
+  <li><strong>Beklenen:</strong> "Haftalık Şehir Özeti" satırında abone sayısı görünür.</li>
+</ol>
+
+<h3>T5 — İş İlanları</h3>
+<ol class="steps">
+  <li><code>/ilanlar</code> aç.</li>
+  <li><strong>Beklenen:</strong> 6 demo ilan listelenir, her birinde <code>[DEMO]</code> etiketi var.</li>
+  <li>Bir ilana tıkla → detay sayfası açılır.</li>
+  <li><strong>Beklenen:</strong> Pozisyon, şirket, konum, başvuru bağlantısı görünür.</li>
+  <li>Geri dön, "İlan Ver" butonuna tıkla.</li>
+  <li><strong>Beklenen:</strong> İlan oluşturma formu açılır (üye girişi gerekli).</li>
+</ol>
+
+<h2 id="sinirlar">7. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Etkinlik onay kuyruğu</td>
+    <td>
+      İlk etkinlik onaylı, sonrakiler otomatik. Ancak <strong>RLS tarafında status kısıtı yok</strong> —
+      PostgREST'e doğrudan istek atan onayı atlayabilir. Migration <code>20261003020000</code> bu
+      açığı kapatır ama henüz canlıda değil.
+    </td>
+  </tr>
+  <tr>
+    <td>Tavsiye coğrafi filtresi</td>
+    <td>
+      Tavsiye talepleri şehir bazında filtrelenir ama <strong>ülke bazında filtre yok</strong>.
+      "Almanya'daki tüm tavsiyeler" sorgusu yapılamaz.
+    </td>
+  </tr>
+  <tr>
+    <td>İş ilanı kotası</td>
+    <td>
+      Ücretsiz üye limiti 6 ilan. Ancak <strong>iki oturum aynı anda ilan oluşturursa</strong>
+      kota aşılabilir (race condition). Migration <code>20261005700000</code> bu açığı kapatır.
+    </td>
+  </tr>
+  <tr>
+    <td>Demo ilanlar</td>
+    <td>
+      6 ilan <code>[DEMO]</code> etiketli. Gerçek veri değil. Gerçek ilanlar girildiğinde kaldırılacak.
+    </td>
+  </tr>
+  <tr>
+    <td>Haftalık özet e-postası</td>
+    <td>
+      E-posta şablonu hazır ama <strong>henüz otomatik gönderim yok</strong>. Manuel tetiklemek için
+      <code>npm run weekly-digest:send</code> komutu kullanılabilir.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>docs/plans/2026-09-30-topluluk-motoru-ucretsiz-islevler-plani.md</code> ·
+  <code>src/lib/events-api.ts</code> · <code>src/lib/recommendations-api.ts</code> ·
+  <code>src/lib/invites-api.ts</code> · <code>src/lib/job-listings-api.ts</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

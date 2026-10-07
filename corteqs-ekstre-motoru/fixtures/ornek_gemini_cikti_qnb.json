@@ -1,0 +1,28 @@
+{
+  "bank": "QNB Finansbank",
+  "card_holder": "BURAK AKCAKANAT",
+  "period_start": "27.08.2026",
+  "period_end": "26.09.2026",
+  "statement_date": "26.09.2026",
+  "due_date": "06.10.2026",
+  "statement_total_try": 7431.77,
+  "cards": [{"last4": "6108", "label": "Sanal Kart", "is_virtual": true}, {"last4": "3286", "label": "Asıl Kart", "is_virtual": false}],
+  "lines": [
+    {"date": "28.08.2026", "description": "GOOGLE *Google One     g.co/helppay# IE", "amount_original": 177.59, "currency_original": "TRY", "amount_try": 177.59, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "01.09.2026", "description": "PADDLE.NET* HIGGSFIELD  LONDON GB", "amount_original": 794.99, "currency_original": "TRY", "amount_try": 794.99, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "01.09.2026", "description": "STRATO AG BERLIN DE", "amount_original": 1183.19, "currency_original": "TRY", "amount_try": 1183.19, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "05.09.2026", "description": "HESAPTAN ODEME - TESEKKUR EDERIZ", "amount_original": -12450.00, "currency_original": "TRY", "amount_try": -12450.00, "card_last4": "3286", "line_type": "payment"},
+    {"date": "07.09.2026", "description": "ANTHROPIC* CLAUDE.AI SUB SAN FRANCISCO US", "amount_original": 20.00, "currency_original": "USD", "amount_try": 981.40, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "08.09.2026", "description": "IYZICO/CANVA PRO ISTANBUL TR", "amount_original": 240.00, "currency_original": "TRY", "amount_try": 240.00, "card_last4": "3286", "line_type": "purchase"},
+    {"date": "09.09.2026", "description": "MIGROS SANAL MARKET ISTANBUL", "amount_original": 612.35, "currency_original": "TRY", "amount_try": 612.35, "card_last4": "3286", "line_type": "purchase"},
+    {"date": "10.09.2026", "description": "SUPABASE PTE LTD SINGAPORE SG", "amount_original": 25.00, "currency_original": "USD", "amount_try": 1249.88, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "11.09.2026", "description": "STRATO AG BERLIN DE", "amount_original": 20.00, "currency_original": "EUR", "amount_try": 1193.00, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "14.09.2026", "description": "OPENAI *CHATGPT SUBSCR SAN FRANCISCO US", "amount_original": 200.00, "currency_original": "USD", "amount_try": 9990.20, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "15.09.2026", "description": "NEO4J INC SAN MATEO US", "amount_original": 16.46, "currency_original": "USD", "amount_try": 822.10, "card_last4": "6108", "line_type": "refund"},
+    {"date": "17.09.2026", "description": "ZOHO CORPORATION WWW.ZOHO.EU", "amount_original": 12.85, "currency_original": "EUR", "amount_try": 758.14, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "17.09.2026", "description": "STRATO AG BERLIN DE", "amount_original": 3.00, "currency_original": "EUR", "amount_try": 178.51, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "20.09.2026", "description": "CURSOR, AI POWERED IDE  NEW YORK US", "amount_original": 20.00, "currency_original": "USD", "amount_try": 999.02, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "22.09.2026", "description": "XYZ DIGITAL SERVICES LTD", "amount_original": 9.99, "currency_original": "USD", "amount_try": 499.00, "card_last4": "6108", "line_type": "purchase"},
+    {"date": "26.09.2026", "description": "BSMV", "amount_original": 12.40, "currency_original": "TRY", "amount_try": 12.40, "card_last4": "3286", "line_type": "fee"}
+  ]
+}

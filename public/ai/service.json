@@ -1,0 +1,84 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": "https://corteqs.net/#service",
+  "name": "CorteQS Diaspora Connect",
+  "url": "https://corteqs.net",
+  "description": "CorteQS, yurt dışındaki Türk diasporasını şehir bazlı olarak danışmanlar, işletmeler, dernekler, vakıflar, bloggerlar/vloggerlar, şehir elçileri ve bireylerle buluşturan bir diaspora network platformudur. Vize, oturum, emlak, iş kurma, vergi, hukuk ve kariyer başlıklarında doğrulanmış danışmanlar ve şehir elçileriyle bağlantı kurar.",
+  "provider": {
+    "@type": "Organization",
+    "@id": "https://corteqs.net/#organization",
+    "name": "CorteQS",
+    "url": "https://corteqs.net",
+    "logo": "https://corteqs.net/logocorteqsbig.png",
+    "email": "info@corteqs.net",
+    "foundingDate": "2026",
+    "foundingLocation": {
+      "@type": "Place",
+      "name": "Istanbul, Turkey"
+    },
+    "sameAs": [
+      "https://www.linkedin.com/company/corteqs-global",
+      "https://x.com/corteqsx",
+      "https://www.instagram.com/corteqssocial",
+      "https://www.facebook.com/corteqs"
+    ]
+  },
+  "serviceType": "Diaspora Networking Platform",
+  "areaServed": [
+    { "@type": "City", "name": "Berlin" },
+    { "@type": "City", "name": "Dortmund" },
+    { "@type": "City", "name": "Köln" },
+    { "@type": "City", "name": "Hamburg" },
+    { "@type": "City", "name": "München" },
+    { "@type": "City", "name": "London" },
+    { "@type": "City", "name": "Amsterdam" },
+    { "@type": "City", "name": "Dubai" },
+    { "@type": "City", "name": "Sydney" },
+    { "@type": "City", "name": "New York" },
+    { "@type": "Place", "name": "Europe" },
+    { "@type": "Place", "name": "Worldwide" }
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Turkish diaspora members, expats, consultants, businesses, associations"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "CorteQS Membership Plans",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "name": "Freemium",
+        "description": "Temel profil, danışman dizininde listeleme, WhatsApp CTA, etkinlik düzenleme",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      {
+        "@type": "Offer",
+        "name": "Premium Pro",
+        "description": "Tüm araçlar, sınırsız AI Twin görüşme, CV görüntüleme, analitik dashboard",
+        "price": "20",
+        "priceCurrency": "EUR",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "20",
+          "priceCurrency": "EUR",
+          "unitText": "year"
+        }
+      }
+    ]
+  },
+  "knowsAbout": [
+    "diaspora networking",
+    "relocation consulting",
+    "visa and immigration support",
+    "Turkish diaspora community",
+    "city ambassador programs",
+    "professional networking for expats",
+    "business connections for diaspora"
+  ],
+  "inLanguage": "tr",
+  "termsOfService": "https://corteqs.net/legal/terms",
+  "privacyPolicy": "https://corteqs.net/legal/privacy"
+}

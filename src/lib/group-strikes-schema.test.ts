@@ -1,8 +1,8 @@
 /**
- * G15 sözleşmesi — uyarı (strike) sistemi + ekleme yasağı.
+ * G15/G15b sözleşmesi — uyarı (strike) sistemi + ekleme yasağı.
  *
  * Kapattığı sessiz başarısızlıklar:
- *   1. **Merdivenin atlanması.** 1.=uyarı · 2.=askı · 3.=removed+yasak (tasarım §7)
+ *   1. **Merdivenin atlanması.** G15b (6 Ekim 2026): 1.=30 gün askı · 2.=removed+yasak
  *      ve kırmızı çizgi 2/4/6 doğrudan removed (politika §4). Eşiklerin koda
  *      sabitlenmesi veya terminal listenin değişmesi ürün kararını sessizce bozar.
  *   2. **Durum geçişinin G12 tek kapısını atlaması.** Strike RPC'si listing_status'e
@@ -20,11 +20,19 @@ import { describe, expect, it } from "vitest";
 import { sliceBetween } from "@/test/source-slice";
 
 const MIGRATION = "20261002050000_group_strikes.sql";
+const MIGRATION_B = "20261007080000_strike_threshold_tighten.sql";
 
 const migrationSql = () => {
   const candidates = [`supabase/migrations/applied/${MIGRATION}`, `supabase/migrations/${MIGRATION}`];
   const path = candidates.find((candidate) => existsSync(candidate));
   if (!path) throw new Error(`${MIGRATION} bulunamadı (applied/ altında yaşamalı).`);
+  return readFileSync(path, "utf8");
+};
+
+const migrationBSql = () => {
+  const candidates = [`supabase/migrations/applied/${MIGRATION_B}`, `supabase/migrations/${MIGRATION_B}`];
+  const path = candidates.find((candidate) => existsSync(candidate));
+  if (!path) throw new Error(`${MIGRATION_B} bulunamadı (applied/ altında yaşamalı).`);
   return readFileSync(path, "utf8");
 };
 
@@ -82,7 +90,7 @@ describe("G15 · group_strikes (tasarım §4: sebep · karar veren · tarih)", (
 });
 
 describe("G15 · ekleme yasağı", () => {
-  it("ban sebepleri tasarım §7 + politika §4 ile sınırlı", () => {
+  it("G15: ban sebepleri tasarım §7 + politika §4 ile sınırlı (orijinal)", () => {
     const table = sliceBetween(
       code(),
       "create table if not exists public.group_submission_bans",
@@ -92,6 +100,13 @@ describe("G15 · ekleme yasağı", () => {
 
     expect(table).toContain("'strike_3', 'redline_2', 'redline_4', 'redline_6'");
     expect(table).toContain("unique (user_id, landing_id, reason)");
+  });
+
+  it("G15b: ban sebebi strike_3 → strike_2 (ALTER CONSTRAINT)", () => {
+    const sqlB = migrationBSql().split("\n").filter((line) => !line.trimStart().startsWith("--")).join("\n");
+
+    expect(sqlB).toContain("drop constraint if exists group_submission_bans_reason_check");
+    expect(sqlB).toContain("'strike_2', 'redline_2', 'redline_4', 'redline_6'");
   });
 
   it("INSERT trigger'ı yasaklıyı engeller, admin muaftır", () => {
@@ -114,13 +129,20 @@ describe("G15 · ekleme yasağı", () => {
   });
 });
 
-describe("G15 · eşikler group_settings'ten (kodda sabit YOK)", () => {
-  it("üç anahtar seed edilir", () => {
+describe("G15/G15b · eşikler group_settings'ten (kodda sabit YOK)", () => {
+  it("G15: üç anahtar seed edilir (orijinal tohumlar)", () => {
     const sql = flat();
 
     expect(sql).toContain("('groups.strike_suspend_threshold', '2'::jsonb)");
     expect(sql).toContain("('groups.strike_remove_threshold', '3'::jsonb)");
     expect(sql).toContain("('groups.terminal_redlines', '[2, 4, 6]'::jsonb)");
+  });
+
+  it("G15b: eşikler sıkılaştırılır (1=askı, 2=kaldırma)", () => {
+    const sqlB = migrationBSql().replace(/\s+/g, " ");
+
+    expect(sqlB).toContain("'groups.strike_suspend_threshold', '1'::jsonb");
+    expect(sqlB).toContain("'groups.strike_remove_threshold', '2'::jsonb");
   });
 
   it("RPC eşikleri ve terminal listeyi ayarlardan okur", () => {
@@ -134,6 +156,18 @@ describe("G15 · eşikler group_settings'ten (kodda sabit YOK)", () => {
     expect(rpc).toContain("group_setting_int('groups.strike_suspend_threshold'");
     expect(rpc).toContain("group_setting_int('groups.strike_remove_threshold'");
     expect(rpc).toContain("group_setting_json('groups.terminal_redlines'");
+  });
+
+  it("G15b: RPC varsayılanları sıkılaştırılmış (1=askı, 2=kaldırma)", () => {
+    const rpcB = sliceBetween(
+      migrationBSql().split("\n").filter((line) => !line.trimStart().startsWith("--")).join("\n"),
+      "create or replace function public.admin_record_group_strike",
+      "comment on function public.admin_record_group_strike",
+      "strike RPC G15b",
+    );
+
+    expect(rpcB).toContain("group_setting_int('groups.strike_suspend_threshold', 1)");
+    expect(rpcB).toContain("group_setting_int('groups.strike_remove_threshold', 2)");
   });
 });
 

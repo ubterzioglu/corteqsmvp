@@ -1,0 +1,7 @@
+[
+  {"id": "tx_01JM8Q0001", "amount": -100.00, "status": "sent", "kind": "debitCardTransaction", "counterpartyName": "Anthropic", "bankDescription": "ANTHROPIC* CLAUDE MAX", "postedAt": "2026-10-03T14:02:11Z", "createdAt": "2026-10-03T14:01:00Z", "attachments": [{"url": "https://mercury.example/receipts/1.pdf", "fileName": "receipt.pdf"}], "details": {"debitCardInfo": {"lastFourDigits": "4421"}}},
+  {"id": "tx_01JM8Q0002", "amount": -25.00, "status": "pending", "kind": "debitCardTransaction", "counterpartyName": "Supabase", "bankDescription": "SUPABASE", "postedAt": null, "createdAt": "2026-10-10T08:00:00Z", "details": {"debitCardInfo": {"lastFourDigits": "4421"}}},
+  {"id": "tx_01JM8Q0003", "amount": -23.61, "status": "sent", "kind": "debitCardTransaction", "counterpartyName": "Strato AG", "bankDescription": "STRATO AG BERLIN", "postedAt": "2026-10-11T09:00:00Z", "createdAt": "2026-10-11T09:00:00Z", "currencyExchangeInfo": {"convertedFromCurrency": "EUR", "convertedFromAmount": 20.00}, "details": {"debitCardInfo": {"lastFourDigits": "4421"}}},
+  {"id": "tx_01JM8Q0004", "amount": 5000.00, "status": "sent", "kind": "incomingDomesticWire", "counterpartyName": "Burak Akcakanat", "postedAt": "2026-10-01T10:00:00Z", "createdAt": "2026-10-01T10:00:00Z"},
+  {"id": "tx_01JM8Q0005", "amount": -18.00, "status": "sent", "kind": "debitCardTransaction", "counterpartyName": "Starbucks", "bankDescription": "STARBUCKS DOHA", "postedAt": "2026-10-12T07:30:00Z", "createdAt": "2026-10-12T07:30:00Z", "details": {"debitCardInfo": {"lastFourDigits": "4421"}}}
+]

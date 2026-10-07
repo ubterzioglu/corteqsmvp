@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Güvenlik ve Altyapı | 7 Ekim 2026</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec; --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74; --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac; --code-bg: #f1f5f9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a; --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309; --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d; --code-bg: #1c222a; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font: 0.88em ui-monospace, monospace; word-break: break-word; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .bad  { background: var(--bad-bg);  border-color: var(--bad-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Güvenlik ve Altyapı</h1>
+  <p class="lede">
+    7 Ekim 2026 · Güvenlik kapıları (SG0–SG11), SEO düzeltmeleri ve konsolosluk kayıtları yayını.
+    Bu dosya <strong>siteye yüklenmez</strong>.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#guvenlik">Güvenlik Kapıları (SG0–SG11)</a></li>
+    <li><a href="#seo">SEO Düzeltmeleri</a></li>
+    <li><a href="#konsolosluk">Konsolosluk Kayıtları Yayını</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="guvenlik">1. Güvenlik Kapıları (SG0–SG11)</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Kapsamlı bir güvenlik sıkılaştırma paketi uygulandı. <strong>12 güvenlik kapısı</strong> (SG0'dan SG11'e)
+  kapatıldı. Bu kapılar RLS (Row Level Security) politikalarını sıkılaştırır, iç RPC'lere anon/authenticated
+  erişimini kapatır, katalog kolonlarını korur ve rate limiting'i atomik hale getirir.
+</p>
+
+<h3>Hangi kapılar kapatıldı?</h3>
+<table>
+  <tr><th>Kapı</th><th>Ne yapar?</th></tr>
+  <tr>
+    <td><strong>SG0</strong></td>
+    <td>Legacy dashboard RLS sıkılaştırma — admin-only erişim</td>
+  </tr>
+  <tr>
+    <td><strong>SG1</strong></td>
+    <td>Command center RLS sıkılaştırma</td>
+  </tr>
+  <tr>
+    <td><strong>SG2</strong></td>
+    <td>İç RPC'lere anon/authenticated erişimi kapatma</td>
+  </tr>
+  <tr>
+    <td><strong>SG3</strong></td>
+    <td>Katalog öğeleri kolon koruması</td>
+  </tr>
+  <tr>
+    <td><strong>SG4</strong></td>
+    <td>WhatsApp landings koruması</td>
+  </tr>
+  <tr>
+    <td><strong>SG5</strong></td>
+    <td>CV bucket'larını private yapma</td>
+  </tr>
+  <tr>
+    <td><strong>SG6</strong></td>
+    <td>Açık RLS politikalarını kapatma</td>
+  </tr>
+  <tr>
+    <td><strong>SG7</strong></td>
+    <td>Backfill log tablolarını kilitleme</td>
+  </tr>
+  <tr>
+    <td><strong>SG8</strong></td>
+    <td>Admin RPC'lerine anon erişimi kapatma</td>
+  </tr>
+  <tr>
+    <td><strong>SG9</strong></td>
+    <td>Atomik rate limiting</td>
+  </tr>
+  <tr>
+    <td><strong>SG10</strong></td>
+    <td>Tavsiye eşleştirme bildirim koruması</td>
+  </tr>
+  <tr>
+    <td><strong>SG11</strong></td>
+    <td>Haftalık özet toggle koruması</td>
+  </tr>
+</table>
+
+<div class="ok box">
+  <p><strong>Admin panelinde doğrudan görünmez.</strong></p>
+  <p>
+    Bu güvenlik kapıları arka planda çalışır ve admin panelinde doğrudan görünmez. Ancak kullanıcı
+    deneyimini dolaylı olarak etkiler: örneğin SG5 CV bucket'larını private yaptığı için CV dosyaları
+    artık imzalı bağlantıyla açılır.
+  </p>
+</div>
+
+<h2 id="seo">2. SEO Düzeltmeleri</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Birden fazla SEO/GEO hatası düzeltildi:
+</p>
+<ul>
+  <li><strong><code>/commercial</code> sonsuz yönlendirme döngüsü</strong> — nginx'te <code>absolute_redirect off</code> eklendi</li>
+  <li><strong><code>/lansman</code> canonical yönlendirme</strong> — doğru canonical URL</li>
+  <li><strong>Tüm nginx yönlendirmeleri <code>http://</code> yerine <code>https://</code> kullanıyor</strong> — HSTS fallback sorunu kapatıldı</li>
+  <li><strong><code>/anket</code> SEO metadata</strong> — SurveysPage'e <code>useSeo</code> eklendi</li>
+  <li><strong>Blog 404 soft-page</strong> — artık <code>noindex, follow</code> döner</li>
+</ul>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>nginx.conf.template</code> — tüm yönlendirme ve güvenlik başlıkları</li>
+  <li><code>src/pages/SurveysPage.tsx</code> — anket SEO metadata</li>
+  <li><code>src/pages/BlogPostPage.tsx</code> — blog 404 handling</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>nginx'te <code>add_header</code> kalıtılmaz.</strong></p>
+  <p>
+    Kendi <code>add_header</code>'ı olan bir <code>location</code>, üst bloktaki TÜM <code>add_header</code>'ları
+    iptal eder. Bu yüzden güvenlik başlıkları 4 location'da tekrarlanır. Yeni bir <code>add_header</code>
+    içeren location eklersen güvenlik başlıklarını oraya da kopyala.
+  </p>
+</div>
+
+<h2 id="konsolosluk">3. Konsolosluk Kayıtları Yayını</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  <strong>241 konsolosluk kaydı</strong> yayınlandı. Bu kayıtlar daha önce "inceleme bekliyor" durumundaydı.
+  Toplu operasyon SQL'i ile tüm kayıtlar <code>published</code> durumuna alındı ve <code>verified</code>
+  olarak işaretlendi.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/directory</code> — konsolosluk kayıtları dizinde görünür</li>
+  <li><code>/admin/consulates</code> — admin konsolosluk yönetimi</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye <code>/directory</code> sayfasına gider.</li>
+  <li>Bir şehir arar (örn. "Sofya").</li>
+  <li><strong>Beklenen:</strong> T.C. Sofya Başkonsolosluğu sonuçlarda çıkar.</li>
+  <li>Kayda tıklar → profil sayfası açılır.</li>
+  <li><strong>Beklenen:</strong> "Doğrulanmış" rozeti görünür.</li>
+</ol>
+
+<div class="ok box">
+  <p><strong>Künye kutusu çıkmaz.</strong></p>
+  <p>
+    Konsolosluk kayıtları kurum kaydıdır, kişi kaydı değildir. Bu yüzden profil sayfalarında sarı künye
+    kutusu <strong>çıkmaz</strong>. Künye yalnız kişi kayıtlarında görünür (uzman/üye).
+  </p>
+</div>
+
+<h2 id="sinirlar">4. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Güvenlik kapıları ve kullanıcı deneyimi</td>
+    <td>
+      SG2 iç RPC'lere anon erişimi kapattı. Bu, bazı eski istemcilerin sessizce başarısız olmasına
+      neden olabilir. Hata mesajı: "authentication required". Çözüm: istemciyi güncelle.
+    </td>
+  </tr>
+  <tr>
+    <td>SEO ve deploy</td>
+    <td>
+      SEO düzeltmeleri <code>nginx.conf.template</code>'te. Deploy edilmediyse eski hali görünür —
+      bu bir kusur değil, sıra meselesi. Deploy sonrası <code>curl -I</code> ile doğrula.
+    </td>
+  </tr>
+  <tr>
+    <td>Konsolosluk kayıtları ve künye</td>
+    <td>
+      Konsolosluk kayıtlarında künye kutusu çıkmaz. Eğer çıkıyorsa kişi/kurum ayrımı bozulmuş demektir.
+      Test T3 bunu denetler.
+    </td>
+  </tr>
+  <tr>
+    <td>Rate limiting</td>
+    <td>
+      SG9 atomik rate limiting getirdi. Ancak <strong>Redis yok</strong>, PostgreSQL advisory lock kullanılıyor.
+      Yüksek trafikte performans sorunu olabilir.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>docs/plans/2026-10-05-birlesik-uygulama-plani.md</code> ·
+  Migration <code>20261006000000_sg2_revoke_internal_rpc.sql</code> → <code>20261006040000_sg9_atomic_rate_limit.sql</code> ·
+  <code>nginx.conf.template</code> · <code>docs/operations/2026-10-05-konsolosluk-yayinla.sql</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

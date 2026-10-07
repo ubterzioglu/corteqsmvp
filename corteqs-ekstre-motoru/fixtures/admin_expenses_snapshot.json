@@ -1,0 +1,303 @@
+[
+ {
+  "id": "e60e091b",
+  "expense_date": "2026-08-26",
+  "description": "Claude",
+  "amount": 100.0,
+  "currency": "USD"
+ },
+ {
+  "id": "89ed4412",
+  "expense_date": "2026-08-16",
+  "description": "CODEX",
+  "amount": 100.0,
+  "currency": "USD"
+ },
+ {
+  "id": "6429d4b2",
+  "expense_date": "2026-08-07",
+  "description": "Claude",
+  "amount": 20.0,
+  "currency": "USD"
+ },
+ {
+  "id": "2a5fe5eb",
+  "expense_date": "2026-07-22",
+  "description": "GPT BUSINESS SUBSCRIPTION",
+  "amount": 180.0,
+  "currency": "QAR"
+ },
+ {
+  "id": "454a7598",
+  "expense_date": "2026-07-21",
+  "description": "HİGSSFİELD ANTHROPİC. X20 FARKI SUPABASE, STRATO",
+  "amount": 181.0,
+  "currency": "USD"
+ },
+ {
+  "id": "2a561189",
+  "expense_date": "2026-07-08",
+  "description": "CANVA PRO",
+  "amount": 4.8,
+  "currency": "USD"
+ },
+ {
+  "id": "5ce4829f",
+  "expense_date": "2026-07-07",
+  "description": "Claude",
+  "amount": 104.25,
+  "currency": "USD"
+ },
+ {
+  "id": "5794a73f",
+  "expense_date": "2026-07-06",
+  "description": "CLAUDE X 5",
+  "amount": 0.0,
+  "currency": "TRY"
+ },
+ {
+  "id": "5717d5bd",
+  "expense_date": "2026-07-01",
+  "description": "Higsfield Video Aracı",
+  "amount": 15.0,
+  "currency": "USD"
+ },
+ {
+  "id": "e968d5aa",
+  "expense_date": "2026-07-01",
+  "description": "Higsfield Video Aracı",
+  "amount": 3.3,
+  "currency": "USD"
+ },
+ {
+  "id": "1c4ff5de",
+  "expense_date": "2026-07-01",
+  "description": "ZOHO-WORKPLACE",
+  "amount": 2.43,
+  "currency": "EUR"
+ },
+ {
+  "id": "894dd6a0",
+  "expense_date": "2026-06-29",
+  "description": "STRATO-GOOGLE ONE MULTIPLE EXPENSE",
+  "amount": 7.0,
+  "currency": "EUR"
+ },
+ {
+  "id": "a4db344a",
+  "expense_date": "2026-06-29",
+  "description": "GEMINI PRO",
+  "amount": 2.99,
+  "currency": "EUR"
+ },
+ {
+  "id": "e462df24",
+  "expense_date": "2026-06-22",
+  "description": "GPT BUSINESS SUBSCRIPTION",
+  "amount": 182.0,
+  "currency": "QAR"
+ },
+ {
+  "id": "610d2295",
+  "expense_date": "2026-06-18",
+  "description": "SEREN KREDİ",
+  "amount": 3600.0,
+  "currency": "TRY"
+ },
+ {
+  "id": "4edf5f81",
+  "expense_date": "2026-06-11",
+  "description": "SUPABASE",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "c548247c",
+  "expense_date": "2026-06-05",
+  "description": "Lovable Top Up",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "4504da11",
+  "expense_date": "2026-06-01",
+  "description": "NEO4 J",
+  "amount": 56.61,
+  "currency": "USD"
+ },
+ {
+  "id": "d335182d",
+  "expense_date": "2026-05-31",
+  "description": "GOOGLE ONE",
+  "amount": 21.99,
+  "currency": "EUR"
+ },
+ {
+  "id": "325f0910",
+  "expense_date": "2026-05-25",
+  "description": "Seren ekstra Video ve içerik",
+  "amount": 5000.0,
+  "currency": "TRY"
+ },
+ {
+  "id": "81622bb9",
+  "expense_date": "2026-05-24",
+  "description": "ZAI",
+  "amount": 10.0,
+  "currency": "USD"
+ },
+ {
+  "id": "76d1fb95",
+  "expense_date": "2026-05-24",
+  "description": "ZAI",
+  "amount": 62.0,
+  "currency": "USD"
+ },
+ {
+  "id": "a0fe6857",
+  "expense_date": "2026-05-22",
+  "description": "Lovable Mayıs 8",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "8b747e42",
+  "expense_date": "2026-05-19",
+  "description": "Lovable Top Up 7",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "43c93448",
+  "expense_date": "2026-05-17",
+  "description": "Lovable Mayıs 6.",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "33d58078",
+  "expense_date": "2026-05-13",
+  "description": "Lovable Top Up",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "60961f20",
+  "expense_date": "2026-05-12",
+  "description": "LOVABLE TOP UP NO 3",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "4b394e66",
+  "expense_date": "2026-05-11",
+  "description": "Lovable Top Up 11 Mayıs /2",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "74d02466",
+  "expense_date": "2026-05-11",
+  "description": "Lovable Top Up",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "849d8b75",
+  "expense_date": "2026-05-10",
+  "description": "SUPABASE",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "f72ad217",
+  "expense_date": "2026-05-10",
+  "description": "Lovable Top Up",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "eca0ec2a",
+  "expense_date": "2026-05-09",
+  "description": "EMERGENT",
+  "amount": 17.65,
+  "currency": "EUR"
+ },
+ {
+  "id": "170864f1",
+  "expense_date": "2026-05-05",
+  "description": "LOVABLE MVP",
+  "amount": 25.0,
+  "currency": "USD"
+ },
+ {
+  "id": "bb81fcaf",
+  "expense_date": "2026-05-04",
+  "description": "KLING VIDEO MAYIS",
+  "amount": 98.48,
+  "currency": "QAR"
+ },
+ {
+  "id": "ba1fd486",
+  "expense_date": "2026-05-02",
+  "description": "EIN NUMBER FAST LANE PAYMENT",
+  "amount": 100.0,
+  "currency": "USD"
+ },
+ {
+  "id": "a35f66b3",
+  "expense_date": "2026-04-29",
+  "description": "ŞİRKET KURULUŞU",
+  "amount": 1071.2,
+  "currency": "USD"
+ },
+ {
+  "id": "2bb6a3fc",
+  "expense_date": "2026-04-29",
+  "description": "SEREN 1. PAKET",
+  "amount": 10000.0,
+  "currency": "TRY"
+ },
+ {
+  "id": "107dd786",
+  "expense_date": "2026-04-28",
+  "description": "GOOGLE CLOUD X DBJDW Gemini AI -BOT İÇİN",
+  "amount": 528.72,
+  "currency": "TRY"
+ },
+ {
+  "id": "842deafb",
+  "expense_date": "2026-04-28",
+  "description": "CORTEQS.NET DOMAIN",
+  "amount": 15.0,
+  "currency": "USD"
+ },
+ {
+  "id": "e2c03ab3",
+  "expense_date": "2026-04-28",
+  "description": "Whatsapp BOT",
+  "amount": 600.0,
+  "currency": "TRY"
+ },
+ {
+  "id": "9a5092f2",
+  "expense_date": "2026-04-22",
+  "description": "GPT BUSINESS SUBSCRIPTION",
+  "amount": 448.53,
+  "currency": "TRY"
+ },
+ {
+  "id": "e2c1f191",
+  "expense_date": "2026-04-19",
+  "description": "4 DOMAIN",
+  "amount": 60.76,
+  "currency": "USD"
+ },
+ {
+  "id": "4458ba27",
+  "expense_date": "2026-04-04",
+  "description": "CORTEQS HOSTING",
+  "amount": 34.07,
+  "currency": "USD"
+ }
+]

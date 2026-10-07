@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Kariyer ve Kadro | 7 Ekim 2026</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec; --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74; --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac; --code-bg: #f1f5f9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a; --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309; --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d; --code-bg: #1c222a; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font: 0.88em ui-monospace, monospace; word-break: break-word; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Kariyer ve Kadro</h1>
+  <p class="lede">
+    7 Ekim 2026 · Kariyer sayfası yenileme (17 ilan + başvuru formu) ve kadro modülü (52 rol yönetimi).
+    Bu dosya <strong>siteye yüklenmez</strong>.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#kariyer">Kariyer Sayfası Yenileme</a></li>
+    <li><a href="#kadro">Kadro Modülü</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="kariyer">1. Kariyer Sayfası Yenileme</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  <code>/kariyer</code> sayfası tamamen yenilendi. Artık <strong>17 gerçek ilan</strong> ve staj programı
+  gösteriliyor. Başvurular kendi tablosunda toplanır ve <code>/admin/kadro/basvurular</code> ekranından
+  yönetilir. Eski 4 ilan "önceki dönem" olarak korunur ve başvuru formunun seçeneklerinde kalır.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><strong>Üye tarafı:</strong> <code>/kariyer</code> (ilan listesi + başvuru formu)</li>
+  <li><strong>Admin tarafı:</strong> <code>/admin/kadro/basvurular</code> (başvuru listesi + detay)</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>Dosya yükleme sınırları.</strong></p>
+  <p>
+    CV: max 10 MB (PDF/DOC/DOCX). Sunum: max 25 MB (PDF/PPT/PPTX/KEY). Ruhsat: max 10 MB (PDF/JPG/PNG).
+    Dosya uzantısı kontrol edilir — MIME tipi güvenilir değildir (.key dosyaları boş gelir).
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye <code>/kariyer</code> sayfasına gider, 17 ilanı listeler.</li>
+  <li>Bir ilana tıklar → detay sayfası açılır (pozisyon, şirket, konum, açıklama).</li>
+  <li>"Başvur" butonuna tıklar → başvuru formu açılır.</li>
+  <li>CV ve opsiyonel sunum/ruhsat yükler.</li>
+  <li>"Gönder" → başvuru kaydedilir, admin'e e-posta gider.</li>
+  <li>Admin <code>/admin/kadro/basvurular</code> ekranında başvuruyu görür, detayına bakar, durum günceller.</li>
+</ol>
+
+<div class="ok box">
+  <p><strong>Bildirim hattı beş parçalıdır.</strong></p>
+  <p>
+    Yeni başvuru geldiğinde admin'e e-posta gider. Bu hat beş parçadan oluşur: outbox CHECK listesi,
+    notification_settings anahtarı, admin_notification_subscriptions sütunu, eşleme fonksiyonu ve
+    edge function. Biri eksikse hata vermez ama mail gitmez.
+  </p>
+</div>
+
+<h2 id="kadro">2. Kadro Modülü</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Admin paneline tam kapsamlı bir kadro yönetimi modülü eklendi. <strong>52 iç rol</strong> yönetilebilir,
+  ilanlar oluşturulabilir, başvurular takip edilebilir, rol matrisi görüntülenebilir ve rutin görevler
+  planlanabilir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/admin/kadro</code> — özet dashboard</li>
+  <li><code>/admin/kadro/ilanlar</code> — ilan listesi + oluştur</li>
+  <li><code>/admin/kadro/basvurular</code> — başvuru listesi + detay</li>
+  <li><code>/admin/kadro/matrix</code> — rol matrisi (rol × yetki)</li>
+  <li><code>/admin/kadro/rutinler</code> — rutin görevler</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/kadro</code> sayfasına gider.</li>
+  <li>Özet dashboard: toplam başvuru, bekleyen başvuru, aktif ilan, rol sayısı.</li>
+  <li>"İlanlar" sekmesine tıkla → ilan listesi görünür.</li>
+  <li>"Yeni İlan" butonuyla yeni ilan oluştur (başlık, açıklama, konum, son tarih).</li>
+  <li>"Başvurular" sekmesine tıkla → başvuru listesi görünür.</li>
+  <li>Bir başvuruya tıkla → detay sayfası açılır (CV, sunum, durum, notlar).</li>
+  <li>Durum güncelle: "Yeni" → "İnceleniyor" → "Mülakat" → "Kabul" veya "Red".</li>
+</ol>
+
+<div class="warn box">
+  <p><strong>CV dosyaları imzalı bağlantıyla açılır.</strong></p>
+  <p>
+    CV dosyaları private bucket'ta saklanır. Admin detay sayfasında "CV'yi Aç" butonuna tıkladığında
+    5 dakikalık imzalı bağlantı üretilir. Bağlantı süresi dolarsa yenilemek gerekir. Dosyalar herkese
+    açık değildir.
+  </p>
+</div>
+
+<h2 id="test">3. Adım adım test listesi</h2>
+
+<h3>T1 — Kariyer başvurusu</h3>
+<ol class="steps">
+  <li><code>/kariyer</code> aç.</li>
+  <li><strong>Beklenen:</strong> 17 ilan listelenir.</li>
+  <li>Bir ilana tıkla → detay sayfası açılır.</li>
+  <li>"Başvur" butonuna tıkla.</li>
+  <li>CV yükle (PDF, &lt;10 MB).</li>
+  <li>"Gönder" → <strong>Beklenen:</strong> "Başvurunuz alındı" mesajı.</li>
+  <li>Admin <code>/admin/kadro/basvurular</code> aç.</li>
+  <li><strong>Beklenen:</strong> Başvuru listede görünür, durum "Yeni".</li>
+</ol>
+
+<h3>T2 — Kadro dashboard</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/kadro</code> aç.</li>
+  <li><strong>Beklenen:</strong> Özet kartlar görünür (toplam başvuru, bekleyen, aktif ilan, rol sayısı).</li>
+  <li>"İlanlar" sekmesine tıkla.</li>
+  <li><strong>Beklenen:</strong> İlan listesi görünür.</li>
+  <li>"Yeni İlan" butonuna tıkla.</li>
+  <li><strong>Beklenen:</strong> İlan oluşturma formu açılır.</li>
+</ol>
+
+<h3>T3 — Başvuru detayı ve CV açma</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/kadro/basvurular</code> aç.</li>
+  <li>Bir başvuruya tıkla.</li>
+  <li><strong>Beklenen:</strong> Detay sayfası açılır (başvuran bilgileri, CV, sunum, durum, notlar).</li>
+  <li>"CV'yi Aç" butonuna tıkla.</li>
+  <li><strong>Beklenen:</strong> Yeni sekmede CV açılır (imzalı bağlantı).</li>
+  <li>Durum güncelle: "İnceleniyor" → "Kaydet".</li>
+  <li><strong>Beklenen:</strong> Durum güncellenir, listede yansır.</li>
+</ol>
+
+<h2 id="sinirlar">4. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Önceki dönem ilanları</td>
+    <td>
+      Eski 4 ilan silinmez ve başvuru formunun <code>position</code> seçeneklerinde kalır. Çıkarılırsa
+      seçim sessizce kaybolur. Kaldırma koşulu: yeni ilanlar üzerinden en az bir tam başvuru döngüsü + ekip onayı.
+    </td>
+  </tr>
+  <tr>
+    <td>İki oturum yarışı</td>
+    <td>
+      İki admin aynı anda aynı başvuruyu farklı duruma güncellerse son yazan kazanır. Optimistic locking yok.
+    </td>
+  </tr>
+  <tr>
+    <td>CV dosya formatı</td>
+    <td>
+      .key dosyaları tarayıcıya göre boş veya <code>application/zip</code> gelir. Bucket listesinde
+      <code>application/octet-stream</code> bilerek yoktur — her şeyi kabul eden bir değerdir.
+    </td>
+  </tr>
+  <tr>
+    <td>Bildirim e-postası</td>
+    <td>
+      Maile dosya yolu/bağlantısı konmaz. İmzalı bağlantı süreli üretilir; maile gömülen bağlantı
+      kutuda süresiz kalır ve iletilen her kopya erişim açar.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>docs/plans/2026-09-30-kariyer-sayfasi-yenileme-plani.md</code> ·
+  <code>src/lib/careers/</code> · <code>src/pages/admin/kadro/</code> ·
+  Migration <code>20261001130000</code> · <code>20261002000000</code> · <code>20261002010000</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

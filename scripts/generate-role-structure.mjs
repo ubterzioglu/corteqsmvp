@@ -39,10 +39,10 @@ for (const row of rows) {
   if (row["Ana Rol"] === "Ana Rol" || !row["Ana Rol"]) continue;
 
   const anaRol = String(row["Ana Rol"] || "").trim();
-  const altRol = String(row["Alt Rol"] || "").trim();
-  const uzmanlik = String(row["Uzmanlık"] || "").trim();
+  const altRol = String(row["Alt Rol (başvuru seviyesi)"] || row["Alt Rol"] || "").trim();
+  const uzmanlik = String(row["Uzmanlık (etiket, 3. seviye)"] || row["Uzmanlık"] || "").trim();
   const yeniKod = String(row["Yeni Admin Rol Kodu"] || "").trim();
-  const eskiKod = String(row["Eski Dropdown (77)"] || "").trim();
+  const eskiKod = String(row["Eski Kod"] || row["Eski Dropdown (77)"] || "").trim();
   const durum = String(row["Durum"] || "").trim();
 
   if (!yeniKod) continue;

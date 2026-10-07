@@ -216,9 +216,10 @@ select set_config('request.jwt.claims', '{"sub":"bdb66bc1-f109-4122-a9ac-0cdcb62
 do $$
 declare r jsonb;
 begin
+  -- G15b: İlk ihlal artık 'suspended' (30 gün askı), 'warning' değil.
   select public.admin_record_group_strike('8bf3cc18-112e-4cfc-bed4-70180b1fdf1f','QA13 uyari testi') into r;
-  assert r->>'outcome' = 'warning', '#13 ilk ihlal warning olmalı: ' || r::text;
-  raise notice 'KABUL #13-hazirlik OK (strike warning)';
+  assert r->>'outcome' = 'suspended', '#13 ilk ihlal suspended olmalı (G15b): ' || r::text;
+  raise notice 'KABUL #13-hazirlik OK (strike suspended — G15b sıkı merdiven)';
 end $$;
 select set_config('request.jwt.claims', '{}', true);
 

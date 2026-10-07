@@ -17,6 +17,30 @@ export type FlatRoleOption = {
   description: string | null;
 };
 
+/**
+ * A6 · Dropdown'dan gizlenecek roller (Excel "Kaldırılan & Taşınan" + plan kararı).
+ *
+ * Bu roller DB'de kalır (silinmez), yalnız başvuru dropdown'ında gösterilmez.
+ * - Eski bireysel roller: Artık herkes "Bireysel Kullanıcı" olarak başlar.
+ * - Deneysel roller: Test amaçlıydı, yeni başvuru almaz.
+ * - Moderatör/Admin: Dropdown'da gösterilmez (ayrı atama süreci).
+ */
+const HIDDEN_ROLE_KEYS = new Set([
+  // Eski bireysel roller (Bireysel varsayılan'a birleşti)
+  "User_DiasporaMember",
+  "User_Contributor",
+  "User_JobSeeker",
+  // Deneysel roller (test amaçlı, yeni başvuru almaz)
+  "Experimental_1",
+  "Experimental_2",
+  "Experimental_3",
+  // Moderatör/Admin rolleri (dropdown'da gösterilmez)
+  "Moderator_Content",
+  "Moderator_Cadde",
+  "Admin_PlatformAdmin",
+  "Admin_SuperAdmin",
+]);
+
 export function fetchFlatRoles() {
   return supabase.rpc("get_flat_roles");
 }
@@ -30,5 +54,6 @@ export function mapFlatRoleOptions(data: unknown): FlatRoleOption[] {
       label: typeof item?.label === "string" ? item.label : "",
       description: typeof item?.description === "string" ? item.description : null,
     }))
-    .filter((item) => item.key && item.label);
+    .filter((item) => item.key && item.label)
+    .filter((item) => !HIDDEN_ROLE_KEYS.has(item.key));
 }

@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Profil ve Hesap | 7 Ekim 2026</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec; --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74; --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac; --code-bg: #f1f5f9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a; --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309; --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d; --code-bg: #1c222a; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font: 0.88em ui-monospace, monospace; word-break: break-word; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Profil ve Hesap</h1>
+  <p class="lede">
+    7 Ekim 2026 · Belge yükleme, hesap silme, uzmanlık etiketleri ve profil etkinlik gösterimi.
+    Bu dosya <strong>siteye yüklenmez</strong>.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#belge">Belge Yükleme</a></li>
+    <li><a href="#silme">Hesap Silme</a></li>
+    <li><a href="#uzmanlik">Uzmanlık Etiketleri</a></li>
+    <li><a href="#etkinlik">Profilde Sonraki Etkinlik</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="belge">1. Belge Yükleme</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık profil sayfalarına <strong>CV, sunum ve ruhsat</strong> yükleyebilir. CV için yeni bir toggle
+  eklendi: "CV'mi Premium üyeler görebilsin". Bu toggle açıldığında yalnız Premium üyeler CV'yi indirebilir.
+  Dosyalar private bucket'ta saklanır ve imzalı bağlantıyla açılır.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Profil sayfası → "Belgelerim" bölümü</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>Dosya sınırları.</strong></p>
+  <p>
+    CV: max 10 MB (PDF/DOC/DOCX). Sunum: max 25 MB (PDF/PPT/PPTX/KEY). Ruhsat: max 10 MB (PDF/JPG/PNG).
+    Dosya uzantısı kontrol edilir — MIME tipi güvenilir değildir.
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye profil sayfasına gider, "Belgelerim" bölümünü bulur.</li>
+  <li>"CV Yükle" butonuna tıklar, dosya seçer.</li>
+  <li>Yükleme tamamlanınca "CV'mi Premium üyeler görebilsin" toggle'ı görünür.</li>
+  <li>Toggle açılırsa: yalnız Premium üyeler CV'yi görebilir ve indirebilir.</li>
+  <li>Toggle kapalıysa: CV herkese açık değildir, yalnız üye kendi CV'sini görebilir.</li>
+</ol>
+
+<h2 id="silme">2. Hesap Silme</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık hesaplarını silebilir. Silme işlemi öncesinde sistem <strong>engelleme kontrolü</strong>
+  yapar: aktif etkinlik, çözülmemiş şikayet veya bekleyen başvuru varsa silme engellenir. Engelleme
+  yoksa hesap ve tüm kişisel veriler silinir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Hesap ayarları → "Hesabımı Sil" butonu</li>
+</ul>
+
+<div class="bad box">
+  <p><strong>Geri alınamaz işlem.</strong></p>
+  <p>
+    Hesap silindiğinde tüm kişisel veriler (profil, başvurular, etkinlikler) kalıcı olarak silinir.
+    Bu işlem geri alınamaz. Üye silme öncesinde "Emin misiniz?" uyarısı görür ve onay ister.
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye hesap ayarlarına gider, "Hesabımı Sil" butonuna tıklar.</li>
+  <li>Sistem engelleme kontrolü yapar.</li>
+  <li>Engelleme varsa: "Aktif etkinliğiniz var, hesabınızı silemezsiniz" mesajı çıkar.</li>
+  <li>Engelleme yoksa: "Emin misiniz? Bu işlem geri alınamaz." uyarısı çıkar.</li>
+  <li>Üye onaylarsa: hesap ve tüm veriler silinir, oturum kapatılır.</li>
+</ol>
+
+<h2 id="uzmanlik">3. Uzmanlık Etiketleri</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık profillerine <strong>uzmanlık etiketleri</strong> ekleyebilir. Örneğin bir doktor
+  "Kardiyoloji", "Dahiliye" gibi etiketler ekleyebilir. Bu etiketler dizin aramasında görünür ve
+  üyenin uzmanlık alanlarını belirtir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Profil sayfası → "Uzmanlık Alanlarım" bölümü</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye profil sayfasına gider, "Uzmanlık Alanlarım" bölümünü bulur.</li>
+  <li>"Etiket Ekle" butonuna tıklar.</li>
+  <li>Açılır listeden bir veya daha fazla uzmanlık seçer.</li>
+  <li>"Kaydet" → etiketler profil sayfasında görünür.</li>
+  <li>Dizin aramasında bu etiketler de aranabilir (örn. "kardiyolog" → kardiyoloji etiketli üyeler).</li>
+</ol>
+
+<h2 id="etkinlik">4. Profilde Sonraki Etkinlik</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üye profil sayfasında artık <strong>bir sonraki etkinliği</strong> gösteriliyor. Üyenin oluşturduğu
+  gelecek tarihli etkinliklerden en yakını profil sayfasında kart olarak görünür. Etkinlik yoksa
+  bu kart gösterilmez.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Profil sayfası → "Yaklaşan Etkinliğim" kartı (varsa)</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Üye profil sayfasına gider.</li>
+  <li>Gelecek tarihli bir etkinliği varsa: "Yaklaşan Etkinliğim" kartı görünür.</li>
+  <li>Kartta: etkinlik başlığı, tarih, konum ve "Detay" butonu.</li>
+  <li>"Detay" butonuna tıklarsa etkinlik detay sayfasına yönlendirilir.</li>
+</ol>
+
+<h2 id="test">5. Adım adım test listesi</h2>
+
+<h3>T1 — Belge yükleme</h3>
+<ol class="steps">
+  <li>Üye profil sayfasına git, "Belgelerim" bölümünü bul.</li>
+  <li>"CV Yükle" → PDF seç (10 MB altı).</li>
+  <li><strong>Beklenen:</strong> Yükleme tamamlanır, "CV'mi Premium üyeler görebilsin" toggle'ı görünür.</li>
+  <li>Toggle'ı aç → <strong>Beklenen:</strong> "Premium üyeler görebilir" etiketi çıkar.</li>
+  <li>Toggle'ı kapat → <strong>Beklenen:</strong> Etiket kaybolur.</li>
+</ol>
+
+<h3>T2 — Hesap silme (engelleme kontrolü)</h3>
+<ol class="steps">
+  <li>Üye hesap ayarlarına git.</li>
+  <li>"Hesabımı Sil" butonuna tıkla.</li>
+  <li><strong>Beklenen:</strong> Engelleme varsa uyarı mesajı çıkar (örn. "Aktif etkinliğiniz var").</li>
+  <li>Engelleme yoksa: "Emin misiniz?" uyarısı çıkar.</li>
+  <li>"İptal" → <strong>Beklenen:</strong> Silme işlemi iptal olur, hesap kalır.</li>
+</ol>
+
+<h3>T3 — Uzmanlık etiketleri</h3>
+<ol class="steps">
+  <li>Üye profil sayfasına git, "Uzmanlık Alanlarım" bölümünü bul.</li>
+  <li>"Etiket Ekle" → listeden bir uzmanlık seç.</li>
+  <li>"Kaydet" → <strong>Beklenen:</strong> Etiket profil sayfasında görünür.</li>
+  <li>Dizin aramasında uzmanlık adını ara → <strong>Beklenen:</strong> Üye sonuçlarda çıkar.</li>
+</ol>
+
+<h3>T4 — Profilde sonraki etkinlik</h3>
+<ol class="steps">
+  <li>Üye bir etkinlik oluştur (gelecek tarihli).</li>
+  <li>Profil sayfasına git.</li>
+  <li><strong>Beklenen:</strong> "Yaklaşan Etkinliğim" kartı görünür.</li>
+  <li>Etkinliği iptal et veya tarihi geçmişe al.</li>
+  <li>Profil sayfasını yenile → <strong>Beklenen:</strong> Kart kaybolur.</li>
+</ol>
+
+<h2 id="sinirlar">6. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>CV dosya formatı</td>
+    <td>
+      .key dosyaları tarayıcıya göre boş veya <code>application/zip</code> gelir. Bucket listesinde
+      <code>application/octet-stream</code> bilerek yoktur. .key dosyaları yüklenemez.
+    </td>
+  </tr>
+  <tr>
+    <td>Hesap silme ve veri saklama</td>
+    <td>
+      Hesap silindiğinde kişisel veriler silinir ama <strong>anonimleştirilmiş veriler</strong> kalabilir
+      (örn. Cadde gönderileri, yorumlar). Bu veriler üye kimliği olmadan saklanır.
+    </td>
+  </tr>
+  <tr>
+    <td>Uzmanlık etiket sayısı</td>
+    <td>
+      Üye en fazla <strong>10 uzmanlık etiketi</strong> ekleyebilir. Limit aşılırsa "En fazla 10 etiket ekleyebilirsiniz" uyarısı çıkar.
+    </td>
+  </tr>
+  <tr>
+    <td>Profil etkinlik kartı</td>
+    <td>
+      Yalnız <strong>gelecek tarihli</strong> etkinlikler gösterilir. Geçmiş etkinlikler "Etkinliklerim"
+      sekmesinde listelenir ama profil sayfasında kart olarak görünmez.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>src/pages/ProfilePage.tsx</code> · <code>src/components/profile/ProfileDocumentsSection.tsx</code> ·
+  Migration <code>20261005800000_profile_license_upload.sql</code> ·
+  <code>20261005160000_check_account_deletion_blocks.sql</code> ·
+  <code>20261007140000_user_specialty_tags.sql</code> ·
+  <code>20261005140000_public_member_next_event.sql</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

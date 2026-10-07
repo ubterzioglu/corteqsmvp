@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admin Panel İyileştirmeleri | 7 Ekim 2026</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec; --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74; --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac; --code-bg: #f1f5f9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a; --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309; --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d; --code-bg: #1c222a; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font: 0.88em ui-monospace, monospace; word-break: break-word; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Admin Panel İyileştirmeleri</h1>
+  <p class="lede">
+    7 Ekim 2026 · Traction dashboard, VIP davetiyeler, menü numaralandırma, bildirim ayarları ve rol yönetimi.
+    Bu dosya <strong>siteye yüklenmez</strong>.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#traction">Traction Dashboard</a></li>
+    <li><a href="#vip">VIP Davetiyeler</a></li>
+    <li><a href="#menu">Admin Menü Numaralandırma</a></li>
+    <li><a href="#bildirim">Bildirim Ayarları</a></li>
+    <li><a href="#rol">Rol Yönetimi</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="traction">1. Traction Dashboard</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Platform büyüme metriklerini gösteren bir dashboard eklendi. <strong>5 metrik</strong> görüntülenir:
+  toplam içerik oluşturulan, kullanıcı edinme hızı, geri dönüş oranı, etkileşim derinliği ve tavsiye
+  aktivitesi. Metrikler veritabanı view'larından hesaplanır ve admin-only guard ile korunur.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/admin/traction</code></li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/traction</code> sayfasına gider.</li>
+  <li>5 metrik kartı görünür: toplam içerik, edinme hızı, geri dönüş, etkileşim, tavsiye.</li>
+  <li>Her kartta: metrik adı, son 7 gün değeri, son 30 gün değeri, değişim yüzdesi.</li>
+  <li>Grafikler (Recharts) ile trend gösterilir.</li>
+</ol>
+
+<div class="ok box">
+  <p><strong>Veritabanı view'larından hesaplanır.</strong></p>
+  <p>
+    Metrikler canlı sorgu değil, veritabanı view'larından hesaplanır. Bu, performans için bilinçli bir
+    karardır. View'lar admin-only guard ile korunur — anon veya authenticated erişemez.
+  </p>
+</div>
+
+<h2 id="vip">2. VIP Davetiyeler</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Adminler artık <strong>özel VIP davet linkleri</strong> oluşturabilir. Her davetiyeye alıcı adı/e-posta,
+  özel başlık/mesaj ve geçerlilik süresi eklenebilir. Davetiye durumu takip edilir: geçerli, kullanıldı,
+  süresi doldu veya iptal edildi.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/admin/vip-invitations</code></li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/vip-invitations</code> sayfasına gider.</li>
+  <li>"Yeni Davetiye" butonuna tıklar.</li>
+  <li>Alıcı adı, e-posta, özel başlık, mesaj ve geçerlilik süresi girer.</li>
+  <li>"Oluştur" → davetiye linki üretilir.</li>
+  <li>"Kopyala" butonuyla link panoya kopyalanır.</li>
+  <li>Link kullanıldığında durum "Kullanıldı" olarak güncellenir.</li>
+</ol>
+
+<h2 id="menu">3. Admin Menü Numaralandırma</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Admin sidebar menüsü artık <strong>sıralı numaralar</strong> taşıyor (1, 2, 3... ve alt menüler 34.1, 34.2...).
+  Bu numaralar AI asistan tarafından da kullanılabilir — asistan menü numarasına referans vererek
+  sayfayı açıklayabilir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Admin sidebar (tüm sayfalarda)</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin paneline giriş yap.</li>
+  <li>Sidebar'da her menü öğesinin yanında numara görünür (örn. "3. Katalog").</li>
+  <li>Alt menülerde numara "34.1", "34.2" şeklinde olur.</li>
+  <li>AI asistan ile konuşurken "34.1 sayfası nedir?" diye sorabilirsin.</li>
+</ol>
+
+<h2 id="bildirim">4. Bildirim Ayarları</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Adminler artık e-posta bildirimlerini yönetebilir. <strong>İki katman</strong> var: global anahtarlar
+  (admin-only) ve kişisel abonelikler (moderatörler). Her bildirim tipi açılıp kapatılabilir, abone
+  sayısı görüntülenebilir ve son gönderim logu incelenebilir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/admin/notifications</code></li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/notifications</code> sayfasına gider.</li>
+  <li>Bildirim tipleri listelenir: kariyer başvurusu, haftalık özet, grup şikayeti vb.</li>
+  <li>Her tip için: toggle (açık/kapalı), abone sayısı, son gönderim tarihi.</li>
+  <li>Toggle'ı değiştir → <strong>Beklenen:</strong> Ayar kaydedilir.</li>
+  <li>"Son gönderimler" butonuna tıkla → log sayfası açılır.</li>
+</ol>
+
+<div class="warn box">
+  <p><strong>Kariyer bildirimi tüm adminlere gider (opt-out).</strong></p>
+  <p>
+    Yeni kariyer başvurusu geldiğinde <code>is_admin</code> olan HERKESE e-posta gider. Abonelik satırı
+    olmayan yönetici de alır, yalnız açıkça <code>career_application_email=false</code> diyen çıkar.
+    Diğer olay tipleri hâlâ opt-in'dir.
+  </p>
+</div>
+
+<h2 id="rol">5. Rol Yönetimi</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Rol yönetimi sayfası yenilendi. Artık <strong>hiyerarşik rol yapısı</strong> destekleniyor (ana.alt.uzmanlık
+  kodları), arama ve filtre eklendi, rol-feature paketleri düzenlenebiliyor. 52 rol Excel'den import edildi.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li><code>/admin/new-member/role-matrix</code></li>
+  <li><code>/admin/new-member/roles-overview</code></li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/new-member/role-matrix</code> sayfasına gider.</li>
+  <li>Arama kutusuna rol adı yaz → sonuçlar filtrelenir.</li>
+  <li>Entity tipi filtresi: kişi, kurum, uzmanlık.</li>
+  <li>Bir role tıkla → rol detay drawer'ı açılır.</li>
+  <li>Feature paketini düzenle: hangi feature'lar aktif, hangileri kapalı.</li>
+  <li>"Kaydet" → değişiklikler kaydedilir.</li>
+</ol>
+
+<h2 id="test">6. Adım adım test listesi</h2>
+
+<h3>T1 — Traction Dashboard</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/traction</code> aç.</li>
+  <li><strong>Beklenen:</strong> 5 metrik kartı görünür (toplam içerik, edinme, geri dönüş, etkileşim, tavsiye).</li>
+  <li>Her kartta: son 7 gün, son 30 gün, değişim yüzdesi.</li>
+  <li>Grafikler görünür (Recharts).</li>
+</ol>
+
+<h3>T2 — VIP Davetiye oluşturma</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/vip-invitations</code> aç.</li>
+  <li>"Yeni Davetiye" → alıcı adı, e-posta, başlık, mesaj gir.</li>
+  <li>"Oluştur" → <strong>Beklenen:</strong> Davetiye listeye eklenir, link üretilir.</li>
+  <li>"Kopyala" → <strong>Beklenen:</strong> Link panoya kopyalanır.</li>
+</ol>
+
+<h3>T3 — Menü numaralandırma</h3>
+<ol class="steps">
+  <li>Admin paneline giriş yap.</li>
+  <li>Sidebar'a bak → <strong>Beklenen:</strong> Her menü öğesinin yanında numara var.</li>
+  <li>Alt menüleri aç → <strong>Beklenen:</strong> Alt menülerde numara "34.1" şeklinde.</li>
+</ol>
+
+<h3>T4 — Bildirim ayarları</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/notifications</code> aç.</li>
+  <li>Bildirim tipleri listelenir.</li>
+  <li>Bir tipin toggle'ını değiştir → <strong>Beklenen:</strong> Ayar kaydedilir.</li>
+  <li>"Son gönderimler" → <strong>Beklenen:</strong> Log sayfası açılır.</li>
+</ol>
+
+<h3>T5 — Rol yönetimi</h3>
+<ol class="steps">
+  <li>Admin <code>/admin/new-member/role-matrix</code> aç.</li>
+  <li>Arama kutusuna "doktor" yaz → <strong>Beklenen:</strong> Sonuçlar filtrelenir.</li>
+  <li>Bir role tıkla → <strong>Beklenen:</strong> Detay drawer'ı açılır.</li>
+  <li>Feature paketini düzenle, kaydet → <strong>Beklenen:</strong> Değişiklik kaydedilir.</li>
+</ol>
+
+<h2 id="sinirlar">7. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Traction metrikleri</td>
+    <td>
+      Metrikler veritabanı view'larından hesaplanır. View'lar güncellenmezse metrikler bayatlar.
+      Şu an otomatik güncelleme yok, manuel refresh gerekir.
+    </td>
+  </tr>
+  <tr>
+    <td>VIP davetiye süresi</td>
+    <td>
+      Süresi dolan davetiyeler otomatik iptal edilmez. <code>pg_cron</code> ile günlük temizlik yapılabilir
+      ama henüz kurulmadı.
+    </td>
+  </tr>
+  <tr>
+    <td>Menü numaraları sabit değil</td>
+    <td>
+      Menü öğeleri eklendiğinde veya sırası değiştiğinde numaralar güncellenir. AI asistan eski numaraya
+      referans verebilir — asistan bağlamı güncel tutulmalıdır.
+    </td>
+  </tr>
+  <tr>
+    <td>Bildirim logu</td>
+    <td>
+      Son 100 gönderim gösterilir. Daha eski loglar arşivlenir ve bu sayfada görünmez.
+    </td>
+  </tr>
+  <tr>
+    <td>Rol hiyerarşisi</td>
+    <td>
+      Hiyerarşik kodlar (ana.alt.uzmanlık) desteklenir ama <strong>çift nokta</strong> (örn. "1.2.3.4")
+      desteklenmez. En fazla 3 seviye.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>src/pages/admin/AdminTractionPage.tsx</code> ·
+  <code>src/pages/admin/AdminVipInvitationsPage.tsx</code> ·
+  <code>src/pages/admin/AdminNotificationSettingsPage.tsx</code> ·
+  <code>src/pages/admin/AdminRoleManagementPage.tsx</code> ·
+  <code>src/lib/admin-shell/admin-menu-numbering.ts</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>

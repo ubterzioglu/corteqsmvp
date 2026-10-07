@@ -2,70 +2,31 @@ User-agent: *
 Allow: /
 Disallow: /admin
 
-# Browsing / answer bots (citations in AI chat answers)
+# ── AI arama ve chat botları (atıf veren, trafik getiren) ──
+# Bu botlar AI cevaplarında corteqs.net'e atıf verir → görünürlük artar.
 User-agent: ChatGPT-User
-Allow: /
-Disallow: /admin
-
 User-agent: OAI-SearchBot
-Allow: /
-Disallow: /admin
-
 User-agent: Claude-Web
-Allow: /
-Disallow: /admin
-
 User-agent: Claude-User
-Allow: /
-Disallow: /admin
-
 User-agent: PerplexityBot
-Allow: /
-Disallow: /admin
-
 User-agent: Perplexity-User
-Allow: /
-Disallow: /admin
-
-# Training / index crawlers
 User-agent: GPTBot
-Allow: /
-Disallow: /admin
-
 User-agent: ClaudeBot
-Allow: /
-Disallow: /admin
-
 User-agent: anthropic-ai
-Allow: /
-Disallow: /admin
-
-User-agent: CCBot
-Allow: /
-Disallow: /admin
-
-User-agent: Google-Extended
-Allow: /
-Disallow: /admin
-
-User-agent: Applebot-Extended
-Allow: /
-Disallow: /admin
-
 User-agent: Amazonbot
-Allow: /
-Disallow: /admin
-
 User-agent: cohere-ai
 Allow: /
 Disallow: /admin
 
+# ── Eğitim botları (karşılıksız veri kullanımı, atıf yok) ──
+# 2026-10-07: Bu botlar içeriği model eğitiminde kullanır ancak AI arama
+# sonuçlarında corteqs.net'e atıf vermez. Hibrit politika: atıf veren botlar
+# açık, eğitim botları kapalı. 3 ay sonra gözden geçir.
+User-agent: CCBot
 User-agent: Bytespider
-Allow: /
-Disallow: /admin
-
 User-agent: Meta-ExternalAgent
-Allow: /
-Disallow: /admin
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Disallow: /
 
 Sitemap: https://corteqs.net/sitemap.xml

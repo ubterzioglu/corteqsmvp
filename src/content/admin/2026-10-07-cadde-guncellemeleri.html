@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Cadde Geliştirmeleri | 7 Ekim 2026</title>
+<style>
+  :root { --bg: #ffffff; --fg: #1a1d21; --muted: #5b6470; --line: #e3e7ec; --card: #f7f9fb; --accent: #0f766e; --warn-bg: #fff7ed; --warn-line: #fdba74; --bad-bg: #fef2f2; --bad-line: #fca5a5; --ok-bg: #f0fdf4; --ok-line: #86efac; --code-bg: #f1f5f9; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #12151a; --fg: #e8ecf1; --muted: #9aa5b1; --line: #2a313a; --card: #171b21; --accent: #5eead4; --warn-bg: #2a1f12; --warn-line: #b45309; --bad-bg: #2a1616; --bad-line: #b91c1c; --ok-bg: #12241a; --ok-line: #15803d; --code-bg: #1c222a; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.65 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 16px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 20px; margin-bottom: 8px; }
+  h1 { font-size: 1.85rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.35rem; margin: 44px 0 12px; padding-top: 18px; border-top: 1px solid var(--line); }
+  h3 { font-size: 1.08rem; margin: 26px 0 8px; color: var(--accent); }
+  p, li { margin: 8px 0; }
+  .lede { color: var(--muted); font-size: 0.97rem; }
+  code { background: var(--code-bg); border-radius: 4px; padding: 1px 5px; font: 0.88em ui-monospace, monospace; word-break: break-word; }
+  .box { border-radius: 10px; padding: 14px 16px; margin: 16px 0; border: 1px solid var(--line); background: var(--card); }
+  .warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .ok   { background: var(--ok-bg);   border-color: var(--ok-line); }
+  .box p:first-child { margin-top: 0; } .box p:last-child, .box ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 14px 0; font-size: 0.93rem; }
+  th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: var(--card); font-weight: 600; }
+  ol.steps { padding-left: 20px; } ol.steps > li { margin: 10px 0; }
+  .tag { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); }
+  nav.toc { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; margin: 22px 0; }
+  nav.toc ol { margin: 6px 0 0; padding-left: 20px; } nav.toc a { color: inherit; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="tag">YALNIZ YÖNETİCİ</span>
+  <h1>Cadde (Sosyal Akış) Geliştirmeleri</h1>
+  <p class="lede">
+    7 Ekim 2026 · Cadde'de gönderi düzenleme, tepki verenler listesi ve tam metin arama.
+    Bu dosya <strong>siteye yüklenmez</strong>.
+  </p>
+</header>
+
+<nav class="toc">
+  <strong>İçindekiler</strong>
+  <ol>
+    <li><a href="#duzenleme">Gönderi Düzenleme</a></li>
+    <li><a href="#tepkiler">Tepki Verenler Listesi</a></li>
+    <li><a href="#arama">Cadde Araması</a></li>
+    <li><a href="#test">Adım adım test listesi</a></li>
+    <li><a href="#sinirlar">Bilinen sınırlar</a></li>
+  </ol>
+</nav>
+
+<h2 id="duzenleme">1. Gönderi Düzenleme</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Üyeler artık yayınladıkları Cadde gönderilerini <strong>düzenleyebilir</strong>. Başlık, gövde, medya,
+  ilgi alanları, kategori ve hedef konum değiştirilebilir. Bahsetmeler (mentions) orijinalden korunur.
+  Medya tamamen değiştirilebilir (eski görseller silinir, yenileri yüklenir).
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Cadde sayfasında gönderi menüsü (⋮) → "Düzenle"</li>
+</ul>
+
+<div class="warn box">
+  <p><strong>Çoklu hedef Premium gerektirir.</strong></p>
+  <p>
+    Gönderi hedefini birden fazla konuma değiştirmek Premium üyelik gerektirir. Ücretsiz üye yalnız
+    tek hedef seçebilir. Premium olmayan kullanıcı "Çoklu hedef Premium özelliğidir" uyarısı görür.
+  </p>
+</div>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Cadde sayfasında kendi gönderinizin sağ üstündeki ⋮ menüsüne tıklayın.</li>
+  <li>"Düzenle" seçeneğine tıklayın.</li>
+  <li>Başlık, gövde, medya, ilgi alanları, kategori veya hedef konumu değiştirin.</li>
+  <li>"Kaydet" butonuna tıklayın.</li>
+  <li><strong>Beklenen:</strong> Gönderi güncellenir, "Düzenlendi" etiketi çıkar.</li>
+</ol>
+
+<h2 id="tepkiler">2. Tepki Verenler Listesi</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Bir gönderiye kimlerin tepki verdiğini (beğeni, tebrik, vb.) görebileceğiniz bir popover eklendi.
+  Tepki sayısına tıkladığınızda küçük bir pencere açılır ve tepki veren üyelerin listesi gösterilir.
+  Banlı veya gizli kullanıcılar listede görünmez.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Cadde sayfasında gönderi altındaki tepki butonlarının yanında sayıya tıklayın</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Cadde sayfasında bir gönderi bulun.</li>
+  <li>Tepki butonlarının yanındaki sayıya tıklayın (örn. "12").</li>
+  <li><strong>Beklenen:</strong> Küçük bir popover açılır, tepki veren üyelerin avatarları ve isimleri listelenir.</li>
+  <li>Bir isme tıklayın → profil sayfasına yönlendirilir.</li>
+</ol>
+
+<div class="ok box">
+  <p><strong>Gizli/banlı kullanıcılar filtrelenir.</strong></p>
+  <p>
+    Tepki listesinde banlı veya gizli kullanıcılar görünmez. Bu, spam veya kötüye kullanım durumunda
+    saldırganın profilinin gizlenmesini sağlar.
+  </p>
+</div>
+
+<h2 id="arama">3. Cadde Araması</h2>
+
+<h3>Ne değişti?</h3>
+<p>
+  Cadde içinde tam metin arama eklendi. Üyeler gönderi başlıklarında, gövdelerinde ve ilgi alanlarında
+  arama yapabilir. Arama sonuçları Cadde sayfasının üstünde yeni bir sekmede listelenir.
+</p>
+
+<h3>Nerede bulunur?</h3>
+<ul>
+  <li>Cadde sayfasında arama kutusu (üst kısım)</li>
+</ul>
+
+<h3>Nasıl çalışır?</h3>
+<ol class="steps">
+  <li>Cadde sayfasına git.</li>
+  <li>Üstteki arama kutusuna bir terim yaz (örn. "Berlin").</li>
+  <li>Enter'a bas veya arama ikonuna tıkla.</li>
+  <li><strong>Beklenen:</strong> Arama sonuçları listelenir, eşleşen terim vurgulanır.</li>
+  <li>Bir sonuca tıkla → gönderi detay sayfası açılır.</li>
+</ol>
+
+<div class="warn box">
+  <p><strong>Arama yalnız yayınlanmış gönderilerde çalışır.</strong></p>
+  <p>
+    Silinmiş, gizli veya bekleyen gönderiler arama sonuçlarına dahil edilmez. Ayrıca banlı kullanıcıların
+    gönderileri de filtrelenir.
+  </p>
+</div>
+
+<h2 id="test">4. Adım adım test listesi</h2>
+
+<h3>T1 — Gönderi düzenleme</h3>
+<ol class="steps">
+  <li>Üye hesabıyla Cadde sayfasına git.</li>
+  <li>Kendi gönderinizin ⋮ menüsüne tıkla → "Düzenle".</li>
+  <li>Başlığı değiştir (örn. "Test Başlığı" → "Düzenlenmiş Başlık").</li>
+  <li>"Kaydet" → <strong>Beklenen:</strong> Başlık güncellenir, "Düzenlendi" etiketi çıkar.</li>
+  <li>Sayfayı yenile → <strong>Beklenen:</strong> Değişiklik kalıcı.</li>
+</ol>
+
+<h3>T2 — Tepki verenler listesi</h3>
+<ol class="steps">
+  <li>Cadde sayfasında tepkisi olan bir gönderi bul.</li>
+  <li>Tepki sayısına tıkla (örn. "5").</li>
+  <li><strong>Beklenen:</strong> Popover açılır, 5 isim listelenir.</li>
+  <li>Bir isme tıkla → <strong>Beklenen:</strong> Profil sayfasına yönlendirilir.</li>
+</ol>
+
+<h3>T3 — Cadde araması</h3>
+<ol class="steps">
+  <li>Cadde sayfasına git.</li>
+  <li>Arama kutusuna "Berlin" yaz, Enter'a bas.</li>
+  <li><strong>Beklenen:</strong> "Berlin" içeren gönderiler listelenir.</li>
+  <li>Arama kutusunu temizle, farklı bir terim ara.</li>
+  <li><strong>Beklenen:</strong> Sonuçlar güncellenir.</li>
+</ol>
+
+<h2 id="sinirlar">5. Bilinen sınırlar</h2>
+
+<table>
+  <tr><th>Konu</th><th>Durum</th></tr>
+  <tr>
+    <td>Gönderi düzenleme geçmişi</td>
+    <td>
+      Düzenleme geçmişi tutulmaz. Bir gönderi düzenlendiğinde eski hali geri alınamaz.
+      "Düzenlendi" etiketi çıkar ama değişiklik logu yoktur.
+    </td>
+  </tr>
+  <tr>
+    <td>Tepki listesi performansı</td>
+    <td>
+      1000+ tepkisi olan gönderilerde popover yüklenmesi yavaş olabilir. Şu an pagination yok.
+    </td>
+  </tr>
+  <tr>
+    <td>Arama indekslemesi</td>
+    <td>
+      Yeni gönderiler arama indeksine eklenir ama <strong>anında değil</strong>. 1-2 dakika gecikme olabilir.
+    </td>
+  </tr>
+  <tr>
+    <td>Arama Türkçe karakter</td>
+    <td>
+      Arama Türkçe karakterleri normalize eder (İ → i, Ş → s). "istanbul" araması "İstanbul" bulur.
+    </td>
+  </tr>
+</table>
+
+<footer>
+  Hazırlayan: Kilo · 7 Ekim 2026 ·
+  Kaynaklar: <code>src/lib/cadde-api.ts</code> · <code>src/lib/cadde-schemas.ts</code> ·
+  Migration <code>20260929140000_update_cadde_post_v1.sql</code> ·
+  <code>20261005150000_cadde_post_reactors_list.sql</code> ·
+  <code>20261006060000_b7_cadde_search.sql</code><br />
+  Bu dosya <code>public/</code> altında değildir; siteye yüklenmez ve internetten açılamaz.
+</footer>
+
+</div>
+</body>
+</html>
