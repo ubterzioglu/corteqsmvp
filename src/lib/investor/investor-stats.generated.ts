@@ -3,12 +3,12 @@
 
 export const INVESTOR_REPO_STATS = {
   "measuredAt": "2026-10-09",
-  "sourceFiles": 1039,
-  "productionLines": 152480,
-  "testFiles": 490,
+  "sourceFiles": 1055,
+  "productionLines": 153738,
+  "testFiles": 496,
   "e2eSpecs": 11,
-  "pages": 182,
-  "components": 401,
+  "pages": 183,
+  "components": 412,
   "lazyRoutes": 68,
   "edgeFunctions": 19,
   "migrations": 529,
