@@ -17,7 +17,9 @@ sed -i "s|__PRERENDER_CANONICAL_HOST__|$escaped_prerender_host|g" /etc/nginx/con
 # dizgesine gömüldüğü için YALNIZ izinli karakterler geçer; tırnak/yeni satır/</script>
 # taşıyan hatalı bir değer env-config.js'i (ve tüm sitenin Supabase ayarını) bozamaz.
 # Biçim dışı değer boşaltılır → sayfa "yapılandırılmamış" der (kapalı kalır).
-investor_hash=$(printf '%s' "${INVESTOR_PASS_HASH:-}" | tr 'A-F' 'a-f')
+# Panelden yapıştırırken gelen tırnak ve boşluklar önce atılır (tr -d), sonra süzülür.
+investor_raw="${INVESTOR_PASS_HASH:-}"
+investor_hash=$(printf '%s' "$investor_raw" | tr -d "\"' \t\r\n" | tr 'A-F' 'a-f')
 case "$investor_hash" in
   pbkdf2:*) ;;
   *) investor_hash="" ;;
@@ -25,6 +27,13 @@ esac
 case "$investor_hash" in
   *[!0-9a-f:pbkd]*) investor_hash="" ;;
 esac
+if [ -z "$investor_raw" ]; then
+  echo "[env-config] INVESTOR_PASS_HASH tanımlı değil — /information kapalı."
+elif [ -z "$investor_hash" ]; then
+  echo "[env-config] INVESTOR_PASS_HASH biçimi geçersiz (pbkdf2:<iter>:<tuz>:<özet> bekleniyor) — /information kapalı."
+else
+  echo "[env-config] INVESTOR_PASS_HASH yüklendi."
+fi
 
 cat <<EOF >/usr/share/nginx/html/env-config.js
 window.__APP_CONFIG__ = {
