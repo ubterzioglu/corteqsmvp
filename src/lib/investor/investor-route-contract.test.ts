@@ -6,7 +6,8 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { sliceBetween } from "@/test/source-slice";
-import { INVESTOR_PATH, isInvestorPath } from "./investor-route";
+import { INFORMATION_REDIRECTS, INVESTOR_PATH, isInvestorPath } from "./investor-route";
+import { ECOSYSTEM_LINKS } from "./investor-content";
 
 const ROOT = path.resolve(__dirname, "..", "..", "..");
 const read = (file: string) => readFileSync(path.join(ROOT, file), "utf8");
@@ -20,6 +21,23 @@ describe("yatırımcı rotası", () => {
     expect(isInvestorPath("/informations")).toBe(false);
     // Alt yol rota ile eşleşmez (NotFound çizilir) → yüzen bileşenler de gizlenmemeli.
     expect(isInvestorPath("/information/x")).toBe(false);
+  });
+
+  it("ekosistem kısa yolları: sabit tablo, yalnız https, kartlarla birebir", () => {
+    for (const target of Object.values(INFORMATION_REDIRECTS)) expect(target).toMatch(/^https:\/\//);
+    expect(isInvestorPath("/information/product")).toBe(true);
+    expect(isInvestorPath("/information/venture-studio/")).toBe(true);
+    expect(isInvestorPath("/information/__proto__")).toBe(false);
+
+    const internal = ECOSYSTEM_LINKS.filter((l) => l.url.includes(`corteqs.net${INVESTOR_PATH}/`));
+    expect(internal.length).toBe(Object.keys(INFORMATION_REDIRECTS).length);
+    for (const link of internal) {
+      const slug = link.url.split(`${INVESTOR_PATH}/`)[1];
+      expect(INFORMATION_REDIRECTS[slug], link.title).toBeDefined();
+    }
+    // Bize ait olmayan alan adı kartta doğrudan geçmez — kısa yoldan gider.
+    expect(ECOSYSTEM_LINKS.every((l) => new URL(l.url).hostname.endsWith("corteqs.net"))).toBe(true);
+    expect(app).toContain("<Route path={`${INVESTOR_PATH}/:slug`} element={<InformationRedirect />} />");
   });
 
   it("PublicLayout DIŞINDA tanımlıdır (sitenin üst/alt bilgisi çizilmez)", () => {

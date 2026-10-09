@@ -86,6 +86,7 @@ const IndependentProfilePage = lazyWithReload(() => import("@/pages/IndependentP
 const VipInvitationPage = lazyWithReload(() => import("@/pages/VipInvitationPage"));
 // Yatırımcı sayfası — PublicLayout DIŞINDA, kendi tasarımıyla (docs/investor/README.md)
 const InvestorPage = lazyWithReload(() => import("@/pages/investor/InvestorPage"));
+const InformationRedirect = lazyWithReload(() => import("@/pages/investor/InformationRedirect"));
 const NotificationPreferencesPage = lazyWithReload(() => import("@/pages/NotificationPreferencesPage"));
 const ContributorResourcesPage = lazyWithReload(() => import("@/pages/ContributorResourcesPage"));
 const EventsPage = lazyWithReload(() => import("@/pages/EventsPage"));
@@ -365,6 +366,8 @@ const App = () => (
                   <Route path="/whatsapp-groups/:id" element={<WhatsAppGroupDetailRedirect />} />
                   {/* Yatırımcı sayfası: layout'suz, noindex, şifreli; sitemap'e GİRMEZ. */}
                   <Route path={INVESTOR_PATH} element={<InvestorPage />} />
+                  {/* Bize ait olmayan ekosistem adreslerinin kendi kısa yolları (sabit tablo). */}
+                  <Route path={`${INVESTOR_PATH}/:slug`} element={<InformationRedirect />} />
                   {adminRoutes}
                 </Routes>
               </Suspense>

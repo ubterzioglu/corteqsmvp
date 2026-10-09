@@ -133,7 +133,7 @@ güvenlik ve uyum yol haritası · ödeme ve kurumsal entegrasyonlar · mühendi
 
 ## 07 · Bağlantılar — Ekosistemi canlı inceleyin
 
-Venture Studio (qualtronsinclair.com/qs-networks) · CorteQS Türk (corteqs.net) · CorteQS Product (global-diaspora-connect.lovable.app) · Sosyal Medya (/cadde) · İş İlanları (/ilanlar) · Kariyer (/kariyer) · Tavsiye İste (/tavsiye) · Liderlik Tablosu (/liderlik) · Topluluk Ekle (/addcom) · Dizin (/directory). Hepsi yeni sekmede açılır.
+Venture Studio (/information/venture-studio → qualtronsinclair.com/qs-networks) · CorteQS Türk (corteqs.net) · CorteQS Product (/information/product → global-diaspora-connect.lovable.app) · Sosyal Medya (/cadde) · İş İlanları (/ilanlar) · Kariyer (/kariyer) · Tavsiye İste (/tavsiye) · Liderlik Tablosu (/liderlik) · Topluluk Ekle (/addcom) · Dizin (/directory). Hepsi yeni sekmede açılır.
 
 ## Kapanış
 

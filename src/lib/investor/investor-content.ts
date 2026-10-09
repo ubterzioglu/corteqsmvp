@@ -129,9 +129,10 @@ export interface EcosystemLink {
 
 /** 07 · Bağlantılar — hepsi herkese açık adresler. */
 export const ECOSYSTEM_LINKS: readonly EcosystemLink[] = [
-  { title: "Venture Studio", text: "Qualtron Sinclair — QS Networks", url: "https://www.qualtronsinclair.com/qs-networks" },
+  // Bize ait olmayan adresler kendi kısa yolumuzdan yönlenir (investor-route.ts → INFORMATION_REDIRECTS).
+  { title: "Venture Studio", text: "Qualtron Sinclair — QS Networks", url: "https://corteqs.net/information/venture-studio" },
   { title: "CorteQS Türk", text: "Ana platform", url: "https://corteqs.net" },
-  { title: "CorteQS Product", text: "Global ürün prototipi", url: "https://global-diaspora-connect.lovable.app" },
+  { title: "CorteQS Product", text: "Global ürün prototipi", url: "https://corteqs.net/information/product" },
   { title: "CorteQS Sosyal Medya", text: "Cadde — diaspora sosyal akışı", url: "https://corteqs.net/cadde" },
   { title: "İş İlanları", text: "Diaspora iş ilanları", url: "https://corteqs.net/ilanlar" },
   { title: "Kariyer", text: "CorteQS ekibine katılım", url: "https://corteqs.net/kariyer" },
