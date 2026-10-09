@@ -3879,6 +3879,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/investor/architecture-content.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/investor/investor-access.test.ts",
       "kind": "ts",
       "module_family": "lib"

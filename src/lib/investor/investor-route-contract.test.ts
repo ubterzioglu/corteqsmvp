@@ -6,7 +6,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { sliceBetween } from "@/test/source-slice";
-import { INFORMATION_REDIRECTS, INVESTOR_PATH, isInvestorPath } from "./investor-route";
+import { ARCHITECTURE_PATH, INFORMATION_REDIRECTS, INVESTOR_PATH, isInvestorPath } from "./investor-route";
 import { ECOSYSTEM_LINKS } from "./investor-content";
 
 const ROOT = path.resolve(__dirname, "..", "..", "..");
@@ -21,6 +21,20 @@ describe("yatırımcı rotası", () => {
     expect(isInvestorPath("/informations")).toBe(false);
     // Alt yol rota ile eşleşmez (NotFound çizilir) → yüzen bileşenler de gizlenmemeli.
     expect(isInvestorPath("/information/x")).toBe(false);
+  });
+
+  it("teknik mimari alt sayfası: sabit yol, kısa yol tablosuyla çakışmaz, layout dışı, noindex", () => {
+    expect(ARCHITECTURE_PATH).toBe("/information/mimari");
+    expect(isInvestorPath("/information/mimari")).toBe(true);
+    expect(isInvestorPath("/information/mimari/")).toBe(true);
+    expect(Object.keys(INFORMATION_REDIRECTS)).not.toContain("mimari");
+    const topLevel = sliceBetween(app, "{LEGACY_REDIRECTS.map", "{adminRoutes}", "layout dışı");
+    expect(topLevel).toContain("<Route path={ARCHITECTURE_PATH} element={<ArchitecturePage />} />");
+    const page = read("src/pages/investor/ArchitecturePage.tsx");
+    expect(page).toContain('robots: "noindex, nofollow"');
+    // Aynı parola kapısı: kapı açılmadan içerik çizilmez.
+    expect(page).toContain("<InvestorGate verifier={verifier}");
+    expect(read("scripts/generate-sitemap.mjs")).not.toContain("/mimari");
   });
 
   it("ekosistem kısa yolları: sabit tablo, yalnız https, kartlarla birebir", () => {

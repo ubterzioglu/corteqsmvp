@@ -2,6 +2,9 @@
 // ve sözleşme testi buradan okur. Sitemap'e ve robots.txt'e EKLENMEZ.
 export const INVESTOR_PATH = "/information";
 
+/** Teknik mimari / CTO özeti — aynı parola kapısının arkasında, sabit alt yol. */
+export const ARCHITECTURE_PATH = `${INVESTOR_PATH}/mimari`;
+
 /**
  * Bize ait olmayan ekosistem adresleri için kendi kısa yollarımız:
  * `/information/<slug>` → dış adres. Yalnız bu SABİT tablo yönlendirilir;
@@ -22,7 +25,7 @@ export const informationRedirectPath = (slug: keyof typeof INFORMATION_REDIRECTS
  */
 export const isInvestorPath = (pathname: string): boolean => {
   const path = pathname.replace(/\/+$/, "");
-  if (path === INVESTOR_PATH) return true;
+  if (path === INVESTOR_PATH || path === ARCHITECTURE_PATH) return true;
   const slug = path.startsWith(`${INVESTOR_PATH}/`) ? path.slice(INVESTOR_PATH.length + 1) : "";
   return Object.prototype.hasOwnProperty.call(INFORMATION_REDIRECTS, slug);
 };

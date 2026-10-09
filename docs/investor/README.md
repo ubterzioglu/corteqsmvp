@@ -16,6 +16,7 @@ Teknik Danışmanlık) anlatan, siteden **bağımsız tasarımlı** (lacivert + 
 | İçerik (tüm metinler) | `src/lib/investor/investor-content.ts` |
 | Repo rakamları (üretilir) | `src/lib/investor/investor-stats.generated.ts` ← `scripts/generate-investor-stats.mjs` |
 | Parola kapısı | `src/lib/investor/investor-access.ts` · `InvestorGate.tsx` |
+| **Teknik mimari / CTO özeti** (`/information/mimari`) | `src/pages/investor/ArchitecturePage.tsx` · içerik `src/lib/investor/architecture-content.ts` · `Arch*.tsx` · `investor-architecture.css` — aynı parola kapısı, aynı içerik kuralları; 5 bölüm (mimari · çalışma düzeni · kimlik · kalite kapıları · ölçümler), rakamlar `LIVE_DB` + üretilen repo istatistiklerinden |
 
 ## Değişmez kurallar
 

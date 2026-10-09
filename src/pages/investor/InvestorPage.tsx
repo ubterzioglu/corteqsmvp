@@ -25,28 +25,13 @@ import QualityGates from "@/components/investor/QualityGates";
 import HandoverGrid from "@/components/investor/HandoverGrid";
 import EcosystemLinks from "@/components/investor/EcosystemLinks";
 import InvestorClosing from "@/components/investor/InvestorClosing";
+import { ARCHITECTURE_PATH } from "@/lib/investor/investor-route";
+import { useInvestorFonts } from "./use-investor-fonts";
 import "./investor-theme.css";
+import "./investor-architecture.css";
 
 // Yatırımcı sayfası — sitenin PublicLayout'u DIŞINDA, kendi tasarımıyla çizilir.
 // Kurallar: docs/investor/README.md · CLAUDE.md "Yatırımcı sayfası" bölümü.
-
-const FONT_LINK_ID = "inv-plex-fonts";
-const FONT_HREF =
-  "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap";
-
-/** Plex yazı ailesini yalnız bu sayfa açıkken yükler (CSP: fonts.googleapis.com izinli). */
-function useInvestorFonts(): void {
-  useEffect(() => {
-    if (document.getElementById(FONT_LINK_ID)) return;
-    const link = document.createElement("link");
-    link.id = FONT_LINK_ID;
-    link.rel = "stylesheet";
-    link.href = FONT_HREF;
-    document.head.appendChild(link);
-    // Sayfadan çıkınca kaldır: site geneline üçüncü taraf isteği taşımasın.
-    return () => link.remove();
-  }, []);
-}
 
 /** Yazdırırken (PDF) tüm "Teknik ayrıntı" eklerini açar, sonra eski hâline döndürür. */
 function useOpenDetailsOnPrint(): void {
@@ -80,7 +65,11 @@ const InvestorContent = ({ onExit }: { onExit: () => void }) => {
 
   return (
     <>
-      <InvestorNav sections={INVESTOR_SECTIONS} onExit={onExit} />
+      <InvestorNav
+        sections={INVESTOR_SECTIONS}
+        onExit={onExit}
+        crossLink={{ to: ARCHITECTURE_PATH, label: "Teknik Mimari" }}
+      />
       <main>
         <InvestorHero />
         <InvestorSectionShell section={sectionById("ozellikler")}>

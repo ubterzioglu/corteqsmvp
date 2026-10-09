@@ -17,7 +17,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import PublicLayout from "@/components/PublicLayout";
 import RouteLoadingFallback from "@/components/RouteLoadingFallback";
 import { RouterAppErrorBoundary } from "@/components/AppErrorBoundary";
-import { INVESTOR_PATH, isInvestorPath } from "@/lib/investor/investor-route";
+import { ARCHITECTURE_PATH, INVESTOR_PATH, isInvestorPath } from "@/lib/investor/investor-route";
 
 // Eager — SEO-critical above-the-fold pages
 import Index from "./pages/Index.tsx";
@@ -87,6 +87,7 @@ const VipInvitationPage = lazyWithReload(() => import("@/pages/VipInvitationPage
 // Yatırımcı sayfası — PublicLayout DIŞINDA, kendi tasarımıyla (docs/investor/README.md)
 const InvestorPage = lazyWithReload(() => import("@/pages/investor/InvestorPage"));
 const InformationRedirect = lazyWithReload(() => import("@/pages/investor/InformationRedirect"));
+const ArchitecturePage = lazyWithReload(() => import("@/pages/investor/ArchitecturePage"));
 const NotificationPreferencesPage = lazyWithReload(() => import("@/pages/NotificationPreferencesPage"));
 const ContributorResourcesPage = lazyWithReload(() => import("@/pages/ContributorResourcesPage"));
 const EventsPage = lazyWithReload(() => import("@/pages/EventsPage"));
@@ -366,6 +367,8 @@ const App = () => (
                   <Route path="/whatsapp-groups/:id" element={<WhatsAppGroupDetailRedirect />} />
                   {/* Yatırımcı sayfası: layout'suz, noindex, şifreli; sitemap'e GİRMEZ. */}
                   <Route path={INVESTOR_PATH} element={<InvestorPage />} />
+                  {/* Teknik mimari / CTO özeti: aynı parola kapısı; statik yol :slug'dan önce eşleşir. */}
+                  <Route path={ARCHITECTURE_PATH} element={<ArchitecturePage />} />
                   {/* Bize ait olmayan ekosistem adreslerinin kendi kısa yolları (sabit tablo). */}
                   <Route path={`${INVESTOR_PATH}/:slug`} element={<InformationRedirect />} />
                   {adminRoutes}
