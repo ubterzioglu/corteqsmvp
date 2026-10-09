@@ -113,6 +113,32 @@ export const INVESTOR_SECTIONS: readonly InvestorSection[] = [
     lead:
       "Teknoloji danışmanlığı için dürüst bir başlangıç noktası. Temeller sağlam; büyüme evresinde stratejik yön ve deneyimin en çok değer katacağı alanlar da açıkça bellidir.",
   },
+  {
+    id: "baglantilar",
+    eyebrow: "07 · Bağlantılar",
+    title: "Ekosistemi canlı inceleyin",
+    lead: "Girişim stüdyosundan ürünün canlı yüzeylerine kadar, anlatılanların hepsi şu an yayında.",
+  },
+];
+
+export interface EcosystemLink {
+  readonly title: string;
+  readonly text: string;
+  readonly url: string;
+}
+
+/** 07 · Bağlantılar — hepsi herkese açık adresler. */
+export const ECOSYSTEM_LINKS: readonly EcosystemLink[] = [
+  { title: "Venture Studio", text: "Qualtron Sinclair — QS Networks", url: "https://www.qualtronsinclair.com/qs-networks" },
+  { title: "CorteQS Türk", text: "Ana platform", url: "https://corteqs.net" },
+  { title: "CorteQS Product", text: "Global ürün prototipi", url: "https://global-diaspora-connect.lovable.app" },
+  { title: "CorteQS Sosyal Medya", text: "Cadde — diaspora sosyal akışı", url: "https://corteqs.net/cadde" },
+  { title: "İş İlanları", text: "Diaspora iş ilanları", url: "https://corteqs.net/ilanlar" },
+  { title: "Kariyer", text: "CorteQS ekibine katılım", url: "https://corteqs.net/kariyer" },
+  { title: "Tavsiye İste", text: "Topluluktan öneri alma", url: "https://corteqs.net/tavsiye" },
+  { title: "Liderlik Tablosu", text: "Davet ve katkı sıralaması", url: "https://corteqs.net/liderlik" },
+  { title: "Topluluk Ekle", text: "Grup ve topluluk kaydı", url: "https://corteqs.net/addcom" },
+  { title: "Dizin", text: "Uzman, işletme ve kurum dizini", url: "https://corteqs.net/directory" },
 ];
 
 export const HERO = {

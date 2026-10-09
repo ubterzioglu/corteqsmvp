@@ -131,6 +131,10 @@ inceleyen ajanlar ayrı · önce ölç sonra yaz · kurumsal hafıza repoda.
 **Önerilen danışmanlık gündemi:** platform ölçek stratejisi · YZ stratejisi ve yönetişimi ·
 güvenlik ve uyum yol haritası · ödeme ve kurumsal entegrasyonlar · mühendislik organizasyonu.
 
+## 07 · Bağlantılar — Ekosistemi canlı inceleyin
+
+Venture Studio (qualtronsinclair.com/qs-networks) · CorteQS Türk (corteqs.net) · CorteQS Product (global-diaspora-connect.lovable.app) · Sosyal Medya (/cadde) · İş İlanları (/ilanlar) · Kariyer (/kariyer) · Tavsiye İste (/tavsiye) · Liderlik Tablosu (/liderlik) · Topluluk Ekle (/addcom) · Dizin (/directory). Hepsi yeni sekmede açılır.
+
 ## Kapanış
 
 **Ürün yol haritası:** Dijital Gruplar (telefon + kurumsal doğrulama) · Topluluk motorunun

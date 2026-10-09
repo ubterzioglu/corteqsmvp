@@ -23,6 +23,7 @@ import InfraDiagram from "@/components/investor/InfraDiagram";
 import MetricTile from "@/components/investor/MetricTile";
 import QualityGates from "@/components/investor/QualityGates";
 import HandoverGrid from "@/components/investor/HandoverGrid";
+import EcosystemLinks from "@/components/investor/EcosystemLinks";
 import InvestorClosing from "@/components/investor/InvestorClosing";
 import "./investor-theme.css";
 
@@ -113,6 +114,9 @@ const InvestorContent = ({ onExit }: { onExit: () => void }) => {
         </InvestorSectionShell>
         <InvestorSectionShell section={sectionById("danismanlik")}>
           <HandoverGrid />
+        </InvestorSectionShell>
+        <InvestorSectionShell section={sectionById("baglantilar")}>
+          <EcosystemLinks />
         </InvestorSectionShell>
       </main>
       <InvestorClosing />

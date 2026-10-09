@@ -605,6 +605,33 @@
   color: var(--inv-on-navy-muted);
 }
 
+/* ---------- Bağlantılar ---------- */
+.inv-link {
+  display: block;
+  text-decoration: none;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.inv-link:hover {
+  border-color: var(--inv-accent);
+  transform: translateY(-2px);
+}
+
+.inv-link__icon {
+  flex-shrink: 0;
+  color: var(--inv-accent);
+}
+
+.inv-link .inv-card__text {
+  margin-bottom: 10px;
+}
+
+.inv-link__url {
+  font-size: 12px;
+  color: var(--inv-navy-500);
+  word-break: break-all;
+}
+
 /* ---------- Kalite kapıları ---------- */
 .inv-gates {
   display: grid;

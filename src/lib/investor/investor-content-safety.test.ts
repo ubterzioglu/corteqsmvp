@@ -38,8 +38,15 @@ const FORBIDDEN: readonly { label: string; pattern: RegExp }[] = [
   { label: "proje referansı", pattern: /\bproject[_ -]?ref\b/i },
 ];
 
-// İzinli alan adları: iletişim adresi ve sayfanın yüklediği yazı tipi servisi.
-const ALLOWED_DOMAINS = new Set(["corteqs.net", "fonts.googleapis.com", "fonts.gstatic.com"]);
+// İzinli alan adları: iletişim adresi, yazı tipi servisi ve 07 · Bağlantılar'daki
+// herkese açık ekosistem adresleri. Yeni adres eklerken BİLİNÇLİ olarak buraya yaz.
+const ALLOWED_DOMAINS = new Set([
+  "corteqs.net",
+  "fonts.googleapis.com",
+  "fonts.gstatic.com",
+  "qualtronsinclair.com",
+  "global-diaspora-connect.lovable.app",
+]);
 const DOMAIN = /\b(?:[a-z0-9-]+\.)+(?:net|com|co|io|in|dev|app|org|cloud)\b/gi;
 
 describe("yatırımcı sayfası — hassas içerik yasağı", () => {
