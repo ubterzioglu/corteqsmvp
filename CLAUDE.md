@@ -663,6 +663,22 @@ Tavsiye İste (`/tavsiye`, M20), davet/liderlik (`/liderlik`, M12). Sözleşme k
 3. Bilinçli istisna: **`cadde.access`** — Cadde rotaları flag arkasında KALIR (ürün
    kararı; ücretsizlik kapsamı dışında). Test bu istisnayı ayrıca kilitler.
 
+## Yatırımcı / teknik danışman sayfası (`/yatirimci` — 2026-10-09)
+
+Siteden bağımsız tasarımlı (lacivert + açık), parolalı teknik tanıtım sayfası. Rehber:
+`docs/investor/README.md` · içerik taslağı: `docs/investor/icerik-taslagi.md`.
+
+1. **Parola istemci taraflıdır, gerçek kilit DEĞİLDİR** (PBKDF2 doğrulayıcısı `env-config.js`'te,
+   içerik JS paketinde). Sayfaya proje kimliği, host/IP, tablo/RPC/secret adı, açık kusur, kapasite
+   zaafı YAZILMAZ — `investor-content-safety.test.ts` tarar, gevşetme.
+2. `PublicLayout` **dışında**; noindex; sitemap/`robots.txt`/`DEMO_ROUTES`'a GİRMEZ
+   (`investor-route-contract.test.ts`).
+3. Parola doğrulayıcısı `npm run investor:hash` ile üretilir (`pbkdf2:<iter>:<tuz>:<özet>`);
+   Coolify env `INVESTOR_PASS_HASH` (çalışma anı, `docker-entrypoint-env.sh` biçimi süzer) —
+   yoksa sayfa açılmaz. Yerelde `VITE_INVESTOR_PASS_HASH`. Düz SHA-256'ya geri DÖNME.
+4. Repo rakamları `npm run investor:stats` ile üretilir; canlı DB rakamları `LIVE_DB` içinde
+   ölçüm tarihiyle durur. Elle rakam yazma.
+
 ## Değişmez sözleşmeler (ZORUNLU — 2026-08-04)
 
 Bu beş kural 2026-08-04 modernizasyon çalışmasında ölçülerek konuldu. Her biri sessizce

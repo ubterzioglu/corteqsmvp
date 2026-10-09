@@ -51,6 +51,7 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 | `security/` | Güvenlik denetimi, kullanım envanteri |
 | `refactor/` | Refactor backlog'u |
 | `dijital-gruplar/` | Dijital Gruplar politika v1.1 ve motor tasarımı (kaynak: `CLAUDE.md` ilgili bölümü) |
+| `investor/` | Parolalı yatırımcı / teknik danışman sayfası (`/yatirimci`): işletim rehberi + içerik taslağı |
 | `agent/` | Ajan araç kataloğu (`tools.json`, `openapi.yaml`) — `npm run ingest:tools:check` ile üretilir/denetlenir, elle düzenleme |
 | `status/` | Durum panoları |
 | `stripe/` | Stripe demo/mock ödeme rehberleri |

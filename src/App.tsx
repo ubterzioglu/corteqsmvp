@@ -17,6 +17,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import PublicLayout from "@/components/PublicLayout";
 import RouteLoadingFallback from "@/components/RouteLoadingFallback";
 import { RouterAppErrorBoundary } from "@/components/AppErrorBoundary";
+import { INVESTOR_PATH, isInvestorPath } from "@/lib/investor/investor-route";
 
 // Eager — SEO-critical above-the-fold pages
 import Index from "./pages/Index.tsx";
@@ -83,6 +84,8 @@ const AssociationDetail = lazyWithReload(() => import("@/pages/AssociationDetail
 const HospitalAppointment = lazyWithReload(() => import("@/pages/HospitalAppointment"));
 const IndependentProfilePage = lazyWithReload(() => import("@/pages/IndependentProfilePage"));
 const VipInvitationPage = lazyWithReload(() => import("@/pages/VipInvitationPage"));
+// Yatırımcı sayfası — PublicLayout DIŞINDA, kendi tasarımıyla (docs/investor/README.md)
+const InvestorPage = lazyWithReload(() => import("@/pages/investor/InvestorPage"));
 const NotificationPreferencesPage = lazyWithReload(() => import("@/pages/NotificationPreferencesPage"));
 const ContributorResourcesPage = lazyWithReload(() => import("@/pages/ContributorResourcesPage"));
 const EventsPage = lazyWithReload(() => import("@/pages/EventsPage"));
@@ -126,6 +129,19 @@ const FoundersCombinedPage = () => (
 const InviteRedemption = () => {
   useInviteRedemption();
   return null;
+};
+
+// Sitenin yüzen bileşenleri. Yatırımcı sayfası siteden bağımsız tasarımdır;
+// orada asistan balonu ve yukarı-çık düğmesi çizilmez.
+const FloatingWidgets = () => {
+  const { pathname } = useLocation();
+  if (isInvestorPath(pathname)) return null;
+  return (
+    <>
+      <ScrollTopButton />
+      <AssistantBubble />
+    </>
+  );
 };
 
 const App = () => (
@@ -347,11 +363,12 @@ const App = () => (
                   ))}
                   {/* Parametre/query taşıdığı için tabloya sığmayanlar (DYNAMIC_LEGACY_REDIRECTS). */}
                   <Route path="/whatsapp-groups/:id" element={<WhatsAppGroupDetailRedirect />} />
+                  {/* Yatırımcı sayfası: layout'suz, noindex, şifreli; sitemap'e GİRMEZ. */}
+                  <Route path={INVESTOR_PATH} element={<InvestorPage />} />
                   {adminRoutes}
                 </Routes>
               </Suspense>
-              <ScrollTopButton />
-              <AssistantBubble />
+              <FloatingWidgets />
             </AuthProvider>
           </DiasporaProvider>
         </RouterAppErrorBoundary>

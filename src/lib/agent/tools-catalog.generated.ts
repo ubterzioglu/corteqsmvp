@@ -22,7 +22,10 @@ export const toolCatalog = {
         "ai:embed",
         "ai:faq",
         "ai:faq:check",
+        "ai:full",
+        "ai:full:check",
         "ai:ingest",
+        "ai:track",
         "build",
         "build:dev",
         "catalog:embed",
@@ -45,6 +48,9 @@ export const toolCatalog = {
         "ingest:admin-menu",
         "ingest:tools",
         "ingest:tools:check",
+        "investor:hash",
+        "investor:stats",
+        "investor:stats:check",
         "lint",
         "migrate:apply",
         "onboarding:import",
@@ -2933,6 +2939,11 @@ export const toolCatalog = {
       "module_family": "cadde"
     },
     {
+      "path": "src/lib/cadde-people-search-schema.test.ts",
+      "kind": "ts",
+      "module_family": "cadde"
+    },
+    {
       "path": "src/lib/cadde-post-target-fold.test.ts",
       "kind": "ts",
       "module_family": "cadde"
@@ -3793,6 +3804,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/group-reports-deadline-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/group-reports-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -3859,6 +3875,41 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/internal-links.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-access.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-access.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-content-safety.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-content.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-route-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-route.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/investor/investor-stats.generated.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4788,6 +4839,16 @@ export const toolCatalog = {
       "module_family": "catalog"
     },
     {
+      "path": "src/lib/role-structure-excel.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/role-structure-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/role-structure.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4938,12 +4999,22 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/traction-metrics-wau-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/use-seo-deps-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
       "path": "src/lib/user-invites-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/user-specialty-tags-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

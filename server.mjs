@@ -135,6 +135,8 @@ const writeRuntimeConfig = async () => {
     VITE_SUPABASE_PROJECT_ID: process.env.VITE_SUPABASE_PROJECT_ID ?? "",
     VITE_SUPABASE_PUBLISHABLE_KEY: process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "",
     VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL ?? "",
+    // Yatırımcı sayfası parola doğrulayıcısı (pbkdf2:<iter>:<tuz>:<özet>) — docs/investor/README.md
+    INVESTOR_PASS_HASH: process.env.INVESTOR_PASS_HASH ?? "",
   };
 
   await writeFile(
