@@ -1,4 +1,4 @@
-# `/yatirimci` — İçerik Taslağı (gözden geçirme için)
+# `/information` — İçerik Taslağı (gözden geçirme için)
 
 **Okuyucu:** Atınç Akçayöz — Chief Technology Advisor adayı. Kurumsal teknoloji, CIO/CTO
 geçmişi; yapay zekâ, fintech ve dijital platformlar odağı. Metin bu gözle yazıldı: pazarlama

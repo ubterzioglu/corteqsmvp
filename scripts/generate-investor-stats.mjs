@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Yatırımcı sayfası (/yatirimci) için REPO rakamlarını üretir.
+// Yatırımcı sayfası (/information) için REPO rakamlarını üretir.
 //
 // NEDEN: CLAUDE.md'deki elle yazılmış rakamlar defalarca bayatladı. Yatırımcıya
 // gösterilen sayı ölçülmüş olmalı; bu script `git ls-files` üzerinden sayar

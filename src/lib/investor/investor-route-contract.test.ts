@@ -15,11 +15,11 @@ describe("yatırımcı rotası", () => {
   const app = read("src/App.tsx");
 
   it("yol sabittir", () => {
-    expect(INVESTOR_PATH).toBe("/yatirimci");
-    expect(isInvestorPath("/yatirimci")).toBe(true);
-    expect(isInvestorPath("/yatirimcilar")).toBe(false);
+    expect(INVESTOR_PATH).toBe("/information");
+    expect(isInvestorPath("/information")).toBe(true);
+    expect(isInvestorPath("/informations")).toBe(false);
     // Alt yol rota ile eşleşmez (NotFound çizilir) → yüzen bileşenler de gizlenmemeli.
-    expect(isInvestorPath("/yatirimci/x")).toBe(false);
+    expect(isInvestorPath("/information/x")).toBe(false);
   });
 
   it("PublicLayout DIŞINDA tanımlıdır (sitenin üst/alt bilgisi çizilmez)", () => {
@@ -42,9 +42,9 @@ describe("yatırımcı rotası", () => {
   });
 
   it("sitemap üreticisinde ve robots.txt'te yolu ifşa edilmez", () => {
-    expect(read("scripts/generate-sitemap.mjs")).not.toContain("yatirimci");
+    expect(read("scripts/generate-sitemap.mjs")).not.toContain(INVESTOR_PATH);
     if (existsSync(path.join(ROOT, "public/robots.txt"))) {
-      expect(read("public/robots.txt")).not.toContain("yatirimci");
+      expect(read("public/robots.txt")).not.toContain(INVESTOR_PATH);
     }
   });
 

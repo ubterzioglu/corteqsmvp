@@ -663,7 +663,7 @@ Tavsiye İste (`/tavsiye`, M20), davet/liderlik (`/liderlik`, M12). Sözleşme k
 3. Bilinçli istisna: **`cadde.access`** — Cadde rotaları flag arkasında KALIR (ürün
    kararı; ücretsizlik kapsamı dışında). Test bu istisnayı ayrıca kilitler.
 
-## Yatırımcı / teknik danışman sayfası (`/yatirimci` — 2026-10-09)
+## Yatırımcı / teknik danışman sayfası (`/information` — 2026-10-09)
 
 Siteden bağımsız tasarımlı (lacivert + açık), parolalı teknik tanıtım sayfası. Rehber:
 `docs/investor/README.md` · içerik taslağı: `docs/investor/icerik-taslagi.md`.

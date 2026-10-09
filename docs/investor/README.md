@@ -1,4 +1,4 @@
-# Yatırımcı / Teknik Danışman Sayfası (`/yatirimci`)
+# Yatırımcı / Teknik Danışman Sayfası (`/information`)
 
 Platformun teknik olgunluğunu (Featurlar · Teknolojiler · Serverlar · Database · Kodlar ·
 Teknik Danışmanlık) anlatan, siteden **bağımsız tasarımlı** (lacivert + açık zemin) ve

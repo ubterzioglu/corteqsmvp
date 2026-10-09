@@ -1,4 +1,4 @@
-// Yatırımcı sayfası (/yatirimci) içeriği — TEK KAYNAK.
+// Yatırımcı sayfası (/information) içeriği — TEK KAYNAK.
 //
 // ⚠️ GÜVENLİK SINIRI: sayfa istemci taraflı parolayla korunur, gerçek kilit
 // değildir. Buraya ASLA yazılmaz: proje kimliği, host/IP, bağlantı adresleri,
