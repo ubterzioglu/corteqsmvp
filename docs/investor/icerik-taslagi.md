@@ -30,7 +30,7 @@ taslak da güncellenir. Sayılar 2026-10-09 ölçümüdür.
 |---|---|---|
 | 11 | ürün modülü | 8'i canlıda |
 | 292 | veritabanı tablosu | 525 güvenlik politikası |
-| 490 | otomatik test dosyası | 11 uçtan uca senaryo |
+| 496 | otomatik test dosyası | 11 uçtan uca senaryo |
 | 19 | sunucu fonksiyonu | olay ve yapay zekâ işleri |
 
 ## 01 · Featurlar — Platformun yaptığı işler
@@ -107,7 +107,7 @@ sapma kontrolü, şema anlık görüntüsü).
 Kalite rakamları elle yazılmaz, araçlarla ölçülür. Her değişiklik otomatik kalite hattından
 geçer; sessizce bozulabilecek her kritik kural bir sözleşme testiyle kilitlidir.
 
-| 1.039 kaynak dosya | 152 bin satır üretim kodu | 490 test dosyası | 67 ayrı yüklenen sayfa paketi |
+| 1.055 kaynak dosya | 152 bin satır üretim kodu | 496 test dosyası | 67 ayrı yüklenen sayfa paketi |
 |---|---|---|---|
 
 Kalite kapıları: CI her değişiklikte · CI aksiyonları özete sabitli (tedarik zinciri) ·

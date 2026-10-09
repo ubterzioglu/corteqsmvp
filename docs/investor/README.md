@@ -109,7 +109,7 @@ union all select 'extensions', count(*) from pg_extension;
 | Tarih | Kaynak | Değerler |
 |---|---|---|
 | 2026-10-09 | canlı katalog | 292 tablo (291 RLS) · 525 politika · 412 security-definer · 836 indeks · 146 trigger · 14 aktif cron · 11 eklenti · 82/78 rol · 59 alan · 64 özellik |
-| 2026-10-09 | `investor:stats` | 1.039 kaynak dosya · ~152 bin satır · 490 test dosyası · 11 E2E · 19 edge function · 529 migration |
+| 2026-10-09 | `investor:stats` | 1.055 kaynak dosya · ~152 bin satır · 496 test dosyası · 11 E2E · 19 edge function · 529 migration |
 
 ## Yazdırma / PDF
 
