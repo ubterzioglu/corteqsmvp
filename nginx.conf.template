@@ -138,6 +138,8 @@ server {
   location = /strategic-partner     { return 301 /commercial/strategic-partner$is_args$args; }
   location = /community-leader      { return 301 /commercial/community-leader$is_args$args; }
   location = /ambassador            { return 301 /commercial/ambassador$is_args$args; }
+  location = /dunya-kupasi          { return 301 /campaign$is_args$args; }
+  location = /dunya-kupasi/kayit    { return 301 /campaign$is_args$args; }
   location = /auth                  { return 301 /login$is_args$args; }
 
   # Parametreli: /whatsapp-groups/<id> → /addcom?group=<id>

@@ -46,6 +46,10 @@ export const LEGACY_REDIRECTS: readonly LegacyRedirect[] = [
   { from: "/strategic-partner", to: "/commercial/strategic-partner" },
   { from: "/community-leader", to: "/commercial/community-leader" },
   { from: "/ambassador", to: "/commercial/ambassador" },
+  // Dünya Kupası kampanyası 2026-07-18'de kaldırıldı; GSC bu iki adresi hâlâ tarıyor ve
+  // NotFound kabuğu (200 + noindex) soft-404 sayılıyordu (ölçüldü 2026-10-10).
+  { from: "/dunya-kupasi", to: "/campaign" },
+  { from: "/dunya-kupasi/kayit", to: "/campaign" },
 ] as const;
 
 /**

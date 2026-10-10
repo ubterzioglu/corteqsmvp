@@ -58,6 +58,8 @@ const legacyRedirectMap = new Map([
   ["/strategic-partner", "/commercial/strategic-partner"],
   ["/community-leader", "/commercial/community-leader"],
   ["/ambassador", "/commercial/ambassador"],
+  ["/dunya-kupasi", "/campaign"],
+  ["/dunya-kupasi/kayit", "/campaign"],
   ["/auth", "/login"],
 ]);
 

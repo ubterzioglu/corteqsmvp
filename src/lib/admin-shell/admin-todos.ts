@@ -26,6 +26,22 @@ export type AdminTodoEntry = {
 
 export const ADMIN_TODOS: AdminTodoEntry[] = [
   {
+    id: "20261010-coolify-http-https-yonlendirme",
+    title: "Coolify: http:// adresleri 404 dönüyor — HTTPS yönlendirmesini aç",
+    description:
+      "http://corteqs.net/ ve http://www.corteqs.net/ adresleri siteye hiç ulaşmıyor; önündeki vekil (Traefik) '404 page not found' dönüyor (ölçüldü 10 Ekim). Google bu iki adresi 404 raporunda gösteriyor. Coolify'da uygulamanın Domains alanında adreslerin https:// ile yazılı olduğunu ve HTTP→HTTPS yönlendirmesinin (Force HTTPS) açık olduğunu kontrol et, kaydet ve yeniden yayınla. Sonra iki adresi tarayıcıda http:// ile aç; https'e geçmeli. Ardından Search Console 404 raporunda 'Doğrulamayı başlat'a basılabilir. Ayrıntı: docs/audits/2026-10-10-gsc-indeksleme-raporu.md",
+    priority: "kritik",
+    actions: [{ label: "http://corteqs.net/ adresini dene", href: "http://corteqs.net/" }],
+  },
+  {
+    id: "20261010-blog-sablon-yazilari-ayristir",
+    title: "Blog: ülke×konu şablon yazılarını ayrıştır, ince yazıları genişlet",
+    description:
+      "Google iki blog yazısını (ingiltere-vatandaslik, almanya-oturum-izni) 'kopya' sayıp dizine almadı; iki grup katalog sayfası ve /commercial/influencer-partner de 'tarandı, dizine eklenmedi' durumunda. Teknik ayar doğru (her sayfa kendini kanonik gösteriyor); sorun içerik: ABD/Almanya/BAE/İngiltere × oturum izni/vatandaşlık yazıları aynı kalıptan çıkmış, ingiltere-vatandaslik yalnız 227 kelime. Önce 30 yazının kelime sayısını listele, 400 kelimenin altındakileri ülkeye özgü bilgiyle genişlet.",
+    priority: "normal",
+    actions: [{ label: "Rehberleri Aç", to: "/radar/rehberler" }],
+  },
+  {
     id: "20260731-hos-geldin-anahtarini-ac",
     title: "Hoş geldin mailini yayına al",
     description:

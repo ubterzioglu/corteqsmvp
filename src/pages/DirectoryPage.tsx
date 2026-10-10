@@ -335,7 +335,10 @@ const DirectoryPage = () => {
             </p>
             <div className="mt-3">
               <Button asChild size="sm">
-                <a href={`/login?next=${encodeURIComponent(`/directory?${searchParams.toString()}`)}`}>
+                <a
+                  href={`/login?next=${encodeURIComponent(`/directory?${searchParams.toString()}`)}`}
+                  rel="nofollow"
+                >
                   Giriş Yap
                 </a>
               </Button>

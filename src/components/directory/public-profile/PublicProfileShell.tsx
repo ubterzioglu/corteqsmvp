@@ -97,7 +97,9 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
     if (!user) {
       return (
         <Button asChild className="min-h-[44px] rounded-full sm:min-h-9">
-          <Link to={loginHref}>
+          {/* nofollow: her profil ayrı bir /login?next=… URL'si üretiyor; GSC bunları
+              noindex sayfa olarak tarıyordu (2026-10-10, ≈20 URL). */}
+          <Link to={loginHref} rel="nofollow">
             <PenLine className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
             Düzenleme Yetkisi Talep Et
           </Link>

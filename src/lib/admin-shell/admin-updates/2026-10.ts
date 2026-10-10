@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
+    id: "20261010-gsc-indeksleme-raporlari",
+    date: "10 Ekim 2026",
+    title: "Google Search Console'un altı 'dizine eklenmedi' raporu incelendi: tek gerçek arıza http:// adresleri",
+    items: [
+      "KISACA: Search Console'daki altı rapor (noindex 37 · başka kanonik 22 · 404 9 · yönlendirme 5 · kopya 2 · tarandı-eklenmedi 4) tek tek ölçüldü. Çoğu doğru davranış; bir gerçek arıza, bir küçük düzeltme ve bir içerik işi çıktı.",
+      "GERÇEK ARIZA: http://corteqs.net/ ve http://www.corteqs.net/ siteye ulaşmıyor, önündeki vekil 404 dönüyor. Bu kod değil Coolify ayarı; Yapılacaklar listesine kritik madde olarak eklendi.",
+      "DÜZELTİLDİ: Kaldırılan Dünya Kupası kampanyasının iki adresi (/dunya-kupasi, /dunya-kupasi/kayit) 'sayfa bulunamadı' gösteriyordu; artık kalıcı olarak /campaign'e yönleniyor. Profil ve dizin sayfalarındaki giriş bağlantılarına 'takip etme' (nofollow) işareti kondu; Google her profil için ayrı bir giriş adresi tarayıp listeye yazıyordu.",
+      "DOĞRU OLANLAR (dokunma): /tools/... araç sayfaları üyeye özel (28 Temmuz kararı) — noindex raporunda 'Doğrulamayı başlat'a BASILMAMALI. Giriş sayfası, /cadde, süresi dolmuş anket, www/mvp adresleri ve ?group=/?role= gibi parametreli adresler beklendiği gibi davranıyor. /addwa, /hakkimizda, /blog gibi eski adreslerin 404 görünmesi 5 Ekim'den önceki taramadan; bugün hepsi doğru yönleniyor.",
+      "İÇERİK İŞİ: İki blog yazısı Google'a göre birbirinin kopyası (aynı kalıptan çıkmış ülke×konu yazıları). Yapılacaklar listesine eklendi. Ayrıntı: docs/audits/2026-10-10-gsc-indeksleme-raporu.md",
+    ],
+  },
+  {
     id: "20261006-dokuman-duzenleme",
     date: "6 Ekim 2026",
     title: "Doküman düzenlemesi: depo kökü ve docs klasörü toparlandı — sitede hiçbir şey değişmedi",
