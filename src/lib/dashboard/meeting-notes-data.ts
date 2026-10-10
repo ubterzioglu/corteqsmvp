@@ -24,6 +24,7 @@ export type MeetingSource =
   | 'T20'
   | 'T21'
   | 'T22'
+  | 'T23'
   | 'WA'
   | 'NO'
   | 'MAN'
@@ -85,6 +86,7 @@ export const MEETING_SOURCES: MeetingNoteSource[] = [
   // ⚠️ T22 tarihi T20/T21'den ÖNCEDİR: 17 Eylül sonradan eklendiği için sıradaki
   // boş kodu aldı. Kod sırası = ekleme sırası, tarih sırası DEĞİL.
   { key: 'T22', label: 'Toplantı 22 (hazırlık notu)', date: '17 Eylül 2026' },
+  { key: 'T23', label: 'Toplantı 23', date: '9 Ekim 2026' },
   { key: 'WA', label: 'WhatsApp Yazışmaları', date: '13-24 Nisan WA' },
   { key: 'NO', label: 'Notion Kararlar', date: '17 Nisan' },
   { key: 'MAN', label: 'Manuel', date: 'Dashboard' },
@@ -113,6 +115,7 @@ export const SOURCE_COLORS: Record<MeetingSource, string> = {
   T20: '#1D4ED8',
   T21: '#7C2D12',
   T22: '#6D28D9',
+  T23: '#B45309',
   WA: '#FA7B17',
   NO: '#8B5CF6',
   MAN: '#1A73E8',
