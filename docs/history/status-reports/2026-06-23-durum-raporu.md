@@ -334,7 +334,7 @@ Planlanan ortak arayüz / altyapı işleri:
   - `https://wa.me/message/corteqs`
 - Varsayım:
   - resmi public community link:
-    - `https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD`
+    - `https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib`
 
 #### 2. Route-specific SEO
 - Mevcut helper ile route bazlı SEO uygulanacak
@@ -493,7 +493,7 @@ Yeni test kapsamı şu maddeleri doğrulamalı:
 
 - Teslimat 2 commit / 2 wave olarak kalır
 - Resmi public community WhatsApp linki:
-  - `https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD`
+  - `https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib`
 - Repo genelindeki eski lint borcu bu audit kapsamı dışındadır
 - Geçmiş migration dosyaları immutable history kabul edilir
 - Production temizlikleri yeni manual SQL dosyalarıyla yapılır
