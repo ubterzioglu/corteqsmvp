@@ -116,6 +116,7 @@ const AssistantBubble = () => {
         <img
           src="/lmaskog.png"
           alt=""
+          role="presentation"
           aria-hidden="true"
           className="h-full w-full rounded-full object-cover"
         />

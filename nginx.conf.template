@@ -21,6 +21,15 @@ map "$is_bot:$prerender_excluded" $prerender_target {
   "1:0" "__PRERENDER_URL__";
 }
 
+# Markdown içerik pazarlığı (GEO, 2026-10-11): `Accept: text/markdown` ile gelen
+# ana sayfa isteğine llms.txt `text/markdown` olarak döner. Bu başlığı tarayıcılar
+# GÖNDERMEZ; yalnız markdown isteyen AI ajanları gönderir. Ad bilinçli olarak dar
+# (envsubst çakışması, bkz. $corteqs_csp).
+map $http_accept $corteqs_wants_markdown {
+  default 0;
+  "~*text/markdown" 1;
+}
+
 # ── Content-Security-Policy (tek kaynak) ─────────────────────────────────────
 # Aşağıdaki location'ların HEPSİ bu değişkeni kullanır. Politika metni uzun olduğu
 # için burada tek kez tanımlanır; böylece bir host'a izin verilirken beş ayrı yeri
@@ -218,6 +227,27 @@ server {
       rewrite ^ /__prerender_internal last;
     }
     rewrite ^ /index.html last;
+  }
+
+  # Ana sayfa: markdown isteyen ajana llms.txt, diğer herkese `location /` ile AYNI
+  # davranış (prerender kapısı + SPA kabuğu). İkisinde de add_header YOKTUR → güvenlik
+  # başlıkları server bloğundan miras gelir; add_header eklersen güvenlik bloğunu kopyala.
+  location = / {
+    if ($corteqs_wants_markdown) {
+      rewrite ^ /__llms_markdown last;
+    }
+    if ($prerender_target != 0) {
+      rewrite ^ /__prerender_internal last;
+    }
+    rewrite ^ /index.html last;
+  }
+
+  location = /__llms_markdown {
+    internal;
+    alias /usr/share/nginx/html/llms.txt;
+    types { }
+    default_type text/markdown;
+    charset_types text/markdown;
   }
 
   # Prerender (SEO/GEO): bot + __PRERENDER_URL__ doluysa, isteği prerender servisine

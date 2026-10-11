@@ -78,6 +78,16 @@
     "professional networking for expats",
     "business connections for diaspora"
   ],
+  "capabilities": [
+    "Diaspora dizini: danışman, işletme, dernek ve şehir elçilerini şehir, meslek veya isimle arama (girişsiz açık)",
+    "Uzman bulma: vize, oturum, emlak, vergi, hukuk ve kariyer danışmanlarıyla bağlantı",
+    "Şehir elçisi programı: her şehirde yerel topluluk temsilcileri",
+    "Etkinlik takvimi: diaspora etkinliklerini listeleme ve ücretsiz etkinlik ekleme",
+    "Topluluk grupları dizini: WhatsApp diaspora gruplarını bulma ve yeni grup ekleme",
+    "Yurt dışı yaşam araçları: taşınma, banka, sigorta ve vatandaşlık hazırlığı için hesaplayıcı ve değerlendirme araçları (https://corteqs.net/tools)",
+    "Rehberler ve blog: ülke ve şehir bazlı yaşam, oturum ve kariyer yazıları (RSS: https://corteqs.net/rss.xml)",
+    "Site asistanı: platform ve dizin hakkında Türkçe soru-cevap"
+  ],
   "inLanguage": "tr",
   "termsOfService": "https://corteqs.net/legal/terms",
   "privacyPolicy": "https://corteqs.net/legal/privacy"

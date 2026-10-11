@@ -91,7 +91,12 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
             <TypeIcon className="h-3 w-3" />
             {marqueeTypeLabels[itemType]}
           </span>
-          <time className="shrink-0 text-[11px] text-muted-foreground">{formatDate(item.published_at)}</time>
+          <time
+            dateTime={item.published_at ?? undefined}
+            className="shrink-0 text-[11px] text-muted-foreground"
+          >
+            {formatDate(item.published_at)}
+          </time>
         </div>
 
         <h3 className="line-clamp-2 text-base font-bold leading-snug text-foreground">{item.title}</h3>

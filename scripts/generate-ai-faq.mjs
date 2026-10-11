@@ -63,7 +63,19 @@ export function buildFaqJson(faqPage) {
     name: question.name,
     acceptedAnswer: { "@type": "Answer", text: question.acceptedAnswer?.text },
   }));
-  const body = { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: questions };
+  // `faqs`: geo-checklist.dev biçimi (düz soru/cevap). JSON-LD tüketicileri bilinmeyen
+  // anahtarı yok sayar; düz liste okuyan ajanlar (ve GEO denetimi) mainEntity'yi
+  // tanımıyordu — 2026-10-11 denetimi "0 FAQs" saydı. Aynı kaynaktan üretilir.
+  const faqs = questions.map((question) => ({
+    question: question.name,
+    answer: question.acceptedAnswer.text,
+  }));
+  const body = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: questions,
+    faqs,
+  };
   return `${JSON.stringify(body, null, 2)}\n`;
 }
 

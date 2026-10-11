@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
+import { isPrerenderEnvironment } from "@/lib/prerender-agent";
+
 type RevealDirection = "up" | "left" | "right" | "none";
 
 interface RevealProps {
@@ -33,12 +35,14 @@ const offsetFor = (direction: RevealDirection): { x: number; y: number } => {
 /**
  * Scroll-reveal sarmalı. İçerik viewport'a girince bir kez fade + translate ile gelir.
  * `prefers-reduced-motion` açıkken hiç animasyon yapmaz — içerik anında görünür.
+ * Prerender'da da animasyon YOKTUR: headless tarayıcı kaydırmaz ve içerik bota
+ * `opacity: 0` ile gider (bkz. src/lib/prerender-agent.ts).
  */
 const Reveal = ({ children, delay = 0, direction = "up", className, as = "div" }: RevealProps) => {
   const reduceMotion = useReducedMotion();
   const MotionTag = motion[as];
 
-  if (reduceMotion) {
+  if (reduceMotion || isPrerenderEnvironment()) {
     const Tag = as;
     return <Tag className={className}>{children}</Tag>;
   }

@@ -37,6 +37,7 @@ const DiasporaMarqueeSection = () => {
             <img
               src="/radar-hero.png"
               alt=""
+              role="presentation"
               aria-hidden="true"
               loading="lazy"
               width={1376}

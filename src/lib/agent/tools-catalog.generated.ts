@@ -4215,6 +4215,11 @@ export const toolCatalog = {
       "module_family": "muhasebe"
     },
     {
+      "path": "src/lib/nginx-markdown-negotiation.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/org-verification-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4266,6 +4271,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/plans.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/prerender-agent.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/prerender-agent.ts",
       "kind": "ts",
       "module_family": "lib"
     },
