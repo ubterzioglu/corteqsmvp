@@ -553,6 +553,8 @@ if (calistirilanDosya === buDosya) {
 export {
   STATIC_ROUTES,
   escapeXml,
+  loadEnvLocal,
+  supabaseEnv,
   renderUrl,
   fetchAllRows,
   PAGE_SIZE,

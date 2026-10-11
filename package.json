@@ -10,9 +10,10 @@
   "scripts": {
     "predev": "npm run verify:text",
     "dev": "vite",
-    "prebuild": "npm run verify:text && npm run generate:sitemap && npm run ai:faq && npm run ai:full",
+    "prebuild": "npm run verify:text && npm run generate:sitemap && npm run generate:rss && npm run ai:faq && npm run ai:full",
     "build": "vite build",
     "generate:sitemap": "node scripts/generate-sitemap.mjs",
+    "generate:rss": "node scripts/generate-rss.mjs",
     "warm:prerender": "node scripts/warm-prerender.mjs",
     "ai:faq": "node scripts/generate-ai-faq.mjs",
     "ai:faq:check": "node scripts/generate-ai-faq.mjs --check",

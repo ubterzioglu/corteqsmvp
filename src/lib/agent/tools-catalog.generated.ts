@@ -38,6 +38,7 @@ export const toolCatalog = {
         "check:migrations:warn",
         "dev",
         "fx:refresh",
+        "generate:rss",
         "generate:sitemap",
         "import:command-center:may13",
         "import:command-center:may13:write",

@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
+import { stripHtmlCommentsPlugin } from "./scripts/strip-html-comments.mjs";
 
 // Commercial documents are rendered by the SPA at /commercial/<slug>
 // (CommercialDocumentPage + src/content/commercial/*.html fragments).
@@ -106,6 +107,8 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     commercialLegacyHtmlRedirects,
+    // index.html geliştirici yorumları dist/ çıktısına sızmasın (GEO 2026-10-11).
+    stripHtmlCommentsPlugin(),
     mode === "development" && componentTagger(),
     ViteImageOptimizer({
       png: { quality: 80 },
