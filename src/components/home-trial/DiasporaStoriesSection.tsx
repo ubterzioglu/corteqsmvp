@@ -8,26 +8,31 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
-import { listPublishedBlogPosts } from "@/lib/blog";
+import { listPublishedBlogPosts, type BlogPostRow } from "@/lib/blog";
+import { buildBlogPostingJsonLd } from "@/lib/blog-seo";
+import { SEO_DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { DiasporaStory } from "./home-trial.types";
 
 const STORY_LIMIT = 3;
 
 const DiasporaStoriesSection = () => {
   const [stories, setStories] = useState<DiasporaStory[]>([]);
+  const [posts, setPosts] = useState<BlogPostRow[]>([]);
 
   useEffect(() => {
     let mounted = true;
     listPublishedBlogPosts()
-      .then((posts) => {
+      .then((loadedPosts) => {
         if (!mounted) return;
-        const mapped: DiasporaStory[] = posts.slice(0, STORY_LIMIT).map((post) => ({
+        const sliced = loadedPosts.slice(0, STORY_LIMIT);
+        const mapped: DiasporaStory[] = sliced.map((post) => ({
           eyebrow: post.country_label || post.category_label || "CorteQS",
           title: post.title,
           excerpt: post.excerpt,
           to: `/blog/${post.slug}`,
         }));
         setStories(mapped);
+        setPosts(sliced);
       })
       .catch((error: unknown) => {
         console.error("Blog hikâyeleri yüklenemedi", error);
@@ -36,6 +41,23 @@ const DiasporaStoriesSection = () => {
       mounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (posts.length === 0) return;
+    const scripts: HTMLScriptElement[] = [];
+    posts.forEach((post) => {
+      const jsonLd = buildBlogPostingJsonLd(post, post.cover_image || SEO_DEFAULT_OG_IMAGE);
+      const script = document.createElement("script");
+      script.type = "application/ld+json";
+      script.setAttribute("data-home-blog", post.slug);
+      script.textContent = JSON.stringify(jsonLd);
+      document.head.appendChild(script);
+      scripts.push(script);
+    });
+    return () => {
+      scripts.forEach((script) => script.remove());
+    };
+  }, [posts]);
 
   // Gerçek içerik yoksa sahte sosyal kanıt göstermemek için bölümü gizle.
   if (stories.length === 0) {
