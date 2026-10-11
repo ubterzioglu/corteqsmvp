@@ -25,7 +25,7 @@ Eğlenceli 8 soruluk testimizle yurt dışı yaşam tarzı kişiliğini keşfet.
 👉 Ücretsiz kayıt olun!
 CorteQS, kişiliğine uyan diaspora kabilesini bulmana yardım ediyor; benzer ruhlar bir tık uzağında. Eğlen, bağlan, ait ol.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #KişilikTesti #YurtDışıYaşam #TürkDiasporası #Eğlence #CorteQS`,
       instagramPost: `✨ Sen bir "Küresel Networker" mısın yoksa "Sakin Yerli" mi? 👀
 
@@ -44,7 +44,7 @@ Yurt dışında yaşayanlar, siz kendinizi hangi tipe yakın buluyorsunuz — so
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Gece hayatı mı sakin kafeler mi? Solo gezi mi tur mu? Cevapların hangi expat 
 👉 Ücretsiz kayıt olun!
 CorteQS, seni sana benzeyen insanlarla buluşturan sıcak bir topluluk. Tarzın ne olursa olsun, yerin burada.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ExpatKişilik #YaşamTarzı #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `🎭 Gurbetteki tarzın seni ele veriyor, farkında mısın?
 
@@ -79,7 +79,7 @@ Siz taşındıktan sonra sosyal hayatınız/tarzınız değişti mi, yoksa hep a
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Macera Avcısı, Kozmopolit Networker, Huzurlu Yerli... Hangi tip sana uyuyor? E
 👉 Ücretsiz kayıt olun!
 CorteQS, kişiliğine en uygun toplulukları önererek gurbeti eğlenceli kılıyor. Kendini bul, çevreni kur.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YaşamTarzıTesti #YurtDışı #TürkDiasporası #Topluluk #CorteQS`,
       instagramPost: `🌟 Aynı şehirde yaşayıp bambaşka hayatlar kurarız, seninki hangisi?
 
@@ -114,7 +114,7 @@ Siz kendinizi bu üç tipten hangisine (ya da farklı bir tipe) yakın buluyorsu
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

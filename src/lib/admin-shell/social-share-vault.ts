@@ -82,7 +82,7 @@ CorteQS diye bir platform 80+ kategoride, 251 ülkeye yayılmış profilleri ara
 
 Site: corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -124,7 +124,7 @@ Amaç profil karıştırmayı azaltmak. Merak ettiğim: bu tür bir eşleştirme
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -166,7 +166,7 @@ Herhangi bir networking/topluluk platformunda profil detayını doldurmanın ger
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -208,7 +208,7 @@ CorteQS'in "Cadde" diye bir feed'i var; global bir akış değil, bulunduğun ş
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -250,7 +250,7 @@ Bu tür doğrulama mekanizmalarının bot/troll sorununu gerçekten azalttığı
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -292,7 +292,7 @@ Geri dönüş planlayan ya da Türkiye'den diasporaya ulaşmaya çalışan biri 
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -334,7 +334,7 @@ Bu tür zaman-sınırlı, sonra kapanan oda formatını deneyen oldu mu, katıl�
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -376,7 +376,7 @@ Yurt dışında yaşayanlar için: taşınma/eşya devretme gibi ihtiyaçlarda g
 
 corteqs.net/cadde/carsi
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -418,7 +418,7 @@ Küçük işletme sahibi olanlar: bu tür niş/yerel reklam alanlarına gerçekt
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -460,7 +460,7 @@ Küçük ölçekli topluluklarda moderasyon deneyimi olan var mı — kullanıc�
 
 corteqs.net/cadde
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },

@@ -25,7 +25,7 @@ Becerilerini, dilini ve sektör talebini girersek sana gerçekçi bir olasılık
 👉 Ücretsiz kayıt olun!
 CorteQS, iş arama yolculuğunu hem veriyle hem ağla güçlendiriyor; hedef ülkede seni bekleyen profesyoneller var. Doğru bağlantı, doğru iş.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İşBulma #Kariyer #TürkDiasporası #YurtDışıİş #CorteQS`,
       instagramPost: `📈 Hedef ülkende iş bulma şansın gerçekte ne kadar, merak ediyor musun?
 
@@ -44,7 +44,7 @@ Yurt dışında iş ararken sizi en çok şaşırtan şey ne oldu — beklediği
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette iş ararken seni mentorlar ve referanslarla buluşturuyor. Şans değil, hazırlık ve ağ kazandırır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İşArama #YurtDışıKariyer #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `💼 "Acaba beni işe alırlar mı?" sorusuna veriyle cevap ver!
 
@@ -79,7 +79,7 @@ Kendi alanınızda "böyle bir analiz yapılsa hangi eksiğim çıkardı" diye d
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Beceri-pazar uyumundan dil seviyene kadar değerlendirip o ülkede işe girme ih
 👉 Ücretsiz kayıt olun!
 CorteQS, kariyer hedefinde yalnız bırakmaz; her hedef ülkede sana kapı açacak bir diaspora ağı hazır. Birlikte daha şanslıyız.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İşOlasılığı #Kariyer #TürkDiasporası #YurtDışı #CorteQS`,
       instagramPost: `🚪 İş bulmak şans değil, strateji!
 
@@ -114,7 +114,7 @@ Siz iş ararken en çok neyle sonuç aldınız — dil seviyenizi geliştirmek m
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

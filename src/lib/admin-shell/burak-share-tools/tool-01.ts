@@ -25,7 +25,7 @@ export const BURAK_SHARE_TOOL_01: BurakShareTool = {
 👉 Ücretsiz kayıt olun!
 CorteQS, göç yolculuğunu şansa bırakmıyor; seni doğru ülkeyle ve oradaki Türk topluluğuyla buluşturuyor. Nerede olursan ol, kökenin hep yanında.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Göç #TürkDiasporası #ÜlkeSeçimi #YurtDışı #CorteQS`,
       instagramPost: `🌍 "Nereye taşınsam ki?" diye gece gece düşünmeyi bırak artık 😅
 
@@ -44,7 +44,7 @@ Böyle testlerin gerçekten işe yaradığını düşünüyor musunuz, yoksa son
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Hangi ülke senin için "mükemmel uyum"? CorteQS Ülke Seçimi Aracı; sağlık
 👉 Ücretsiz kayıt olun!
 CorteQS, dünyaya açılırken yalnız bırakmaz; testten çıkan her ülkede seni bekleyen bir diaspora ağı var. Güvenle keşfet, güvenle taşın.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ÜlkeSeçimi #Diaspora #GöçPlanı #TürkDiasporası #CorteQS`,
       instagramPost: `✈️ Aynı maaş, üç farklı ülkede üç farklı hayat demek — hangisi senin hayatın olacak?
 
@@ -79,7 +79,7 @@ Birden fazla ülkede yaşamış olanlar: aynı maaşla gerçekten en büyük far
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Bütçenden dil becerine, vize durumundan değerlerine kadar her şeyi hesaba ka
 👉 Ücretsiz kayıt olun!
 CorteQS, en doğru kararı verebilmen için veriyi ve topluluğu bir araya getiriyor. Bir dizin değil, yaşayan bir rehber.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #GöçKararı #ÜlkeTesti #TürkDiasporası #YurtDışıHayat #CorteQS`,
       instagramPost: `🧭 Göç kararı duygusal değil, stratejik olmalı diyoruz!
 
@@ -114,7 +114,7 @@ Göç kararı verirken siz nasıl bir yöntem izlediniz — tablo mu yaptınız,
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

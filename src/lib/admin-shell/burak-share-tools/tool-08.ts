@@ -25,7 +25,7 @@ export const BURAK_SHARE_TOOL_08: BurakShareTool = {
 👉 Ücretsiz kayıt olun!
 CorteQS, yeni hayatının ilk adımlarını düzene sokuyor ve her görevde sana yol gösterecek bir topluluk sunuyor. Sıfırdan değil, destekle başla.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YeniGelenler #Planlama #TürkDiasporası #YurtDışı #CorteQS`,
       instagramPost: `🗓️ Yeni ülkede ilk 90 gün her şeyi belirler, hazır mısın?
 
@@ -44,7 +44,7 @@ Yeni geldiğinizde ilk 90 günde en çok neyi geç fark ettiniz, "keşke önce b
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Birkaç soruyla yanıtla; sana hafta hafta önceliklendirilmiş bir yerleşme pl
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette ilk adımlarını atarken elinden tutuyor; deneyimli komşuların tecrübesi bir tık uzağında. Yalnız uğraşma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YerleşmePlanı #YeniGelenler #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `✅ "Önce neyi halletmeliyim?" diye panikleme, listele!
 
@@ -79,7 +79,7 @@ Siz taşındığınızda böyle bir zaman çizelgesi takip ettiniz mi, yoksa her
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, yeni başlangıcını kolaylaştırıyor; her görevde sana destek olacak bir diaspora ağı hazır. Birlikte daha kolay.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İlk90Gün #YerleşmeRehberi #TürkDiasporası #Göç #CorteQS`,
       instagramPost: `📋 Yeni bir ülke, yüzlerce yapılacak iş... nereden başlanır?
 
@@ -114,7 +114,7 @@ Yeni yerleştiğiniz yerde kontrol listesinde hiç yer almayan ama sizi çok uğ
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

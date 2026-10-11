@@ -25,7 +25,7 @@ export const BURAK_SHARE_TOOL_03: BurakShareTool = {
 👉 Ücretsiz kayıt olun!
 CorteQS, taşınma yolculuğunda sana ayna tutuyor ve eksiklerini kapatacak mentorlarla buluşturuyor. Hazırlıklı giden, güçlü gelir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TaşınmaHazırlığı #Göç #TürkDiasporası #YurtDışı #CorteQS`,
       instagramPost: `🎒 Taşınmaya gerçekten hazır mısın, yoksa sadece hayalini mi kuruyorsun? 👀
 
@@ -44,7 +44,7 @@ Taşınmadan önce kendini objektif değerlendirmek için böyle bir test/checkl
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Hazırlık Testimiz finansal birikiminden evrak durumuna kadar her şeyi ölçü
 👉 Ücretsiz kayıt olun!
 CorteQS, hayalini sağlam temellere oturtman için hem rehberlik hem topluluk sunuyor. Doğru hazırlık, yarı yol demektir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #GerçeklikKontrolü #TaşınmaTesti #Diaspora #GöçPlanı #CorteQS`,
       instagramPost: `⚖️ Cesaret yeterli mi? Bir de gerçeklik kontrolü yapalım bakalım 👀
 
@@ -79,7 +79,7 @@ Siz taşınmadan önce kendinizi "hazır" hissettiniz mi, yoksa sonradan mı öy
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Finansal güvence, dil, destek ağı, uyum yeteneği... Hepsini tek testte değe
 👉 Ücretsiz kayıt olun!
 CorteQS, her adımında yanında; eksik kaldığın yerde sana yol gösterecek bir diaspora ağı bir tık uzağında. Birlikte daha hazırız.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TaşınmaHazırlığı #YurtDışıHayat #TürkDiasporası #Göç #CorteQS`,
       instagramPost: `🧠 Taşınmanın en zor kısmı bavul değil, hazır olmak!
 
@@ -114,7 +114,7 @@ Bana kalırsa insanlar genelde parayı ve evrakı düşünüp "destek ağı" ve 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

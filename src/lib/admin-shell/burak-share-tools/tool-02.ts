@@ -25,7 +25,7 @@ Mesleğini ve deneyimini gir; alanının farklı ülkelerde ne kadar kazandırd�
 👉 Ücretsiz kayıt olun!
 CorteQS, kariyer kararlarını net verilerle aydınlatıyor ve seni o ülkelerdeki meslektaşlarınla buluşturuyor. Bilgi paylaşıldıkça büyür.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Maaş #Kariyer #TürkDiasporası #YurtDışıİş #CorteQS`,
       instagramPost: `💰 Aynı işi yapıyorsun ama Berlin'de mi yoksa Toronto'da mı daha çok kazanırsın, hiç merak ettin mi?
 
@@ -44,7 +44,7 @@ Yurt dışında çalışanlar: sizce bu tür maaş karşılaştırma verileri ge
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Maaş Karşılaştırma Aracımız, brüt rakamı değil yaşam maliyetine göre
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette kariyerini kurarken hem veriyle hem mentorlarla yanında. Doğru karar, doğru bilgiyle başlar.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YaşamMaliyeti #Maaş #Diaspora #Kariyer #CorteQS`,
       instagramPost: `📊 Yüksek maaş her zaman yüksek refah demek değil, biliyor muydun?
 
@@ -79,7 +79,7 @@ Bunu deneyimleyen var mı — kağıt üzerinde düşük görünen bir maaşın 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Yazılımcıdan hemşireye, mühendisten öğretmene — alanının küresel maa
 👉 Ücretsiz kayıt olun!
 CorteQS, yeteneğinin karşılığını dünyada bulman için yol gösteriyor; her hedef ülkede seni bekleyen bir Türk ağı var. Yalnız değilsin.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #MaaşHaritası #YurtDışıKariyer #TürkDiasporası #İşHayatı #CorteQS`,
       instagramPost: `🚀 Mesleğin senin pasaportun! Peki dünya onu nasıl değerlendiriyor biliyor musun?
 
@@ -114,7 +114,7 @@ Kendi mesleğinizde yurt dışında beklediğinizden çok farklı bir maaş/tale
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

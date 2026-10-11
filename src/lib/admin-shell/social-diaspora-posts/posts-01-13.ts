@@ -23,7 +23,7 @@ Ama bu özlemi tek başına taşımak zorunda değilsin. Berlin'de, Toronto'da, 
 👉 Ücretsiz kayıt olun!
 CorteQS, dünyanın dört bir yanındaki Türkleri tek çatı altında buluşturan, güvene dayalı ilk diaspora ağı. Nerede olursan ol, kökenin hep yanında.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Gurbet #Memleket #CorteQS`,
     instagramPost: `🌉 Bir çay bardağının buharında bile İstanbul'u görüyorsan... evet, gurbettesin 🥹
 
@@ -44,7 +44,7 @@ Sizde de böyle anlar oluyor mu, en çok hangi sıradan şey sizi oraya götür�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -67,7 +67,7 @@ Ekranlar mesafeyi kapatmaya çalışıyor ama gerçek bir topluluk, yanında fiz
 👉 Ücretsiz kayıt olun!
 CorteQS, "yalnız değilsin" hissini bir slogan değil, gerçek bir ağa dönüştürüyor — şehir şehir, insan insan.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Gurbet #TürkDiasporası #Özlem #Topluluk #CorteQS`,
     instagramPost: `📞 "Yemek yedin mi?" diyen o ses... dünyanın en güçlü vatanı 🥺
 
@@ -88,7 +88,7 @@ Sizin için görüntülü konuşmalar gerçekten yetiyor mu, yoksa siz de aynı 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -109,7 +109,7 @@ Gurbet, mesafeyi öğretir ama aynı zamanda bir gerçeği de hatırlatır: Ayn�
 👉 Ücretsiz kayıt olun!
 CorteQS, görünmez bir ağla birbirine bağlı bu büyük aileyi görünür kılıyor. Kökenini paylaşan milyonlar, artık bir arama kadar yakın.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TürkDiasporası #Diaspora #Gurbet #Aidiyet #CorteQS`,
     instagramPost: `🌙 Baktığın ay, annenin baktığı ayla aynı ✨
 
@@ -130,7 +130,7 @@ Siz de "aynı gökyüzü altındayız" hissini gerçek bir teselli olarak mı ya
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -151,7 +151,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, köklerini kaybetmeden geleceğini kurmak isteyen yeni nesil için tasarlandı. Kim olduğunu unutmadan, nereye gideceğini birlikte keşfedelim.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İkinciKuşak #Kimlik #TürkDiasporası #İkiKültür #CorteQS`,
     instagramPost: `🌍 İki dilde rüya görüyorsun, iki kültürde de bazen "yabancı" hissediyorsun. Ama aslında ikisinin de zenginliğini taşıyorsun ✨
 
@@ -172,7 +172,7 @@ CorteQS diye bir platformda ikinci/üçüncü kuşak için tam da bu "iki dünya
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -193,7 +193,7 @@ Dedelerimiz "misafir işçi" olarak gitti, kalıcı oldu, koca bir diaspora kurd
 👉 Ücretsiz kayıt olun!
 CorteQS, dedelerimizin dayanışmasını dijital çağa taşıyor — aynı sıcaklık, yeni bir adres. Geçmişimize saygı, geleceğimize yatırım.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Gastarbeiter #TürkDiasporası #Kuşaklar #Göç #CorteQS`,
     instagramPost: `🧳 1961'de bir valizle başladı her şey. Bugün biz o yolculuğun 3. 4. kuşağıyız 🌍
 
@@ -214,7 +214,7 @@ Sizin ailenizde de ilk kuşağın hikayeleri var mı, ve siz bugün onların kur
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -235,7 +235,7 @@ Gurbette bazen en küçük şey en büyük rahatlamadır: aynı esprileri anlaya
 👉 Ücretsiz kayıt olun!
 CorteQS'te bağ kurduğun kişi sadece bir "kontak" değil; aynı kökten, aynı hikâyeden gelen bir yol arkadaşı. Güven, tanıdıklıkla başlar.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Kimlik #TürkDiasporası #Networking #Aidiyet #CorteQS`,
     instagramPost: `🤝 İsmini ilk seferde doğru telaffuz eden biriyle tanışmanın huzurunu bilir misin?
 
@@ -256,7 +256,7 @@ Sizde de böyle küçük ama etkili anlar oldu mu — bir isim telaffuzu, bir es
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -277,7 +277,7 @@ Bu, koca bir şehir değil — koca bir ülke nüfusu! Peki bu kadar kalabalıkk
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya'daki bu devasa ağı şehir bazında haritalandırıyor. Kalabalığın içinde kaybolma; kendi insanını tek aramada bul.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Almanya #TürkDiasporası #Gurbetçi #Berlin #CorteQS`,
     instagramPost: `🇩🇪 Almanya'da 3 milyonu aşan bir Türk nüfusu var — koca bir ülke nüfusu! 😲
 
@@ -298,7 +298,7 @@ Almanya'da yaşayanlar: sizin şehrinizde bu "kalabalık ama izole" hissi var m�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -319,7 +319,7 @@ Batı Avrupa, 6 milyonu aşkın Türk için adeta ikinci vatan oldu. Ama bu gü�
 👉 Ücretsiz kayıt olun!
 CorteQS, Berlin'den Paris'e, Rotterdam'dan Viyana'ya uzanan bu ağı tek bir güven zemininde buluşturuyor. Dağınık değil, birlikte güçlüyüz.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Avrupa #TürkDiasporası #Diaspora #Gurbet #CorteQS`,
     instagramPost: `🇪🇺 Batı Avrupa, 6 milyonu aşkın Türk için ikinci vatan oldu! 🌍
 
@@ -340,7 +340,7 @@ Siz başka Avrupa ülkelerindeki Türklerle bir bağlantınız var mı, yoksa he
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -361,7 +361,7 @@ Dünyanın her köşesine dağıldık. Ama dağılmak, kopmak zorunda değil.
 👉 Ücretsiz kayıt olun!
 CorteQS, Dubai'den Sidney'e, Toronto'dan Los Angeles'a — 251 ülkeye yayılan Türkleri tek ağda buluşturuyor. Mesafe artık bir engel değil.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Dubai #Avustralya #Kanada #TürkDiasporası #CorteQS`,
     instagramPost: `🌏 Türk diasporası artık sadece Avrupa değil! Dubai, Toronto, Sidney, Los Angeles... dünyanın her köşesindeyiz 🌍
 
@@ -382,7 +382,7 @@ ABD/Kanada/Avustralya/Körfez'de yaşayan var mı burada, oradaki Türk toplulu�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -403,7 +403,7 @@ Türkçeyi yaşatmak, çocuğuna sadece bir dil değil, bir kimlik, bir köprü 
 👉 Ücretsiz kayıt olun!
 CorteQS'te Türkçe etkinlikler, anne-baba toplulukları ve dil destek gruplarıyla çocuğunun kökleriyle bağını canlı tut. Yalnız uğraşmana gerek yok.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Türkçe #Anadil #TürkDiasporası #İkiDillilik #CorteQS`,
     instagramPost: `🗣️ Çocuğun "Mummy, can I have water?" dediği anda içinde o tatlı burukluğu hisseden var mı? 🥹
 
@@ -424,7 +424,7 @@ Aynı durumu yaşayan var mı, çocuğunuzla Türkçe konuşma çabanız gerçek
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -445,7 +445,7 @@ Yurt dışında doğan çocuklara Türkçeyi sevdirmek; masallarla, türkülerle
 👉 Ücretsiz kayıt olun!
 CorteQS, dilini ve kültürünü yaşatmak isteyen ailelere şehir bazlı topluluklar ve gerçek bağlantılar sunuyor. Kökler güçlüyse dallar her yere uzanır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Anadil #Türkçe #TürkDiasporası #ÇocukEğitimi #CorteQS`,
     instagramPost: `📖 "Dandini dandini dastana"... ninniler bir kuşaktan diğerine taşınan en değerli miras 🌙
 
@@ -466,7 +466,7 @@ Siz üçüncü kuşağa ninni/masal/türkü aktarabiliyor musunuz, yoksa bu iş 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -487,7 +487,7 @@ Türk mutfağı, gurbetçinin en derin özlemlerinden biri. Ama o lezzeti payla�
 👉 Ücretsiz kayıt olun!
 CorteQS'te şehrindeki Türk lokantalarını, ev yemeği yapan komşuları ve sofra arkadaşlarını keşfet. Lezzet paylaşıldıkça çoğalır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TürkMutfağı #Gurbet #TürkDiasporası #Lezzet #CorteQS`,
     instagramPost: `🍽️ Malzemeyi bulursun ama o tadı bir türlü tutturamazsın... çünkü eksik olan baharat değil, annenin eli 🥲
 
@@ -508,7 +508,7 @@ Sizin de "hiç annemin gibi olmuyor" dediğiniz bir yemek var mı, tarifi tam ol
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -529,7 +529,7 @@ Yurt dışında "nerede simit bulurum?" sorusu, aslında "nerede kendimi evimde 
 👉 Ücretsiz kayıt olun!
 CorteQS'in Çarşı ve Cadde modülleriyle şehrindeki Türk fırınını, marketini ve esnafını anında bul. Memleket lezzetleri bir tık uzağında.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Simit #Çay #TürkMutfağı #TürkDiasporası #CorteQS`,
     instagramPost: `🥯 Bir simit, bir bardak çay... çok basit ama gurbette bir sabahı memlekete çeviriyor ☕
 
@@ -550,7 +550,7 @@ Sizde de "aslında yemekten çok özlemi arıyorum" dediğiniz böyle bir arayı
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },

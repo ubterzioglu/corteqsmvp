@@ -25,7 +25,7 @@ Kariyer Yolu Testimiz; ilgi alanlarını ve becerilerini analiz edip yurt dış�
 👉 Ücretsiz kayıt olun!
 CorteQS, kariyer yolculuğunda hem rehber hem ağ; testten çıkan her yolda sana eşlik edecek mentorlar var. Geleceğin bugünden başlasın.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Kariyer #YurtDışıEğitim #TürkDiasporası #YolHaritası #CorteQS`,
       instagramPost: `🎓 Yüksek lisans mı, teknoloji işi mi, kendi girişimin mi? Karar zamanı!
 
@@ -44,7 +44,7 @@ Yurt dışında kariyer değiştiren ya da yön belirlerken zorlananlar: siz nas
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, hedefine giden yolda seni başarılı diaspora profesyonelleriyle buluşturuyor. İlham ve fırsat, tek ağda.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #KariyerTesti #YurtDışıKariyer #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `🧭 Yetenekli olmak yetmez, doğru yöne gitmek gerekir!
 
@@ -79,7 +79,7 @@ Kendi risk toleransınızı doğru tahmin ettiniz mi yoksa sonradan "meğer sand
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Kariyer Yolu Aracı, becerilerini ve hedeflerini eşleştirip sana özel bir yö
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette kariyerini kurarken yalnız bırakmaz; her alanda sana yol gösterecek bir topluluk hazır. Birlikte daha yükseğe.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #KariyerYolu #YurtDışıHayat #TürkDiasporası #Mentorluk #CorteQS`,
       instagramPost: `🚀 Akademi mi, sektör mü, girişim mi? Karar senin, rehber bizden!
 
@@ -114,7 +114,7 @@ Akademiye devam mı ettiniz, sektöre mi geçtiniz, yoksa girişim mi kurdunuz �
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

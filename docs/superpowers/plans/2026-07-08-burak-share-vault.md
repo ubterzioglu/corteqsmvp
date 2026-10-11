@@ -101,7 +101,7 @@ N26, ING, Sparkasse, Trade Republic... 20 soruyla dil, şube, ücret ve yatırı
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya'daki finans kararlarını netleştiriyor ve aynı yoldan geçmiş Türklerle seni buluşturuyor. Tecrübe paylaşıldıkça kolaylaşır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #AlmanyaHayatı #BankaSeçimi #TürkDiasporası #Almanya #CorteQS`,
       },
       {
@@ -114,7 +114,7 @@ Nakit mi mobil mi? Şube mi dijital mi? Kripto ve ETF yapıyor musun? Birkaç so
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette parana sahip çıkman için hem veriyi hem topluluğu bir araya getiriyor. Doğru seçim, ceplerine yansır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Almanya #Banka #Finans #TürkDiasporası #CorteQS`,
       },
       {
@@ -127,7 +127,7 @@ CorteQS, gurbette parana sahip çıkman için hem veriyi hem topluluğu bir aray
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya'daki ilk adımlarını kolaylaştırıyor; aynı bankalarda hesap açmış bir diaspora ağı bir tık uzağında. Yalnız uğraşma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YeniGelenler #AlmanyaRehberi #Banka #TürkDiasporası #CorteQS`,
       },
     ],
@@ -154,7 +154,7 @@ Krankenversicherung mu, Haftpflicht mi, Rechtsschutz mu? 20 soruyla durumunu de�
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya bürokrasisinde seni yalnız bırakmıyor; aynı kararları vermiş Türklerin tecrübesi hep yanında. Bilgi, en iyi güvencedir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Almanya #Sigorta #TürkDiasporası #AlmanyaHayatı #CorteQS`,
       },
       {
@@ -167,7 +167,7 @@ Sigorta Seçimi Aracımız; çalışma durumun, ailen, araç ve konut profiline 
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette doğru güvenceyi kurman için hem rehber hem topluluk sunuyor. Doğru sigorta, huzurlu bir hayat demek.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #SigortaRehberi #Almanya #Finans #TürkDiasporası #CorteQS`,
       },
       {
@@ -180,7 +180,7 @@ Ailen, işin, araban ve yaşam tarzına göre gerçekten ihtiyacın olan sigorta
 👉 Ücretsiz kayıt olun!
 CorteQS, seni ve sevdiklerini korumana yardımcı oluyor; aynı yolu yürümüş bir diaspora ağı çözümü hep yakında. Birlikte daha güvendeyiz.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Sigorta #AileGüvencesi #Almanya #TürkDiasporası #CorteQS`,
       },
     ],

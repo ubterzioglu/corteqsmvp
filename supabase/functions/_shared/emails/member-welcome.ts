@@ -49,7 +49,7 @@ export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
   { label: "Instagram", href: "https://www.instagram.com/corteqsturk" },
   { label: "X", href: "https://x.com/turksdiaspora" },
   { label: "YouTube", href: "https://www.youtube.com/@corteqsyoutube" },
-  { label: "WhatsApp topluluğu", href: "https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD" },
+  { label: "WhatsApp topluluğu", href: "https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib" },
 ];
 
 /** Mailde tanıtılan bölümler. Yollar src/App.tsx'teki gerçek public route'lardır. */

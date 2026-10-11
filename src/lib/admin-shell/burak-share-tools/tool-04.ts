@@ -25,7 +25,7 @@ Berlin mi Münih mi? İş fırsatından iklime, yaşam maliyetinden Türk toplul
 👉 Ücretsiz kayıt olun!
 CorteQS, sadece ülkeyi değil, doğru mahalleyi bulmana yardım ediyor ve o şehirdeki Türklerle seni buluşturuyor. Şehrin tanıdık olsun.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ŞehirSeçimi #Göç #TürkDiasporası #YurtDışı #CorteQS`,
       instagramPost: `🏙️ Doğru ülkeyi seçtin, peki hangi şehir tam sana göre?
 
@@ -44,7 +44,7 @@ Aynı ülke içinde yanlış şehri seçtiği için pişman olan ya da tam tersi
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, gideceğin şehirde seni yalnız bırakmıyor; oradaki diaspora ağı ilk günden yanında. Yeni şehir, tanıdık bir aile.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ŞehirEşleştirme #Diaspora #YurtDışıHayat #TürkDiasporası #CorteQS`,
       instagramPost: `📍 Ülke büyük ama hayatın aslında bir şehirde kuruluyor!
 
@@ -79,7 +79,7 @@ Herhangi bir şehir öneri aracı kullanıp sonra gerçek kiraların tahminden �
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, doğru şehirde doğru bağlantılarla başlaman için hazır; her şehirde yaşayan bir ağ seni bekliyor. Bir dizin değil, bir topluluk.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ŞehirRehberi #Göç #TürkDiasporası #YeniHayat #CorteQS`,
       instagramPost: `🗺️ İki şehir aynı ülkede ama iki ayrı dünya olabilir, biliyor muydun?
 
@@ -114,7 +114,7 @@ Aynı ülke içinde şehir değiştirip hayatının bambaşka bir hal aldığın
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

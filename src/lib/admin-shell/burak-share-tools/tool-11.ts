@@ -25,7 +25,7 @@ N26, ING, Sparkasse, Trade Republic... 20 soruyla dil, şube, ücret ve yatırı
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya'daki finans kararlarını netleştiriyor ve aynı yoldan geçmiş Türklerle seni buluşturuyor. Tecrübe paylaşıldıkça kolaylaşır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #AlmanyaHayatı #BankaSeçimi #TürkDiasporası #Almanya #CorteQS`,
       instagramPost: `🏦 Almanya'da hâlâ yanlış bankada mı boğuşuyorsun? 😅
 
@@ -44,7 +44,7 @@ Almanya'da banka değiştirenler: ilk açtığınız hesaptan neden vazgeçtiniz
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Nakit mi mobil mi? Şube mi dijital mi? Kripto ve ETF yapıyor musun? Birkaç so
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette parana sahip çıkman için hem veriyi hem topluluğu bir araya getiriyor. Doğru seçim, ceplerine yansır.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Almanya #Banka #Finans #TürkDiasporası #CorteQS`,
       instagramPost: `💳 Gereksiz hesap ücretlerine kaç yıldır para mı yatırıyorsun? 🙈
 
@@ -79,7 +79,7 @@ Siz hesap ücretlerini kontrol ettiniz mi, yoksa hâlâ "değiştirmek zahmetli"
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya'daki ilk adımlarını kolaylaştırıyor; aynı bankalarda hesap açmış bir diaspora ağı bir tık uzağında. Yalnız uğraşma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YeniGelenler #AlmanyaRehberi #Banka #TürkDiasporası #CorteQS`,
       instagramPost: `🧭 Almanya'ya yeni geldin ve banka seçimi kafanı mı karıştırdı?
 
@@ -114,7 +114,7 @@ CorteQS'in testi bu üç önceliği tartıp yeni gelenler için bir banka sıral
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

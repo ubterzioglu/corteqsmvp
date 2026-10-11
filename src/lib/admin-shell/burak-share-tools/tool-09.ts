@@ -25,7 +25,7 @@ export const BURAK_SHARE_TOOL_09: BurakShareTool = {
 👉 Ücretsiz kayıt olun!
 CorteQS, dağınık kaygıları net bir önceliğe çeviriyor ve o konuda sana yardımcı olacak mentorlarla buluşturuyor. Önce doğru adım.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Önceliklendirme #Göç #TürkDiasporası #YurtDışı #CorteQS`,
       instagramPost: `🎯 Her şeyi aynı anda çözmeye çalışınca hiçbiri çözülmüyor, farkında mısın?
 
@@ -44,7 +44,7 @@ Sizin için taşınma sürecinde gerçekten "her şeyi tıkayan" tek bir engel v
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Kısa testimizle en kritik engelini tespit et, enerjini doğru yere harca. Vize 
 👉 Ücretsiz kayıt olun!
 CorteQS, seni doğru kaynağa ve doğru kişiye yönlendiriyor; engelini aşmış biri zaten ağda seni bekliyor. Yalnız çözme.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TaşınmaEngeli #Odak #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `🧩 Kafanda yüz tane soru var ama hangisi gerçekten acil?
 
@@ -79,7 +79,7 @@ Taşınma sürecinde "bunu çözmeden diğerleri anlamsız" dediğiniz bir şey 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, her zorlukta yanında; aynı yolu yürümüş bir diaspora ağıyla çözüm hep yakında. Birlikte daha kolay aşarız.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #EngelTesti #GöçPlanı #TürkDiasporası #Topluluk #CorteQS`,
       instagramPost: `🔦 En büyük engelini bil ki onu aşabilesin!
 
@@ -114,7 +114,7 @@ Siz ilk zorluğunuzu hemen mi fark ettiniz, yoksa aylar sonra mı "aslında ası
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

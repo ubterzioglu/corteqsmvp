@@ -303,7 +303,7 @@ export function getStepMessage(
 
     case "completed":
       return {
-        content: "\ud83c\udf89 Kayd\u0131n ba\u015far\u0131yla al\u0131nd\u0131!\n\nSeni CorteQS diaspora a\u011f\u0131na dahil edece\u011fiz.\n\n\ud83d\udc49 Web: https://corteqs.net\n\ud83d\udc49 WhatsApp: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD\n\nYak\u0131nda seninle ileti\u015fime ge\u00e7ece\u011fiz. Ho\u015f geldin! \ud83c\udf0d",
+        content: "\ud83c\udf89 Kayd\u0131n ba\u015far\u0131yla al\u0131nd\u0131!\n\nSeni CorteQS diaspora a\u011f\u0131na dahil edece\u011fiz.\n\n\ud83d\udc49 Web: https://corteqs.net\n\ud83d\udc49 WhatsApp: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib\n\nYak\u0131nda seninle ileti\u015fime ge\u00e7ece\u011fiz. Ho\u015f geldin! \ud83c\udf0d",
       };
 
     default:

@@ -21,7 +21,7 @@ Tatil bitip valizler açılınca gelen o boşluk hissi, gurbetçilerin çoğunun
 👉 Ücretsiz kayıt olun!
 Dönüş sonrası yalnız kalma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #MemleketÖzlemi #CorteQS`,
     instagramPost: `✈️ Memleketten dönünce ilk hafta neden bu kadar zor?
 
@@ -40,7 +40,7 @@ Siz bu geçiş dönemini nasıl atlatıyorsunuz, işe yarayan bir yöntem buldun
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -61,7 +61,7 @@ CorteQS'in Çarşı'sında işletmeni dünyanın dört bir yanındaki diaspora �
 👉 Ücretsiz kayıt olun!
 İşletmeni ekle, diaspora seni bulsun.
 🔗 https://corteqs.net/cadde/carsi
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Girişimcilik #KüçükİşletmeCorteQS`,
     instagramPost: `🏪 Küçük işletmeni büyütmenin en ucuz yolu: doğru topluluğa duyurmak!
 
@@ -80,7 +80,7 @@ Böyle niş diaspora platformlarının küçük işletmelere gerçekten müşter
 
 corteqs.net/cadde/carsi
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -101,7 +101,7 @@ CorteQS'te bulunduğun üniversite şehrindeki diğer Türk öğrencileri bulabi
 👉 Ücretsiz kayıt olun!
 Şehrindeki öğrenci topluluğuna katıl.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Öğrenci #CorteQS`,
     instagramPost: `🎓 Yeni bir ülkede öğrenci olmak heyecanlı ama yalnız da olabilir.
 
@@ -120,7 +120,7 @@ Siz nasıl bir yol izlediniz, aynı şehirdeki Türk öğrencileri nasıl buldun
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -141,7 +141,7 @@ CorteQS'te bulunduğun alanda ya da hedeflediğin şehirde daha önce yol almı�
 👉 Ücretsiz kayıt olun!
 Bir adım önde olanı bul, sor, öğren.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Mentorluk #CorteQS`,
     instagramPost: `🕯️ Senin şu an takıldığın yerden, biri zaten geçti.
 
@@ -160,7 +160,7 @@ Siz mentorluk/deneyim paylaşımını nasıl buluyorsunuz — resmi programlar m
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -181,7 +181,7 @@ CorteQS ağı, bulunduğun şehirdeki diaspora etkinliklerini ve buluşmaları k
 👉 Ücretsiz kayıt olun!
 Şehrindeki bir sonraki buluşmayı kaçırma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Etkinlik #CorteQS`,
     instagramPost: `📍 Ekrandaki bağlantı güzel ama gerçek buluşma başka!
 
@@ -200,7 +200,7 @@ Siz şehrinizdeki topluluk etkinliklerini kaçırmamak için nasıl bir sistem k
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -221,7 +221,7 @@ CorteQS'te bulunduğun şehirdeki kadın girişimcilerle, profesyonellerle ve an
 👉 Ücretsiz kayıt olun!
 Sen de bu güçlü ağın parçası ol.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Kadın #CorteQS`,
     instagramPost: `💪 Gurbette kadın olmanın kendine has zorlukları var, kendine has gücü de!
 
@@ -240,7 +240,7 @@ Siz bulunduğunuz yerde böyle bir kadın topluluğu buldunuz mu, nasıl?
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -261,7 +261,7 @@ CorteQS'te bulunduğun şehrin gönüllü temsilcisi (ambasadörü) olabilir, ye
 👉 Ücretsiz kayıt olun!
 Şehrinin temsilcisi olmaya aday ol.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Ambasador #CorteQS`,
     instagramPost: `🚩 Şehrini iyi tanıyorsun. Yeni gelenlere rehberlik etmeye ne dersin?
 
@@ -280,7 +280,7 @@ Siz böyle gönüllü rehberlik sistemlerinin gerçekten işe yaradığını dü
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },
@@ -301,7 +301,7 @@ CorteQS'in vizyonu büyük ama basit: dünyanın neresinde olursan ol, kökenini
 👉 Ücretsiz kayıt olun!
 Bu büyük ağın bir parçası ol.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Diaspora #TürkDiasporası #Manifesto #CorteQS`,
     instagramPost: `🌍 251 ülke. Tek bir ağ. Ortak bir köken.
 
@@ -320,7 +320,7 @@ Siz böyle "her yeri kapsayan" ağ iddialarına ne kadar inanıyorsunuz, yoksa h
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
   },

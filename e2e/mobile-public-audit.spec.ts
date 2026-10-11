@@ -106,7 +106,7 @@ test("contact and CTA surfaces use the official WhatsApp community link", async 
   );
 
   expect(hrefs).not.toContain("https://wa.me/message/corteqs");
-  expect(hrefs).toContain("https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD");
+  expect(hrefs).toContain("https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib");
 });
 
 test("public pages preserve Turkish characters on mobile", async ({ page }) => {

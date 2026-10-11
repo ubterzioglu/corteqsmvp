@@ -24,7 +24,7 @@ export const SOCIAL_TEST_TOOLS_01_03: SocialTestTool[] = [
 👉 Ücretsiz kayıt olun!
 CorteQS, göç yolculuğunu şansa bırakmıyor; seni doğru ülkeyle ve oradaki Türk topluluğuyla buluşturuyor. Nerede olursan ol, kökenin hep yanında.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Göç #TürkDiasporası #ÜlkeSeçimi #YurtDışı #CorteQS`,
         instagramPost: `🌍 "Acaba nereye taşınsam?" diye gece gece düşünmeyi bırak!
 
@@ -43,7 +43,7 @@ Böyle bir testin gerçekten anlamlı bir sıralama üretebileceğini düşünü
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -59,7 +59,7 @@ Hangi ülke senin için "mükemmel uyum"? CorteQS Ülke Seçimi Aracı; sağlık
 👉 Ücretsiz kayıt olun!
 CorteQS, dünyaya açılırken yalnız bırakmaz; testten çıkan her ülkede seni bekleyen bir diaspora ağı var. Güvenle keşfet, güvenle taşın.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ÜlkeSeçimi #Diaspora #GöçPlanı #TürkDiasporası #CorteQS`,
         instagramPost: `✈️ Aynı maaş, 3 ayrı ülkede 3 bambaşka hayat demek olabilir!
 
@@ -78,7 +78,7 @@ Yurt dışına çıkmadan önce bu tür faktörleri sistematik karşılaştıran
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -94,7 +94,7 @@ Bütçenden dil becerine, vize durumundan değerlerine kadar her şeyi hesaba ka
 👉 Ücretsiz kayıt olun!
 CorteQS, en doğru kararı verebilmen için veriyi ve topluluğu bir araya getiriyor. Bir dizin değil, yaşayan bir rehber.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #GöçKararı #ÜlkeTesti #TürkDiasporası #YurtDışıHayat #CorteQS`,
         instagramPost: `🧭 Göç kararı duygusal değil, stratejik olmalı!
 
@@ -113,7 +113,7 @@ Böyle bir çerçevede karar vermiş olan var mı? Sonuçta gerçek hayatta işe
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -139,7 +139,7 @@ Mesleğini ve deneyimini gir; alanının farklı ülkelerde ne kadar kazandırd�
 👉 Ücretsiz kayıt olun!
 CorteQS, kariyer kararlarını net verilerle aydınlatıyor ve seni o ülkelerdeki meslektaşlarınla buluşturuyor. Bilgi paylaşıldıkça büyür.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Maaş #Kariyer #TürkDiasporası #YurtDışıİş #CorteQS`,
         instagramPost: `💰 Aynı işi yapıyorsun ama Berlin'de mi Toronto'da mı daha çok kazanırsın?
 
@@ -158,7 +158,7 @@ Böyle maaş karşılaştırma araçlarını ciddiye alıyor musunuz, yoksa ger�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -174,7 +174,7 @@ Maaş Karşılaştırma Aracımız, brüt rakamı değil yaşam maliyetine göre
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette kariyerini kurarken hem veriyle hem mentorlarla yanında. Doğru karar, doğru bilgiyle başlar.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YaşamMaliyeti #Maaş #Diaspora #Kariyer #CorteQS`,
         instagramPost: `📊 Yüksek maaş her zaman yüksek refah demek değil!
 
@@ -193,7 +193,7 @@ Gerçekten taşınmış olanlar: sizce bu tür hesaplamalar taşınmadan önce n
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -209,7 +209,7 @@ Yazılımcıdan hemşireye, mühendisten öğretmene — alanının küresel maa
 👉 Ücretsiz kayıt olun!
 CorteQS, yeteneğinin karşılığını dünyada bulman için yol gösteriyor; her hedef ülkede seni bekleyen bir Türk ağı var. Yalnız değilsin.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #MaaşHaritası #YurtDışıKariyer #TürkDiasporası #İşHayatı #CorteQS`,
         instagramPost: `🚀 Mesleğin senin pasaportun. Dünya onu nasıl değerlendiriyor bakalım?
 
@@ -228,7 +228,7 @@ Sizin mesleğinizde yurt dışına geçiş kolay mı oldu, yoksa maaş farkı ka
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -254,7 +254,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, taşınma yolculuğunda sana ayna tutuyor ve eksiklerini kapatacak mentorlarla buluşturuyor. Hazırlıklı giden, güçlü gelir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TaşınmaHazırlığı #Göç #TürkDiasporası #YurtDışı #CorteQS`,
         instagramPost: `🎒 Taşınmaya gerçekten hazır mısın, yoksa sadece hayalini mi kuruyorsun?
 
@@ -273,7 +273,7 @@ Böyle bir öz-değerlendirme testi kullanan oldu mu, sonuç sizi gerçekten şa
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -289,7 +289,7 @@ Hazırlık Testimiz finansal birikiminden evrak durumuna kadar her şeyi ölçü
 👉 Ücretsiz kayıt olun!
 CorteQS, hayalini sağlam temellere oturtman için hem rehberlik hem topluluk sunuyor. Doğru hazırlık, yarı yol demektir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #GerçeklikKontrolü #TaşınmaTesti #Diaspora #GöçPlanı #CorteQS`,
         instagramPost: `⚖️ Cesaret yeterli mi? Bir de gerçeklik kontrolü yapalım.
 
@@ -308,7 +308,7 @@ Taşınmadan önce kendinizi objektif değerlendirdiniz mi, yoksa direkt atlayı
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -324,7 +324,7 @@ Finansal güvence, dil, destek ağı, uyum yeteneği... Hepsini tek testte değe
 👉 Ücretsiz kayıt olun!
 CorteQS, her adımında yanında; eksik kaldığın yerde sana yol gösterecek bir diaspora ağı bir tık uzağında. Birlikte daha hazırız.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #TaşınmaHazırlığı #YurtDışıHayat #TürkDiasporası #Göç #CorteQS`,
         instagramPost: `🧠 Taşınmanın en zor kısmı bavul değil, hazır olmak!
 
@@ -343,7 +343,7 @@ Bu tür çok boyutlu öz-değerlendirme testlerine güveniyor musunuz, yoksa son
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },

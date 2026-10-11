@@ -25,7 +25,7 @@ Diaspora Ağı Eşleştirici; mesleğine, şehrine ve ihtiyacına göre sana en 
 👉 Ücretsiz kayıt olun!
 CorteQS, dağınık diasporayı akıllı eşleştirmeyle bir araya getiriyor; aradığın insan da seni arıyor olabilir. Birlikte daha güçlüyüz.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Networking #Mentorluk #TürkDiasporası #Eşleşme #CorteQS`,
       instagramPost: `🤝 Gurbette en kıymetli şey: senden önce o yoldan geçmiş biri!
 
@@ -44,7 +44,7 @@ Mentor bulma konusunda hangi yöntem sizde işe yaradı — organik mi, yoksa b�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Ne sunduğunu ve ne aradığını yaz; alan, şehir ve dil uyumuna göre sana en
 👉 Ücretsiz kayıt olun!
 CorteQS, kökenini paylaşan milyonları görünür kılan güven ağı. Yardım istemek de vermek de artık çok kolay.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #DiasporaAğı #Mentorluk #TürkDiasporası #Topluluk #CorteQS`,
       instagramPost: `🌐 Tanıdık bir tanıdık beklemek devri kapandı artık!
 
@@ -79,7 +79,7 @@ Yurt dışında yaşayanlara soruyorum: network kurarken en çok zaman kaybetti�
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Diaspora Eşleştirici, ihtiyaçları ve yetenekleri eşleştiren bir köprü. Y
 👉 Ücretsiz kayıt olun!
 CorteQS, dayanışmayı bir değer değil bir refleks haline getiriyor; her eşleşme yeni bir kapı. Nerede olursan ol, yanında biri var.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Dayanışma #Networking #Diaspora #TürkDiasporası #CorteQS`,
       instagramPost: `💡 Sen birine yardım edebilirsin, biri de sana yol gösterebilir!
 
@@ -114,7 +114,7 @@ Deneyimli olanlara soruyorum: karşılıksız mentorluk yapmaya gerçekten vakti
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },

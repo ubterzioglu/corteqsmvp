@@ -24,7 +24,7 @@ Eğlenceli 8 soruluk testimizle yurt dışı yaşam tarzı kişiliğini keşfet.
 👉 Ücretsiz kayıt olun!
 CorteQS, kişiliğine uyan diaspora kabilesini bulmana yardım ediyor; benzer ruhlar bir tık uzağında. Eğlen, bağlan, ait ol.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #KişilikTesti #YurtDışıYaşam #TürkDiasporası #Eğlence #CorteQS`,
         instagramPost: `✨ Sen bir "Küresel Networker" mısın yoksa "Sakin Yerli" mi?
 
@@ -43,7 +43,7 @@ Böyle bir test yapıp sonucu gerçekten kendine uygun bulan var mı, yoksa hepi
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -59,7 +59,7 @@ Gece hayatı mı sakin kafeler mi? Solo gezi mi tur mu? Cevapların hangi expat 
 👉 Ücretsiz kayıt olun!
 CorteQS, seni sana benzeyen insanlarla buluşturan sıcak bir topluluk. Tarzın ne olursa olsun, yerin burada.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #ExpatKişilik #YaşamTarzı #Diaspora #TürkDiasporası #CorteQS`,
         instagramPost: `🎭 Gurbetteki tarzın seni ele veriyor!
 
@@ -78,7 +78,7 @@ Sizin expat/gurbet tarzınız hangisine daha yakın — gece hayatı tipi mi, sa
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -94,7 +94,7 @@ Macera Avcısı, Kozmopolit Networker, Huzurlu Yerli... Hangi tip sana uyuyor? E
 👉 Ücretsiz kayıt olun!
 CorteQS, kişiliğine en uygun toplulukları önererek gurbeti eğlenceli kılıyor. Kendini bul, çevreni kur.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YaşamTarzıTesti #YurtDışı #TürkDiasporası #Topluluk #CorteQS`,
         instagramPost: `🌟 Aynı şehirde yaşayıp bambaşka hayatlar kurarız. Seninki hangisi?
 
@@ -113,7 +113,7 @@ Kendinizi hangi tipe yakın buluyorsunuz, yoksa zamanla bir tipten diğerine mi 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -139,7 +139,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, yeni hayatının ilk adımlarını düzene sokuyor ve her görevde sana yol gösterecek bir topluluk sunuyor. Sıfırdan değil, destekle başla.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YeniGelenler #Planlama #TürkDiasporası #YurtDışı #CorteQS`,
         instagramPost: `🗓️ Yeni ülkede ilk 90 gün her şeyi belirler. Hazır mısın?
 
@@ -158,7 +158,7 @@ Yeni taşındığınızda ilk 90 günde en çok neyi geç fark ettiniz / keşke 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -174,7 +174,7 @@ Birkaç soruyla yanıtla; sana hafta hafta önceliklendirilmiş bir yerleşme pl
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette ilk adımlarını atarken elinden tutuyor; deneyimli komşuların tecrübesi bir tık uzağında. Yalnız uğraşma.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #YerleşmePlanı #YeniGelenler #Diaspora #TürkDiasporası #CorteQS`,
         instagramPost: `✅ "Önce neyi halletmeliyim?" panikleme, listele!
 
@@ -193,7 +193,7 @@ Kendi ilk 90 gününüzü planlı mı geçirdiniz yoksa işler zaten randevu/bü
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },
@@ -209,7 +209,7 @@ corteqs.net
 👉 Ücretsiz kayıt olun!
 CorteQS, yeni başlangıcını kolaylaştırıyor; her görevde sana destek olacak bir diaspora ağı hazır. Birlikte daha kolay.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #İlk90Gün #YerleşmeRehberi #TürkDiasporası #Göç #CorteQS`,
         instagramPost: `📋 Yeni bir ülke, yüzlerce yapılacak iş. Nereden başlanır?
 
@@ -228,7 +228,7 @@ Yeni bir yerde sosyal çevre kurmayı gerçekten "planlı" mı yaptınız, yoksa
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
       },

@@ -25,7 +25,7 @@ Krankenversicherung mu, Haftpflicht mi, Rechtsschutz mu? 20 soruyla durumunu de�
 👉 Ücretsiz kayıt olun!
 CorteQS, Almanya bürokrasisinde seni yalnız bırakmıyor; aynı kararları vermiş Türklerin tecrübesi hep yanında. Bilgi, en iyi güvencedir.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Almanya #Sigorta #TürkDiasporası #AlmanyaHayatı #CorteQS`,
       instagramPost: `🛡️ Almanya'da hangi sigorta gerçekten şart, hangisi lüks?
 
@@ -44,7 +44,7 @@ Sonradan "keşke daha önce yaptırsaymışım" dediğiniz bir sigorta oldu mu, 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -60,7 +60,7 @@ Sigorta Seçimi Aracımız; çalışma durumun, ailen, araç ve konut profiline 
 👉 Ücretsiz kayıt olun!
 CorteQS, gurbette doğru güvenceyi kurman için hem rehber hem topluluk sunuyor. Doğru sigorta, huzurlu bir hayat demek.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #SigortaRehberi #Almanya #Finans #TürkDiasporası #CorteQS`,
       instagramPost: `📋 Onlarca sigorta türü var, hangisiyle başlayacağını bilmiyor musun?
 
@@ -79,7 +79,7 @@ Sigorta seçerken makler mi kullandınız, kendiniz mi araştırdınız, yoksa h
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
@@ -95,7 +95,7 @@ Ailen, işin, araban ve yaşam tarzına göre gerçekten ihtiyacın olan sigorta
 👉 Ücretsiz kayıt olun!
 CorteQS, seni ve sevdiklerini korumana yardımcı oluyor; aynı yolu yürümüş bir diaspora ağı çözümü hep yakında. Birlikte daha güvendeyiz.
 🔗 https://corteqs.net/
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 #Sigorta #AileGüvencesi #Almanya #TürkDiasporası #CorteQS`,
       instagramPost: `☂️ Bir kaza, bir dava, bir hastalık — Almanya'da hazırlıklı mısın?
 
@@ -114,7 +114,7 @@ Ailesi olanlar: sigorta önceliğiniz bekar/tek yaşayanlardan farklı oldu mu, 
 
 corteqs.net
 
-💬 WhatsApp topluluğu: https://chat.whatsapp.com/IOpBgZK29CQEhhdOd5hUAD
+💬 WhatsApp topluluğu: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib
 🔗 https://corteqs.net/tools
 `,
     },
