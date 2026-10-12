@@ -63,9 +63,19 @@ describe("M12 · davet taşıyıcısı (?davet=) — M13 köprüsü", () => {
     expect(readInviteCodeFromSearch(`?davet=${"A".repeat(200)}`)).toBeNull();
   });
 
-  it("alfabe ikinci kez UYDURULMAZ — normalizasyon referral-qr'dan", () => {
+  it("alfabe ikinci kez UYDURULMAZ — normalizasyon referral-code'dan", () => {
     const api = readFileSync("src/lib/invites-api.ts", "utf8");
-    expect(api).toContain('import { normalizeReferralCode } from "@/lib/referral-qr"');
+    expect(api).toContain('import { normalizeReferralCode } from "@/lib/referral-code"');
+  });
+
+  // Lighthouse 2026-10-12: invites-api başlangıç zincirinde (use-invite-redemption)
+  // olduğu için referral-qr üzerinden `qrcode` paketini HER sayfaya çekiyordu.
+  // Normalizasyon qrcode'suz modülde durur; invites-api referral-qr'ı import etmez.
+  it("başlangıç zinciri qrcode paketini çekmez", () => {
+    const api = readFileSync("src/lib/invites-api.ts", "utf8");
+    const code = readFileSync("src/lib/referral-code.ts", "utf8");
+    expect(api).not.toContain("@/lib/referral-qr");
+    expect(code).not.toMatch(/from ["']qrcode["']/);
   });
 });
 

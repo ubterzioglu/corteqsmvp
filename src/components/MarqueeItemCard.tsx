@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Megaphone, Newspaper, TrendingUp } from "lucide-react";
 
 import { marqueeTypeLabels, type MarqueeItemRow, type MarqueeItemType } from "@/lib/marquee";
+import { storageImageUrl } from "@/lib/storage-image";
 import { cn } from "@/lib/utils";
 
 const typeStyles: Record<
@@ -63,10 +64,12 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
       <div className="relative h-[150px] shrink-0 overflow-hidden bg-muted">
         {hasRealImage ? (
           <img
-            src={item.image_url as string}
+            // Kart görseli ~400×150 px; 2x ekran için 640 px genişlik istenir.
+            src={storageImageUrl(item.image_url as string, { width: 640 })}
             alt={item.image_alt || item.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
+            decoding="async"
           />
         ) : (
           <div

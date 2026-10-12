@@ -94,15 +94,34 @@ describe("nginx güvenlik başlıkları", () => {
   const KENDI_ADD_HEADERI_OLAN_LOCATIONLAR = [
     "location = /env-config.js",
     "location = /index.html",
-    "location /assets/",
+    "location ^~ /assets/",
+    "location ~* \\.[a-z0-9]+$",
     "location = /__prerender_internal",
   ];
 
   it("CSP tek kaynaktan gelir ve her ilgili location'da tekrarlanır", () => {
     const cspSatirlari = nginxConf.match(/add_header\s+Content-Security-Policy\s+\$corteqs_csp/g) ?? [];
 
-    // server bloğu + kendi add_header'ı olan 4 location = 5
+    // server bloğu + kendi add_header'ı olan 5 location = 6
     expect(cspSatirlari.length).toBe(KENDI_ADD_HEADERI_OLAN_LOCATIONLAR.length + 1);
+  });
+
+  // Lighthouse 2026-10-12: hash'li JS/CSS'in önbellek ömrü 0 ölçüldü. Sebep: nginx'te
+  // regex location (`~* \.[a-z0-9]+$`) düz önek bloğa (`/assets/`) ÜSTÜN gelir; bu
+  // yüzden `/assets/x.js` regex bloğuna düşüyor ve `immutable` başlığı hiç gitmiyordu.
+  // `^~` öneki regex taramasını atlatır.
+  it("/assets/ bloğu `^~` ile regex location'dan önce kazanır ve immutable döner", () => {
+    expect(/location\s+\^~\s+\/assets\/\s*\{/.test(nginxConf)).toBe(true);
+    expect(/location\s+\/assets\/\s*\{/.test(nginxConf)).toBe(false);
+    const blok = nginxConf.match(/location \^~ \/assets\/ \{[\s\S]*?\n {2}\}/)?.[0] ?? "";
+    expect(blok).toContain('Cache-Control "public, max-age=31536000, immutable"');
+  });
+
+  it("hash'siz statik dosyalar sınırlı süre önbelleklenir (immutable DEĞİL)", () => {
+    const blok = nginxConf.match(/location ~\* \\\.\[a-z0-9\]\+\$ \{[\s\S]*?\n {2}\}/)?.[0] ?? "";
+    expect(blok, "statik dosya regex bloğu bulunamadı").not.toBe("");
+    expect(blok).toMatch(/add_header\s+Cache-Control\s+"public, max-age=\d+"/);
+    expect(blok).not.toContain("immutable");
   });
 
   it("script-src'de 'unsafe-inline' yoktur", () => {

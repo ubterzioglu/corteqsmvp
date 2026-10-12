@@ -115,14 +115,14 @@ const Footer = () => {
               <Link
                 to={link.to}
                 onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
-                className="underline underline-offset-4 transition-colors hover:text-primary"
+                className="inline-flex min-h-6 items-center underline underline-offset-4 transition-colors hover:text-primary"
               >
                 {link.label}
               </Link>
             ) : (
               <a
                 href={link.href}
-                className="underline underline-offset-4 transition-colors hover:text-primary"
+                className="inline-flex min-h-6 items-center underline underline-offset-4 transition-colors hover:text-primary"
               >
                 {link.label}
               </a>

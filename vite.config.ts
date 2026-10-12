@@ -92,13 +92,14 @@ export default defineConfig(({ mode }) => ({
           if (normalizedId.includes("/@radix-ui/")) return "vendor-radix";
           if (normalizedId.includes("/lucide-react/")) return "vendor-icons";
           if (normalizedId.includes("/framer-motion/")) return "vendor-motion";
-          if (normalizedId.includes("/recharts/") || normalizedId.includes("/d3-")) return "vendor-charts";
           if (normalizedId.includes("/date-fns/")) return "vendor-date";
           if (normalizedId.includes("/@tanstack/")) return "vendor-query";
-          if (normalizedId.includes("/zod/") || normalizedId.includes("/react-hook-form/") || normalizedId.includes("/@hookform/")) return "vendor-forms";
-          if (/\/(react-markdown|remark-|rehype-|unified|micromark|mdast-|hast-|property-information|vfile)\//.test(normalizedId)) return "vendor-markdown";
-          if (normalizedId.includes("/react-day-picker/") || normalizedId.includes("/frimousse/")) return "vendor-pickers";
-          if (normalizedId.includes("/qrcode/")) return "vendor-qrcode";
+          // ⚠️ Yalnız TEMBEL sayfaların kullandığı kütüphaneler (recharts/d3, react-markdown,
+          // react-hook-form/zod, qrcode, takvim seçicileri) burada ADLANDIRILMAZ.
+          // Lighthouse 2026-10-12: `vendor-charts` grubu React çekirdeğini de içine almıştı
+          // (recharts → react bağımlılığı) ve bu yüzden grafik/markdown/form/qrcode parçaları
+          // HER sayfanın başlangıcında yükleniyordu (~300 KB kullanılmayan JS). Adsız
+          // bırakılınca Rolldown onları kullanan lazy sayfalarla birlikte böler.
           return undefined;
         },
       },

@@ -98,7 +98,8 @@ server {
   #
   # nginx'te add_header KALITILMAZ: kendi add_header'ı olan bir location, üst
   # bloktaki TÜM add_header'ları iptal eder. Bu dosyada /env-config.js,
-  # /index.html, /assets/ ve /__prerender_internal kendi
+  # /index.html, /assets/, statik dosya regex'i (`~* \.[a-z0-9]+$`) ve
+  # /__prerender_internal kendi
   # Cache-Control'lerini eklediği için, güvenlik başlıklarının o location'larda
   # TEK TEK TEKRARLANMASI ZORUNLUDUR.
   #
@@ -188,7 +189,10 @@ server {
     try_files $uri =404;
   }
 
-  location /assets/ {
+  # `^~` ZORUNLU: nginx'te regex location düz önek bloğa ÜSTÜN gelir. `^~` olmadan
+  # `/assets/x.js` aşağıdaki `~* \.[a-z0-9]+$` bloğuna düşer ve immutable başlığı
+  # hiç gitmez (Lighthouse 2026-10-12: tüm /assets/ için önbellek ömrü 0 ölçüldü).
+  location ^~ /assets/ {
     add_header X-Frame-Options "DENY" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
@@ -202,7 +206,20 @@ server {
     try_files $uri =404;
   }
 
+  # Hash'siz public/ dosyaları (görsel, video, font, robots.txt …): adları sabit
+  # olduğu için immutable DEĞİL, 7 gün. Kendi add_header'ı var → güvenlik başlıkları
+  # burada da tekrarlanır (add_header kalıtılmaz, bkz. yukarıdaki not).
   location ~* \.[a-z0-9]+$ {
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Cross-Origin-Opener-Policy "same-origin" always;
+    add_header Cross-Origin-Resource-Policy "same-origin" always;
+    add_header Content-Security-Policy $corteqs_csp always;
+
+    add_header Cache-Control "public, max-age=604800";
     try_files $uri =404;
   }
 

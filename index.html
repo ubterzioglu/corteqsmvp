@@ -43,10 +43,11 @@
          Render-blocking maliyeti preload + display=swap ile karşılanır. -->
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
-    <!-- LCP görseli: hero'daki logo. (Eski /og-image.png preload'u kaldırıldı —
-         o görsel yalnızca sosyal paylaşım meta'sında kullanılıyor, sayfada render
-         edilmiyordu; yüksek öncelikli preload LCP'yi gereksiz yere geciktiriyordu.) -->
-    <link rel="preload" as="image" href="/newlogo.png" fetchpriority="high" />
+    <!-- LCP görseli: ana sayfa hero'sunun poster karesi (~10 KB WebP). Lighthouse
+         2026-10-12'de LCP öğesi 8 MB'lık hero videosuydu; artık poster çizilir, video
+         yalnız geniş ekranda ve sayfa yüklendikten sonra gelir (HeroNetworkSection.tsx).
+         Eski /newlogo.png preload'u eski hero'dan kalmaydı, bu sayfada LCP değildi. -->
+    <link rel="preload" as="image" href="/landing-assets/hero-network-poster.webp" type="image/webp" fetchpriority="high" />
 
     <!-- Analitik: gtag ve Ahrefs harici dosyadır, CSP allowlist'inde host adları geçer.
          gtag config'i ve Clarity yükleyicisi /analytics.js'e taşındı — CSP script-src'inde

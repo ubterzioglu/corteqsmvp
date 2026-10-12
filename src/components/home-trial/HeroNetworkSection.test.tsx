@@ -1,6 +1,6 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import HeroNetworkSection from "./HeroNetworkSection";
 
@@ -109,6 +109,58 @@ describe("ana sayfa hero", () => {
       fireEvent.click(screen.getByRole("button", { name: /Daha az göster/ }));
 
       expect(screen.getByRole("navigation", { name: "Hızlı erişim" })).toHaveClass("hidden");
+    });
+  });
+
+  // Lighthouse 2026-10-12: LCP öğesi 8 MB'lık hero videosuydu (LCP 8,8 sn).
+  // Kullanıcı kararı 2026-10-12: dar ekranda ve "azaltılmış hareket" tercihinde
+  // video HİÇ çizilmez, yalnız hafif poster görseli durur. Geniş ekranda video,
+  // sayfa yüklendikten sonra poster'ın üstüne gelir.
+  describe("hero arka planı", () => {
+    const originalMatchMedia = window.matchMedia;
+
+    const stubMatchMedia = (matches: boolean) => {
+      window.matchMedia = ((query: string) => ({
+        matches,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      })) as typeof window.matchMedia;
+    };
+
+    afterEach(() => {
+      window.matchMedia = originalMatchMedia;
+    });
+
+    it("poster görseli her zaman çizilir ve yüksek öncelikle yüklenir", () => {
+      stubMatchMedia(false);
+      const { container } = renderHero();
+
+      const poster = container.querySelector('img[src="/landing-assets/hero-network-poster.webp"]');
+      expect(poster).not.toBeNull();
+      expect(poster).toHaveAttribute("fetchpriority", "high");
+      expect(poster).toHaveAttribute("alt", "");
+    });
+
+    it("dar ekranda / azaltılmış harekette video ÇİZİLMEZ", () => {
+      stubMatchMedia(false);
+      const { container } = renderHero();
+
+      expect(container.querySelector("video")).toBeNull();
+    });
+
+    it("geniş ekranda video poster'la birlikte çizilir", async () => {
+      stubMatchMedia(true);
+      const { container } = renderHero();
+
+      await waitFor(() => expect(container.querySelector("video")).not.toBeNull());
+      const video = container.querySelector("video");
+      expect(video).toHaveAttribute("src", "/landing-assets/hero-network.mp4");
+      expect(video).toHaveAttribute("poster", "/landing-assets/hero-network-poster.webp");
     });
   });
 

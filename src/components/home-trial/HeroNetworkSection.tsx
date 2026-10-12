@@ -5,6 +5,8 @@
  * Video açık renkli olduğu için metin KOYU, okunabilirlik örtüsü de soldan BEYAZ.
  */
 
+import { useEffect, useState } from "react";
+
 import { HomeActionStack } from "./HomeActionStack";
 import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
@@ -27,8 +29,42 @@ import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 // olsaydı Vite dist/landingtrial/ dizini üretir, nginx onu /landingtrial route'unun
 // önüne geçirip 403 verirdi (CLAUDE.md "dist/<slug>/ dizini oluşmamalı" uyarısı).
 const HERO_VIDEO_SRC = "/landing-assets/hero-network.mp4";
+// Videonun İLK karesi (ffmpeg, 1280px WebP ~10 KB). Video değişirse poster de
+// yeniden üretilir, yoksa video başlarken görüntü sıçrar. index.html bu dosyayı
+// preload eder — adı değişirse orayı da güncelle.
+const HERO_POSTER_SRC = "/landing-assets/hero-network-poster.webp";
+
+// Lighthouse 2026-10-12: LCP öğesi 8 MB'lık bu videoydu (mobil LCP 8,8 sn).
+// Kullanıcı kararı 2026-10-12: dar ekranda (≤640px) ve "azaltılmış hareket"
+// tercihinde video HİÇ çizilmez; yalnız poster durur. Geniş ekranda video, sayfa
+// `load` olduktan SONRA poster'ın üstüne gelir — LCP'yi poster belirler.
+const HERO_VIDEO_QUERY = "(min-width: 641px) and (prefers-reduced-motion: no-preference)";
+
+// React 18 `fetchPriority` prop'unu tanımaz (uyarı verir); küçük harfli DOM
+// özniteliği olarak geçirilir. React 19'a geçince `fetchPriority="high"` yazılır.
+const HIGH_FETCH_PRIORITY = { fetchpriority: "high" } as Record<string, string>;
+
+function useHeroVideoEnabled(): boolean {
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    if (!window.matchMedia(HERO_VIDEO_QUERY).matches) return undefined;
+
+    const enable = () => setEnabled(true);
+    if (document.readyState === "complete") {
+      enable();
+      return undefined;
+    }
+    window.addEventListener("load", enable, { once: true });
+    return () => window.removeEventListener("load", enable);
+  }, []);
+
+  return enabled;
+}
 
 const HeroNetworkSection = () => {
+  const videoEnabled = useHeroVideoEnabled();
+
   return (
     // İçerik dikeyde ortalıdır; üst boşluğu azaltmak için `py-8` yerine ASİMETRİK
     // dolgu kullanılır. Alt dolgunun fazlası, ortalama kutusunu yukarı taşır —
@@ -36,17 +72,29 @@ const HeroNetworkSection = () => {
     // yüksekliği aynı kalır. `items-start`'a geçmek yüksekliği korurdu ama içeriği
     // ekran boyundan bağımsız olarak tepeye yapıştırırdı; uzun ekranlarda kötü durur.
     <section className="relative flex min-h-[calc(100vh-8rem)] items-center overflow-hidden bg-white pb-24 pt-6 sm:min-h-[calc(100vh-6rem)] sm:pb-32 sm:pt-8">
-      {/* Tam ekran arka plan video — dekoratif, loop, sessiz, autoplay. */}
-      <video
-        src={HERO_VIDEO_SRC}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
+      {/* Poster her ekranda çizilir ve LCP öğesidir; video (yalnız geniş ekranda)
+          aynı karede başladığı için üstüne geçiş görünmez. Dekoratif → alt="". */}
+      <img
+        src={HERO_POSTER_SRC}
+        alt=""
         aria-hidden="true"
+        decoding="async"
+        {...HIGH_FETCH_PRIORITY}
         className="pointer-events-none absolute inset-0 h-full w-full object-cover"
       />
+      {videoEnabled ? (
+        <video
+          src={HERO_VIDEO_SRC}
+          poster={HERO_POSTER_SRC}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+        />
+      ) : null}
       {/* Okunabilirlik örtüsü: açık videoda KOYU metnin okunması için soldan beyaz → sağa şeffaf.
           Başlığın olduğu sol taraf süt beyaza yaklaşır, sağdaki ağ deseni görünür kalır. */}
       <div

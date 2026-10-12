@@ -12,7 +12,7 @@
 // DÜZ NESNE — instanceof Error daraltması YASAK (m75/KR03).
 import { supabase } from "@/integrations/supabase/client";
 import { reportClientError } from "@/lib/client-error-reports";
-import { normalizeReferralCode } from "@/lib/referral-qr";
+import { normalizeReferralCode } from "@/lib/referral-code";
 
 /** M11 raise kodları → Türkçe (çift yönlü ayna test: user-invites-schema). */
 export const INVITE_ERROR_MESSAGES: Record<string, string> = {

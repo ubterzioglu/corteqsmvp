@@ -154,6 +154,9 @@ const DiasporaSearchSection = () => {
         />
         <button
           type="submit"
+          // Mobilde "Ara" yazısı gizli, yalnız ok ikonu kalır → erişilebilir ad buradan
+          // gelir (Lighthouse 2026-10-12 `button-name`).
+          aria-label="Ara"
           className="group inline-flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-5 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal sm:px-6"
         >
           <span className="hidden sm:inline">Ara</span>

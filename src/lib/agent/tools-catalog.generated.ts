@@ -4530,6 +4530,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/referral-code.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/referral-codes.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4966,6 +4971,16 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/standalone-tools.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/storage-image.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/storage-image.ts",
       "kind": "ts",
       "module_family": "lib"
     },
