@@ -2,6 +2,12 @@ import { createRoot, hydrateRoot } from "react-dom/client";
 import App from "./App.tsx";
 import AppErrorBoundary from "./components/AppErrorBoundary.tsx";
 import { installChunkErrorRecovery } from "./lib/recoveryReload";
+// Fontlar kendi sunucumuzdan (Google Fonts render-blocking'i yerine; bkz. index.html).
+// Aile adları tailwind.config.ts'teki fontFamily ile BİREBİR eşleşmeli.
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/600.css";
+import "@fontsource/space-grotesk/700.css";
 import "./index.css";
 
 installChunkErrorRecovery();

@@ -16,9 +16,10 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        // "Inter Variable" = @fontsource-variable/inter'in @font-face adı (src/main.tsx).
+        sans: ['"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
         // Başlıklar için keskin, "tech" hissi veren display font. Gövde Inter kalır.
-        display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', '"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
         // Marka renkleriyle neon glow — CTA ve kart hover'larında kullanılır.

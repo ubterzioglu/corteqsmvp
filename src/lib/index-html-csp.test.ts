@@ -34,20 +34,35 @@ describe("index.html CSP sözleşmesi", () => {
     expect(hits).toEqual([]);
   });
 
-  it("font stylesheet'i koşulsuz uygulanır (media=print ile parkta bırakılmaz)", () => {
-    const fontLinks = Array.from(
-      INDEX_HTML.matchAll(/<link[^>]*fonts\.googleapis\.com[^>]*>/gi),
+  it("hiçbir stylesheet print'e park edilmez (media=print hilesi yok)", () => {
+    const stylesheetLinks = Array.from(
+      INDEX_HTML.matchAll(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi),
     ).map((m) => m[0]);
 
-    expect(fontLinks.length).toBeGreaterThan(0);
-
-    const stylesheetLinks = fontLinks.filter((tag) => /rel=["']stylesheet["']/i.test(tag));
-    expect(stylesheetLinks.length).toBeGreaterThan(0);
-
-    // Uygulanan stylesheet'in hiçbiri print'e park edilmiş olmamalı.
     for (const tag of stylesheetLinks) {
       expect(tag).not.toMatch(/media=["']print["']/i);
     }
+  });
+
+  // 2026-10-12: Inter / Space Grotesk artık KENDİ sunucumuzdan (@fontsource) gelir.
+  // Lighthouse'ta Google Fonts CSS'i ~824 ms render-blocking ölçüldü. Fontlar JS
+  // girişinden import edilir ve hash'li /assets/ dosyası olarak (immutable) iner;
+  // index.html'e Google Fonts bağlantısı GERİ EKLENMEZ. (Ticari dokümanlar ve
+  // yatırımcı sayfası kendi Google Fonts'unu kullanır — CSP izni o yüzden durur.)
+  it("ana fontlar kendi sunucumuzdan yüklenir, index.html Google Fonts çağırmaz", () => {
+    expect(INDEX_HTML).not.toMatch(/fonts\.(googleapis|gstatic)\.com/);
+
+    const mainTsx = readFileSync(path.resolve(process.cwd(), "src/main.tsx"), "utf8");
+    expect(mainTsx).toMatch(/import ["']@fontsource-variable\/inter\/wght\.css["']/);
+    for (const weight of ["500", "600", "700"]) {
+      expect(mainTsx).toContain(`import "@fontsource/space-grotesk/${weight}.css"`);
+    }
+
+    // Aile adı paketin @font-face'iyle BİREBİR aynı olmalı; yoksa font iner ama
+    // hiç uygulanmaz (2026-09-05'teki "canlıda font yok" sınıfının aynısı).
+    const tailwind = readFileSync(path.resolve(process.cwd(), "tailwind.config.ts"), "utf8");
+    expect(tailwind).toContain(`'"Inter Variable"'`);
+    expect(tailwind).toContain(`'"Space Grotesk"'`);
   });
 
   it("inline <script> yalnız JSON-LD olabilir (çalıştırılabilir inline script yok)", () => {

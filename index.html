@@ -32,17 +32,12 @@
          dolayısıyla onlar her sayfada "Türkçe sürümüm ana sayfa" diyen ölü sinyaldi.
 
          Sözleşme testi: src/lib/seo.test.ts — "index.html kabuğu" bloğu. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Fontlar: preload + DOĞRUDAN stylesheet. `media="print" onload="this.media='all'"`
-         hilesi 05.09.2026'da KALDIRILDI — CSP script-src'inde 'unsafe-inline' olmadığı için
-         (bilinçli, bkz. "Değişmez sözleşmeler" md.3) tarayıcı o inline onload'ı hiç
-         çalıştırmıyordu; stylesheet media="print" olarak kalıyor ve Inter/Space Grotesk
-         CANLIDA HİÇ UYGULANMIYORDU. Canlı ölçüm: document.fonts boş, link.media="print".
-         Buraya inline `onload`/`onclick` EKLEME — CSP sessizce yutar, hata görünmez.
-         Render-blocking maliyeti preload + display=swap ile karşılanır. -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" />
+    <!-- Fontlar (Inter Variable + Space Grotesk) 2026-10-12'den beri KENDİ sunucumuzdan
+         gelir: src/main.tsx @fontsource paketlerini import eder, woff2 dosyaları hash'li
+         /assets/ altına iner (immutable). Google Fonts CSS'i Lighthouse'ta ~824 ms
+         render-blocking ölçülmüştü. Buraya Google Fonts bağlantısı GERİ EKLEME
+         (src/lib/index-html-csp.test.ts kilitler). Inline `onload`/`onclick` de
+         EKLEME — CSP 'unsafe-inline' içermez, sessizce yutar. -->
     <!-- LCP görseli: ana sayfa hero'sunun poster karesi (~10 KB WebP). Lighthouse
          2026-10-12'de LCP öğesi 8 MB'lık hero videosuydu; artık poster çizilir, video
          yalnız geniş ekranda ve sayfa yüklendikten sonra gelir (HeroNetworkSection.tsx).
