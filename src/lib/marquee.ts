@@ -48,7 +48,7 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
       "Yurt dışındaki Türk topluluğu giderek büyüyor; öğrenciler, profesyoneller, işletmeler ve aileler aynı şehirlerde yan yana yaşıyor. CorteQS bu insanların birbirini keşfetmesini, deneyim paylaşmasını ve fırsatlara erişmesini kolaylaştırmak için hazırlanıyor. Şehrindeki Türk topluluğunu bir adım daha yakına getiriyoruz.",
     detail_content: null,
     external_url: null,
-    image_url: "/logocorteqsbig.png",
+    image_url: "/logocorteqsbig-480.webp",
     image_alt: "CorteQS diaspora bağlantı görseli",
     metric_value: "8.8 milyon",
     news_post_id: null,
@@ -135,9 +135,13 @@ export async function uploadNewsImage(file: File): Promise<string> {
     .slice(0, 80);
   const path = `marquee/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safeBaseName}${extension}`;
 
+  // Yol her yüklemede benzersizdir ve `upsert: false` → nesne hiç değişmez, uzun önbellek
+  // güvenlidir. Varsayılan 3600 sn idi; ana sayfa marquee görselleri her ziyarette yeniden
+  // doğrulanıyordu (Lighthouse 2026-10-13). Yalnız YENİ yüklemeleri etkiler.
   const { error } = await supabase.storage.from(newsImageBucket).upload(path, file, {
     contentType: file.type,
     upsert: false,
+    cacheControl: "31536000",
   });
 
   if (error) throw error;

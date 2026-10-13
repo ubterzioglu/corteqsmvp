@@ -17,7 +17,7 @@ const ChatMessage = ({ message }: Props) => {
     <div className={`flex gap-3 ${isUser ? "justify-end" : "justify-start"}`}>
       {!isUser && (
         <img
-          src="/lmaskog.png"
+          src="/lmaskog-128.webp"
           alt=""
           aria-hidden="true"
           className="h-8 w-8 shrink-0 rounded-full object-cover shadow"

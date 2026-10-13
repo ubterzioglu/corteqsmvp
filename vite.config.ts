@@ -74,33 +74,38 @@ export default defineConfig(({ mode }) => ({
         lansman: path.resolve(import.meta.dirname, "lansman/index.html"),
       },
       output: {
-        manualChunks(id) {
-          const normalizedId = id.replace(/\\/g, "/");
+        // Rolldown gruplaması (`manualChunks` yerine). Bir grup eşleşen modülün
+        // BAĞIMLILIKLARINI da yakalar (`includeDependenciesRecursively` varsayılanı true);
+        // bu yüzden öncelik sırası anlam taşır.
+        // ⚠️ Lighthouse 2026-10-13: eski `manualChunks` ile React çekirdeği `vendor-icons`'a,
+        // `react/jsx-runtime` ise `vendor-motion`'a sürüklenmişti — ana sayfa hiç kullanmadığı
+        // framer-motion'ı (46 KB) yalnız jsx-runtime için indiriyordu. `vendor-react` en yüksek
+        // öncelikte olmalı ki React'i başka bir grup yutmasın.
+        codeSplitting: {
+          groups: [
+            { name: "vendor-react", priority: 100, test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
+            { name: "vendor-supabase", priority: 90, test: /[\\/]node_modules[\\/]@supabase[\\/]/ },
+            { name: "vendor-query", priority: 90, test: /[\\/]node_modules[\\/]@tanstack[\\/]/ },
+            { name: "vendor-icons", priority: 80, test: /[\\/]node_modules[\\/]lucide-react[\\/]/ },
+            { name: "vendor-motion", priority: 80, test: /[\\/]node_modules[\\/]framer-motion[\\/]/ },
+            { name: "vendor-date", priority: 80, test: /[\\/]node_modules[\\/]date-fns[\\/]/ },
+            // ⚠️ `@radix-ui/*` bilerek GRUPLANMAZ. Lighthouse 2026-10-13: tek `vendor-radix`
+            // grubu ~30 primitive'i 92 KB'lık tek parçada her sayfaya indiriyordu (bootup 1,16 sn).
+            // ⚠️ Yalnız TEMBEL sayfaların kullandığı kütüphaneler (recharts/d3, react-markdown,
+            // react-hook-form/zod, qrcode, takvim seçicileri) de GRUPLANMAZ. Lighthouse 2026-10-12:
+            // `vendor-charts` grubu React çekirdeğini içine almıştı ve grafik/markdown/form/qrcode
+            // HER sayfanın başlangıcında yükleniyordu. Grupsuz kalınca Rolldown onları kullanan
+            // lazy sayfalarla birlikte böler.
 
-          // Uzantısız önek bilinçli: hem barrel (social-diaspora-posts.ts,
-          // social-test-tools.ts, burak-share-tools.ts) hem de parça dosyalar
-          // (social-diaspora-posts/posts-XX-YY.ts, social-test-tools/tools-XX-YY.ts,
-          // burak-share-tools/tool-XX.ts) aynı chunk'a girsin.
-          if (normalizedId.includes("/src/lib/admin-shell/social-diaspora-posts")) return "social-vault-diaspora";
-          if (normalizedId.includes("/src/lib/admin-shell/social-test-tools")) return "social-vault-tests";
-          if (normalizedId.includes("/src/lib/admin-shell/burak-share-tools")) return "social-vault-burak";
-          if (normalizedId.includes("/src/lib/admin-shell/social-share-vault.ts")) return "social-vault-tools";
-
-          if (!normalizedId.includes("/node_modules/")) return undefined;
-          if (/\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(normalizedId)) return "vendor-react";
-          if (normalizedId.includes("/@supabase/")) return "vendor-supabase";
-          if (normalizedId.includes("/@radix-ui/")) return "vendor-radix";
-          if (normalizedId.includes("/lucide-react/")) return "vendor-icons";
-          if (normalizedId.includes("/framer-motion/")) return "vendor-motion";
-          if (normalizedId.includes("/date-fns/")) return "vendor-date";
-          if (normalizedId.includes("/@tanstack/")) return "vendor-query";
-          // ⚠️ Yalnız TEMBEL sayfaların kullandığı kütüphaneler (recharts/d3, react-markdown,
-          // react-hook-form/zod, qrcode, takvim seçicileri) burada ADLANDIRILMAZ.
-          // Lighthouse 2026-10-12: `vendor-charts` grubu React çekirdeğini de içine almıştı
-          // (recharts → react bağımlılığı) ve bu yüzden grafik/markdown/form/qrcode parçaları
-          // HER sayfanın başlangıcında yükleniyordu (~300 KB kullanılmayan JS). Adsız
-          // bırakılınca Rolldown onları kullanan lazy sayfalarla birlikte böler.
-          return undefined;
+            // Uzantısız önek bilinçli: hem barrel (social-diaspora-posts.ts,
+            // social-test-tools.ts, burak-share-tools.ts) hem de parça dosyalar
+            // (social-diaspora-posts/posts-XX-YY.ts, social-test-tools/tools-XX-YY.ts,
+            // burak-share-tools/tool-XX.ts) aynı chunk'a girsin.
+            { name: "social-vault-diaspora", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-diaspora-posts/ },
+            { name: "social-vault-tests", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-test-tools/ },
+            { name: "social-vault-burak", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]burak-share-tools/ },
+            { name: "social-vault-tools", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-share-vault\.ts/ },
+          ],
         },
       },
     },

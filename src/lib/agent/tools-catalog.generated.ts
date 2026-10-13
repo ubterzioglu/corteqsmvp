@@ -2675,6 +2675,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/blog-cards.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/blog-seo.test.ts",
       "kind": "ts",
       "module_family": "lib"

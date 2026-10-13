@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
-import { listPublishedBlogPosts, type BlogPostRow } from "@/lib/blog";
+import { listLatestBlogPostCards, type BlogPostCard } from "@/lib/blog";
 import { buildBlogPostingJsonLd } from "@/lib/blog-seo";
 import { SEO_DEFAULT_OG_IMAGE } from "@/lib/seo";
 import type { DiasporaStory } from "./home-trial.types";
@@ -17,11 +17,11 @@ const STORY_LIMIT = 3;
 
 const DiasporaStoriesSection = () => {
   const [stories, setStories] = useState<DiasporaStory[]>([]);
-  const [posts, setPosts] = useState<BlogPostRow[]>([]);
+  const [posts, setPosts] = useState<BlogPostCard[]>([]);
 
   useEffect(() => {
     let mounted = true;
-    listPublishedBlogPosts()
+    listLatestBlogPostCards(STORY_LIMIT)
       .then((loadedPosts) => {
         if (!mounted) return;
         const sliced = loadedPosts.slice(0, STORY_LIMIT);

@@ -115,6 +115,41 @@ export async function listPublishedBlogPostSummaries(): Promise<BlogPostSummary[
   return (data ?? []) as BlogPostSummary[];
 }
 
+/** Ana sayfa kartı + BlogPosting JSON-LD için gereken kolonlar (markdown gövdesi YOK). */
+export type BlogPostCard = Pick<
+  BlogPostRow,
+  | "slug"
+  | "title"
+  | "excerpt"
+  | "country_label"
+  | "category"
+  | "category_label"
+  | "cover_image"
+  | "published_at"
+  | "created_at"
+  | "updated_at"
+>;
+
+const BLOG_CARD_COLUMNS =
+  "slug, title, excerpt, country_label, category, category_label, cover_image, published_at, created_at, updated_at";
+
+/**
+ * Ana sayfanın "hikâyeler" bölümü yalnız ilk birkaç yazıyı gösterir. Lighthouse 2026-10-13:
+ * bölüm `listPublishedBlogPosts()` ile TÜM yazıları markdown gövdesiyle çekiyordu (47 KB,
+ * ağ zincirinin en uzun halkası). Sıralama `listPublishedBlogPosts` ile aynıdır.
+ */
+export async function listLatestBlogPostCards(limit: number): Promise<BlogPostCard[]> {
+  const { data, error } = await supabase
+    .from(TABLE)
+    .select(BLOG_CARD_COLUMNS)
+    .eq("published", true)
+    .order("sort_order", { ascending: true })
+    .order("published_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []) as BlogPostCard[];
+}
+
 export async function getPublishedBlogPostBySlug(slug: string): Promise<BlogPostRow | null> {
   const { data, error } = await supabase
     .from(TABLE)

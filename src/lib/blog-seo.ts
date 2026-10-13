@@ -11,7 +11,12 @@ export type { BlogPostSummary };
 
 export const DEFAULT_RELATED_POST_LIMIT = 3;
 
-export function buildBlogPostingJsonLd(post: BlogPostRow, ogImage: string): Record<string, unknown> {
+export type BlogPostingSource = Pick<
+  BlogPostRow,
+  "slug" | "title" | "excerpt" | "published_at" | "created_at" | "updated_at" | "country_label" | "category"
+>;
+
+export function buildBlogPostingJsonLd(post: BlogPostingSource, ogImage: string): Record<string, unknown> {
   const canonicalUrl = `${SEO_CANONICAL_ORIGIN}/blog/${post.slug}`;
 
   return {

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { Session } from "@supabase/supabase-js";
 
 import { AuthContext, type AuthContextValue, type Profile } from "@/components/auth/auth-context";
@@ -15,8 +15,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setProfile(await fetchAuthProfile(userId));
   }, []);
 
+  // Açılışta hem `getSession()` hem `onAuthStateChange(INITIAL_SESSION)` aynı kullanıcıyı
+  // bildirir; ikisi de profil çekince 4 sorgu + 4 CORS preflight gidiyordu (Lighthouse
+  // 2026-10-13). Aynı kullanıcı için ikinci açılış çağrısı atlanır; `refreshProfile` ve
+  // gerçek kullanıcı değişimi bu korumadan geçmez.
+  const lastBootstrapUserId = useRef<string | null>(null);
+  const bootstrapProfile = useCallback(
+    (userId: string) => {
+      if (lastBootstrapUserId.current === userId) return;
+      lastBootstrapUserId.current = userId;
+      void fetchProfile(userId);
+    },
+    [fetchProfile],
+  );
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    lastBootstrapUserId.current = null;
     setProfile(null);
   }, []);
 
@@ -29,8 +44,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       if (nextSession?.user) {
         // setTimeout avoids Supabase client deadlock inside auth state change callback
-        setTimeout(() => fetchProfile(nextSession.user.id), 0);
+        setTimeout(() => bootstrapProfile(nextSession.user.id), 0);
       } else {
+        lastBootstrapUserId.current = null;
         setProfile(null);
       }
     });
@@ -40,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(initialSession);
       setIsLoading(false);
       if (initialSession?.user) {
-        void fetchProfile(initialSession.user.id);
+        bootstrapProfile(initialSession.user.id);
       }
     });
 
@@ -48,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isMounted = false;
       data.subscription.unsubscribe();
     };
-  }, [fetchProfile]);
+  }, [bootstrapProfile]);
 
   const refreshProfile = useCallback(async () => {
     if (session?.user) await fetchProfile(session.user.id);

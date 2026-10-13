@@ -31,12 +31,13 @@ describe("App founders routing", () => {
     window.history.pushState({}, "", "/");
   });
 
-  it("renders the founders page on /founders", () => {
+  it("renders the founders page on /founders", async () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
     render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>);
 
+    // FoundersPage/AboutPage tembel yüklenir (Lighthouse 2026-10-13) — önce parçanın çözülmesini bekle.
+    expect(await screen.findByRole("heading", { name: "Burak Akçakanat" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "CorteQS CorteQS Global Türk Diaspora Network" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Burak Akçakanat" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Umut Barış Terzioğlu" })).toBeInTheDocument();
     expect(screen.getAllByAltText("CorteQS").length).toBeGreaterThan(0);
     expect(screen.getByAltText("Burak Akçakanat profil fotoğrafı")).toBeInTheDocument();

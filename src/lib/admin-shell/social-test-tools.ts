@@ -11,7 +11,7 @@
 // parça dosyasından yapılır. Metinler temiz UTF-8 Türkçe + gerçek tırnak +
 // emoji olarak tutulur; HTML-entity / mojibake KULLANILMAZ.
 //
-// DİKKAT — vite.config.ts içindeki `social-vault-tests` manualChunks kuralı
+// DİKKAT — vite.config.ts içindeki `social-vault-tests` codeSplitting grubu
 // UZANTISIZ öneke bakar (`/src/lib/admin-shell/social-test-tools`), böylece
 // barrel ve parça dosyalar aynı chunk'ta kalır. Kurala `.ts` geri eklenirse
 // parçalar chunk dışına düşer ve bundle bölünmesi sessizce değişir.

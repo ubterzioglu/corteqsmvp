@@ -214,6 +214,20 @@ describe("AuthProvider — oturum varken profil kurulumu", () => {
     expect(role?.maybeSingle).toBe(true);
   });
 
+  it("getSession ve INITIAL_SESSION ayni kullaniciyi bildirince profil TEK kez cekilir", async () => {
+    // Gercek supabase-js abonelik kurulunca INITIAL_SESSION'i hemen yayinlar.
+    onAuthStateChangeMock.mockImplementation((callback: (event: string, session: unknown) => void) => {
+      callback("INITIAL_SESSION", SESSION);
+      return { data: { subscription: { unsubscribe: unsubscribeMock } } };
+    });
+
+    renderProvider();
+
+    await waitFor(() => expect(screen.getByTestId("fullName")).toHaveTextContent("Ayse Yilmaz"));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(queryCalls).toHaveLength(2);
+  });
+
   it("nitelikleri profile esler ve rolu accountType yapar", async () => {
     renderProvider();
 

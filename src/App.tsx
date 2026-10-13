@@ -19,12 +19,15 @@ import RouteLoadingFallback from "@/components/RouteLoadingFallback";
 import { RouterAppErrorBoundary } from "@/components/AppErrorBoundary";
 import { ARCHITECTURE_PATH, INVESTOR_PATH, isInvestorPath } from "@/lib/investor/investor-route";
 
-// Eager — SEO-critical above-the-fold pages
-import Index from "./pages/Index.tsx";
-import LansmanPage from "./pages/LansmanPage.tsx";
-import FoundersPage from "./pages/FoundersPage.tsx";
-import AboutPage from "./pages/AboutPage.tsx";
+// Eager — yalnız 404 kabuğu (küçük, her bilinmeyen rotada gerekir).
+// ⚠️ Lighthouse 2026-10-13: Index (/landingtrial), Lansman, Founders, About burada EAGER
+// duruyordu ve `/` (LandingTrialPage) tembel olduğu hâlde DiasporaSearchBar'ın
+// command/popover/geo zincirini HER sayfanın ana paketine sokuyordu. Eager sayfa ekleme.
 import NotFound from "./pages/NotFound.tsx";
+const Index = lazyWithReload(() => import("./pages/Index.tsx"));
+const LansmanPage = lazyWithReload(() => import("./pages/LansmanPage.tsx"));
+const FoundersPage = lazyWithReload(() => import("./pages/FoundersPage.tsx"));
+const AboutPage = lazyWithReload(() => import("./pages/AboutPage.tsx"));
 
 // Lazy — public pages
 const LandingTrialPage = lazyWithReload(() => import("./pages/LandingTrialPage.tsx")); // ana sayfa (/) içeriği — eski /landingtrial denemesi 2026-06-18'de ana sayfa yapıldı
