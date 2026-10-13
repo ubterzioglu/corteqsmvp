@@ -114,7 +114,7 @@ const AssistantBubble = () => {
         style={{ right: RIGHT, bottom: BUBBLE_BOTTOM }}
       >
         <img
-          src="/lmaskog-128.webp"
+          src="/lmaskog-112.webp"
           alt=""
           role="presentation"
           aria-hidden="true"

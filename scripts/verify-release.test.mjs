@@ -5,6 +5,7 @@ import { extractHtmlAssets, extractMuhasebeChunks } from "./verify-release.mjs";
 describe("release verification asset discovery", () => {
   it("selects the main module after vendor entrypoints", () => {
     const html = `
+      <script src="/env-config.js" defer></script>
       <script type="module" crossorigin src="/assets/vendor-react-abc123.js"></script>
       <script type="module" crossorigin src="/assets/vendor-query-def456.js"></script>
       <script type="module" crossorigin src="/assets/main-release789.js"></script>

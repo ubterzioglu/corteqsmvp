@@ -4,6 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
 import { stripHtmlCommentsPlugin } from "./scripts/strip-html-comments.mjs";
+import { routeModulePreloadPlugin } from "./scripts/route-modulepreload.mjs";
+import { envConfigOrderPlugin } from "./scripts/env-config-order.mjs";
 
 // Commercial documents are rendered by the SPA at /commercial/<slug>
 // (CommercialDocumentPage + src/content/commercial/*.html fragments).
@@ -115,6 +117,10 @@ export default defineConfig(({ mode }) => ({
     commercialLegacyHtmlRedirects,
     // index.html geliştirici yorumları dist/ çıktısına sızmasın (GEO 2026-10-11).
     stripHtmlCommentsPlugin(),
+    // `/` tembel parçasını main ile PARALEL indir (Lighthouse 2026-10-13, ikinci dalga).
+    routeModulePreloadPlugin({ moduleSuffix: "src/pages/LandingTrialPage.tsx" }),
+    // env-config.js modüllerden ÖNCE çalışmazsa supabase boş config ile kurulur → build düşer.
+    envConfigOrderPlugin(),
     mode === "development" && componentTagger(),
     ViteImageOptimizer({
       png: { quality: 80 },

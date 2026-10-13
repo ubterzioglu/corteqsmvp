@@ -5,7 +5,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import { DemoBanner } from "@/components/common/DemoBanner";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { findDemoRoute } from "@/lib/demo-pages";
-const logo = "/newlogo-128.webp"; // 512px PNG 40–50px'de çiziliyordu (Lighthouse 2026-10-13)
+const logo = "/newlogo-96.webp"; // 512px PNG 40–50px'de çiziliyordu (Lighthouse 2026-10-13)
 // Q2 (13 Eylül gözle QA): whitespace-nowrap olmadan dar ekranda link METNİ
 // kelime ortasından bölünüyordu ("Geri" / "Bildirim" iki satıra ayrılıp
 // komşu linklerle çakışıyordu). Satırın kendisi de flex-wrap almalı (aşağıda)

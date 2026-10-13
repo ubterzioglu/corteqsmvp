@@ -2,6 +2,12 @@
 <html lang="tr">
   <head>
     <meta charset="UTF-8" />
+    <!-- env-config.js (window.__APP_CONFIG__) HEAD'in BAŞINDA ve `defer`'lidir — render'ı bloklamaz
+         (Lighthouse 2026-10-13). `defer`'li klasik script ile modüller BELGE SIRASIYLA çalışır.
+         ⚠️ Body'ye TAŞIMA: Vite modül script'lerini derlenen HTML'de head'in SONUNA koyar; body'deki
+         env-config modüllerden sonra kalır ve supabase istemcisi boş config ile kurulur.
+         `async` YAPMA. Build bunu denetler: scripts/env-config-order.mjs -->
+    <script src="/env-config.js" defer></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="alternate" type="application/rss+xml" title="CorteQS Blog" href="/rss.xml" />
@@ -358,7 +364,6 @@
 
   <body>
     <div id="root"></div>
-    <script src="/env-config.js"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

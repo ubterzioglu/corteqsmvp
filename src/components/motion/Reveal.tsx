@@ -1,7 +1,7 @@
-import { type ReactNode } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef, type CSSProperties, type ReactNode } from "react";
 
 import { isPrerenderEnvironment } from "@/lib/prerender-agent";
+import { useInViewOnce, usePrefersReducedMotion } from "./motion-hooks";
 
 type RevealDirection = "up" | "left" | "right" | "none";
 
@@ -17,6 +17,7 @@ interface RevealProps {
 }
 
 const OFFSET = 28;
+const EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const offsetFor = (direction: RevealDirection): { x: number; y: number } => {
   switch (direction) {
@@ -37,28 +38,32 @@ const offsetFor = (direction: RevealDirection): { x: number; y: number } => {
  * `prefers-reduced-motion` açıkken hiç animasyon yapmaz — içerik anında görünür.
  * Prerender'da da animasyon YOKTUR: headless tarayıcı kaydırmaz ve içerik bota
  * `opacity: 0` ile gider (bkz. src/lib/prerender-agent.ts).
+ *
+ * framer-motion KULLANMAZ (Lighthouse 2026-10-13): IntersectionObserver + CSS transition.
  */
 const Reveal = ({ children, delay = 0, direction = "up", className, as = "div" }: RevealProps) => {
-  const reduceMotion = useReducedMotion();
-  const MotionTag = motion[as];
+  const Tag = as;
+  const ref = useRef<HTMLElement>(null);
+  const reduceMotion = usePrefersReducedMotion();
+  const animate = !reduceMotion && !isPrerenderEnvironment();
+  const visible = useInViewOnce(ref, { threshold: 0.2, rootMargin: "0px 0px -10% 0px", enabled: animate });
 
-  if (reduceMotion || isPrerenderEnvironment()) {
-    const Tag = as;
+  if (!animate) {
     return <Tag className={className}>{children}</Tag>;
   }
 
   const { x, y } = offsetFor(direction);
+  const style: CSSProperties = {
+    opacity: visible ? 1 : 0,
+    transform: visible ? "none" : `translate3d(${x}px, ${y}px, 0)`,
+    transition: `opacity 0.6s ${EASING} ${delay}s, transform 0.6s ${EASING} ${delay}s`,
+  };
 
   return (
-    <MotionTag
-      className={className}
-      initial={{ opacity: 0, x, y }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, amount: 0.2, margin: "0px 0px -10% 0px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    // `as` dört etiketin birleşimi olduğu için ref tipi daraltılamaz; hepsi HTMLElement'tir.
+    <Tag ref={ref as never} className={className} style={style} data-reveal={visible ? "in" : "pending"}>
       {children}
-    </MotionTag>
+    </Tag>
   );
 };
 

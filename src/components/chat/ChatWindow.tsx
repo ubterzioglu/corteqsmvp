@@ -5,7 +5,7 @@ import ChatInput from "@/components/chat/ChatInput";
 import ChatProgressBar from "@/components/chat/ChatProgressBar";
 import type { ChatState } from "@/hooks/useChatMachine";
 import { getProgressInfo } from "@/lib/chatConfig";
-const chatbotMascot = "/lmaskog-128.webp";
+const chatbotMascot = "/lmaskog-112.webp";
 
 type Props = {
   state: ChatState;

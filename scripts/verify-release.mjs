@@ -2,6 +2,8 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { findEnvConfigOrderProblem } from "./env-config-order.mjs";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, "..");
@@ -58,6 +60,11 @@ export const extractHtmlAssets = (html) => {
 
   if (!styleMatch?.[1]) {
     fail("dist/index.html does not contain the main stylesheet");
+  }
+
+  const envConfigProblem = findEnvConfigOrderProblem(html);
+  if (envConfigProblem) {
+    fail(envConfigProblem);
   }
 
   return {

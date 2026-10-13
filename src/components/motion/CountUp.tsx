@@ -1,12 +1,7 @@
-import { useEffect, useRef } from "react";
-import {
-  animate,
-  useInView,
-  useMotionValue,
-  useReducedMotion,
-  useTransform,
-  motion,
-} from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+
+import { isPrerenderEnvironment } from "@/lib/prerender-agent";
+import { easeOutQuint, useInViewOnce, usePrefersReducedMotion } from "./motion-hooks";
 
 interface CountUpProps {
   /** Hedef sayı. */
@@ -20,26 +15,42 @@ interface CountUpProps {
 
 /**
  * 0'dan hedefe sayan animasyonlu sayaç. Viewport'a girince bir kez tetiklenir.
- * `prefers-reduced-motion` açıkken doğrudan son değeri (animasyonsuz) gösterir.
+ * `prefers-reduced-motion` açıkken ve prerender'da doğrudan son değeri gösterir —
+ * headless tarayıcı kaydırmadığı için bot aksi hâlde "0" görür.
+ *
+ * framer-motion KULLANMAZ (Lighthouse 2026-10-13): IntersectionObserver + requestAnimationFrame.
  */
 const CountUp = ({ to, duration = 1.4, locale = "tr-TR", className }: CountUpProps) => {
-  const reduceMotion = useReducedMotion();
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.6 });
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (value) => Math.round(value).toLocaleString(locale));
+  const reduceMotion = usePrefersReducedMotion();
+  const animate = !reduceMotion && !isPrerenderEnvironment();
+  const inView = useInViewOnce(ref, { threshold: 0.6, enabled: animate });
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (reduceMotion || !inView) return;
-    const controls = animate(count, to, { duration, ease: [0.22, 1, 0.36, 1] });
-    return () => controls.stop();
-  }, [count, to, duration, inView, reduceMotion]);
+    if (!animate || !inView) return;
+    let frame = 0;
+    const start = performance.now();
+    const totalMs = Math.max(0, duration * 1000);
 
-  if (reduceMotion) {
+    const tick = (now: number) => {
+      const progress = totalMs === 0 ? 1 : (now - start) / totalMs;
+      setValue(to * easeOutQuint(progress));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [animate, inView, to, duration]);
+
+  if (!animate) {
     return <span className={className}>{to.toLocaleString(locale)}</span>;
   }
 
-  return <motion.span ref={ref} className={className}>{rounded}</motion.span>;
+  return (
+    <span ref={ref} className={className}>
+      {Math.round(value).toLocaleString(locale)}
+    </span>
+  );
 };
 
 export default CountUp;
