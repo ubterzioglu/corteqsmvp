@@ -75,6 +75,41 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  // Kod sağlığı eşikleri (2026-11-07, ölçülerek konuldu).
+  // ⚠️ `lint` `--max-warnings 0` ile koşar → `warn` da KIRMIZIDIR; eşikler bu yüzden
+  // `error` ve mevcut ihlaller `eslint-suppressions.json` tabanındadır (ESLint 9 toplu
+  // bastırma). Yeni ihlal anında kırmızı; bir ihlali düzeltince `npx eslint .
+  // --prune-suppressions` ile tabandan düşür (yoksa lint "kullanılmayan bastırma" der).
+  // Dosya taşınırsa bastırması düşer ve ihlal GÜRÜLTÜLÜ geri gelir — bilinçli tercih.
+  // Ölçüm (07.11, üretim kodu): complexity>15 → 97 fonksiyon / 90 dosya;
+  // max-depth>4 → 0; max-lines>800 (boş satır+yorum hariç) → yalnız veri/üretilen dosyalar.
+  {
+    files: ["src/**/*.{ts,tsx}"],
+    ignores: ["src/integrations/supabase/types.ts", "**/*.generated.ts", "src/components/ui/**"],
+    rules: {
+      complexity: ["error", 15],
+      "max-depth": ["error", 4],
+      "max-lines": ["error", { max: 800, skipBlankLines: true, skipComments: true }],
+    },
+  },
+  {
+    // Testler tablo güdümlüdür, dallanma sayısı ürün riski değildir; boyutları da serbest.
+    files: ["src/**/*.test.{ts,tsx}", "src/test/**"],
+    rules: { complexity: "off", "max-lines": "off" },
+  },
+  {
+    // VERİ dosyaları (kod değil): satır sayısı içerik hacmidir. Glob ile — dosya adıyla
+    // yazılmış liste taşınınca kuralı sessizce düşürürdü.
+    files: [
+      "src/lib/admin-shell/admin-updates/**",
+      "src/lib/admin-shell/social-diaspora-posts/**",
+      "src/lib/zgen/zgen-data.ts",
+      "src/lib/germany-vize-data.ts",
+      "src/lib/role-structure.ts",
+      "src/data/**",
+    ],
+    rules: { "max-lines": "off" },
+  },
   // Node script'leri (2026-11-07): bu bloktan önce `**/*.{ts,tsx}` dışındaki hiçbir
   // dosya lint'lenmiyordu — `scripts/` altındaki ~100 .mjs (CI kapıları, ingest,
   // migration araçları) ve `server.mjs` hiç denetlenmiyordu.

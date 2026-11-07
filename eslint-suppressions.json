@@ -1,0 +1,452 @@
+{
+  "src/components/InterestForm.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/SearchableCitySelect.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/SearchableCountrySelect.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/ServiceRequestForm.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/ServiceRequestsList.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/catalog/CatalogEntityProfilePanel.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/catalog/CatalogRecordsTable.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/muhasebe/ExpenseFormDialog.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/muhasebe/IncomeFormDialog.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/shell/AdminSidebar.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/shell/AdminSidebarItem.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/social-share/UnifiedShareList.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/surveys/SurveyBuilder.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/admin/workshop/WorkshopBoard.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/cadde/CaddeComposer.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/cadde/CaddeFeedView.tsx": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/components/cadde/CaddeInterestsCard.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/cadde/CaddeRightRail.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/cadde/CaddeTanitimPanel.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/cadde/CreateCafeForm.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/chat/ChatBot.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/chat/ChatWindow.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/directory/DirectoryFilters.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/directory/public-profile/OrgVerificationRequestCard.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/directory/public-profile/PublicProfileHero.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/directory/public-profile/PublicProfileShell.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/events/CreateEventFormSection.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/events/MyEventsPanel.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/profile/AttributeInput.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/profile/PhoneVerificationCard.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/profile/ProfileAttributeEditor.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/profile/ProfileFieldsCard.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/profile/premium/PremiumProfileHero.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/relocation/tools/QuestionRenderer.tsx": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/components/surveys/SurveyQuestionRenderer.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/whatsapp/AddCommunityFormSection.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/whatsapp/GroupOwnerPanel.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/whatsapp/GroupOwnershipClaim.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/components/whatsapp/GroupReportButton.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/hooks/admin/useNotificationSettings.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/hooks/cadde/useCaddeLayoutState.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/hooks/useChatMachine.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/cadde-api.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/lib/catalog-directory.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/chatConfig.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/lib/dashboard/command-center-hot-fixes.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/dashboard/command-center-items/filters.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/dashboard/command-center-items/form-state.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/dashboard/command-center-items/queries.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/events-api.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/events-timezone.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/member-profile-api.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/pending-onboarding-api.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/profile-social-links.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/public-content-search.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/relocation-tools-challenge.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/relocation-tools-country.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/relocation-tools-diaspora.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/relocation-tools-jobprob.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/seo.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/site-assistant-api.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/submissions.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/lib/surveys.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/whatsapp-landing-presentation.ts": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/lib/whatsapp-landings.ts": {
+    "complexity": {
+      "count": 2
+    }
+  },
+  "src/pages/AddWhatsAppPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/AssociationDetail.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/Associations.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/DirectoryPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/EventDetailPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/IndependentProfilePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/JobListingDetailPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/ProfilePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/RecommendationDetailPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/VipInvitationPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminCaddePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminCustomerRequestsPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminDurumRaporuPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminEventsPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminGruplarPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminNotificationSettingsPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminRoleManagementPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminToolRegistryPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminTractionPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/cadde/CaddeCafePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/cadde/CaddeCarsiPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/cadde/CaddePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/relocation/RelocationHomePage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/relocation/tools/RelocationToolPage.tsx": {
+    "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/relocation/tools/germany/VatandaslikTestiToolPage.tsx": {
+    "complexity": {
+      "count": 2
+    }
+  }
+}

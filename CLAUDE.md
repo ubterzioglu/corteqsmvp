@@ -1063,10 +1063,16 @@ try {
 
 ## Linting & Code Quality
 
-- **ESLint:** `npm run lint`
-- **No auto-fix on save** (hooks configured elsewhere if needed)
-- **Disabled rules:** `no-unused-vars`, loose style
-- **Recommended:** Enable `strict` checks in `tsconfig` after routing refactor
+- **ESLint:** `npm run lint` (`--max-warnings 0` → `warn` da kırmızıdır)
+- **Kapsam (2026-11-07):** `src/**/*.{ts,tsx}` + `scripts/**/*.mjs` + kök `*.mjs` (Node bloğu).
+- **Kod sağlığı eşikleri (`src`, üretim kodu):** `complexity` 15 · `max-depth` 4 ·
+  `max-lines` 800 (boş satır/yorum hariç). Testlerde `complexity`/`max-lines` kapalı;
+  veri dosyaları glob ile `max-lines` dışında.
+- ⚠️ **`eslint-suppressions.json` mevcut `complexity` ihlallerinin TABANIDIR** (97 / 90 dosya,
+  07.11). Yeni ihlal anında kırmızı. Bir fonksiyonu sadeleştirince `npx eslint .
+  --prune-suppressions` koş — yoksa lint "kullanılmayan bastırma" ile düşer. Tabana YENİ
+  ihlal ekleme (`--suppress-rule`) son çaredir; önce fonksiyonu böl.
+- **`no-unused-vars`:** TS'te kapalı, `.mjs`'te açık (`argsIgnorePattern: ^_`).
 
 ## Documentation & Runbooks
 
