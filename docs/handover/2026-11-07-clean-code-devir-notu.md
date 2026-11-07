@@ -69,3 +69,53 @@ son_dogrulama: 2026-11-07
 Tam liste ve gerekçeler: KALANLAR §1.9 (GB1, U12, U14, K15, K17, W02b, G10c, K18, PS01, SF01, CO01/CO01a, RH01).
 Özet: 🔴 GB1 (anahtar rotasyonu — ayrıntı yalnız plan dosyasında) ·
 frontend deploy (arama düzeltmeleri) · yedek dizinini silmek · karar maddeleri.
+
+## 6. Akşam turu (07.11 akşam) — DEVAM NOKTASI
+
+İki branch, ikisi de **yerel** (push/merge YOK; kullanıcı "branch'e commit" dedi):
+
+1. `clean-code/w3-tekillestirme` (main'in 4 commit önünde, TAMAM): `0ec63b2c` relocation ortak
+   yardımcıları + 🐛 jobprob linkedin `v/5`→`(v-1)/4` (SQL aynası) + ölçek kilit testleri ·
+   `cb212830` `getCurrentUserId` / `AdminLoadingState` / `trSlugify` (🐛 "İstanbul"→`i-stanbul`,
+   "Kış"→`k-s`) · `6e247e1b` KALANLAR CC3 · `f01f6580` yönetici güncellemesi (mail GİTTİ).
+2. `fix/st00-ev01` (1'in ÜSTÜNDE, COMMIT'SİZ — yarım):
+   - ✅ ST00: `ServiceRequestForm` sahte kart ekranı kaldırıldı, talep doğrudan gönderilir,
+     "şu an ücret alınmıyor" notu; `MockStripeCheckout.tsx` silindi (tek kullanıcısıydı).
+   - ✅ `chatConfig.detectCommand`: `trFold` ile katlanmış komut kelimeleri ("İPTAL", "gec").
+   - ✅ W3 tarih (ajan): `src/lib/format-date.ts` (`formatLongDateTimeTR`, `formatShortDateTimeTR`)
+     ← 4 admin yorum/ayar + 2 radar çağrı yeri; altın karşılaştırma 3 TZ × 2.876 girdi = 0 fark.
+   - ⏳ EV01 (ajan): 13 eksik saat dilimi + bitiş<başlangıç uyarısı.
+   - ⏳ Sahte hastane randevusu (ajan): `HospitalAppointment` kart alanları kalkar, dürüst metin,
+     `findDemoRoute`'a `:param` desteği + `/hospital-appointment/:id` DEMO_ROUTES satırı.
+
+**Gece sonu durumu (inceleme tamam, düzeltme sürüyor):**
+- Yönetici güncellemesi `20261107-sahte-odeme-ve-etkinlik-uyarilari` commit'lendi (`0ea39b38`) ve
+  MAİLLENDİ (sent 1). ⚠️ İçindeki iki iddia düzeltme ister: (a) ST00 başarı bildirimi hâlâ
+  "Ödeme alındı" diyordu (düzeltme workflow'unda); (b) "kayıt asistanı komutları artık tanınıyor"
+  — `detectCommand`'ın canlı ekrandan ULAŞILAMAZ olduğu iddia edildi (useChatMachine hiçbir
+  bileşende yok). ✅ İKİSİ DE DOĞRULANDI ve `5afa69ee` (`20261107-duzeltme-ve-ara-durum`) ile
+  düzeltilip MAİLLENDİ — tekrar gönderme. Kalan tek mail: iş bitince "son durum".
+- Çok açılı inceleme (25 ajan): 34 bulgu → 2 doğrulandı (yukarıdaki ST00 bildirimi + detectCommand
+  boşluk testi), 5 çürütüldü, 25 düşük. Mutasyon 12/12 yakalandı.
+- Düzeltme workflow'u (4 ayrık parti + her birine çürütücü): ST00 bildirimi/yorum/hitap/docs-stripe ·
+  detectCommand erişilebilirlik ölçümü + yorum kaçış dizileri + testler · EV01 canlı bölge a11y +
+  ServiceRequestsList tarih · hastane galeri metni + test + BusinessDetailPage yorumu + CLAUDE.md
+  DEMO listesi.
+
+**Kalan adımlar (sırayla):** ajanlar bitince → bağımsız çok-açılı çürütme incelemesi (ultracode
+açık; Workflow) → `npm run ingest:tools` (yeni `format-date.ts` + yeni export'lar) → tam kapı turu
+(10 kapı) → konu başına ayrı commit (ST00 · detectCommand · W3 tarih · EV01 · hastane demo ·
+KALANLAR) → yönetici güncellemesine AYRI paket → mail (force).
+
+**Bu turun pratik tuzakları:**
+- `npm run build` `public/sitemap.xml`'i canlı `lastmod` ile yeniden üretir → işe ait değil,
+  `git restore public/sitemap.xml`.
+- PowerShell'de `npx prettier --write $dizi` diziyi TEK argüman yapar → `& npx prettier --write @dizi`.
+- Yönetici güncellemesini hemen göndermek: commit kancası kuyruğa yazar; sonra
+  `send-notification-emails`'e `{"force":true}` + `x-dispatch-secret` (`.env.local`
+  `NOTIFY_DISPATCH_SECRET`; `verify_jwt=false`). Betik: scratchpad `force-send-admin-updates.mjs`
+  (gizli değeri yazdırmaz). Yanıt alıcı sayısı DÖNMEZ.
+- Paralel ajanlar aynı çalışma ağacını paylaşır: her biri yalnız kendi dosyalarına dokunur;
+  `ingest:tools`, build, commit yalnız orkestratörde.
+- İnceleme ajanı rapordan sonra arka planda iş bırakabilir → kapı turundan önce durdur,
+  `git diff --stat`'ı rapordakiyle karşılaştır.

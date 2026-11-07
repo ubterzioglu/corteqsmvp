@@ -102,6 +102,13 @@ SELECT auth.send_reset_password_email('user@example.com');
 **Coolify Paneli:**
 - Tüm env vars'ları güncelle (yukarıdaki yeni değerlerle)
 
+#### 2.6 Demo test hesabı parolası (07.11 gece eklendi)
+
+- Bir demo test hesabının (Experimental_3 rolü; Stripe mock rehberlerinde kullanılan) parolası
+  **izlenen** dosyalarda düz metin duruyor: `docs/stripe/` altındaki 4 rehber +
+  `docs/archive/private/burak-stripe-rehberi.html`. Hesap canlıdaysa parolası değiştirilir ya da
+  hesap kapatılır; dosyalardaki parola maskelenir. Geçmiş temizliği (§3) bu dosyaları da kapsar.
+
 ---
 
 ### 3. Git Geçmişini Temizle
