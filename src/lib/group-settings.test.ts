@@ -160,6 +160,11 @@ describe("group_settings sözleşmesi", () => {
       // migration'da OKUNDUĞUNU kilitler (report_threshold · report_min_account_age_days
       // · report_require_phone · report_same_group_cooldown_days).
       "src/lib/group-reports-schema.test.ts",
+      // Şikayet karar süresi sözleşme testi (mig 20261007090000) karar süresi
+      // anahtarının seed edildiğini (report_decision_deadline_days = 15) ve
+      // group_reports_expire_unreviewed fonksiyonunun tanımını kilitler. 9cc236a7
+      // bu satırı eklemeyi atlamıştı; anahtarın TS'te üretim tüketicisi yok.
+      "src/lib/group-reports-deadline-schema.test.ts",
     ]);
     const offenders = sourceFiles().filter((file) => {
       if (allowed.has(file.replace(/\\/g, "/"))) return false;
