@@ -289,6 +289,17 @@ traction ölçülecek.
   bu beşini "uygulanmamış" sayar. Seçenek: ledger satırlarını yaz (canlı DB yazımı) ya da
   bırak. Aynı temizlikte üst dizindeki 6 kopya kaldırıldı ve applied/ `role_structure`
   dosyaları canlıyla hizalandı (`64ce943a`).
+- 🟠 **K16 · `admin-updates` paketini böl — AÇIK (07.11, ajan işi, ürün etkisi var).**
+  Aylık değişiklik günlüğü verisi (`src/lib/admin-shell/admin-updates/*.ts`, kaynak ~564 KB)
+  tek JS parçasında 526 KB'a ulaştı ve 500 KB `check:bundle` sınırını aştı. Parça topbar zil
+  menüsü (`useAdminUpdates`) yüzünden HER admin sayfasında yüklenir. Geçici çözüm:
+  `scripts/check-bundle-size.mjs` → `CHUNK_LIMIT_EXCEPTIONS` (yalnız bu önek, 1 MB tavan;
+  ~100 KB/ay büyümeyle ~5 ay pay). Kalıcı çözüm: "son N ay" eşzamanlı + "arşiv" isteğe bağlı
+  (`import()`) — ama zil menüsü okunmamış sayısını TÜM kayıtlar üzerinden hesaplıyor ve
+  "hepsi okundu" tüm id'leri saklıyor (`useAdminUpdates.ts`); bölünce rozet anlamı değişir →
+  önce davranış kararı (okunmamış = son N ay mı?). Tavan aşılırsa YÜKSELTME, böl.
+  ⚠️ `scripts/sync-admin-updates.mjs` barrel'ı Node ile doğrudan import eder (`.ts` uzantılı
+  importlar bilinçli) — bölünce o yolu da koru.
 - **P02–P07** — clean-code planının canlı DB/deploy/ürün kararı isteyen maddeleri.
 - **X** — batch'e bölünmeden önce ayrı plan isteyen büyük işler.
 
