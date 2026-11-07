@@ -179,7 +179,7 @@ export async function handleWhatsAppAutoReply(
   let contextText = "";
   if (hasContext) {
     contextText = searchResults
-      .map((r: any) => r.content)
+      .map((r: { content: string }) => r.content)
       .join("\n\n")
       .substring(0, MAX_CONTEXT_TOKENS * 4); // rough token estimate
   }
@@ -191,7 +191,8 @@ export async function handleWhatsAppAutoReply(
     : WHATSAPP_ASSISTANT_SYSTEM_PROMPT;
 
   let responseText: string;
-  let tokenUsage: any;
+  // Hata yolunda tanımsız kalabilir; recordAssistantUsage `usage: unknown` kabul eder.
+  let tokenUsage: { promptTokenCount: number; candidatesTokenCount: number; totalTokenCount: number } | undefined;
 
   try {
     const result = await model.generateContent(prompt);

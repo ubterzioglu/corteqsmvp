@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { handleWhatsAppAutoReply } from "../_shared/whatsapp-autoreply.ts";
+import { handleWhatsAppAutoReply, type WhatsAppAutoReplyRequest } from "../_shared/whatsapp-autoreply.ts";
 import { secretsMatch } from "../_shared/edge-authorization.ts";
 
 const requiredEnvVars = [
@@ -55,7 +55,8 @@ serve(async (req) => {
   }
 
   // Parse request body
-  let body: any;
+  // Gövde güvenilmez: alanlar aşağıda tek tek doğrulanır, sonra daraltılmış hâliyle geçer.
+  let body: Partial<WhatsAppAutoReplyRequest>;
   try {
     body = await req.json();
   } catch (error) {

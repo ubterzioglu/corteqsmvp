@@ -8,6 +8,7 @@
  * Farklı kullanıcı → checking.
  */
 
+import type { Session } from "@supabase/supabase-js";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
@@ -37,7 +38,7 @@ vi.mock("@/integrations/supabase/client", () => ({
 import { useAdminAccess } from "./useAdminAccess";
 
 describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
-  let authChangeCallback: ((event: string, session: any) => void) | null = null;
+  let authChangeCallback: ((event: string, session: Session | null) => void) | null = null;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -55,7 +56,7 @@ describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
 
   it("authorized iken aynı kullanıcı için TOKEN_REFRESHED → durum değişmez", async () => {
     const userId = "user-123";
-    const session = { user: { id: userId } } as any;
+    const session = { user: { id: userId } } as unknown as Session;
 
     // İlk session: admin
     getSessionMock.mockResolvedValue({ data: { session } });
@@ -83,7 +84,7 @@ describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
 
   it("authorized iken aynı kullanıcı için SIGNED_IN → durum değişmez", async () => {
     const userId = "user-456";
-    const session = { user: { id: userId } } as any;
+    const session = { user: { id: userId } } as unknown as Session;
 
     getSessionMock.mockResolvedValue({ data: { session } });
     userIsAdminMock.mockResolvedValue(true);
@@ -107,8 +108,8 @@ describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
   });
 
   it("farklı kullanıcı → checking'e düşer", async () => {
-    const session1 = { user: { id: "user-1" } } as any;
-    const session2 = { user: { id: "user-2" } } as any;
+    const session1 = { user: { id: "user-1" } } as unknown as Session;
+    const session2 = { user: { id: "user-2" } } as unknown as Session;
 
     getSessionMock.mockResolvedValue({ data: { session: session1 } });
     userIsAdminMock.mockResolvedValue(true);
@@ -135,7 +136,7 @@ describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
   });
 
   it("çıkış → unauthenticated", async () => {
-    const session = { user: { id: "user-789" } } as any;
+    const session = { user: { id: "user-789" } } as unknown as Session;
 
     getSessionMock.mockResolvedValue({ data: { session } });
     userIsAdminMock.mockResolvedValue(true);
@@ -156,7 +157,7 @@ describe("useAdminAccess — A11 sekme değişince kapanmasın", () => {
 
   it("denied iken aynı kullanıcı için TOKEN_REFRESHED → checking'e düşer", async () => {
     const userId = "user-999";
-    const session = { user: { id: userId } } as any;
+    const session = { user: { id: userId } } as unknown as Session;
 
     getSessionMock.mockResolvedValue({ data: { session } });
     userIsAdminMock.mockResolvedValue(false); // admin değil
