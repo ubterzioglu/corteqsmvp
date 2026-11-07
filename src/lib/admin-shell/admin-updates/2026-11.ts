@@ -5,6 +5,20 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261107-duzeltme-ve-ara-durum",
+    date: "7 Kasım 2026",
+    title: "Düzeltme ve ara durum: bir önceki güncellemedeki iki ifade düzeltildi",
+    items: [
+      "KISACA: Bir önceki güncellemedeki ('sahte ödeme ekranları ve etkinlik saat uyarısı') iki ifade bağımsız denetimde yanlış ya da eksik çıktı; aşağıda düzeltiyoruz. Değişiklikler hâlâ yayında değil.",
+      "DÜZELTME 1 — KAYIT ASİSTANI: 'Komutlar artık tanınıyor' demiştik; bu YANLIŞTI. Düzeltilen kod sitede hiçbir ekrandan çalışmıyor: sitedeki sohbet asistanı (ana sayfa ve her sayfadaki balon) bu komutları hiç kullanmıyor, eski kayıt sohbeti artık kullanılmayan kod. Üyeler için değişen bir şey yok. Kullanılmayan kodun silinmesi ayrı iş olarak listeye alınacak.",
+      "DÜZELTME 2 — HİZMET TALEBİ FORMU: Sahte kart ekranı kaldırılmıştı ama talep gönderilince çıkan bildirim hâlâ 'Ödeme alındı' diyordu. Düzeltildi: artık 'Talep oluşturuldu! 🎉' diyor; formu gerçekten dolduran ve gönderen yeni bir test bunu kilitliyor. Ayrıca ölçüldü: eski sahte kart ekranına yalnız test hesapları değil, sıradan üyeler de ulaşabiliyordu (Premium profil düzeni çoğu bireysel rolde açık).",
+      "EK DÜZELTMELER: Hastane randevu sayfasının başlığı hâlâ 'kolayca online randevu alın' diyordu; artık örnek hastanelerle bir deneme olduğunu söylüyor, kart düğmesi 'Demo randevu al' oldu. Eski sahte ödeme rehberleri (docs/stripe) 'güncel değil' olarak işaretlendi; asistanın bilgi tabanından da çıkacaklar.",
+      "DENETİM: 25 bağımsız denetçi değişiklikleri bozmaya çalıştı; 34 bulgudan 2'si gerçek çıktı (yukarıdaki iki düzeltme). Testlerin hatayı yakalayıp yakalamadığı 12 ayrı bozma denemesiyle sınandı, 12'si de yakalandı. Düzeltmelerin ikinci denetimi şu an sürüyor.",
+      "KARARINIZI BEKLEYEN (yeni): Dernek detay sayfası hâlâ 'Online randevu sistemi' ve 'Online Randevu Al' diyor; bağlantı örnek hastane sayfasına gidiyor. Dernek sayfalarıyla ilgili açık kararın parçası olduğu için dokunulmadı.",
+      "SONRAKİ ADIM: İkinci denetim bitince tüm otomatik kontroller koşulacak, her konu ayrı kayıt (commit) olarak saklanacak ve son durum ayrıca bildirilecek. 🔴 Anahtar yenileme işi (GB1) hâlâ en acil iş.",
+    ],
+  },
+  {
     id: "20261107-sahte-odeme-ve-etkinlik-uyarilari",
     date: "7 Kasım 2026",
     title: "Gece turu: iki ekranda sahte ödeme kaldırıldı, etkinlik formuna saat uyarısı geldi",
