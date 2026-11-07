@@ -12,6 +12,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
 import { aggregateCashflowMonthly, getCurrencyTotal } from "@/lib/muhasebe-aggregations";
 import { formatCurrency } from "@/lib/muhasebe-format";
+import { formatCompactAmountTR } from "@/lib/format-money";
 import { CURRENCY_CODES, MONTH_LABELS_TR, type CurrencyCode } from "@/types/muhasebe";
 
 type RowKey =
@@ -143,15 +144,7 @@ export default function NakitAkisiPage() {
                 <ComposedChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis
-                    tick={{ fontSize: 12 }}
-                    tickFormatter={(v) =>
-                      new Intl.NumberFormat("tr-TR", {
-                        notation: "compact",
-                        maximumFractionDigits: 1,
-                      }).format(v as number)
-                    }
-                  />
+                  <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => formatCompactAmountTR(v as number)} />
                   <Tooltip
                     formatter={(v) => formatCurrency(v as number, selectedCurrency)}
                     contentStyle={{ fontSize: 12 }}

@@ -8,16 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { formatCurrencyTR } from "@/lib/format-money";
 import { rankTransfers } from "@/lib/germany-transfer";
-
-function fmt(value: number, currency: "EUR" | "TRY"): string {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
 
 export default function ParaTransferiToolPage() {
   const [amount, setAmount] = useState(1000);
@@ -70,11 +62,11 @@ export default function ParaTransferiToolPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-xs text-muted-foreground">Eline geçen</p>
-                  <p className="font-bold text-foreground">{fmt(p.receivedAmount, "TRY")}</p>
+                  <p className="font-bold text-foreground">{formatCurrencyTR(p.receivedAmount, "TRY")}</p>
                 </div>
               </div>
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                <span>Ücret: {fmt(p.fee, "EUR")}</span>
+                <span>Ücret: {formatCurrencyTR(p.fee, "EUR")}</span>
                 <span>Kur: {p.exchangeRate.toFixed(5)}</span>
               </div>
               <div className="mt-2 flex flex-wrap gap-1">

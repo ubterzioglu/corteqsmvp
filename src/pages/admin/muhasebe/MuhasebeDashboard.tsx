@@ -17,6 +17,7 @@ import {
   getCurrencyTotal,
 } from "@/lib/muhasebe-aggregations";
 import { formatCurrency } from "@/lib/muhasebe-format";
+import { formatCompactAmountTR } from "@/lib/format-money";
 import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
 import {
   CATEGORY_COLORS,
@@ -152,15 +153,7 @@ export default function MuhasebeDashboard() {
                 <ComposedChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis
-                    tick={{ fontSize: 12 }}
-                    tickFormatter={(v) =>
-                      new Intl.NumberFormat("tr-TR", {
-                        notation: "compact",
-                        maximumFractionDigits: 1,
-                      }).format(v as number)
-                    }
-                  />
+                  <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => formatCompactAmountTR(v as number)} />
                   <Tooltip
                     formatter={(v) => formatCurrency(v as number, selectedCurrency)}
                     contentStyle={{ fontSize: 12 }}
