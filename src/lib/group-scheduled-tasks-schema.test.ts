@@ -22,7 +22,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261002110000_group_scheduled_tasks.sql";
 const EDGE = "supabase/functions/group-link-health/index.ts";
@@ -52,8 +52,12 @@ describe("G22 · salt ekleme + ayarlar", () => {
     expect(sql).not.toMatch(/drop\s+column/i);
     expect(sql).not.toMatch(/drop\s+table/i);
     // G16/G17 fonksiyonları yeniden TANIMLANMAZ — sarmal eklenir
-    expect(sql).not.toContain("create or replace function public.group_posts_escalate_due");
-    expect(sql).not.toContain("create or replace function public.group_health_scores_recompute_all");
+    expect(compactSource(sql)).not.toContain(
+      compactSource("create or replace function public.group_posts_escalate_due"),
+    );
+    expect(compactSource(sql)).not.toContain(
+      compactSource("create or replace function public.group_health_scores_recompute_all"),
+    );
   });
 
   it("7 yeni anahtar seed edilir (kaynaklılar tasarım §6/§8; ⚠️’ler ajan ihtiyatı)", () => {
@@ -90,8 +94,8 @@ describe("G22 · link-health due — yayma + aralık + tavan ayarlardan", () => 
 
     expect(sql).toContain("grant execute on function public.group_link_health_due(integer, integer) to service_role;");
     expect(sql).toContain("grant execute on function public.group_link_health_record(uuid, text) to service_role;");
-    expect(sql).not.toContain("group_link_health_due(integer, integer) to authenticated");
-    expect(sql).not.toContain("group_link_health_record(uuid, text) to authenticated");
+    expect(compactSource(sql)).not.toContain(compactSource("group_link_health_due(integer, integer) to authenticated"));
+    expect(compactSource(sql)).not.toContain(compactSource("group_link_health_record(uuid, text) to authenticated"));
   });
 });
 
@@ -138,7 +142,9 @@ describe("G22 · health-score bayrağı (G17 tuzağı)", () => {
     expect(health).toContain("group_setting_bool('groups.health_score_cron_enabled', false)");
     expect(health).toContain("return -1;");
     expect(health).toContain("public.group_health_scores_recompute_all()");
-    expect(health).not.toContain("group_setting_bool('groups.health_score_cron_enabled', true)");
+    expect(compactSource(health)).not.toContain(
+      compactSource("group_setting_bool('groups.health_score_cron_enabled', true)"),
+    );
   });
 });
 
@@ -225,11 +231,11 @@ describe("G22 · group-link-health edge (radar/dispatcher deseni)", () => {
 
   it("kural 8: log/yanıt YALNIZ sayılar — link ve kimlik sızmaz", () => {
     expect(edge()).toContain('console.info("group-link-health", summary);');
-    expect(edge()).not.toContain('console.info("group-link-health", row');
+    expect(compactSource(edge())).not.toContain(compactSource('console.info("group-link-health", row'));
     // JSON anahtarı olarak invite_link yanıta/log'a giremez (TS tip anotasyonu
     // `"invite_link:"` değil `"invite_link"` JSON biçimiyle ayırt edilir)
     expect(edge()).not.toContain('"invite_link"');
-    expect(edge()).not.toContain("invite_link: row.invite_link");
+    expect(compactSource(edge())).not.toContain(compactSource("invite_link: row.invite_link"));
     // Yanıt nesnesi summary'den ibaret
     expect(edge()).toContain("return jsonResponse(summary, 200);");
   });

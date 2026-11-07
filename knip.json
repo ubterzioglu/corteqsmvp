@@ -33,7 +33,6 @@
     "exports": "warn",
     "types": "warn",
     "duplicates": "warn",
-    "enumMembers": "warn",
-    "classMembers": "warn"
+    "enumMembers": "warn"
   }
 }

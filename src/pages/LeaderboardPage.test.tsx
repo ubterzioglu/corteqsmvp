@@ -16,6 +16,7 @@ import { readFileSync } from "node:fs";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { InviteCard } from "@/components/invites/InviteCard";
 import LeaderboardPage from "@/pages/LeaderboardPage";
@@ -93,7 +94,7 @@ describe("LeaderboardPage · liste", () => {
     expect(code).not.toContain("is_directory_visible");
     expect(code).not.toContain("PLACEHOLDER");
     expect(code).not.toContain("is_admin");
-    expect(code).not.toContain(".filter(");
+    expect(compactSource(code)).not.toContain(compactSource(".filter("));
   });
 
   it("anon → giriş yönlendirmesi; InviteCard çizilmez", async () => {

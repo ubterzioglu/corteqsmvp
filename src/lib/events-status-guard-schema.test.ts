@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261003020000_events_rls_status_guard.sql";
 
@@ -54,7 +54,7 @@ describe("M03 · INSERT politikası status='pending' zorlar (T1 birinci katman)"
   it("create_event_v1'in auto-publish yolu ETKİLENMEZ (RPC security definer — M02 kilidi)", () => {
     // Bu migration RPC'yi YENİDEN TANIMLAMAZ; M02'deki security definer kalır
     // (tablo sahibi RLS'i bypass eder).
-    expect(code()).not.toContain("create or replace function public.create_event_v1");
+    expect(compactSource(code())).not.toContain(compactSource("create or replace function public.create_event_v1"));
   });
 });
 
@@ -79,9 +79,9 @@ describe("M03 · events_guard_status (T1 ikinci katman — UPDATE)", () => {
     const fn = guard();
 
     // Fonksiyonda status/approval_source dışında kolon karşılaştırması YOK:
-    expect(fn).not.toContain("new.title");
-    expect(fn).not.toContain("new.event_date");
-    expect(fn).not.toContain("new.description");
+    expect(compactSource(fn)).not.toContain(compactSource("new.title"));
+    expect(compactSource(fn)).not.toContain(compactSource("new.event_date"));
+    expect(compactSource(fn)).not.toContain(compactSource("new.description"));
     expect(fn).toContain("return new;");
   });
 

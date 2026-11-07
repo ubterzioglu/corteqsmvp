@@ -16,7 +16,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261003030000_event_attendees.sql";
 
@@ -132,7 +132,7 @@ describe("M04 · salt ekleme", () => {
 
     expect(sql).not.toMatch(/drop\s+column/i);
     expect(sql).not.toMatch(/drop\s+table/i);
-    expect(sql).not.toContain("create or replace function public.create_event_v1");
+    expect(compactSource(sql)).not.toContain(compactSource("create or replace function public.create_event_v1"));
     expect(sql).not.toContain('drop policy if exists "Users can');
   });
 });

@@ -51,8 +51,11 @@ function findBareSliceIndexOf(files: string[]): Offender[] {
         from = at + 1;
 
         const before = line.slice(0, at);
-        // (a) Aynı satırda indexOf'tan ÖNCE açılmış bir slice/substring.
-        const inlineSlice = /\.(slice|substring)\([^;]*$/.test(before);
+        // (a) indexOf'tan ÖNCE açılmış, henüz kapanmamış bir slice/substring — aynı satırda YA DA
+        //     son 3 satırda. Prettier (2026-11-07) dilim çağrısını açıp her indexOf argümanını ayrı
+        //     satıra koyar; yalnız aynı satıra bakan eski kontrol bu biçimi görmüyordu (4 ihlal kaçmıştı).
+        const context = [...lines.slice(Math.max(0, index - 3), index), before].join("\n");
+        const inlineSlice = /\.(slice|substring)\([^;]*$/.test(context);
         // (b) Değişkene atanıp sonraki satırlarda dilimlenmiş.
         //     ⚠️ (a) ile (b) ayrı ölçülmeli: satır içi kullanımda yakalanan değişken
         //     DİLİMİN SONUCU olur, indeksin kendisi değil — ilk ölçüm aracı tam bu

@@ -16,7 +16,7 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 import { LANDING_INVITE_FAILURE_MESSAGES, type LandingInviteFailure } from "@/lib/whatsapp-landings";
 
 const source = readFileSync(resolve(__dirname, "../..", "src/lib/whatsapp-landings.ts"), "utf8");
@@ -58,7 +58,7 @@ describe("G03b · davet linki RPC sarmalayıcısı", () => {
 
   it("RPC'yi çağırır, tabloya sormaz", () => {
     expect(body).toContain('supabase.rpc("get_whatsapp_landing_invite"');
-    expect(body).not.toContain(".from(");
+    expect(compactSource(body)).not.toContain(compactSource(".from("));
   });
 
   it("42501 ve P0002 hatalarını AYIRT eder", () => {

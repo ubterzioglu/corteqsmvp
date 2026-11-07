@@ -13,6 +13,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { safeStorageFileName, validateServiceAttachment } from "@/lib/security";
 
@@ -170,7 +171,7 @@ describe("form ile doğrulama sözleşmesi aynı hizada", () => {
 
   it("yükleme yolunda ham dosya adı KULLANILMAZ", () => {
     expect(form).toContain("safeStorageFileName(file.name)");
-    expect(form).not.toContain("${Date.now()}-${file.name}");
+    expect(compactSource(form)).not.toContain(compactSource("${Date.now()}-${file.name}"));
   });
 
   it("yükleme hatası sessizce yutulmaz", () => {
@@ -214,7 +215,7 @@ describe("private bucket geçişi (B3/Y6) SQL-kod sözleşmesi", () => {
     const form = readFileSync("src/components/ServiceRequestForm.tsx", "utf8");
     // Gerçek API ÇAĞRISI yasak (yorumda kelimenin geçmesi serbest — bu test
     // ilk halinde yorumdaki "getPublicUrl ölü doğar" notuna takıldı).
-    expect(form).not.toContain(".getPublicUrl(");
+    expect(compactSource(form)).not.toContain(compactSource(".getPublicUrl("));
     expect(form).toContain("attachmentRefs.push(filePath)");
   });
 

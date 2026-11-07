@@ -13,6 +13,7 @@ import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import { readFileSync } from "node:fs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 const listMock = vi.fn();
 
@@ -64,7 +65,7 @@ describe("CaddeRecommendationCard · davranış", () => {
     await screen.findByRole("link", { name: /güvenilir terzi/i });
     expect(screen.queryByText(/0555 111 22 33/)).not.toBeInTheDocument();
     expect(screen.queryByText(/terzi@mail\.com/)).not.toBeInTheDocument();
-    expect(document.body.textContent).not.toContain("terzi@mail.com");
+    expect(compactSource(document.body.textContent)).not.toContain(compactSource("terzi@mail.com"));
   });
 
   it("hata durumunda CTA'ya düşer, ÇÖKMEZ (akış bloklanmaz)", () => {

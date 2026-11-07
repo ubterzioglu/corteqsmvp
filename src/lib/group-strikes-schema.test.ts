@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261002050000_group_strikes.sql";
 const MIGRATION_B = "20261007080000_strike_threshold_tighten.sql";
@@ -191,7 +191,7 @@ describe("G15 · strike RPC tek kapı üzerinden geçiş yapar", () => {
     const body = rpc();
 
     expect(body).toContain("public.set_group_status_v1(");
-    expect(body).not.toContain("update public.whatsapp_landings set listing_status");
+    expect(compactSource(body)).not.toContain(compactSource("update public.whatsapp_landings set listing_status"));
   });
 
   it("strike_count guard bayrağıyla güncellenir", () => {

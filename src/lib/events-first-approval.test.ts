@@ -16,7 +16,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
-import { compactSource } from "@/test/source-slice";
+import { compactSource, sliceBetween } from "@/test/source-slice";
 
 import { EVENT_RPC_ERROR_MESSAGES, EVENTS_ACTIVE_LIMIT, resolveEventRpcErrorMessage } from "@/lib/events-rules";
 
@@ -75,25 +75,19 @@ describe("M05 · limit aynası", () => {
 
 describe("M05 · createEvent RPC'ye geçti (doğrudan insert YOK)", () => {
   const apiSource = readFileSync("src/lib/events-api.ts", "utf8");
-  const createFn = apiSource.slice(
-    apiSource.indexOf("export async function createEvent("),
-    apiSource.indexOf("// ── M04 katılım RPC'leri"),
-  );
+  const createFn = sliceBetween(apiSource, "export async function createEvent(", "// ── M04 katılım RPC'leri");
 
   it('create_event_v1 çağrılır; .from("events").insert createEvent\'te YOK', () => {
     expect(compactSource(createFn)).toContain(compactSource('supabase.rpc("create_event_v1" as never'));
-    expect(createFn).not.toContain('.from("events").insert');
+    expect(compactSource(createFn)).not.toContain(compactSource('.from("events").insert'));
     expect(createFn).not.toContain('status: "pending"');
   });
 
   it("userId istemciden GİTMEZ — CreateEventInput'ta alan yok, payload'da p_user yok", () => {
-    const input = apiSource.slice(
-      apiSource.indexOf("export interface CreateEventInput"),
-      apiSource.indexOf("export type CreateEventResult"),
-    );
+    const input = sliceBetween(apiSource, "export interface CreateEventInput", "export type CreateEventResult");
     expect(input).not.toContain("userId");
     expect(createFn).not.toContain("p_user_id");
-    expect(createFn).not.toContain("input.userId");
+    expect(compactSource(createFn)).not.toContain(compactSource("input.userId"));
   });
 
   it("join/leave/count RPC sarmalayıcıları mevcut ve Türkçe hata üretiyor", () => {
@@ -104,9 +98,10 @@ describe("M05 · createEvent RPC'ye geçti (doğrudan insert YOK)", () => {
   });
 
   it("sayaç İKİNCİL yüzey: hata fırlatmaz, null döner", () => {
-    const countFn = apiSource.slice(
-      apiSource.indexOf("export async function fetchEventAttendeeCount"),
-      apiSource.indexOf("export async function updateEvent"),
+    const countFn = sliceBetween(
+      apiSource,
+      "export async function fetchEventAttendeeCount",
+      "export async function updateEvent",
     );
     expect(countFn).toContain("if (error || !data) return null;");
     expect(countFn).not.toContain("throw");

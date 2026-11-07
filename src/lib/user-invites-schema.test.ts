@@ -18,7 +18,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { SAFE_CHARS } from "@/lib/referral-codes";
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261003050000_user_invites_and_leaderboard.sql";
 
@@ -116,7 +116,7 @@ describe("M11 · liderlik — sızıntı üçlüsü SQL'de (AI korpus dersi)", (
     expect(flat()).toContain(
       "grant execute on function public.get_invite_leaderboard(integer) to anon, authenticated;",
     );
-    expect(board()).not.toContain("auth.uid()");
+    expect(compactSource(board())).not.toContain(compactSource("auth.uid()"));
   });
 
   it("eşikler + limit invite_settings'ten (kodda sabit yok)", () => {
@@ -132,7 +132,7 @@ describe("M11 · liderlik — sızıntı üçlüsü SQL'de (AI korpus dersi)", (
 
     expect(sql).toContain("grant execute on function public.get_or_create_my_invite_code() to authenticated;");
     expect(sql).toContain("grant execute on function public.redeem_invite_code(text) to authenticated;");
-    expect(sql).not.toContain("get_or_create_my_invite_code() to anon");
-    expect(sql).not.toContain("redeem_invite_code(text) to anon");
+    expect(compactSource(sql)).not.toContain(compactSource("get_or_create_my_invite_code() to anon"));
+    expect(compactSource(sql)).not.toContain(compactSource("redeem_invite_code(text) to anon"));
   });
 });

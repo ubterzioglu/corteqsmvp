@@ -254,7 +254,8 @@ describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıc
   it("şablon import edilir", () => {
     // Satır sonu farklarına (CRLF) dayanıklı parça parça kilit:
     expect(edge()).toContain("buildGroupNotificationEmail,");
-    expect(edge()).toMatch(/\btype GroupNotificationEventType\b/);
+    // Tip, ŞABLON MODÜLÜNDEN import edilmeli; yerel bir `type ... =` bildirimi bunu karşılamaz.
+    expect(edge()).toMatch(/import\s*\{[^}]*\btype\s+GroupNotificationEventType\b[^}]*\}\s*from/);
     expect(edge()).toContain('from "../_shared/emails/group-notifications.ts";');
   });
 });

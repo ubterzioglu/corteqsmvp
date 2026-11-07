@@ -1070,10 +1070,18 @@ try {
 - **Kod sağlığı eşikleri (`src`, üretim kodu):** `complexity` 15 · `max-depth` 4 ·
   `max-lines` 800 (boş satır/yorum hariç). Testlerde `complexity`/`max-lines` kapalı;
   veri dosyaları glob ile `max-lines` dışında.
-- ⚠️ **`eslint-suppressions.json` mevcut `complexity` ihlallerinin TABANIDIR** (97 / 90 dosya,
-  07.11). Yeni ihlal anında kırmızı. Bir fonksiyonu sadeleştirince `npx eslint .
-  --prune-suppressions` koş — yoksa lint "kullanılmayan bastırma" ile düşer. Tabana YENİ
-  ihlal ekleme (`--suppress-rule`) son çaredir; önce fonksiyonu böl.
+- ⚠️ **`eslint-suppressions.json` mevcut ihlallerin TABANIDIR** (07.11: `complexity` 97 / 90
+  dosya + `max-lines` 2 dosya — `AdminCaddePage`, `AdminDatabaseTablesPage`, Prettier
+  biçimlendirmesiyle 800'ü aştılar). Taban **dosya başına ihlal SAYISINI** tutar: bir dosyaya
+  YENİ bir ihlal (yeni karmaşık fonksiyon) eklenince kırmızı olur; ama tabandaki bir
+  fonksiyonun daha da karmaşıklaşması ya da tabandaki bir dosyanın büyümesi **yakalanmaz**
+  — ESLint toplu bastırmasının sınırıdır. Bir ihlali giderince `npx eslint .
+  --prune-suppressions` koş (yoksa lint "kullanılmayan bastırma" ile düşer). Tabana yeni
+  ihlal eklemek (`--suppress-rule`) son çaredir; önce böl.
+- ⚠️ **Kaynak metni okuyan sözleşme testleri biçimden bağımsız yazılır** (Prettier zinciri ve
+  argümanları satırlara böler): pozitif ve negatif kod parçası iddialarında
+  `compactSource()` (`src/test/source-slice.ts`) iki tarafa da uygulanır; dilim `sliceBetween`
+  ile alınır (`test-source-slice-contract.test.ts` çok satırlı çıplak dilimi de yakalar).
 - **`no-unused-vars`:** TS'te kapalı, `.mjs`'te açık (`argsIgnorePattern: ^_`).
 
 ## Documentation & Runbooks

@@ -121,14 +121,15 @@ export function htmlToPlainText(html) {
   return collapseWhitespace(text);
 }
 
+// NBSP (U+00A0) regex'e ham karakter olarak YAZILMAZ (görünmezdir, no-irregular-whitespace);
+// kaçış dizisi de güvenilmez — araç katmanı onu düzenleme sırasında gerçek karaktere çevirebilir.
+// Sınıf fromCharCode ile kurulur.
+const HORIZONTAL_WHITESPACE = new RegExp(`[ \\t${String.fromCharCode(0xa0)}]+`, "g");
+
 /**
  * Boşluk sadeleştirme. Paragraf sınırı (iki satır sonu) KORUNUR — parçalayıcı
  * bölme noktasını oradan seçiyor, hepsini tek boşluğa indirirsek o bilgi kaybolur.
  */
-// NBSP (U+00A0) regex'e ham karakter olarak YAZILMAZ: görünmezdir (no-irregular-whitespace)
-// ve kaçış dizisi biçimlendirici kancasında harfe döner. Sınıf fromCharCode ile kurulur.
-const HORIZONTAL_WHITESPACE = new RegExp(`[ \\t${String.fromCharCode(0xa0)}]+`, "g");
-
 export function collapseWhitespace(input) {
   return String(input ?? "")
     .replace(HORIZONTAL_WHITESPACE, " ")

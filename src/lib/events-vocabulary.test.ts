@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import {
   DEFAULT_EVENT_TYPE,
@@ -108,8 +109,8 @@ describe("etkinlik yayın durumu", () => {
     // 20.09.2026'ya kadar bu iki switch AdminEventsPage.tsx içine gömülüydü.
     // Üye paneli eklenince ikinci kopya çıkacaktı; iki kopya zamanla ayrışır.
     const admin = readSource("src/pages/admin/AdminEventsPage.tsx");
-    expect(admin).not.toContain("function statusLabel(");
-    expect(admin).not.toContain("function statusTone(");
+    expect(compactSource(admin)).not.toContain(compactSource("function statusLabel("));
+    expect(compactSource(admin)).not.toContain(compactSource("function statusTone("));
     expect(admin).toContain("eventStatusLabel");
   });
 });
@@ -141,16 +142,16 @@ describe("etkinlik dosyaları sözlükten sapmaz", () => {
       "src/components/events/MyEventsPanel.tsx",
     ]) {
       const source = readSource(relativePath);
-      expect(source).not.toContain("twitter.com/intent/tweet");
-      expect(source).not.toContain("facebook.com/sharer");
-      expect(source).not.toContain("api.whatsapp.com/send");
+      expect(compactSource(source)).not.toContain(compactSource("twitter.com/intent/tweet"));
+      expect(compactSource(source)).not.toContain(compactSource("facebook.com/sharer"));
+      expect(compactSource(source)).not.toContain(compactSource("api.whatsapp.com/send"));
     }
   });
 
   it("etkinlik sayfaları tür karşılaştırmasını elle yapmaz", () => {
     for (const relativePath of ["src/pages/EventsPage.tsx", "src/pages/EventDetailPage.tsx"]) {
       const source = readSource(relativePath);
-      expect(source).not.toContain('event.type === "yüz yüze"');
+      expect(compactSource(source)).not.toContain(compactSource('event.type === "yüz yüze"'));
     }
   });
 });

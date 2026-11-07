@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 const migrationPaths = [
   "supabase/migrations/20260802170000_cadde_multi_targets.sql",
@@ -27,7 +28,7 @@ describe("cadde multi-target migration", () => {
     expect(sql).toContain("p_targets jsonb default '[]'::jsonb");
     expect(sql).toContain("public.has_cadde_feature(v_uid, 'cadde.post.multi_target')");
     expect(sql).toContain("cadde_multi_target_premium_required");
-    expect(sql).not.toContain("drop function public.create_cadde_post_v1");
+    expect(compactSource(sql)).not.toContain(compactSource("drop function public.create_cadde_post_v1"));
   });
 
   it("updates feed matching and output to read legacy columns plus target rows", () => {

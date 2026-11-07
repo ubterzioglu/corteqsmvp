@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { mapCaddeCafeJoinRequestRow } from "@/lib/cadde-cafe-api";
 
@@ -54,7 +55,7 @@ describe("Cadde cafe join request summary (workshop m92)", () => {
     expect(sql).toContain(
       "grant execute on function public.list_cadde_cafe_join_requests_v1(uuid) to authenticated, service_role",
     );
-    expect(sql).not.toContain("auth.users");
+    expect(compactSource(sql)).not.toContain(compactSource("auth.users"));
     expect(sql).not.toMatch(/select[\s\S]*\b(email|phone_e164|whatsapp)\b/);
   });
 });

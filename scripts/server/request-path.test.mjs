@@ -30,7 +30,9 @@ describe("normalizeRequestPath (SG8/O12)", () => {
     expect(normalizeRequestPath("http://localhost/%5c..%5c.env.local", distDir)).toBeNull();
     expect(normalizeRequestPath("http://localhost/%5c.env", distDir)).toBeNull();
     expect(normalizeRequestPath("http://localhost/a%5Cb", distDir)).toBeNull();
-    expect(normalizeRequestPath(`http://localhost/x${BACKSLASH}y`, distDir)).not.toContain(BACKSLASH);
+    // Ham ters eğik çizgi fonksiyona hiç ULAŞMAZ: WHATWG URL ayrıştırıcısı onu `/`'e çevirir.
+    // Gerçek koruma kodlanmış (%5c) biçim içindir — yukarıdaki üç iddia.
+    expect(normalizeRequestPath(`http://localhost/x${BACKSLASH}y`, distDir)).toBe("/x/y");
   });
 
   it("üst dizin bölümleri distDir içine hapsolur (URL ayrıştırıcısı .. çözer)", () => {

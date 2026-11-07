@@ -18,7 +18,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261002130000_group_moderator_panel.sql";
 
@@ -59,10 +59,14 @@ describe("G24 · salt ekleme", () => {
 
     expect(sql).not.toMatch(/drop\s+column/i);
     expect(sql).not.toMatch(/drop\s+table/i);
-    expect(sql).not.toContain("create or replace function public.set_group_status_v1");
-    expect(sql).not.toContain("create or replace function public.admin_review_group_claim");
-    expect(sql).not.toContain("create or replace function public.group_post_review");
-    expect(sql).not.toContain("create or replace function public.admin_record_group_strike");
+    expect(compactSource(sql)).not.toContain(compactSource("create or replace function public.set_group_status_v1"));
+    expect(compactSource(sql)).not.toContain(
+      compactSource("create or replace function public.admin_review_group_claim"),
+    );
+    expect(compactSource(sql)).not.toContain(compactSource("create or replace function public.group_post_review"));
+    expect(compactSource(sql)).not.toContain(
+      compactSource("create or replace function public.admin_record_group_strike"),
+    );
   });
 });
 

@@ -18,7 +18,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261002040000_group_claims.sql";
 
@@ -337,10 +337,10 @@ describe("G13 · guard v2 — ownership + motor alanları", () => {
   it("legacy/içerik alanları SERBEST kalmaya devam eder", () => {
     const body = guard();
 
-    expect(body).not.toContain("new.status");
-    expect(body).not.toContain("new.tagline");
-    expect(body).not.toContain("new.group_name");
-    expect(body).not.toContain("new.description");
+    expect(compactSource(body)).not.toContain(compactSource("new.status"));
+    expect(compactSource(body)).not.toContain(compactSource("new.tagline"));
+    expect(compactSource(body)).not.toContain(compactSource("new.group_name"));
+    expect(compactSource(body)).not.toContain(compactSource("new.description"));
   });
 });
 
@@ -385,7 +385,7 @@ describe("K10a · varsayılan rol yükseltilir", () => {
     expect(branch).toContain("update public.user_role_assignments");
     expect(branch).toContain("set role_id = v_role_id");
     // Yeni satır EKLEMEZ: PK (user_id) tek rol modelidir.
-    expect(branch).not.toContain("insert into public.user_role_assignments");
+    expect(compactSource(branch)).not.toContain(compactSource("insert into public.user_role_assignments"));
   });
 
   it("yükseltme YALNIZ varsayılan role açıktır — diğer roller korunur", () => {
@@ -397,7 +397,7 @@ describe("K10a · varsayılan rol yükseltilir", () => {
     const skip = sliceBetween(body, "elsif v_has_role then", "else", "atlama dalı");
     expect(skip).toContain("role_assigned = false");
     expect(skip).toContain("role_skipped_reason");
-    expect(skip).not.toContain("update public.user_role_assignments");
+    expect(compactSource(skip)).not.toContain(compactSource("update public.user_role_assignments"));
   });
 
   it("varsayılan rol anahtarı signup trigger'ının atadığı rolle aynıdır", () => {

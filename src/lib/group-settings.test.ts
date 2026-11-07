@@ -17,6 +17,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261001120000_group_settings.sql";
 
@@ -103,7 +104,7 @@ describe("group_settings sözleşmesi", () => {
     expect(sql).toContain(
       "revoke all on function public.group_setting_json(text, jsonb) from public, anon, authenticated",
     );
-    expect(sql).not.toContain("grant execute on function public.group_setting_json");
+    expect(compactSource(sql)).not.toContain(compactSource("grant execute on function public.group_setting_json"));
 
     expect(sql).toContain("grant execute on function public.group_setting_bool(text, boolean) to authenticated");
     expect(sql).toContain("grant execute on function public.group_setting_int(text, integer) to authenticated");

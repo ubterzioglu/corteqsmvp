@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
-import { compactSource } from "@/test/source-slice";
+import { compactSource, sliceBetween } from "@/test/source-slice";
 
 import { createRecommendationInputSchema } from "@/lib/recommendations-schemas";
 
@@ -49,9 +49,10 @@ describe("M19 · userId istemciden GİTMEZ (RPC auth.uid())", () => {
 
   it("create payload'ında p_user_id YOK (auth.uid() sunucuda)", () => {
     const src = apiSource();
-    const createFn = src.slice(
-      src.indexOf("export async function createRecommendationRequest"),
-      src.indexOf("export async function answerRecommendation"),
+    const createFn = sliceBetween(
+      src,
+      "export async function createRecommendationRequest",
+      "export async function answerRecommendation",
     );
     expect(createFn).not.toContain("p_user_id");
     expect(createFn).not.toContain("user_id:");

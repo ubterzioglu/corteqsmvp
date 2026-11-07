@@ -23,7 +23,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceBetween } from "@/test/source-slice";
+import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261002090000_public_view_motor_badges.sql";
 
@@ -162,7 +162,7 @@ describe("G19 · is_new — eşik group_settings'ten (G09 doktrini)", () => {
       "grant execute on function public.group_listing_is_new(timestamptz, timestamptz) to anon, authenticated;",
     );
     // G09 grant matrisi değişmedi: json hâlâ private, int hâlâ yalnız authenticated
-    expect(sql).not.toContain("grant execute on function public.group_setting_int");
+    expect(compactSource(sql)).not.toContain(compactSource("grant execute on function public.group_setting_int"));
     expect(sql).not.toContain("group_setting_json");
   });
 

@@ -150,7 +150,7 @@ describe("G21 · sahip düzenlemesi motor alanlarına UZANAMAZ", () => {
 
     expect(fn).toContain("v_country_code text := null;");
     expect(fn).toContain("coalesce(v_country_code, v_old.country_code)");
-    expect(fn).not.toContain("coalesce(v_country.code");
+    expect(compactSource(fn)).not.toContain(compactSource("coalesce(v_country.code"));
   });
 
   it("grant yalnız authenticated", () => {
@@ -169,7 +169,7 @@ describe("G21 · kaldırma isteği G12 owner yolundan gider (kabul #9)", () => {
     expect(fn).toContain('p_to_status: "hidden"');
     expect(fn).toContain('p_reason: "owner_request"');
     // Migration bu geçiş için YENİ fonksiyon tanımlamaz (G12 tek kapı):
-    expect(code()).not.toContain("create or replace function public.group_owner_remove");
+    expect(compactSource(code())).not.toContain(compactSource("create or replace function public.group_owner_remove"));
   });
 
   it("tasarım §3.C: gerekçe SORULMAZ — RPC notu sabit, kullanıcıdan metin almaz", () => {

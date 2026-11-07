@@ -1,6 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { resolveCaddeRpcErrorMessage } from "./cadde-rules";
 
@@ -49,8 +50,8 @@ describe("cadde paylaşım hedefi — fold eşleşmesi", () => {
     const sql = readExecutableSql(FOLD_MIGRATION);
 
     // Kusurun tam metni — yürütülebilir SQL'e geri dönerse test patlar.
-    expect(sql).not.toContain("c.name = r.country_name");
-    expect(sql).not.toContain("ci.name = r.city_name");
+    expect(compactSource(sql)).not.toContain(compactSource("c.name = r.country_name"));
+    expect(compactSource(sql)).not.toContain(compactSource("ci.name = r.city_name"));
   });
 
   it("NULL koruması korunur (fold boş string döndürdüğü için şart)", () => {

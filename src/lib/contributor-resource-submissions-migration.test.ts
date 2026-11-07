@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 const sql = readFileSync(
   resolve(process.cwd(), "supabase/migrations/applied/20260830213000_contributor_resource_submissions.sql"),
@@ -13,7 +14,9 @@ describe("contributor resource submissions migration", () => {
     expect(sql).toContain("public.is_admin(auth.uid())");
     expect(sql).toContain("revoke all on public.contributor_resource_submissions from anon, authenticated");
     expect(sql).toContain("grant select on public.contributor_resource_submissions to authenticated");
-    expect(sql).not.toContain("grant insert on public.contributor_resource_submissions to authenticated");
+    expect(compactSource(sql)).not.toContain(
+      compactSource("grant insert on public.contributor_resource_submissions to authenticated"),
+    );
   });
 
   it("validates input at the database boundary and keeps an audit trail", () => {
@@ -26,7 +29,7 @@ describe("contributor resource submissions migration", () => {
   });
 
   it("leaves the transaction and ledger record to the safe migration runner", () => {
-    expect(sql).not.toContain("supabase_migrations.schema_migrations");
+    expect(compactSource(sql)).not.toContain(compactSource("supabase_migrations.schema_migrations"));
     expect(sql).not.toMatch(/^\s*(begin|commit|rollback)\s*;/im);
   });
 });
