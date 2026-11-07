@@ -98,6 +98,8 @@ npm run dev                  # Vite dev server (port 8080)
 npm run build                # Production bundle
 npm run build:dev            # Dev build with component tagger
 npm run lint                 # ESLint check
+npm run format               # Prettier (yalnız kod dosyaları; .prettierignore) — format:check CI kapısı
+npm run check:knip           # kullanılmayan/listelenmemiş bağımlılık (CI kapısı)
 npm run test                 # Vitest run once
 npm run test:watch           # Vitest watch mode
 npm run start                # Serve dist/ locally (node server.mjs)

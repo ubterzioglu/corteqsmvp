@@ -1,0 +1,5 @@
+# git blame bu commit'leri atlar: git config blame.ignoreRevsFile .git-blame-ignore-revs
+# Yalnız SAF biçim commit'leri buraya girer (davranış değişikliği içeren commit ASLA).
+
+# 2026-11-07 — Prettier ile tüm repo biçimlendirildi
+113dd58a25bc876ce7b6863ea0e08e2ddf381b94

@@ -22,6 +22,12 @@ uses `node:22-alpine`).
 3. Apply Supabase migrations.
 4. Create at least one admin auth user and assign it an admin role in `user_role_assignments` (verified via the `is_admin()` RPC; `public.admin_users` no longer exists).
 5. Deploy the Edge Functions and set their secrets.
+6. Optional but recommended: `git config blame.ignoreRevsFile .git-blame-ignore-revs` — `git blame`
+   then skips the one-time repo-wide Prettier commit (2026-11-07) and shows the real author of a line.
+
+**Code style:** Prettier 3 (`.prettierrc.json`, width 120) formats code files only (ts/tsx/js/mjs);
+`npm run format` writes, `npm run format:check` is a CI gate. Markdown/HTML/CSS/JSON/SQL are deliberately
+excluded (`.prettierignore`) because contract tests read several of them as text.
 
 ## Required app env
 
