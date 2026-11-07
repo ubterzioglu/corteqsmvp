@@ -30,6 +30,27 @@ paths:
       operationId: execute_directory_search
       x-tool-key: edge.directory_search
       x-status: active
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                p_search_text:
+                  type: string
+                p_role_key:
+                  type: string
+                p_country_code:
+                  type: string
+                p_city:
+                  type: string
+                p_featured_only:
+                  type: string
+                p_limit:
+                  type: string
+                p_offset:
+                  type: string
       responses:
         "200":
           description: Başarılı
@@ -101,6 +122,15 @@ paths:
       x-tool-key: edge.group_claim_verify
       x-status: active
       x-tables: [group_claims, whatsapp_landings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                claim_id:
+                  type: string
       responses:
         "200":
           description: Başarılı
@@ -144,6 +174,15 @@ paths:
       x-tool-key: edge.group_preview
       x-status: active
       x-tables: [whatsapp_landings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
       responses:
         "200":
           description: Başarılı

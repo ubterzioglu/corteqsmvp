@@ -43,13 +43,16 @@ export function extractLimits(source) {
  * @returns {{ present: boolean, fields: string[] }}
  */
 export function extractZodRequest(source) {
-  const idx = source.search(/RequestSchema\s*=\s*z\.object\(/);
+  // Prettier zinciri bölebilir (`z` + satır sonu + `.object(`): nokta çevresinde boşluk serbest.
+  // Bu desen 2026-11-07'ye kadar bitişik `z.object(` arıyordu; biçim commit'i directory-search
+  // şemasını katalogdan sessizce düşürdü (group-claim-verify / group-preview zaten bu biçimdeydi).
+  const idx = source.search(/RequestSchema\s*=\s*z\s*\.object\s*\(/);
   if (idx === -1) {
-    const hasAnyZod = /z\.object\(/.test(source);
+    const hasAnyZod = /z\s*\.object\s*\(/.test(source);
     return { present: hasAnyZod, fields: [] };
   }
   // RequestSchema bloğunun gövdesini dengeli paranteze kadar al.
-  const start = source.indexOf("z.object(", idx);
+  const start = idx + source.slice(idx).search(/\.object\s*\(/);
   let depth = 0;
   let body = "";
   for (let i = source.indexOf("{", start); i < source.length; i++) {

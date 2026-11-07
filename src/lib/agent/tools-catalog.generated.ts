@@ -31,6 +31,8 @@ export const toolCatalog = {
         "catalog:embed",
         "check:bundle",
         "check:dead",
+        "check:docs",
+        "check:docs:strict",
         "check:drift",
         "check:drift:warn",
         "check:functions",
@@ -123,7 +125,15 @@ export const toolCatalog = {
       "interface_kind": "http",
       "input_schema": {
         "validation": "zod",
-        "fields": []
+        "fields": [
+          "p_search_text",
+          "p_role_key",
+          "p_country_code",
+          "p_city",
+          "p_featured_only",
+          "p_limit",
+          "p_offset"
+        ]
       },
       "tables_read_write": [],
       "rpcs": [
@@ -215,7 +225,9 @@ export const toolCatalog = {
       "interface_kind": "http",
       "input_schema": {
         "validation": "zod",
-        "fields": []
+        "fields": [
+          "claim_id"
+        ]
       },
       "tables_read_write": [
         "group_claims",
@@ -295,7 +307,9 @@ export const toolCatalog = {
       "interface_kind": "http",
       "input_schema": {
         "validation": "zod",
-        "fields": []
+        "fields": [
+          "url"
+        ]
       },
       "tables_read_write": [
         "whatsapp_landings"
