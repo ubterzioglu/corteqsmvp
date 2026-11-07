@@ -1,5 +1,11 @@
 # Ekstre motoru → muhasebe modülü entegrasyon planı — 29 Eylül 2026
 
+> ⚠️ **Yol değişti (2026-11-07).** Aşağıdaki "takipsiz duruyor / repoya commit edilmez"
+> notları bayattır: paket 7 Ekim'de `9cc236a7` ile repoya girmiş (30 dosya), kökte durduğu
+> için `npm run lint`'i 32 hatayla kırıyordu. Paket **`docs/archive/2026-10-07-ekstre-motoru-paketi/`**
+> altına taşındı (ESLint, `verify:text` ve bot korpusu arşivi taramaz). Bu plandaki her
+> `corteqs-ekstre-motoru/` yolu artık o dizini gösterir. Entegrasyon hâlâ başlamadı.
+
 > **Durum: plan yazıldı, UYGULAMA BAŞLAMADI.** Dört karar bu oturumda alındı
 > (tablo öneki · iade politikası · PDF okuyucu · Mercury ertelemesi); kod
 > yazılmadı, migration uygulanmadı, commit atılmadı.

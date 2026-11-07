@@ -13,6 +13,7 @@ Canlı doküman buraya değil, ilgili aktif `docs/` klasörüne yazılır.
 | `2026-09-21-retired-edge-functions/` | Emekli edge function kaynakları |
 | `2026-09-30-kapanan-is-dokumanlari/` | Kapanan devir notları, durum raporları (taşıma ölçütü kendi `README.md`'sinde) |
 | `2026-10-02-kariyer-kaynak-paketi/` | Kariyer sayfası yenilemesinin ham kaynak paketi |
+| `2026-10-07-ekstre-motoru-paketi/` | Kart ekstresi → muhasebe motorunun ham paketi (entegrasyon planı: `docs/plans/2026-09-29-ekstre-motoru-muhasebe-entegrasyonu-plani.md`, başlamadı). Kökte `9cc236a7` ile girmişti; 2026-11-07'de taşındı |
 | `kaynak-gorseller/` | Özgün kaynak görseller |
 | `taxonomy/`, `turkish_missions_import_builder/` | Eski veri/import çalışmaları |
 | `artifacts/`, `assets/`, `private/` | Eski çıktılar, görseller, özel notlar |
