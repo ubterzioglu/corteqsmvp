@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-09-20-dizin-arama-plani.md
+son_dogrulama: 2026-11-07
+---
 # Arama + Site Geneli AI Bot — Denetim Bulguları ve Uygulama Planı
 
 **Tarih:** 20 Eylül 2026

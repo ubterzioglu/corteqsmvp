@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # SEO/GEO + Clean Code — KALAN PLAN (6 Ekim 2026)
 
 > Ana plan: `C:\Users\baris-terzioglu\.claude\plans\reactive-spinning-castle.md` (onaylı). Bu dosya yalnız **kalanı** sıralar.

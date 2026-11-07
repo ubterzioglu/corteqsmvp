@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # GECE VARDİYASI — KALAN TÜM İŞLER (sormadan yürütülecek)
 
 > **Kimin için:** tek bir ajan, kullanıcı uyurken baştan sona yürütür. **Soru sorma**: karar gereken yerde aşağıdaki **varsayılan karar** uygulanır; varsayılan "atla" ise atlanır ve rapora yazılır.

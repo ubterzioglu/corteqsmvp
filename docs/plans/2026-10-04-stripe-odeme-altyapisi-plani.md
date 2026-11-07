@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Stripe / ödeme altyapısı — durum ölçümü ve uygulama planı
 
 > **Tarih:** 4 Ekim 2026 · **Durum:** PLAN — kod yazılmadı, kullanıcı onayı bekler

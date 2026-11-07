@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # K11 — Bekleyen 4 migration incelemesi (6 Ekim 2026)
 
 > **Kapsam:** `supabase/migrations/applied/20261006060000 … 090000`. **Salt okunur inceleme** — hiçbiri

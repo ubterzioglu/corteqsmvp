@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # §B1 — Secret Rotasyonu + Git Geçmişi Temizliği (SONRA YAPILACAK)
 
 > **Durum:** ⏸️ SONRA YAPILACAK — 6 Ekim 2026

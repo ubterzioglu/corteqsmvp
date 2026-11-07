@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: supabase/migrations/applied/20260718120000_revision_requests_mvp_seed.sql
+son_dogrulama: 2026-11-07
+---
 # CorteQS MVP Düzeltmeleri — E2E AI Agent Prompt
 
 Sen kıdemli bir **React + TypeScript Frontend Engineer**, **Supabase/Postgres Engineer**, **UX/Product Designer**, **QA Lead** ve **Startup MVP Polish Specialist** gibi çalışacaksın.

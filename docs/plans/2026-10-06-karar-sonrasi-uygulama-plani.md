@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # CorteQS — Karar Sonrası Uygulama Planı
 
 *6 Ekim 2026 · Kaynak: `2026-10-06-kalan-isler-sade-anlatim.md` (22 soru) · Cevaplayanlar: Burak Akçakanat + Umut Barış Terzioğlu*

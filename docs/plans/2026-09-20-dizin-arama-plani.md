@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Dizin ve Arama Planı
 
 > **Uygulama notu (21 Eylül 2026): Batch 0, 1, 2, 3 TAMAMLANDI ve CANLIDA.**

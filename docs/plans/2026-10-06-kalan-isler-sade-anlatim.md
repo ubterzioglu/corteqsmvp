@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # CorteQS — Kalan İşler (Sade Anlatım)
 
 *6 Ekim 2026 · Teknik bilgi gerekmez. Bu dosya, "tek plan" dosyasının (`2026-10-06-tek-plan-kalan-isler.md`) herkesin anlayacağı dille yazılmış hâlidir.*

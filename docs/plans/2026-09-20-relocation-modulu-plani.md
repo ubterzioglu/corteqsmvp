@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Relocation Modülü Planı
 
 > **Durum tazelendi 2026-09-21.** Bu dosyada daha önce 18 batch'in HEPSİ ✅

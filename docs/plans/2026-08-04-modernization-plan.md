@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # CorteQS MVP — Clean Code, SEO/GEO, Performans ve Dokümantasyon Modernizasyonu
 
 > **Durum:** onaylandı, uygulama başlamadı · **Tarih:** 2026-08-04 · **Branch:** `main`

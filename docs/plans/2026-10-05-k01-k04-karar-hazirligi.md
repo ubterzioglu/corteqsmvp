@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # K01 + K04 Karar Hazırlığı — sade dil + görsel tarif
 
 > **Tarih:** 5 Ekim 2026 · **Durum:** KARAR BEKLİYOR (kod değiştirilmedi)

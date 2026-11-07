@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # Cadde Reactors İnceleme Raporu (A1.9)
 
 > Tarih: 5 Ekim 2026

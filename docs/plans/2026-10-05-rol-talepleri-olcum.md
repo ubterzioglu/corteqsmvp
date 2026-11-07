@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # B14 · Rol Talepleri — Veri Ölçümü
 
 **Tarih:** 5 Ekim 2026

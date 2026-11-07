@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # Etkinlik modülü — kalan işler (20 Eylül 2026)
 
 Burak'ın 20.09 tarihli **"Ö9 ETKİNLİK"** geri bildirimi üzerine yapılan çalışmanın

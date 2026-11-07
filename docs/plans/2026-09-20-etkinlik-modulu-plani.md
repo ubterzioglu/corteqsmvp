@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Etkinlik Modülü Planı
 
 ### Batch 0a — Commit durumu ✅

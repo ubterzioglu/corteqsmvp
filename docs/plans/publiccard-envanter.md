@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # B08 · PublicCard Envanteri
 
 **Tarih:** 5 Ekim 2026

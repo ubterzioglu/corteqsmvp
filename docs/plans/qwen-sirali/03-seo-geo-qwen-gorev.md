@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # SEO/GEO görevi — Qwen için devir (2026-10-05)
 
 Hedef: corteqs.net için `geo-optimizer-skill` bulgularından **güvenli** olanları uygulamak.

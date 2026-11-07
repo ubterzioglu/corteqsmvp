@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # CorteQS Service Finder E2E implementation document for `ubterzioglu/corteqsmvp`
 
 ## Executive summary

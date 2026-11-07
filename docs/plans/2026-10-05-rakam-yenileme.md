@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # Rakam Yenileme — 5 Ekim 2026
 
 > **Amaç:** CLAUDE.md ve AGENT_CONTEXT.md'deki bayat rakamları yeniden ölçmek.

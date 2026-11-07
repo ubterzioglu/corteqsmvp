@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # Final Doğrulama ve Teslim Planı
 
 ### Batch 0 — Proje doğrulama

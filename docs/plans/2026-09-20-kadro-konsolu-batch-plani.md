@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Kadro Konsolu — Küçük Batch Uygulama Planı
 
 **Hedef:** 52 pozisyonluk kadro planını yalnızca yöneticilere açık, geçmiş tutan ve

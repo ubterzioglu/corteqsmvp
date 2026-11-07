@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # G04/G05 Spike: Telefon OTP hız sınırı — native yol mu edge function mı?
 
 > **Tarih:** 4 Ekim 2026 · **Yazan:** ajan · **Karar:** (a) native yol + DB gözlem

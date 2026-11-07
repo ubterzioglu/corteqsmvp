@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # TUR 1 ENVANTER — Her dosya → batch eşleştirmesi (5 Ekim 2026)
 
 > `git status` + `git diff --stat HEAD` çıktısından üretildi. 28 değiştirilmiş + 48 izlenmeyen = **76 yol**.

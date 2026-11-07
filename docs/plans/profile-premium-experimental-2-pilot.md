@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Premium Profil Deneyimi — Experimental_2 Pilotu
 
 > Durum: **UYGULANDI** (branch: `feat/premium-profile-experimental-2-pilot`, 2026-06-12)

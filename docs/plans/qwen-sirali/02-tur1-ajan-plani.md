@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-05-birlesik-uygulama-plani.md
+son_dogrulama: 2026-11-07
+---
 # TUR 1 — ajan planı (V · 2.2 · 2.4 · 2.5 · 2.9)
 
 > Kaynak: `docs/plans/qwen-sirali/01-tek-plan-kalan-isler.md` (kararlar §1, işler §2). Bu dosya yalnız **Tur 1**'in

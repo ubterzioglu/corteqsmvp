@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # CorteQS Admin Panel V2
 ## Baştan Yazım, Yenilikçi Layout ve E2E Uygulama Master Planı
 

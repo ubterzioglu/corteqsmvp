@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # SG · SEO/GEO planı — canlı ölçüme dayalı (5 Ekim 2026)
 
 > Devir notu "SG01–SG08 plan hazır" diyordu; **dosya repoda yoktu** (`grep SG01` yalnız devir

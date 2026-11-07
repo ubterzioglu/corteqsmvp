@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-05-birlesik-uygulama-plani.md
+son_dogrulama: 2026-11-07
+---
 # Birleşik Plan — (1) CV/İlan Premium kilidi + (2) Rol Talepleri yeniden yapılanma
 
 Sıralama kuralı: **Bölüm A** = kullanıcı kararı/onayı GEREKTİRMEYEN batch'ler, küçükten büyüğe.

@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Site Geneli AI Bot — MVP Planı (sadeleştirilmiş)
 
 **Tarih:** 21 Eylül 2026 (20 Eylül planının yerini alır)

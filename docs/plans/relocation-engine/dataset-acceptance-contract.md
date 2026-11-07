@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Relocation Dataset Acceptance Contract
 
 Bir veri seti (resmi dosya, API veya partner feed) relocation motoruna kabul edilmeden önce bu

@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # CorteQS — Lansmana Hazırlık Planı
 
 `Revizyon kaydı: #REV-___ · Hazırlayan: Burak · Uygulayıcı: Barış · Sürüm: v2 — 04.10.2026`

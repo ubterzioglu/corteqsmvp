@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Cadde & Cafe UX/UI denetimi — tek tek yapılabilir batch listesi
 
 > **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `H1`).

@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Relocation Source Registry
 
 Bu doküman, `relocation_source_registry` tablosunun seed içeriğini ve her kaynağın lisans/cache/

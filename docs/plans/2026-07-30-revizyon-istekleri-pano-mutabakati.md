@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # /admin/revision-requests — Pano Mutabakatı + Hızlı Kazanımlar
 
 > Plan tarihi: 30 Temmuz 2026 · Durum: **yazıldı, uygulanmadı** (kod/SQL yok)

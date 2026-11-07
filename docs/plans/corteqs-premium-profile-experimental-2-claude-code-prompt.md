@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # CorteQS Premium Profile Experience — `Experimental_2` Pilot Prompt
 
 Bu repoda doğrudan kod değişikliklerini uygula:

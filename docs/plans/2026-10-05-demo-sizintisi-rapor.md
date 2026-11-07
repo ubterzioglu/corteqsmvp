@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # B06 · Demo Sızıntısı Sözleşme Testi — Durum Raporu
 
 **Tarih:** 5 Ekim 2026

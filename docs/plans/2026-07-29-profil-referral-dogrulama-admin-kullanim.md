@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Profilde Referral Kodu Doğrulama + Admin Kullanım Görünürlüğü
 
 > **Durum: PLAN — henüz uygulanmadı (2026-07-29).** Kod yok, migration yok, commit yok.

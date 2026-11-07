@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # U01 · Service role anahtarı — yeni anahtar düzenine geçiş SPIKE'ı (5 Ekim 2026)
 
 > Karar 12 (`KALANLAR.md` §2.0): *"önce 3 edge function yeni anahtar düzenine taşınır, SONRA

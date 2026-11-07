@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Cadde Gönderi Düzenleme UI'ı — Uygulama Planı (CD01–CD04)
 
 > ✅ **SERİ TAMAM 03.10** — CD01 `7a3f3f84` · CD02 `591caa84` · CD03 `4023751e` ·

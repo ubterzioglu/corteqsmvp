@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Ekstre motoru → muhasebe modülü entegrasyon planı — 29 Eylül 2026
 
 > ⚠️ **Yol değişti (2026-11-07).** Aşağıdaki "takipsiz duruyor / repoya commit edilmez"

@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Çalışma Alanı ve Üretim Kontrol Planı
 
 ### Batch 0a — Çalışma alanı durumu ✅

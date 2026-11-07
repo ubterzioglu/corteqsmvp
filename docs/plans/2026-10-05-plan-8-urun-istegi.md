@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-05-birlesik-uygulama-plani.md
+son_dogrulama: 2026-11-07
+---
 # Plan — 8 ürün isteği (footer · belgeler · asistan balonu · etkinlik akışı · arama · AI bot · revizyon editörü · tehlike bölgesi)
 
 > Numaralandırma önceki planın (`2026-10-05-birlesik-plan-cv-ilan-rol-talepleri.md`, A1–A8 / B1–B8) devamıdır: bu planın batch'leri **A9–A16** ve **B9–B13**; kimlikler tekildir.

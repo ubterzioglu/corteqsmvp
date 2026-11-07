@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # CorteQS Relocation Recommendation Engine — E2E Tasarım
 
 > Bu doküman, kökteki taslak `relocation.md`'nin repo'ya yerleştirilmiş, citation gürültüsünden

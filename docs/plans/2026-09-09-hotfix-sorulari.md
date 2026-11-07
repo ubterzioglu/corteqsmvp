@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # Acil işler listesi — durum ve sorular
 
 **Tarih:** 9 Eylül 2026

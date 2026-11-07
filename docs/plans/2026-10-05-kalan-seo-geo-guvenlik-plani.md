@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # KALAN SEO/GEO + GÜVENLİK İŞLERİ (5 Ekim 2026 gece)
 
 > **Kapsam:** yalnız SEO/GEO ve güvenlikte **henüz yapılmamış / doğrulanmamış** işler. Yapılanlar dahil değildir.

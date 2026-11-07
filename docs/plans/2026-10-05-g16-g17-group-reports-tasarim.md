@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # G16/G17 → group_reports Bağlantısı — Mini Tasarım Notu
 
 > **Tarih:** 5 Ekim 2026

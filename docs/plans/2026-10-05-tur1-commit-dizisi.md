@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # A1.10 · Commit Dizisi — Hazır (5 Ekim 2026)
 
 > **Kapılar:** tsc ✓ · eslint ✓ · 64 test ✓ (8 dosya)

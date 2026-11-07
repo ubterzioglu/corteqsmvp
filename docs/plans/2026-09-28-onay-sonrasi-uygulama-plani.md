@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Onay sonrası uygulama planı — 28 Eylül 2026
 
 > **Bu plan, 28.09'da alınan kararların uygulama adımlarıdır.** Kararlar verildi,

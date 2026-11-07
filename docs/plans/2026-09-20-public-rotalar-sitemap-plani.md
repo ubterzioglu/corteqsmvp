@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Public Rotalar ve Sitemap Planı
 
 ### Batch 0 — Rota smoke testi

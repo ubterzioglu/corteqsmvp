@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # BİRLEŞİK UYGULAMA PLANI — 4 Qwen planı + son ajan raporu (5 Ekim 2026 gece)
 
 > **Kaynaklar (`docs/plans/qwen-sirali/`):** 01 tek-plan-kalan-isler · 02 tur1-ajan-plani · 03 seo-geo-qwen-gorev · 04 guvenlik-yamalari-plani

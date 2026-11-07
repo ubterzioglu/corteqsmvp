@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Kariyer Sayfası Yenilemesi — Uygulama Planı
 
 > Tarih: 2026-09-30 · Durum: onaya sunuldu, uygulama başlamadı

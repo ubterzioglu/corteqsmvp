@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # CorteQS — kalan işler, tek tek yapılabilir batch listesi
 
 > **Nasıl kullanılır:** yeni bir oturumda yalnız batch numarasını söyle (ör. `S1`).

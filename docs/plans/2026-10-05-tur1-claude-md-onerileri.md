@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-06-claude-md-guncelleme-onerileri.md
+son_dogrulama: 2026-11-07
+---
 # CLAUDE.md Önerileri — A1.8 (5 Ekim 2026)
 
 > A13 (20261005900000_events_auto_approval.sql) ile ilk-onay kuralı KALDIRILDI.

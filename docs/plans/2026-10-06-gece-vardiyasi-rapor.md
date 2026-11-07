@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # Gece Vardiyası Raporu — 6 Ekim 2026
 
 > **Süre:** ~3 saat (21:00 - 00:30)

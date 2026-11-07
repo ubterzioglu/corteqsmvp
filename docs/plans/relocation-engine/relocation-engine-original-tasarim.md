@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/relocation-engine/relocation-engine-e2e.md
+son_dogrulama: 2026-11-07
+---
 # CorteQS Relocation Recommendation Engine E2E Tasarım Dokümanı
 
 ## Yönetici Özeti

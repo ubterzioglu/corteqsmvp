@@ -7,7 +7,7 @@
 >
 > | | |
 > |---|---|
-> | **Son yapısal düzenleme** | 1 Ekim 2026 |
+> | **Son yapısal düzenleme** | 1 Ekim 2026 · **7 Kasım: 5 Ekim sonrası açık işler geri alındı → §1.9** |
 > | **Son ölçüm tabanı** | 30 Eylül 2026 öğlen (↓ "Ölçüm tabanı") |
 > | **Açık batch** | **11** (A 0 · N 0 · W 8 · M 0 · G 3 · KR 0 · CD 0) — ölçüldü 04.10 gece; G14 05.10'da kapandı. **M · KR · CD · CC serileri ve G11 TAMAMEN KAPANDI.** ⛔ bloke: **W01–W08** (U09; W03–W06 kilidi 04.10'da gevşedi → 🟢) · **G04–G05** (U06; kod şimdi yazılabilir, karar 2) · ~~G14~~ ✅ 05.10 (uçtan uca kullanım U06'ya bağlı). 🟡 **G10c: bloke DEĞİL ama AYRI ONAY ister** (karar 11). Stripe serisi planlandı, batch'e bölünmedi (⛔ U11) |
 > | **Kullanıcı eli bekleyen** | 8 (U — ✅ U10 + ✅ U05 03.10) · **Karar** 2 açık (**K02 · K07**) · ✅ 4 cevaplandı (K03/K06/K09/K10) · ⏸️ **3 PARK (K01/K04/K05 — Burak 03.10, X bölümünün EN SONU)** · Command Center arşivi ✅ **(C)** → ajan işi · **Onay** 6 (P) |
@@ -127,6 +127,57 @@ Bu dosyaya yeni gelen ajan **sırayla** şunu yapar:
 **W02 / W07** gerçek telefon · **W08** panel erişimi · **S01** Stripe hesap doğrulaması ·
 **S02** vergi rejimi (profesyonel) · **K07** 25 Eylül transkripti (dosya kullanıcıda) ·
 repo dışı ~50 maddenin teyidi.
+
+---
+## 1.9 · 🔴 07.11 UZLAŞTIRMA — 5 Ekim sonrası açık işler (KALANLAR'a geri alındı)
+
+> **Neden var:** bu dosyanın son yapısal düzenlemesi 1 Ekim'di; 5–7 Ekim'de yazılan
+> `docs/plans/2026-10-06-tek-plan-kalan-isler.md`, `qwen-sirali/01-…`, `gece-vardiyasi-*`,
+> `kalan-isler-sade-anlatim`, `2026-09-07-kalan-isler-batch-listesi`, `kalanlar/2026-09-21-KALANLAR.md`
+> ve `2026-09-20-etkinlik-kalan-isler` buraya HİÇ atıf vermiyordu ve aşağıdaki açık maddeleri
+> yalnız onlar taşıyordu. 07.11'de içerik düzeyinde uzlaştırıldı (salt-okunur ajan raporu, kanıt =
+> commit/`git grep`; canlı DB ölçülmedi). Rakip dosyalar `durum: yerini-aldı` frontmatter'ı aldı
+> (bot korpusundan da çıktılar). **Tek kaynak yine bu dosyadır.** Ayrıntı: kaynak sütunundaki dosya.
+
+| ID | Madde | Kaynak | Kanıt / not |
+|---|---|---|---|
+| 🔴 **GB1** | **Public repo geçmişinde GEÇERLİ service_role JWT.** Repo PUBLIC (07.11 `gh repo view`). Anahtarı ekleyen `f5927714`/`3c937293` (07.06) origin/main'de; ağaçtan çıkaran `6da5fc1e` geçmişi temizlemedi. Sıra: private yap → rotasyon (service role, DB parolası, 2 PAT, WhatsApp token, RAG_API_SECRET, admin parolası) → filter-repo + force-push → GitHub Support → KVKK. **Kullanıcı yapar.** | `plans/2026-10-06-gb1-secret-rotasyonu-plani.md` | KALANLAR:3111'deki "origin'e hiç ulaşmadı" cümlesi yalnız 27.09 olayını anlatır — bu sızıntı AYRI |
+| **K17** | 5 güvenlik kapısı (karar bekler): `notifications` doğrudan INSERT · `whatsapp_landings` eski INSERT politikası · OTP pepper (DOKUNMA — veri bozulur) · anonim form kolon grant'i · `job_listings` eski politika | `2026-10-06-karar-sonrasi-uygulama-plani.md` İş 12 | eski INSERT politikasını düşüren migration yok |
+| **CO01a** | Haftalık özet CHECK'i: `pg_get_constraintdef` ile ölç — outbox CHECK'te `weekly_city_digest` var mı? Yoksa `20261006130000`'i uygula (anahtar açık + CHECK eksik = 23514 = mail sessizce gitmez) | `2026-10-06-k11-migration-inceleme.md` | `20261005100500` CHECK'i bu değer olmadan yeniden kurar |
+| **CO01** | Canlı salt-okunur ölçüm turu: P06 Türkçe collate · U01 spike §4 SQL · etkinliğe doğrudan `published` INSERT reddi · G14 iki oturumlu deadlock · G10 geri alma | tek-plan · `p04-p07-olcum-raporu` | P06 "ölçülemedi" |
+| **HS01–03** | Hesap silme: anonimleştirme gövdesi + `account_deletion_log` mig · `delete-account` edge (bugün PLACEHOLDER — DEPLOY ETME) · UI (SİL modalı + yeniden doğrulama) | tek-plan · qwen/01 D2–D4 | `delete-account/index.ts:80` placeholder; menü `dbbbc0d8` ile gizli |
+| **G14b** | Şikayet → grup yöneticisine OTOMATİK e-posta (karar 06.10; beş parçalı bildirim hattı) + `20261006070000` sahip yedeği `coalesce(owner_user_id, submitted_by, user_id)` | karar-sonrası #14 | `send-notification-emails`'te `group_report` 0 |
+| **G10c** | Karar 06.10: `admin_approved` KALIR; yalnız `member_approved` düşer — 6 Kasım sonrası VE okuyan kod/RLS/RPC 0 ölçülürse. Geri alınamaz, ayrı onay | karar-sonrası #16 · `2026-10-05-g10c-onay-talebi.md` | eşik geçti (06.11) |
+| **RT01** | Rol seçici (A3.4·R4) bağlanır — karar 06.10: yalnız kararı belli Excel satırları, alt rol = ETİKET (yeni `roles` satırı yok); R5 süzgeci doğrulanır. K15'e bağlı | birleşik plan · karar-sonrası İş 5 | `RoleSelector`+`useRoleStructure` bilinen ölü kod (`check-dead-code.mjs`) |
+| **U12** | `http://corteqs.net` → HTTPS (Traefik 404) · `mvp.corteqs.net` eski derlemeyi sunuyor. **Kullanıcı (Coolify)** | tek-plan | `6c2dbf52` |
+| **U14** | Deploy kuyruğu: `member-cv-link` · `whatsapp-autoreply` · `send-notification-emails` (A15). Deploy ETME: `delete-account`, `send-phone-otp-hook`. Sonra `npm run check:functions` | tek-plan · qwen/01 | repo 19+ fonksiyon; son `check:functions` kaydı 02.10 |
+| **ST00** | Mock "ödeme başarılı" iki gerçek ekranda (`ServiceRequestForm`, `PremiumProfileTabs`) — metin/akış düzeltilir; U11'i beklemez | tek-plan | `MockStripeCheckout` kullanımı |
+| **G26** | `submitLanding` emekliliği + INSERT politikasının RPC'ye daraltılması (K17 kapı 2) · `/admin/whatsapp-landings` tek dile · (ops.) yıllık yenileme maili | tek-plan | `whatsapp-landings.ts` `submitLanding` dışa açık |
+| **M16b** | WAU: Tavsiye İste kullanan aktif sayılır (karar 06.10) — yeni view mig + M16 doğrulaması | karar-sonrası | view yalnız `20261003120000`'de |
+| **RH01** | Üye rehberleri: `etkinlik-paylasma.md` + `reklam-verme.md` Burak düzeltince `MEMBER_DOCUMENTATION_PATHS`'e (`sources.mjs`) + ingest/embed; 4. rehber RT01'den sonra | tek-plan | bugün üye korpusunda yalnız `belge-yukleme.md` |
+| **CV01** | `member-cv-link` deploy + `verify_jwt` ölçümü (U14) · `ProfilePage.tsx` ≤800 (Faz 3 W4) | tek-plan | |
+| **C6b** | `types.ts` Management API ile yeniden üret; test dışı `as never` (~137–208) temizlenir. Büyük diff ayrı commit | tek-plan · `2026-10-06-seo-geo-cleancode-kalan-plan.md` | son üretim `9cc236a7` |
+| **SG** | S3–S8 ✅ (→ Kapananlar). Kalan: C5 (dev fonksiyon ayrıştırma) · C7 (`formatDate`/`env.mjs` tekilleştirme) | `2026-10-06-seo-geo-cleancode-kalan-plan.md` | Faz 3 W3/W4 ile örtüşür |
+| **CS01** | Cadde gönderileri aramaya GİRMEZ (karar 06.10): `public-content-search.ts`'teki `cadde` dalı kaldırılır + sözleşme testi. ⚠️ `29e27f19`'daki ilk RPC canlıda uygulandı mı ölçülmedi | karar-sonrası | `20261006060000` = `select 1;` |
+| **EV01** | Etkinlik: `events.type`/`status` CHECK · `AdminEventsPage` `toLowerCase` → `trIncludes` · eksik 7 saat dilimi · bitiş<başlangıç uyarısı · DST kararı · otomatik yayına göre yeniden yazılmış tarayıcı QA'sı | `2026-09-20-etkinlik-kalan-isler.md` | U04 yalnız işaretleri düzeltti |
+| **DM01** | `/ilanlar` `DEMO_ROUTES`'a (`20261005130000` 6 `[DEMO]` ilan ekler, bant çizilmiyor) | qwen/01 | |
+| **U13** | Gateway `X-Forwarded-For` davranışı non-prod'da ölçülür (Burak) | tek-plan | kanıt yok |
+| **KS05b** | CV bağlantısı paylaşıldıysa dosyalar yeni adla yeniden yüklenir (CDN TTL) | tek-plan | |
+| **K18** | Araç sonucu profile kaydedilsin mi — hangi `afs_attributes` + açık rıza metni | `2026-09-07-kalan-isler-batch-listesi.md` K4 | karar bekler |
+| **W02b** | Meta webhook: callback bugün `corebot.corteqs.net`'te; Supabase `whatsapp-webhook`'a çevirmek corebot akışını keser → ayna (`MIRROR_WEBHOOK_URL`) mı, taşıma mı? **Karar** | `kalanlar/2026-09-21-KALANLAR.md` B05.2 | U09/W02 satırı bununla çelişiyordu |
+| **PS01** | `platform-safety-core` kararı: çekirdek mig (`20260830140000`, `f1e03612`) canlıda ama 5 entegrasyon batch'inin hiçbiri yapılmadı ve hiçbir yerde izlenmiyordu | `plans/platform-safety-core.md` · teknik-borç planı | 07.11 plan sınıflandırması |
+| **SF01** | Service-finder worker: Coolify deploy + canary (Tavily/SerpAPI) yapıldı mı — repodan doğrulanamıyor. **Kullanıcı teyit eder** | `plans/service-finder/13062026_scrapper.md` | worker kodu `workers/service-finder` |
+| **X** | Ertelenenler: B8c landing/dizin tek kaynak · Command Center'daki 10 "Beklemede" · arşiv README açık kararları (61 kişi, 69 placeholder, AssociationDetail düğmeleri) · OTP ile bot aynı numarada | tek-plan · qwen/01 | ayrı plan ister |
+
+**Bu tabloyla düzeltilen BAYAT bilgiler (bu dosyanın içinde):**
+- **W04–W06 kodu TAMAM** (`ac9d5ec7` · `b2fdc356` · `a5888025`, origin/main'de) — açık olan deploy (U14) ve W07 testi; panodaki 🟢 satırlar bayattı.
+- **Etkinlik onayı OTOMATİK** (karar #7, `…5900000`/`…6100000`, limit 2; `080000` no-op) — M02/M03'ün "ilk onay" anlatımı ve CLAUDE.md T1 metni bayat.
+- **AI Legion: `meslek-kariyer` + `hobi-kultur` ikisi birden** (karar-sonrası #10; `20261005180000`). **TED InnoVenture: Dubai** (`20261006110000`) — ⚠️ kayıtta `country_code='TR'` + `city='Dubai'` kalmış olabilir, canlıda ölç.
+- **U01 yöntemi:** "önce 3 edge function taşınır" öncülü çürüdü (`2026-10-05-u01-anahtar-gecisi-spike.md`) — kritik yol Coolify'da `VITE_SUPABASE_PUBLISHABLE_KEY`; eski anahtarı kapatmak bugün SİTEYİ düşürür.
+- **241 konsolosluk** "yayında değil" iddiası büyük olasılıkla yanlış (09-21: `published+public` 241); açık olan doğrulama rozeti. Ölçülmedi.
+- **P02–P07:** P04 kusur yok · P05 kritik → GB1 · P06 ölçülemedi (→ CO01) · P07 bayat.
+- **"27 commit PUSH'LANMADI"** notu bayat: origin/main = `b49ca798` (07.11). `corteqs-ekstre-motoru` lint notu bayat (arşive taşındı, `6a0898bc`).
+- **OTP migration'ı** `20261005400000` `applied/` dizininde ama "uygulanmaz, Meta bekliyor" — `applied/` ≠ uygulandı; `check:migrations` sapma sayabilir.
 
 ---
 ## 2 · DURUM PANOSU — açık batch'lerin tamamı

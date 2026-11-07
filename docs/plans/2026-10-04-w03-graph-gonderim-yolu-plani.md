@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # W03 — Meta Graph gönderim yolunu `_shared`'a çıkar (uygulama planı)
 
 > **Tarih:** 4 Ekim 2026 · **Yazan:** plan oturumu · **Uygulayan:** BAŞKA ajan

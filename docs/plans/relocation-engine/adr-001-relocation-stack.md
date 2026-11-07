@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # ADR-001: Relocation Engine Stack
 
 - **Durum:** Kabul edildi (2026-06-19)

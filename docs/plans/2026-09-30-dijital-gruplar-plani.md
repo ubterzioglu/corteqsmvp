@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # Dijital Gruplar Motoru — Uygulama Planı (G01–G25)
 
 > Tarih: 2026-09-30 · Durum: onaya sunuldu

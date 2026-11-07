@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # TEK PLAN — kalan her şey (6 Ekim 2026, öğleden önce)
 
 > **Bu dosya** `2026-10-05-tek-plan-kalan-isler.md` (5 Ekim akşamı) ve `2026-10-06-gece-vardiyasi-*` dosyalarının yerini alır;

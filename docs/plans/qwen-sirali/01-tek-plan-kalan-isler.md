@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/kalanlar/KALANLAR.md
+son_dogrulama: 2026-11-07
+---
 # TEK PLAN — kalan her şey (5 Ekim 2026 akşam)
 
 > Bu dosya, dağınık planların (KALANLAR.md, birleşik CV/ilan/rol planı, 8 ürün isteği planı, WhatsApp OTP

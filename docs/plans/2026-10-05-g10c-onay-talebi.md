@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # G10c · `whatsapp_landings` eski kolonlarının düşürülmesi — ONAY TALEBİ (5 Ekim 2026)
 
 > Karar 11 (`KALANLAR.md` §2.0): **G10c AYRI ONAY ister; kolon düşürmek geri alınamaz.**

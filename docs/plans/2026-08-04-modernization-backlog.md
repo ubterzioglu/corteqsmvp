@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: CLAUDE.md
+son_dogrulama: 2026-11-07
+---
 # Modernizasyon Backlog — 2026-08-04
 
 Bu dosya, 2026-08-04 modernizasyon çalışmasında **bilinçli olarak ertelenen** işleri

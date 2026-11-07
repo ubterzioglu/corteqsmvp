@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Vodafone Style Landing Plan for CorteQS
 
 ## Executive synthesis

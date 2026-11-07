@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-05-birlesik-uygulama-plani.md
+son_dogrulama: 2026-11-07
+---
 # 04 — GÜVENLİK YAMALARI (batch batch) — 5 Ekim 2026
 
 > **Kaynak:** `docs/security/SECURITY_AUDIT.md` (S1–S10, O1–O12, Düşük). Bulgunun ayrıntısı, kanıt satırı ve

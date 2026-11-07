@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # SE1 · A10 SEO/GEO Doğrulama Raporu
 
 > Tarih: 5 Ekim 2026

@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # P04–P07 ölçüm raporu (5 Ekim 2026)
 
 > Kaynak: `.kilo/plans/1790537630793-tidy-cactus.md` "ONAY GEREKTİREN İŞLER" (P04–P07) ·

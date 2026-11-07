@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # WhatsApp ile telefon OTP — durum ve kalan adımlar (5 Ekim 2026)
 
 Amaç: telefon doğrulama kodunu SMS yerine **Meta WhatsApp Cloud API** ile göndermek (U06'nın Twilio

@@ -1,3 +1,7 @@
+---
+durum: tamamlandı
+son_dogrulama: 2026-11-07
+---
 # Relocation motoru — referans port planı (2026-09-20)
 
 Tetikleyici: `https://abroad-buddy-map.lovable.app/relocation` motorunun hayata

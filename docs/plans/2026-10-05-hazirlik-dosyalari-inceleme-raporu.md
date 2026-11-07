@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # İncelenmemiş Hazırlık Dosyaları — İnceleme Raporu
 
 > **Tarih:** 5 Ekim 2026

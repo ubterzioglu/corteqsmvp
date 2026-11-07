@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # Admin Panel V2 — Faz 0 Baseline Raporu
 
 **Tarih:** 2026-06-10

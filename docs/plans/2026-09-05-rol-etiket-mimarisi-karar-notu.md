@@ -1,3 +1,8 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-06-karar-sonrasi-uygulama-plani.md
+son_dogrulama: 2026-11-07
+---
 # Rol / etiket mimarisi — karar notu (Profil WS1 13–16, Batch C)
 
 **Tarih:** 5 Eylül 2026

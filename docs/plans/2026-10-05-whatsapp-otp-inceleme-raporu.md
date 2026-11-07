@@ -1,3 +1,8 @@
+---
+durum: tamamlandı
+tur: rapor
+son_dogrulama: 2026-11-07
+---
 # WhatsApp OTP Bağımsız İnceleme Raporu (5 Ekim 2026)
 
 > **Commit:** `b45f2747` (feat(G05): telefon OTP WhatsApp uzerinden)

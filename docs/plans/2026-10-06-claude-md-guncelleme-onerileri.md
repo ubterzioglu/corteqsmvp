@@ -1,3 +1,7 @@
+---
+durum: aktif
+son_dogrulama: 2026-11-07
+---
 # CLAUDE.md güncelleme önerileri (6 Ekim 2026)
 
 > **CLAUDE.md doğrudan düzenlenmedi** (yalnız onayla değişir). Bu liste, bugün **ölçülerek** doğrulanan
