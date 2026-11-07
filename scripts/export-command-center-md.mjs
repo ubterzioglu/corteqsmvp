@@ -50,7 +50,6 @@ async function fetchAllItems() {
   let offset = 0;
 
   while (true) {
-    const rangeEnd = offset + PAGE_SIZE - 1;
     const url = `${SUPABASE_URL}/rest/v1/command_center_items?select=id,item_type,title,detail,category_label,assignee,status,priority,due_date,urgent,legacy_source_type,legacy_source_code,legacy_source_date_label,legacy_source_category,legacy_source_title,sort_order,archived_at,deleted_at,created_at,updated_at&order=created_at.asc&offset=${offset}&limit=${PAGE_SIZE}`;
 
     const res = await fetch(url, {
@@ -73,13 +72,6 @@ async function fetchAllItems() {
   }
 
   return items;
-}
-
-function escapeMd(text) {
-  if (!text) return '';
-  return text
-    .replace(/\|/g, '\\|')
-    .replace(/\n/g, '<br>');
 }
 
 function formatDate(d) {

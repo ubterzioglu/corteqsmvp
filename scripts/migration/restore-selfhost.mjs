@@ -29,8 +29,6 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 
-const REPO_ROOT = resolve(import.meta.dirname, "..", "..");
-
 /** Sıra ÖNEMLİ. auth verisi public'ten ÖNCE gelir (56 FK). */
 const ORDER = [
   { file: "01-roles.sql", label: "Roller", tolerateErrors: true },

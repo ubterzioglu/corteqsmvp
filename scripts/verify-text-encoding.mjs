@@ -38,6 +38,8 @@ const suspiciousPatterns = [
   /\u00C3[\u0080-\u00BF]/u,
   /\u00C4[\u0080-\u00BF]/u,
   /\u00C5[\u0080-\u00BF]/u,
+  // Kontrol karakterleri BİLEREK aralıkta: mojibake'in üçüncü baytı 0x00-0xFF arası her şey olabilir.
+  // eslint-disable-next-line no-control-regex
   /\u00E2\u20AC[\u0000-\u00FF]?/u,
   /\u00E2\u20AC\u2122|\u00E2\u20AC\u0153|\u00E2\u20AC\u009D|\u00E2\u20AC\u201C|\u00E2\u20AC\u201D|\u00E2\u20AC\u00A2/u,
 ];

@@ -50,7 +50,7 @@ export async function ensureBackground({ tool, variantIndex, force, backgroundsD
   return backgroundPath;
 }
 
-function overlaySvg(tool, variantIndex) {
+function overlaySvg(tool, _variantIndex) {
   const categoryLabel = 'CorteQS Test Aracı';
   const title = xmlEscape(tool.name);
   const desc = xmlEscape(shortDescription(tool.description));

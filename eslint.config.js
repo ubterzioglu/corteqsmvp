@@ -75,6 +75,21 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": "off",
     },
   },
+  // Node script'leri (2026-11-07): bu bloktan önce `**/*.{ts,tsx}` dışındaki hiçbir
+  // dosya lint'lenmiyordu — `scripts/` altındaki ~100 .mjs (CI kapıları, ingest,
+  // migration araçları) ve `server.mjs` hiç denetlenmiyordu.
+  {
+    extends: [js.configs.recommended],
+    files: ["scripts/**/*.mjs", "*.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.node,
+    },
+    rules: {
+      "no-unused-vars": ["error", { argsIgnorePattern: "^_", caughtErrors: "none" }],
+    },
+  },
   // C11.2: veri erişimi API katmanına taşınmış yüzeylerde `any` geri gelemez.
   {
     files: [

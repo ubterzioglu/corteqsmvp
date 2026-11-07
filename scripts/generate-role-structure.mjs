@@ -8,7 +8,7 @@
  * Kullanım: node scripts/generate-role-structure.mjs
  */
 
-import { readFileSync, writeFileSync } from "fs";
+import { writeFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { read, utils } from "xlsx";
