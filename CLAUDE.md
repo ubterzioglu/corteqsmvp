@@ -496,8 +496,14 @@ Plan: `docs/plans/2026-09-20-site-geneli-ai-bot-plani.md` · Ertelenenler:
 4. **`audience` sütunu (`public`/`member`/`admin`) kitle filtresidir ve filtre
    `ai_knowledge_search` RPC'si İÇİNDE uygulanır.** İstemciden gelen rol iddiasına
    güvenilmez; `site-assistant` kullanıcının kendi oturumuyla `is_admin()` sorar.
-   Bugün korpusta `admin` satırı yok; iç belgeler eklendiğinde (kalan işler K1) bu
-   sözleşme onları üyeden gizleyen tek mekanizma olacak.
+   ⚠️ **Doküman kitlesi DİZİNDEN türetilmez — açık izin listesidir (2026-11-07).**
+   `scripts/ai-knowledge/sources.mjs` → `MEMBER_DOCUMENTATION_PATHS`. Eski kural
+   `docs/guides/**`'ın tamamını üyeye veriyordu; canlıda `docs-member`'da 19 doküman
+   vardı (başlığında "ÜYELERE GÖSTERİLMEZ" yazan iki taslak, clean-code prompt'u, iç
+   yetkilendirme rehberleri dahil). `guides/`'a dosya koymak artık onu üyeye AÇMAZ;
+   üye rehberi = listeye bir satır. `docs/archive|reference|history|commandcenter`
+   ve başlığında `BOT BİLGİ TABANINA … ALINMAZ` ya da frontmatter'ında
+   `durum: yerini-aldı` olan doküman korpusa HİÇ girmez. Kilit: `sources.test.mjs`.
 5. **Yeni `hnsw` indeksi kullanılır, `ivfflat` değil.** ivfflat küme merkezlerini var
    olan satırlardan öğrenir; boş tabloda kurulursa isabet *hiçbir hata vermeden* düşük
    kalır. `catalog_search_documents` üzerindeki ivfflat indeksi (lists=100) tam olarak

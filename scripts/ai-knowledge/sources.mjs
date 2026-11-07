@@ -13,11 +13,53 @@ import { markdownToPlainText, htmlToPlainText, collapseWhitespace } from "./text
 
 const DOCS_ROOT = "docs";
 
-/** New documentation is admin-only unless it is deliberately placed in guides. */
+/**
+ * Üyeye (`member`) açılan dokümanlar — VARSAYILAN KAPALI, açık izin listesi.
+ *
+ * ⚠️ 2026-11-07 canlıda ölçüldü: eski kural `docs/guides/**` altındaki HER dosyayı
+ * üyeye veriyordu ve `docs-member` korpusunda 19 doküman vardı. Aralarında başlığında
+ * "ÜYELERE GÖSTERİLMEZ" yazan iki taslak (`etkinlik-paylasma.md`, `reklam-verme.md`),
+ * geliştirici clean-code prompt'u, iç yetkilendirme rehberleri ve bir test kılavuzu
+ * bulunuyordu — dosyadaki uyarıyı uygulayan hiçbir kod yoktu. Dizin bir kitle sınırı
+ * DEĞİLDİR: `guides/`'a bırakılan dosya artık admin kalır. Üyeye yalnız buraya
+ * yolu yazılan, üye için doğrulanmış rehber çıkar. Listedeki her yolun diskte var
+ * olduğunu `sources.test.mjs` denetler (yanlış yazılmış yol sessizce düşmesin).
+ */
+export const MEMBER_DOCUMENTATION_PATHS = new Set(["docs/guides/belge-yukleme.md"]);
+
+/**
+ * Bota HİÇ girmeyen dizinler. Arşiv/tarihçe/referans donmuş ve bayat iddialar taşır
+ * (bot onları güncel sanıp yanlış cevap verir); `commandcenter/` gitignore'ludur ama
+ * `readdir` diskten okuduğu için korpusa giriyordu; blog dışa aktarımı `blog` kaynağının
+ * kopyasıdır.
+ */
+export const EXCLUDED_DOCUMENTATION_PREFIXES = [
+  "docs/exports/blog-md/",
+  "docs/archive/",
+  "docs/reference/",
+  "docs/history/",
+  "docs/commandcenter/",
+];
+
 export function classifyDocumentationPath(relativePath) {
   const normalized = relativePath.replace(/\\/g, "/");
-  if (normalized.startsWith("docs/exports/blog-md/")) return null;
-  return normalized.startsWith("docs/guides/") ? "member" : "admin";
+  if (EXCLUDED_DOCUMENTATION_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return null;
+  return MEMBER_DOCUMENTATION_PATHS.has(normalized) ? "member" : "admin";
+}
+
+// Doküman kendi başlığında bot dışı ilan edilmişse uyulur. Yalnız baştaki bölüme
+// bakılır: kuralı ANLATAN bir doküman (ör. bu deseni açıklayan plan) dışlanmasın.
+const SELF_EXCLUSION_HEAD_LENGTH = 1500;
+const SELF_EXCLUSION_PATTERN = /BOT BİLGİ TABANINA[^\n]{0,40}ALINMAZ/;
+const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---/;
+const SUPERSEDED_PATTERN = /^durum:\s*yerini-ald[ıi]\s*$/m;
+
+/** `ai:ingest` dışında kalması gereken doküman mı (başlıkta ret işareti ya da `durum: yerini-aldı`)? */
+export function isExcludedByContent(raw) {
+  const text = String(raw ?? "");
+  if (SELF_EXCLUSION_PATTERN.test(text.slice(0, SELF_EXCLUSION_HEAD_LENGTH))) return true;
+  const frontmatter = FRONTMATTER_PATTERN.exec(text);
+  return Boolean(frontmatter && SUPERSEDED_PATTERN.test(frontmatter[1]));
 }
 
 async function loadDocumentationDocuments(audience) {
@@ -29,6 +71,7 @@ async function loadDocumentationDocuments(audience) {
         const relativePath = path.join(DOCS_ROOT, entry).replace(/\\/g, "/");
         if (classifyDocumentationPath(relativePath) !== audience) return null;
         const raw = await readFile(relativePath, "utf8");
+        if (isExcludedByContent(raw)) return null;
         const text = entry.toLowerCase().endsWith(".html") ? htmlToPlainText(raw) : markdownToPlainText(raw);
         if (!text) return null;
         return {
