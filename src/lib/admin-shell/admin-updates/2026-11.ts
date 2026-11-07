@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261107-gece-turu-son-durum",
+    date: "7 Kasım 2026",
+    title: "Gece turu tamamlandı: tüm değişiklikler denetlendi ve kayda alındı",
+    items: [
+      "KISACA: Gece turundaki bütün değişiklikler iki tur bağımsız denetimden geçti, tüm otomatik kontroller yeşil (4.416 test), her konu ayrı kayıt (commit) olarak saklandı. Hâlâ YAYINDA DEĞİL: iki çalışma dalının ana dala alınması ve sitenin yeniden yayına alınması gerekiyor.",
+      "SON DENETİMDEN ÇIKAN EK DÜZELTMELER: (1) Yönetici panelindeki tarih gösterimleri, sekme açıkken bilgisayarın saat dilimi değişirse (yolculuk) eski dilimde kalabiliyordu — giderildi, test kilitliyor. (2) Etkinlik formundaki saat uyarısı ekran okuyucular tarafından da duyurulacak biçimde düzenlendi. (3) Hastane sayfasındaki 'online randevu alın' vaadi kaldırıldı; sayfa artık 'örnek hastanelerle deneyin' diyor, demo uyarısını sayfanın üstündeki band gösteriyor.",
+      "KAYITLAR (6 konu, ayrı ayrı): sahte ödeme ekranı · demo hastane sayfası · etkinlik saat uyarısı ve 13 saat dilimi · kayıt sohbeti (kullanılmayan kod olduğu not edildi) · yönetici paneli tarih biçimleri · iş listesi (KALANLAR).",
+      "İŞ LİSTESİNE YENİ EKLENENLER: kullanılmayan kayıt sohbeti kodunun silinmesi · hastane sayfasının bağlantı hatası ve dernek sayfalarındaki 'online randevu' metinleri (karar bekliyor) · iş ilanı detay sayfalarına demo bandı (karar bekliyor).",
+      "SİZDEN BEKLENEN: (1) İki çalışma dalının ana dala alınması (onay bekliyor) ve ardından sitenin Coolify'dan yeniden yayına alınması — bu turun düzeltmeleri ancak o zaman üyelere görünür. (2) 🔴 Anahtar yenileme işi (GB1) hâlâ en acil iş; kapsamı bu gece bir maddeyle genişledi, ayrıntı yalnız plan dosyasında.",
+    ],
+  },
+  {
     id: "20261107-duzeltme-ve-ara-durum",
     date: "7 Kasım 2026",
     title: "Düzeltme ve ara durum: bir önceki güncellemedeki iki ifade düzeltildi",
