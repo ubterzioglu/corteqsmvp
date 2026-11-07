@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261107-olu-kod-ve-bicim-temizligi",
+    date: "7 Kasım 2026",
+    title: "Gece sonu: kullanılmayan sohbet kodu silindi, para ve tarih gösterimleri tek yerde",
+    items: [
+      "KISACA: Üyeye görünen bir değişiklik yok; kod sadeleşti. Kullanılmayan eski kayıt sohbeti silindi, para ve tarih gösterimlerinin kopyaları tek yerde toplandı. Ekranlardaki biçim aynen korundu: eski ve yeni gösterim 3 saat diliminde binlerce örnekle karşılaştırıldı, fark çıkmadı.",
+      "KULLANILMAYAN KOD: Önceki güncellemede belirttiğimiz gibi eski kayıt sohbetini hiçbir ekran kullanmıyordu; silindi (binden fazla satır). Sitedeki sohbet asistanı aynen çalışıyor. Silmeden önce hiçbir planın bu kodu geri getirmeyi beklemediği kontrol edildi.",
+      "CADDE: Cadde ekranlarındaki tarih gösterimlerine dokunmadan önce bugünkü görünümü kilitleyen testler yazıldı, ardından ortak yere bağlandı.",
+      "DENETİM: Her iş bağımsız bir denetçiden ve bilerek bozma denemelerinden geçti; tüm otomatik kontroller yeşil (4.465 test). Değişiklikler ana dala alındı.",
+      "SİZDEN BEKLENEN: (1) Sitenin Coolify'dan yeniden yayına alınması — gece turundaki düzeltmeler (sahte ödeme ekranları, etkinlik uyarıları, arama) ancak o zaman üyelere görünür. (2) 🔴 Anahtar yenileme işi (GB1) hâlâ en acil iş.",
+    ],
+  },
+  {
     id: "20261107-gece-turu-son-durum",
     date: "7 Kasım 2026",
     title: "Gece turu tamamlandı: tüm değişiklikler denetlendi ve kayda alındı",
