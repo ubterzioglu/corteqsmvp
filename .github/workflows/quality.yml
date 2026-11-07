@@ -26,5 +26,8 @@ jobs:
       - run: npm run build
       - run: npm run check:bundle
       - run: npm run check:dead
+      # knip: bağımlılık sınıfının kapısı (kullanılmayan/listelenmemiş/çözülemeyen paket).
+      # Dosyalar check:dead'in, export/tip bulguları uyarı düzeyinde (knip.json rules).
+      - run: npm run check:knip
       - run: npm run check:drift
       - run: npm run ingest:tools:check

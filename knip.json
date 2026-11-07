@@ -1,0 +1,39 @@
+{
+  "$schema": "https://unpkg.com/knip@6.42.1/schema.json",
+  "entry": [
+    "src/main.tsx",
+    "src/components/ui/**/*.tsx",
+    "scripts/**/*.mjs",
+    "server.mjs"
+  ],
+  "project": [
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.mjs",
+    "*.mjs"
+  ],
+  "ignore": [
+    "src/integrations/supabase/types.ts",
+    "**/*.generated.ts",
+    "src/vite-env.d.ts"
+  ],
+  "ignoreFiles": [
+    "supabase/**",
+    "workers/**",
+    "docs/**",
+    "referans/**",
+    "referanslovable/**"
+  ],
+  "ignoreBinaries": [
+    "psql",
+    "supabase",
+    "docker"
+  ],
+  "rules": {
+    "files": "warn",
+    "exports": "warn",
+    "types": "warn",
+    "duplicates": "warn",
+    "enumMembers": "warn",
+    "classMembers": "warn"
+  }
+}
