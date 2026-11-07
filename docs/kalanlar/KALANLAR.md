@@ -182,6 +182,41 @@ repo dışı ~50 maddenin teyidi.
 - **P02–P07:** P04 kusur yok · P05 kritik → GB1 · P06 ölçülemedi (→ CO01) · P07 bayat.
 - **"27 commit PUSH'LANMADI"** notu bayat: origin/main = `b49ca798` (07.11). `corteqs-ekstre-motoru` lint notu bayat (arşive taşındı, `6a0898bc`).
 - **OTP migration'ı** `20261005400000` `applied/` dizininde ama "uygulanmaz, Meta bekliyor" — `applied/` ≠ uygulandı; `check:migrations` sapma sayabilir.
+  ⚠️ **08.11 ölçümü bununla çelişiyor:** canlı `schema_migrations`'ta `20261005400000 phone_otp_send_claim` kaydı VAR (7 Kasım, Management API). Kanca kapalı, `send-phone-otp-hook` deploy edilmedi; yani migration uygulanmış ama yol kapalı. L9'da yeniden ölç.
+
+---
+## 1.10 · 🚀 1 OCAK LANSMANI — batch'ler L0–L21 (08.11)
+
+Kaynak: Burak'ın 4 Kasım planı (REV-111, Claude Docs; dokunulmaz). Uygulama planı (ajan sürümü):
+`docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` · kanıtlar:
+`docs/audits/2026-11-08-ocak-lansman-tutarsizlik-raporu.md`. Her batch sonunda Güncellemeler kaydı
+(`2026-11.ts` en üstü) + bu tablonun "Durum" sütunu güncellenir. 9 Kasım'da kapanacak 14 karar
+planın §4'ünde; L1 onları K bölümüne işler.
+
+| ID | Madde | Kim | Ön koşul / bağlı karar | Durum |
+|---|---|---|---|---|
+| **L0** | Tutarsızlık raporu + uygulama planı + Barış'ın Claude Docs sürümü + bu bölüm | C | — | ✅ 08.11 — rapor 12 yeni bulgu (H1–H12) ekledi; L2/L3/L6/L7 düzeltmeleri planın başında |
+| **L1** | 9 Kasım kararlarının kaydı; REV listesi (097/099 yapıldı, 103, 107, 110, 111) | C+B+E | 9 Kasım toplantısı | ⏳ |
+| **L2** | Etkinlik metinleri karar 5'e uyar · iş ilanı demo seed'i (6 kayıt) · `/founders-1000` → `/founding-1000` 301 | C, B deploy | karar 5, 10, 11 | ⏳ |
+| **L3** | Regresyon 12 madde → test eşlemesi · bundle bütçesi · "Lovable'dan gelmesin" sözleşme testi · Playwright smoke | C | — | ⏳ |
+| **L4** | 7 başlıklı menü (tek config + ölü link testi) · `/venture-hub` `/transfer` `/creator` "Yakında" kabukları | C | karar 13, 14 | ⏳ |
+| **L5** | Lovable hero (LCP posteri korunur) · arama çubuğu + kapsam (etkinlik/grup/Çarşı) | C | — | ⏳ |
+| **L6** | Rol Talepleri = **RT01** (RoleSelector bağlanır, 19 öneri satırı) | C, B mig | karar 6, K15 | ⏳ |
+| **L7** | `plans.ts` tek kaynak + yeni /pricing (ödemesiz, "ön kayıt") | C | karar 1, 2 | ⏳ |
+| **L8** | staging + vision nginx blokları (noindex, admin yolları 404) | C taslak, B DNS/deploy | karar 12 | ⏳ |
+| **L9** | Diaspora Pasaportu (rozet + kapı) | C, B Meta/kanca/deploy | karar 4, Meta doğrulaması | ⏳ |
+| **L10** | Profil doluluk e-postası (0/3/10. gün) · profilde Geri Bildirim sekmesi + "REV'e taşı" | C, E metin | — | ⏳ |
+| **L11** | Cadde üç sütun · cafe kapasite + ad listesi SQL'e | C | karar 7 (K9) | ⏳ |
+| **L12** | Çarşı: 14 kategori, son dakika, açılış | C, B, E hukuk | karar 8 | ⏳ |
+| **L13** | Evim-Evin anketi | C | karar 9 | ⏳ |
+| **L14** | Stripe abonelik (test modu → canlı) | C, B hesap/Tax | karar 1, 3 · S01/S02 | ⏳ |
+| **L15** | Self-servis reklam (%80 lansman indirimi) + REV-102/106 kilit tarihi | C | L14 · karar 3 | ⏳ |
+| **L16** | CorBot: site haritası + kılavuz kaynağı, talep kuyruğu, 30 soruluk test | C, E kılavuz | (W6 ile tek deploy) | ⏳ |
+| **L17** | "Yakında" sayfaları içerik + anonim bekleme listesi | C, E metin/görsel | karar 14 | ⏳ |
+| **L18** | Menü taşımaları, dizin düzenleri, REV 066/069/090/001/005/014 | C | — | ⏳ |
+| **L19** | Araştırma kayıtları içe aktarma + araştırma skill'i | C, E | L9 (sahiplenme) | ⏳ |
+| **L20** | 21 Ara dondurma · tam test · 30 Ara go/no-go · 1 Oca yayın | C+B+E | — | ⏳ |
+| **L21** | Ocak: W4'ün 3 dosyası (ProfilePage, CaddeFeedView, CreateEventFormSection) + "olursa iyi"ler | C | 1 Ocak sonrası | ⏳ |
 
 ---
 ## 2 · DURUM PANOSU — açık batch'lerin tamamı

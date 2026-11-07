@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261108-lansman-l0-plan-ve-tutarsizlik-raporu",
+    date: "8 Kasım 2026",
+    title: "1 Ocak lansman planı yerinde incelendi: 14 karar 9 Kasım'a, iş 22 küçük adıma bölündü",
+    items: [
+      "KISACA: Burak'ın 4 Kasım tarihli 1 Ocak lansman planı; canlı veritabanı, Lovable prototipi, Drive ekleri ve Ekim'de alınmış kararlarla karşılaştırıldı. Plan sağlam bir iskelet; ama bazı işlerin zaten yapılmış olduğunu ve Ekim'de verilmiş bazı kararları görmüyor. Sitede bugün değişen bir şey yok; bu adımda yalnız plan ve rapor yazıldı.",
+      "EN ÖNEMLİ BULGULAR: (1) Fiyatlar üç belgede üç farklı şekilde yazıyor (5 Ekim kararı, 4 Kasım planı, Gelir Modeli tablosu). (2) Yeni rol yapısına geçiş sanıldığı kadar büyük değil: 180 üyenin 152'si bireysel, değişiklik yalnız 22 kişiyi etkiliyor. (3) Telefon doğrulama kodu yazılı ama sitede kapalı; Meta onayı bekliyor. (4) 'Canlı' sayılan İş İlanları'ndaki 6 ilanın hepsi örnek veri, Etkinlikler'de ise tek kayıt var. (5) 24 saat açık cafe ve Çarşı'daki 5 ilan sınırı zaten çalışıyor.",
+      "DOĞRULAMADA ÇIKANLAR: Rapor ayrı bir denetçiyle yeniden ölçüldü ve 12 yeni nokta daha bulundu. En önemlileri: (1) Rol tablosundaki 'eski rol' sütunu gerçek rol kodlarını tutmuyor; Rol Talepleri işi önce doğru bir eşleme tablosuyla başlayacak. (2) Fiyat ayar dosyasında henüz hiç fiyat yok; fiyat sayfasında ise ayrıca bir '%50 indirim' yazısı duruyor. (3) Lovable'dan alınmayacak dediğimiz bir referans kodu (GGVBLA-M7SDSR) 19 Eylül'den beri Kurucu 1000 bölümünde duruyor; bizim kodumuz mu, Lovable kopyası mı, sorulacak. (4) Etkinlik formunda her zaman görünen 'admin onayı' yazısı Ekim kararıyla çelişiyor. Bu düzeltmeler planın başına işlendi.",
+      "NASIL İLERLEYECEĞİZ: İş 22 küçük adıma (L0–L21) bölündü. Her adım bitince bu menüye sade bir özet yazılacak. Sıra: önce 9 Kasım kararları, sonra menü, ana sayfa, rol talepleri ve fiyat sayfası (ödemesiz); ardından Cadde, Çarşı, Evim-Evin ve ödeme; 21 Aralık'ta kod dondurma, 30 Aralık'ta son karar.",
+      "SİZDEN BEKLENEN: 9 Kasım toplantısında 14 kararın kapanması (fiyat modeli, '+90 numaralar Pasaport alamaz' kuralı, etkinlik onayı, cafe süre ve kapasitesi, Çarşı açılışı ve diğerleri). Kapanmayan kararda önerilen varsayımla ilerlenecek. Ayrıca bekleyen yeniden yayınlama (Coolify) ve 🔴 anahtar yenileme (GB1) hâlâ en acil iki iş.",
+      "BİLMENİZ GEREKEN: Burak'ın plan dokümanına dokunulmadı. Ayrıntılı plan, kanıtlarıyla birlikte proje deposundaki planlar ve denetimler klasörlerinde duruyor; Barış için ayrıca okunur bir özet doküman hazırlandı.",
+    ],
+  },
+  {
     id: "20261107-olu-kod-ve-bicim-temizligi",
     date: "7 Kasım 2026",
     title: "Gece sonu: kullanılmayan sohbet kodu silindi, para ve tarih gösterimleri tek yerde",
