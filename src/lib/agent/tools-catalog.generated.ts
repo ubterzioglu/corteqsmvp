@@ -2776,6 +2776,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/admin-shell/admin-updates/2026-11.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/admin-shell/admin-updates/types.ts",
       "kind": "ts",
       "module_family": "lib"
