@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useNotificationSettings } from "@/hooks/admin/useNotificationSettings";
+import { formatLongDateTimeTR } from "@/lib/format-date";
 import {
   NOTIFICATION_EVENT_LABELS,
   OUTBOX_STATUS_LABELS,
@@ -36,13 +37,7 @@ function formatDateTime(value: string | null): string {
   if (!value) return "-";
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return "-";
-  return parsed.toLocaleString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatLongDateTimeTR(parsed);
 }
 
 type ToggleRowProps = {

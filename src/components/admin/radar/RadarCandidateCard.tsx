@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { formatShortDateTimeTR } from "@/lib/format-date";
 import { toRelevanceReasons } from "@/lib/radarNewsPipeline";
 import type { RadarCandidate, RelevanceReason } from "@/lib/radarNewsPipeline";
 
@@ -65,13 +66,7 @@ function ReasonTags({ reasons }: { reasons: RelevanceReason[] }) {
 
 function formatDate(val: string | null) {
   if (!val) return "—";
-  return new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(val));
+  return formatShortDateTimeTR(val);
 }
 
 export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish, onReject, onMarkDuplicate }: Props) {

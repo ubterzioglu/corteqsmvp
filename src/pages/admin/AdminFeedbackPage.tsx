@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { fetchUserEmails } from "@/lib/admin-shell/revision-requests";
+import { formatLongDateTimeTR } from "@/lib/format-date";
 import {
   FEEDBACK_STATUSES,
   deleteFeedback,
@@ -35,16 +36,6 @@ const STATUS_TONES: Record<FeedbackStatus, AdminStatusTone> = {
   okundu: "success",
   arsiv: "neutral",
 };
-
-function formatDate(value: string): string {
-  return new Date(value).toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 const AdminFeedbackPage = () => {
   const { toast } = useToast();
@@ -132,7 +123,7 @@ const AdminFeedbackPage = () => {
                 <p className="whitespace-pre-wrap text-sm text-foreground">{feedback.body}</p>
                 <p className="mt-1.5 text-xs text-muted-foreground">
                   {feedback.createdBy ? emails[feedback.createdBy] || "Üye" : "Bilinmeyen üye"} ·{" "}
-                  {formatDate(feedback.createdAt)}
+                  {formatLongDateTimeTR(feedback.createdAt)}
                 </p>
               </div>
 

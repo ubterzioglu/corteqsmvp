@@ -21,6 +21,7 @@ import {
   markServiceRequestInProgress,
   updateServiceProposalStatus,
 } from "@/lib/service-requests-api";
+import { formatLongDateTimeTR } from "@/lib/format-date";
 
 interface Proposal {
   id: string;
@@ -353,14 +354,7 @@ const ServiceRequestsList = () => {
                 </div>
 
                 <p className="text-[11px] text-muted-foreground/60">
-                  Oluşturulma:{" "}
-                  {new Date(req.created_at).toLocaleDateString("tr-TR", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+                  Oluşturulma: {formatLongDateTimeTR(req.created_at)}
                 </p>
               </div>
             )}

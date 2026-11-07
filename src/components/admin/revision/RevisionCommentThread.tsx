@@ -19,18 +19,9 @@ import {
   type RevisionComment,
 } from "@/lib/admin-shell/revision-requests";
 import { REVISION_ATTACHMENT_ACCEPT } from "@/lib/admin-shell/revision-attachment-media";
+import { formatLongDateTimeTR } from "@/lib/format-date";
 
 const commentsKey = (requestId: string) => ["revision-comments", requestId] as const;
-
-function formatDateTime(value: string): string {
-  return new Date(value).toLocaleString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 function authorLabel(comment: RevisionComment, emails: Record<string, string>): string {
   if (!comment.createdBy) return "Bilinmeyen";
@@ -132,7 +123,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
               <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">{authorLabel(comment, emails)}</span>
                 <span className="flex items-center gap-2">
-                  {formatDateTime(comment.createdAt)}
+                  {formatLongDateTimeTR(comment.createdAt)}
                   <button
                     type="button"
                     aria-label="Yorumu sil"

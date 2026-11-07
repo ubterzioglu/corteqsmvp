@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { formatShortDateTimeTR } from "@/lib/format-date";
 import type { RadarScanRun } from "@/lib/radarNewsPipeline";
 
 type Props = {
@@ -18,16 +19,6 @@ function formatDuration(start: string, end: string | null) {
   if (!end) return "—";
   const ms = new Date(end).getTime() - new Date(start).getTime();
   return ms < 1000 ? `${ms}ms` : `${(ms / 1000).toFixed(1)}s`;
-}
-
-function formatDate(val: string) {
-  return new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(val));
 }
 
 export function RadarScanRunTable({ runs, loading }: Props) {
@@ -63,7 +54,7 @@ export function RadarScanRunTable({ runs, loading }: Props) {
         ) : (
           runs.map((run) => (
             <TableRow key={run.id}>
-              <TableCell className="text-xs">{formatDate(run.started_at)}</TableCell>
+              <TableCell className="text-xs">{formatShortDateTimeTR(run.started_at)}</TableCell>
               <TableCell>
                 <Badge variant="outline" className="text-xs capitalize">
                   {run.trigger_type}

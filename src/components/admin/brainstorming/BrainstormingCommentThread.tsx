@@ -11,18 +11,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { addComment, fetchComments, fetchUserEmails, type BrainstormingComment } from "@/lib/brainstorming-api";
+import { formatLongDateTimeTR } from "@/lib/format-date";
 
 const commentsKey = (sectionKey: string) => ["brainstorming-comments", sectionKey] as const;
-
-function formatDateTime(value: string): string {
-  return new Date(value).toLocaleString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
 
 function authorLabel(comment: BrainstormingComment, emails: Record<string, string>): string {
   if (!comment.createdBy) return "Admin";
@@ -85,7 +76,7 @@ export function BrainstormingCommentThread({ sectionKey }: BrainstormingCommentT
             <div key={comment.id} className="rounded-lg border border-border bg-muted/30 p-3">
               <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">{authorLabel(comment, emails)}</span>
-                <span>{formatDateTime(comment.createdAt)}</span>
+                <span>{formatLongDateTimeTR(comment.createdAt)}</span>
               </div>
               <p className="whitespace-pre-wrap text-sm text-foreground">{comment.body}</p>
             </div>
