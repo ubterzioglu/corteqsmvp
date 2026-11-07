@@ -151,7 +151,7 @@ build başarılı, tsc temiz, eslint temiz (relocation-tools dosyaları). `verif
   (kullanıcı havuza katılır). İsim/iletişim ASLA otomatik paylaşılmaz; intro accept/decline RPC'leri var ama
   accept sonrası mesajlaşma UI'ı (iç messaging/Cadde) ayrı iş. Standalone result sayfasında intro butonu yok
   (sadece canlı araç sayfasında).
-- Opsiyonel `relocation_user_tasks` (kişisel checklist kaydı, docs/08 §5) ve profile-write CTA'ları
+- Opsiyonel `relocation_user_tasks` (kişisel checklist kaydı, docs/10tool/08-ilk-90-gun-planlayici-e2e.md §5) ve profile-write CTA'ları
   ertelendi (consent gerektirir).
 
 ---

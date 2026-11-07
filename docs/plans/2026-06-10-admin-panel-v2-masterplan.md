@@ -1866,7 +1866,7 @@ CorteQS projesindeki /admin panelini Admin Panel V2 olarak yeniden yazacağız.
 Önce şu dosyaları oku:
 - CLAUDE.md
 - docs/AGENT_CONTEXT.md
-- docs/architecture/AI_TECHNICAL_REFERENCE.md
+- docs/archive/architecture/AI_TECHNICAL_REFERENCE.md
 - docs/plans/2026-06-10-admin-panel-v2-masterplan.md
 - src/components/admin/AdminLayout.tsx
 - src/components/admin/admin-navigation.ts

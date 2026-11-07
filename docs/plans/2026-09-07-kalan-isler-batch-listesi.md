@@ -14,7 +14,7 @@
 ## Context
 
 Kalan işler bugüne kadar 10 dakikalık batch'lere bölünmüştü
-(`docs/plans/2026-09-06-kalan-isler-10dk-batch-plani.md`). Bu plan onu **daha küçük ve
+(`docs/archive/2026-09-30-kapanan-is-dokumanlari/2026-09-06-kalan-isler-10dk-batch-plani.md`). Bu plan onu **daha küçük ve
 kendi kendine yeterli** parçalara indirir: kullanıcı yeni bir oturumda yalnız **batch
 numarasını** söyleyecek ve o batch bağlam kazısı yapmadan, tek başına yapılabilecek.
 

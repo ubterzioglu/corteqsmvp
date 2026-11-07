@@ -15,7 +15,7 @@
 - Role copy de-familied (no "aile" wording for roles).
 - Verify: old-name entries = 0; new cards present.
 
-## 3. docs/roles-infogram.html
+## 3. docs/guides/roles-infogram.html
 - **Removed family framing** ("82 rol — Ailelere göre gruplanır" → flat "76 bağımsız rol"); prefix headings kept as pure visual sections with explicit "bağımsız, miras yok" copy.
 - **Corrected numbers:** 82→76 roles; AFS 53/42/7 made explicit; described v1 = 76 placeholder items, no real-data migration.
 - **Removed legacy references:** 6 legacy role keys, "aile"/"parent"/"alt kategori", old table names.

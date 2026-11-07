@@ -167,7 +167,7 @@
   - Koşul: Ne zaman geçerli?
 - Diğer rol bazlı kurallar var mı?
 - Kitapçık formatı:
-  - Seçenek A: Tek markdown dosyası (docs/operations/referral-kural-kitapcigi.md)
+  - Seçenek A: Tek markdown dosyası (docs/operations/referral-kural-kitapcigi.md (repoda yok))
   - Seçenek B: HTML sayfası (src/content/commercial/referral-kural-kitapcigi.html)
   - Seçenek C: Admin panelinde görüntülenen sayfa
 

@@ -341,7 +341,7 @@ const AdminDurumRaporuPage = () => {
             <p className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground">
               <Layers className="h-3.5 w-3.5" />
               Tam raporlar: <code>docs/catalog-role-afs-rebuild/00-14</code> · İnfografik:{" "}
-              <code>docs/roles-infogram.html</code>
+              <code>docs/guides/roles-infogram.html</code>
             </p>
           </CardContent>
         </Card>

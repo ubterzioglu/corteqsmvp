@@ -41,7 +41,7 @@
 - Tests: `MessagesInbox.test.tsx`, `AdminAttributesPage.test.tsx`
 
 ## Static assets
-- `docs/roles-infogram.html` (flat, family framing removed)
+- `docs/guides/roles-infogram.html` (flat, family framing removed)
 
 ## Reports (docs/catalog-role-afs-rebuild/)
 00 preflight · 01 audit · 02 flat-role-inventory · 03 afs-catalog-inventory · 04 role-afs-matrix · 05 design · 06 ER-diagram · 07 backend-integration · 08 frontend-integration · 09 admin-database-menu · 10 legacy-cleanup-manifest · 11 e2e-test · 12 migration-push · 13 post-cleanup-grep · 14 changed-files · _phase2-live-structure-notes · _RESUME-HERE · _phase4_rewire.py · _push_to_prod.sh

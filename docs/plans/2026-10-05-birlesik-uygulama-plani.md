@@ -133,7 +133,7 @@ Sürüm sırası şu an (yerel `applied/` sonu): `…100000 ×2 · 110000 · 120
 
 ## A9 · Küçük işler — ✅ TAMAM  
 - **G17 QA SQL'i:** `supabase/qa/g17-health-score-reports-acceptance.sql`'e "kuyruk penceresi şikayet kalemini değiştirmez / rapor penceresi değiştirir / 91 gün önceki `upheld` kırmaz, 89 gün kırar / `open`·`rejected` kırmaz" senaryosu (çalıştırma).
-- **Örnek ilan:** seed (6 ilan) uygulandı denmiş → `[ÖRNEK]` olmayan satır yok mu ölç; `/ilanlar` (+gerekirse detay) `DEMO_ROUTES`'ta mı bak (path `App.tsx` ile birebir; `demo-pages.test.ts` yeşil); silme SQL'i seed'in tersi (`docs/operations/2026-10-05-ornek-ilan-seed.sql` yoksa yaz, çalıştırma).
+- **Örnek ilan:** seed (6 ilan) uygulandı denmiş → `[ÖRNEK]` olmayan satır yok mu ölç; `/ilanlar` (+gerekirse detay) `DEMO_ROUTES`'ta mı bak (path `App.tsx` ile birebir; `demo-pages.test.ts` yeşil); silme SQL'i seed'in tersi (`docs/operations/2026-10-05-ornek-ilan-seed.sql` (repoda yok) yoksa yaz, çalıştırma).
 - **`types.ts` borcu:** yeni RPC'ler tiplerde yok, kodda `as never` → yeniden üret (Management API; yol: `SUPABASE_ACCESS_TOKEN` gerekir, yoksa §B9).
 
 ## A10 · SEO/GEO — 3 AI keşif dosyası — ✅ TAMAM  

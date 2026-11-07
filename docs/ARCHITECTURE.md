@@ -349,7 +349,7 @@ Doğrulama: BASE_URL=https://corteqs.net npm run verify:release
 ```
 
 Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — `docs/archive`,
-`docs/reference`, `docs/docu` arşiv klasörleri taramadan muaftır. `prebuild` ayrıca
+`docs/reference`, `docs/partner-materials` arşiv klasörleri taramadan muaftır. `prebuild` ayrıca
 `generate:sitemap` koşar.
 
 > **Deploy sonrası zorunlu kontrol:** nginx değişiklikleri konteyner içinde doğrulanmadı
@@ -385,5 +385,5 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
 | `docs/catalog-role-afs-rebuild/` | AFS rebuild raporları (00–14) |
 | `docs/archive/` | Dondurulmuş içerik: eski mimari dokümanlar, kök temizliği arşivi (`root-2026-06-11/`), DB yedekleri (`backups/`), eski cleanup'lar, import araçları |
 | `docs/reference/` | Referans repo kopyaları (global-network-bridge) |
-| `docs/docu/`, `docs/assets/` | Eski docu klasörü + arşiv görselleri |
+| `docs/partner-materials/`, `docs/assets/` | Eski docu klasörü + arşiv görselleri |
 | `docs/README.md` | docs ağacının indeksi |

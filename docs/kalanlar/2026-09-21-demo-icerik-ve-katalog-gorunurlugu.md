@@ -12,7 +12,7 @@
 ## Bu dosya neyi kapsamaz
 
 Kapanan planın **kod** artıkları ayrı bir dosyada duruyor ve burada tekrarlanmaz:
-`docs/plans/2026-09-21-public-rotalar-kalan-isler.md` (PR1 hareketsiz düğmeler ·
+`docs/kalanlar/2026-09-21-public-rotalar-kalan-isler.md` (PR1 hareketsiz düğmeler ·
 PR2 iç bağlantı sözleşme testi · PR3 Playwright portu · PR4 sitemap veri durumu ·
 PR5 paralel oturum artıkları).
 

@@ -304,7 +304,7 @@ Yerelleştirme ve erişilebilirlik ilk günden çekirdek gereksinim olmalıdır.
 
 ## Repo Göç Planı ve Yol Haritası
 
-Entegrasyon planı repo’nun mevcut klasör ve belge disipliniyle uyumlu olmalıdır. `docs/README.md`, kökte yalnızca dört bakımlı dokümanın yaşaması gerektiğini ve yeni aktif dokümanların `docs/` altına eklenmesini söylüyor. Bu nedenle relocation motoru için ana tasarım ve ADR’ler `docs/plans/relocation-engine/` veya `docs/modules/relocation/` altında tutulmalıdır. Uygulama kodu ise mevcut feature slicing modelini takip etmelidir. citeturn25view0turn4view1
+Entegrasyon planı repo’nun mevcut klasör ve belge disipliniyle uyumlu olmalıdır. `docs/README.md`, kökte yalnızca dört bakımlı dokümanın yaşaması gerektiğini ve yeni aktif dokümanların `docs/` altına eklenmesini söylüyor. Bu nedenle relocation motoru için ana tasarım ve ADR’ler `docs/plans/relocation-engine/` veya `docs/modules/relocation/` (repoda yok) altında tutulmalıdır. Uygulama kodu ise mevcut feature slicing modelini takip etmelidir. citeturn25view0turn4view1
 
 Önerilen dosya/folder yapısı aşağıdaki gibidir:
 

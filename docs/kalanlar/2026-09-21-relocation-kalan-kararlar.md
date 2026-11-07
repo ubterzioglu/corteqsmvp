@@ -179,5 +179,5 @@ dahil değildir, deploy'u kırmaz — ama `npm run test` ve `npm run lint`,
 `verify:text` kancasına takıldığı için **hiç koşamıyor**.
 
 **Bu iki madde o oturumun kalan-işler dosyasına aittir**
-(`docs/plans/2026-09-21-site-geneli-ai-bot-kalan-isler.md`); buraya yalnız
+(`docs/kalanlar/2026-09-21-site-geneli-ai-bot-kalan-isler.md`); buraya yalnız
 deploy riski görünür olsun diye yazıldı.

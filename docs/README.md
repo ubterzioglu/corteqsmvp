@@ -90,3 +90,22 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 3. **Biten planı silme, `history/` veya `archive/`'e taşı.** Arşivde ne olduğunu klasörün `README.md`'sine yaz.
 4. **Sayı yazma, komutu yaz** — rakam bayatlar, komut bayatlamaz.
 5. Biten bir kalan-iş maddesi `kalanlar/KALANLAR.md`'den silinir; tarihçesi `history/`'de kalır.
+6. **`npm run check:docs`** bu kuralların makinece denetlenebilen kısmını doğrular (`prelint` ve CI
+   `--strict` koşar): bu dizin her üst klasörü anar · yaşayan doküman ve koddaki `docs/...` yolu var
+   olan bir hedefi gösterir · byte-birebir aynı iki doküman yoktur · `durum: yerini-aldı` taşıyan
+   dokümanın `yerini_alan` hedefi vardır. Tarihli ad kuralı yalnız uyarıdır.
+7. **Var olmayan bir dokümana bilerek atıf** (önerilmiş ama yazılmamış, ya da silinmiş) yapılacaksa
+   yolun hemen arkasına `(repoda yok)` yaz — denetim bunu bilinçli kayıt sayar.
+8. **Bilinçli kopya dizinleri:** `social-share-outputs/` (seed girdisi; her dosya ayrı bir DB kaydı) ve
+   `partner-materials/` (her kit kendi başına dağıtılır). Bunların bir **kopyasını** başka yere koyma.
+
+## Bot (site asistanı) ve dokümanlar
+
+`npm run ai:ingest` bu dizini bot korpusuna yükler (`scripts/ai-knowledge/sources.mjs`):
+
+- **Üye kitlesi açık izin listesidir** (`MEMBER_DOCUMENTATION_PATHS`). `guides/`'a dosya koymak onu
+  üyeye AÇMAZ; üyeye gösterilecek rehber listeye bir satırla eklenir.
+- `archive/`, `reference/`, `history/`, `commandcenter/` ve `exports/blog-md/` **bota hiç girmez**.
+- Başlığında `BOT BİLGİ TABANINA … ALINMAZ` yazan ya da frontmatter'ında `durum: yerini-aldı` olan
+  doküman da girmez. Bir planı emekliye ayırmanın yolu: dosyanın başına
+  `---` / `durum: yerini-aldı` / `yerini_alan: <yol>` / `---` frontmatter'ı.

@@ -1,6 +1,6 @@
 # TUR 1 — ajan planı (V · 2.2 · 2.4 · 2.5 · 2.9)
 
-> Kaynak: `docs/plans/2026-10-05-tek-plan-kalan-isler.md` (kararlar §1, işler §2). Bu dosya yalnız **Tur 1**'in
+> Kaynak: `docs/plans/qwen-sirali/01-tek-plan-kalan-isler.md` (kararlar §1, işler §2). Bu dosya yalnız **Tur 1**'in
 > uygulanabilir, ölçülmüş ayrıntısıdır. Tur 2 (B2 CV, rol zinciri, B10, B12, B13) **V temiz çıkmadan başlamaz.**
 > Her batch ayrı commit; **push yok**; canlıya yazma/deploy/migration uygulama **yok**.
 
@@ -86,7 +86,7 @@ Kabul (V): envanter dosyası · her batch için kapı çıktıları · eksik kab
 
 ## 2.2 · Örnek ilan SQL'i (karar B3b: önce SQL ile örnek ilan)
 
-- Dosya `docs/operations/2026-10-05-ornek-ilan-seed.sql`. **Çalıştırma.** `job_listings` şeması (baseline `:20137`): `user_id uuid NOT NULL` (sahip), `business_name`, `title NOT NULL`, `department`, `employment_type`,
+- Dosya `docs/operations/2026-10-05-ornek-ilan-seed.sql` (repoda yok). **Çalıştırma.** `job_listings` şeması (baseline `:20137`): `user_id uuid NOT NULL` (sahip), `business_name`, `title NOT NULL`, `department`, `employment_type`,
   `location_type`, `country`, `city`, `location`, `salary_min/max`, `currency`, `description`, `requirements`, `package`, `total_price`, `status` (varsayılan `published`), `expires_at`, `hide_business_name`.
 - Sahip: psql değişkeni `:owner_user_id` (kullanıcı kendi test/admin hesabının id'sini verir; **e-posta/kimlik uydurma ve dosyaya yazma**). Dosya başında "sahip kimliğini şöyle bul" yorumu.
 - 6–8 ilan, **hepsi açıkça örnek**: `title` `[ÖRNEK] …`, `business_name` gerçek bir şirket adı DEĞİL ("Örnek Şirket A"), gerçekçi ama uydurma-olduğu-belli içerik. 1–2 tanesinde `hide_business_name=true`. Çeşitli şehir/ülke (Berlin, İstanbul, Doha…) ve `employment_type`.

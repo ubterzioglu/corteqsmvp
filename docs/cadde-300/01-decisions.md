@@ -81,7 +81,7 @@
 - **Öneri:** **Yeni tablo açılmaz.** Mevcut tablo Faz 7'de `alter table add column if not exists` ile genişletilir (actor_user_id, entity_type, payload jsonb), `"System can insert" WITH CHECK(true)` policy'si kaldırılıp insert yalnız security-definer producer fonksiyonlarına verilir. Veri 0 olduğu için migration risksiz.
 
 ### R-04 — CKS v2 dokümanı repoda yok 🟡
-- **Öneri:** CKS v2, `docs/cadde-300/cks-v2.md` olarak repoya alınmalı (kaynak öncelik sırasında 5. sırada referans veriliyor ama denetlenebilir kopyası yok). Ürün sorumlusundan güncel metin istenir; spec ile çelişen eski teknik adlar (user_roles, has_role) çeviri notuyla işaretlenir.
+- **Öneri:** CKS v2, `docs/cadde-300/cks-v2.md` (repoda yok) olarak repoya alınmalı (kaynak öncelik sırasında 5. sırada referans veriliyor ama denetlenebilir kopyası yok). Ürün sorumlusundan güncel metin istenir; spec ile çelişen eski teknik adlar (user_roles, has_role) çeviri notuyla işaretlenir.
 
 ### R-05 — Bozuk import temizliği ✅
 - `CreateCafeForm.tsx:22 → @/lib/cafeNameModeration` (dosya yok). Dosya freeze listesinde olduğundan Faz 1'de dokunulmaz; Faz 4'te canonical `cadde-rules.ts` içine isim moderasyonu yazılır, Faz 9'da legacy dosya silinince bozuk import da gider. (Feed.tsx zinciri bundle'a girmediği için bugün build'i etkilemiyor.)

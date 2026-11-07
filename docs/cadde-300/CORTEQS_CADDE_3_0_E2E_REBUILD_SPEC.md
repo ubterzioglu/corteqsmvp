@@ -2140,7 +2140,7 @@ Görev: Cadde 3.0 modülünü kontrollü ve E2E biçimde yeniden düzenle. Önce
 
 Zorunlu kaynak sırası:
 1. mevcut migrations ve repo gerçekliği
-2. docs/architecture/AI_TECHNICAL_REFERENCE.md
+2. docs/archive/architecture/AI_TECHNICAL_REFERENCE.md
 3. CLAUDE.md
 4. docs/AGENT_CONTEXT.md
 5. Cadde Kural Seti CKS v2

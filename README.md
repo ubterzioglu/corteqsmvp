@@ -209,7 +209,7 @@ under `docs/`:
 | Current phase / handover status | `docs/history/SONDURUM.md` |
 
 See `docs/README.md` for the full index. Frozen archives live in `docs/archive/`,
-`docs/reference/`, `docs/docu/`. **Do not add new documents to the repo root.**
+`docs/reference/`, `docs/partner-materials/`. **Do not add new documents to the repo root.**
 
 ## Notes
 

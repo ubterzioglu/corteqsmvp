@@ -36,7 +36,7 @@
 > kısıtının geçersiz kılacağı mevcut nesne bulunmuyor.
 
 **Durum:** migration YAZILDI, canlıda UYGULANMADI.
-**Dosya:** `docs/operations/2026-09-28-service-attachments-bucket-hardening.sql`
+**Dosya:** `supabase/migrations/applied/20260928120000_service_attachments_hardening.sql`
 
 **Uygulama öncesi ölçüm (28.09, alındı):**
 
@@ -51,7 +51,7 @@ tam olarak `Authenticated users can upload attachments` olmalı.
 
 **Adımlar:**
 
-1. `psql -f docs/operations/2026-09-28-service-attachments-bucket-hardening.sql`
+1. `psql -f supabase/migrations/applied/20260928120000_service_attachments_hardening.sql`
    (⚠️ PowerShell'den satır yapıştırma — Türkçe karakter bozulur, dosyayla gönder)
 2. Dosyayı `supabase/migrations/applied/20260928120000_service_attachments_hardening.sql`
    olarak **taşı**

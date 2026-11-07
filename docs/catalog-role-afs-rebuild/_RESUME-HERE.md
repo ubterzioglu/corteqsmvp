@@ -77,7 +77,7 @@ admin_list_catalog_claims, admin_list_catalog_profiles, admin_list_member_catalo
 - Phase 3: 014 bloğunu çöz (write-path fn rewire) → commit.
 - Phase 4: 17 fn + ~100 RPC + RLS toptan + edge functions + src/lib/*-api.ts + types.ts regen. Rapor 07.
 - Phase 5: frontend 23 dosya (new-member form flat rol, public/owner/admin profil). Rapor 08.
-- Phase 6: admin Veritabanı menüsü + /admin/new-member/guide + docs/roles-infogram.html. Rapor 09.
+- Phase 6: admin Veritabanı menüsü + /admin/new-member/guide + docs/guides/roles-infogram.html. Rapor 09.
 - Phase 7: E2E + cleanup grep. Rapor 11, 13.
 - Phase 8 GATE: migration 016 (drop legacy: 6 rol, family kolon, catalog_item_types+item_type_*, role_taxonomy_rules, item_type FK) + 017 verify → **prod push öncesi DUR/go-no-go** → push (Management API veya supabase db push) → remote doğrula. Rapor 10,12,14.
 

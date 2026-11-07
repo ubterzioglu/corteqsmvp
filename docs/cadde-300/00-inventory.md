@@ -214,7 +214,7 @@ Ayrıca: canonical auth'un onboarding kriteri yalnız `full_name` (AuthProvider.
 | `src/components/AIConsultationCTA.tsx` | Yok |
 | CKS v2 dokümanının kendisi | Repoda yok (yalnız spec içi referans) → R-04 |
 
-Mevcut Cadde dokümanları: `docs/modules/cadde/cadde.md` (eski MVP spec'i), `docs/history/completed-plans/caddePLAN.md`, `docs/architecture/AI_TECHNICAL_REFERENCE.md` (cadde yalnız SEO-route + terminoloji satırlarında), `docs/AGENT_CONTEXT.md`.
+Mevcut Cadde dokümanları: `docs/modules/cadde/cadde.md` (eski MVP spec'i), `docs/history/completed-plans/caddePLAN.md`, `docs/archive/architecture/AI_TECHNICAL_REFERENCE.md` (cadde yalnız SEO-route + terminoloji satırlarında), `docs/AGENT_CONTEXT.md`.
 
 ---
 

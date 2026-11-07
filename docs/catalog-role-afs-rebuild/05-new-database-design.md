@@ -65,7 +65,7 @@ No `_v2/_new/_temp/_legacy` names survive. Rename-collision handled per plan §1
 ## 8. Blast radius (grep-confirmed)
 - Renamed-table refs in frontend/lib: **84 across 23 files** (admin pages, `profile-helpers.ts`, `role-catalog.ts`, `AuthProvider.tsx`, messaging, `cadde.ts`).
 - Satellite refs: 344 across 30 files (mostly SQL migrations; few runtime).
-- Plus RPCs, RLS, edge functions, admin Database menu, `/admin/new-member/guide`, `docs/roles-infogram.html` (← plan's `rosel-infogram.html`).
+- Plus RPCs, RLS, edge functions, admin Database menu, `/admin/new-member/guide`, `docs/guides/roles-infogram.html` (← plan's `rosel-infogram.html`).
 
 ## 9. Phase plan (execution, with checkpoints)
 1. **Reports** — finish 01–04 (audit, role inv, AFS inv, explicit matrix) + 06 ER diagram. *Checkpoint.*
