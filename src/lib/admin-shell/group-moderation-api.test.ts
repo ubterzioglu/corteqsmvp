@@ -9,6 +9,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { GROUP_MODERATION_ERROR_MESSAGES, REJECT_REASON_PRESETS } from "@/lib/admin-shell/group-moderation-api";
 import { sliceBetween } from "@/test/source-slice";
@@ -22,7 +23,13 @@ const readMigration = (name: string) => {
 };
 
 const raiseCodes = (sql: string) =>
-  new Set([...sql.matchAll(/raise exception '(group_[a-z0-9_]+|forbidden|unknown_setting_key|setting_value_must_be_boolean)'/g)].map((m) => m[1]));
+  new Set(
+    [
+      ...sql.matchAll(
+        /raise exception '(group_[a-z0-9_]+|forbidden|unknown_setting_key|setting_value_must_be_boolean)'/g,
+      ),
+    ].map((m) => m[1]),
+  );
 
 const API = "src/lib/admin-shell/group-moderation-api.ts";
 
@@ -34,7 +41,12 @@ describe("G24 · hata haritası beş kapıya karşı çift yönlü", () => {
   const G16 = readMigration("20261002060000_group_posts.sql");
 
   it("G24 kodları haritada", () => {
-    for (const code of ["group_moderator_forbidden", "forbidden", "unknown_setting_key", "setting_value_must_be_boolean"]) {
+    for (const code of [
+      "group_moderator_forbidden",
+      "forbidden",
+      "unknown_setting_key",
+      "setting_value_must_be_boolean",
+    ]) {
       expect(G24).toContain(`'${code}'`);
       expect(code in GROUP_MODERATION_ERROR_MESSAGES, `eksik: ${code}`).toBe(true);
     }
@@ -43,14 +55,23 @@ describe("G24 · hata haritası beş kapıya karşı çift yönlü", () => {
   it("karar kapılarının kullanıcıya dönebilen kodları haritada", () => {
     // Panelin çağırdığı fonksiyonların kodları (create-only yollar hariç):
     const expected = [
-      "group_invalid_status", "group_hidden_reason_required", "group_not_found",
-      "group_illegal_transition", "group_forbidden",                       // G12
-      "group_claim_forbidden", "group_claim_invalid_decision", "group_claim_not_found",
-      "group_claim_not_reviewable",                                       // G13
-      "group_strike_forbidden", "group_strike_reason_required",
-      "group_strike_invalid_redline", "group_already_removed",            // G15
-      "group_post_invalid_decision", "group_post_not_found",
-      "group_post_invalid_transition", "group_post_forbidden",            // G16
+      "group_invalid_status",
+      "group_hidden_reason_required",
+      "group_not_found",
+      "group_illegal_transition",
+      "group_forbidden", // G12
+      "group_claim_forbidden",
+      "group_claim_invalid_decision",
+      "group_claim_not_found",
+      "group_claim_not_reviewable", // G13
+      "group_strike_forbidden",
+      "group_strike_reason_required",
+      "group_strike_invalid_redline",
+      "group_already_removed", // G15
+      "group_post_invalid_decision",
+      "group_post_not_found",
+      "group_post_invalid_transition",
+      "group_post_forbidden", // G16
     ];
     const sources = G12 + G13 + G15 + G16;
     for (const code of expected) {
@@ -61,9 +82,13 @@ describe("G24 · hata haritası beş kapıya karşı çift yönlü", () => {
 
   it("haritada beş migration'da da OLMAYAN hayali kod yok", () => {
     const all = new Set<string>([
-      ...raiseCodes(G24), ...raiseCodes(G12), ...raiseCodes(G13), ...raiseCodes(G15), ...raiseCodes(G16),
+      ...raiseCodes(G24),
+      ...raiseCodes(G12),
+      ...raiseCodes(G13),
+      ...raiseCodes(G15),
+      ...raiseCodes(G16),
       "group_status_direct_update_forbidden", // guard v3 (G13) — PostgREST 42xxx mesajı
-      "group_post_auth_required",             // G16 create/review ortak kodu
+      "group_post_auth_required", // G16 create/review ortak kodu
     ]);
     const phantom = Object.keys(GROUP_MODERATION_ERROR_MESSAGES).filter((code) => !all.has(code));
     expect(phantom).toEqual([]);
@@ -74,12 +99,12 @@ describe("G24 · kararlar mevcut tek kapılardan (yeni RPC uydurulmaz)", () => {
   const src = readFileSync(API, "utf8");
 
   it("beş karar da bilinen fonksiyon adlarını çağırır", () => {
-    expect(src).toContain('supabase.rpc("set_group_status_v1" as never');
-    expect(src).toContain('supabase.rpc("admin_review_group_claim" as never');
-    expect(src).toContain('supabase.rpc("group_post_review" as never');
-    expect(src).toContain('supabase.rpc("admin_record_group_strike" as never');
-    expect(src).toContain('supabase.rpc("admin_set_group_setting" as never');
-    expect(src).toContain('supabase.rpc("group_moderator_summary" as never');
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("set_group_status_v1" as never'));
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("admin_review_group_claim" as never'));
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("group_post_review" as never'));
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("admin_record_group_strike" as never'));
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("admin_set_group_setting" as never'));
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("group_moderator_summary" as never'));
   });
 
   it("hızlı şerit anahtarı beyaz liste anahtarını birebir gönderir", () => {

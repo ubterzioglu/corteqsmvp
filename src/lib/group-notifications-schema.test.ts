@@ -63,9 +63,15 @@ describe("G23 · CHECK genişletmesi (KR09 dersi)", () => {
     );
 
     for (const legacy of [
-      "new_member", "admin_update", "member_welcome", "revision_request",
-      "revision_request_completed", "relocation_tool_report", "relocation_tool_abandonment",
-      "radar_scan_digest", "career_application",
+      "new_member",
+      "admin_update",
+      "member_welcome",
+      "revision_request",
+      "revision_request_completed",
+      "relocation_tool_report",
+      "relocation_tool_abandonment",
+      "radar_scan_digest",
+      "career_application",
     ]) {
       expect(constraint, `eski tip korunmalı: ${legacy}`).toContain(`'${legacy}'`);
     }
@@ -161,12 +167,42 @@ describe("G23 · trigger zinciri", () => {
 
   it("kural 8: hiçbir trigger fonksiyonu link/invite_code OKUMAZ", () => {
     const triggerFns = [
-      sliceBetween(code(), "create or replace function public.group_notify_landing_insert", "drop trigger if exists trg_group_notify_landing_insert", "insert trigger"),
-      sliceBetween(code(), "create or replace function public.group_notify_moderation_log", "drop trigger if exists trg_group_notify_moderation_log", "log trigger"),
-      sliceBetween(code(), "create or replace function public.group_notify_claim_verified", "drop trigger if exists trg_group_notify_claim_verified", "claim trigger"),
-      sliceBetween(code(), "create or replace function public.group_notify_post_pending", "drop trigger if exists trg_group_notify_post_pending", "post trigger"),
-      sliceBetween(code(), "create or replace function public.group_notify_badge_earned", "drop trigger if exists trg_group_notify_badge_earned", "badge trigger"),
-      sliceBetween(code(), "create or replace function public.enqueue_group_notification", "comment on function public.enqueue_group_notification", "helper"),
+      sliceBetween(
+        code(),
+        "create or replace function public.group_notify_landing_insert",
+        "drop trigger if exists trg_group_notify_landing_insert",
+        "insert trigger",
+      ),
+      sliceBetween(
+        code(),
+        "create or replace function public.group_notify_moderation_log",
+        "drop trigger if exists trg_group_notify_moderation_log",
+        "log trigger",
+      ),
+      sliceBetween(
+        code(),
+        "create or replace function public.group_notify_claim_verified",
+        "drop trigger if exists trg_group_notify_claim_verified",
+        "claim trigger",
+      ),
+      sliceBetween(
+        code(),
+        "create or replace function public.group_notify_post_pending",
+        "drop trigger if exists trg_group_notify_post_pending",
+        "post trigger",
+      ),
+      sliceBetween(
+        code(),
+        "create or replace function public.group_notify_badge_earned",
+        "drop trigger if exists trg_group_notify_badge_earned",
+        "badge trigger",
+      ),
+      sliceBetween(
+        code(),
+        "create or replace function public.enqueue_group_notification",
+        "comment on function public.enqueue_group_notification",
+        "helper",
+      ),
     ];
 
     for (const fn of triggerFns) {
@@ -183,7 +219,8 @@ describe("G23 · trigger zinciri", () => {
   });
 });
 
-describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıcı)", () => {  const edge = () => readFileSync(EDGE, "utf8");
+describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıcı)", () => {
+  const edge = () => readFileSync(EDGE, "utf8");
 
   it("8 olay SETTING_KEY_BY_EVENT'te", () => {
     for (const event of GROUP_EVENTS) {
@@ -217,7 +254,7 @@ describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıc
   it("şablon import edilir", () => {
     // Satır sonu farklarına (CRLF) dayanıklı parça parça kilit:
     expect(edge()).toContain("buildGroupNotificationEmail,");
-    expect(edge()).toContain("type GroupNotificationEventType,");
+    expect(edge()).toMatch(/\btype GroupNotificationEventType\b/);
     expect(edge()).toContain('from "../_shared/emails/group-notifications.ts";');
   });
 });
@@ -231,10 +268,7 @@ describe("G23 · edge kablolaması (dörtlü: anahtar + birlik + şablon + alıc
 // KALDIRILDI (strike_2/3'te çift mail riski de kapanır).
 
 const fixSql = () => {
-  const candidates = [
-    `supabase/migrations/applied/${FIX_MIGRATION}`,
-    `supabase/migrations/${FIX_MIGRATION}`,
-  ];
+  const candidates = [`supabase/migrations/applied/${FIX_MIGRATION}`, `supabase/migrations/${FIX_MIGRATION}`];
   const path = candidates.find((candidate) => existsSync(candidate));
   if (!path) throw new Error(`${FIX_MIGRATION} bulunamadı (applied/ altında yaşamalı).`);
   return readFileSync(path, "utf8")

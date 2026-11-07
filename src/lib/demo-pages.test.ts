@@ -13,11 +13,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 
 import { describe, expect, it } from "vitest";
+import { sliceBetween } from "@/test/source-slice";
 
 import { DEMO_ROUTES, findDemoRoute, isDemoRoute } from "@/lib/demo-pages";
 
-const readSource = (relativePath: string) =>
-  readFileSync(path.resolve(process.cwd(), relativePath), "utf8");
+const readSource = (relativePath: string) => readFileSync(path.resolve(process.cwd(), relativePath), "utf8");
 
 describe("demo-pages", () => {
   it("her demo rotası App.tsx'te gerçekten tanımlı", () => {
@@ -59,10 +59,7 @@ describe("demo-pages", () => {
   // "Kampanya & Yarışmalar" düğmesi rozetsiz kalamaz (2026-09-25'te tekleşti).
   it("Kampanya & Yarışmalar düğmesi demo işaretli kalır", () => {
     const catalog = readSource("src/components/home-trial/action-buttons-data.ts");
-    const contestsBlock = catalog.slice(
-      catalog.indexOf("campaigns:"),
-      catalog.indexOf("radar:"),
-    );
+    const contestsBlock = sliceBetween(catalog, "campaigns:", "radar:");
 
     expect(contestsBlock).toContain('label: "Kampanya & Yarışmalar"');
     expect(catalog).not.toContain("contests:");

@@ -39,16 +39,24 @@ export function sliceUntil(source: string, anchor: string, label = "sliceUntil")
 }
 
 /**
+ * Boşluk ve satır kırılımından BAĞIMSIZ karşılaştırma için metindeki tüm boşlukları siler.
+ *
+ * Prettier (2026-11-07) bir zincir çağrısını ya da JSX niteliklerini satırlara bölebilir:
+ * `supabase.rpc("x" as never` artık `supabase.rpc(` + satır sonu + `"x" as never` olarak
+ * yazılabilir. Sözleşme testinin denetlediği şey YERLEŞİM değil, çağrının VARLIĞIDIR.
+ * İki tarafı da sıkıştır:
+ *   expect(compactSource(kaynak)).toContain(compactSource('supabase.rpc("x" as never'))
+ */
+export function compactSource(source: string): string {
+  return source.replace(/\s+/g, "");
+}
+
+/**
  * İki çıpa arasını diler. `end` çıpası `start`'tan SONRA aranır — aksi halde aynı
  * dize metnin başında da geçiyorsa negatif uzunlukta boş bir dilim üretilir ve
  * bu da sessizce geçen bir iddiaya yol açar.
  */
-export function sliceBetween(
-  source: string,
-  start: string,
-  end: string,
-  label = "sliceBetween",
-): string {
+export function sliceBetween(source: string, start: string, end: string, label = "sliceBetween"): string {
   const from = requireIndex(source, start, `${label} (başlangıç)`);
   const rest = source.slice(from);
   const to = requireIndex(rest, end, `${label} (bitiş)`);

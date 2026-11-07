@@ -16,12 +16,9 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
-import {
-  EVENT_RPC_ERROR_MESSAGES,
-  EVENTS_ACTIVE_LIMIT,
-  resolveEventRpcErrorMessage,
-} from "@/lib/events-rules";
+import { EVENT_RPC_ERROR_MESSAGES, EVENTS_ACTIVE_LIMIT, resolveEventRpcErrorMessage } from "@/lib/events-rules";
 
 const MIGRATIONS = [
   "20261003010000_events_first_approval.sql",
@@ -39,8 +36,7 @@ const readMigration = (name: string) => {
 
 const allSql = () => MIGRATIONS.map(readMigration).join("\n");
 
-const raisedCodes = () =>
-  new Set([...allSql().matchAll(/raise exception '(event_[a-z0-9_]+)'/g)].map((m) => m[1]));
+const raisedCodes = () => new Set([...allSql().matchAll(/raise exception '(event_[a-z0-9_]+)'/g)].map((m) => m[1]));
 
 describe("M05 · hata haritası üç migration'a karşı çift yönlü", () => {
   it("migration'lardaki HER event_* kodu haritada", () => {
@@ -84,10 +80,10 @@ describe("M05 · createEvent RPC'ye geçti (doğrudan insert YOK)", () => {
     apiSource.indexOf("// ── M04 katılım RPC'leri"),
   );
 
-  it("create_event_v1 çağrılır; .from(\"events\").insert createEvent'te YOK", () => {
-    expect(createFn).toContain('supabase.rpc("create_event_v1" as never');
+  it('create_event_v1 çağrılır; .from("events").insert createEvent\'te YOK', () => {
+    expect(compactSource(createFn)).toContain(compactSource('supabase.rpc("create_event_v1" as never'));
     expect(createFn).not.toContain('.from("events").insert');
-    expect(createFn).not.toContain("status: \"pending\"");
+    expect(createFn).not.toContain('status: "pending"');
   });
 
   it("userId istemciden GİTMEZ — CreateEventInput'ta alan yok, payload'da p_user yok", () => {
@@ -101,9 +97,9 @@ describe("M05 · createEvent RPC'ye geçti (doğrudan insert YOK)", () => {
   });
 
   it("join/leave/count RPC sarmalayıcıları mevcut ve Türkçe hata üretiyor", () => {
-    expect(apiSource).toContain('supabase.rpc("join_event_v1" as never');
-    expect(apiSource).toContain('supabase.rpc("leave_event_v1" as never');
-    expect(apiSource).toContain('supabase.rpc("event_attendee_count" as never');
+    expect(compactSource(apiSource)).toContain(compactSource('supabase.rpc("join_event_v1" as never'));
+    expect(compactSource(apiSource)).toContain(compactSource('supabase.rpc("leave_event_v1" as never'));
+    expect(compactSource(apiSource)).toContain(compactSource('supabase.rpc("event_attendee_count" as never'));
     expect(apiSource).toContain("resolveEventRpcErrorMessage");
   });
 

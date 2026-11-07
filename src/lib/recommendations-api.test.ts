@@ -7,6 +7,7 @@
 import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { createRecommendationInputSchema } from "@/lib/recommendations-schemas";
 
@@ -16,17 +17,19 @@ const apiSource = () => readFileSync(API_SOURCE, "utf8");
 describe("M19 · yazma yalnız RPC (doğrudan insert YOK)", () => {
   it("createRecommendationRequest RPC çağırır, .insert ÇAĞIRMAZ", () => {
     const src = apiSource();
-    expect(src).toContain('supabase.rpc("create_recommendation_request_v1" as never');
+    expect(compactSource(src)).toContain(compactSource('supabase.rpc("create_recommendation_request_v1" as never'));
     expect(src).not.toMatch(/from\("recommendation_requests"[^)]*\)\s*\.insert/);
     expect(src).not.toMatch(/from\("recommendation_answers"[^)]*\)\s*\.insert/);
   });
 
   it("answerRecommendation RPC çağırır", () => {
-    expect(apiSource()).toContain('supabase.rpc("answer_recommendation_v1" as never');
+    expect(compactSource(apiSource())).toContain(compactSource('supabase.rpc("answer_recommendation_v1" as never'));
   });
 
   it("match RPC'si M18 fonksiyonunu çağırır (iletişim sızdırmayan)", () => {
-    expect(apiSource()).toContain('supabase.rpc("match_recommendation_professionals" as never');
+    expect(compactSource(apiSource())).toContain(
+      compactSource('supabase.rpc("match_recommendation_professionals" as never'),
+    );
   });
 
   it("hatalar resolveRecommendationRpcErrorMessage'den geçer (düz nesne, instanceof YASAK)", () => {

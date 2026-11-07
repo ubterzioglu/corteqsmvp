@@ -23,6 +23,7 @@
 import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { sliceBetween } from "@/test/source-slice";
 
@@ -52,7 +53,10 @@ describe("M01 · ücretsiz topluluk rotaları RequireFeature ALAMAZ (T2 kilidi)"
       // ihlali değil; rota eklendiğinde bu test otomatik olarak denetler.
       return;
     }
-    expect(element, `${path} rotası RequireFeature ile SARILAMAZ (role_features'ta kuralı yok — sessizce herkese kapanır)`).not.toContain("RequireFeature");
+    expect(
+      element,
+      `${path} rotası RequireFeature ile SARILAMAZ (role_features'ta kuralı yok — sessizce herkese kapanır)`,
+    ).not.toContain("RequireFeature");
   });
 
   it("bugün var olan üç rota gerçekten mevcut (test boşta dönmesin)", () => {
@@ -77,7 +81,9 @@ describe("M01 · cadde.access BİLİNÇLİ istisna — korunur", () => {
   it("cadde rotaları RequireFeature(caddeAccess) arkasında KALIR", () => {
     // Cadde'nin ücretsizliği ürün kararı DEĞİL; flag'i kaldırmak da bu serinin
     // işi değil. Kilit: en az bir cadde rotası guard'lı olmaya devam eder.
-    const guarded = appSource.includes("RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess}");
+    const guarded = compactSource(appSource).includes(
+      compactSource("RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess}"),
+    );
     expect(guarded).toBe(true);
   });
 });

@@ -46,8 +46,21 @@ function hslToHex(h: number, s: number, l: number): string {
   const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = lig - c / 2;
   const [r, g, b] =
-    h < 60 ? [c, x, 0] : h < 120 ? [x, c, 0] : h < 180 ? [0, c, x] : h < 240 ? [0, x, c] : h < 300 ? [x, 0, c] : [c, 0, x];
-  const toByte = (v: number) => Math.round((v + m) * 255).toString(16).padStart(2, "0");
+    h < 60
+      ? [c, x, 0]
+      : h < 120
+        ? [x, c, 0]
+        : h < 180
+          ? [0, c, x]
+          : h < 240
+            ? [0, x, c]
+            : h < 300
+              ? [x, 0, c]
+              : [c, 0, x];
+  const toByte = (v: number) =>
+    Math.round((v + m) * 255)
+      .toString(16)
+      .padStart(2, "0");
   return `#${toByte(r)}${toByte(g)}${toByte(b)}`;
 }
 
@@ -72,7 +85,7 @@ function countClass(source: string, className: string): number {
 describe("marka rengi sözleşmesi", () => {
   it("sosyal üretici bronze'u hâlâ #aa8c42", () => {
     // Bu satır değişirse arayüz token'ı da değişmeli — testin diğer yarısı onu tutar.
-    expect(SOCIAL_CONFIG).toContain("bronze: '#aa8c42'");
+    expect(SOCIAL_CONFIG).toMatch(/bronze:\s*["']#aa8c42["']/);
   });
 
   it("--cadde-brand token'ı #aa8c42'ye çözülür", () => {
@@ -109,13 +122,25 @@ describe("marka rengi sözleşmesi", () => {
   });
 
   it("T3: üç seviyeli eylem dili ortak token sınıflarında tanımlıdır", () => {
-    expect(CSS).toMatch(/\.cadde-secondary-action\s*{[^}]*border[^}]*var\(--cadde-line\)[^}]*background-color:\s*hsl\(var\(--cadde-panel\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s);
-    expect(CSS).toMatch(/\.cadde-tertiary-action\s*{[^}]*background-color:\s*transparent[^}]*color:\s*hsl\(var\(--cadde-brand-ink\)\)/s);
+    expect(CSS).toMatch(
+      /\.cadde-secondary-action\s*{[^}]*border[^}]*var\(--cadde-line\)[^}]*background-color:\s*hsl\(var\(--cadde-panel\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s,
+    );
+    expect(CSS).toMatch(
+      /\.cadde-tertiary-action\s*{[^}]*background-color:\s*transparent[^}]*color:\s*hsl\(var\(--cadde-brand-ink\)\)/s,
+    );
   });
 
   it("T3: eylem token'ları portallı modal içeriklerinde de kökten erişilebilir", () => {
     const rootBlock = CSS.match(/:root\s*{([^}]*)}/s)?.[1] ?? "";
-    for (const token of ["cadde-ink", "cadde-panel", "cadde-line", "cadde-brand", "cadde-brand-strong", "cadde-brand-soft", "cadde-brand-ink"]) {
+    for (const token of [
+      "cadde-ink",
+      "cadde-panel",
+      "cadde-line",
+      "cadde-brand",
+      "cadde-brand-strong",
+      "cadde-brand-soft",
+      "cadde-brand-ink",
+    ]) {
       expect(rootBlock).toMatch(new RegExp(`--${token}:\\s`));
     }
   });
@@ -134,7 +159,9 @@ describe("marka rengi sözleşmesi", () => {
     expect(CSS).toMatch(
       /\.cadde-filter-active\s*{[^}]*border-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*background-color:\s*hsl\(var\(--cadde-brand\)\)[^}]*color:\s*hsl\(var\(--cadde-ink\)\)/s,
     );
-    expect(contrastRatio(hslToRgb(...readHslToken("cadde-brand")), hslToRgb(...readHslToken("cadde-ink")))).toBeGreaterThanOrEqual(4.5);
+    expect(
+      contrastRatio(hslToRgb(...readHslToken("cadde-brand")), hslToRgb(...readHslToken("cadde-ink"))),
+    ).toBeGreaterThanOrEqual(4.5);
   });
 
   it("T5: içerik şeritleri Cadde, Cafe ve Çarşı pillar token'larına bağlıdır", () => {

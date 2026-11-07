@@ -20,6 +20,7 @@
 import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
+import { compactSource } from "@/test/source-slice";
 
 import { sliceBetween } from "@/test/source-slice";
 
@@ -90,9 +91,7 @@ describe("G21 · panel durumu sızıntısız", () => {
   });
 
   it("grant yalnız authenticated", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.group_owner_panel_state(uuid) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.group_owner_panel_state(uuid) to authenticated;");
   });
 });
 
@@ -126,9 +125,7 @@ describe("G21 · sahip düzenlemesi motor alanlarına UZANAMAZ", () => {
     // koşul 'olmayan-xx'e çevrilince raise var diye test geçiyordu (M3 dersi).
     expect(fn).toContain("if p_category = 'aile-cocuk' then");
     expect(fn).toContain("group_owner_category_locked");
-    expect(fn.indexOf("group_owner_category_locked")).toBeLessThan(
-      fn.indexOf("group_owner_invalid_category"),
-    );
+    expect(fn.indexOf("group_owner_category_locked")).toBeLessThan(fn.indexOf("group_owner_invalid_category"));
   });
 
   it("160 sınırı + geo doğrulaması (kategori/ülke/şehir G18 deseninde)", () => {
@@ -168,7 +165,7 @@ describe("G21 · kaldırma isteği G12 owner yolundan gider (kabul #9)", () => {
     const src = readFileSync("src/lib/group-owner-panel.ts", "utf8");
     const fn = sliceBetween(src, "export async function requestGroupRemoval(", "\n}", "requestGroupRemoval");
 
-    expect(fn).toContain('supabase.rpc("set_group_status_v1" as never');
+    expect(compactSource(fn)).toContain(compactSource('supabase.rpc("set_group_status_v1" as never'));
     expect(fn).toContain('p_to_status: "hidden"');
     expect(fn).toContain('p_reason: "owner_request"');
     // Migration bu geçiş için YENİ fonksiyon tanımlamaz (G12 tek kapı):

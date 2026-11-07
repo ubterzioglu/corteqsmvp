@@ -22,6 +22,7 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { sliceBetween } from "@/test/source-slice";
 
 import DiasporaSearchSection from "@/components/home-trial/DiasporaSearchSection";
 
@@ -128,12 +129,10 @@ describe("DiasporaSearchSection arama örnekleri", () => {
       fs.readFileSync("src/components/home-trial/DiasporaSearchSection.tsx", "utf8"),
     );
 
-    const listBlock = source.slice(
-      source.indexOf("const EXAMPLE_QUERIES"),
-      source.indexOf("const PLACEHOLDER_INTERVAL_MS"),
-    );
+    const listBlock = sliceBetween(source, "const EXAMPLE_QUERIES", "const PLACEHOLDER_INTERVAL_MS");
 
-    const entries = [...listBlock.matchAll(/^\s*"([^"]+)",$/gm)].map((match) => match[1]);
+    // Satır düzeninden bağımsız: biçimlendirici kısa diziyi tek satıra indirebilir.
+    const entries = [...listBlock.matchAll(/"([^"]+)"/g)].map((match) => match[1]);
 
     expect(entries.length).toBeGreaterThanOrEqual(10);
     for (const entry of entries) {
