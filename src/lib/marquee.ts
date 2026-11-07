@@ -1,5 +1,6 @@
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 import { supabase } from "@/integrations/supabase/client";
+import { trSlugify } from "@/lib/text-normalization";
 
 export type MarqueeItemType = "news" | "stat" | "announcement";
 export type MarqueeItemRow = Tables<"marquee_items">;
@@ -81,20 +82,8 @@ export const fallbackMarqueeItems: MarqueeItemRow[] = [
   },
 ];
 
-export function slugifyMarqueeTitle(value: string) {
-  return value
-    .toLocaleLowerCase("tr-TR")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/ı/g, "i")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/-{2,}/g, "-");
+export function slugifyMarqueeTitle(value: string): string {
+  return trSlugify(value);
 }
 
 export function validateNewsImageFile(file: File) {

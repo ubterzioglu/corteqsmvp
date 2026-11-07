@@ -81,6 +81,15 @@ describe("createSection / updateSection validation", () => {
     expect(fromMock).toHaveBeenCalledWith("brainstorming_sections");
   });
 
+  it("section_key Türkçe harfleri katlar (07.11: 'Kış' eskiden 'k-s' oluyordu)", async () => {
+    const builder = chainable({ single: { data: { id: "sec-2", title: "Kış Okulu" }, error: null } });
+    fromMock.mockReturnValue(builder);
+
+    await createSection({ ...VALID_SECTION_FORM, title: "Kış Okulu" }, 0);
+    const payload = (builder.insert as ReturnType<typeof vi.fn>).mock.calls[0][0] as { section_key: string };
+    expect(payload.section_key).toMatch(/^kis-okulu-[a-z0-9]+$/);
+  });
+
   it("surfaces a friendly error on update failure", async () => {
     fromMock.mockReturnValue(chainable({ single: { data: null, error: { message: "boom" } } }));
     await expect(updateSection("sec-1", VALID_SECTION_FORM)).rejects.toThrow("Bölüm güncellenemedi.");

@@ -1,6 +1,5 @@
 // src/pages/admin/service-finder/routes.tsx
 // Service Finder modülünün route ağacı (muhasebe deseni).
-/* eslint-disable react-refresh/only-export-components */
 //
 // Kullanım (src/pages/admin/routes.tsx):
 //   import { serviceFinderRoutes } from "./service-finder/routes";
@@ -15,6 +14,7 @@
 import { Route } from "react-router-dom";
 import { Suspense } from "react";
 import { lazyWithReload } from "@/lib/lazy-with-reload";
+import { AdminLoadingState } from "@/components/admin/page/AdminLoadingState";
 
 const ServiceFinderDashboardPage = lazyWithReload(() => import("./ServiceFinderDashboardPage"));
 const ServiceFinderJobsPage = lazyWithReload(() => import("./ServiceFinderJobsPage"));
@@ -24,16 +24,12 @@ const ServiceFinderTemplatesPage = lazyWithReload(() => import("./ServiceFinderT
 const ServiceFinderCostsPage = lazyWithReload(() => import("./ServiceFinderCostsPage"));
 const ServiceFinderGuidePage = lazyWithReload(() => import("./ServiceFinderGuidePage"));
 
-function PageFallback() {
-  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
-}
-
 export const serviceFinderRoutes = (
   <Route path="service-finder">
     <Route
       index
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderDashboardPage />
         </Suspense>
       }
@@ -41,7 +37,7 @@ export const serviceFinderRoutes = (
     <Route
       path="jobs"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderJobsPage />
         </Suspense>
       }
@@ -49,7 +45,7 @@ export const serviceFinderRoutes = (
     <Route
       path="jobs/:jobId"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderJobDetailPage />
         </Suspense>
       }
@@ -57,7 +53,7 @@ export const serviceFinderRoutes = (
     <Route
       path="providers"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderProvidersPage />
         </Suspense>
       }
@@ -65,7 +61,7 @@ export const serviceFinderRoutes = (
     <Route
       path="templates"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderTemplatesPage />
         </Suspense>
       }
@@ -73,7 +69,7 @@ export const serviceFinderRoutes = (
     <Route
       path="costs"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderCostsPage />
         </Suspense>
       }
@@ -81,7 +77,7 @@ export const serviceFinderRoutes = (
     <Route
       path="guide"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ServiceFinderGuidePage />
         </Suspense>
       }

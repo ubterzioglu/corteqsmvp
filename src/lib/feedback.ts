@@ -12,6 +12,7 @@
 // returning istenirse RLS'e takılır. Insert `return=minimal` olarak kalmalı.
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserId } from "@/lib/auth-api";
 import { sanitizeError, validateContent } from "@/lib/security";
 import { fetchAllRows } from "./supabase-chunked";
 
@@ -76,11 +77,6 @@ export function validateFeedbackBody(body: string): string | null {
   return validateContent(trimmed);
 }
 
-async function currentUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
-}
-
 /** Üye feedback'i gönderir (created_by = aktif üye; RLS gereği oturum zorunlu). */
 export async function submitFeedback(body: string, pagePath: string): Promise<void> {
   const validationError = validateFeedbackBody(body);
@@ -88,7 +84,7 @@ export async function submitFeedback(body: string, pagePath: string): Promise<vo
     throw new Error(validationError);
   }
 
-  const createdBy = await currentUserId();
+  const createdBy = await getCurrentUserId();
   if (!createdBy) {
     throw new Error("Feedback göndermek için giriş yapmalısınız.");
   }

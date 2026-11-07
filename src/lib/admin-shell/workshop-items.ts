@@ -12,6 +12,7 @@
 // zaten `mapItem` ile açıkça yapılıyordu, gizlenen bir kusur yoktu.
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserId } from "@/lib/auth-api";
 import { sanitizeError, validateContent } from "@/lib/security";
 import { trCompare, trIncludes } from "@/lib/text-normalization";
 
@@ -283,11 +284,6 @@ export function validateWorkshopItemDraft(draft: WorkshopItemDraft): string | nu
   return null;
 }
 
-async function currentUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
-}
-
 /** Bir workshop'un aktif maddelerini madde sırasıyla getirir. */
 export async function fetchWorkshopItems(workshopKey: string): Promise<WorkshopItem[]> {
   const { data, error } = await table()
@@ -330,7 +326,7 @@ export async function createWorkshopItem(workshopKey: string, draft: WorkshopIte
     throw new Error(validationError);
   }
 
-  const [itemNo, createdBy] = await Promise.all([nextItemNo(workshopKey), currentUserId()]);
+  const [itemNo, createdBy] = await Promise.all([nextItemNo(workshopKey), getCurrentUserId()]);
   const { data, error } = await table()
     .insert({
       workshop_key: workshopKey,

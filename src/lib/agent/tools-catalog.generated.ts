@@ -1137,7 +1137,8 @@ export const toolCatalog = {
       "interface_kind": "internal_api",
       "exports": [
         "AUTH_PROFILE_ATTRIBUTE_KEYS",
-        "fetchAuthProfile"
+        "fetchAuthProfile",
+        "getCurrentUserId"
       ],
       "tables_read_write": [
         "user_profile_attributes",
@@ -3167,6 +3168,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/assistant-usage-api.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/auth-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

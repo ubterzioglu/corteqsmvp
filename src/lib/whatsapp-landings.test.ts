@@ -31,6 +31,10 @@ describe("whatsapp landing helpers", () => {
     expect(slugify("Berlin Türk Girişimciler 2026!!")).toBe("berlin-turk-girisimciler-2026");
   });
 
+  it("İ'yi Türkçe kuralla katlar (07.11: 'İstanbul' eskiden 'i-stanbul' oluyordu)", () => {
+    expect(slugify("İstanbul Türkleri")).toBe("istanbul-turkleri");
+  });
+
   it("limits slug length", () => {
     expect(slugify("a".repeat(100)).length).toBeLessThanOrEqual(60);
   });

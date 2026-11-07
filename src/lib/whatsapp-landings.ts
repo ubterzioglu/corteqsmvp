@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { fetchAllRows } from "./supabase-chunked";
+import { trSlugify } from "@/lib/text-normalization";
 
 export type LandingMode = "visual" | "text";
 export type LandingCategory =
@@ -205,18 +206,9 @@ const LANDING_CATEGORY_ALIASES: Record<string, LandingCategory> = {
   diger: "diger",
 };
 
-export function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ı/g, "i")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "")
-    .slice(0, 60);
+/** Grup sayfası slug'ı ve görsel dosya adı — en çok 60 karakter. */
+export function slugify(value: string): string {
+  return trSlugify(value, 60);
 }
 
 // Keep addcom copy and community metadata on a single Turkish normalization path.

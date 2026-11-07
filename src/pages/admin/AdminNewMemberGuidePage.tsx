@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { fetchCatalogRows, fetchRolesForGuide, type CatalogRow } from "@/lib/role-catalog";
+import { trSlugify } from "@/lib/text-normalization";
 
 type RoleRow = { key: string; label: string; sort_order: number; is_active: boolean };
 
@@ -386,25 +387,12 @@ const ATTRIBUTE_SECTION_ID = "guide-reference-attribute-katalogu";
 const FEATURE_SECTION_ID = "guide-reference-feature-katalogu";
 const PROFILE_SECTION_ID = "guide-reference-bolum-katalogu-sections";
 
-function slugify(value: string) {
-  return value
-    .toLocaleLowerCase("tr-TR")
-    .replace(/ı/g, "i")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
-
 function getBlockId(heading: string) {
-  return `guide-block-${slugify(heading)}`;
+  return `guide-block-${trSlugify(heading)}`;
 }
 
 function getSectionId(heading: string, title: string) {
-  return `guide-section-${slugify(heading)}-${slugify(title)}`;
+  return `guide-section-${trSlugify(heading)}-${trSlugify(title)}`;
 }
 
 const AdminNewMemberGuidePage = () => {

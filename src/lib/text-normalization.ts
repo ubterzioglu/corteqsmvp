@@ -17,6 +17,20 @@ export const trLower = (input: string): string => input.toLocaleLowerCase("tr-TR
 export const trFold = (input: string): string =>
   input.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ı/g, "i");
 
+/**
+ * URL/DB anahtarı için Türkçe-doğru slug: "İstanbul Kış Okulu" → "istanbul-kis-okulu".
+ * `trFold` ile katlar; [a-z0-9] dışı her dizi tek "-", baştaki/sondaki "-" kırpılır,
+ * `maxLength` verildiyse EN SON kesilir (7 eski kopyanın sırası — kesim sonda "-" bırakabilir).
+ * ⚠️ Slug'lar saklanır: çıktıyı değiştirmek yalnız YENİ kayıtları etkiler, ama
+ * kayıtlı slug'ı yeniden geçiren formlar için fonksiyon idempotent kalmalıdır.
+ */
+export function trSlugify(input: string, maxLength?: number): string {
+  const slug = trFold(input)
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return maxLength === undefined ? slug : slug.slice(0, maxLength);
+}
+
 /** Arama/filtre eşleşmesi: hem "İstanbul" hem "istanbul" hem "ISTANBUL" birbirini bulur. */
 export const trIncludes = (haystack: string | null | undefined, needle: string): boolean => {
   const query = trFold(needle.trim());

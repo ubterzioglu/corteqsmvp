@@ -5,6 +5,7 @@
 //      bu yüzden satır tipleri burada elle tanımlandı.
 
 import { supabase } from "@/integrations/supabase/client";
+import { trSlugify } from "@/lib/text-normalization";
 
 export type BlogCategory =
   | "giris-ulasim"
@@ -191,20 +192,7 @@ export async function deleteBlogPost(id: string): Promise<void> {
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 export function slugifyBlogTitle(value: string): string {
-  return value
-    .toLocaleLowerCase("tr-TR")
-    .replace(/ı/g, "i")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/İ/g, "i")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .replace(/-{2,}/g, "-");
+  return trSlugify(value);
 }
 
 export interface BlogCountryGroup {

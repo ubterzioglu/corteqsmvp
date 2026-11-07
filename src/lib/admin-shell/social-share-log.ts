@@ -17,6 +17,7 @@
 import { Facebook, Instagram, Linkedin, MessageCircle, Twitter, type LucideIcon } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserId } from "@/lib/auth-api";
 
 /** İçerik bölümleri — DB CHECK ile eşleşir. */
 export type ShareTab = "tools" | "diaspora" | "tests" | "burak";
@@ -121,14 +122,9 @@ export async function fetchShareState(): Promise<ShareState> {
   return { badges, notes };
 }
 
-async function currentUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
-}
-
 /** Bir kalem × platform rozetini aç/kapatır (upsert). */
 export async function toggleShare(args: { globalId: string; platform: SharePlatform; shared: boolean }): Promise<void> {
-  const markedBy = await currentUserId();
+  const markedBy = await getCurrentUserId();
   const { error } = await supabase.from("social_share_log").upsert(
     {
       global_id: args.globalId,
@@ -147,7 +143,7 @@ export async function toggleShare(args: { globalId: string; platform: SharePlatf
 
 /** Bir kalemin tek notunu kaydeder (upsert). */
 export async function saveItemNote(args: { globalId: string; note: string }): Promise<void> {
-  const markedBy = await currentUserId();
+  const markedBy = await getCurrentUserId();
   const { error } = await supabase.from("social_share_item_note").upsert(
     {
       global_id: args.globalId,

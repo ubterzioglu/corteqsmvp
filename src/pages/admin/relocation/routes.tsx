@@ -1,6 +1,5 @@
 // src/pages/admin/relocation/routes.tsx
 // Relocation ingestion admin route ağacı (service-finder/routes.tsx kalıbı).
-/* eslint-disable react-refresh/only-export-components */
 //
 // Kullanım (src/pages/admin/routes.tsx):
 //   import { relocationAdminRoutes } from "./relocation/routes";
@@ -13,14 +12,11 @@
 import { Route } from "react-router-dom";
 import { Suspense } from "react";
 import { lazyWithReload } from "@/lib/lazy-with-reload";
+import { AdminLoadingState } from "@/components/admin/page/AdminLoadingState";
 
 const RelocationJobsPage = lazyWithReload(() => import("./RelocationJobsPage"));
 const RelocationCandidatesPage = lazyWithReload(() => import("./RelocationCandidatesPage"));
 const RelocationToolsQuestionCountsPage = lazyWithReload(() => import("./RelocationToolsQuestionCountsPage"));
-
-function PageFallback() {
-  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
-}
 
 export const relocationAdminRoutes = (
   <>
@@ -28,7 +24,7 @@ export const relocationAdminRoutes = (
       <Route
         index
         element={
-          <Suspense fallback={<PageFallback />}>
+          <Suspense fallback={<AdminLoadingState />}>
             <RelocationJobsPage />
           </Suspense>
         }
@@ -36,7 +32,7 @@ export const relocationAdminRoutes = (
       <Route
         path="candidates"
         element={
-          <Suspense fallback={<PageFallback />}>
+          <Suspense fallback={<AdminLoadingState />}>
             <RelocationCandidatesPage />
           </Suspense>
         }
@@ -46,7 +42,7 @@ export const relocationAdminRoutes = (
       <Route
         path="soru-sayilari"
         element={
-          <Suspense fallback={<PageFallback />}>
+          <Suspense fallback={<AdminLoadingState />}>
             <RelocationToolsQuestionCountsPage />
           </Suspense>
         }

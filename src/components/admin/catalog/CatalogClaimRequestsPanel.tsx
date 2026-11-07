@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { approveCatalogClaim, listCatalogClaims, rejectCatalogClaim } from "@/lib/admin-catalog";
+import { formatDateTime } from "@/lib/admin-catalog-display";
 import type { CatalogClaim } from "@/lib/catalog-types";
 
 type CatalogClaimRequestsPanelProps = {
@@ -126,16 +127,6 @@ const CatalogClaimRequestsPanel = ({ itemId }: CatalogClaimRequestsPanelProps) =
       </CardContent>
     </Card>
   );
-};
-
-const formatDateTime = (value: string | null) => {
-  if (!value) return "-";
-
-  return new Date(value).toLocaleString("tr-TR", {
-    dateStyle: "medium",
-    timeStyle: "short",
-    timeZone: "Europe/Berlin",
-  });
 };
 
 export default CatalogClaimRequestsPanel;

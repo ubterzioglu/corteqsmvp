@@ -1,6 +1,5 @@
 // src/pages/admin/muhasebe/routes.tsx
 // Muhasebe modülünün route ağacı.
-/* eslint-disable react-refresh/only-export-components */
 // Mevcut App.tsx içindeki /admin route'u altına Route element'i olarak eklenir.
 //
 // Örnek kullanım App.tsx içinde:
@@ -16,6 +15,7 @@
 import { Route } from "react-router-dom";
 import { Suspense } from "react";
 import { lazyWithReload } from "@/lib/lazy-with-reload";
+import { AdminLoadingState } from "@/components/admin/page/AdminLoadingState";
 
 // Code-splitting: muhasebe sayfaları ihtiyaç anında yüklensin
 const MuhasebeLayout = lazyWithReload(() => import("./MuhasebeLayout"));
@@ -25,16 +25,12 @@ const GelirlerPage = lazyWithReload(() => import("./GelirlerPage"));
 const NakitAkisiPage = lazyWithReload(() => import("./NakitAkisiPage"));
 const ButcePage = lazyWithReload(() => import("./butce/ButcePage"));
 
-function PageFallback() {
-  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
-}
-
 // Re-usable route subtree. Parent route (AdminLayout) must also guard via auth.
 export const muhasebeRoutes = (
   <Route
     path="muhasebe"
     element={
-      <Suspense fallback={<PageFallback />}>
+      <Suspense fallback={<AdminLoadingState />}>
         <MuhasebeLayout />
       </Suspense>
     }
@@ -42,7 +38,7 @@ export const muhasebeRoutes = (
     <Route
       index
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <MuhasebeDashboard />
         </Suspense>
       }
@@ -50,7 +46,7 @@ export const muhasebeRoutes = (
     <Route
       path="giderler"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <GiderlerPage />
         </Suspense>
       }
@@ -58,7 +54,7 @@ export const muhasebeRoutes = (
     <Route
       path="gelirler"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <GelirlerPage />
         </Suspense>
       }
@@ -66,7 +62,7 @@ export const muhasebeRoutes = (
     <Route
       path="nakit-akisi"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <NakitAkisiPage />
         </Suspense>
       }
@@ -74,7 +70,7 @@ export const muhasebeRoutes = (
     <Route
       path="butce"
       element={
-        <Suspense fallback={<PageFallback />}>
+        <Suspense fallback={<AdminLoadingState />}>
           <ButcePage />
         </Suspense>
       }

@@ -2,20 +2,7 @@ import { useMemo, useState } from "react";
 import type { SurveyWithQuestions } from "@/lib/surveys";
 import { buildAutoDateSlug, createSurvey, updateSurvey, upsertSurveyQuestions } from "@/lib/surveys";
 import SurveyQuestionEditor, { type EditableQuestion } from "@/components/admin/surveys/SurveyQuestionEditor";
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ı/g, "i")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "")
-    .slice(0, 80);
-}
+import { trSlugify } from "@/lib/text-normalization";
 
 interface SurveyBuilderProps {
   initial?: SurveyWithQuestions | null;
@@ -45,7 +32,7 @@ export default function SurveyBuilder({ initial, onSaved }: SurveyBuilderProps) 
     })),
   );
 
-  const computedSlug = useMemo(() => slugify(title), [title]);
+  const computedSlug = useMemo(() => trSlugify(title, 80), [title]);
 
   const addQuestion = () => {
     setQuestions((prev) => [

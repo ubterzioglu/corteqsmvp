@@ -12,6 +12,17 @@ import type { Profile } from "@/components/auth/auth-context";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
+ * Oturumdaki kullanıcının kimliği; oturum yoksa `null`. FIRLATMAZ — çağıran
+ * `null`'u kendisi ele alır (RLS gereği oturum zorunluysa kendi hatasını üretir).
+ * Oturum zorunluluğunu hata ile bildirmesi gereken yer (`org-verification-api`)
+ * bilerek kendi sürümünü tutar.
+ */
+export async function getCurrentUserId(): Promise<string | null> {
+  const { data } = await supabase.auth.getUser();
+  return data.user?.id ?? null;
+}
+
+/**
  * Oturum açılışında okunan profil nitelikleri.
  *
  * Liste doğrudan sorgunun `.in()` filtresine gider. Buraya anahtar eklemek

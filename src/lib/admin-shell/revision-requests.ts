@@ -18,6 +18,7 @@
 // created_by → e-posta gösterimi admin_get_user_email(uuid) RPC ile çözülür.
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserId } from "@/lib/auth-api";
 import type { Database } from "@/integrations/supabase/types";
 import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
 import { fetchAllRows } from "@/lib/supabase-chunked";
@@ -174,11 +175,6 @@ export function validateRevisionRequestForm(form: RevisionRequestForm): string |
   return null;
 }
 
-async function currentUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
-}
-
 // Dönüş tipi BİLEREK açıklanmıyor: `Record<string, unknown>` derleyicinin
 // insert/update yükünü tabloya karşı denetlemesini engelliyordu. Çıkarım
 // bırakıldığında olmayan bir sütuna yazmak derleme zamanında yakalanır
@@ -242,7 +238,7 @@ export async function createRevisionRequest(form: RevisionRequestForm): Promise<
     throw new Error(validationError);
   }
 
-  const createdBy = await currentUserId();
+  const createdBy = await getCurrentUserId();
   const { data, error } = await supabase
     .from("revision_requests")
     .insert({ ...buildRequestPayload(form), created_by: createdBy })
@@ -301,7 +297,7 @@ export async function addComment(requestId: string, body: string): Promise<Revis
     throw new Error(contentError);
   }
 
-  const createdBy = await currentUserId();
+  const createdBy = await getCurrentUserId();
   const { data, error } = await supabase
     .from("revision_request_comments")
     .insert({ request_id: requestId, body: trimmed, created_by: createdBy })
@@ -458,7 +454,7 @@ export async function uploadAttachment(parent: AttachmentParent, file: File): Pr
     throw new Error(sanitizeError(uploadError, "Dosya yüklenemedi."));
   }
 
-  const createdBy = await currentUserId();
+  const createdBy = await getCurrentUserId();
   const { column, value } = attachmentParentColumn(parent);
   const base = {
     storage_path: path,

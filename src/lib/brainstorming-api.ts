@@ -13,6 +13,7 @@
 // sütunlarını kesişime sokar ve var olan sütunları bile reddeder.
 
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentUserId } from "@/lib/auth-api";
 import { sanitizeError } from "@/lib/security";
 import {
   brainstormingRowFormSchema,
@@ -21,6 +22,7 @@ import {
   type BrainstormingSectionForm,
   type BrainstormingStatus,
 } from "@/lib/brainstorming-schemas";
+import { trSlugify } from "@/lib/text-normalization";
 
 // Form tipleri şemalarda tanımlıdır ama bu modülün açık API'sinin parçası:
 // createSection/updateRow gibi fonksiyonların imzaları bunları kullanıyor ve
@@ -126,23 +128,6 @@ function mapComment(row: CommentRow): BrainstormingComment {
   };
 }
 
-function slugify(value: string): string {
-  return (
-    value
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 80) || "bolum"
-  );
-}
-
-async function currentUserId(): Promise<string | null> {
-  const { data } = await supabase.auth.getUser();
-  return data.user?.id ?? null;
-}
-
 /** Tüm bölümleri, her birinin satırlarıyla birlikte sıralı getirir. */
 export async function fetchSections(): Promise<BrainstormingSection[]> {
   const { data: sectionData, error: sectionError } = await supabase
@@ -182,8 +167,8 @@ export async function createSection(
   orderIndex: number,
 ): Promise<BrainstormingSection> {
   const parsed = brainstormingSectionFormSchema.parse(input);
-  const uid = await currentUserId();
-  const sectionKey = `${slugify(parsed.title)}-${Date.now().toString(36)}`;
+  const uid = await getCurrentUserId();
+  const sectionKey = `${trSlugify(parsed.title, 80) || "bolum"}-${Date.now().toString(36)}`;
 
   const { data, error } = await supabase
     .from("brainstorming_sections")
@@ -209,7 +194,7 @@ export async function createSection(
 /** Var olan bir bölümü günceller (rows dokunulmaz). */
 export async function updateSection(id: string, input: BrainstormingSectionForm): Promise<BrainstormingSection> {
   const parsed = brainstormingSectionFormSchema.parse(input);
-  const uid = await currentUserId();
+  const uid = await getCurrentUserId();
 
   const { data, error } = await supabase
     .from("brainstorming_sections")

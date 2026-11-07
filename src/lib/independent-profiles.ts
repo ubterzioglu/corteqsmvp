@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { trSlugify } from "@/lib/text-normalization";
 
 export type IndependentProfileKind = "consulate" | "embassy";
 export type IndependentProfileKindFilter = IndependentProfileKind | "all";
@@ -200,18 +201,7 @@ const inputToPayload = (input: IndependentProfileInput) => ({
   sort_order: input.sortOrder,
 });
 
-export const slugifyIndependentProfile = (value: string) =>
-  value
-    .toLocaleLowerCase("tr")
-    .replace(/ğ/g, "g")
-    .replace(/ü/g, "u")
-    .replace(/ş/g, "s")
-    .replace(/ı/g, "i")
-    .replace(/ö/g, "o")
-    .replace(/ç/g, "c")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "")
-    .slice(0, 80);
+export const slugifyIndependentProfile = (value: string): string => trSlugify(value, 80);
 
 export const getConsulateSlugForAssociationId = (associationId: string) =>
   CONSULATE_SLUG_BY_ASSOCIATION_ID[associationId] ?? null;
