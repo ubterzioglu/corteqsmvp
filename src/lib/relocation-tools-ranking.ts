@@ -25,6 +25,24 @@ export function clamp01OrNeutral(value: DimensionScore): number {
   return value;
 }
 
+/** 4 ondalığa yuvarlar — araçların ortak yuvarlaması (SQL round(…, 4) aynası). */
+export const round4 = (n: number): number => Math.round(n * 10_000) / 10_000;
+
+/** 1..5 ölçek cevabı → 0..1, (v-1)/4; eksik/NaN → nötr 0.5. */
+export function likert5ToUnit(value: number | undefined): number {
+  if (value === undefined || Number.isNaN(value)) return 0.5;
+  return clamp01OrNeutral((value - 1) / 4);
+}
+
+/**
+ * 0..5 seviye (ör. `language_level`) → 0..1, v/5; eksik/NaN → nötr 0.5.
+ * ⚠️ `likert5ToUnit` ile AYNI DEĞİLDİR (1 → 0.2, orada 0) — ikisini birleştirme.
+ */
+export function level5ToUnit(value: number | undefined): number {
+  if (value === undefined || Number.isNaN(value)) return 0.5;
+  return clamp01OrNeutral(value / 5);
+}
+
 /** Ham boyut değerlerini weights anahtar kümesine göre 0..1 breakdown'a çevirir. */
 export function computeScoreBreakdown(
   features: Record<string, DimensionScore>,
@@ -50,7 +68,7 @@ export function computeWeightedScore(breakdown: ScoreBreakdown, weights: Dimensi
     scoreSum += clamp01OrNeutral(breakdown[dim]) * w;
   }
   if (weightSum === 0) return 0;
-  return Math.round((scoreSum / weightSum) * 10_000) / 10_000;
+  return round4(scoreSum / weightSum);
 }
 
 /** 0..1 skoru 0..100'e ölçekler (DB total_score numeric(6,2) ile uyumlu). */

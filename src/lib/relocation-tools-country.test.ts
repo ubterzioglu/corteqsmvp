@@ -112,3 +112,41 @@ describe("countryBucket — eşik sınırları", () => {
     expect(countryBucket(40)).toBe("risky");
   });
 });
+
+// KARAKTERİZASYON (07.11, W3): tüm tercihler 2 → Likert (v-1)/4 = 0.25, seviye v/5 = 0.4.
+// Eksik/1/5 girdileri iki ölçeği AYIRT ETMEZ; mutasyon taramasında 6 çağrının 6'sı korumasızdı.
+// Değerler o günkü TS çıktısıdır — SQL eşitliğini KANITLAMAZ, yalnız sessiz kaymayı yakalar.
+describe("computeCountryBreakdown — ölçek kilidi (tüm tercihler 2)", () => {
+  it("kırılım birebir korunur", () => {
+    const midCountry: CountryMetrics = {
+      cost_index: 0.6,
+      employment_index: 0.6,
+      visa_complexity: 0.6,
+      english_workability: 0.6,
+      healthcare_index: 0.6,
+      safety_index: 0.6,
+      inclusion_index: 0.6,
+      community_density: 0.6,
+    };
+    const twos: CountryPreferences = {
+      monthly_budget: 2000,
+      community_importance: 2,
+      healthcare_priority: 2,
+      safety_priority: 2,
+      inclusion_priority: 2,
+      tax_burden_tolerance: 2,
+      remote_work_flexibility: 2,
+    };
+    expect(computeCountryBreakdown(midCountry, twos)).toMatchInlineSnapshot(`
+      {
+        "budget_fit": 0.3775,
+        "career_market_fit": 0.565,
+        "climate_fit": 0.6,
+        "community_fit": 0.33,
+        "language_fit": 0.8,
+        "quality_of_life_fit": 0.45,
+        "visa_path_fit": 0.34,
+      }
+    `);
+  });
+});

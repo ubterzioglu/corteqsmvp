@@ -9,6 +9,8 @@ import {
   type DimensionWeights,
   clamp01OrNeutral,
   computeWeightedScore,
+  likert5ToUnit,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -56,24 +58,17 @@ export interface CityPreferences {
   healthcare_access_urgency?: number;
 }
 
-function pref01(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral((value - 1) / 4);
-}
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** Bir şehrin 6 boyut kırılımını hesaplar. SQL scored.breakdown aynası. */
 export function computeCityBreakdown(features: CityFeatures, prefs: CityPreferences): Record<CityDimension, number> {
-  const community = pref01(prefs.community_need);
-  const safety = pref01(prefs.safety_family);
-  const airport = pref01(prefs.airport_access);
-  const industry = pref01(prefs.industry_hub);
-  const health = pref01(prefs.healthcare_priority);
-  const transportPref = pref01(prefs.public_transport_importance);
-  const greenPref = pref01(prefs.green_space_preference);
+  const community = likert5ToUnit(prefs.community_need);
+  const safety = likert5ToUnit(prefs.safety_family);
+  const airport = likert5ToUnit(prefs.airport_access);
+  const industry = likert5ToUnit(prefs.industry_hub);
+  const health = likert5ToUnit(prefs.healthcare_priority);
+  const transportPref = likert5ToUnit(prefs.public_transport_importance);
+  const greenPref = likert5ToUnit(prefs.green_space_preference);
   const expatPref = prefs.expat_community_size;
-  const healthUrgency = pref01(prefs.healthcare_access_urgency);
+  const healthUrgency = likert5ToUnit(prefs.healthcare_access_urgency);
   const expatMultiplier = expatPref === "large" ? 1.05 : expatPref === "no_preference" ? 0.95 : 1.0;
 
   return {

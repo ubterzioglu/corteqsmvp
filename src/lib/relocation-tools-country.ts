@@ -10,7 +10,9 @@ import {
   type ScoreBucket,
   clamp01OrNeutral,
   computeWeightedScore,
+  likert5ToUnit,
   resolveBucket,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -73,27 +75,20 @@ export interface CountryPreferences {
   remote_work_flexibility?: number;
 }
 
-function pref01(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral((value - 1) / 4);
-}
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** Bir ülkenin ham 7 boyut kırılımını (deal-breaker cap UYGULANMADAN) hesaplar. */
 function rawBreakdown(m: CountryMetrics, prefs: CountryPreferences): Record<CountryDimension, number> {
   const hasBudget = prefs.monthly_budget !== undefined && prefs.monthly_budget !== "";
   const englishOnly = prefs.language_profile === "english_only";
   const visaAssets = prefs.visa_assets ?? [];
   const hasVisaAsset = visaAssets.some((a) => a !== "none");
-  const community = pref01(prefs.community_importance);
-  const health = pref01(prefs.healthcare_priority);
-  const safety = pref01(prefs.safety_priority);
-  const inclusion = pref01(prefs.inclusion_priority);
+  const community = likert5ToUnit(prefs.community_importance);
+  const health = likert5ToUnit(prefs.healthcare_priority);
+  const safety = likert5ToUnit(prefs.safety_priority);
+  const inclusion = likert5ToUnit(prefs.inclusion_priority);
   const climate = prefs.climate_preference;
   const tags = m.climate_tags ?? [];
-  const taxTolerance = pref01(prefs.tax_burden_tolerance);
-  const remotePref = pref01(prefs.remote_work_flexibility);
+  const taxTolerance = likert5ToUnit(prefs.tax_burden_tolerance);
+  const remotePref = likert5ToUnit(prefs.remote_work_flexibility);
 
   return {
     budget_fit: hasBudget ? clamp01OrNeutral((1 - (m.cost_index ?? 0.5)) * 0.85 + taxTolerance * 0.15) : 0.5,

@@ -5,7 +5,7 @@
 // docs/10tool/09-oncelikli-tasinma-sorunu-e2e.md §4:
 //   category_score = user_stress*0.35 + progress_blocker*0.35 + urgency*risk*0.20 + dependency*0.10
 
-import { clamp01OrNeutral } from "@/lib/relocation-tools-ranking";
+import { clamp01OrNeutral, round4 } from "@/lib/relocation-tools-ranking";
 
 export type ChallengeCategory =
   | "visa_docs"
@@ -129,7 +129,6 @@ export function computeChallengeScores(answers: ChallengeAnswers): Record<Challe
   const urgencyRisk =
     urgencyMultiplier(answers.urgency) *
     riskFromConfidence(answers.confidence, answers.decision_paralysis, answers.action_readiness);
-  const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
   const scores = {} as Record<ChallengeCategory, number>;
   for (const cat of CHALLENGE_CATEGORIES) {

@@ -12,6 +12,7 @@ import {
   type DimensionWeights,
   clamp01OrNeutral,
   computeWeightedScore,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -67,8 +68,6 @@ function intersectCount(a: string[], b: string[]): number {
   const setB = new Set(b);
   return a.filter((x) => setB.has(x)).length;
 }
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
 /** İki vektörün 6 boyut uyum kırılımı. SQL cand.breakdown aynası. */
 export function computeDiasporaBreakdown(

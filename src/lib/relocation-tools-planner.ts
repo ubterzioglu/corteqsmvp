@@ -5,6 +5,8 @@
 // (relocation-tools-planner.test.ts kilitler). docs/10tool/08 §4:
 //   priority_score = deadline_urgency*0.40 + legal_dependency*0.25 + user_gap*0.25 + source_trust*0.10
 
+import { round4 } from "@/lib/relocation-tools-ranking";
+
 export type PlannerPhase = "before_departure" | "day_0_7" | "day_8_30" | "day_31_90" | "ongoing";
 
 export const PHASE_ORDER: Record<PlannerPhase, number> = {
@@ -58,8 +60,6 @@ interface CatalogEntry {
   sourceHasLink: boolean;
   gap: (a: PlannerAnswers) => boolean;
 }
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
 // Görev kataloğu — SQL catalog values bloğu ile BİREBİR.
 const CATALOG: CatalogEntry[] = [

@@ -107,3 +107,41 @@ describe("computeCityScore — sıralama tutarlılığı", () => {
     expect(better).toBeGreaterThan(worse);
   });
 });
+
+// KARAKTERİZASYON (07.11, W3): tüm tercihler 2 → Likert (v-1)/4 = 0.25, seviye v/5 = 0.4.
+// Eksik/1/5 girdileri iki ölçeği AYIRT ETMEZ; mutasyon taramasında 8 çağrının 7'si korumasızdı.
+// Değerler o günkü TS çıktısıdır — SQL eşitliğini KANITLAMAZ, yalnız sessiz kaymayı yakalar.
+describe("computeCityBreakdown — ölçek kilidi (tüm tercihler 2)", () => {
+  it("kırılım birebir korunur", () => {
+    const midCity: CityFeatures = {
+      cost_index: 0.6,
+      housing_availability: 0.6,
+      bureaucracy_complexity: 0.6,
+      gsm_coverage: 0.6,
+      community_density: 0.6,
+      safety_index: 0.6,
+      healthcare_access: 0.6,
+      flight_access: 0.6,
+    };
+    const twos: CityPreferences = {
+      community_need: 2,
+      safety_family: 2,
+      airport_access: 2,
+      industry_hub: 2,
+      healthcare_priority: 2,
+      public_transport_importance: 2,
+      green_space_preference: 2,
+      healthcare_access_urgency: 2,
+    };
+    expect(computeCityBreakdown(midCity, twos)).toMatchInlineSnapshot(`
+      {
+        "budget_housing_fit": 0.48,
+        "community_fit": 0.33,
+        "job_hub_fit": 0.25,
+        "lifestyle_fit": 0.62,
+        "mobility_flight_fit": 0.294,
+        "safety_healthcare_fit": 0.33,
+      }
+    `);
+  });
+});

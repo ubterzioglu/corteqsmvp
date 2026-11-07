@@ -9,7 +9,10 @@ import {
   type ScoreBucket,
   clamp01OrNeutral,
   computeWeightedScore,
+  level5ToUnit,
+  likert5ToUnit,
   resolveBucket,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -65,13 +68,6 @@ export interface JobProbAnswers {
   local_recruiter_contact?: string;
 }
 
-function scale5(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral(value / 5);
-}
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** demand_fit: ülke+meslek sinyali (vacancy 0.4 + shortage 0.4 + düşük işsizlik 0.2). null → nötr 0.5. */
 export function computeDemandFit(signal: JobMarketSignal | null): number {
   if (!signal) return 0.5;
@@ -89,8 +85,8 @@ export function computeJobProbBreakdown(
   answers: JobProbAnswers,
   signal: JobMarketSignal | null,
 ): Record<JobProbDimension, number> {
-  const langWork = scale5(answers.language_level);
-  const langEn = scale5(answers.english_level);
+  const langWork = level5ToUnit(answers.language_level);
+  const langEn = level5ToUnit(answers.english_level);
   const years = answers.years_experience ?? 0;
   const seniorityScore =
     answers.seniority === "junior"
@@ -109,7 +105,8 @@ export function computeJobProbBreakdown(
   const apps = answers.applications ?? 0;
   const salaryResearchScore =
     answers.salary_research_done === "thorough" ? 1.0 : answers.salary_research_done === "basic" ? 0.5 : 0.2;
-  const linkedinQuality = scale5(answers.linkedin_profile_quality);
+  // Soru 1..5 Likert → (v-1)/4; SQL ile aynı (eskiden v/5 — seviye sanılmıştı).
+  const linkedinQuality = likert5ToUnit(answers.linkedin_profile_quality);
   const industryCerts = answers.industry_specific_certifications ?? [];
   const industryCertScore =
     industryCerts.length === 0 || (industryCerts.length === 1 && industryCerts[0] === "none")

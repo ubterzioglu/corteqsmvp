@@ -107,3 +107,18 @@ describe("computeSalaryPowerIndex + salaryBucket", () => {
     expect(free).toBeGreaterThan(regulated);
   });
 });
+
+// Ölçek kilidi (07.11, W3): nötr ve 5 girdileri Likert (v-1)/4 ile seviye v/5'i AYIRT ETMEZ
+// (ikisi de 0.5 / 1.0 verir). 2 → Likert 0.25, seviye 0.4 olurdu.
+describe("computeSalaryBreakdown — negotiation/interview 1..5 Likert", () => {
+  it("ikisi de 2 → demand_fit = 0.9*0.8 + 0.25*0.1 + 0.25*0.1 = 0.77", () => {
+    const row: SalaryBenchmarkRow = { salary_median: 72000, net_ratio: 0.62, demand_index: 0.9, cost_index: 0.55 };
+    const b = computeSalaryBreakdown(row, 110000, "no", { negotiation_experience: 2, interview_readiness: 2 });
+    expect(b.demand_fit).toBeCloseTo(0.77, 4);
+  });
+  it("yalnız negotiation 2 → demand_fit = 0.72 + 0.025 + 0.05(nötr) = 0.795", () => {
+    const row: SalaryBenchmarkRow = { salary_median: 72000, net_ratio: 0.62, demand_index: 0.9, cost_index: 0.55 };
+    const b = computeSalaryBreakdown(row, 110000, "no", { negotiation_experience: 2 });
+    expect(b.demand_fit).toBeCloseTo(0.795, 4);
+  });
+});

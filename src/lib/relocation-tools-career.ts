@@ -4,7 +4,7 @@
 // Patika katsayıları + hibrit eşiği SQL ile BİREBİR (relocation-tools-career.test.ts kilitler).
 // docs/10tool/06-yurtdisi-kariyer-yolu-e2e.md §4. (Persona deseni — #7 ile aynı sınıf.)
 
-import { clamp01OrNeutral } from "@/lib/relocation-tools-ranking";
+import { level5ToUnit, likert5ToUnit, round4 } from "@/lib/relocation-tools-ranking";
 
 export type CareerPath =
   | "international_professional"
@@ -38,35 +38,21 @@ export interface CareerAnswers {
   mission_driven_motivation?: number;
 }
 
-/** scale 1..5 → 0..1; eksik → nötr 0.5. */
-function scale5(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral((value - 1) / 4);
-}
-
-/** language_level 0..5 → /5; eksik → nötr 0.5. */
-function lang5(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral(value / 5);
-}
-
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** 6 patika puanını hesaplar (deterministic). SQL ile birebir. */
 export function computeCareerScores(answers: CareerAnswers): Record<CareerPath, number> {
-  const study = scale5(answers.study_willingness);
-  const risk = scale5(answers.risk_appetite);
-  const salaryPref = scale5(answers.salary_vs_stability);
-  const lang = lang5(answers.language_level);
-  const entre = scale5(answers.entrepreneurship);
-  const research = scale5(answers.research_interest);
-  const hands = scale5(answers.hands_on_interest);
-  const people = scale5(answers.people_helping);
-  const management = scale5(answers.management_interest);
-  const certOpenness = scale5(answers.hands_on_certification_openness);
-  const clientFacing = scale5(answers.client_facing_comfort);
-  const flexible = scale5(answers.structured_vs_flexible);
-  const mission = scale5(answers.mission_driven_motivation);
+  const study = likert5ToUnit(answers.study_willingness);
+  const risk = likert5ToUnit(answers.risk_appetite);
+  const salaryPref = likert5ToUnit(answers.salary_vs_stability);
+  const lang = level5ToUnit(answers.language_level);
+  const entre = likert5ToUnit(answers.entrepreneurship);
+  const research = likert5ToUnit(answers.research_interest);
+  const hands = likert5ToUnit(answers.hands_on_interest);
+  const people = likert5ToUnit(answers.people_helping);
+  const management = likert5ToUnit(answers.management_interest);
+  const certOpenness = likert5ToUnit(answers.hands_on_certification_openness);
+  const clientFacing = likert5ToUnit(answers.client_facing_comfort);
+  const flexible = likert5ToUnit(answers.structured_vs_flexible);
+  const mission = likert5ToUnit(answers.mission_driven_motivation);
 
   const skills = answers.core_skills ?? [];
   const fav = answers.favorite_work ?? [];

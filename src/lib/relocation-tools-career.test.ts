@@ -104,3 +104,36 @@ describe("computeCareerScores — uç değer kırpılır", () => {
     expect(scores.academic_research).toBeCloseTo(0.525, 4);
   });
 });
+
+// KARAKTERİZASYON (07.11, W3): tüm ölçekler 2 → Likert (v-1)/4 = 0.25, language_level (seviye)
+// v/5 = 0.4. Eksik/1/5 girdileri iki ölçeği AYIRT ETMEZ; mutasyon taramasında 13 çağrının 13'ü
+// korumasızdı. Değerler o günkü TS çıktısıdır — SQL eşitliğini KANITLAMAZ, sessiz kaymayı yakalar.
+describe("computeCareerScores — ölçek kilidi (tüm ölçekler 2)", () => {
+  it("patika puanları birebir korunur", () => {
+    const twos: CareerAnswers = {
+      study_willingness: 2,
+      risk_appetite: 2,
+      salary_vs_stability: 2,
+      language_level: 2,
+      entrepreneurship: 2,
+      research_interest: 2,
+      hands_on_interest: 2,
+      people_helping: 2,
+      management_interest: 2,
+      hands_on_certification_openness: 2,
+      client_facing_comfort: 2,
+      structured_vs_flexible: 2,
+      mission_driven_motivation: 2,
+    };
+    expect(computeCareerScores(twos)).toMatchInlineSnapshot(`
+      {
+        "academic_research": 0.175,
+        "international_professional": 0.1925,
+        "public_ngo_community": 0.1775,
+        "remote_global": 0.0875,
+        "startup_entrepreneur": 0.2125,
+        "vocational_practical": 0.175,
+      }
+    `);
+  });
+});

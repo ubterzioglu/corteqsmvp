@@ -7,9 +7,11 @@
 import {
   type DimensionWeights,
   type ScoreBucket,
-  clamp01OrNeutral,
   computeWeightedScore,
+  level5ToUnit,
+  likert5ToUnit,
   resolveBucket,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -63,18 +65,6 @@ function optScore(questionKey: string, value: string | undefined): number {
   return OPTION_SCORES[questionKey]?.[value] ?? 0.5;
 }
 
-/** scale 1..5 → 0..1; eksik → nötr 0.5. */
-function scale5(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral((value - 1) / 4);
-}
-
-/** language_level 0..5 → 0..1 (/5); eksik → nötr 0.5. */
-function langScale(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral(value / 5);
-}
-
 export interface ReadinessAnswers {
   savings_months?: string;
   passport_validity?: string;
@@ -98,8 +88,6 @@ export interface ReadinessAnswers {
   mental_health_readiness?: number;
 }
 
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** 6 boyut feature değerlerini (0..1) hesaplar. SQL v_breakdown aynası. */
 export function computeReadinessBreakdown(answers: ReadinessAnswers): Record<ReadinessDimension, number> {
   const savings = optScore("savings_months", answers.savings_months);
@@ -112,15 +100,15 @@ export function computeReadinessBreakdown(answers: ReadinessAnswers): Record<Rea
   const support = optScore("support_network", answers.support_network);
   const family = optScore("family_alignment", answers.family_alignment);
   const emergency = optScore("emergency_plan", answers.emergency_plan);
-  const debt = scale5(answers.debt_pressure);
-  const lang = langScale(answers.language_level);
-  const adapt = scale5(answers.adaptability);
-  const timeline = scale5(answers.timeline_realism);
+  const debt = likert5ToUnit(answers.debt_pressure);
+  const lang = level5ToUnit(answers.language_level);
+  const adapt = likert5ToUnit(answers.adaptability);
+  const timeline = likert5ToUnit(answers.timeline_realism);
   const emergencyFund = optScore("emergency_fund_access", answers.emergency_fund_access);
   const bank = optScore("local_bank_account", answers.local_bank_account);
   const remoteTransition = optScore("remote_work_transition", answers.remote_work_transition);
   const pet = optScore("pet_relocation_plan", answers.pet_relocation_plan);
-  const mental = scale5(answers.mental_health_readiness);
+  const mental = likert5ToUnit(answers.mental_health_readiness);
 
   return {
     financial_readiness: round4(savings * 0.5 + debt * 0.3 + emergencyFund * 0.2),

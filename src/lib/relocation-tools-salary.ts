@@ -9,7 +9,9 @@ import {
   type ScoreBucket,
   clamp01OrNeutral,
   computeWeightedScore,
+  likert5ToUnit,
   resolveBucket,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -48,19 +50,12 @@ export function credentialScore(regulated: string | undefined): number {
   return 0.85;
 }
 
-const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
-
 /** YENİ (+8, 2026-07-01): demand_fit/tax_social_fit/credential_transferability ek sinyalleri. */
 export interface SalaryExtraSignals {
   negotiation_experience?: number; // scale 1..5
   interview_readiness?: number; // scale 1..5
   visa_sponsor_need?: string; // 'yes' | 'no' | 'not_sure'
   benefits_priority?: string[];
-}
-
-function scale5(value: number | undefined): number {
-  if (value === undefined || Number.isNaN(value)) return 0.5;
-  return clamp01OrNeutral((value - 1) / 4);
 }
 
 function benefitsScore(benefits: string[] | undefined): number {
@@ -81,8 +76,8 @@ export function computeSalaryBreakdown(
 ): Record<SalaryDimension, number> {
   const gmax = globalMax > 0 ? globalMax : 1;
   const cost = row.cost_index ?? 0.5;
-  const negotiation = scale5(extra.negotiation_experience);
-  const interviewReady = scale5(extra.interview_readiness);
+  const negotiation = likert5ToUnit(extra.negotiation_experience);
+  const interviewReady = likert5ToUnit(extra.interview_readiness);
   const benefits = benefitsScore(extra.benefits_priority);
   const visaSponsorMultiplier = extra.visa_sponsor_need === "yes" ? 0.9 : 1.0;
 

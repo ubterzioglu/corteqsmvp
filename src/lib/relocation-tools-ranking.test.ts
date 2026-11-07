@@ -6,7 +6,10 @@ import {
   clamp01OrNeutral,
   computeScoreBreakdown,
   computeWeightedScore,
+  level5ToUnit,
+  likert5ToUnit,
   resolveBucket,
+  round4,
   toScore100,
 } from "@/lib/relocation-tools-ranking";
 
@@ -38,6 +41,49 @@ describe("clamp01OrNeutral (SQL rl_tool_clamp_neutral aynası)", () => {
     expect(clamp01OrNeutral(-0.2)).toBe(0);
     expect(clamp01OrNeutral(1.5)).toBe(1);
     expect(clamp01OrNeutral(0.73)).toBe(0.73);
+  });
+});
+
+// Araç modüllerinde 9 + 5 + 3 kopya olarak duran yardımcıların ortak hâli (W3, 07.11).
+// Kopyalar SQL aynası olduğu için çıktı BİREBİR korunmalı: değerler eski yerel tanımlardan
+// elle hesaplandı, araçların kendi drift testleri ayrıca kilitler.
+describe("round4 (4 ondalık)", () => {
+  it("4 ondalığa yuvarlar", () => {
+    expect(round4(0.123449)).toBe(0.1234);
+    expect(round4(0.12345)).toBe(0.1235);
+    expect(round4(1)).toBe(1);
+    expect(round4(0)).toBe(0);
+  });
+});
+
+describe("likert5ToUnit (1..5 ölçek → 0..1, (v-1)/4)", () => {
+  it("eksik/NaN → nötr 0.5", () => {
+    expect(likert5ToUnit(undefined)).toBe(0.5);
+    expect(likert5ToUnit(NaN)).toBe(0.5);
+  });
+  it("1 → 0, 3 → 0.5, 5 → 1; aralık dışı kırpılır", () => {
+    expect(likert5ToUnit(1)).toBe(0);
+    expect(likert5ToUnit(3)).toBe(0.5);
+    expect(likert5ToUnit(5)).toBe(1);
+    expect(likert5ToUnit(0)).toBe(0);
+    expect(likert5ToUnit(7)).toBe(1);
+  });
+});
+
+describe("level5ToUnit (0..5 seviye → 0..1, v/5)", () => {
+  it("eksik/NaN → nötr 0.5", () => {
+    expect(level5ToUnit(undefined)).toBe(0.5);
+    expect(level5ToUnit(NaN)).toBe(0.5);
+  });
+  it("0 → 0, 1 → 0.2, 5 → 1; aralık dışı kırpılır", () => {
+    expect(level5ToUnit(0)).toBe(0);
+    expect(level5ToUnit(1)).toBe(0.2);
+    expect(level5ToUnit(5)).toBe(1);
+    expect(level5ToUnit(-1)).toBe(0);
+    expect(level5ToUnit(6)).toBe(1);
+  });
+  it("likert5ToUnit ile AYNI DEĞİLDİR (1 → 0.2 ≠ 0) — birleştirme", () => {
+    expect(level5ToUnit(1)).not.toBe(likert5ToUnit(1));
   });
 });
 

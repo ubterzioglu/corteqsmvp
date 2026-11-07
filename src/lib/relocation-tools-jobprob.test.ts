@@ -58,6 +58,25 @@ describe("computeJobProbBreakdown — net güçlü profil", () => {
   });
 });
 
+// Soru "1 = düşük, 5 = yüksek" Likert'tir; SQL `(coalesce(v,3) - 1) / 4`
+// (20260701120000_relocation_tools_20q_normalize.sql). TS 07.11'e dek v/5 kullanıyordu
+// → "1" seçen kullanıcıya önizleme 0.2 gösteriyordu, DB 0 hesaplıyordu.
+describe("network_activity_fit — linkedin_profile_quality 1..5 Likert (SQL aynası)", () => {
+  const base: JobProbAnswers = { network: "weak", applications: 10 };
+  const fit = (linkedin?: number) =>
+    computeJobProbBreakdown({ ...base, linkedin_profile_quality: linkedin }, null).network_activity_fit;
+
+  it("3 (orta) nötr ile aynı katkıyı verir", () => {
+    expect(fit(3)).toBeCloseTo(fit(undefined), 4);
+  });
+  it("1 (düşük) katkıyı sıfırlar: nötrden 0.5 × 0.15 = 0.075 düşük", () => {
+    expect(fit(1)).toBeCloseTo(fit(undefined) - 0.075, 4);
+  });
+  it("5 (yüksek) tam katkı: nötrden 0.075 yüksek", () => {
+    expect(fit(5)).toBeCloseTo(fit(undefined) + 0.075, 4);
+  });
+});
+
 describe("credential_fit — regulated mantığı (industry_specific_certifications nötr 0.5 katkısıyla)", () => {
   it("regulated=no → base 0.9 * 0.85 + 0.5(nötr sertifika) * 0.15 = 0.84", () => {
     expect(computeJobProbBreakdown({ regulated_profession: "no" }, null).credential_fit).toBeCloseTo(0.84, 4);
