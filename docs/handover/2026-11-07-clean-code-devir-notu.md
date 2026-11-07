@@ -105,16 +105,11 @@ frontend deploy (arama düzeltmeleri) · yedek dizinini silmek · karar maddeler
 **§7 — SON DURUM (07.11 gece geç, YENİ OTURUM BURADAN BAŞLAR):**
 - ✅ `main` = `7c81140c` (W3 + gece turu, 13 commit), GitHub'da, **CI YEŞİL**. Branch'ler silindi.
   3 yönetici maili gitti (son: `7c81140c` "gece turu son durum").
-- ⏳ Branch `clean-code/w3-devam` (main'den) — COMMIT'SİZ, bir workflow yazıyor: CH01 (ölü kayıt
-  sohbeti silme; önce "plan geri getirecek mi" kapısı) · W3 para biçimi (yalnız birebir kopyalar) ·
-  W3 kalan tarih kümeleri (Cadde: önce karakterizasyon testi; `format-date.ts` HER ÇAĞRIDA kurar).
-- Yeni oturum yapacaklar: `git status` → değişiklikleri incele (rapor bu oturumda kaldı; diff'e
-  bak) → `npm run ingest:tools` → 10 kapı (`npm run verify:quality`, `lint`, `format:check`,
-  `check:dead`, `check:knip`, `check:docs:strict`, `ingest:tools:check`, `test`, `build`,
-  `check:bundle`; build sonrası `git restore public/sitemap.xml`) → konu başına commit → `main`'e
-  ff + push → CI → yönetici güncellemesi + force mail.
-- ⚠️ BAŞKA BİR PLANA bu çalışma ağacında, bu branch commit'lenmeden BAŞLAMA — aynı dizin paylaşılır,
-  yarım değişiklikler karışır.
+- ✅ GECE SONU: `main` = `cc61db31` (CH01 ölü sohbet silindi · W3 para `format-money.ts` · W3 kalan
+  tarih kümeleri Cadde dahil — önce karakterizasyon testi), 10/10 kapı (516 dosya / 4.465 test),
+  push'lu; açık branch YOK, çalışma ağacı temiz. 4. yönetici maili gitti (`cc61db31`).
+- Yeni oturum serbest: başka bir plana doğrudan başlanabilir. Kalan ajan işleri KALANLAR CC3
+  (W3 küçükleri, W4–W8) · C6b · EV01 kalanı. Kullanıcıda: deploy, GB1, kararlar (HA01, DM02, …).
 
 **Kalan adımlar (sırayla):** ajanlar bitince → bağımsız çok-açılı çürütme incelemesi (ultracode
 açık; Workflow) → `npm run ingest:tools` (yeni `format-date.ts` + yeni export'lar) → tam kapı turu
