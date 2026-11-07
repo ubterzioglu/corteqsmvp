@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { EventRow } from "@/lib/events-api";
 import { EVENT_TYPE_OPTIONS, eventStatusLabel, eventStatusTone, eventTypeLabel } from "@/lib/events-vocabulary";
 import { formatEventDate } from "@/lib/events-timezone";
+import { trIncludes } from "@/lib/text-normalization";
 
 const AdminEventsPage = () => {
   const { toast } = useToast();
@@ -38,10 +39,8 @@ const AdminEventsPage = () => {
     return events.filter((e) => {
       if (statusFilter !== "all" && e.status !== statusFilter) return false;
       if (typeFilter !== "all" && e.type !== typeFilter) return false;
-      if (search) {
-        const q = search.toLowerCase();
-        if (!e.title.toLowerCase().includes(q) && !e.description.toLowerCase().includes(q)) return false;
-      }
+      // trIncludes: Türkçe + aksan toleranslı ("istanbul" → "İstanbul", "uskudar" → "Üsküdar").
+      if (search && !trIncludes(e.title, search) && !trIncludes(e.description, search)) return false;
       return true;
     });
   }, [events, statusFilter, typeFilter, search]);

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 
 import { fetchAllRows } from "./supabase-chunked";
+import { trUpper } from "./text-normalization";
 import type {
   LansmanRegistration,
   LansmanRegistrationFormData,
@@ -23,7 +24,8 @@ export function isValidWhatsappPhone(phone: string) {
 export function buildInitials(firstName: string, lastName: string) {
   const first = firstName.trim().charAt(0);
   const last = lastName.trim().charAt(0);
-  return `${first}${last}`.toUpperCase();
+  // Kullanıcıya görünen metin: tr-TR kuralı (i → İ). Bare toUpperCase() "ilker" → "I" yapardı.
+  return trUpper(`${first}${last}`);
 }
 
 function normalizeOptionalText(value: string) {

@@ -15,6 +15,12 @@ describe("lansman helpers", () => {
     expect(buildInitials(" ada ", " lovelace ")).toBe("AL");
   });
 
+  it("baş harfleri Türkçe kurallarla büyütür (i → İ, ı → I)", () => {
+    // toUpperCase() "ilker" → "I" yapar; Türkçede doğrusu "İ" (CLAUDE.md Türkçe metin kuralı 1).
+    expect(buildInitials("ilker", "ışık")).toBe("İI");
+    expect(buildInitials("şule", "çelik")).toBe("ŞÇ");
+  });
+
   it("validates international whatsapp phone formats", () => {
     expect(isValidWhatsappPhone("+491701234567")).toBe(true);
     expect(isValidWhatsappPhone("+49 170 1234567")).toBe(true);

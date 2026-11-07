@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
 import {
   createRevisionRequest,
@@ -85,14 +86,12 @@ const AdminRevisionRequestsPage = () => {
   }, [requests]);
 
   const filteredRequests = useMemo(() => {
-    const query = searchText.trim().toLowerCase();
+    const query = searchText.trim();
     return requests.filter((request) => {
       if (statusFilter !== "all" && request.status !== statusFilter) return false;
       if (areaFilter !== "all" && request.areaLabel !== areaFilter) return false;
-      if (query) {
-        const haystack = `${request.title} ${request.detail}`.toLowerCase();
-        if (!haystack.includes(query)) return false;
-      }
+      // trIncludes: Türkçe + aksan toleranslı arama (bare toLowerCase "İ"yi bozardı).
+      if (query && !trIncludes(`${request.title} ${request.detail}`, query)) return false;
       return true;
     });
   }, [requests, statusFilter, areaFilter, searchText]);
