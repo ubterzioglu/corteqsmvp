@@ -1,0 +1,32 @@
+# Prettier yalnız KOD dosyalarını biçimlendirir (ts/tsx/js/jsx/mjs/cjs).
+# Düz metin/şablon türleri bilerek dışarıda: CLAUDE.md, index.html, index.css,
+# nginx/tailwind şablonları ve migration metinleri sözleşme testlerinde regex ile
+# okunuyor; biçim değişikliği bu testleri kırar ya da sessizce anlamsızlaştırır.
+*.md
+*.html
+*.css
+*.json
+*.yml
+*.yaml
+*.sql
+*.svg
+
+# Üretilen / harici / donmuş içerik
+dist/
+coverage/
+node_modules/
+package-lock.json
+src/integrations/supabase/types.ts
+**/*.generated.ts
+src/components/ui/
+supabase/migrations/
+supabase/baseline/
+docs/
+public/
+referans/
+referanslovable/
+.worktrees/
+.claude/
+.kilo/
+.omc/
+workers/*/node_modules/
