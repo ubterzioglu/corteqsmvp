@@ -5,6 +5,21 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261107-sahte-odeme-ve-etkinlik-uyarilari",
+    date: "7 Kasım 2026",
+    title: "Gece turu: iki ekranda sahte ödeme kaldırıldı, etkinlik formuna saat uyarısı geldi",
+    items: [
+      "KISACA: Üyeyi yanıltabilecek iki 'ödeme' ekranı dürüst hâle getirildi, etkinlik formu yanlış girilen saatleri artık fark ediyor. Değişiklikler HENÜZ YAYINDA DEĞİL: şu an bağımsız denetimden geçiyor; ana dala alınıp site yeniden yayına alınınca üyelere görünür.",
+      "HİZMET TALEBİ FORMU: Form gerçek bir talep kaydediyordu ama araya sahte bir kart ödeme ekranı koyup sonunda 'Ödeme Başarılı' diyordu; oysa hiç ödeme alınmıyordu ve üye oraya gerçek kartını yazabilirdi. Sahte ekran kaldırıldı: düğme artık 'Talebi Gönder', ücret satırında 'şu an ücret alınmıyor' yazıyor.",
+      "HASTANE RANDEVUSU SAYFASI: Örnek verilerle çalışan bu sayfa kart numarası, son kullanma tarihi ve CVV istiyor, sonunda '✅ Randevu Oluşturuldu!' diyordu. Kart alanları tamamen kaldırıldı, düğme 'Demo randevuyu tamamla' oldu, bildirim 'gerçek randevu oluşturulmadı, ödeme alınmadı' diyor ve sayfanın üstünde artık 'Demo sayfa' bandı çıkıyor.",
+      "ETKİNLİK FORMU: Bitiş saati başlangıçtan önce girilirse (ör. 22:00–01:00) 'etkinlik gece yarısını aşıp ertesi gün bitecek' uyarısı, iki saat aynı girilirse '24 saat sürecek' uyarısı çıkıyor. Eskiden yanlış yazılan saat sessizce 23–24 saatlik etkinliğe dönüşüyordu. Uyarı göndermeyi engellemez. Saat dilimi listesine 13 yer eklendi: Belgrad, Üsküp, Saraybosna, Zagreb, Tiran, Tallinn, Riga, Vilnius, Lüksemburg, Malta, Detroit, Phoenix, Melbourne.",
+      "KAYIT ASİSTANI: Sohbetli kayıtta 'İPTAL', 'SIFIRLA' gibi büyük harfli ya da 'gec', 'sifirla' gibi Türkçe karaktersiz yazılan komutlar tanınmıyordu; artık tanınıyor.",
+      "TEMİZLİK: Yönetici panelindeki yorum, geri bildirim, bildirim ayarları ve radar ekranlarında aynı tarihi biçimleyen 6 kopya tek yerde toplandı. Ekranda değişiklik yok; eski ve yeni biçim 3 saat diliminde 2.876 örnekle karşılaştırıldı, fark çıkmadı.",
+      "KARARINIZI BEKLEYENLER: (1) Hastane randevu sayfası, dernek sayfasındaki 'Randevu Al' bağlantısından gelen hastaneyi tanımıyor (bağlantı adı ile sayfanın beklediği ad farklı), her seferinde genel listeye düşüyor; düzeltmek davranışı değiştireceği için onayınızı bekliyor. (2) İş İlanı detay sayfaları da artık 'Demo' bandı alabilir — ilanların 6/6'sı örnek; isterseniz eklenir.",
+      "SİZDEN BEKLENEN: Denetim bitince değişikliklerin ana dala alınması ve sitenin Coolify'dan yeniden yayına alınması. 🔴 Önceki güncellemelerdeki anahtar yenileme işi (GB1) hâlâ en acil iş.",
+    ],
+  },
+  {
     id: "20261107-kopya-kod-tekillestirme",
     date: "7 Kasım 2026",
     title: "Akşam turu: kopya kod parçaları tek yerde toplandı, bu sırada üç hata bulunup düzeltildi",
