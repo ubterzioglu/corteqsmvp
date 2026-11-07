@@ -30,37 +30,15 @@ type ErrorWithMessage = {
   code?: string;
 };
 
-export const allowedSubmissionDocumentTypes = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-] as const;
-
-export const maxSubmissionDocumentBytes = 50 * 1024 * 1024;
-export const maxSubmissionDocumentCount = 5;
-
-export const categoryOptions = [
-  { value: "danisman", label: "Danışman" },
-  { value: "isletme", label: "İşletme / Şirket" },
-  { value: "dernek", label: "Dernek" },
-  { value: "vakif", label: "Vakıf" },
-  { value: "radyo-tv", label: "Radyo / TV" },
-  { value: "blogger-vlogger", label: "Blogger / Vlogger" },
-  { value: "influencer", label: "Influencer" },
-  { value: "sehir-elcisi", label: "Şehir Elçisi" },
-  { value: "bireysel", label: "Bireysel Kullanıcı" },
-  { value: "support", label: "Destek / Yatırım" },
-] as const;
+// CH01 (07.11.2026): `categoryOptions` + `getCategoryLabel` ve `validateSubmissionDocuments`
+// (+ izinli tür / boyut / adet sabitleri) silindi — üretimde tek kullanıcıları silinen kayıt
+// sohbetiydi (useChatMachine + chatConfig).
 
 export const referralSourceOptions = REFERRAL_SOURCE_OPTIONS;
 
-// Anahtar tipi bilerek `string`: bu haritalar DB'den gelen SERBEST metni sorgular ve
-// bilinmeyen değerde `?? value` ile ham değere düşer. Dar union anahtar, çağıranı
-// olmayan bir garantiye zorlar (getCategoryLabel'a `string | null` geliyor).
-const categoryLabelMap = new Map<string, string>(categoryOptions.map((option) => [option.value, option.label]));
+// Anahtar tipi bilerek `string`: bu harita DB'den gelen SERBEST metni sorgular ve
+// bilinmeyen değerde `?? source` ile ham değere düşer. Dar union anahtar, çağıranı
+// olmayan bir garantiye zorlar (getReferralSourceLabel'a `string | null` geliyor).
 const referralLabelMap = new Map<string, string>(referralSourceOptions.map((option) => [option.value, option.label]));
 
 const statusLabelMap: Record<SubmissionStatus, string> = {
@@ -74,11 +52,6 @@ export const submissionStatusOptions: Array<{ value: SubmissionStatus; label: st
   { value: "contacted", label: statusLabelMap.contacted },
   { value: "archived", label: statusLabelMap.archived },
 ];
-
-export function getCategoryLabel(category: string | null) {
-  if (!category) return "Belirtilmedi";
-  return categoryLabelMap.get(category) ?? category;
-}
 
 export function getFormTypeLabel(formType: string) {
   if (formType === "support") return "Destek";
@@ -168,39 +141,6 @@ export function buildSubmissionSearchText(submission: Submission) {
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-}
-
-export function validateSubmissionDocuments(files: File[], currentFiles: File[] = []) {
-  const merged = [...currentFiles];
-
-  for (const file of files) {
-    if (!allowedSubmissionDocumentTypes.includes(file.type as (typeof allowedSubmissionDocumentTypes)[number])) {
-      return {
-        ok: false as const,
-        message: `"${file.name}" desteklenmeyen format. Sadece PDF, DOC, DOCX, JPG, PNG, WEBP.`,
-      };
-    }
-
-    if (file.size > maxSubmissionDocumentBytes) {
-      return {
-        ok: false as const,
-        message: `"${file.name}" çok büyük. Dosya başına maks. 50 MB.`,
-      };
-    }
-
-    if (merged.length >= maxSubmissionDocumentCount) {
-      return {
-        ok: false as const,
-        message: `En fazla ${maxSubmissionDocumentCount} dosya yükleyebilirsiniz.`,
-      };
-    }
-
-    if (!merged.some((existing) => existing.name === file.name && existing.size === file.size)) {
-      merged.push(file);
-    }
-  }
-
-  return { ok: true as const, files: merged };
 }
 
 function parseUploadedDocument(input: unknown): UploadedDocument | null {

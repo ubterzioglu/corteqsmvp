@@ -3,8 +3,7 @@ import ChatMessage from "@/components/chat/ChatMessage";
 import ChatQuickReply from "@/components/chat/ChatQuickReply";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatProgressBar from "@/components/chat/ChatProgressBar";
-import type { ChatState } from "@/hooks/useChatMachine";
-import { getProgressInfo } from "@/lib/chatConfig";
+import { getProgressInfo, type ChatState } from "@/lib/chatConfig";
 const chatbotMascot = "/lmaskog-112.webp";
 
 type Props = {

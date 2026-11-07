@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   buildSubmissionSearchText,
   formatBytes,
-  getCategoryLabel,
   getFormTypeLabel,
   getReferralValidationMessage,
   getSubmissionDocuments,
@@ -13,7 +12,6 @@ import {
   type Submission,
   type UploadedDocument,
   toSubmissionInsert,
-  validateSubmissionDocuments,
 } from "@/lib/submissions";
 
 describe("submission helpers", () => {
@@ -76,7 +74,6 @@ describe("submission helpers", () => {
   });
 
   it("renders labels and search text consistently", () => {
-    expect(getCategoryLabel("sehir-elcisi")).toBe("Şehir Elçisi");
     expect(getFormTypeLabel("support")).toBe("Destek");
     expect(getStatusLabel("contacted")).toBe("İletişime geçildi");
 
@@ -126,23 +123,6 @@ describe("submission helpers", () => {
     expect(haystack).toContain("abc42");
     expect(haystack).toContain("network arıyor");
     expect(haystack).toContain("doc.pdf");
-  });
-
-  it("validates uploaded documents against limits and types", () => {
-    const validFile = new File(["hello"], "cv.pdf", { type: "application/pdf" });
-    const invalidFile = new File(["hello"], "script.exe", { type: "application/x-msdownload" });
-
-    const valid = validateSubmissionDocuments([validFile]);
-    expect(valid.ok).toBe(true);
-    if (valid.ok) {
-      expect(valid.files).toHaveLength(1);
-    }
-
-    const invalid = validateSubmissionDocuments([invalidFile]);
-    expect(invalid.ok).toBe(false);
-    if (!invalid.ok) {
-      expect(invalid.message).toContain("desteklenmeyen format");
-    }
   });
 
   it("parses documents and falls back to legacy single-document fields", () => {

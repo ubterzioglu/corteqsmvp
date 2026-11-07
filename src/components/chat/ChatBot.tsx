@@ -6,8 +6,7 @@ import ChatWindow from "@/components/chat/ChatWindow";
 import { useAuth } from "@/components/auth/useAuth";
 import { appendSources, toAssistantHistory } from "@/components/chat/chatbot-message-helpers";
 import { askSiteAssistant } from "@/lib/site-assistant-api";
-import { INITIAL_DATA, type ChatMessage } from "@/lib/chatConfig";
-import type { ChatState } from "@/hooks/useChatMachine";
+import { INITIAL_DATA, type ChatMessage, type ChatState } from "@/lib/chatConfig";
 
 type ChatBotProps = {
   classicFormMode?: "modal" | "route";
@@ -53,8 +52,6 @@ const createInitialState = (): ChatState => ({
   loading: false,
   error: null,
   submitted: false,
-  stepHistory: ["welcome"],
-  prefillCity: null,
 });
 
 const ChatBot = ({

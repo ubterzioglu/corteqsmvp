@@ -204,11 +204,6 @@
       "count": 1
     }
   },
-  "src/hooks/useChatMachine.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/lib/cadde-api.ts": {
     "complexity": {
       "count": 2
@@ -217,11 +212,6 @@
   "src/lib/catalog-directory.ts": {
     "complexity": {
       "count": 1
-    }
-  },
-  "src/lib/chatConfig.ts": {
-    "complexity": {
-      "count": 2
     }
   },
   "src/lib/dashboard/command-center-hot-fixes.ts": {
