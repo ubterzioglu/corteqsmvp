@@ -44,8 +44,9 @@ export const DEMO_ROUTES: DemoRoute[] = [
     // Ölçüldü 2026-09-20: `Business_*` rollerinde canlıda 25 satırın 25'i de
     // `is_placeholder` — gerçek işletme kaydı SIFIR. Gerçek kayıtlar geldiğinde
     // liste onları kendiliğinden üstte gösterir; o zaman BU SATIR SİLİNİR.
-    // ⚠️ `/isletme/:slug` buraya EKLENMEZ: `findDemoRoute` literal yol eşitliği
-    // arar, dinamik yol asla eşleşmez. O sayfa `DemoPageBanner` kullanır.
+    // `/isletme/:slug` burada YOK: o sayfa bandını `DemoPageBanner` ile kendisi
+    // çiziyor (o zaman `findDemoRoute` dinamik segment eşleyemiyordu). Buraya
+    // eklenirse iki bant üst üste biner — önce `DemoPageBanner` kaldırılır.
     path: "/businesses",
     label: "İşletmeler",
     note: "Listedeki işletmeler örnektir. Gerçek işletme kayıtları başvurular değerlendirildikçe yayına alınır.",
@@ -69,10 +70,20 @@ export const DEMO_ROUTES: DemoRoute[] = [
   {
     // Ölçüldü 2026-11-07 (salt-okunur): `job_listings` canlıda 6 satır, 6'sı da `[DEMO]`/`[ÖRNEK]`
     // (seed `20261005130000`). Gerçek ilan SIFIR. İlk gerçek ilan yayına girince bu satır silinir.
-    // ⚠️ `/ilanlar/:id` eklenmez — `findDemoRoute` literal yol eşitliği arar (bkz. /businesses notu).
+    // `/ilanlar/:id` henüz EKLENMEDİ (ürün kararı bekliyor). `findDemoRoute` artık dinamik
+    // segmenti eşler; ama satır ROTA düzeyindedir — ilk gerçek ilan da "demo" görünür.
     path: "/ilanlar",
     label: "İş İlanları",
     note: "Listedeki ilanlar örnektir; başvurular gerçek bir işverene gitmez. Gerçek ilanlar yayına alındıkça bu işaret kalkar.",
+  },
+  {
+    // Ölçüldü 2026-11-07: sayfa yalnız dosya içi `mockHospitals` / `entityHospitalMap`
+    // verisiyle çalışır; Supabase çağrısı, randevu tablosu ve ödeme entegrasyonu YOK.
+    // Ödeme adımındaki kart alanları bu yüzden kaldırıldı — demo kart verisi TOPLAMAZ.
+    // Gerçek hastane/randevu verisine geçilince bu satır silinir (ve `noindex` kalkar).
+    path: "/hospital-appointment/:id",
+    label: "Hastane Randevusu",
+    note: "Hastaneler, bölümler ve randevu saatleri örnektir. Gerçek randevu oluşturulmaz, ödeme alınmaz.",
   },
 ];
 
@@ -87,10 +98,14 @@ export const DEMO_COPY = {
 /**
  * Verilen yol bir demo sayfası mı? Sorgu dizesi ve sondaki eğik çizgi yok
  * sayılır — `/campaign/vlogger?ref=x` de `/campaign/vlogger/` de demodur.
+ *
+ * `:` ile başlayan segment (`/hospital-appointment/:id`) TAM OLARAK BİR boş
+ * olmayan segmenti eşler. Joker ve önek eşleşmesi BİLEREK yok: literal bir demo
+ * rotası alt yollarını yakalamaz, dinamik segment de birden çok segmenti yutmaz.
  */
 export function findDemoRoute(pathname: string): DemoRoute | undefined {
-  const normalized = normalizePath(pathname);
-  return DEMO_ROUTES.find((route) => normalizePath(route.path) === normalized);
+  const actual = toSegments(pathname);
+  return DEMO_ROUTES.find((route) => matchesSegments(toSegments(route.path), actual));
 }
 
 export function isDemoRoute(pathname: string): boolean {
@@ -103,4 +118,15 @@ function normalizePath(pathname: string): string {
     return withoutQuery.slice(0, -1);
   }
   return withoutQuery;
+}
+
+function toSegments(pathname: string): string[] {
+  return normalizePath(pathname).split("/");
+}
+
+function matchesSegments(pattern: string[], actual: string[]): boolean {
+  if (pattern.length !== actual.length) return false;
+  return pattern.every((segment, index) =>
+    segment.startsWith(":") ? actual[index].length > 0 : segment === actual[index],
+  );
 }

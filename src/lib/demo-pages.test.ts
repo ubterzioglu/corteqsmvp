@@ -54,6 +54,30 @@ describe("demo-pages", () => {
     expect(isDemoRoute("/campaign/vlogger-baska")).toBe(false);
   });
 
+  // Dinamik segment: DEMO_ROUTES'taki ":param" segmenti TAM OLARAK BİR boş olmayan
+  // segmenti eşler. Joker yok, önek eşleşmesi yok — literal rotalar eskisi gibi kalır.
+  it("':param' segmenti tek bir boş olmayan segmenti eşler", () => {
+    expect(isDemoRoute("/hospital-appointment/turkish-hospital-berlin")).toBe(true);
+    expect(isDemoRoute("/hospital-appointment/h1/")).toBe(true);
+    expect(isDemoRoute("/hospital-appointment/h1?ref=ABC")).toBe(true);
+    expect(isDemoRoute("/hospital-appointment/h1#odeme")).toBe(true);
+    expect(findDemoRoute("/hospital-appointment/h1")?.path).toBe("/hospital-appointment/:id");
+  });
+
+  it("':param' segmenti boş, eksik ya da fazla segmenti eşlemez", () => {
+    expect(isDemoRoute("/hospital-appointment")).toBe(false);
+    expect(isDemoRoute("/hospital-appointment/")).toBe(false);
+    expect(isDemoRoute("/hospital-appointment//")).toBe(false);
+    expect(isDemoRoute("/hospital-appointment/h1/ek")).toBe(false);
+    expect(isDemoRoute("/hospital-appointment-baska/h1")).toBe(false);
+    expect(isDemoRoute("/onek/hospital-appointment/h1")).toBe(false);
+  });
+
+  it("literal demo rotası alt yolları önek olarak yakalamaz", () => {
+    expect(isDemoRoute("/campaign/vlogger/ek")).toBe(false);
+    expect(isDemoRoute("/relocation/ek")).toBe(false);
+  });
+
   // Rozet ile bandın AYRIŞMASINI kapatan iddia: /campaign/vlogger ve
   // /campaign/blogger demo olduğu sürece, onları listeleyen merkeze götüren
   // "Kampanya & Yarışmalar" düğmesi rozetsiz kalamaz (2026-09-25'te tekleşti).

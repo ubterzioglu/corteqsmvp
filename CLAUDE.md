@@ -394,12 +394,16 @@ tek bir listeden işaretlenir: **`src/lib/demo-pages.ts` → `DEMO_ROUTES`**.
 - Yeni demo sayfası = `DEMO_ROUTES`'a **bir satır**. Gerçek içeriğe kavuşunca =
   satırı **sil**. `path` `App.tsx`'teki `path` ile birebir aynı olmalı, yoksa
   bant hiç çizilmez ve hata hiçbir yerde görünmez.
+- `path` `:param` segmenti taşıyabilir (`/hospital-appointment/:id`): her `:param`
+  TAM OLARAK BİR boş olmayan segmenti eşler, segment sayısı aynı olmalıdır (önek ya
+  da joker eşleşmesi yok) ve yol yine `App.tsx`'teki `path` ile birebir aynı yazılır.
 - Demo bandı **kapatılamaz** (beta bandı kapatılabilir; ikisi farklı iştir) ve
   rengi bilerek farklıdır.
 - Sözleşme testi: `src/lib/demo-pages.test.ts` — gevşetme.
 - Tam gerekçe ve akış: `docs/guides/demo-icerik-deseni.md`.
 
-Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`, `/relocation`.
+Bugünkü liste: `/campaign/vlogger`, `/campaign/blogger`, `/businesses`, `/relocation`,
+`/ilanlar`, `/hospital-appointment/:id`.
 
 ⚠️ **`/relocation` 2026-09-22'de listeden çıkarıldı ve AYNI GÜN geri kondu** — bu döngü
 öğreticidir. Önce örnek içerik taşıyan üç sekme (İş & İşletmeler · Okullar · Hoşgeldin

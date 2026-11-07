@@ -7,10 +7,19 @@
  * bu sayfaya DEĞİL.
  *
  * ⚠️ Bant neden `DEMO_ROUTES` deseniyle değil `DemoPageBanner` ile çiziliyor:
- * `DEMO_ROUTES` LİTERAL yol karşılaştırır (`findDemoRoute` → `normalizePath`
- * eşitliği). `/isletme/:slug` dinamik bir yoldur, hiçbir zaman eşleşmez ve bant
- * sessizce çizilmez. `AssociationDetail` de aynı nedenle `DemoPageBanner`
- * kullanıyor — desen tutarlıdır, unutulmuş değil.
+ * sayfa yazıldığında `findDemoRoute` yalnız LİTERAL yol eşliyordu; `/isletme/:slug`
+ * o gün hiç eşleşmiyordu, bant sessizce çizilmezdi. 07.11'den beri `:param` segmentini
+ * de eşliyor — ama bu yol yine de `DEMO_ROUTES`'a EKLENMEZ:
+ *   1. Eklenirse `SiteHeader` kendi `DemoBanner`'ını da çizer ve iki demo bandı üst üste biner.
+ *   2. `DemoPageBanner` detay sayfasına özgü çağrıyı taşır (Kurucu 1000 · listenin
+ *      `#kayit-form` çapasına "Kayıt Ol"); `DemoBanner` yalnız rota adını ve notunu
+ *      gösterir, çağrı taşımaz.
+ *   3. `DEMO_ROUTES` satırı ROTA düzeyindedir: "İşletme bulunamadı" ekranında da
+ *      bant çizerdi; `DemoPageBanner` yalnız kayıt bulunduğunda çizilir.
+ * Desene geçilecekse önce `DemoPageBanner` kaldırılır, sonra satır eklenir (bkz.
+ * `src/lib/demo-pages.ts`, `/businesses` satırının notu). `AssociationDetail`
+ * (`/association/:id`) da aynı desenle `DemoPageBanner` kullanıyor — tutarlıdır,
+ * unutulmuş değil.
  *
  * SEO: `robots: "noindex, follow"` — uydurma içerik indekslenmemeli.
  */

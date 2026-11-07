@@ -249,7 +249,7 @@ const HospitalAppointment = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDept, setSelectedDept] = useState("all");
   const [bookingHospital, setBookingHospital] = useState<(typeof mockHospitals)[0] | null>(null);
-  const [bookingStep, setBookingStep] = useState<"dept" | "time" | "info" | "payment" | "done">("dept");
+  const [bookingStep, setBookingStep] = useState<"dept" | "time" | "info" | "summary" | "done">("dept");
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedBookingDept, setSelectedBookingDept] = useState("");
@@ -290,10 +290,12 @@ const HospitalAppointment = () => {
     setBookingHospital(null);
   };
 
+  // DEMO (`DEMO_ROUTES` → /hospital-appointment/:id): hiçbir yere kayıt yazılmaz,
+  // ödeme alınmaz. Bildirim bunu açıkça söyler; "randevu oluşturuldu" DEMEZ.
   const handleBook = () => {
     toast({
-      title: "✅ Randevu Oluşturuldu!",
-      description: `${bookingHospital?.name} - ${selectedDate} ${selectedTime}`,
+      title: "Demo — gerçek randevu oluşturulmadı",
+      description: `${bookingHospital?.name} · ${selectedDate} ${selectedTime} — örnek akış; hastaneye iletilmedi, ödeme alınmadı.`,
     });
     resetBooking();
   };
@@ -403,14 +405,14 @@ const HospitalAppointment = () => {
               rows={3}
             />
           </div>
-          <Button className="w-full" disabled={!patientName || !patientPhone} onClick={() => setBookingStep("payment")}>
-            Ödemeye Geç <CreditCard className="h-4 w-4 ml-1" />
+          <Button className="w-full" disabled={!patientName || !patientPhone} onClick={() => setBookingStep("summary")}>
+            Özete geç <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
       )}
 
-      {/* Step: Payment */}
-      {bookingStep === "payment" && (
+      {/* Step: Summary — DEMO: kart alanı YOK, demo kart verisi toplamaz. */}
+      {bookingStep === "summary" && (
         <div className="space-y-4">
           <div className="rounded-lg border border-border p-4 space-y-2 bg-muted/30">
             <div className="flex justify-between text-sm">
@@ -434,20 +436,15 @@ const HospitalAppointment = () => {
               <span className="font-medium text-foreground">{patientName}</span>
             </div>
             <div className="border-t border-border pt-2 flex justify-between font-bold">
-              <span>Randevu Ücreti</span>
+              <span>Örnek ücret</span>
               <span className="text-primary">€{hospital.appointmentFee}</span>
             </div>
           </div>
-          <div className="space-y-2">
-            <Label>Kart Numarası</Label>
-            <Input placeholder="•••• •••• •••• ••••" />
-            <div className="grid grid-cols-2 gap-2">
-              <Input placeholder="AA/YY" />
-              <Input placeholder="CVV" />
-            </div>
-          </div>
+          <p className="text-xs text-muted-foreground">
+            Bu bir demodur: gerçek randevu oluşturulmaz, hastaneye bilgi gönderilmez ve ücret tahsil edilmez.
+          </p>
           <Button className="w-full" onClick={handleBook}>
-            <Check className="h-4 w-4 mr-1" /> €{hospital.appointmentFee} Öde & Randevu Al
+            <Check className="h-4 w-4 mr-1" /> Demo randevuyu tamamla
           </Button>
         </div>
       )}
@@ -479,11 +476,12 @@ const HospitalAppointment = () => {
                   <Hospital className="h-8 w-8 text-primary" />
                   <h1 className="text-3xl font-bold text-foreground">Hastane Randevu</h1>
                 </div>
-                <p className="text-muted-foreground max-w-xl mx-auto">
-                  Yaşadığınız ülkedeki hastanelerden kolayca online randevu alın. Türkçe konuşan personel bilgisi dahil.
-                </p>
+                {/* Demo uyarısı sayfaya ELLE yazılmaz (CLAUDE.md DEMO deseni) — bandı `SiteHeader`
+                    `DEMO_ROUTES`'tan çizer. Bu satır yalnız sayfayı dürüstçe tarif eder; "gerçek randevu
+                    yok, ödeme yok" bilgisi işlem anında, özet adımında verilir. */}
+                <p className="text-muted-foreground max-w-xl mx-auto">Randevu akışını örnek hastanelerle deneyin.</p>
                 <Badge variant="outline" className="mt-2 border-primary/30 text-primary">
-                  <CreditCard className="h-3 w-3 mr-1" /> Randevu ücreti: €12 - €25
+                  <CreditCard className="h-3 w-3 mr-1" /> Örnek ücret: €12 - €25
                 </Badge>
               </div>
 
@@ -538,7 +536,7 @@ const HospitalAppointment = () => {
                           <span className="text-xs text-muted-foreground">({hospital.reviews})</span>
                         </div>
                         <Badge variant="secondary" className="text-xs">
-                          €{hospital.appointmentFee} randevu
+                          €{hospital.appointmentFee} (örnek)
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-1 mb-3">
@@ -568,7 +566,7 @@ const HospitalAppointment = () => {
                       >
                         <DialogTrigger asChild>
                           <Button className="w-full" size="sm">
-                            <Calendar className="h-4 w-4 mr-1" /> Randevu Al
+                            <Calendar className="h-4 w-4 mr-1" /> Demo randevu al
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-md">

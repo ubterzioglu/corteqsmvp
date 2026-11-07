@@ -82,7 +82,8 @@ test.describe("Demo işaretleri — Batch 1", () => {
   test("/isletme/:slug detay bandı taşır", async ({ page }) => {
     await page.goto(`/isletme/${DEMO_BUSINESS_SLUG}`);
 
-    // Dinamik yol `DEMO_ROUTES` ile eşleşemez; bu sayfa `DemoPageBanner` kullanır.
+    // `/isletme/:slug` BİLEREK `DEMO_ROUTES`'ta değil (07.11'den beri `:param` eşlense de):
+    // bu sayfa kendi `DemoPageBanner`'ını kullanır — gerekçe `BusinessDetailPage.tsx` başında.
     await expect(page.getByText(/Bu profil örnek içeriktir/)).toBeVisible();
   });
 

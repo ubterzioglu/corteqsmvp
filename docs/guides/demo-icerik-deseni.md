@@ -36,6 +36,13 @@ Bu kadar. Bant `SiteHeader` tarafından **rotadan türetilir** — demo sayfanı
 kendisine hiçbir kod eklenmez. Hub kartları da `isDemoRoute(c.to)` ile kendi
 rozetlerini otomatik alır (`CampaignHubPage.tsx`).
 
+**Dinamik rota (2026-11-07):** `path` içinde `:` ile başlayan segment
+(`/hospital-appointment/:id`) **tam olarak bir boş olmayan** segmenti eşler.
+Joker (`*`) ve önek eşleşmesi yoktur: `/campaign/vlogger` satırı
+`/campaign/vlogger/ek`'i yakalamaz, `:id` de iki segmenti yutmaz. Satır **rota
+düzeyindedir** — o rotadaki her kayıt "demo" görünür; gerçek ve örnek kayıtlar
+aynı rotada karışıyorsa satır eklemek yanlış olur.
+
 Ana sayfa düğmesine rozet gerekiyorsa katalogda tek alan:
 `src/components/home-trial/action-buttons-data.ts` → ilgili girdiye `demo: true`.
 
@@ -61,7 +68,8 @@ ayrışmasını yakalar.
 
 ## Test
 
-`src/lib/demo-pages.test.ts` (8 test): rotaların App.tsx'te var olduğunu, yolun
-tekrarlanmadığını, sorgu/eğik çizgi normalizasyonunu, "Yarışmalar" düğmesinin
+`src/lib/demo-pages.test.ts`: rotaların App.tsx'te var olduğunu, yolun
+tekrarlanmadığını, sorgu/eğik çizgi normalizasyonunu, `:param` segmentinin tek
+bir boş olmayan segmenti eşlediğini (önek/joker yok), "Yarışmalar" düğmesinin
 `demo: true` kaldığını ve bandın SiteHeader'da rotadan türetildiğini doğrular.
 Sözleşme testidir — gevşetme, dosyayı düzelt.
