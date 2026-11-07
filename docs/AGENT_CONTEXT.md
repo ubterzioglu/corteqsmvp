@@ -2,9 +2,8 @@
 
 > Bu dosya, yeni bir agent oturumunun projeyi hızla kavraması için hazırlanmıştır.
 > Diğer teknik belgelerden bilgi derleyerek token maliyetini minimize eder.
-> **Güncelleme:** 2026-09-21 (bayat metrikler ölçülerek düzeltildi: prod runtime nginx, 11 Edge
-> Function kaynak dizini, 403 migration, stack sürümleri ve teknik borç listesi güncel — önceki güncelleme
-> 2026-06-11'de Cadde 3.0 E2E rebuild kapanışıydı)
+> **Güncelleme:** 2026-11-07 — sabit rakamlar kaldırıldı (ölçüm komutları CLAUDE.md'de); açık işlerin
+> tek listesi `docs/kalanlar/KALANLAR.md`. Önceki güncelleme: 2026-09-21.
 >
 > **Kök doküman düzeni (2026-08-04):** kökte yalnız 2 `.md` yaşar —
 > `CLAUDE.md` (agent kuralları — kökte) ve `README.md` (GitHub giriş sayfası).
@@ -25,9 +24,7 @@
 - Supabase Project ID: `injprdrsklkxgnaiixzh`
 - Deploy: Docker / Coolify → `npm run build` → **nginx** (production runtime).
   `server.mjs` yalnız `npm run start` / nixpacks yoludur — bkz. §7.
-- **Repo gerçekliği (ölçüldü 2026-09-21):** 1.195 `ts/tsx` dosya `src` altında (211 sayfa `.tsx`,
-  117'si admin; 447 component; 463 lib modülü), **403 migration** (151 applied + 252 archive),
-  **306 test dosyası / 2.361 test**, **11 Edge Function kaynak dizini** (10 aktif, 1 deprecated)
+- **Repo gerçekliği:** rakam yazılmaz, ölçülür — `npm run investor:stats` (dosya/satır özeti) · `git ls-files` (⚠️ çıplak `find` gitignore'lu `referanslovable/` klonunu da sayar) · `npm run check:migrations` · `npm run check:functions`.
 
 ### Modüller (tek SPA içinde)
 
@@ -231,7 +228,7 @@ catalog_audit_logs           → + 15 satellite tablo (media, contacts, links, l
 
 ```
 roles                        → 76 flat rol (key, label, is_active, sort_order, deleted_at) — 0 legacy
-afs_attributes               → Attribute sözlüğü, 53 satır (eski: attribute_catalog)
+afs_attributes               → Attribute sözlüğü (eski: attribute_catalog)
 afs_features                 → Feature sözlüğü, 42 satır (eski: feature_catalog)
 afs_sections                 → Section sözlüğü, 7 satır (eski: profile_section_catalog)
 role_attributes              → Rol↔attribute kuralı (eski: role_attribute_rules)
@@ -451,24 +448,16 @@ supabase functions deploy whatsapp-reply
 - ~~B5 auth shim~~ → silindi (2026-09-06), 16 dosya kanonik yolda
 - ~~ESLint borcu (1280 problem)~~ → `npm run lint` **0 problem**
 
-**AÇIK:**
-1. **Cadde çifti refactor'u:** `cadde-api.ts` (~986 satır, 25 importer, **testi yok**) +
-   `CaddePage.tsx` (~1716 satır, 19 importer) — önce karakterizasyon testi yaz, sonra ayrıştır.
-   İki dalgada da bilinçli ERTELENDİ.
-2. **B6 karışık data fetching:** component-içi `supabase.from()` kalan 2 meşru çağrı
-   `AuthProvider.tsx`'te (çok satırlı zincir — tek satır regex'le sayma). Yeni kod:
-   `*-api.ts` + React Query.
-3. **B7 TypeScript loose:** 3 gerçek `as any` cast (`cadde-internal.ts`, `relocation-api.ts`,
-   `relocation-tools-api.ts`) — bilinçli, tsc'yi yeniden artırır.
-4. **B8:** `no-unused-vars` ESLint'te kapalı.
-5. **Playwright E2E pasif** (9 spec) — kritik akışlar (kayıt/profil/catalog claim) için aktive et.
-6. **Geo katalog uzlaştırması:** form `geo_countries/geo_cities` (251/76.990), Cadde
-   `cadde_countries/cities` (22/54) kullanıyor; köprü kolonlar kısmen dolu — CLAUDE.md Cadde
-   bölümündeki ölçümlere bak. Telefon kodundan ülke TÜRETME.
+**AÇIK:** tek liste `docs/kalanlar/KALANLAR.md`. Kalıcı dikkat noktaları: (1) `no-unused-vars` TS'te
+kapalı (`.mjs`'te açık); (2) Playwright bu makinede port 8080 çakışmasıyla koşmuyor (B09);
+(3) geo katalog uzlaştırması — form `geo_*`, Cadde `cadde_*` kullanır, köprü kolonlar kısmen dolu
+(CLAUDE.md Cadde bölümü); telefon kodundan ülke TÜRETME.
+~~Cadde çifti refactor'u~~, ~~B6 karışık data fetching~~, ~~B7 "3 gerçek `as any`"~~ → KAPANDI
+(ayrıntı: `docs/history/2026-11-07-claude-md-arsivi.md`).
 
-**Zaten yapıldı:** App.tsx modüler (51 lazy), tek Supabase client, legacy auth tabloları drop,
+**Zaten yapıldı:** App.tsx modüler (`lazyWithReload`), tek Supabase client, legacy auth tabloları drop,
 `admin.ts` → `admin/` domain modülleri, nginx güvenlik başlıkları + CSP, tek kaynaklı redirect
-tablosu, büyük dosya ayrıştırması (800+ üretim dosyası: Cadde çifti hariç kalmadı).
+tablosu, büyük dosya ayrıştırması (800+ satır kuralı ESLint `max-lines`'ta; taban `eslint-suppressions.json`).
 
 ---
 

@@ -17,18 +17,15 @@
 katalog, **Cadde** (sosyal akış + Cafe + Çarşı + Tanıtım), anketler, muhasebe, workspace ve admin paneli.
 
 ```
-React 18 + Vite 5 (SWC)  ·  TypeScript (strict KAPALI — bilinçli)  ·  Tailwind + shadcn/ui
+React 18 + Vite 8 (@vitejs/plugin-react)  ·  TypeScript (strict KAPALI — bilinçli)  ·  Tailwind + shadcn/ui
 @tanstack/react-query 5  ·  react-router-dom 7  ·  zod + react-hook-form
-Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + 11 Edge Function kaynak dizini
+Supabase: Postgres + RLS + security-definer RPC'ler + Auth + Realtime + Edge Function'lar (`supabase/functions/`)
 Deploy: Docker/Coolify → npm run build → nginx 1.27-alpine (301'ler + güvenlik başlıkları + CSP +
         prerender proxy + RAG proxy + SPA fallback).  server.mjs PROD RUNTIME DEĞİLDİR — bkz. §6.
 Canlı: corteqs.net · Supabase proje: injprdrsklkxgnaiixzh
 ```
 
-Ölçülen büyüklük (2026-09-21): `src` altında 1.195 `.ts/.tsx` — 211 sayfa, 447 component, 463 lib
-modülü; 306 Vitest test dosyası (src 275, scripts 19, Supabase 8, workers 4) + 10 Playwright
-`.spec.ts`; 403 migration (151 applied + 252 archive); 11 Edge Function kaynak dizini (10 aktif,
-1 deprecated).
+Büyüklük **yazılmaz, ölçülür** (2026-11-07): `npm run investor:stats` (dosya/satır özeti) · `git ls-files` (⚠️ çıplak `find` gitignore'lu `referanslovable/` klonunu da sayar) · `npm run check:migrations` · `npm run check:functions`.
 
 **Temel mimari ilke:** Kural DB'de yaşar. Yazma işlemleri security-definer RPC'lerden geçer,
 RLS okumayı sınırlar; frontend yalnız yol gösterir (Zod ilk hat, Türkçe hata mesajları).
@@ -39,7 +36,7 @@ RLS okumayı sınırlar; frontend yalnız yol gösterir (Zod ilk hat, Türkçe h
 
 ### 2.1 Route ağacı
 
-- `src/App.tsx` — tüm public + cadde rotaları (51 `lazy()` ile code-split, 283 satır).
+- `src/App.tsx` — tüm public + cadde rotaları (`lazyWithReload()` ile code-split).
 - `src/pages/admin/routes.tsx` — `/admin` alt ağacının tamamı (AdminLayout + RequireAuth).
   `src/components/admin/AdminLayout.tsx` artık yalnızca 6 satırlık bir barrel'dır; gerçek layout
   alt bileşenlere bölünmüştür.
@@ -92,7 +89,7 @@ Tek sistem; legacy `profiles`/`user_profiles`/`admin_users`/`role_feature_defaul
 ```
 auth.users → user_role_assignments (user↔rol, TEK yer) → roles (76 FLAT rol, 75 aktif; aile/parent YOK
                                                           — User_Standard 2026-06-11'de User_DiasporaMember'a konsolide, pasif)
-user_profile_attributes  → tüm profil verisi attribute olarak (afs_attributes sözlüğü, 53)
+user_profile_attributes  → tüm profil verisi attribute olarak (afs_attributes sözlüğü)
 user_feature_overrides   → kullanıcı bazlı feature istisnası
 AFS kuralları: role_attributes / role_features / role_sections  (afs_features 42, afs_sections 7)
 Feature çözümleme: override > role_features default > false   (cadde tarafında + ban kill-switch)
@@ -361,14 +358,13 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
 
 ## 7. Test Stratejisi
 
-- **Vitest** (unit + component, jsdom): 306 test dosyası (src 275, scripts 19, Supabase 8,
-  workers 4) — SQL↔TS ayna truth table'ları, cursor tekrar/kayıp, Zod sınırları, sayfa smoke'ları.
+- **Vitest** (unit + component, jsdom): `npm run test` (src + scripts + `supabase/functions` + `workers/service-finder`) — SQL↔TS ayna truth table'ları, cursor tekrar/kayıp, Zod sınırları, sayfa smoke'ları.
   Tek dosya: `npm run test -- <path>`.
 - **Drift kilitleri** (bunlar bilerek "test" değil "sözleşme bekçisi"dir; kırılırsa iki tarafı da
   güncelle): `src/lib/redirects.test.ts` (redirects.ts ↔ nginx.conf.template + CSP kuralları),
   `scripts/generate-sitemap.test.mjs` (STATIC_ROUTES ↔ App.tsx route tablosu),
   `src/lib/cadde-rules` ayna testleri (SQL ↔ TS).
-- **Playwright** yapılandırılmış: 10 `.spec.ts`; persona matrisi (spec §22.4) açık kalem.
+- **Playwright** yapılandırılmış (`e2e/*.spec.ts`); persona matrisi (spec §22.4) açık kalem.
 - Tam `npm run lint` **0 problem** döner (eski "1280 problem" iddiası bayattı, 2026-09-05'te
   ölçülüp kapandı — CLAUDE.md "Known Limitations"). `tsc -p tsconfig.app.json --noEmit`:
   **0 hata** (2026-09-13'te sıfırlandı, §5 eski A/B/C sınıf dökümü artık tarihsel).
