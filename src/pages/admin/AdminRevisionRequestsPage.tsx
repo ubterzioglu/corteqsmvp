@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { formatLongDateTR } from "@/lib/format-date";
 import { trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
 import {
@@ -53,14 +54,6 @@ const STATUS_FILTER_OPTIONS = [
   { value: "all", label: "Tüm durumlar" },
   ...REVISION_STATUSES.map((status) => ({ value: status, label: getRevisionStatusLabel(status) })),
 ] as const;
-
-function formatDate(value: string): string {
-  return new Date(value).toLocaleDateString("tr-TR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
 
 const AdminRevisionRequestsPage = () => {
   const { toast } = useToast();
@@ -208,7 +201,7 @@ const AdminRevisionRequestsPage = () => {
               </div>
               <p className="mt-0.5 truncate text-xs text-muted-foreground">
                 {request.createdBy ? emails[request.createdBy] || "Admin" : "Bilinmeyen"} ·{" "}
-                {formatDate(request.createdAt)}
+                {formatLongDateTR(request.createdAt)}
               </p>
             </div>
           </button>

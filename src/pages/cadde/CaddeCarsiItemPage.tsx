@@ -22,9 +22,7 @@ import {
   updateCarsiItem,
 } from "@/lib/cadde-carsi-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "long", year: "numeric" }).format(new Date(value));
+import { formatPaddedLongDateTR } from "@/lib/format-date";
 
 const CaddeCarsiItemPage = () => {
   const { itemId = "" } = useParams<{ itemId: string }>();
@@ -145,8 +143,8 @@ const CaddeCarsiItemPage = () => {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock3 className="h-4 w-4 text-amber-600" />
-                {formatDate(item.createdAt)}
-                {item.expiresAt ? ` → ${formatDate(item.expiresAt)}` : ""}
+                {formatPaddedLongDateTR(item.createdAt)}
+                {item.expiresAt ? ` → ${formatPaddedLongDateTR(item.expiresAt)}` : ""}
               </span>
             </div>
           </CardHeader>

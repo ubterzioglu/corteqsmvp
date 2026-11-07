@@ -7,11 +7,9 @@ import { Link } from "react-router-dom";
 import { MapPin, Briefcase, Clock } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { formatShortDayMonthTR } from "@/lib/format-date";
 import { useJobListings } from "@/lib/job-listings-api";
 import { useSeo } from "@/lib/seo";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short" }).format(new Date(value));
 
 const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
   "Tam Zamanlı": "Tam Zamanlı",
@@ -102,7 +100,7 @@ export default function JobListingsPage() {
                         {LOCATION_TYPE_LABELS[listing.location_type] ?? listing.location_type}
                         {listing.city ? ` · ${listing.city}` : ""}
                       </span>
-                      <span className="ml-auto text-xs">{formatDate(listing.created_at)}</span>
+                      <span className="ml-auto text-xs">{formatShortDayMonthTR(listing.created_at)}</span>
                     </div>
                   </Link>
                 </CardContent>

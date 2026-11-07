@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useGroupReportState, useSubmitGroupReport } from "@/hooks/useGroupReports";
+import { formatLongDateTR } from "@/lib/format-date";
 import { GROUP_REPORT_NOTE_MAX, GROUP_REPORT_REASONS, type GroupReportReason } from "@/lib/group-reports-api";
 import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
 
@@ -16,9 +17,6 @@ interface GroupReportButtonProps {
   /** Girişsiz kullanıcı → OAuth akışı (dönüş aynı grup sayfasına). */
   onRequestSignIn: () => void;
 }
-
-const formatDate = (value: string) =>
-  new Date(value).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric" });
 
 /**
  * G14 · "Şikayet et" (tasarım §3.E, politika §4/§8).
@@ -91,7 +89,7 @@ export function GroupReportButton({ landing, isSignedIn, onRequestSignIn }: Grou
     return wrap(
       <p role="status" className="text-muted-foreground">
         {sent ? "Şikayetin alındı. Moderatör ekibi inceleyecek. " : "Bu gruba şikayetin alınmıştı. "}
-        Aynı gruba yeni şikayet {formatDate(state.cooldown_until)} tarihinden sonra gönderilebilir.
+        Aynı gruba yeni şikayet {formatLongDateTR(state.cooldown_until)} tarihinden sonra gönderilebilir.
       </p>,
     );
   }

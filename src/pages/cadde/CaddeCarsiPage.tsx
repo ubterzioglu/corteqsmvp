@@ -32,6 +32,7 @@ import {
 import { listCaddeCities, listCaddeCountries } from "@/lib/cadde-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { formatShortDayMonthTR } from "@/lib/format-date";
 import type { CarsiItem, CarsiItemStatus } from "@/lib/cadde-types";
 
 const STATUS_LABELS: Record<CarsiItemStatus, string> = {
@@ -40,9 +41,6 @@ const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   paused: "Pasif",
   expired: "Süresi doldu",
 };
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short" }).format(new Date(value));
 
 const CaddeCarsiPage = () => {
   const { user } = useAuth();
@@ -267,7 +265,7 @@ const CaddeCarsiPage = () => {
                       >
                         {item.categoryLabel}
                       </Link>
-                      {` • ${formatCarsiPrice(item)}${item.expiresAt ? ` • Bitiş: ${formatDate(item.expiresAt)}` : ""}`}
+                      {` • ${formatCarsiPrice(item)}${item.expiresAt ? ` • Bitiş: ${formatShortDayMonthTR(item.expiresAt)}` : ""}`}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -331,7 +329,7 @@ const CaddeCarsiPage = () => {
                       {item.categoryLabel}
                     </CaddeBadge>
                   </Link>
-                  <span className="text-xs text-slate-500">{formatDate(item.createdAt)}</span>
+                  <span className="text-xs text-slate-500">{formatShortDayMonthTR(item.createdAt)}</span>
                 </div>
                 <Link
                   to={`/cadde/carsi/${item.id}`}

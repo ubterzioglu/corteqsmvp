@@ -29,15 +29,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { CaddeCafe } from "@/lib/cadde-types";
-
-// CaddePage'deki yerel biçimlendiricinin aynısı — panel taşınırken birlikte geldi.
-const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
+import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 /** m69: akordeon açıkken ilk anda çizilen kafe satırı sayısı; gerisi tek tıkla açılır. */
 const CAFE_PREVIEW_COUNT = 3;
@@ -181,7 +173,7 @@ const CaddeCafesPanel = ({
                         ) : null}
                       </p>
                       <p className="truncate text-xs text-slate-500">
-                        {cafe.city ?? "Global"} • {formatDateTime(cafe.startsAt)} • {cafe.memberCount} üye
+                        {cafe.city ?? "Global"} • {formatShortDayMonthTimeTR(cafe.startsAt)} • {cafe.memberCount} üye
                         {cafe.summary ? ` • ${cafe.summary}` : ""}
                       </p>
                     </div>

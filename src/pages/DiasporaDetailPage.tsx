@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { CalendarDays } from "lucide-react";
 
 import NotFound from "@/pages/NotFound";
+import { formatPaddedLongDateTR } from "@/lib/format-date";
 import {
   fallbackMarqueeItems,
   getPublicMarqueeItemBySlug,
@@ -14,13 +15,6 @@ import { applySeo, SEO_CANONICAL_ORIGIN, SEO_DEFAULT_OG_IMAGE, SEO_SITE_NAME } f
 
 const getType = (type: string): MarqueeItemType =>
   type === "news" || type === "stat" || type === "announcement" ? type : "announcement";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(value));
 
 const DiasporaDetailPage = () => {
   const { slug = "" } = useParams();
@@ -125,7 +119,7 @@ const DiasporaDetailPage = () => {
               </span>
               <span className="inline-flex items-center gap-2">
                 <CalendarDays className="h-4 w-4" />
-                {formatDate(item.published_at)}
+                {formatPaddedLongDateTR(item.published_at)}
               </span>
             </div>
 

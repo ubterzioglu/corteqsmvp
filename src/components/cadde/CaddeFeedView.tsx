@@ -44,20 +44,13 @@ import { describeCaddeWidenCount } from "@/lib/cadde-feed-widen";
 import { serializeCaddeFilters } from "@/lib/cadde-format";
 import type { CaddeFilterState, CaddeReactionType } from "@/lib/cadde-types";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [
   { key: "like", label: "Beğendim", icon: ThumbsUp },
   { key: "support", label: "Destek", icon: Sparkles },
   { key: "unsure", label: "Soru", icon: HelpCircle },
 ];
-
-const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit",
-    month: "short",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
 
 export type CaddeFeedViewProps = {
   composerState: ReturnType<typeof useCaddeComposerState>;
@@ -257,7 +250,7 @@ export const CaddeFeedView = ({
                       </div>
                       <p className="text-xs text-slate-500">
                         {[item.post.country, item.post.city].filter(Boolean).join(" • ") || "Global"} •{" "}
-                        {formatDateTime(item.post.createdAt)}
+                        {formatShortDayMonthTimeTR(item.post.createdAt)}
                       </p>
                     </div>
 
@@ -629,7 +622,7 @@ export const CaddeFeedView = ({
                           >
                             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                               <p className="text-sm font-semibold text-slate-900">{comment.authorName}</p>
-                              <p className="text-xs text-slate-500">{formatDateTime(comment.createdAt)}</p>
+                              <p className="text-xs text-slate-500">{formatShortDayMonthTimeTR(comment.createdAt)}</p>
                             </div>
                             <p className="mt-0.5 text-sm leading-5 text-slate-700">{comment.body}</p>
                           </div>

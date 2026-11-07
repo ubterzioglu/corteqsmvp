@@ -16,11 +16,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { listMyCaddeCafes } from "@/lib/cadde-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-
-const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
-    new Date(value),
-  );
+import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const CaddeMyContentCard = () => {
   const { user } = useAuth();
@@ -72,7 +68,7 @@ const CaddeMyContentCard = () => {
           >
             <span className="truncate text-xs font-medium text-slate-900">{cafe.title}</span>
             <span className="shrink-0 text-[10px] text-slate-500">
-              {cafe.memberCount} üye • bitiş {formatDate(cafe.endsAt)}
+              {cafe.memberCount} üye • bitiş {formatShortDayMonthTimeTR(cafe.endsAt)}
             </span>
           </Link>
         ))}

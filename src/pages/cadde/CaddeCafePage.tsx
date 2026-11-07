@@ -54,11 +54,7 @@ import {
 import { listCaddeCafeThemes, updateCaddeCafeLogo } from "@/lib/cadde-cafe-api";
 import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-
-const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
-    new Date(value),
-  );
+import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const remainingLabel = (endsAt: string): string => {
   const diffMs = new Date(endsAt).getTime() - Date.now();
@@ -314,7 +310,8 @@ const CaddeCafePage = () => {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Clock3 className="h-4 w-4 text-orange-500" />
-                {formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})
+                {formatShortDayMonthTimeTR(cafe.startsAt)} → {formatShortDayMonthTimeTR(cafe.endsAt)} (
+                {remainingLabel(cafe.endsAt)})
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <Users className="h-4 w-4 text-orange-500" />
@@ -545,7 +542,7 @@ const CaddeCafePage = () => {
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-semibold text-slate-900">{post.authorName}</p>
-                  <span className="text-xs text-slate-500">{formatDateTime(post.createdAt)}</span>
+                  <span className="text-xs text-slate-500">{formatShortDayMonthTimeTR(post.createdAt)}</span>
                 </div>
                 {/* m60: gövde düz <p> değil CaddePostBody — bağlantılar, #etiketler ve
                     @bahsetmeler ana akıştaki gibi tıklanabilir çizilir. */}
