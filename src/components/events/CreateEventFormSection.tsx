@@ -32,10 +32,27 @@ import {
 import {
   EVENT_TIMEZONE_GROUPS,
   EVENT_TIMEZONE_OPTIONS,
+  eventEndTimeWarning,
   eventTimezoneLabel,
   isKnownEventTimezone,
   resolveBrowserEventTimezone,
+  type EventEndTimeWarning,
 } from "@/lib/events-timezone";
+
+const END_TIME_WARNING_ID = "end-time-warning";
+
+// Aynı anda en fazla biri çizilir; ikisi de bitişi ertesi güne taşıyan
+// `eventInstantRange` davranışını kullanıcıya söyler.
+const END_TIME_WARNINGS: Record<EventEndTimeWarning, { testId: string; text: string }> = {
+  before: {
+    testId: "event-end-before-start-warning",
+    text: "Bitiş saati başlangıçtan önce — etkinlik gece yarısını aşıp ertesi gün bitecek. Doğru mu?",
+  },
+  equal: {
+    testId: "event-end-equals-start-warning",
+    text: "Başlangıç ve bitiş saati aynı — etkinlik 24 saat sürecek. Doğru mu?",
+  },
+};
 
 interface CreateEventFormSectionProps {
   open: boolean;
@@ -112,6 +129,9 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
 
   const showPhysicalFields = isPhysicalEventType(type);
   const showOnlineFields = isOnlineEventType(type);
+  // Yalnız UYARI: gece yarısını aşan etkinlik meşrudur, gönderim engellenmez ve
+  // saat değiştirilmez (bitişi ertesi güne `eventInstantRange` taşır).
+  const endTimeWarning = eventEndTimeWarning(startTime, endTime);
 
   const handleAddTag = () => {
     const trimmed = tagInput.trim();
@@ -365,36 +385,56 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
                   </div>
                 </div>
 
-                <div className="grid gap-3 sm:grid-cols-3">
-                  <div>
-                    <Label htmlFor="event-date">Tarih *</Label>
-                    <Input
-                      id="event-date"
-                      type="date"
-                      className={formFieldInsetClass}
-                      value={eventDate}
-                      onChange={(event) => setEventDate(event.target.value)}
-                    />
+                <div>
+                  <div className="grid gap-3 sm:grid-cols-3">
+                    <div>
+                      <Label htmlFor="event-date">Tarih *</Label>
+                      <Input
+                        id="event-date"
+                        type="date"
+                        className={formFieldInsetClass}
+                        value={eventDate}
+                        onChange={(event) => setEventDate(event.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="start-time">Başlangıç Saati</Label>
+                      <Input
+                        id="start-time"
+                        type="time"
+                        className={formFieldInsetClass}
+                        value={startTime}
+                        onChange={(event) => setStartTime(event.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="end-time">Bitiş Saati</Label>
+                      <Input
+                        id="end-time"
+                        type="time"
+                        className={formFieldInsetClass}
+                        value={endTime}
+                        onChange={(event) => setEndTime(event.target.value)}
+                        aria-describedby={endTimeWarning ? END_TIME_WARNING_ID : undefined}
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor="start-time">Başlangıç Saati</Label>
-                    <Input
-                      id="start-time"
-                      type="time"
-                      className={formFieldInsetClass}
-                      value={startTime}
-                      onChange={(event) => setStartTime(event.target.value)}
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="end-time">Bitiş Saati</Label>
-                    <Input
-                      id="end-time"
-                      type="time"
-                      className={formFieldInsetClass}
-                      value={endTime}
-                      onChange={(event) => setEndTime(event.target.value)}
-                    />
+
+                  {/* Canlı bölge HER ZAMAN DOM'dadır; uyarı yokken boştur, yalnız içeriği
+                      değişir. Metniyle AYNI ANDA mount edilen bir role="status" öğesini
+                      ekran okuyucular (VoiceOver/JAWS) çoğu zaman OKUMAZ: bölge, içeriği
+                      değişmeden önce erişilebilirlik ağacında olmalıdır. Grid'le aynı
+                      sarmalayıcıdadır ki boş bölge dıştaki `space-y-3` aralığını ikiye
+                      katlamasın. */}
+                  <div id={END_TIME_WARNING_ID} role="status" aria-live="polite">
+                    {endTimeWarning && (
+                      <p
+                        data-testid={END_TIME_WARNINGS[endTimeWarning].testId}
+                        className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800"
+                      >
+                        {END_TIME_WARNINGS[endTimeWarning].text}
+                      </p>
+                    )}
                   </div>
                 </div>
 

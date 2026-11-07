@@ -107,9 +107,10 @@ Sırayla geçilecek liste:
   03:30'a kayar ve kimse uyarılmaz.
 - **Sonbahar geri dönüşünde iki kez yaşanan saat** (25 Ekim 02:00–03:00): ikinci
   oluşum seçiliyor. Yine sessiz.
-- **Bitiş < başlangıç durumunda formda uyarı yok.** Hesap düzeltildi (bitiş ertesi
-  güne taşınıyor) ama kullanıcıya "bu etkinlik gece yarısını aşıyor" denmiyor.
-  Yanlışlıkla ters girilen saat sessizce 23 saatlik etkinliğe dönüşür.
+- ~~**Bitiş < başlangıç durumunda formda uyarı yok.**~~ ✅ **07.11 KAPANDI** (EV01, branch
+  `fix/st00-ev01`): bitiş < başlangıç "gece yarısını aşar", bitiş = başlangıç "24 saat sürer"
+  uyarısı çıkar, gönderimi engellemez (`eventEndTimeWarning`). ⚠️ Uyarı duvar saatini, hesap
+  anları karşılaştırır — yukarıdaki iki yaz saati uç durumunda ayrışabilir (JSDoc'ta yazılı).
 
 ---
 
@@ -118,15 +119,14 @@ Sırayla geçilecek liste:
 - **`events.type` ve `events.status` üzerinde CHECK kısıtı YOK.** 19 Eylül'deki
   ASCII'ye düşmüş kategori kusurunun kök nedeni buydu ve hâlâ açık. Yeni
   `timezone` sütununa biçim CHECK'i konuldu; diğer ikisine konmadı.
-- **`AdminEventsPage` arama filtresi `toLowerCase()` kullanıyor.** CLAUDE.md
-  Türkçe metin kuralı `trIncludes` diyor ("İstanbul" aramasında bozulur). Bu
-  çalışmadan gelmiyor, dokunulmadı.
-- **Saat dilimi listesi 65 satır**, dünyadaki 400+ dilimin tamamı değil. Listede
-  olmayan bir ülke çıkarsa `src/lib/events-timezone.ts` içindeki
-  `EVENT_TIMEZONE_OPTIONS` dizisine bir satır eklenir — başka hiçbir yere
-  dokunmak gerekmez. Bilinen eksikler: Balkanlar (Belgrad, Üsküp, Saraybosna,
-  Zagreb, Tiran), Baltıklar, Lüksemburg, Malta, `America/Detroit`,
-  `America/Phoenix`, `Australia/Melbourne`.
+- ~~**`AdminEventsPage` arama filtresi `toLowerCase()` kullanıyor.**~~ ✅ **07.11 KAPANDI**
+  (clean code W2): arama `trIncludes` kullanır.
+- **Saat dilimi listesi** — ✅ **07.11:** bilinen 13 eksik eklendi (Belgrad, Üsküp, Saraybosna,
+  Zagreb, Tiran, Tallinn, Riga, Vilnius, Lüksemburg, Malta, `America/Detroit`,
+  `America/Phoenix`, `Australia/Melbourne`; liste ~76 satır). Hâlâ 400+ dilimin tamamı değil:
+  listede olmayan bir ülke çıkarsa `src/lib/events-timezone.ts` içindeki
+  `EVENT_TIMEZONE_OPTIONS` dizisine bir satır eklenir; test, değeri DB biçim kısıtına karşı
+  denetler.
 
 ---
 

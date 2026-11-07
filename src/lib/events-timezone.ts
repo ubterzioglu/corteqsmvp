@@ -45,9 +45,11 @@ export const EVENT_TIMEZONE_OPTIONS: EventTimezoneOption[] = [
   { value: "Europe/Vienna", label: "Avusturya (Viyana)", group: "Avrupa" },
   { value: "Europe/Amsterdam", label: "Hollanda (Amsterdam)", group: "Avrupa" },
   { value: "Europe/Brussels", label: "Belçika (Brüksel)", group: "Avrupa" },
+  { value: "Europe/Luxembourg", label: "Lüksemburg", group: "Avrupa" },
   { value: "Europe/Paris", label: "Fransa (Paris)", group: "Avrupa" },
   { value: "Europe/Zurich", label: "İsviçre (Zürih)", group: "Avrupa" },
   { value: "Europe/Rome", label: "İtalya (Roma)", group: "Avrupa" },
+  { value: "Europe/Malta", label: "Malta (Valletta)", group: "Avrupa" },
   { value: "Europe/Madrid", label: "İspanya (Madrid)", group: "Avrupa" },
   { value: "Europe/Lisbon", label: "Portekiz (Lizbon)", group: "Avrupa" },
   { value: "Europe/London", label: "Birleşik Krallık (Londra)", group: "Avrupa" },
@@ -56,11 +58,19 @@ export const EVENT_TIMEZONE_OPTIONS: EventTimezoneOption[] = [
   { value: "Europe/Stockholm", label: "İsveç (Stockholm)", group: "Avrupa" },
   { value: "Europe/Oslo", label: "Norveç (Oslo)", group: "Avrupa" },
   { value: "Europe/Helsinki", label: "Finlandiya (Helsinki)", group: "Avrupa" },
+  { value: "Europe/Tallinn", label: "Estonya (Tallinn)", group: "Avrupa" },
+  { value: "Europe/Riga", label: "Letonya (Riga)", group: "Avrupa" },
+  { value: "Europe/Vilnius", label: "Litvanya (Vilnius)", group: "Avrupa" },
   { value: "Europe/Warsaw", label: "Polonya (Varşova)", group: "Avrupa" },
   { value: "Europe/Prague", label: "Çekya (Prag)", group: "Avrupa" },
   { value: "Europe/Budapest", label: "Macaristan (Budapeşte)", group: "Avrupa" },
+  { value: "Europe/Zagreb", label: "Hırvatistan (Zagreb)", group: "Avrupa" },
+  { value: "Europe/Sarajevo", label: "Bosna-Hersek (Saraybosna)", group: "Avrupa" },
+  { value: "Europe/Belgrade", label: "Sırbistan (Belgrad)", group: "Avrupa" },
   { value: "Europe/Bucharest", label: "Romanya (Bükreş)", group: "Avrupa" },
   { value: "Europe/Sofia", label: "Bulgaristan (Sofya)", group: "Avrupa" },
+  { value: "Europe/Skopje", label: "Kuzey Makedonya (Üsküp)", group: "Avrupa" },
+  { value: "Europe/Tirane", label: "Arnavutluk (Tiran)", group: "Avrupa" },
   { value: "Europe/Athens", label: "Yunanistan (Atina)", group: "Avrupa" },
   { value: "Europe/Kyiv", label: "Ukrayna (Kiev)", group: "Avrupa" },
   { value: "Europe/Moscow", label: "Rusya (Moskova)", group: "Avrupa" },
@@ -88,8 +98,12 @@ export const EVENT_TIMEZONE_OPTIONS: EventTimezoneOption[] = [
   { value: "Asia/Tokyo", label: "Japonya (Tokyo)", group: "Asya" },
 
   { value: "America/New_York", label: "ABD — Doğu (New York)", group: "Amerika" },
+  { value: "America/Detroit", label: "ABD — Doğu (Detroit)", group: "Amerika" },
   { value: "America/Chicago", label: "ABD — Orta (Şikago)", group: "Amerika" },
   { value: "America/Denver", label: "ABD — Dağ (Denver)", group: "Amerika" },
+  // Arizona yaz saati UYGULAMAZ: yazın Denver'dan bir saat geridir. Denver'a
+  // katlanırsa Phoenix'teki etkinlik yılın yarısında bir saat kayar.
+  { value: "America/Phoenix", label: "ABD — Arizona (Phoenix)", group: "Amerika" },
   { value: "America/Los_Angeles", label: "ABD — Batı (Los Angeles)", group: "Amerika" },
   { value: "America/Toronto", label: "Kanada — Doğu (Toronto)", group: "Amerika" },
   { value: "America/Vancouver", label: "Kanada — Batı (Vancouver)", group: "Amerika" },
@@ -107,6 +121,7 @@ export const EVENT_TIMEZONE_OPTIONS: EventTimezoneOption[] = [
 
   { value: "Australia/Perth", label: "Avustralya — Batı (Perth)", group: "Okyanusya" },
   { value: "Australia/Sydney", label: "Avustralya — Doğu (Sidney)", group: "Okyanusya" },
+  { value: "Australia/Melbourne", label: "Avustralya — Doğu (Melbourne)", group: "Okyanusya" },
   { value: "Pacific/Auckland", label: "Yeni Zelanda (Auckland)", group: "Okyanusya" },
 ];
 
@@ -154,8 +169,8 @@ export function eventTimezoneShortLabel(value: string | null | undefined): strin
  *
  * ⚠️ Burası bilerek "varsayılana çek" DEĞİLDİR. Önceki hâli bilinmeyeni
  * `Europe/Istanbul`'a çekiyordu ve bu, modülün önlemeyi vaat ettiği zararın ta
- * kendisiydi: Üsküp'teki (`Europe/Skopje`, listede yok) üye 19:00 girer, form
- * sessizce "Türkiye (İstanbul)" yazar, Berlin'deki izleyici "senin saatinle
+ * kendisiydi: Üsküp'teki (`Europe/Skopje`, o gün listede yoktu) üye 19:00 girer,
+ * form sessizce "Türkiye (İstanbul)" yazar, Berlin'deki izleyici "senin saatinle
  * 17:00" görür ve iki saat erken gelir. Boş bırakmak, yanlış bir referansı
  * kendinden emin bir etiketle basmaktan iyidir.
  */
@@ -182,7 +197,7 @@ export function resolveBrowserEventTimezone(): string {
 /**
  * İZLEYİCİNİN gerçek saat dilimi — listeyle SINIRLI DEĞİLDİR.
  *
- * Seçenek listesi ~65 satırdır; dünyada 400'den fazla IANA saat dilimi vardır.
+ * Seçenek listesi ~75 satırdır; dünyada 400'den fazla IANA saat dilimi vardır.
  * İzleyicinin dilimini bu listeye daraltmak, listede olmayan her kullanıcıya
  * yanlış bir "senin saatinle" satırı yazdırır. Okunamazsa boş döner ve arayüz
  * o satırı hiç çizmez.
@@ -360,6 +375,43 @@ export function eventInstantRange(input: {
   }
 
   return { start, end };
+}
+
+/** Formdaki bitiş saati uyarısının türü: bitiş başlangıçtan önce / başlangıçla aynı. */
+export type EventEndTimeWarning = "before" | "equal";
+
+/**
+ * Formdaki bitiş saati uyarısının tek koşulu — duvar saati karşılaştırması.
+ *
+ * NEDEN VAR: `eventInstantRange` bitişi başlangıçtan küçük YA DA EŞİTSE sessizce
+ * ertesi güne taşır. Gece yarısını aşan etkinlik meşrudur (22:00 – 01:00), ama
+ * yanlışlıkla ters yazılan "21:00 – 19:00" 22 saatlik, aynı yazılan
+ * "19:00 – 19:00" 24 saatlik etkinliğe kimseye sorulmadan dönüşür. İki durumun
+ * metni farklıdır ("önce" eşit saate uymaz), bu yüzden tür ayrı döner.
+ *
+ * Bu yardımcı yalnız formun kullanıcıya SORMASINI sağlar; hesabı DEĞİŞTİRMEZ ve
+ * gönderimi ENGELLEMEZ. Uçlardan biri boş ya da okunamıyorsa `null` — uydurma
+ * uyarı çizilmez.
+ *
+ * ⚠️ BİLİNEN SINIR: burası DUVAR SAATİNİ karşılaştırır, `eventInstantRange` ise
+ * ANLARI. Yaz saatine geçilen gün, var olmayan saat aralığına düşen bir uç ikisini
+ * ayrıştırabilir (ölçüldü, 29 Mart 2026, Europe/Berlin): "02:30 – 03:30" uyarı
+ * almaz ama iki uç aynı ana düştüğü için hesap 24 saatlik etkinlik üretir;
+ * "03:15 – 02:45" "önce" uyarısı alır ama bitiş ertesi güne taşınmaz. Bu,
+ * `docs/plans/2026-09-20-etkinlik-kalan-isler.md` §3'te bilerek açık bırakılan uç
+ * durum sınıfıdır; mantık bilerek değiştirilmedi.
+ */
+export function eventEndTimeWarning(
+  startTime: string | null | undefined,
+  endTime: string | null | undefined,
+): EventEndTimeWarning | null {
+  const start = startTime ? parseClock(startTime) : null;
+  const end = endTime ? parseClock(endTime) : null;
+  if (!start || !end) return null;
+  const startMinutes = start.hours * 60 + start.minutes;
+  const endMinutes = end.hours * 60 + end.minutes;
+  if (endMinutes < startMinutes) return "before";
+  return endMinutes === startMinutes ? "equal" : null;
 }
 
 export type EventScheduleView = {

@@ -15,8 +15,10 @@ import {
   eventTimezoneShortLabel,
   formatClockInZone,
   eventInstantRange,
+  formatDayInZone,
   formatEventDate,
   resolveViewerTimezone,
+  eventEndTimeWarning,
   isKnownEventTimezone,
   sanitizeEventTimezone,
 } from "./events-timezone";
@@ -112,10 +114,11 @@ describe("etkinlik saat dilimi sözlüğü", () => {
 
   it("sanitizeEventTimezone bilinmeyeni BOŞ yapar, varsayılana ÇEKMEZ", () => {
     // Bilinmeyeni "Europe/Istanbul"a çekmek, bu modülün önlemek için var olduğu
-    // zararı üretir: Üsküp'teki üye 19:00 girer, form sessizce "Türkiye" yazar,
-    // Berlin'deki izleyici "senin saatinle 17:00" görüp iki saat erken gelir.
+    // zararı üretir: Kişinev'deki üye 19:00 girer, form sessizce "Türkiye" yazar,
+    // Berlin'deki izleyici kışın "senin saatinle 17:00" görüp bir saat erken gelir.
+    // (Örnek eskiden Üsküp'tü; Üsküp EV01'de listeye eklendi.)
     expect(sanitizeEventTimezone("Europe/Berlin")).toBe("Europe/Berlin");
-    expect(sanitizeEventTimezone("Europe/Skopje")).toBe("");
+    expect(sanitizeEventTimezone("Europe/Chisinau")).toBe("");
     expect(sanitizeEventTimezone(undefined)).toBe("");
     expect(sanitizeEventTimezone(7)).toBe("");
   });
@@ -125,6 +128,47 @@ describe("etkinlik saat dilimi sözlüğü", () => {
     const form = readSource("src/components/events/CreateEventFormSection.tsx");
     expect(form).toContain("isKnownEventTimezone(timezone)");
     expect(form).toContain("Saat dilimi seçin");
+  });
+});
+
+describe("EV01 · eklenen saat dilimleri", () => {
+  // `docs/plans/2026-09-20-etkinlik-kalan-isler.md` §4'te "bilinen eksikler" diye
+  // listelenen 13 dilim. Listeden düşerse o bölgedeki üyenin formu sessizce BOŞ
+  // saat dilimiyle açılır ve saat girdiğinde seçim yapamaz.
+  const ADDED: Array<[value: string, label: string, group: string]> = [
+    ["Europe/Belgrade", "Sırbistan (Belgrad)", "Avrupa"],
+    ["Europe/Skopje", "Kuzey Makedonya (Üsküp)", "Avrupa"],
+    ["Europe/Sarajevo", "Bosna-Hersek (Saraybosna)", "Avrupa"],
+    ["Europe/Zagreb", "Hırvatistan (Zagreb)", "Avrupa"],
+    ["Europe/Tirane", "Arnavutluk (Tiran)", "Avrupa"],
+    ["Europe/Tallinn", "Estonya (Tallinn)", "Avrupa"],
+    ["Europe/Riga", "Letonya (Riga)", "Avrupa"],
+    ["Europe/Vilnius", "Litvanya (Vilnius)", "Avrupa"],
+    ["Europe/Luxembourg", "Lüksemburg", "Avrupa"],
+    ["Europe/Malta", "Malta (Valletta)", "Avrupa"],
+    ["America/Detroit", "ABD — Doğu (Detroit)", "Amerika"],
+    ["America/Phoenix", "ABD — Arizona (Phoenix)", "Amerika"],
+    ["Australia/Melbourne", "Avustralya — Doğu (Melbourne)", "Okyanusya"],
+  ];
+
+  it.each(ADDED)("%s listede, Türkçe etiketiyle ve doğru grupta", (value, label, group) => {
+    expect(isKnownEventTimezone(value)).toBe(true);
+    expect(eventTimezoneLabel(value)).toBe(label);
+    expect(EVENT_TIMEZONE_OPTIONS.find((option) => option.value === value)?.group).toBe(group);
+  });
+
+  it("kısa etiket şehri verir; şehir-devlette ülke adı kalır", () => {
+    expect(eventTimezoneShortLabel("Europe/Skopje")).toBe("Üsküp");
+    expect(eventTimezoneShortLabel("Europe/Sarajevo")).toBe("Saraybosna");
+    expect(eventTimezoneShortLabel("Europe/Luxembourg")).toBe("Lüksemburg");
+  });
+
+  it("Arizona yaz saati uygulamaz — Denver'dan ayrı satır olmasının sebebi", () => {
+    // Temmuzda Denver UTC-6, Phoenix UTC-7. Aynı satıra katlanırsa yazın bir saat sapar.
+    const denver = eventInstant("2026-07-15", "19:00", "America/Denver");
+    const phoenix = eventInstant("2026-07-15", "19:00", "America/Phoenix");
+    expect(denver?.toISOString()).toBe("2026-07-16T01:00:00.000Z");
+    expect(phoenix?.toISOString()).toBe("2026-07-16T02:00:00.000Z");
   });
 });
 
@@ -190,7 +234,7 @@ describe("etkinlik günü", () => {
 describe("izleyici saat dilimi", () => {
   it("listeyle SINIRLI DEĞİLDİR", () => {
     // Form varsayılanı listeye daraltılır; izleyicinin gerçek dilimi daraltılamaz.
-    // Daraltılsaydı `America/Detroit` kullanıcısına İstanbul saati "senin saatin"
+    // Daraltılsaydı `America/Anchorage` kullanıcısına İstanbul saati "senin saatin"
     // diye gösterilirdi.
     const source = readSource("src/lib/events-timezone.ts");
     const fn = sliceFrom(source, "export function resolveViewerTimezone", "resolveViewerTimezone");
@@ -243,6 +287,73 @@ describe("gece yarısını aşan etkinlik", () => {
     });
     // 1 Kasım 02:00 İstanbul (UTC+3) = 31 Ekim 23:00 UTC
     expect(end?.toISOString()).toBe("2026-10-31T23:00:00.000Z");
+  });
+});
+
+describe("eventEndTimeWarning — formdaki bitiş saati uyarısı", () => {
+  // Hesap bitişi başlangıçtan küçük YA DA EŞİTSE sessizce ertesi güne taşır
+  // (yukarıdaki blok). Uyarı olmazsa ters girilen saat ("21:00 – 19:00") 22
+  // saatlik, aynı girilen saat ("19:00 – 19:00") 24 saatlik etkinliğe kimseye
+  // sorulmadan dönüşür. Bu yardımcı YALNIZ hangi uyarının çizileceğini söyler;
+  // hesabı değiştirmez ve gönderimi engellemez.
+  it("bitiş başlangıçtan önceyse 'before'", () => {
+    expect(eventEndTimeWarning("22:00", "01:00")).toBe("before");
+    expect(eventEndTimeWarning("21:00", "19:00")).toBe("before");
+    expect(eventEndTimeWarning("23:59", "00:00")).toBe("before");
+  });
+
+  it("saatler eşitse 'equal' — 'önce' metni bu duruma uymaz, ayrı uyarı", () => {
+    expect(eventEndTimeWarning("19:00", "19:00")).toBe("equal");
+    expect(eventEndTimeWarning("00:00", "00:00")).toBe("equal");
+  });
+
+  it("aynı gün biten etkinlikte null", () => {
+    expect(eventEndTimeWarning("19:00", "21:00")).toBeNull();
+    expect(eventEndTimeWarning("00:00", "23:59")).toBeNull();
+  });
+
+  it("DB biçimini (saniyeli) de okur", () => {
+    expect(eventEndTimeWarning("22:00:00", "01:00:00")).toBe("before");
+    expect(eventEndTimeWarning("19:00:00", "19:00")).toBe("equal");
+    expect(eventEndTimeWarning("19:00:00", "21:00")).toBeNull();
+  });
+
+  it("uçlardan biri boş ya da geçersizse null — uydurma uyarı yok", () => {
+    expect(eventEndTimeWarning("", "01:00")).toBeNull();
+    expect(eventEndTimeWarning("22:00", "")).toBeNull();
+    expect(eventEndTimeWarning(null, "01:00")).toBeNull();
+    expect(eventEndTimeWarning("22:00", undefined)).toBeNull();
+    expect(eventEndTimeWarning("saat yok", "01:00")).toBeNull();
+    expect(eventEndTimeWarning("25:00", "01:00")).toBeNull();
+    expect(eventEndTimeWarning(null, null)).toBeNull();
+  });
+
+  it("uyarı ile hesap AYNI şeyi söyler: 'before' = ertesi gün, <24 sa · 'equal' = tam 24 sa", () => {
+    // Uyarı metinleri "ertesi gün bitecek" ve "24 saat sürecek" der; iki iddia da
+    // `eventInstantRange`'in gerçek davranışıyla örtüşmeli. Tarih yaz saati
+    // geçişinden uzak seçildi (Berlin geçişi 25 Ekim).
+    const DAY_MS = 24 * 60 * 60 * 1000;
+    const pairs: Array<[string, string]> = [
+      ["22:00", "01:00"],
+      ["19:00", "21:00"],
+      ["23:59", "00:00"],
+      ["00:00", "23:59"],
+      ["12:30", "12:29"],
+      ["19:00", "19:00"],
+      ["00:00", "00:00"],
+    ];
+    for (const [startTime, endTime] of pairs) {
+      const { start, end } = eventInstantRange({
+        eventDate: "2026-10-05",
+        startTime,
+        endTime,
+        timezone: "Europe/Berlin",
+      });
+      const rolled = formatDayInZone(end!, "Europe/Berlin") !== "2026-10-05";
+      const duration = end!.getTime() - start!.getTime();
+      const expected = !rolled ? null : duration === DAY_MS ? "equal" : "before";
+      expect(eventEndTimeWarning(startTime, endTime), `${startTime} – ${endTime}`).toBe(expected);
+    }
   });
 });
 
@@ -345,6 +456,22 @@ describe("migration sözleşmesi", () => {
     expect(sql).toContain("add column if not exists timezone text");
     expect(sql.toLowerCase()).toContain("check");
     expect(sql).toContain("events_timezone_format");
+  });
+
+  it("listedeki HER değer DB biçim kısıtından geçer", () => {
+    // Liste TS'te, biçim kısıtı SQL'de. Kısıtı geçemeyen bir satır formda seçilir
+    // ama insert `23514` ile reddedilir — kullanıcı yalnız "Gönderilemedi" görür.
+    // Regex migration METNİNDEN okunur; ikinci bir kopya yazılmaz.
+    const sql = readMigration();
+    const match = sql.match(/check\s*\(\s*timezone is null or timezone ~ '([^']+)'\s*\)/i);
+    expect(match, "events_timezone_format regex'i migration'da bulunamadı").not.toBeNull();
+    const format = new RegExp(match![1]);
+    for (const option of EVENT_TIMEZONE_OPTIONS) {
+      expect(option.value, option.value).toMatch(format);
+    }
+    // Kısıt gerçekten ayırt ediyor mu — boş geçen bir regex testi anlamsızlaştırır.
+    expect("Almanya").not.toMatch(format);
+    expect("Europe Berlin").not.toMatch(format);
   });
 
   it("sütun NOT NULL yapılmaz", () => {
