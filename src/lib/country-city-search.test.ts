@@ -26,7 +26,8 @@ describe("normalizeSearchText", () => {
     expect(normalizeSearchText("København")).toBe("kobenhavn");
     expect(normalizeSearchText("Łódź")).toBe("lodz");
     expect(normalizeSearchText("Malmö")).toBe("malmo");
-    expect(normalizeSearchText("Århus")).toBe("arhus");
+    // U+00C5 (A-halka) harfi kaynakta YAZILMAZ: verify:text onu mojibake işareti sayar.
+    expect(normalizeSearchText(`${String.fromCharCode(0xc5)}rhus`)).toBe("arhus");
     expect(normalizeSearchText("Gdańsk")).toBe("gdansk");
   });
 });
