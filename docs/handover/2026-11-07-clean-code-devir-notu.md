@@ -102,6 +102,20 @@ frontend deploy (arama düzeltmeleri) · yedek dizinini silmek · karar maddeler
   ServiceRequestsList tarih · hastane galeri metni + test + BusinessDetailPage yorumu + CLAUDE.md
   DEMO listesi.
 
+**§7 — SON DURUM (07.11 gece geç, YENİ OTURUM BURADAN BAŞLAR):**
+- ✅ `main` = `7c81140c` (W3 + gece turu, 13 commit), GitHub'da, **CI YEŞİL**. Branch'ler silindi.
+  3 yönetici maili gitti (son: `7c81140c` "gece turu son durum").
+- ⏳ Branch `clean-code/w3-devam` (main'den) — COMMIT'SİZ, bir workflow yazıyor: CH01 (ölü kayıt
+  sohbeti silme; önce "plan geri getirecek mi" kapısı) · W3 para biçimi (yalnız birebir kopyalar) ·
+  W3 kalan tarih kümeleri (Cadde: önce karakterizasyon testi; `format-date.ts` HER ÇAĞRIDA kurar).
+- Yeni oturum yapacaklar: `git status` → değişiklikleri incele (rapor bu oturumda kaldı; diff'e
+  bak) → `npm run ingest:tools` → 10 kapı (`npm run verify:quality`, `lint`, `format:check`,
+  `check:dead`, `check:knip`, `check:docs:strict`, `ingest:tools:check`, `test`, `build`,
+  `check:bundle`; build sonrası `git restore public/sitemap.xml`) → konu başına commit → `main`'e
+  ff + push → CI → yönetici güncellemesi + force mail.
+- ⚠️ BAŞKA BİR PLANA bu çalışma ağacında, bu branch commit'lenmeden BAŞLAMA — aynı dizin paylaşılır,
+  yarım değişiklikler karışır.
+
 **Kalan adımlar (sırayla):** ajanlar bitince → bağımsız çok-açılı çürütme incelemesi (ultracode
 açık; Workflow) → `npm run ingest:tools` (yeni `format-date.ts` + yeni export'lar) → tam kapı turu
 (10 kapı) → konu başına ayrı commit (ST00 · detectCommand · W3 tarih · EV01 · hastane demo ·
