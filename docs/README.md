@@ -54,7 +54,7 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 | `investor/` | Parolalı yatırımcı / teknik danışman sayfası (`/information`): işletim rehberi + içerik taslağı |
 | `agent/` | Ajan araç kataloğu (`tools.json`, `openapi.yaml`) — `npm run ingest:tools:check` ile üretilir/denetlenir, elle düzenleme |
 | `status/` | Durum panoları |
-| `stripe/` | Stripe demo/mock ödeme rehberleri |
+| `stripe/` | Stripe doğrulama hazırlığı (`STRIPE_VERIFICATION_READINESS.md`); mock ödeme rehberleri 07.11'den beri `durum: yerini-aldı` (ST00) |
 | `marketing/`, `analytics/` | Kampanya kitleri, Clarity haftalık rapor paketi |
 | `notes/` | Toplantı ve karar notları |
 

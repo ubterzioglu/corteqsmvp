@@ -6,6 +6,11 @@ son_dogrulama: 2026-11-07
 
 > **Tarih:** 4 Ekim 2026 · **Durum:** PLAN — kod yazılmadı, kullanıcı onayı bekler
 > **Tetikleyen:** K05 parkının kaldırılması kararı (kullanıcı, 04.10)
+>
+> ⚠️ **07.11 (ST00) — bu plandaki `MockStripeCheckout` anlatımı TARİHSELDİR.** Bileşen silindi;
+> TEK çağrı yeri `ServiceRequestForm`'du ("iki gerçek yer" sayımı aynı bileşeni iki kez saymıştı:
+> `PremiumProfileTabs` yalnız `ServiceRequestForm`'u barındırır). Talep artık doğrudan kaydedilir,
+> €19 yalnız gösterilir. Faz 5'in "iki çağrı yeri" maddesi tek yere — `ServiceRequestForm` — iner.
 > **Kaynak:** Haziran 2026 hazırlık paketi `docs/stripe/STRIPE_VERIFICATION_READINESS.md`
 >
 > 🛑 Bu dosya **plandır**. Hiçbir faz onay alınmadan başlatılmaz.

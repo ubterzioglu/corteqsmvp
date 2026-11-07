@@ -157,10 +157,9 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
 ];
 
 /**
- * "Hizmet Talepleri" sekmesi: yeni talep oluşturma formu (göstermelik Stripe
- * ödemesiyle) ve kullanıcının mevcut talepleri/teklifleri. Form gönderimi
- * ServiceRequestForm içindeki MockStripeCheckout'a yönlenir; ödeme "başarılı"
- * olunca talep gerçekten kaydedilir ve liste yenilenir.
+ * "Hizmet Talepleri" sekmesi: yeni talep oluşturma formu ve kullanıcının mevcut
+ * talepleri/teklifleri. Form talebi doğrudan kaydeder ve liste yenilenir; ödeme
+ * altyapısı (Stripe, U11) açılana dek ödeme adımı yoktur (ST00, 07.11).
  */
 const ServiceRequestsPanel = () => {
   const [showForm, setShowForm] = useState(false);

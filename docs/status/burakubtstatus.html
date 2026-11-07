@@ -386,7 +386,7 @@ bekleyen işler.</p>
   <p style="margin-top:0"><strong class="warn">Dikkat:</strong> Aşağıdakiler ekranda çalışır görünür ama arkada gerçek veri/işlem yoktur. Tartışmada "bunlar zaten bitti" sanılmasın:</p>
   <table>
     <tr><th>Nerede</th><th>Görünen</th><th>Gerçek</th><th>Dosya</th></tr>
-    <tr><td>Hizmet Talepleri ödeme akışı</td><td>Stripe ile ödeme alınıyormuş gibi</td><td><strong class="warn">MockStripeCheckout</strong> — gerçek tahsilat YOK</td><td><code>src/components/ServiceRequestForm.tsx</code></td></tr>
+    <tr><td>Hizmet Talepleri ödeme akışı</td><td>Stripe ile ödeme alınıyormuş gibi</td><td><strong class="warn">MockStripeCheckout</strong> — gerçek tahsilat YOK (07.11 · ST00: kodda kaldırıldı, talep doğrudan kaydedilir; canlıya deploy ile iner)</td><td><code>src/components/ServiceRequestForm.tsx</code></td></tr>
     <tr><td>Kupon yönetimi</td><td>Kupon oluştur / listele / aktif-pasif</td><td><strong class="warn">Tamamen in-memory mock</strong> — yenileyince kaybolur, DB yok</td><td><code>src/components/CouponManager.tsx</code></td></tr>
     <tr><td>Takip ("takip et")</td><td>"Takip edildi 🔔"</td><td><strong class="warn">Sadece localStorage</strong> — kalıcı değil, kimse "takipçim" olduğunu görmez</td><td><code>src/hooks/useFollow.ts</code></td></tr>
   </table>

@@ -1,4 +1,24 @@
+---
+durum: yerini-aldı
+yerini_alan: docs/plans/2026-10-04-stripe-odeme-altyapisi-plani.md
+son_dogrulama: 2026-11-07
+---
 # Göstermelik Stripe Ödeme Akışı — Kullanım Kılavuzu
+
+> ⛔ **GÜNCEL DEĞİL — 07.11.2026'dan beri tarihsel kayıt (ST00).** Bu kılavuzun anlattığı
+> göstermelik ödeme akışı üye akışlarından **kaldırıldı**: "Ödemeye Geç · €19" düğmesi,
+> sahte kart ekranı ("€19.00 Öde" → "Ödeme Başarılı ✓") ve
+> `src/components/payments/MockStripeCheckout.tsx` artık **yok**.
+> ⚠️ Bu değişiklik **kodda** yapıldı; canlı site, frontend Coolify'dan yeniden yayına alınana dek eski akışı göstermeyi sürdürür.
+>
+> **Bugünkü akış:** hizmet talebi formu (`src/components/ServiceRequestForm.tsx`) talebi
+> **doğrudan** kaydeder ("Talebi Gönder" → bildirim "Talep oluşturuldu! 🎉"). €19 başvuru
+> ücreti formda yalnız **gösterilir, tahsil edilmez** ("şu an ücret alınmıyor"). Gerçek ödeme
+> altyapısının planı: `docs/plans/2026-10-04-stripe-odeme-altyapisi-plani.md` (açık iş:
+> KALANLAR U11).
+>
+> Aşağıdaki adımlar, ekran adları ve test kartı bilgisi bugün **çalışmaz** — demo, sunum
+> veya geliştirme için KULLANMA.
 
 Son güncelleme: 28 Haziran 2026
 
