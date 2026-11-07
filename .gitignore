@@ -155,3 +155,12 @@ skills-lock.json
 # .superpowers = oturum çıktıları. İkisi de makineye özeldir, repoya girmez.
 .agents/
 .superpowers/
+
+# Claude Code yerel izin ayarları (2026-11-07): bu dosya düz metin DB parolası
+# taşıyordu ve yalnız kullanıcının GLOBAL git ignore'u onu dışarıda tutuyordu —
+# başka bir makinede/kullanıcıda ilk `git add .` ile repoya girerdi. Paylaşılan
+# proje ayarı gerekiyorsa `.claude/settings.json` kullanılır (o izlenebilir).
+.claude/settings.local.json
+
+# Lighthouse rapor çıktıları (ölçüm artığı; sonuçlar memory/plan dosyalarında).
+/corteqs.net-*.html
