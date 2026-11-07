@@ -59,6 +59,15 @@ async function main() {
   const preload = ["README.md", "docs/AGENT_CONTEXT.md", "docs/ARCHITECTURE.md", "CLAUDE.md", "package.json"];
   const loaded = new Map();
   for (const p of preload) loaded.set(p, await reader(p));
+  // Okunamayan (taşınmış/silinmiş/boş) dosya HATADIR: kurallar boş metinde sessizce 0 bulgu
+  // üretir ve drift kapısı hiçbir şeyi denetlemeden yeşil kalırdı (2026-11-07, plan W0).
+  const missing = preload.filter((p) => !loaded.get(p));
+  if (missing.length > 0) {
+    console.error(`[check-drift] HATA: okunamayan kaynak dosya(lar): ${missing.join(", ")}`);
+    console.error("[check-drift] Taşındıysa check-drift.mjs preload + drift-rules.mjs yollarını güncelle.");
+    process.exitCode = 1;
+    return;
+  }
   const read = (relPath) => loaded.get(relPath) ?? "";
 
   const ctx = { read, pkg, catalog };

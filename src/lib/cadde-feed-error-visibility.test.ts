@@ -191,9 +191,12 @@ describe("çarşı okuma yüzeyi hata görünürlüğü sözleşmesi", () => {
 // kullanıcıyı yanıltır (içerik). Bu testin kilitlediği şey hangisinin seçildiği
 // DEĞİL, seçimin GEREKÇELENDİRİLMİŞ olması: sessizce yutan yeni bir catch eklenemez.
 describe("cadde okuma yollarında gerekçesiz sessizlik yasağı", () => {
-  const API_FILES = readdirSync("src/lib")
-    .filter((file) => /^cadde.*api.*\.ts$/.test(file) && !file.includes(".test."))
-    .map((file) => `src/lib/${file}`);
+  // Alt dizinler DAHİL: düz tarama, bir cadde API dosyası src/lib/cadde/ gibi bir alt
+  // dizine taşındığında onu SESSİZCE kapsam dışı bırakırdı (2026-11-07, plan W0).
+  const API_FILES = (readdirSync("src/lib", { recursive: true }) as string[])
+    .map((entry) => entry.replace(/\\/g, "/"))
+    .filter((entry) => /^cadde.*api.*\.ts$/.test(entry.split("/").pop() ?? "") && !entry.includes(".test."))
+    .map((entry) => `src/lib/${entry}`);
 
   it("cadde API dosyalarını gerçekten tarıyor (kapsam boşa düşmesin)", () => {
     expect(API_FILES.length, "cadde API dosyası bulunamadı").toBeGreaterThan(5);

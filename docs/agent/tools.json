@@ -2,10 +2,10 @@
   "schema_version": 1,
   "generated_by": "scripts/ingest-tools.mjs",
   "counts": {
-    "total": 70,
+    "total": 94,
     "edge_functions": 19,
     "workers": 2,
-    "ui_modules": 48
+    "ui_modules": 72
   },
   "tools": [
     {
@@ -820,6 +820,293 @@
       "evidence_path": "supabase/functions/whatsapp-webhook/index.ts"
     },
     {
+      "tool_key": "module.admin_access_api",
+      "tool_name": "admin-access-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-access-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "userIsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "is_admin"
+      ],
+      "evidence_path": "src/lib/admin/admin-access-api.ts"
+    },
+    {
+      "tool_key": "module.admin_approval_api",
+      "tool_name": "admin-approval-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-approval-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "reviewApprovalRequestAsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_review_approval_request"
+      ],
+      "evidence_path": "src/lib/admin/admin-approval-api.ts"
+    },
+    {
+      "tool_key": "module.admin_approvals_api",
+      "tool_name": "admin-approvals-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-approvals-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminApprovalsBundle"
+      ],
+      "tables_read_write": [
+        "approval_requests"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-approvals-api.ts"
+    },
+    {
+      "tool_key": "module.admin_audit_logs_api",
+      "tool_name": "admin-audit-logs-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-audit-logs-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminAuditLogsBundle"
+      ],
+      "tables_read_write": [
+        "admin_audit_logs"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-audit-logs-api.ts"
+    },
+    {
+      "tool_key": "module.admin_client_errors_api",
+      "tool_name": "admin-client-errors-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-client-errors-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "CLIENT_ERROR_SOURCE_FILTER_ALL",
+        "fetchClientErrorReportsBundle",
+        "filterClientErrorReports"
+      ],
+      "tables_read_write": [
+        "client_error_reports"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-client-errors-api.ts"
+    },
+    {
+      "tool_key": "module.admin_dashboard_api",
+      "tool_name": "admin-dashboard-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-dashboard-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminDashboardSummary"
+      ],
+      "tables_read_write": [
+        "admin_audit_logs",
+        "approval_requests",
+        "catalog_items",
+        "roles",
+        "user_feature_overrides"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-dashboard-api.ts"
+    },
+    {
+      "tool_key": "module.admin_favorites_api",
+      "tool_name": "admin-favorites-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-favorites-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminFavoritePageIds",
+        "saveAdminFavoritePageIds"
+      ],
+      "tables_read_write": [
+        "admin_favorite_pages"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin/admin-favorites-api.ts"
+    },
+    {
+      "tool_key": "module.admin_feature_api",
+      "tool_name": "admin-feature-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-feature-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "clearUserFeatureOverrideAsAdmin",
+        "setFeatureGlobalStateAsAdmin",
+        "setRoleFeatureFlagAsAdmin",
+        "setUserFeatureOverrideAsAdmin",
+        "setUserFeatureOverrideDetailedAsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_clear_user_feature_override",
+        "admin_set_feature_global_state",
+        "admin_set_role_feature_flag",
+        "admin_set_user_feature_override",
+        "admin_set_user_feature_override_detailed"
+      ],
+      "evidence_path": "src/lib/admin/admin-feature-api.ts"
+    },
+    {
+      "tool_key": "module.admin_overrides_api",
+      "tool_name": "admin-overrides-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-overrides-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminOverridesBundle"
+      ],
+      "tables_read_write": [
+        "afs_features",
+        "user_feature_overrides"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-overrides-api.ts"
+    },
+    {
+      "tool_key": "module.admin_profile_api",
+      "tool_name": "admin-profile-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-profile-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "setAttributeRuleAsAdmin",
+        "updateUserProfileAttributeAsAdmin",
+        "upsertEntityMetadataAsAdmin",
+        "upsertRoleProfileSectionRuleAsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_set_attribute_rule",
+        "admin_update_user_profile_attribute",
+        "admin_upsert_entity_metadata",
+        "admin_upsert_role_profile_section_rule"
+      ],
+      "evidence_path": "src/lib/admin/admin-profile-api.ts"
+    },
+    {
+      "tool_key": "module.admin_referral_api",
+      "tool_name": "admin-referral-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-referral-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createReferralCode",
+        "createReferralGroup",
+        "createReferralSource",
+        "createReferralType",
+        "deleteReferralCodeHard",
+        "listReferralCodeUsages",
+        "listReferralCodes",
+        "listReferralGroups",
+        "listReferralSources",
+        "listReferralTypes",
+        "setReferralCodeActive",
+        "updateReferralCodeEditableFields",
+        "updateReferralGroup",
+        "updateReferralSource",
+        "updateReferralType"
+      ],
+      "tables_read_write": [
+        "referral_code_usages",
+        "referral_codes",
+        "referral_groups",
+        "referral_sources",
+        "referral_types",
+        "submissions"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin/admin-referral-api.ts"
+    },
+    {
+      "tool_key": "module.admin_role_api",
+      "tool_name": "admin-role-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-role-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getRoleManagementBundle",
+        "setUserRoleAsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_set_user_role",
+        "get_role_management_bundle"
+      ],
+      "evidence_path": "src/lib/admin/admin-role-api.ts"
+    },
+    {
+      "tool_key": "module.admin_role_matrix_api",
+      "tool_name": "admin-role-matrix-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/admin-role-matrix-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchAdminRoleOptions"
+      ],
+      "tables_read_write": [
+        "roles"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin-shell/admin-role-matrix-api.ts"
+    },
+    {
+      "tool_key": "module.admin_taxonomy_api",
+      "tool_name": "admin-taxonomy-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-taxonomy-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "setTaxonomyOptionActiveAsAdmin",
+        "updateUserTaxonomySelectionAsAdmin",
+        "upsertRoleTaxonomyRuleAsAdmin"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_set_taxonomy_option_active",
+        "admin_update_user_taxonomy_selection",
+        "admin_upsert_role_taxonomy_rule"
+      ],
+      "evidence_path": "src/lib/admin/admin-taxonomy-api.ts"
+    },
+    {
+      "tool_key": "module.admin_traction_api",
+      "tool_name": "admin-traction-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/admin-traction-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchTractionMetrics",
+        "formatRatePercent",
+        "totalContentCreated"
+      ],
+      "tables_read_write": [],
+      "rpcs": [],
+      "evidence_path": "src/lib/admin/admin-traction-api.ts"
+    },
+    {
       "tool_key": "module.assistant_usage_api",
       "tool_name": "assistant-usage-api",
       "family": "ui_module",
@@ -1205,6 +1492,54 @@
       "evidence_path": "src/lib/cadde-tanitim-api.ts"
     },
     {
+      "tool_key": "module.careers_admin_api",
+      "tool_name": "careers-admin-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/careers/careers-admin-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "CAREER_SIGNED_URL_TTL_SECONDS",
+        "createCareerFileUrl",
+        "listCareerApplications",
+        "updateCareerApplicationNotes",
+        "updateCareerApplicationStatus"
+      ],
+      "tables_read_write": [
+        "career_applications"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/careers/careers-admin-api.ts"
+    },
+    {
+      "tool_key": "module.careers_api",
+      "tool_name": "careers-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/careers/careers-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "CAREER_BUCKET",
+        "CAREER_CV_ACCEPT",
+        "CAREER_CV_MAX_SIZE",
+        "CAREER_PRESENTATION_ACCEPT",
+        "CAREER_PRESENTATION_MAX_SIZE",
+        "careerContentType",
+        "careerErrorMessage",
+        "careerStorageKey",
+        "newCareerApplicationId",
+        "submitCareerApplication",
+        "uploadCareerFiles",
+        "validateCareerCvFile",
+        "validateCareerPresentationFile"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "submit_career_application"
+      ],
+      "evidence_path": "src/lib/careers/careers-api.ts"
+    },
+    {
       "tool_key": "module.catalog_entity_api",
       "tool_name": "catalog-entity-api",
       "family": "ui_module",
@@ -1286,6 +1621,22 @@
       "tables_read_write": [],
       "rpcs": [],
       "evidence_path": "src/lib/current-user-api.ts"
+    },
+    {
+      "tool_key": "module.durum_raporu_api",
+      "tool_name": "durum-raporu-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/durum-raporu-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "getRebuildStatusReport"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_rebuild_status_report"
+      ],
+      "evidence_path": "src/lib/admin-shell/durum-raporu-api.ts"
     },
     {
       "tool_key": "module.events_api",
@@ -1373,6 +1724,41 @@
       "tables_read_write": [],
       "rpcs": [],
       "evidence_path": "src/lib/germany-citizenship-api.ts"
+    },
+    {
+      "tool_key": "module.group_moderation_api",
+      "tool_name": "group-moderation-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/group-moderation-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "REJECT_REASON_PRESETS",
+        "createClaimScreenshotUrl",
+        "decideClaim",
+        "decidePendingGroup",
+        "decidePost",
+        "fetchGroupModeratorSummary",
+        "fetchPendingClaims",
+        "fetchPendingGroups",
+        "fetchPendingPosts",
+        "recordStrike",
+        "setFastLaneEnabled"
+      ],
+      "tables_read_write": [
+        "group_claims",
+        "group_posts",
+        "whatsapp_landings"
+      ],
+      "rpcs": [
+        "admin_record_group_strike",
+        "admin_review_group_claim",
+        "admin_set_group_setting",
+        "group_moderator_summary",
+        "group_post_review",
+        "set_group_status_v1"
+      ],
+      "evidence_path": "src/lib/admin-shell/group-moderation-api.ts"
     },
     {
       "tool_key": "module.group_reports_api",
@@ -1467,6 +1853,34 @@
         "list_job_listings_public"
       ],
       "evidence_path": "src/lib/job-listings-api.ts"
+    },
+    {
+      "tool_key": "module.kadro_api",
+      "tool_name": "kadro-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/kadro/kadro-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createKadroCandidate",
+        "deleteKadroCandidate",
+        "fetchKadroCandidates",
+        "fetchKadroRoleEvents",
+        "fetchKadroRoleStates",
+        "mapKadroCandidate",
+        "mapKadroRoleEvent",
+        "mapKadroRoleState",
+        "saveKadroRoleState",
+        "updateKadroCandidate",
+        "validateKadroCandidateDraft"
+      ],
+      "tables_read_write": [
+        "kadro_candidates",
+        "kadro_role_events",
+        "kadro_role_states"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/kadro/kadro-api.ts"
     },
     {
       "tool_key": "module.member_profile_api",
@@ -1570,6 +1984,51 @@
       "evidence_path": "src/lib/muhasebe-butce-api.ts"
     },
     {
+      "tool_key": "module.mvp_items_api",
+      "tool_name": "mvp-items-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/dashboard/mvp-items-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createMvpItem",
+        "deleteMvpItem",
+        "listMvpItems",
+        "updateMvpItem"
+      ],
+      "tables_read_write": [
+        "mvp_items"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/dashboard/mvp-items-api.ts"
+    },
+    {
+      "tool_key": "module.notification_settings_api",
+      "tool_name": "notification-settings-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin-shell/notification-settings-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "NOTIFICATION_SETTING_KEYS",
+        "OUTBOX_STATUSES",
+        "dispatchPendingNotifications",
+        "fetchAdminNotificationState",
+        "mapNotificationState",
+        "mapOutboxEntry",
+        "sendWelcomeEmailPreview",
+        "setMyNotificationSubscription",
+        "setNotificationSetting"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "get_admin_notification_state",
+        "set_my_notification_subscription",
+        "set_notification_setting"
+      ],
+      "evidence_path": "src/lib/admin-shell/notification-settings-api.ts"
+    },
+    {
       "tool_key": "module.org_verification_api",
       "tool_name": "org-verification-api",
       "family": "ui_module",
@@ -1596,6 +2055,25 @@
         "request_org_verification_v1"
       ],
       "evidence_path": "src/lib/org-verification-api.ts"
+    },
+    {
+      "tool_key": "module.org_verification_review_api",
+      "tool_name": "org-verification-review-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/admin/org-verification-review-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "fetchOrgVerificationQueue",
+        "orgVerificationReviewErrorMessage",
+        "reviewOrgVerification"
+      ],
+      "tables_read_write": [],
+      "rpcs": [
+        "admin_list_org_verifications",
+        "review_org_verification_v1"
+      ],
+      "evidence_path": "src/lib/admin/org-verification-review-api.ts"
     },
     {
       "tool_key": "module.pending_onboarding_api",
@@ -1893,6 +2371,25 @@
         "request_relocation_tool_report"
       ],
       "evidence_path": "src/lib/relocation-tools-api.ts"
+    },
+    {
+      "tool_key": "module.resource_entries_api",
+      "tool_name": "resource-entries-api",
+      "family": "ui_module",
+      "status": "active",
+      "entrypoint": "src/lib/dashboard/resource-entries-api.ts",
+      "interface_kind": "internal_api",
+      "exports": [
+        "createResourceEntry",
+        "deleteResourceEntry",
+        "listResourceEntries",
+        "updateResourceEntry"
+      ],
+      "tables_read_write": [
+        "resource_entries"
+      ],
+      "rpcs": [],
+      "evidence_path": "src/lib/dashboard/resource-entries-api.ts"
     },
     {
       "tool_key": "module.service_finder_api",

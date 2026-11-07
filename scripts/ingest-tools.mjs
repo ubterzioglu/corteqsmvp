@@ -57,7 +57,10 @@ async function collectWorkerTools(files) {
 }
 
 async function collectLibTools(files) {
-  const libs = files.filter((f) => /^src\/lib\/[a-zA-Z0-9-]+-api\.ts$/.test(f));
+  // Alt dizinler DAHİL (2026-11-07): desen yalnız src/lib kökünü tarıyordu ve admin/,
+  // admin-shell/, careers/, kadro/, dashboard/ altındaki 24 API modülü katalogdan SESSİZCE
+  // düşüyordu — bir modülü alt dizine taşımak onu da düşürürdü.
+  const libs = files.filter((f) => /^src\/lib\/(?:[a-zA-Z0-9-]+\/)*[a-zA-Z0-9-]+-api\.ts$/.test(f));
   const tools = [];
   for (const rel of libs) {
     const source = await readSafe(rel);
@@ -108,6 +111,16 @@ async function main() {
   const workerTools = await collectWorkerTools(files);
   const libTools = await collectLibTools(files);
   const scriptTool = extractScriptTool(scripts);
+
+  // tool_key dosya ADINDAN türetilir: farklı dizinlerde aynı adlı iki modül sessizce
+  // birbirini ezmesin — gürültülü düş.
+  const seenKeys = new Map();
+  for (const t of [...edgeTools, ...workerTools, ...libTools]) {
+    if (seenKeys.has(t.tool_key)) {
+      throw new Error(`tool_key çakışması: ${t.tool_key} → ${seenKeys.get(t.tool_key)} ve ${t.entrypoint}`);
+    }
+    seenKeys.set(t.tool_key, t.entrypoint);
+  }
 
   const tools = [...edgeTools, ...workerTools, ...libTools, scriptTool].sort((a, b) =>
     a.tool_key.localeCompare(b.tool_key),
