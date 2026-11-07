@@ -1,29 +1,27 @@
+import { trFold } from "@/lib/text-normalization";
+
+/**
+ * NFD'nin ayrıştıramadığı (birleşen işarete bölünmeyen) harfler — trFold bunları olduğu gibi
+ * bırakır. Diaspora şehir adlarında geçenler: Straße, København, Łódź, Malmø …
+ */
+const NON_DECOMPOSABLE: Record<string, string> = {
+  ß: "ss",
+  ø: "o",
+  ł: "l",
+  đ: "d",
+  æ: "ae",
+  œ: "oe",
+};
+
+/**
+ * Ülke/şehir arama anahtarı: Türkçe-duyarlı katlama + aksan silme.
+ *
+ * ⚠️ Eski sürüm `toLowerCase()` ile başlıyordu: "İ" → "i" + birleşen nokta (U+0307) olur ve
+ * sonraki `replace(/İ/g, "i")` hiç tetiklenmezdi — "istanbul" araması "İstanbul"u BULMUYORDU
+ * (2026-11-07, `country-city-search.test.ts`). `trFold` tr-TR küçültür, NFD ile aksanları siler.
+ */
 export function normalizeSearchText(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/İ/g, "i")
-    .replace(/ı/g, "i")
-    .replace(/Ş/g, "s")
-    .replace(/ş/g, "s")
-    .replace(/Ğ/g, "g")
-    .replace(/ğ/g, "g")
-    .replace(/Ü/g, "u")
-    .replace(/ü/g, "u")
-    .replace(/Ö/g, "o")
-    .replace(/ö/g, "o")
-    .replace(/Ç/g, "c")
-    .replace(/ç/g, "c")
-    .replace(/\u00C4/g, "a")
-    .replace(/\u00E4/g, "a")
-    .replace(/ß/g, "ss")
-    .replace(/Ø/g, "o")
-    .replace(/ø/g, "o")
-    .replace(/\u00C5/g, "a")
-    .replace(/\u00E5/g, "a")
-    .replace(/Ń/g, "n")
-    .replace(/ń/g, "n")
-    .replace(/Ł/g, "l")
-    .replace(/ł/g, "l");
+  return trFold(text).replace(/[ßøłđæœ]/g, (ch) => NON_DECOMPOSABLE[ch]);
 }
 
 export function filterByQuery(items: string[], query: string): string[] {

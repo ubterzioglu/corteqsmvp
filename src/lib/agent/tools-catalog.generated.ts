@@ -3786,6 +3786,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/country-city-search.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/country-city-search.ts",
       "kind": "ts",
       "module_family": "lib"
