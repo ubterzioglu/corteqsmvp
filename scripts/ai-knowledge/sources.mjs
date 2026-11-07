@@ -52,7 +52,7 @@ function normalizeDocumentationPath(relativePath) {
 
 export function classifyDocumentationPath(relativePath) {
   const normalized = normalizeDocumentationPath(relativePath);
-  // Dışlama büyük/küçük harfe DUYARSIZ (fail-closed: `docs/Archive/` de dışlanır);
+  // Dışlama büyük/küçük harfe DUYARSIZ (fail-closed: büyük harfli `Archive/` dizini de dışlanır);
   // üye listesi ise TAM eşleşme ister (fail-closed: yakın yazım üyeye açılmaz).
   // toLowerCase burada teknik değer (dosya yolu) üzerindedir, kullanıcı metni değil.
   const lowered = normalized.toLowerCase();

@@ -53,6 +53,13 @@ describe("refExists", () => {
   it("bilinen yerel çıktı dizini (gitignore'lu) var sayılır", () => {
     expect(refExists("docs/commandcenter/todo.md", files, dirs)).toBe(true);
   });
+
+  it("DETERMİNİSTİK: büyük/küçük harf farkı ve yalnız diskte duran yol geçersizdir (Windows ≠ Linux CI)", () => {
+    // 2026-11-07: existsSync Windows'ta `docs/Archive`'ı `docs/archive` sandı; CI'da düştü.
+    expect(refExists("docs/Guides/a.md", files, dirs)).toBe(false);
+    expect(refExists("docs/GUIDES", files, dirs)).toBe(false);
+    expect(refExists("referanslovable/README.md", files, dirs)).toBe(false);
+  });
 });
 
 describe("isScannedForRefs", () => {

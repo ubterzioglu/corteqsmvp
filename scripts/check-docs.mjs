@@ -12,7 +12,7 @@
 // 1–4 HATA, 5 UYARIdır: mevcut ad ihlallerini toplu düzeltmek atıfları kırar.
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -31,7 +31,14 @@ export const HISTORICAL_PREFIXES = [
 ];
 
 /** Repoda izlenmeyen ama script'lerin diske yazdığı bilinen çıktı yolları. */
+// ⚠️ Denetim DETERMİNİSTİKTİR: diske (existsSync) BAKILMAZ. 2026-11-07'de existsSync yerelde
+// gitignore'lu dizinleri bulduğu ve Windows büyük/küçük harfe duyarsız olduğu için (büyük harfli Archive
+// dizini küçük harfliyle aynı sayıldı) yerelde geçip Linux CI'da düştü. Geçerli = git'te izlenen ya da aşağıda ADIYLA
+// yazılmış bilinen yerel çıktı.
 export const LOCAL_OUTPUT_PREFIXES = ["docs/commandcenter", "docs/archive/backups", "docs/fallback-images"];
+
+/** docs/README.md'nin anabileceği, git'te izlenmeyen bilinen dizin adları (yerel çıktı / kök klonu). */
+export const KNOWN_UNTRACKED_DIR_NAMES = ["commandcenter", "referanslovable", "backups", "fallback-images"];
 
 /**
  * Bilinçli kopya dizinleri (kopya kuralı uygulanmaz):
@@ -184,13 +191,12 @@ export function runChecks() {
 
   // 1. INDEX
   const topDirs = [...new Set(tracked.filter((f) => /^docs\/[^/]+\//.test(f)).map((f) => f.split("/")[1]))].sort();
-  // Bilinen adlar: docs altındaki her dizinin adı + diskte var olan (yerel çıktı / kök klonu) dizinler.
+  // Bilinen adlar: docs altındaki her izlenen dizinin adı + KNOWN_UNTRACKED_DIR_NAMES.
   const knownNames = new Set(
     [...trackedDirs].filter((d) => d.startsWith("docs/")).map((d) => d.slice(d.lastIndexOf("/") + 1)),
   );
   const readme = readFileSync("docs/README.md", "utf8");
-  for (const m of readme.matchAll(/`([a-z0-9][a-z0-9_.-]*)\/`/g))
-    if (existsSync(`docs/${m[1]}`) || existsSync(m[1])) knownNames.add(m[1]);
+  for (const name of KNOWN_UNTRACKED_DIR_NAMES) knownNames.add(name);
   const { missing, stale } = checkIndex(topDirs, readme, knownNames);
   for (const d of missing) errors.push(`INDEX     docs/README.md üst dizini anmıyor: docs/${d}/`);
   for (const d of stale) errors.push(`INDEX     docs/README.md var olmayan dizini anıyor: ${d}/`);
@@ -211,7 +217,7 @@ export function runChecks() {
       continue;
     }
     for (const ref of extractDocRefs(text)) {
-      if (refExists(ref, trackedFiles, trackedDirs, existsSync)) continue;
+      if (refExists(ref, trackedFiles, trackedDirs)) continue;
       if (fromMigration) migrationRefs.push(`${ref}  <=  ${path}`);
       else errors.push(`KIRIK     ${ref}  <=  ${path}`);
     }
@@ -234,7 +240,7 @@ export function runChecks() {
     if (!path.endsWith(".md") || HISTORICAL_PREFIXES.some((p) => path.startsWith(p))) continue;
     const target = supersededTarget(readFileSync(path, "utf8"));
     if (target === null) errors.push(`YERINI    ${path}: durum yerini-aldı ama yerini_alan yok`);
-    else if (target && !refExists(target, trackedFiles, trackedDirs, existsSync))
+    else if (target && !refExists(target, trackedFiles, trackedDirs))
       errors.push(`YERINI    ${path}: yerini_alan hedefi yok → ${target}`);
   }
 
