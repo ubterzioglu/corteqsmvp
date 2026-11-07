@@ -90,6 +90,19 @@ export async function pruneSource(client, sourceKey, keepExternalIds) {
   return data ?? 0;
 }
 
+/**
+ * Hiçbir gerçek kimlikle eşleşmeyen tutma değeri. `ai_knowledge_prune_source` boş
+ * listeyi BİLEREK reddeder (okuma hatasına karşı tek fren); kaynağı kasıtlı boşaltmak
+ * için ona bu tek elemanlı liste verilir → kaynaktaki her satır silinir. Gerçek
+ * kimlikler dosya yolu / uuid / slug'dır, bu biçimde değildir.
+ */
+export const EMPTY_SOURCE_SENTINEL = "__kaynak-bilerek-bosaltildi__";
+
+/** Kaynağı kasıtlı olarak tamamen boşaltır (yalnız `allowEmpty` kaynaklar için). */
+export async function clearSource(client, sourceKey) {
+  return pruneSource(client, sourceKey, [EMPTY_SOURCE_SENTINEL]);
+}
+
 export async function fetchPendingDocuments(client, { limit = 100, maxAttempts = 3 } = {}) {
   const { data, error } = await client.rpc("ai_knowledge_pending_documents", {
     p_limit: limit,

@@ -40,6 +40,22 @@ describe("documentation knowledge-source classification", () => {
     expect(classifyDocumentationPath(path)).toBeNull();
   });
 
+  it("yol biçimi tekilleştirilir: ./ öneki, // ve büyük harfli dizin dışlamayı kaçırmaz", () => {
+    expect(classifyDocumentationPath("./docs/guides/belge-yukleme.md")).toBe("member");
+    expect(classifyDocumentationPath("docs//archive/x.md")).toBeNull();
+    expect(classifyDocumentationPath("./docs/archive/x.md")).toBeNull();
+    expect(classifyDocumentationPath("docs/Archive/x.md")).toBeNull();
+  });
+
+  it("üye listesi TAM eşleşme ister — büyük harfli yakın yazım üyeye açılmaz", () => {
+    expect(classifyDocumentationPath("docs/guides/Belge-Yukleme.md")).toBe("admin");
+  });
+
+  it("önek dizin sınırında biter: docs/archive.md ve docs/historyX/ dışlanmaz", () => {
+    expect(classifyDocumentationPath("docs/archive.md")).toBe("admin");
+    expect(classifyDocumentationPath("docs/historyX/not.md")).toBe("admin");
+  });
+
   it("dışlanan önek listesi beklenen beş dizindir", () => {
     expect(EXCLUDED_DOCUMENTATION_PREFIXES).toEqual([
       "docs/exports/blog-md/",
@@ -73,6 +89,24 @@ describe("doküman içerik dışlaması", () => {
   it("frontmatter'ı `durum: yerini-aldı` olan doküman dışlanır", () => {
     expect(isExcludedByContent("---\ndurum: yerini-aldı\nyerini_alan: docs/kalanlar/KALANLAR.md\n---\n# Eski plan\n")).toBe(true);
     expect(isExcludedByContent("---\r\ndurum: yerini-aldi\r\n---\r\n# Eski plan\r\n")).toBe(true);
+  });
+
+  it("işaret yazım varyantlarında da yakalanır: ayrık nokta (NFD), noktasız I, küçük harf", () => {
+    // Birleşen nokta (U+0307) kaçış dizisiyle YAZILMAZ: kanca onu görünmez karaktere çeviriyor.
+    const dot = String.fromCharCode(0x307);
+    // "I + birleşen nokta" = ayrık (NFD) yazılmış İ.
+    const nfd = "# T\n\n> BOT BI" + dot + "LGI" + dot + " TABANINA (ai:ingest) ALINMAZ.\n";
+    expect(isExcludedByContent(nfd)).toBe(true);
+    expect(isExcludedByContent("# T\n\n> BOT BILGI TABANINA ALINMAZ\n")).toBe(true);
+    expect(isExcludedByContent("# T\n\n> bot bilgi tabanına alınmaz\n")).toBe(true);
+  });
+
+  it("frontmatter varyantları: BOM, tırnak, büyük harf, satır sonu yorumu", () => {
+    const bom = String.fromCharCode(0xfeff);
+    expect(isExcludedByContent(`${bom}---\ndurum: yerini-aldı\n---\n# Eski\n`)).toBe(true);
+    expect(isExcludedByContent('---\ndurum: "yerini-aldı"\n---\n# Eski\n')).toBe(true);
+    expect(isExcludedByContent("---\ndurum: Yerini-Aldı\n---\n# Eski\n")).toBe(true);
+    expect(isExcludedByContent("---\ndurum: yerini-aldı # KALANLAR'a taşındı\n---\n# Eski\n")).toBe(true);
   });
 
   it("aktif ya da frontmatter'sız doküman dışlanmaz", () => {

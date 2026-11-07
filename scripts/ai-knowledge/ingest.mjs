@@ -8,9 +8,9 @@
 // md5 karşılaştırır ve yalnız DEĞİŞEN satırların embedding'ini geçersiz kılar. Yani
 // bu script'i tekrar tekrar çalıştırmak güvenlidir ve yeniden ücretlendirme yapmaz.
 
-import { createServiceClient, pruneSource, readStats, upsertDocument } from "./client.mjs";
+import { createServiceClient, readStats } from "./client.mjs";
 import { KNOWLEDGE_SOURCES, findSource } from "./sources.mjs";
-import { chunkText } from "./chunk.mjs";
+import { ingestSource } from "./ingest-source.mjs";
 
 function parseArgs(argv) {
   const args = { sources: null, dryRun: false };
@@ -39,54 +39,6 @@ function resolveSources(requested) {
     }
     return source;
   });
-}
-
-async function ingestSource(client, source, { dryRun }) {
-  const documents = await source.load(client);
-
-  // Kaynak hiç kayıt döndürmediyse bu neredeyse her zaman bir okuma hatasıdır.
-  // Devam edersek `prune` tüm kaynağı silmeye çalışır (ve RPC bunu reddeder),
-  // ama hatayı burada, sebebi belliyken vermek daha açık.
-  if (documents.length === 0) {
-    throw new Error(
-      `${source.key}: kaynak 0 kayit dondurdu — okuma hatasi olabilir, silme yapilmadi.`,
-    );
-  }
-
-  const report = { inserted: 0, updated: 0, unchanged: 0, chunks: 0, deleted: 0 };
-
-  for (const document of documents) {
-    const chunks = chunkText(document.text);
-    report.chunks += chunks.length;
-    if (dryRun) continue;
-
-    for (const [chunkIndex, content] of chunks.entries()) {
-      const action = await upsertDocument(client, {
-        sourceKey: source.key,
-        externalId: document.externalId,
-        chunkIndex,
-        // Çok parçalı belgede başlığa parça numarası eklenir: getirme sonucunda
-        // "Vize Rehberi (2/5)" görmek, aynı başlığın beş kez tekrarlamasından iyidir.
-        title: chunks.length > 1 ? `${document.title} (${chunkIndex + 1}/${chunks.length})` : document.title,
-        url: document.url,
-        audience: source.audience,
-        content,
-      });
-      if (action === "inserted") report.inserted += 1;
-      else if (action === "updated") report.updated += 1;
-      else report.unchanged += 1;
-    }
-  }
-
-  if (!dryRun) {
-    report.deleted = await pruneSource(
-      client,
-      source.key,
-      documents.map((document) => document.externalId),
-    );
-  }
-
-  return { documents: documents.length, ...report };
 }
 
 async function main() {

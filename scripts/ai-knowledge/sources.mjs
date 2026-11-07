@@ -41,23 +41,49 @@ export const EXCLUDED_DOCUMENTATION_PREFIXES = [
   "docs/commandcenter/",
 ];
 
+/**
+ * Yol biçimini tekilleştirir: ters eğik çizgi, `./` öneki ve `//` tek biçime iner.
+ * Gerçek yükleyici zaten temiz yol üretir; bu, sınıflandırıcıyı doğrudan çağıran yeni
+ * kodun dışlamayı sessizce kaçırmasını önler.
+ */
+function normalizeDocumentationPath(relativePath) {
+  return path.posix.normalize(String(relativePath).replace(/\\/g, "/")).replace(/^\.\//, "");
+}
+
 export function classifyDocumentationPath(relativePath) {
-  const normalized = relativePath.replace(/\\/g, "/");
-  if (EXCLUDED_DOCUMENTATION_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return null;
+  const normalized = normalizeDocumentationPath(relativePath);
+  // Dışlama büyük/küçük harfe DUYARSIZ (fail-closed: `docs/Archive/` de dışlanır);
+  // üye listesi ise TAM eşleşme ister (fail-closed: yakın yazım üyeye açılmaz).
+  // toLowerCase burada teknik değer (dosya yolu) üzerindedir, kullanıcı metni değil.
+  const lowered = normalized.toLowerCase();
+  if (EXCLUDED_DOCUMENTATION_PREFIXES.some((prefix) => lowered.startsWith(prefix))) return null;
   return MEMBER_DOCUMENTATION_PATHS.has(normalized) ? "member" : "admin";
 }
 
 // Doküman kendi başlığında bot dışı ilan edilmişse uyulur. Yalnız baştaki bölüme
 // bakılır: kuralı ANLATAN bir doküman (ör. bu deseni açıklayan plan) dışlanmasın.
+// Eşleşme Türkçe-katlanmış metinde yapılır: regex'in `i` bayrağı `ı`↔`I` eşlemez
+// (ECMAScript, ≥128 bir karakterin ASCII'ye katlanmasını yasaklar), bu yüzden
+// "bot bilgi tabanına alınmaz" bayraklı desenle KAÇARDI.
 const SELF_EXCLUSION_HEAD_LENGTH = 1500;
-const SELF_EXCLUSION_PATTERN = /BOT BİLGİ TABANINA[^\n]{0,40}ALINMAZ/;
+const SELF_EXCLUSION_PATTERN = /bot bilgi tabanina[^\n]{0,40}alinmaz/;
+
+/** Yalnız bu işaret için: İ/I/ı → i, sonra küçük harf (teknik eşleşme, görüntü değil). */
+function foldForMarker(text) {
+  return text.replace(/[İIı]/g, "i").toLowerCase();
+}
 const FRONTMATTER_PATTERN = /^---\r?\n([\s\S]*?)\r?\n---/;
-const SUPERSEDED_PATTERN = /^durum:\s*yerini-ald[ıi]\s*$/m;
+const SUPERSEDED_PATTERN = /^durum:\s*["']?yerini-ald[ıi]["']?\s*(?:#.*)?$/im;
+// BOM kaçış dizisiyle YAZILMAZ: biçimlendirici kancası kaçışı görünmez karaktere
+// çeviriyor (bkz. memory: verify:text + kaçış dizisi tuzağı).
+const BYTE_ORDER_MARK = String.fromCharCode(0xfeff);
 
 /** `ai:ingest` dışında kalması gereken doküman mı (başlıkta ret işareti ya da `durum: yerini-aldı`)? */
 export function isExcludedByContent(raw) {
-  const text = String(raw ?? "");
-  if (SELF_EXCLUSION_PATTERN.test(text.slice(0, SELF_EXCLUSION_HEAD_LENGTH))) return true;
+  // NFC: ayrık yazılmış "I + birleşen nokta" tek İ karakterine iner.
+  let text = String(raw ?? "").normalize("NFC");
+  if (text.startsWith(BYTE_ORDER_MARK)) text = text.slice(1);
+  if (SELF_EXCLUSION_PATTERN.test(foldForMarker(text.slice(0, SELF_EXCLUSION_HEAD_LENGTH)))) return true;
   const frontmatter = FRONTMATTER_PATTERN.exec(text);
   return Boolean(frontmatter && SUPERSEDED_PATTERN.test(frontmatter[1]));
 }
@@ -294,6 +320,10 @@ export const KNOWLEDGE_SOURCES = [
     key: "docs-member",
     label: "Üye rehberleri",
     audience: "member",
+    // KİTLE SINIRI: listeden son rehber çıkarılırsa 0 belge MEŞRUDUR ve kaynak
+    // tamamen budanır (ingest-source.mjs). Bu bayrak yoksa "0 kayıt → silme yapma"
+    // freni eski üye satırlarını yerinde bırakırdı — fail-open.
+    allowEmpty: true,
     load: () => loadDocumentationDocuments("member"),
   },
   {
