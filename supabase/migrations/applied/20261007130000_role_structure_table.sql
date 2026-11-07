@@ -11,7 +11,7 @@
 --     - alt_rol: "Gayrimenkul", "Vize & Göçmenlik" vb.
 --     - uzmanlik: "Ev kiralama", "Öğrenci vizesi" vb. (etiket, 3. seviye)
 --     - yeni_kod: Excel'deki "Yeni Admin Rol Kodu" (örn. consultant.gayrimenkul.ev_kiralama)
---     - eski_kod: Eski dropdown kodu (varsa)
+--     - eski_roles_key: Eski roles.key değeri (varsa)
 --     - durum: 'onaylandi' veya 'oneri'
 --
 -- ═══ İLİŞKİ ═══
@@ -32,7 +32,7 @@ create table if not exists public.role_structure (
   alt_rol text not null,
   uzmanlik text not null default '',
   yeni_kod text not null unique,
-  eski_kod text,
+  eski_roles_key text,
   durum text not null default 'onaylandi' check (durum in ('onaylandi', 'oneri')),
   created_at timestamptz not null default now()
 );
@@ -78,7 +78,7 @@ as $$
         'alt_rol', alt_rol,
         'uzmanlik', uzmanlik,
         'yeni_kod', yeni_kod,
-        'eski_kod', eski_kod,
+        'eski_roles_key', eski_roles_key,
         'durum', durum
       )
       order by ana_rol, alt_rol, uzmanlik
@@ -109,7 +109,7 @@ as $$
         'alt_rol', alt_rol,
         'uzmanlik', uzmanlik,
         'yeni_kod', yeni_kod,
-        'eski_kod', eski_kod,
+        'eski_roles_key', eski_roles_key,
         'durum', durum
       )
       order by alt_rol, uzmanlik
