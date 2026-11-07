@@ -56,6 +56,19 @@ describe("searchPublicContent", () => {
 
     await expect(searchPublicContent("almanya")).rejects.toThrow("search failed");
   });
+
+  it("Cadde gönderisi genel arama sonucuna GİRMEZ (karar 06.10) — RPC döndürse bile elenir", async () => {
+    rpcMock.mockResolvedValue({
+      data: [
+        { content_type: "cadde", external_id: "p1", title: "Gönderi", description: null, href: "/cadde/post/p1" },
+        { content_type: "event", external_id: "e1", title: "Etkinlik", description: null, href: "/events/e1" },
+      ],
+      error: null,
+    });
+
+    const results = await searchPublicContent("zz-arac-eslesmesin");
+    expect(results.map((r) => r.type)).toEqual(["event"]);
+  });
 });
 
 describe("searchStaticTools", () => {

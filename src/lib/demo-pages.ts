@@ -66,6 +66,14 @@ export const DEMO_ROUTES: DemoRoute[] = [
     label: "Taşınma Planlayıcı",
     note: "Araç çalışıyor ama şehir, servis ve bürokrasi içeriği şimdilik örnek veridir; gerçek sağlayıcı ve resmî süreç bilgisi değildir. Acil numaralar gerçektir.",
   },
+  {
+    // Ölçüldü 2026-11-07 (salt-okunur): `job_listings` canlıda 6 satır, 6'sı da `[DEMO]`/`[ÖRNEK]`
+    // (seed `20261005130000`). Gerçek ilan SIFIR. İlk gerçek ilan yayına girince bu satır silinir.
+    // ⚠️ `/ilanlar/:id` eklenmez — `findDemoRoute` literal yol eşitliği arar (bkz. /businesses notu).
+    path: "/ilanlar",
+    label: "İş İlanları",
+    note: "Listedeki ilanlar örnektir; başvurular gerçek bir işverene gitmez. Gerçek ilanlar yayına alındıkça bu işaret kalkar.",
+  },
 ];
 
 /** Rozetin ve bandın paylaştığı metinler — çeviri/ton tek yerden değişir. */

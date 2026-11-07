@@ -269,11 +269,6 @@
       "count": 1
     }
   },
-  "src/lib/public-content-search.ts": {
-    "complexity": {
-      "count": 1
-    }
-  },
   "src/lib/relocation-tools-challenge.ts": {
     "complexity": {
       "count": 1

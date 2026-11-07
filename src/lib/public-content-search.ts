@@ -2,7 +2,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { STANDALONE_TOOLS } from "@/lib/standalone-tools";
 
 export type PublicContentSearchResult = {
-  type: "blog" | "tool" | "event" | "cadde";
+  type: "blog" | "tool" | "event";
   id: string;
   title: string;
   description: string | null;
@@ -104,26 +104,8 @@ export async function searchPublicContent(query: string, limit = 12): Promise<Pu
         },
       ];
     }
-    // B7b: Cadde gönderisi sonuçları
-    if (row.content_type === "cadde") {
-      if (
-        typeof row.external_id !== "string" ||
-        typeof row.title !== "string" ||
-        typeof row.href !== "string" ||
-        !row.href.startsWith("/cadde/post/")
-      ) {
-        return [];
-      }
-      return [
-        {
-          type: "cadde" as const,
-          id: row.external_id,
-          title: row.title,
-          description: typeof row.description === "string" ? row.description : null,
-          href: row.href,
-        },
-      ];
-    }
+    // Cadde gönderileri genel aramaya GİRMEZ (Burak kararı, 06.10). Canlı `search_public_content`
+    // cadde döndürmüyor (2026-11-07 salt-okunur katalog ölçümü); bilinmeyen tür sessizce elenir.
     return [];
   });
 
