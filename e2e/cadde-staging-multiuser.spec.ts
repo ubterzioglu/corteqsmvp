@@ -8,12 +8,7 @@ const USER_B_EMAIL = process.env.CADDE_E2E_USER_B_EMAIL;
 const USER_B_PASSWORD = process.env.CADDE_E2E_USER_B_PASSWORD;
 
 const isConfigured = Boolean(
-  STAGING_MARKER === "staging"
-  && BASE_URL
-  && USER_A_EMAIL
-  && USER_A_PASSWORD
-  && USER_B_EMAIL
-  && USER_B_PASSWORD,
+  STAGING_MARKER === "staging" && BASE_URL && USER_A_EMAIL && USER_A_PASSWORD && USER_B_EMAIL && USER_B_PASSWORD,
 );
 
 const assertStagingTarget = () => {
@@ -41,7 +36,10 @@ const openAuthenticatedPage = async (context: BrowserContext, email: string, pas
 
 const createApprovalCafe = async (page: Page, marker: string) => {
   await page.goto("/cadde");
-  await page.getByRole("button", { name: /Cafe Aç/i }).first().click();
+  await page
+    .getByRole("button", { name: /Cafe Aç/i })
+    .first()
+    .click();
 
   const dialog = page.getByRole("dialog", { name: "Yeni Cafe" });
   await expect(dialog).toBeVisible();
@@ -110,8 +108,12 @@ test.describe("Cadde staging multi-user acceptance (m76/m92/m134)", () => {
       await expect(cardA).toBeVisible({ timeout: 30_000 });
       const embeddedImage = cardA.locator("img").first();
       await expect(embeddedImage).toHaveClass(/object-contain/);
-      await expect.poll(() => embeddedImage.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
-      await expect.poll(() => embeddedImage.evaluate((image: HTMLImageElement) => image.naturalHeight)).toBeGreaterThan(0);
+      await expect
+        .poll(() => embeddedImage.evaluate((image: HTMLImageElement) => image.naturalWidth))
+        .toBeGreaterThan(0);
+      await expect
+        .poll(() => embeddedImage.evaluate((image: HTMLImageElement) => image.naturalHeight))
+        .toBeGreaterThan(0);
       await cardA.getByRole("button", { name: /büyüt/i }).click();
       await expect(pageA.getByRole("dialog")).toBeVisible();
       await pageA.keyboard.press("Escape");

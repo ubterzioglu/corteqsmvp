@@ -2,19 +2,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { countryCities } from "@/data/countryCities";
 import { filterByQuery } from "@/lib/country-city-search";
 import { useGeoCities } from "@/hooks/useGeo";
@@ -79,17 +68,13 @@ const SearchableCitySelect = ({
 
   const isDisabled = disabled || (!externalCities && !countryName);
 
-  const displayValue = value === allOptionValue && includeAllOptionLabel
-    ? includeAllOptionLabel
-    : value || "";
+  const displayValue = value === allOptionValue && includeAllOptionLabel ? includeAllOptionLabel : value || "";
 
   const { optionList, hiddenCount } = useMemo(() => {
     const deduped = Array.from(new Set(cities)).filter((item) => item !== allOptionValue);
     const matched = filterByQuery(deduped, search);
     const visible = matched.slice(0, MAX_RENDERED);
-    const withAll = includeAllOptionLabel && !search.trim()
-      ? [allOptionValue, ...visible]
-      : visible;
+    const withAll = includeAllOptionLabel && !search.trim() ? [allOptionValue, ...visible] : visible;
     return { optionList: withAll, hiddenCount: matched.length - visible.length };
   }, [allOptionValue, cities, includeAllOptionLabel, search]);
 
@@ -105,15 +90,9 @@ const SearchableCitySelect = ({
             role="combobox"
             aria-expanded={open}
             disabled={isDisabled}
-            className={cn(
-              "w-full justify-between font-normal",
-              sizeClasses[size],
-              !value && "text-muted-foreground",
-            )}
+            className={cn("w-full justify-between font-normal", sizeClasses[size], !value && "text-muted-foreground")}
           >
-            <span className="truncate">
-              {displayValue || placeholder}
-            </span>
+            <span className="truncate">{displayValue || placeholder}</span>
             <span className="flex items-center gap-0.5 shrink-0">
               {allowClear && value && !isDisabled && (
                 <span
@@ -166,12 +145,7 @@ const SearchableCitySelect = ({
                       handleOpenChange(false);
                     }}
                   >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === city ? "opacity-100" : "opacity-0",
-                      )}
-                    />
+                    <Check className={cn("mr-2 h-4 w-4", value === city ? "opacity-100" : "opacity-0")} />
                     {city === allOptionValue ? includeAllOptionLabel : city}
                   </CommandItem>
                 ))}

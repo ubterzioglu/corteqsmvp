@@ -80,12 +80,7 @@ export default function CaddeReactionActorsPopover({
                   {/* Avatar */}
                   <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-slate-100 to-slate-200">
                     {reactor.avatar_url ? (
-                      <img
-                        src={reactor.avatar_url}
-                        alt=""
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
+                      <img src={reactor.avatar_url} alt="" className="h-full w-full object-cover" loading="lazy" />
                     ) : (
                       <span className="text-sm font-semibold text-slate-600">
                         {reactor.display_name.charAt(0).toUpperCase()}

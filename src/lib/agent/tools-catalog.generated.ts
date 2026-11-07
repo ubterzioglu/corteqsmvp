@@ -34,9 +34,12 @@ export const toolCatalog = {
         "check:drift",
         "check:drift:warn",
         "check:functions",
+        "check:knip",
         "check:migrations",
         "check:migrations:warn",
         "dev",
+        "format",
+        "format:check",
         "fx:refresh",
         "generate:rss",
         "generate:sitemap",
@@ -120,15 +123,7 @@ export const toolCatalog = {
       "interface_kind": "http",
       "input_schema": {
         "validation": "zod",
-        "fields": [
-          "p_search_text",
-          "p_role_key",
-          "p_country_code",
-          "p_city",
-          "p_featured_only",
-          "p_limit",
-          "p_offset"
-        ]
+        "fields": []
       },
       "tables_read_write": [],
       "rpcs": [

@@ -1,5 +1,12 @@
 import type { KadroRole } from "./kadro-types";
-import { KADRO_AD_BLOCKS, KADRO_DEPTS, KADRO_AXES, KADRO_WORK_TYPES, KADRO_STATUSES, KADRO_PRIORITIES } from "./kadro-taxonomy";
+import {
+  KADRO_AD_BLOCKS,
+  KADRO_DEPTS,
+  KADRO_AXES,
+  KADRO_WORK_TYPES,
+  KADRO_STATUSES,
+  KADRO_PRIORITIES,
+} from "./kadro-taxonomy";
 
 export function buildKadroAdText(role: KadroRole): string | null {
   if (!role.ad) return null;

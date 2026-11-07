@@ -53,14 +53,9 @@ test.describe("Public rotalar — Batch 0 smoke", () => {
       await expect(page).toHaveTitle(route.title);
       expect(await page.title()).not.toBe(NOT_FOUND_TITLE);
 
-      await expect(
-        page.getByRole("heading", { level: 1, name: route.heading, exact: true }),
-      ).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1, name: route.heading, exact: true })).toBeVisible();
 
-      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-        "href",
-        route.canonical,
-      );
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", route.canonical);
     });
   }
 
@@ -68,15 +63,10 @@ test.describe("Public rotalar — Batch 0 smoke", () => {
     await page.goto(`/isletme/${DEMO_BUSINESS_SLUG}`);
 
     expect(await page.title()).not.toBe(NOT_FOUND_TITLE);
-    await expect(
-      page.getByRole("heading", { level: 1, name: "Turkish Hospital Qatar" }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Turkish Hospital Qatar" })).toBeVisible();
 
     // Uydurma içerik indekslenmemeli — sayfanın kendi kuralı.
-    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-      "content",
-      "noindex, follow",
-    );
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", "noindex, follow");
   });
 });
 
@@ -137,7 +127,10 @@ test.describe("Hareketsiz düğme kontrolü — B11.5", () => {
   test("/association/:id — hareketsiz buton sayısı kabul edilen eşikte", async ({ page }) => {
     await page.goto("/associations");
     // İlk kuruluş kartına tıkla
-    const firstCard = page.getByRole("link").filter({ hasText: /Dernek/ }).first();
+    const firstCard = page
+      .getByRole("link")
+      .filter({ hasText: /Dernek/ })
+      .first();
     await firstCard.click();
     await page.waitForURL(/\/association\//);
 

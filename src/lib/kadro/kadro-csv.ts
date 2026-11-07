@@ -47,10 +47,7 @@ export function buildKadroCsv(roles: KadroResolvedRole[]): string {
     return field;
   };
 
-  const csvLines = [
-    headers.map(escapeCsvField).join(","),
-    ...rows.map((row) => row.map(escapeCsvField).join(",")),
-  ];
+  const csvLines = [headers.map(escapeCsvField).join(","), ...rows.map((row) => row.map(escapeCsvField).join(","))];
 
   return csvLines.join("\n");
 }

@@ -50,9 +50,7 @@ describe("candidateResultSchema", () => {
   });
 
   it("güven skoru 100'ü aşamaz", () => {
-    expect(
-      candidateResultSchema.safeParse({ ...validResult, confidence_score: 150 }).success,
-    ).toBe(false);
+    expect(candidateResultSchema.safeParse({ ...validResult, confidence_score: 150 }).success).toBe(false);
   });
 
   it("geçersiz iletişim tipi reddedilir", () => {

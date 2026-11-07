@@ -1,7 +1,16 @@
 // Cadde URL filtre durumu ve feed yerleşim yardımcıları.
 
 import { normalizeHashtag } from "./cadde-text";
-import type { CaddeContentMode, CaddeFeedListItem, CaddeFeedScope, CaddeFilterState, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "./cadde-types";
+import type {
+  CaddeContentMode,
+  CaddeFeedListItem,
+  CaddeFeedScope,
+  CaddeFilterState,
+  CaddeInterest,
+  CaddePost,
+  CaddePromotionCard,
+  CaddeSponsoredPlacement,
+} from "./cadde-types";
 
 /** Virgülle ayrılmış URL parametresini normalize edilmiş ad listesine çevirir. */
 const parseListParam = (value: string | null): string[] => {
@@ -23,7 +32,16 @@ const parseListParam = (value: string | null): string[] => {
  * Faz 3: country/city parametreleri virgülle ayrılmış ÇOKLU değer taşır;
  * eski tekil `?country=Almanya` URL'leri tek elemanlı liste olarak okunur (geriye uyumlu).
  */
-const FEED_SCOPES: readonly CaddeFeedScope[] = ["all", "city", "country", "events", "cafes", "nearby", "following", "jobs"];
+const FEED_SCOPES: readonly CaddeFeedScope[] = [
+  "all",
+  "city",
+  "country",
+  "events",
+  "cafes",
+  "nearby",
+  "following",
+  "jobs",
+];
 
 const parseScopeParam = (value: string | null): CaddeFeedScope => {
   const candidate = (value ?? "").trim() as CaddeFeedScope;

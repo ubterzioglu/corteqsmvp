@@ -34,9 +34,7 @@ const AdminAttentionQueue = ({ summary, isLoading }: AdminAttentionQueueProps) =
         ) : (
           <div className="flex items-center gap-2 rounded-lg border border-border bg-muted/30 px-3 py-2.5 text-sm text-muted-foreground">
             <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-emerald-500" />
-            {typeof pending === "number"
-              ? "Şu an dikkat bekleyen iş yok."
-              : "Dikkat metrikleri şu an yüklenemedi."}
+            {typeof pending === "number" ? "Şu an dikkat bekleyen iş yok." : "Dikkat metrikleri şu an yüklenemedi."}
           </div>
         )}
       </div>

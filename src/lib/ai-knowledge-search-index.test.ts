@@ -19,10 +19,7 @@ import { describe, expect, it } from "vitest";
 
 import { sliceBetween, sliceFrom } from "@/test/source-slice";
 
-const SQL = readFileSync(
-  "supabase/migrations/applied/20260927140000_ai_knowledge_search_index_kullanimi.sql",
-  "utf8",
-);
+const SQL = readFileSync("supabase/migrations/applied/20260927140000_ai_knowledge_search_index_kullanimi.sql", "utf8");
 
 /** Fonksiyon gövdesindeki `return query` ile biten ifadeyi çıkarır. */
 const body = sliceBetween(SQL, "return query", "end;\n$function$", "ai_knowledge_search gövdesi");

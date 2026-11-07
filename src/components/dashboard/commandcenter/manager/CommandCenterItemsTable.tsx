@@ -7,51 +7,51 @@
 // gösterge), 'Kategori' (etiket türetilmiş), 'Tarih' (hafta kovası etiketi —
 // due_date sırasıyla birebir değil) ve 'İşlem' sıralanamaz.
 
-import { ArrowDown, ArrowUp, ArrowUpDown } from 'lucide-react'
-import { Dispatch, SetStateAction } from 'react'
-import { toCommandCenterFormState } from '@/lib/dashboard/command-center-items'
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { Dispatch, SetStateAction } from "react";
+import { toCommandCenterFormState } from "@/lib/dashboard/command-center-items";
 import type {
   CommandCenterFormState,
   CommandCenterItem,
   CommandCenterSortDirection,
   CommandCenterSortKey,
-} from '@/lib/dashboard/command-center-items'
-import ItemsMobileCard from './ItemsMobileCard'
-import ItemsTableEditorRow from './ItemsTableEditorRow'
-import ItemsTableRow from './ItemsTableRow'
+} from "@/lib/dashboard/command-center-items";
+import ItemsMobileCard from "./ItemsMobileCard";
+import ItemsTableEditorRow from "./ItemsTableEditorRow";
+import ItemsTableRow from "./ItemsTableRow";
 
 interface CommandCenterColumnSpec {
-  label: string
-  sortKey?: CommandCenterSortKey
+  label: string;
+  sortKey?: CommandCenterSortKey;
 }
 
 // Colgroup ve başlık sırası panoda görünür — sırayı değiştirme.
 const COMMAND_CENTER_COLUMNS: readonly CommandCenterColumnSpec[] = [
-  { label: 'Prio', sortKey: 'priority' },
-  { label: 'Acil' },
-  { label: 'Kategori' },
-  { label: 'Tarih' },
-  { label: 'Başlık & Detay', sortKey: 'title' },
-  { label: 'Kim', sortKey: 'assignee' },
-  { label: 'Durum', sortKey: 'status' },
-  { label: 'Eklenme', sortKey: 'created_at' },
-  { label: 'İşlem' },
-]
+  { label: "Prio", sortKey: "priority" },
+  { label: "Acil" },
+  { label: "Kategori" },
+  { label: "Tarih" },
+  { label: "Başlık & Detay", sortKey: "title" },
+  { label: "Kim", sortKey: "assignee" },
+  { label: "Durum", sortKey: "status" },
+  { label: "Eklenme", sortKey: "created_at" },
+  { label: "İşlem" },
+];
 
 export interface CommandCenterItemsTableProps {
-  items: CommandCenterItem[]
-  editingId: string | null
-  editingState: CommandCenterFormState
-  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>
-  isSubmitting: boolean
-  sortKey: CommandCenterSortKey
-  sortDirection: CommandCenterSortDirection
-  onSortChange: (key: CommandCenterSortKey) => void
-  onStartEdit: (item: CommandCenterItem) => void
-  onCancelEdit: () => void
-  onUpdate: (itemId: string) => void
-  onArchive: (itemId: string) => void
-  onDelete: (itemId: string) => void
+  items: CommandCenterItem[];
+  editingId: string | null;
+  editingState: CommandCenterFormState;
+  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>;
+  isSubmitting: boolean;
+  sortKey: CommandCenterSortKey;
+  sortDirection: CommandCenterSortDirection;
+  onSortChange: (key: CommandCenterSortKey) => void;
+  onStartEdit: (item: CommandCenterItem) => void;
+  onCancelEdit: () => void;
+  onUpdate: (itemId: string) => void;
+  onArchive: (itemId: string) => void;
+  onDelete: (itemId: string) => void;
 }
 
 export default function CommandCenterItemsTable({
@@ -88,20 +88,16 @@ export default function CommandCenterItemsTable({
           <thead className="border-b border-[rgba(66,133,244,0.08)] bg-[rgba(66,133,244,0.02)]">
             <tr>
               {COMMAND_CENTER_COLUMNS.map((column) => {
-                const isActive = column.sortKey !== undefined && column.sortKey === sortKey
+                const isActive = column.sortKey !== undefined && column.sortKey === sortKey;
                 const ariaSort =
                   column.sortKey === undefined
                     ? undefined
                     : isActive
-                      ? sortDirection === 'asc'
-                        ? ('ascending' as const)
-                        : ('descending' as const)
-                      : ('none' as const)
-                const SortIcon = isActive
-                  ? sortDirection === 'asc'
-                    ? ArrowUp
-                    : ArrowDown
-                  : ArrowUpDown
+                      ? sortDirection === "asc"
+                        ? ("ascending" as const)
+                        : ("descending" as const)
+                      : ("none" as const);
+                const SortIcon = isActive ? (sortDirection === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
 
                 return (
                   <th
@@ -117,7 +113,7 @@ export default function CommandCenterItemsTable({
                         type="button"
                         onClick={() => onSortChange(column.sortKey!)}
                         className={`inline-flex items-center gap-1 uppercase tracking-[0.16em] transition-colors hover:text-gray-800 ${
-                          isActive ? 'text-[#1A6DC2]' : ''
+                          isActive ? "text-[#1A6DC2]" : ""
                         }`}
                         title={`${column.label} sıralaması`}
                       >
@@ -126,7 +122,7 @@ export default function CommandCenterItemsTable({
                       </button>
                     )}
                   </th>
-                )
+                );
               })}
             </tr>
           </thead>
@@ -152,7 +148,7 @@ export default function CommandCenterItemsTable({
                   onArchive={onArchive}
                   onDelete={onDelete}
                 />
-              )
+              ),
             )}
           </tbody>
         </table>
@@ -160,8 +156,8 @@ export default function CommandCenterItemsTable({
 
       <div className="space-y-3 p-4 md:hidden">
         {items.map((item) => {
-          const rowIsEditing = editingId === item.id
-          const rowState = rowIsEditing ? editingState : toCommandCenterFormState(item)
+          const rowIsEditing = editingId === item.id;
+          const rowState = rowIsEditing ? editingState : toCommandCenterFormState(item);
 
           return (
             <ItemsMobileCard
@@ -178,9 +174,9 @@ export default function CommandCenterItemsTable({
               onArchive={onArchive}
               onDelete={onDelete}
             />
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

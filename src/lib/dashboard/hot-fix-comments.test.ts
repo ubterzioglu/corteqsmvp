@@ -15,11 +15,7 @@ vi.mock("./supabase", () => ({
   getSupabaseBrowserClient: () => ({ from: fromMock }),
 }));
 
-import {
-  HOT_FIX_COMMENT_BODY_MAX,
-  createHotFixComment,
-  listHotFixComments,
-} from "./hot-fix-comments";
+import { HOT_FIX_COMMENT_BODY_MAX, createHotFixComment, listHotFixComments } from "./hot-fix-comments";
 
 /** `select().eq().is().order()` zincirini taklit eder. */
 const selectChain = (result: unknown) => {
@@ -158,9 +154,7 @@ describe("createHotFixComment", () => {
 
     await createHotFixComment("h1", "   ", "not");
 
-    expect(chain.insert).toHaveBeenCalledWith(
-      expect.objectContaining({ author_name: "Anonim", hot_fix_id: "h1" }),
-    );
+    expect(chain.insert).toHaveBeenCalledWith(expect.objectContaining({ author_name: "Anonim", hot_fix_id: "h1" }));
   });
 
   it("DÜZ NESNE supabase hatasının mesajını okur", async () => {

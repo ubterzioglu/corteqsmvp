@@ -81,10 +81,7 @@ function pref01(value: number | undefined): number {
 const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
 /** Bir ülkenin ham 7 boyut kırılımını (deal-breaker cap UYGULANMADAN) hesaplar. */
-function rawBreakdown(
-  m: CountryMetrics,
-  prefs: CountryPreferences,
-): Record<CountryDimension, number> {
+function rawBreakdown(m: CountryMetrics, prefs: CountryPreferences): Record<CountryDimension, number> {
   const hasBudget = prefs.monthly_budget !== undefined && prefs.monthly_budget !== "";
   const englishOnly = prefs.language_profile === "english_only";
   const visaAssets = prefs.visa_assets ?? [];
@@ -99,15 +96,9 @@ function rawBreakdown(
   const remotePref = pref01(prefs.remote_work_flexibility);
 
   return {
-    budget_fit: hasBudget
-      ? clamp01OrNeutral((1 - (m.cost_index ?? 0.5)) * 0.85 + taxTolerance * 0.15)
-      : 0.5,
-    career_market_fit: clamp01OrNeutral(
-      (m.employment_index ?? 0.5) * 0.9 + remotePref * 0.1,
-    ),
-    visa_path_fit: clamp01OrNeutral(
-      (1 - (m.visa_complexity ?? 0.5)) * (hasVisaAsset ? 1.0 : 0.85),
-    ),
+    budget_fit: hasBudget ? clamp01OrNeutral((1 - (m.cost_index ?? 0.5)) * 0.85 + taxTolerance * 0.15) : 0.5,
+    career_market_fit: clamp01OrNeutral((m.employment_index ?? 0.5) * 0.9 + remotePref * 0.1),
+    visa_path_fit: clamp01OrNeutral((1 - (m.visa_complexity ?? 0.5)) * (hasVisaAsset ? 1.0 : 0.85)),
     language_fit: englishOnly
       ? clamp01OrNeutral(m.english_workability)
       : clamp01OrNeutral(0.5 + 0.5 * (m.english_workability ?? 0.5)),
@@ -117,12 +108,7 @@ function rawBreakdown(
         (m.inclusion_index ?? 0.5) * (0.2 + 0.4 * inclusion) * 0.5,
     ),
     community_fit: clamp01OrNeutral((m.community_density ?? 0.5) * (0.4 + 0.6 * community)),
-    climate_fit:
-      climate === undefined || climate === "no_preference"
-        ? 0.6
-        : tags.includes(climate)
-          ? 1.0
-          : 0.3,
+    climate_fit: climate === undefined || climate === "no_preference" ? 0.6 : tags.includes(climate) ? 1.0 : 0.3,
   };
 }
 

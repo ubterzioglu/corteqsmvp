@@ -33,11 +33,7 @@ const ISO_ALPHA2 = /^[A-Z]{2}$/;
  */
 export function cityScopeFromAnswers(answers: Record<string, ToolAnswerValue>): string[] {
   const raw = answers[TARGET_COUNTRIES_QUESTION_KEY];
-  const parts = Array.isArray(raw)
-    ? raw.map(String)
-    : typeof raw === "string"
-      ? raw.split(",")
-      : [];
+  const parts = Array.isArray(raw) ? raw.map(String) : typeof raw === "string" ? raw.split(",") : [];
 
   const seen = new Set<string>();
   for (const part of parts) {

@@ -47,14 +47,7 @@ const DURUM_INTENT_CLASS: Record<CaddeBadgeIntent, string> = {
 };
 
 const CaddeBadge = ({ tone, intent = "neutral", icon, className, children }: CaddeBadgeProps) => (
-  <Badge
-    className={cn(
-      "gap-1",
-      TONE_CLASS[tone],
-      tone === "durum" && DURUM_INTENT_CLASS[intent],
-      className,
-    )}
-  >
+  <Badge className={cn("gap-1", TONE_CLASS[tone], tone === "durum" && DURUM_INTENT_CLASS[intent], className)}>
     {tone === "kimlik" && icon ? icon : null}
     {children}
   </Badge>

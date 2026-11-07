@@ -160,8 +160,7 @@ function main() {
   // demek yanıltıcıdır ve sağlam bir yedeğe güvensizlik yaratır.
   const explicitlyFailed = all.filter((n) => existsSync(join(root, n, "BACKUP-FAILED.json")));
   const unmarked = all.filter(
-    (n) =>
-      !existsSync(join(root, n, "BACKUP-OK.json")) && !existsSync(join(root, n, "BACKUP-FAILED.json")),
+    (n) => !existsSync(join(root, n, "BACKUP-OK.json")) && !existsSync(join(root, n, "BACKUP-FAILED.json")),
   );
 
   const toDelete = successful.slice(0, Math.max(0, successful.length - args.keep));

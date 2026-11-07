@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  analyzeSourceGraph,
-  extractModuleSpecifiers,
-  isTestFile,
-  resolveLocalModule,
-} from "./check-dead-code.mjs";
+import { analyzeSourceGraph, extractModuleSpecifiers, isTestFile, resolveLocalModule } from "./check-dead-code.mjs";
 
 describe("extractModuleSpecifiers", () => {
   it("extracts static, side-effect, re-export and dynamic imports", () => {
@@ -16,12 +11,7 @@ describe("extractModuleSpecifiers", () => {
       const Page = lazy(() => import("./Page.tsx"));
     `;
 
-    expect(extractModuleSpecifiers(source)).toEqual([
-      "./value",
-      "./styles.css",
-      "@/lib/helper",
-      "./Page.tsx",
-    ]);
+    expect(extractModuleSpecifiers(source)).toEqual(["./value", "./styles.css", "@/lib/helper", "./Page.tsx"]);
   });
 
   it("ignores imports that only appear in comments", () => {
@@ -53,15 +43,13 @@ describe("resolveLocalModule", () => {
 
   it("resolves relative and @ aliases with extension and index fallbacks", () => {
     expect(resolveLocalModule("src/main.tsx", "./App", sourceFiles)).toBe("src/App.tsx");
-    expect(resolveLocalModule("src/main.tsx", "@/lib/helper", sourceFiles)).toBe(
-      "src/lib/helper.ts",
-    );
+    expect(resolveLocalModule("src/main.tsx", "@/lib/helper", sourceFiles)).toBe("src/lib/helper.ts");
     expect(resolveLocalModule("src/pages/Page.tsx", "@/components/Card", sourceFiles)).toBe(
       "src/components/Card/index.tsx",
     );
-    expect(
-      resolveLocalModule("src/pages/Page.tsx", "@/lib/tools-catalog.generated", sourceFiles),
-    ).toBe("src/lib/tools-catalog.generated.ts");
+    expect(resolveLocalModule("src/pages/Page.tsx", "@/lib/tools-catalog.generated", sourceFiles)).toBe(
+      "src/lib/tools-catalog.generated.ts",
+    );
   });
 
   it("ignores packages and non-source assets", () => {
@@ -91,9 +79,7 @@ describe("analyzeSourceGraph", () => {
       configReferencedExceptions: new Set(["src/test/setup.ts", "src/vite-env.d.ts"]),
     });
 
-    expect(result.reachable).toEqual(
-      new Set(["src/main.tsx", "src/App.tsx", "src/pages/Page.tsx", "src/lib/live.ts"]),
-    );
+    expect(result.reachable).toEqual(new Set(["src/main.tsx", "src/App.tsx", "src/pages/Page.tsx", "src/lib/live.ts"]));
     expect(result.knownDead).toEqual(["src/lib/known-dead.ts"]);
     expect(result.newDead).toEqual(["src/lib/new-dead.ts"]);
   });

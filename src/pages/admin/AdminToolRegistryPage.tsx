@@ -10,13 +10,7 @@ import { Link } from "react-router-dom";
 
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { trIncludes } from "@/lib/text-normalization";
 import { toolCatalog as catalog } from "@/lib/agent/tools-catalog.generated";
@@ -39,10 +33,7 @@ type CatalogTool = {
   commands?: string[];
 };
 
-const FAMILY_META: Record<
-  string,
-  { label: string; icon: typeof Cpu; accent: string }
-> = {
+const FAMILY_META: Record<string, { label: string; icon: typeof Cpu; accent: string }> = {
   edge_function: { label: "Edge Function (HTTP)", icon: Cloud, accent: "text-sky-500" },
   worker: { label: "Worker (arka plan)", icon: Cpu, accent: "text-violet-500" },
   ui_module: { label: "UI Modülü (dahili API)", icon: FileCode2, accent: "text-emerald-500" },
@@ -94,9 +85,7 @@ const AdminToolRegistryPage = () => {
         <Badge variant="secondary">{catalog.counts.edge_functions} edge function</Badge>
         <Badge variant="secondary">{catalog.counts.workers} worker</Badge>
         <Badge variant="secondary">{catalog.counts.ui_modules} modül</Badge>
-        {deprecatedCount > 0 && (
-          <Badge variant="destructive">{deprecatedCount} kullanımdan kaldırıldı</Badge>
-        )}
+        {deprecatedCount > 0 && <Badge variant="destructive">{deprecatedCount} kullanımdan kaldırıldı</Badge>}
         <Link
           to="/admin/guide#agent-altyapisi"
           className="ml-auto inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
@@ -130,16 +119,11 @@ const AdminToolRegistryPage = () => {
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between gap-2">
                       <CardTitle className="text-base">{tool.tool_name}</CardTitle>
-                      <Badge
-                        variant={tool.status === "deprecated" ? "destructive" : "outline"}
-                        className="shrink-0"
-                      >
+                      <Badge variant={tool.status === "deprecated" ? "destructive" : "outline"} className="shrink-0">
                         {tool.status === "deprecated" ? "kaldırıldı" : "aktif"}
                       </Badge>
                     </div>
-                    <CardDescription className="font-mono text-xs">
-                      {tool.entrypoint}
-                    </CardDescription>
+                    <CardDescription className="font-mono text-xs">{tool.entrypoint}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-2 text-sm text-muted-foreground">
                     {tool.description && <p>{tool.description}</p>}
@@ -148,9 +132,7 @@ const AdminToolRegistryPage = () => {
                       <p>
                         <span className="font-medium text-foreground">Girdi:</span>{" "}
                         {tool.input_schema.validation === "zod" ? "Zod şeması" : "elle doğrulama"}
-                        {tool.input_schema.fields?.length
-                          ? ` · ${tool.input_schema.fields.join(", ")}`
-                          : ""}
+                        {tool.input_schema.fields?.length ? ` · ${tool.input_schema.fields.join(", ")}` : ""}
                       </p>
                     )}
 
@@ -163,15 +145,13 @@ const AdminToolRegistryPage = () => {
 
                     {!!tool.rpcs?.length && (
                       <p>
-                        <span className="font-medium text-foreground">RPC:</span>{" "}
-                        {tool.rpcs.join(", ")}
+                        <span className="font-medium text-foreground">RPC:</span> {tool.rpcs.join(", ")}
                       </p>
                     )}
 
                     {!!tool.exports?.length && (
                       <p className="line-clamp-2">
-                        <span className="font-medium text-foreground">Fonksiyonlar:</span>{" "}
-                        {tool.exports.join(", ")}
+                        <span className="font-medium text-foreground">Fonksiyonlar:</span> {tool.exports.join(", ")}
                       </p>
                     )}
 
@@ -190,8 +170,7 @@ const AdminToolRegistryPage = () => {
 
                     {!!tool.commands?.length && (
                       <p className="line-clamp-3">
-                        <span className="font-medium text-foreground">Komutlar:</span>{" "}
-                        {tool.commands.join(", ")}
+                        <span className="font-medium text-foreground">Komutlar:</span> {tool.commands.join(", ")}
                       </p>
                     )}
                   </CardContent>
@@ -202,11 +181,7 @@ const AdminToolRegistryPage = () => {
         );
       })}
 
-      {groups.length === 0 && (
-        <p className="mt-6 text-sm text-muted-foreground">
-          "{query}" için araç bulunamadı.
-        </p>
-      )}
+      {groups.length === 0 && <p className="mt-6 text-sm text-muted-foreground">"{query}" için araç bulunamadı.</p>}
     </AdminPageShell>
   );
 };

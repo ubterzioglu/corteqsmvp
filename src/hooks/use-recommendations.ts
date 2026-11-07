@@ -28,10 +28,7 @@ const LIST_STALE_MS = 60_000;
 /** Eşleşme — talep başına deterministik + match RPC tam üye kataloğunu tarar. */
 const MATCH_STALE_MS = 5 * 60_000;
 
-export function useRecommendations(
-  filters?: RecommendationFilters,
-  opts?: { limit?: number; offset?: number },
-) {
+export function useRecommendations(filters?: RecommendationFilters, opts?: { limit?: number; offset?: number }) {
   return useQuery({
     queryKey: [...LIST_KEY, filters ?? {}, opts?.limit ?? 50, opts?.offset ?? 0],
     queryFn: () => fetchRecommendations(filters, opts),

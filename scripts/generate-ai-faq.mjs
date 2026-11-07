@@ -39,9 +39,9 @@ function findFaqPage(node) {
 
 /** HTML içindeki application/ld+json bloklarından FAQPage düğümünü çıkarır; yoksa FIRLATIR. */
 export function extractFaqPage(html) {
-  const blocks = [
-    ...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g),
-  ].map((match) => match[1]);
+  const blocks = [...html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(
+    (match) => match[1],
+  );
 
   for (const block of blocks) {
     let parsed;

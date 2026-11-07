@@ -61,7 +61,10 @@ describe("AdminCaddeModerationPage", () => {
   });
 
   it("filters by entity type", async () => {
-    listModerationQueueMock.mockResolvedValue([makeItem(), makeItem({ id: "q2", entityType: "cafe", entityId: "cafe-1", reason: "uygunsuz cafe adı" })]);
+    listModerationQueueMock.mockResolvedValue([
+      makeItem(),
+      makeItem({ id: "q2", entityType: "cafe", entityId: "cafe-1", reason: "uygunsuz cafe adı" }),
+    ]);
 
     renderPage();
 

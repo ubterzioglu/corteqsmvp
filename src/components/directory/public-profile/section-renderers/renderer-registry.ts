@@ -51,9 +51,7 @@ export const GENERIC_PUBLIC_SECTION_RENDERER: PublicSectionRendererDefinition = 
   Icon: LayoutGrid,
 };
 
-export function resolvePublicSectionRenderer(
-  componentKey: string | null,
-): PublicSectionRendererDefinition {
+export function resolvePublicSectionRenderer(componentKey: string | null): PublicSectionRendererDefinition {
   if (!componentKey) return GENERIC_PUBLIC_SECTION_RENDERER;
   return PUBLIC_SECTION_RENDERERS[componentKey] ?? GENERIC_PUBLIC_SECTION_RENDERER;
 }

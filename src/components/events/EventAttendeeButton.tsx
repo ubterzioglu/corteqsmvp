@@ -70,9 +70,7 @@ export function EventAttendeeButton({ eventId, eventStatus }: EventAttendeeButto
   if (!user) {
     return (
       <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center" data-testid="event-attendee-anon">
-        <p className="text-sm text-muted-foreground">
-          Katılmak için giriş yap — katılım listesi üyelere açık.
-        </p>
+        <p className="text-sm text-muted-foreground">Katılmak için giriş yap — katılım listesi üyelere açık.</p>
         <Button asChild variant="outline" size="sm">
           <Link to="/login">Giriş yap</Link>
         </Button>
@@ -127,9 +125,7 @@ export function EventAttendeeButton({ eventId, eventStatus }: EventAttendeeButto
           </p>
         ) : null}
       </div>
-      {joined ? (
-        <p className="text-xs text-emerald-700">Katılımcı listesinde görünüyorsun.</p>
-      ) : null}
+      {joined ? <p className="text-xs text-emerald-700">Katılımcı listesinde görünüyorsun.</p> : null}
     </div>
   );
 }

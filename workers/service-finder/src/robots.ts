@@ -105,9 +105,7 @@ export async function isRobotsAllowed(targetUrl: string): Promise<boolean> {
   return evaluateRules(entry, parsed.pathname + parsed.search);
 }
 
-async function fetchRobots(
-  origin: string,
-): Promise<RobotsRules | "unavailable_blocked" | "unavailable_open"> {
+async function fetchRobots(origin: string): Promise<RobotsRules | "unavailable_blocked" | "unavailable_open"> {
   try {
     const response = await fetch(`${origin}/robots.txt`, {
       headers: { "user-agent": USER_AGENT },

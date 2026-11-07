@@ -7,8 +7,7 @@ import { expect, test, type Page } from "@playwright/test";
  * tutulur: URL + kritik metin/etiket.
  */
 
-const b64url = (value: object) =>
-  Buffer.from(JSON.stringify(value)).toString("base64url");
+const b64url = (value: object) => Buffer.from(JSON.stringify(value)).toString("base64url");
 
 // İmza doğrulaması client'ta yapılmaz; decode edilebilir sahte JWT yeterli.
 const ACCESS_TOKEN = `${b64url({ alg: "none", typ: "JWT" })}.${b64url({
@@ -89,12 +88,8 @@ const mockSupabase = async (page: Page, { isAdmin = true } = {}) => {
   await page.route(/\/rest\/v1\//, (route) => route.fulfill(json([])));
   await page.route(/\/rest\/v1\/rpc\//, (route) => route.fulfill(json(null)));
   await page.route(/\/rest\/v1\/rpc\/is_admin/, (route) => route.fulfill(json(isAdmin)));
-  await page.route(/\/rest\/v1\/rpc\/get_role_management_bundle/, (route) =>
-    route.fulfill(json(ROLE_BUNDLE)),
-  );
-  await page.route(/\/rest\/v1\/rpc\/admin_list_member_catalog_profiles/, (route) =>
-    route.fulfill(json([])),
-  );
+  await page.route(/\/rest\/v1\/rpc\/get_role_management_bundle/, (route) => route.fulfill(json(ROLE_BUNDLE)));
+  await page.route(/\/rest\/v1\/rpc\/admin_list_member_catalog_profiles/, (route) => route.fulfill(json([])));
   await page.route(/\/rest\/v1\/approval_requests/, (route) => route.fulfill(json(APPROVAL_ROWS)));
   await page.route(/\/rest\/v1\/admin_audit_logs/, (route) => route.fulfill(json(AUDIT_ROWS)));
   await page.route(/\/rest\/v1\/roles\?/, (route) => route.fulfill(json(ROLE_ROWS)));

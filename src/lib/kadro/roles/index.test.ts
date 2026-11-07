@@ -4,11 +4,19 @@ import { KADRO_DEPTS, KADRO_PRIORITIES, KADRO_STATUSES, KADRO_WORK_TYPES } from 
 import { KADRO_ROLES, kadroRoleById } from "./index";
 
 const EXPECTED_BY_DEPT: Record<string, number> = {
-  kurucu: 5, kurumsal: 3, pazarlama: 27, urun: 9, operasyon: 5, gelir: 3,
+  kurucu: 5,
+  kurumsal: 3,
+  pazarlama: 27,
+  urun: 9,
+  operasyon: 5,
+  gelir: 3,
 };
 
 const EXPECTED_BY_AXIS: Record<string, number> = {
-  merkez: 25, islev: 11, cografya: 9, urun: 7,
+  merkez: 25,
+  islev: 11,
+  cografya: 9,
+  urun: 7,
 };
 
 describe("kadro rol kataloğu", () => {
@@ -47,7 +55,18 @@ describe("kadro rol kataloğu", () => {
 
   it("her rolün zorunlu metin alanları doludur", () => {
     for (const role of KADRO_ROLES) {
-      for (const field of ["title", "reports", "hours", "pay", "esop", "cadence", "tools", "trigger", "exit", "jd"] as const) {
+      for (const field of [
+        "title",
+        "reports",
+        "hours",
+        "pay",
+        "esop",
+        "cadence",
+        "tools",
+        "trigger",
+        "exit",
+        "jd",
+      ] as const) {
         expect(role[field], `${role.id}.${field}`).toBeTruthy();
       }
       expect(role.kpi.length, `${role.id}.kpi`).toBeGreaterThan(0);
@@ -58,8 +77,11 @@ describe("kadro rol kataloğu", () => {
   it("50 rolde ilan metni vardır, 2 kurucu rolünde yoktur", () => {
     const withAd = KADRO_ROLES.filter((r) => r.ad !== null);
     expect(withAd).toHaveLength(50);
-    expect(KADRO_ROLES.filter((r) => r.ad === null).map((r) => r.id).sort())
-      .toEqual(["ld-ceo", "ld-cto"]);
+    expect(
+      KADRO_ROLES.filter((r) => r.ad === null)
+        .map((r) => r.id)
+        .sort(),
+    ).toEqual(["ld-ceo", "ld-cto"]);
   });
 
   it("ilan metinleri eksiksizdir", () => {

@@ -52,14 +52,9 @@ export function estimateSerpApiSearchCost(): { units: number; amountUsd: number 
   return { units: 1, amountUsd: SERPAPI_USD_PER_SEARCH };
 }
 
-export function estimateGeminiCost(
-  model: string,
-  inputTokens: number,
-  outputTokens: number,
-): { amountUsd: number } {
+export function estimateGeminiCost(model: string, inputTokens: number, outputTokens: number): { amountUsd: number } {
   const pricing = GEMINI_PRICING[model] ?? GEMINI_PRICING["gemini-2.5-flash"];
   const amount =
-    (inputTokens / 1_000_000) * pricing.inputUsdPerMTokens +
-    (outputTokens / 1_000_000) * pricing.outputUsdPerMTokens;
+    (inputTokens / 1_000_000) * pricing.inputUsdPerMTokens + (outputTokens / 1_000_000) * pricing.outputUsdPerMTokens;
   return { amountUsd: round4(amount) };
 }

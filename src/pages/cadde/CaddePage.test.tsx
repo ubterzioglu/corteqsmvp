@@ -114,9 +114,7 @@ vi.mock("@/lib/cadde-api", async () => {
 });
 
 vi.mock("@/lib/cadde-notifications-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-notifications-api")>(
-    "@/lib/cadde-notifications-api",
-  );
+  const actual = await vi.importActual<typeof import("@/lib/cadde-notifications-api")>("@/lib/cadde-notifications-api");
   return {
     ...actual,
     listMyNotifications: (...args: unknown[]) => listMyNotificationsMock(...args),
@@ -204,7 +202,13 @@ describe("CaddePage", () => {
   it("shows the profile gate with missing fields when the actor context is incomplete", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     actorContextMock.mockReturnValue({
-      data: makeActorContext({ country: null, city: null, missingGateFields: ["country", "city"], canEnterCadde: false, canPostCadde: false }),
+      data: makeActorContext({
+        country: null,
+        city: null,
+        missingGateFields: ["country", "city"],
+        canEnterCadde: false,
+        canPostCadde: false,
+      }),
       isLoading: false,
     });
     listCaddeCountriesMock.mockResolvedValue([]);
@@ -219,7 +223,10 @@ describe("CaddePage", () => {
     expect(await screen.findByText(/Caddeye çıkmak için profilini tamamla/i)).toBeInTheDocument();
     const missingItems = screen.getAllByRole("listitem").map((item) => item.textContent);
     expect(missingItems).toEqual(expect.arrayContaining(["Ülke", "Şehir"]));
-    expect(screen.getByRole("link", { name: /Profil Ayarlarını Tamamla/i })).toHaveAttribute("href", "/profile?tab=settings");
+    expect(screen.getByRole("link", { name: /Profil Ayarlarını Tamamla/i })).toHaveAttribute(
+      "href",
+      "/profile?tab=settings",
+    );
   });
 
   it("renders the page normally when the context cannot be loaded (fail-open, DB enforces)", async () => {
@@ -249,7 +256,9 @@ describe("CaddePage", () => {
   it("shows a login-gated composer for visitors", async () => {
     useAuthMock.mockReturnValue({ session: null, user: null, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([{ id: "country-de", code: "DE", name: "Almanya" }]);
-    listCaddeCitiesMock.mockResolvedValue([{ id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" }]);
+    listCaddeCitiesMock.mockResolvedValue([
+      { id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" },
+    ]);
     listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
     listCaddeCafesMock.mockResolvedValue([]);
     listCaddeBillboardsMock.mockResolvedValue([]);
@@ -275,12 +284,7 @@ describe("CaddePage", () => {
     renderPage("/cadde");
 
     await waitFor(() => {
-      expect(listCaddeFeedMock).toHaveBeenCalledWith(
-        expect.objectContaining({ mode: "real" }),
-        null,
-        "user-1",
-        "tr",
-      );
+      expect(listCaddeFeedMock).toHaveBeenCalledWith(expect.objectContaining({ mode: "real" }), null, "user-1", "tr");
     });
   });
 
@@ -290,7 +294,9 @@ describe("CaddePage", () => {
     // composer normal şekilde görünür.
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
     listCaddeCountriesMock.mockResolvedValue([{ id: "country-de", code: "DE", name: "Almanya" }]);
-    listCaddeCitiesMock.mockResolvedValue([{ id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" }]);
+    listCaddeCitiesMock.mockResolvedValue([
+      { id: "city-berlin", countryId: "country-de", name: "Berlin", timezone: "Europe/Berlin" },
+    ]);
     listCaddeFeedMock.mockResolvedValue({ items: [], nextPage: null });
     listCaddeCafesMock.mockResolvedValue([]);
     listCaddeBillboardsMock.mockResolvedValue([]);
@@ -306,7 +312,10 @@ describe("CaddePage", () => {
 
   it("uses the registered profile location for new posts instead of the active filter or bridge toggle", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "user-1" } }, user: { id: "user-1" }, isLoading: false });
-    actorContextMock.mockReturnValue({ data: makeActorContext({ country: "Almanya", city: "Berlin" }), isLoading: false });
+    actorContextMock.mockReturnValue({
+      data: makeActorContext({ country: "Almanya", city: "Berlin" }),
+      isLoading: false,
+    });
     listCaddeCountriesMock.mockResolvedValue([
       { id: "country-de", code: "DE", name: "Almanya" },
       { id: "country-nl", code: "NL", name: "Hollanda" },
@@ -322,7 +331,9 @@ describe("CaddePage", () => {
 
     renderPage("/cadde?country=Hollanda&city=Amsterdam&bridge=1");
 
-    fireEvent.change(await screen.findByLabelText("Paylaşım metni"), { target: { value: "Profil konumumdan paylaşım" } });
+    fireEvent.change(await screen.findByLabelText("Paylaşım metni"), {
+      target: { value: "Profil konumumdan paylaşım" },
+    });
     fireEvent.click(screen.getByRole("button", { name: "Paylaş" }));
 
     await waitFor(() =>
@@ -378,9 +389,30 @@ describe("CaddePage", () => {
     });
     listCaddePostCommentsMock.mockResolvedValue({
       items: [
-        { id: "comment-1", postId: "post-1", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
-        { id: "comment-2", postId: "post-1", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
-        { id: "comment-3", postId: "post-1", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
+        {
+          id: "comment-1",
+          postId: "post-1",
+          userId: "u1",
+          body: "İlk yorum",
+          authorName: "Zeynep",
+          createdAt: "2026-06-23T10:01:00Z",
+        },
+        {
+          id: "comment-2",
+          postId: "post-1",
+          userId: "u2",
+          body: "İkinci yorum",
+          authorName: "Mert",
+          createdAt: "2026-06-23T10:02:00Z",
+        },
+        {
+          id: "comment-3",
+          postId: "post-1",
+          userId: "u3",
+          body: "Üçüncü yorum",
+          authorName: "Deniz",
+          createdAt: "2026-06-23T10:03:00Z",
+        },
       ],
       nextCursor: null,
     });
@@ -452,17 +484,59 @@ describe("CaddePage", () => {
         cursor === FIRST_PAGE_CURSOR
           ? {
               items: [
-                { id: "comment-6", postId: "post-load-more", userId: "u6", body: "Altıncı yorum", authorName: "Nil", createdAt: "2026-06-23T10:06:00Z" },
+                {
+                  id: "comment-6",
+                  postId: "post-load-more",
+                  userId: "u6",
+                  body: "Altıncı yorum",
+                  authorName: "Nil",
+                  createdAt: "2026-06-23T10:06:00Z",
+                },
               ],
               nextCursor: null,
             }
           : {
               items: [
-                { id: "comment-1", postId: "post-load-more", userId: "u1", body: "Birinci yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
-                { id: "comment-2", postId: "post-load-more", userId: "u2", body: "İkinci yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
-                { id: "comment-3", postId: "post-load-more", userId: "u3", body: "Üçüncü yorum", authorName: "Deniz", createdAt: "2026-06-23T10:03:00Z" },
-                { id: "comment-4", postId: "post-load-more", userId: "u4", body: "Dördüncü yorum", authorName: "Ece", createdAt: "2026-06-23T10:04:00Z" },
-                { id: "comment-5", postId: "post-load-more", userId: "u5", body: "Beşinci yorum", authorName: "Can", createdAt: "2026-06-23T10:05:00Z" },
+                {
+                  id: "comment-1",
+                  postId: "post-load-more",
+                  userId: "u1",
+                  body: "Birinci yorum",
+                  authorName: "Zeynep",
+                  createdAt: "2026-06-23T10:01:00Z",
+                },
+                {
+                  id: "comment-2",
+                  postId: "post-load-more",
+                  userId: "u2",
+                  body: "İkinci yorum",
+                  authorName: "Mert",
+                  createdAt: "2026-06-23T10:02:00Z",
+                },
+                {
+                  id: "comment-3",
+                  postId: "post-load-more",
+                  userId: "u3",
+                  body: "Üçüncü yorum",
+                  authorName: "Deniz",
+                  createdAt: "2026-06-23T10:03:00Z",
+                },
+                {
+                  id: "comment-4",
+                  postId: "post-load-more",
+                  userId: "u4",
+                  body: "Dördüncü yorum",
+                  authorName: "Ece",
+                  createdAt: "2026-06-23T10:04:00Z",
+                },
+                {
+                  id: "comment-5",
+                  postId: "post-load-more",
+                  userId: "u5",
+                  body: "Beşinci yorum",
+                  authorName: "Can",
+                  createdAt: "2026-06-23T10:05:00Z",
+                },
               ],
               nextCursor: FIRST_PAGE_CURSOR,
             },
@@ -529,7 +603,16 @@ describe("CaddePage", () => {
       nextPage: null,
     });
     listCaddePostCommentsMock.mockResolvedValue({
-      items: [{ id: "comment-enter", postId: "post-enter", userId: "u1", body: "Mevcut yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" }],
+      items: [
+        {
+          id: "comment-enter",
+          postId: "post-enter",
+          userId: "u1",
+          body: "Mevcut yorum",
+          authorName: "Zeynep",
+          createdAt: "2026-06-23T10:01:00Z",
+        },
+      ],
       nextCursor: null,
     });
 
@@ -640,7 +723,7 @@ describe("CaddePage", () => {
 
     fireEvent.click(await screen.findByTestId("cadde-comment-toggle"));
     const panel = await screen.findByTestId("cadde-comment-panel");
-    const textarea = await screen.findByPlaceholderText("Yorum yaz") as HTMLTextAreaElement;
+    const textarea = (await screen.findByPlaceholderText("Yorum yaz")) as HTMLTextAreaElement;
 
     fireEvent.change(textarea, { target: { value: "Merhaba dunya" } });
     textarea.setSelectionRange(8, 8);
@@ -700,13 +783,36 @@ describe("CaddePage", () => {
     });
     listCaddePostCommentsMock
       .mockResolvedValueOnce({
-        items: [{ id: "comment-poll-1", postId: "post-poll", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" }],
+        items: [
+          {
+            id: "comment-poll-1",
+            postId: "post-poll",
+            userId: "u1",
+            body: "İlk yorum",
+            authorName: "Zeynep",
+            createdAt: "2026-06-23T10:01:00Z",
+          },
+        ],
         nextCursor: null,
       })
       .mockResolvedValueOnce({
         items: [
-          { id: "comment-poll-1", postId: "post-poll", userId: "u1", body: "İlk yorum", authorName: "Zeynep", createdAt: "2026-06-23T10:01:00Z" },
-          { id: "comment-poll-2", postId: "post-poll", userId: "u2", body: "Karşı yorum", authorName: "Mert", createdAt: "2026-06-23T10:02:00Z" },
+          {
+            id: "comment-poll-1",
+            postId: "post-poll",
+            userId: "u1",
+            body: "İlk yorum",
+            authorName: "Zeynep",
+            createdAt: "2026-06-23T10:01:00Z",
+          },
+          {
+            id: "comment-poll-2",
+            postId: "post-poll",
+            userId: "u2",
+            body: "Karşı yorum",
+            authorName: "Mert",
+            createdAt: "2026-06-23T10:02:00Z",
+          },
         ],
         nextCursor: null,
       });
@@ -1014,11 +1120,15 @@ describe("CaddePage", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Paylaş (0)" }));
 
-    await waitFor(() => expect(shareMock).toHaveBeenCalledWith(expect.objectContaining({
-      title: "Paylaşılacak konu",
-      text: "Bu post Web Share API ile paylaşılır.",
-      url: expect.stringContaining("/cadde?post=post-share-web"),
-    })));
+    await waitFor(() =>
+      expect(shareMock).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: "Paylaşılacak konu",
+          text: "Bu post Web Share API ile paylaşılır.",
+          url: expect.stringContaining("/cadde?post=post-share-web"),
+        }),
+      ),
+    );
     await waitFor(() => expect(recordCaddeShareMock).toHaveBeenCalledWith("post-share-web", "web_share"));
   });
 
@@ -1068,7 +1178,9 @@ describe("CaddePage", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: "Paylaş (2)" }));
 
-    await waitFor(() => expect(writeTextMock).toHaveBeenCalledWith(expect.stringContaining("/cadde?post=post-share-copy")));
+    await waitFor(() =>
+      expect(writeTextMock).toHaveBeenCalledWith(expect.stringContaining("/cadde?post=post-share-copy")),
+    );
     await waitFor(() => expect(recordCaddeShareMock).toHaveBeenCalledWith("post-share-copy", "copy_link"));
   });
 
@@ -1104,9 +1216,7 @@ describe("CaddePage", () => {
     expect(screen.queryByTestId("cadde-featured-empty-state")).not.toBeInTheDocument();
     expect(screen.queryByTestId("cadde-billboards-empty-state")).not.toBeInTheDocument();
     // m52: konum seçili DEĞİLKEN mesaj yer adı uydurmaz.
-    expect(screen.getByTestId("cadde-cafes-empty-state")).toHaveTextContent(
-      "Henüz aktif bir cafe açılmadı.",
-    );
+    expect(screen.getByTestId("cadde-cafes-empty-state")).toHaveTextContent("Henüz aktif bir cafe açılmadı.");
   });
 
   // 04.08.2026 canlı denetimi: listCaddeFeed'in catch bloğu hatayı yutup BOŞ sayfa
@@ -1364,9 +1474,7 @@ describe("CaddePage", () => {
     // findByRole'un sağladığı sıralama garantisini, akışın çözüldüğünü kanıtlayan bir
     // veri bariyeriyle geri koyuyoruz:
     await screen.findByTestId("cadde-feed-empty-state");
-    await waitFor(() =>
-      expect(screen.getByTestId("cadde-geo-toggle")).toHaveAttribute("aria-expanded", "false"),
-    );
+    await waitFor(() => expect(screen.getByTestId("cadde-geo-toggle")).toHaveAttribute("aria-expanded", "false"));
     expect(screen.queryByText(COLD_START_HINT)).not.toBeInTheDocument();
   });
 
@@ -1448,9 +1556,7 @@ describe("CaddePage", () => {
     ).toBe(true);
 
     // (ii) Daraltılmış akış hâlâ TAM filtreyle soruldu.
-    expect(
-      listCaddeFeedMock.mock.calls.some(([callFilters]) => callFilters.cities.join() === "Berlin"),
-    ).toBe(true);
+    expect(listCaddeFeedMock.mock.calls.some(([callFilters]) => callFilters.cities.join() === "Berlin")).toBe(true);
 
     // (iii) HİÇBİR çağrı ülkeyi düşürmedi — yoklama yalnız bir adım gevşetir, filtreyi
     // temizlemez. Tamamen filtresiz bir çağrı olsaydı bu iddia düşerdi.

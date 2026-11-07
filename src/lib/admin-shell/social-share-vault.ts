@@ -35,13 +35,12 @@ export type SocialShareTool = {
 };
 
 /** Kategori → Türkçe görünür etiket. */
-export const SOCIAL_SHARE_CATEGORY_LABELS: Record<SocialShareCategory, string> =
-  {
-    kesfet: "Keşfet",
-    baglan: "Bağlan",
-    kullan: "Kullan",
-    koru: "Koru",
-  };
+export const SOCIAL_SHARE_CATEGORY_LABELS: Record<SocialShareCategory, string> = {
+  kesfet: "Keşfet",
+  baglan: "Bağlan",
+  kullan: "Kullan",
+  koru: "Koru",
+};
 
 export const SOCIAL_SHARE_TOOLS: SocialShareTool[] = [
   {

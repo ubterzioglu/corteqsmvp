@@ -98,8 +98,8 @@ const RequestNewProfileDialog = ({ open, onOpenChange, onSuccess }: RequestNewPr
         <DialogHeader>
           <DialogTitle>Yeni Profil Aç</DialogTitle>
           <DialogDescription>
-            Başka bir rol için ikinci bir profil talep et. Talebin admin onayından sonra profilin açılır;
-            mevcut profilin değişmeden kalır.
+            Başka bir rol için ikinci bir profil talep et. Talebin admin onayından sonra profilin açılır; mevcut
+            profilin değişmeden kalır.
           </DialogDescription>
         </DialogHeader>
 

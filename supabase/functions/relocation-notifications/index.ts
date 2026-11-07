@@ -71,11 +71,7 @@ Deno.serve(async (req: Request) => {
   // yönetici panelidir. Kullanıcıya kendi bildirimlerini gösteren bir uç gerekirse
   // AYRI yazılmalı ve move'ları çağıranın kendi `user_id`siyle filtrelemelidir —
   // bu ucu kullanıcıya açmak sızıntıyı geri getirir.
-  const caller = await resolveAdminOrSecretCaller(
-    req,
-    admin,
-    Deno.env.get("NOTIFY_DISPATCH_SECRET"),
-  );
+  const caller = await resolveAdminOrSecretCaller(req, admin, Deno.env.get("NOTIFY_DISPATCH_SECRET"));
   if (!caller.authorized) {
     return new Response(JSON.stringify({ error: "unauthorized" }), {
       status: 401,

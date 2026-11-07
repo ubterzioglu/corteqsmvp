@@ -45,10 +45,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
       .eq("is_active", true)
       .order("sort_order"),
 
-    supabase
-      .from("afs_features")
-      .select("key, label, description, is_active_globally")
-      .order("key"),
+    supabase.from("afs_features").select("key, label, description, is_active_globally").order("key"),
 
     supabase
       .from("afs_sections")
@@ -56,9 +53,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
       .eq("is_active", true)
       .order("sort_order"),
 
-    supabase
-      .from("entity_metadata")
-      .select("entity_type, entity_key, description, admin_note"),
+    supabase.from("entity_metadata").select("entity_type, entity_key, description, admin_note"),
   ]);
 
   if (attrResult.error) throw attrResult.error;
@@ -71,8 +66,7 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
     metaMap.set(`${m.entity_type}:${m.entity_key}`, m);
   }
 
-  const getMeta = (kind: EntityKind, key: string) =>
-    metaMap.get(`${kind}:${key}`) ?? null;
+  const getMeta = (kind: EntityKind, key: string) => metaMap.get(`${kind}:${key}`) ?? null;
 
   const attrs: CatalogRow[] = (attrResult.data ?? []).map((a) => {
     const meta = getMeta("attribute", a.key);
@@ -116,13 +110,9 @@ export async function fetchCatalogRows(): Promise<CatalogRow[]> {
   return [...attrs, ...feats, ...sects];
 }
 
-const turkishLower = (s: string) =>
-  s.replace(/İ/g, "i").replace(/I/g, "i").toLowerCase();
+const turkishLower = (s: string) => s.replace(/İ/g, "i").replace(/I/g, "i").toLowerCase();
 
-export function filterCatalogRows(
-  rows: CatalogRow[],
-  { search, kind }: CatalogFilterState,
-): CatalogRow[] {
+export function filterCatalogRows(rows: CatalogRow[], { search, kind }: CatalogFilterState): CatalogRow[] {
   const needle = turkishLower(normalizeTurkishText(search.trim()));
 
   return rows.filter((row) => {
@@ -131,9 +121,7 @@ export function filterCatalogRows(
     if (!needle) return true;
 
     const haystack = turkishLower(
-      normalizeTurkishText(
-        [row.label, row.key, row.description ?? "", row.adminNote ?? ""].join(" "),
-      ),
+      normalizeTurkishText([row.label, row.key, row.description ?? "", row.adminNote ?? ""].join(" ")),
     );
 
     return haystack.includes(needle);

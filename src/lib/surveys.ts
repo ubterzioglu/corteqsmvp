@@ -69,11 +69,7 @@ export async function getAdminSurveys() {
 }
 
 export async function getSurveyById(id: string) {
-  const { data: survey, error: surveyError } = await supabase
-    .from("surveys")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const { data: survey, error: surveyError } = await supabase.from("surveys").select("*").eq("id", id).single();
   if (surveyError) throw surveyError;
 
   const { data: questions, error: questionError } = await supabase
@@ -126,7 +122,10 @@ export async function updateSurvey(id: string, input: UpdateSurveyInput) {
   return data;
 }
 
-export async function upsertSurveyQuestions(surveyId: string, questions: Array<Partial<SurveyQuestion> & { id?: string }>) {
+export async function upsertSurveyQuestions(
+  surveyId: string,
+  questions: Array<Partial<SurveyQuestion> & { id?: string }>,
+) {
   const existingIds = questions.map((q) => q.id).filter(Boolean) as string[];
 
   const { data: existingRows, error: existingRowsError } = await supabase

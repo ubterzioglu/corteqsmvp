@@ -103,14 +103,13 @@ const AdminDeniedCard = ({ access }: { access: AdminAccessState }) => (
       <CardHeader>
         <CardTitle>Bu hesabın yönetici yetkisi bulunmuyor</CardTitle>
         <CardDescription>
-          Yönetici erişimi kullanıcı rol atamaları ve güvenli is_admin() kontrolü üzerinden
-          doğrulanır. Yetkiniz olduğunu düşünüyorsanız sistem yöneticisiyle iletişime geçin.
+          Yönetici erişimi kullanıcı rol atamaları ve güvenli is_admin() kontrolü üzerinden doğrulanır. Yetkiniz
+          olduğunu düşünüyorsanız sistem yöneticisiyle iletişime geçin.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-lg border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
-          Giriş yapan kullanıcı:{" "}
-          <span className="font-medium text-foreground">{access.session?.user.email}</span>
+          Giriş yapan kullanıcı: <span className="font-medium text-foreground">{access.session?.user.email}</span>
         </div>
         <Button variant="outline" onClick={() => void access.logout()}>
           Çıkış Yap
@@ -126,8 +125,8 @@ const AdminAccessErrorCard = ({ access }: { access: AdminAccessState }) => (
       <CardHeader>
         <CardTitle>Yetki kontrolü başarısız</CardTitle>
         <CardDescription>
-          Yetki doğrulaması sırasında bir sorun oluştu. Tekrar deneyin; sorun sürerse sistem
-          yöneticisiyle iletişime geçin.
+          Yetki doğrulaması sırasında bir sorun oluştu. Tekrar deneyin; sorun sürerse sistem yöneticisiyle iletişime
+          geçin.
         </CardDescription>
       </CardHeader>
       <CardContent className="flex gap-3">

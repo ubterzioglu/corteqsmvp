@@ -101,9 +101,7 @@ export interface ReadinessAnswers {
 const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
 /** 6 boyut feature değerlerini (0..1) hesaplar. SQL v_breakdown aynası. */
-export function computeReadinessBreakdown(
-  answers: ReadinessAnswers,
-): Record<ReadinessDimension, number> {
+export function computeReadinessBreakdown(answers: ReadinessAnswers): Record<ReadinessDimension, number> {
   const savings = optScore("savings_months", answers.savings_months);
   const passport = optScore("passport_validity", answers.passport_validity);
   const visa = optScore("visa_route", answers.visa_route);
@@ -126,15 +124,11 @@ export function computeReadinessBreakdown(
 
   return {
     financial_readiness: round4(savings * 0.5 + debt * 0.3 + emergencyFund * 0.2),
-    legal_document_readiness: round4(
-      passport * 0.3 + visa * 0.3 + diploma * 0.25 + bank * 0.15,
-    ),
+    legal_document_readiness: round4(passport * 0.3 + visa * 0.3 + diploma * 0.25 + bank * 0.15),
     language_readiness: round4(lang),
     housing_logistics: round4(housing * 0.45 + timeline * 0.25 + family * 0.15 + pet * 0.15),
     job_income_readiness: round4(job * 0.75 + remoteTransition * 0.25),
-    support_adaptability: round4(
-      support * 0.3 + emergency * 0.15 + health * 0.15 + adapt * 0.2 + mental * 0.2,
-    ),
+    support_adaptability: round4(support * 0.3 + emergency * 0.15 + health * 0.15 + adapt * 0.2 + mental * 0.2),
   };
 }
 
@@ -174,17 +168,13 @@ export const READINESS_LABELS: Record<ReadinessDimension, string> = {
  * değiştirirsen bu cümleyi de güncelle, yoksa kullanıcıya yanlış şey vaat eder.
  */
 export const READINESS_DIMENSION_DESCRIPTIONS: Record<ReadinessDimension, string> = {
-  financial_readiness:
-    "Birikiminin kaç ayı karşıladığı, borç baskın ve acil duruma erişebildiğin nakit.",
+  financial_readiness: "Birikiminin kaç ayı karşıladığı, borç baskın ve acil duruma erişebildiğin nakit.",
   legal_document_readiness:
     "Pasaport geçerliliği, vize yolunun netliği, diploma/denklik evrakları ve yerel banka hesabı.",
   language_readiness: "Hedef ülkenin iş ve günlük yaşam dilindeki seviyen.",
-  housing_logistics:
-    "İlk ay konaklaman, takviminin gerçekçiliği, ailenin uyumu ve varsa evcil hayvan planın.",
-  job_income_readiness:
-    "İlk 3 ayın gelir kaynağı ve mevcut işini uzaktana taşıyabilme durumun.",
-  support_adaptability:
-    "Yerindeki destek ağın, acil durum planın, sağlık sigortan, uyum ve ruhsal dayanıklılığın.",
+  housing_logistics: "İlk ay konaklaman, takviminin gerçekçiliği, ailenin uyumu ve varsa evcil hayvan planın.",
+  job_income_readiness: "İlk 3 ayın gelir kaynağı ve mevcut işini uzaktana taşıyabilme durumun.",
+  support_adaptability: "Yerindeki destek ağın, acil durum planın, sağlık sigortan, uyum ve ruhsal dayanıklılığın.",
 };
 
 /**
@@ -197,10 +187,8 @@ export const READINESS_DIMENSION_ACTIONS: Record<ReadinessDimension, string> = {
     "En az 3 aylık yaşam gideri kadar ayrı bir tampon hesap aç ve taşınma tarihine kadar ona dokunma.",
   legal_document_readiness:
     "Pasaport bitiş tarihini ve vize yolunu bu hafta yaz; diploma denkliği/apostil süresi aylar alabilir, önce onu başlat.",
-  language_readiness:
-    "Hedefin günlük konuşma değil, iş görüşmesi eşiği olsun. Haftada 3 kez konuşma pratiği ekle.",
-  housing_logistics:
-    "İlk 30 gün için iptal edilebilir bir konaklama ayırt; kalıcı ev aramasını yerinde yap.",
+  language_readiness: "Hedefin günlük konuşma değil, iş görüşmesi eşiği olsun. Haftada 3 kez konuşma pratiği ekle.",
+  housing_logistics: "İlk 30 gün için iptal edilebilir bir konaklama ayırt; kalıcı ev aramasını yerinde yap.",
   job_income_readiness:
     "Taşınmadan önce en az bir gelir kaynağını yazılı hale getir: iş teklifi, uzaktan sözleşme ya da müşteri taahhüdü.",
   support_adaptability:

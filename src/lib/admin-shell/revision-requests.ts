@@ -21,10 +21,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { sanitizeError, validateContent, validateFile, validateTitle } from "@/lib/security";
 import { fetchAllRows } from "@/lib/supabase-chunked";
-import {
-  REVISION_ATTACHMENT_EXTENSIONS,
-  REVISION_ATTACHMENT_MAX_BYTES,
-} from "./revision-attachment-media";
+import { REVISION_ATTACHMENT_EXTENSIONS, REVISION_ATTACHMENT_MAX_BYTES } from "./revision-attachment-media";
 
 type AttachmentInsert = Database["public"]["Tables"]["revision_request_attachments"]["Insert"];
 
@@ -114,8 +111,7 @@ type CommentRow = {
   created_at: string;
 };
 
-const REQUEST_SELECT =
-  "id,revision_number,title,detail,status,priority,area_label,created_by,created_at,updated_at";
+const REQUEST_SELECT = "id,revision_number,title,detail,status,priority,area_label,created_by,created_at,updated_at";
 const COMMENT_SELECT = "id,request_id,body,created_by,created_at";
 
 // types.ts bu tabloları tanımadığı için tüm sorgular tek bir gevşek istemci
@@ -204,7 +200,8 @@ export async function fetchRevisionRequests(): Promise<RevisionRequest[]> {
   let error: unknown = null;
   try {
     data = await fetchAllRows((from, to) =>
-      supabase.from("revision_requests")
+      supabase
+        .from("revision_requests")
         .select(REQUEST_SELECT)
         .is("deleted_at", null)
         .order("priority", { ascending: false })
@@ -224,7 +221,8 @@ export async function fetchRevisionRequests(): Promise<RevisionRequest[]> {
 
 /** Bir talebin aktif yorumlarını eskiden yeniye getirir. */
 export async function fetchComments(requestId: string): Promise<RevisionComment[]> {
-  const { data, error } = await supabase.from("revision_request_comments")
+  const { data, error } = await supabase
+    .from("revision_request_comments")
     .select(COMMENT_SELECT)
     .eq("request_id", requestId)
     .is("deleted_at", null)
@@ -238,16 +236,15 @@ export async function fetchComments(requestId: string): Promise<RevisionComment[
 }
 
 /** Yeni revizyon talebi oluşturur (created_by = aktif admin). */
-export async function createRevisionRequest(
-  form: RevisionRequestForm,
-): Promise<RevisionRequest> {
+export async function createRevisionRequest(form: RevisionRequestForm): Promise<RevisionRequest> {
   const validationError = validateRevisionRequestForm(form);
   if (validationError) {
     throw new Error(validationError);
   }
 
   const createdBy = await currentUserId();
-  const { data, error } = await supabase.from("revision_requests")
+  const { data, error } = await supabase
+    .from("revision_requests")
     .insert({ ...buildRequestPayload(form), created_by: createdBy })
     .select(REQUEST_SELECT)
     .single();
@@ -260,16 +257,14 @@ export async function createRevisionRequest(
 }
 
 /** Var olan bir talebi günceller (updated_at trigger ile otomatik). */
-export async function updateRevisionRequest(
-  id: string,
-  form: RevisionRequestForm,
-): Promise<RevisionRequest> {
+export async function updateRevisionRequest(id: string, form: RevisionRequestForm): Promise<RevisionRequest> {
   const validationError = validateRevisionRequestForm(form);
   if (validationError) {
     throw new Error(validationError);
   }
 
-  const { data, error } = await supabase.from("revision_requests")
+  const { data, error } = await supabase
+    .from("revision_requests")
     .update(buildRequestPayload(form))
     .eq("id", id)
     .select(REQUEST_SELECT)
@@ -284,7 +279,8 @@ export async function updateRevisionRequest(
 
 /** Talebi soft-delete eder (deleted_at set). Cascade ile yorumlar da gizlenir. */
 export async function deleteRevisionRequest(id: string): Promise<void> {
-  const { error } = await supabase.from("revision_requests")
+  const { error } = await supabase
+    .from("revision_requests")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -306,7 +302,8 @@ export async function addComment(requestId: string, body: string): Promise<Revis
   }
 
   const createdBy = await currentUserId();
-  const { data, error } = await supabase.from("revision_request_comments")
+  const { data, error } = await supabase
+    .from("revision_request_comments")
     .insert({ request_id: requestId, body: trimmed, created_by: createdBy })
     .select(COMMENT_SELECT)
     .single();
@@ -320,7 +317,8 @@ export async function addComment(requestId: string, body: string): Promise<Revis
 
 /** Yorumu soft-delete eder. */
 export async function deleteComment(id: string): Promise<void> {
-  const { error } = await supabase.from("revision_request_comments")
+  const { error } = await supabase
+    .from("revision_request_comments")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -341,9 +339,12 @@ export async function fetchUserEmails(ids: (string | null)[]): Promise<Record<st
 
   const entries = await Promise.all(
     uniqueIds.map(async (id) => {
-      const { data, error } = await supabase.rpc("admin_get_user_email" as never, {
-        p_user_id: id,
-      } as never);
+      const { data, error } = await supabase.rpc(
+        "admin_get_user_email" as never,
+        {
+          p_user_id: id,
+        } as never,
+      );
       if (error || !data) {
         return [id, ""] as const;
       }
@@ -423,7 +424,8 @@ function buildAttachmentPath(parent: AttachmentParent, file: File): string {
 /** Bir talebin ya da yorumun aktif (silinmemiş) eklerini eskiden yeniye getirir. */
 export async function fetchAttachments(parent: AttachmentParent): Promise<RevisionAttachment[]> {
   const { column, value } = attachmentParentColumn(parent);
-  const { data, error } = await supabase.from("revision_request_attachments")
+  const { data, error } = await supabase
+    .from("revision_request_attachments")
     .select(ATTACHMENT_SELECT)
     .eq(column, value)
     .is("deleted_at", null)
@@ -437,10 +439,7 @@ export async function fetchAttachments(parent: AttachmentParent): Promise<Revisi
 }
 
 /** Bir dosyayı revision-attachments bucket'ına yükler ve satır ekler (created_by = aktif admin). */
-export async function uploadAttachment(
-  parent: AttachmentParent,
-  file: File,
-): Promise<RevisionAttachment> {
+export async function uploadAttachment(parent: AttachmentParent, file: File): Promise<RevisionAttachment> {
   // A09b: tür/boyut sınırları TEK KAYNAKTAN (revision-attachment-media.ts) —
   // bucket'ın allowed_mime_types/file_size_limit değerleriyle ayna sözleşmesi.
   const fileError = validateFile(file, {
@@ -475,10 +474,9 @@ export async function uploadAttachment(
   // (`RejectExcessProperties` birleşime dağılmıyor). `satisfies` değil `:` —
   // amaç birleşimi tek şekle indirmek; fazla sütun yine derlemede yakalanır.
   const row: AttachmentInsert =
-    column === "request_id"
-      ? { ...base, request_id: value }
-      : { ...base, comment_id: value };
-  const { data, error } = await supabase.from("revision_request_attachments")
+    column === "request_id" ? { ...base, request_id: value } : { ...base, comment_id: value };
+  const { data, error } = await supabase
+    .from("revision_request_attachments")
     .insert(row)
     .select(ATTACHMENT_SELECT)
     .single();
@@ -492,14 +490,13 @@ export async function uploadAttachment(
 
 /** Eki storage'dan siler ve satırı soft-delete eder. */
 export async function deleteAttachment(id: string, storagePath: string): Promise<void> {
-  const { error: removeError } = await supabase.storage
-    .from(ATTACHMENTS_BUCKET)
-    .remove([storagePath]);
+  const { error: removeError } = await supabase.storage.from(ATTACHMENTS_BUCKET).remove([storagePath]);
   if (removeError) {
     throw new Error(sanitizeError(removeError, "Ek silinemedi."));
   }
 
-  const { error } = await supabase.from("revision_request_attachments")
+  const { error } = await supabase
+    .from("revision_request_attachments")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -510,13 +507,9 @@ export async function deleteAttachment(id: string, storagePath: string): Promise
 
 /** Bir ekin görüntülenmesi için kısa ömürlü signed URL üretir. */
 export async function getAttachmentUrl(storagePath: string): Promise<string> {
-  const { data, error } = await supabase.storage
-    .from(ATTACHMENTS_BUCKET)
-    .createSignedUrl(storagePath, 300);
+  const { data, error } = await supabase.storage.from(ATTACHMENTS_BUCKET).createSignedUrl(storagePath, 300);
   if (error || !data?.signedUrl) {
     throw new Error(sanitizeError(error, "Dosya için erişim linki üretilemedi."));
   }
   return data.signedUrl;
 }
-
-

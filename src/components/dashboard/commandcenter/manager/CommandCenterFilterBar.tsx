@@ -3,32 +3,29 @@
 // `onChange*` yardımcılarında toplanmıştır). Kategori ve Tip seçenekleri tek
 // facet sorgusundan türer; filtre değişimi yeni bir seçenek isteği ATMAZ.
 
-import { Search } from 'lucide-react'
-import { COMMAND_CENTER_PRIORITY_OPTIONS } from '@/lib/dashboard/command-center-items'
-import type {
-  CommandCenterCategoryOption,
-  CommandCenterDateGroupOption,
-} from '@/lib/dashboard/command-center-items'
-import { TODO_ASSIGNEES, TODO_STATUSES } from '@/lib/dashboard/todo-items'
-import { CHECKBOX_CLS, FILTER_INPUT_CLS, FILTER_SELECT_CLS } from './styles'
+import { Search } from "lucide-react";
+import { COMMAND_CENTER_PRIORITY_OPTIONS } from "@/lib/dashboard/command-center-items";
+import type { CommandCenterCategoryOption, CommandCenterDateGroupOption } from "@/lib/dashboard/command-center-items";
+import { TODO_ASSIGNEES, TODO_STATUSES } from "@/lib/dashboard/todo-items";
+import { CHECKBOX_CLS, FILTER_INPUT_CLS, FILTER_SELECT_CLS } from "./styles";
 
 interface CommandCenterFilterBarProps {
-  selectedAssignee: string
-  onAssigneeChange: (value: string) => void
-  selectedCategory: string
-  onCategoryChange: (value: string) => void
-  categoryOptions: CommandCenterCategoryOption[]
-  selectedDateGroup: string
-  onDateGroupChange: (value: string) => void
-  dateGroupOptions: CommandCenterDateGroupOption[]
-  selectedStatus: string
-  onStatusChange: (value: string) => void
-  selectedPriority: string
-  onPriorityChange: (value: string) => void
-  urgentOnly: boolean
-  onUrgentOnlyChange: (value: boolean) => void
-  searchTerm: string
-  onSearchTermChange: (value: string) => void
+  selectedAssignee: string;
+  onAssigneeChange: (value: string) => void;
+  selectedCategory: string;
+  onCategoryChange: (value: string) => void;
+  categoryOptions: CommandCenterCategoryOption[];
+  selectedDateGroup: string;
+  onDateGroupChange: (value: string) => void;
+  dateGroupOptions: CommandCenterDateGroupOption[];
+  selectedStatus: string;
+  onStatusChange: (value: string) => void;
+  selectedPriority: string;
+  onPriorityChange: (value: string) => void;
+  urgentOnly: boolean;
+  onUrgentOnlyChange: (value: boolean) => void;
+  searchTerm: string;
+  onSearchTermChange: (value: string) => void;
 }
 
 export default function CommandCenterFilterBar({
@@ -149,5 +146,5 @@ export default function CommandCenterFilterBar({
         </label>
       </div>
     </div>
-  )
+  );
 }

@@ -100,9 +100,7 @@ async function main() {
   console.log(`[catalog-embed] Baslangic kuyrugu: ${before}`);
   const result = await runCatalogEmbeddingQueue({ client, apiKey, limit });
   const after = await countPendingCatalogDocuments(client);
-  console.log(
-    `[catalog-embed] Tamamlandi: ${result.succeeded} basarili · ${after} embedding bos`,
-  );
+  console.log(`[catalog-embed] Tamamlandi: ${result.succeeded} basarili · ${after} embedding bos`);
 }
 
 if (process.argv[1]?.endsWith("catalog-vectors.mjs")) {

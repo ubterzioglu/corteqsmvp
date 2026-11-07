@@ -1,16 +1,5 @@
 import { type ComponentType, type ReactNode } from "react";
-import {
-  Bell,
-  Calendar,
-  FileText,
-  Inbox,
-  MessageSquare,
-  Plane,
-  Settings,
-  Store,
-  Ticket,
-  Users,
-} from "lucide-react";
+import { Bell, Calendar, FileText, Inbox, MessageSquare, Plane, Settings, Store, Ticket, Users } from "lucide-react";
 
 import { useState } from "react";
 
@@ -120,8 +109,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     kind: "placeholder",
     placeholder: {
       title: "Kuponlar",
-      description:
-        "Sana özel kuponlar ve indirim kodları burada toplanacak. Bu panel yakında açılacak.",
+      description: "Sana özel kuponlar ve indirim kodları burada toplanacak. Bu panel yakında açılacak.",
     },
   },
   {
@@ -131,8 +119,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     kind: "placeholder",
     placeholder: {
       title: "Çarşı",
-      description:
-        "Çarşı ilanların ve favori ürünlerin buraya bağlanacak. Bu panel yakında açılacak.",
+      description: "Çarşı ilanların ve favori ürünlerin buraya bağlanacak. Bu panel yakında açılacak.",
     },
   },
   {
@@ -153,8 +140,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     kind: "placeholder",
     placeholder: {
       title: "WhatsApp Grupları",
-      description:
-        "Üyesi olduğun WhatsApp grupları ve davetlerin burada listelenecek. Bu panel yakında açılacak.",
+      description: "Üyesi olduğun WhatsApp grupları ve davetlerin burada listelenecek. Bu panel yakında açılacak.",
     },
   },
   {
@@ -165,8 +151,7 @@ const PREMIUM_TABS: PremiumTabConfig[] = [
     hiddenFromTabBar: true,
     placeholder: {
       title: "Bildirimler",
-      description:
-        "Platform bildirimlerin ve uyarıların burada toplanacak. Bu panel yakında açılacak.",
+      description: "Platform bildirimlerin ve uyarıların burada toplanacak. Bu panel yakında açılacak.",
     },
   },
 ];
@@ -225,11 +210,7 @@ type PremiumProfileTabsProps = {
   onActiveTabChange: (value: string) => void;
 };
 
-const PremiumProfileTabs = ({
-  settingsContent,
-  activeTab,
-  onActiveTabChange,
-}: PremiumProfileTabsProps) => {
+const PremiumProfileTabs = ({ settingsContent, activeTab, onActiveTabChange }: PremiumProfileTabsProps) => {
   const visibleTabs = PREMIUM_TABS.filter((tab) => !tab.hiddenFromTabBar);
 
   return (
@@ -240,11 +221,7 @@ const PremiumProfileTabs = ({
             {visibleTabs.map((tab) => {
               const Icon = tab.icon;
               return (
-                <TabsTrigger
-                  key={tab.key}
-                  value={tab.key}
-                  className="gap-1.5 text-xs"
-                >
+                <TabsTrigger key={tab.key} value={tab.key} className="gap-1.5 text-xs">
                   <Icon className="h-3.5 w-3.5" aria-hidden="true" /> {tab.label}
                 </TabsTrigger>
               );

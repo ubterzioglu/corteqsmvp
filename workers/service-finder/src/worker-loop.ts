@@ -83,14 +83,17 @@ function providerByKey(runtime: JobRuntime, key: string): ProviderConfig | null 
 
 function applyTotals(runtime: JobRuntime, totals: CostTotals): void {
   if (totals.hard_cap_exceeded) {
-    throw new BudgetExceededError(
-      `Hard cap aşıldı: $${totals.cost_total_usd} / $${totals.hard_cap_usd}`,
-    );
+    throw new BudgetExceededError(`Hard cap aşıldı: $${totals.cost_total_usd} / $${totals.hard_cap_usd}`);
   }
   if (totals.soft_cap_exceeded && !runtime.softCapHit) {
     runtime.softCapHit = true;
-    void appendEvent(runtime.db, runtime.job.id, "soft_cap_reached",
-      `Soft cap aşıldı ($${totals.cost_total_usd}); ucuz moda geçiliyor.`, { level: "warn" });
+    void appendEvent(
+      runtime.db,
+      runtime.job.id,
+      "soft_cap_reached",
+      `Soft cap aşıldı ($${totals.cost_total_usd}); ucuz moda geçiliyor.`,
+      { level: "warn" },
+    );
   }
 }
 
@@ -107,8 +110,7 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
   const template = await loadTemplate(db, job.template_id);
   const queries = buildQueries(job, template);
 
-  const searchConfig =
-    providerById(runtime, job.search_provider_id) ?? providerByKey(runtime, "tavily");
+  const searchConfig = providerById(runtime, job.search_provider_id) ?? providerByKey(runtime, "tavily");
   if (!searchConfig || !searchConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin arama sağlayıcısı yok");
   }
@@ -118,10 +120,7 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
     providers.push(createTavilySearchProvider(resolveSecret(env, searchConfig.secret_ref)));
   } else if (searchConfig.provider_key === "serpapi") {
     providers.push(
-      createSerpApiSearchProvider(
-        resolveSecret(env, searchConfig.secret_ref),
-        searchConfig.request_defaults,
-      ),
+      createSerpApiSearchProvider(resolveSecret(env, searchConfig.secret_ref), searchConfig.request_defaults),
     );
   }
 
@@ -140,9 +139,10 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
     await ensureLease(runtime, { stage: "search", query: queryIndex, of: queries.length });
 
     const requestDefaults = searchConfig.request_defaults ?? {};
-    const baseDepth = typeof requestDefaults["search_depth"] === "string"
-      ? (requestDefaults["search_depth"] as "basic" | "advanced")
-      : "basic";
+    const baseDepth =
+      typeof requestDefaults["search_depth"] === "string"
+        ? (requestDefaults["search_depth"] as "basic" | "advanced")
+        : "basic";
     const depth: "basic" | "advanced" = runtime.softCapHit ? "basic" : baseDepth;
     const maxResults = runtime.softCapHit
       ? Math.min(5, Number(requestDefaults["max_results"] ?? 8))
@@ -196,9 +196,7 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
       event_type: "search",
       billing_unit: searchOutput.usage.billingUnit,
       quantity: searchOutput.usage.units,
-      unit_cost_usd: searchOutput.usage.units > 0
-        ? searchOutput.usage.estimatedCostUsd / searchOutput.usage.units
-        : 0,
+      unit_cost_usd: searchOutput.usage.units > 0 ? searchOutput.usage.estimatedCostUsd / searchOutput.usage.units : 0,
       amount_usd: searchOutput.usage.estimatedCostUsd,
       query_id: queryId,
       request_meta: { query: queryText, depth },
@@ -270,8 +268,12 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
     discoveredTotal += await insertDiscoveredSources(db, sources);
   }
 
-  await appendEvent(db, job.id, "search_stage_done",
-    `${queryIndex} sorgu çalıştı, ${discoveredTotal} kaynak keşfedildi.`);
+  await appendEvent(
+    db,
+    job.id,
+    "search_stage_done",
+    `${queryIndex} sorgu çalıştı, ${discoveredTotal} kaynak keşfedildi.`,
+  );
 
   // Seed URL'leri arama aşamasından bağımsız olarak doğrudan kaynak kuyruğuna ekle.
   if (job.seed_urls?.length) {
@@ -288,8 +290,12 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
         source_snippet: null as string | null,
       }));
       await insertDiscoveredSources(db, seedSources);
-      await appendEvent(db, job.id, "seed_urls_injected",
-        `${validSeedUrls.length} ön adres ekstraksiyon kuyruğuna eklendi.`);
+      await appendEvent(
+        db,
+        job.id,
+        "seed_urls_injected",
+        `${validSeedUrls.length} ön adres ekstraksiyon kuyruğuna eklendi.`,
+      );
     }
   }
 }
@@ -299,17 +305,17 @@ async function runSearchStage(runtime: JobRuntime): Promise<void> {
 // ---------------------------------------------------------------------------
 async function runExtractStage(runtime: JobRuntime): Promise<void> {
   const { db, env, job } = runtime;
-  const extractConfig =
-    providerById(runtime, job.extract_provider_id) ?? providerByKey(runtime, "tavily");
+  const extractConfig = providerById(runtime, job.extract_provider_id) ?? providerByKey(runtime, "tavily");
   if (!extractConfig || !extractConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin ekstraksiyon sağlayıcısı yok");
   }
   const extractProvider = createTavilyExtractProvider(resolveSecret(env, extractConfig.secret_ref));
 
   const requestDefaults = extractConfig.request_defaults ?? {};
-  const baseDepth = typeof requestDefaults["extract_depth"] === "string"
-    ? (requestDefaults["extract_depth"] as "basic" | "advanced")
-    : "basic";
+  const baseDepth =
+    typeof requestDefaults["extract_depth"] === "string"
+      ? (requestDefaults["extract_depth"] as "basic" | "advanced")
+      : "basic";
 
   const sources = await loadSourcesByStatus(db, job.id, "discovered", job.max_extract_urls);
   let fetchedCount = 0;
@@ -326,8 +332,13 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
     if (robotsAllowed) allowed.push(source);
   }
   if (sources.length > allowed.length) {
-    await appendEvent(db, job.id, "robots_blocked",
-      `${sources.length - allowed.length} kaynak robots.txt nedeniyle atlandı.`, { level: "info" });
+    await appendEvent(
+      db,
+      job.id,
+      "robots_blocked",
+      `${sources.length - allowed.length} kaynak robots.txt nedeniyle atlandı.`,
+      { level: "info" },
+    );
   }
 
   for (let offset = 0; offset < allowed.length; offset += EXTRACT_BATCH_SIZE) {
@@ -374,9 +385,7 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
         event_type: "extract",
         billing_unit: output.usage.billingUnit,
         quantity: output.usage.units,
-        unit_cost_usd: output.usage.units > 0
-          ? output.usage.estimatedCostUsd / output.usage.units
-          : 0,
+        unit_cost_usd: output.usage.units > 0 ? output.usage.estimatedCostUsd / output.usage.units : 0,
         amount_usd: output.usage.estimatedCostUsd,
         request_meta: { urls: batch.length, depth },
       });
@@ -392,8 +401,7 @@ async function runExtractStage(runtime: JobRuntime): Promise<void> {
 // ---------------------------------------------------------------------------
 async function runClassifyStage(runtime: JobRuntime): Promise<void> {
   const { db, env, job } = runtime;
-  const classifierConfig =
-    providerById(runtime, job.classifier_provider_id) ?? providerByKey(runtime, "gemini");
+  const classifierConfig = providerById(runtime, job.classifier_provider_id) ?? providerByKey(runtime, "gemini");
   if (!classifierConfig || !classifierConfig.is_enabled) {
     throw new AuthOrConfigError("Etkin sınıflandırıcı yok");
   }
@@ -443,9 +451,16 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     const validation = candidateResultSchema.safeParse(clampEvidenceQuotes(classification.parsed));
     if (!validation.success) {
       await updateSource(db, source.id, { fetch_status: "failed" });
-      await appendEvent(db, job.id, "classifier_validation_failed",
-        validation.error.issues.map((issue) => issue.message).join("; ").slice(0, 500),
-        { level: "warn", payload: { source_id: source.id } });
+      await appendEvent(
+        db,
+        job.id,
+        "classifier_validation_failed",
+        validation.error.issues
+          .map((issue) => issue.message)
+          .join("; ")
+          .slice(0, 500),
+        { level: "warn", payload: { source_id: source.id } },
+      );
       applyTotals(runtime, totals);
       continue;
     }
@@ -461,8 +476,14 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
 
     const duplicateKey = makeDuplicateKey(parsed);
     const candidateId = await upsertCandidate(
-      db, job.id, source.id, duplicateKey, parsed, job,
-      classification.usage.model, source.source_url,
+      db,
+      job.id,
+      source.id,
+      duplicateKey,
+      parsed,
+      job,
+      classification.usage.model,
+      source.source_url,
     );
     if (candidateId) {
       candidateCount += 1;
@@ -472,19 +493,18 @@ async function runClassifyStage(runtime: JobRuntime): Promise<void> {
     applyTotals(runtime, totals);
   }
 
-  await appendEvent(db, job.id, "classify_stage_done",
-    `${classified} kaynak sınıflandırıldı; toplam ${candidateCount} aday.`);
+  await appendEvent(
+    db,
+    job.id,
+    "classify_stage_done",
+    `${classified} kaynak sınıflandırıldı; toplam ${candidateCount} aday.`,
+  );
 }
 
 // ---------------------------------------------------------------------------
 // İş yürütücü
 // ---------------------------------------------------------------------------
-export async function processJob(
-  env: WorkerEnv,
-  db: Db,
-  workerId: string,
-  job: ServiceFinderJob,
-): Promise<void> {
+export async function processJob(env: WorkerEnv, db: Db, workerId: string, job: ServiceFinderJob): Promise<void> {
   const providerList = await loadProviderConfigs(db);
   const runtime: JobRuntime = {
     env,
@@ -518,9 +538,10 @@ export async function processJob(
       return;
     }
     const retryable = isRetryable(error);
-    const delay = error instanceof Object && "retryAfterSeconds" in error
-      ? Number((error as { retryAfterSeconds?: number }).retryAfterSeconds ?? 60)
-      : 60;
+    const delay =
+      error instanceof Object && "retryAfterSeconds" in error
+        ? Number((error as { retryAfterSeconds?: number }).retryAfterSeconds ?? 60)
+        : 60;
     await failJob(db, job.id, workerId, errorCode(error), errorMessage(error), retryable, delay);
   }
 }

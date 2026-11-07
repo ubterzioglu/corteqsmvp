@@ -74,11 +74,13 @@ describe("AdminOrgVerificationPage", () => {
 
     fireEvent.click(await screen.findByRole("button", { name: /tuzuk.pdf/i }));
     await waitFor(() => expect(openDocMock).toHaveBeenCalledWith("req-1/item-1/tuzuk.pdf"));
-    await waitFor(() => expect(globalThis.open).toHaveBeenCalledWith(
-      "https://signed.example/tuzuk?token=abc",
-      "_blank",
-      "noopener,noreferrer",
-    ));
+    await waitFor(() =>
+      expect(globalThis.open).toHaveBeenCalledWith(
+        "https://signed.example/tuzuk?token=abc",
+        "_blank",
+        "noopener,noreferrer",
+      ),
+    );
   });
 
   it("Onayla → reviewOrgVerification(claimId, true, sebep)", async () => {

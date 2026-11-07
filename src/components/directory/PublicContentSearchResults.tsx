@@ -35,8 +35,22 @@ const PublicContentSearchResults = ({ results, isLoading, error }: PublicContent
       </div>
       <div className="grid gap-3 sm:grid-cols-2">
         {results.map((result) => {
-          const Icon = result.type === "tool" ? Wrench : result.type === "event" ? Calendar : result.type === "cadde" ? MessageSquare : BookOpen;
-          const typeLabel = result.type === "tool" ? "Araç" : result.type === "event" ? "Etkinlik" : result.type === "cadde" ? "Cadde" : "Rehber yazısı";
+          const Icon =
+            result.type === "tool"
+              ? Wrench
+              : result.type === "event"
+                ? Calendar
+                : result.type === "cadde"
+                  ? MessageSquare
+                  : BookOpen;
+          const typeLabel =
+            result.type === "tool"
+              ? "Araç"
+              : result.type === "event"
+                ? "Etkinlik"
+                : result.type === "cadde"
+                  ? "Cadde"
+                  : "Rehber yazısı";
           return (
             <Link
               key={`${result.type}-${result.id}`}

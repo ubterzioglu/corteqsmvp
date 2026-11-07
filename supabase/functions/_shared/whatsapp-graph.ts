@@ -52,9 +52,8 @@ export async function sendGraphMessage(
   }
   const messages = (responseBody as { messages?: unknown }).messages;
   const first = Array.isArray(messages) ? messages[0] : null;
-  const providerMessageId = typeof first === "object" && first !== null && "id" in first
-    ? (first as { id?: unknown }).id
-    : null;
+  const providerMessageId =
+    typeof first === "object" && first !== null && "id" in first ? (first as { id?: unknown }).id : null;
   if (typeof providerMessageId !== "string" || !providerMessageId.startsWith("wamid.")) {
     throw new Error("meta_response_invalid");
   }

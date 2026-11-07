@@ -33,8 +33,21 @@ const NETWORK_NODES = [
 
 /** Kenarlar düğüm indislerine göre verilir — koordinat kopyalanmaz. */
 const NETWORK_EDGES: [number, number][] = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8],
-  [0, 2], [1, 3], [2, 4], [3, 5], [4, 6], [5, 7], [6, 8],
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [5, 6],
+  [6, 7],
+  [7, 8],
+  [0, 2],
+  [1, 3],
+  [2, 4],
+  [3, 5],
+  [4, 6],
+  [5, 7],
+  [6, 8],
 ];
 
 /**
@@ -122,10 +135,7 @@ const ManifestoSection = () => {
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
         <p className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/75 px-4 py-1.5 font-display text-xs font-semibold uppercase tracking-[0.2em] text-brand-indigo shadow-sm backdrop-blur">
-          <span
-            aria-hidden="true"
-            className="manifesto-node h-1.5 w-1.5 rounded-full bg-glow-orange"
-          />
+          <span aria-hidden="true" className="manifesto-node h-1.5 w-1.5 rounded-full bg-glow-orange" />
           Bir manifesto
         </p>
 
@@ -136,9 +146,8 @@ const ManifestoSection = () => {
         </h2>
 
         <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-slate-700 sm:text-xl">
-          Dünyanın dört bir yanına dağılmış bir halk, görünmez bir ağla birbirine bağlı.
-          CorteQS bu ağı görünür kılıyor: nerede olursan ol, kendi insanını, kendi
-          topluluğunu ve kendi fırsatını bulabilmen için.
+          Dünyanın dört bir yanına dağılmış bir halk, görünmez bir ağla birbirine bağlı. CorteQS bu ağı görünür kılıyor:
+          nerede olursan ol, kendi insanını, kendi topluluğunu ve kendi fırsatını bulabilmen için.
         </p>
 
         {/* Şehir çipleri: "dağılmış bir halk" cümlesinin görünür karşılığı. */}

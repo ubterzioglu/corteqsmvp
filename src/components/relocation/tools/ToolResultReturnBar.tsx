@@ -11,11 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft, X } from "lucide-react";
 
-import {
-  forgetToolResult,
-  readToolResultReturn,
-  type ToolResultReturn,
-} from "@/lib/relocation-result-return";
+import { forgetToolResult, readToolResultReturn, type ToolResultReturn } from "@/lib/relocation-result-return";
 
 export function ToolResultReturnBar() {
   const { pathname } = useLocation();

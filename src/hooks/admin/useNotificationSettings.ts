@@ -41,8 +41,7 @@ export function useNotificationSettings() {
     retry: false,
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: adminQueryKeys.notificationState() });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: adminQueryKeys.notificationState() });
 
   const notifyError = (error: unknown, fallback: string) => {
     toast({
@@ -111,8 +110,7 @@ export function useNotificationSettings() {
     });
   };
 
-  const setGlobal = (key: NotificationSettingKey, enabled: boolean) =>
-    settingMutation.mutate({ key, enabled });
+  const setGlobal = (key: NotificationSettingKey, enabled: boolean) => settingMutation.mutate({ key, enabled });
 
   // Kişisel tercihi açık ama genel anahtarı kapalı olan türler: kullanıcı mail
   // bekler ama gitmez. Uyarı metni bu listeden üretilir.
@@ -120,22 +118,18 @@ export function useNotificationSettings() {
     ? [
         state.myNewMemberEmail && !state.newMemberEnabled ? "yeni üye" : null,
         state.myAdminUpdateEmail && !state.adminUpdateEnabled ? "güncelleme" : null,
-        state.myRevisionRequestEmail && !state.revisionRequestEnabled
-          ? "revizyon isteği"
-          : null,
-        state.myRadarScanDigestEmail && !state.radarScanDigestEnabled
-          ? "radar tarama özeti"
-          : null,
+        state.myRevisionRequestEmail && !state.revisionRequestEnabled ? "revizyon isteği" : null,
+        state.myRadarScanDigestEmail && !state.radarScanDigestEnabled ? "radar tarama özeti" : null,
       ].filter((value): value is string => value !== null)
     : [];
 
   /** Kullanıcı fiilen en az bir bildirim alıyor mu (kişisel AÇIK + genel AÇIK). */
   const isReceiving = Boolean(
     state &&
-      ((state.myNewMemberEmail && state.newMemberEnabled) ||
-        (state.myAdminUpdateEmail && state.adminUpdateEnabled) ||
-        (state.myRevisionRequestEmail && state.revisionRequestEnabled) ||
-        (state.myRadarScanDigestEmail && state.radarScanDigestEnabled)),
+    ((state.myNewMemberEmail && state.newMemberEnabled) ||
+      (state.myAdminUpdateEmail && state.adminUpdateEnabled) ||
+      (state.myRevisionRequestEmail && state.revisionRequestEnabled) ||
+      (state.myRadarScanDigestEmail && state.radarScanDigestEnabled)),
   );
 
   return {

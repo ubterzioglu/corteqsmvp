@@ -11,7 +11,6 @@ type CareerPositionCardProps = {
   onApply: (positionId: string) => void;
 };
 
-
 export function CareerPositionCard({ job, areaLabel, onApply }: CareerPositionCardProps) {
   return (
     <AccordionItem

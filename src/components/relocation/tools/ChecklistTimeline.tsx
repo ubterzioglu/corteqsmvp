@@ -33,9 +33,7 @@ export function ChecklistTimeline({ title, tasks }: ChecklistTimelineProps) {
       <CardContent className="space-y-5">
         {groups.map((group) => (
           <div key={group.phase} className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">
-              {PHASE_LABELS[group.phase]}
-            </h3>
+            <h3 className="text-sm font-semibold text-foreground">{PHASE_LABELS[group.phase]}</h3>
             <ul className="space-y-2">
               {group.items.map((task, idx) => (
                 <li

@@ -416,10 +416,7 @@ const AdminNewMemberGuidePage = () => {
   useEffect(() => {
     let isMounted = true;
     void (async () => {
-      const [rolesResult, catalogResult] = await Promise.allSettled([
-        fetchRolesForGuide(),
-        fetchCatalogRows(),
-      ]);
+      const [rolesResult, catalogResult] = await Promise.allSettled([fetchRolesForGuide(), fetchCatalogRows()]);
       if (!isMounted) return;
       if (rolesResult.status === "fulfilled" && !rolesResult.value.error) {
         setRoles((rolesResult.value.data ?? []) as RoleRow[]);
@@ -499,11 +496,12 @@ const AdminNewMemberGuidePage = () => {
             <div className="space-y-0.5">
               {navItems.map((item, idx) => {
                 const isHeadingActive = targetSectionId === item.id;
-                const shortLabel = item.heading === "Referans Katalogları"
-                  ? "Referans Katalogları"
-                  : blocks[idx]?.tag
-                    ? `${idx}. ${blocks[idx].tag}`
-                    : item.heading;
+                const shortLabel =
+                  item.heading === "Referans Katalogları"
+                    ? "Referans Katalogları"
+                    : blocks[idx]?.tag
+                      ? `${idx}. ${blocks[idx].tag}`
+                      : item.heading;
                 return (
                   <a
                     key={item.id}
@@ -527,12 +525,11 @@ const AdminNewMemberGuidePage = () => {
           <section className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
               <div className="space-y-2">
-                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-                  Kullanım Kılavuzu
-                </h1>
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">Kullanım Kılavuzu</h1>
                 <p className="max-w-3xl text-sm leading-6 text-muted-foreground">
                   Güncel kod akışına göre rol, profil, feature, attribute, section ve auth kullanımını tek yerde toplar.
-                  Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları artık aynı sayfa akışında doğrudan görünür.
+                  Veritabanı menüsündeki güncel operasyon sırası burada özetlenir; canlı referans katalogları artık aynı
+                  sayfa akışında doğrudan görünür.
                 </p>
               </div>
               <Button asChild variant="outline" size="sm" className="self-start">
@@ -545,7 +542,7 @@ const AdminNewMemberGuidePage = () => {
                   <Badge key={block.tag} variant="secondary" className="rounded-full text-xs">
                     {block.tag}
                   </Badge>
-                ) : null
+                ) : null,
               )}
             </div>
             <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -565,32 +562,21 @@ const AdminNewMemberGuidePage = () => {
                 { label: "Feature", value: featureCount },
                 { label: "Section", value: sectionCount },
               ].map((stat) => (
-                <div
-                  key={stat.label}
-                  className="rounded-2xl border border-border/60 bg-muted/30 px-4 py-3"
-                >
-                  <p className="text-2xl font-semibold tracking-tight text-foreground">
-                    {stat.value}
-                  </p>
-                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    {stat.label}
-                  </p>
+                <div key={stat.label} className="rounded-2xl border border-border/60 bg-muted/30 px-4 py-3">
+                  <p className="text-2xl font-semibold tracking-tight text-foreground">{stat.value}</p>
+                  <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{stat.label}</p>
                 </div>
               ))}
             </div>
             <p className="text-xs text-muted-foreground/70">
-              Sayılar veritabanından canlı çekilir; veri yüklenene kadar referans
-              değerler gösterilir (76 rol / 53 attribute / 42 feature / 7 section).
+              Sayılar veritabanından canlı çekilir; veri yüklenene kadar referans değerler gösterilir (76 rol / 53
+              attribute / 42 feature / 7 section).
             </p>
           </section>
 
           <div className="space-y-12">
             {blocks.map((block) => (
-              <section
-                key={block.heading}
-                id={getBlockId(block.heading)}
-                className="scroll-mt-28 space-y-6"
-              >
+              <section key={block.heading} id={getBlockId(block.heading)} className="scroll-mt-28 space-y-6">
                 <h2 className="border-b border-border/60 pb-3 text-lg font-semibold tracking-tight text-foreground">
                   {block.heading}
                 </h2>
@@ -638,18 +624,14 @@ const AdminNewMemberGuidePage = () => {
                         className="flex items-center justify-between rounded-md border border-border/50 bg-muted/30 px-3 py-1.5 text-xs"
                       >
                         <span className="font-medium text-foreground">{role.label}</span>
-                        <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">
-                          {role.key}
-                        </code>
+                        <code className="ml-2 shrink-0 text-[10px] text-muted-foreground">{role.key}</code>
                       </div>
                     ))}
                   </div>
                 </section>
 
                 <section id={ATTRIBUTE_SECTION_ID} className="scroll-mt-28 space-y-4">
-                  <h3 className="text-base font-semibold text-foreground">
-                    Attribute Kataloğu ({attributes.length})
-                  </h3>
+                  <h3 className="text-base font-semibold text-foreground">Attribute Kataloğu ({attributes.length})</h3>
                   <div className="grid gap-1 sm:grid-cols-2">
                     {attributes.map((a) => (
                       <div
@@ -672,9 +654,7 @@ const AdminNewMemberGuidePage = () => {
                 </section>
 
                 <section id={FEATURE_SECTION_ID} className="scroll-mt-28 space-y-4">
-                  <h3 className="text-base font-semibold text-foreground">
-                    Feature Kataloğu ({features.length})
-                  </h3>
+                  <h3 className="text-base font-semibold text-foreground">Feature Kataloğu ({features.length})</h3>
                   <div className="grid gap-1 sm:grid-cols-2">
                     {features.map((f) => (
                       <div

@@ -29,8 +29,12 @@ describe("contributor resource self-service migration", () => {
   });
 
   it("does not grant direct writes to browser roles", () => {
-    expect(sql).toMatch(/revoke all on function public\.submit_contributor_resource_submission[\s\S]*from public, anon/i);
-    expect(sql).toMatch(/grant execute on function public\.submit_contributor_resource_submission[\s\S]*to authenticated/i);
+    expect(sql).toMatch(
+      /revoke all on function public\.submit_contributor_resource_submission[\s\S]*from public, anon/i,
+    );
+    expect(sql).toMatch(
+      /grant execute on function public\.submit_contributor_resource_submission[\s\S]*to authenticated/i,
+    );
     expect(sql).not.toMatch(/grant insert on public\.contributor_resource_submissions/i);
   });
 });

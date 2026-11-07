@@ -119,7 +119,10 @@ function normalizeUrl(value) {
 export function buildImportRecord(row, roleConfig, roleMap, options = {}) {
   const common = roleMap.commonColumns ?? {};
   const titleFromConfiguredColumns = roleConfig.titleColumns
-    ? roleConfig.titleColumns.map((column) => readFirst(row, [column])).filter(Boolean).join(" ")
+    ? roleConfig.titleColumns
+        .map((column) => readFirst(row, [column]))
+        .filter(Boolean)
+        .join(" ")
     : "";
   const title = titleFromConfiguredColumns || readFirst(row, common.title);
 
@@ -165,7 +168,14 @@ export function buildImportRecord(row, roleConfig, roleMap, options = {}) {
     contacts: [
       phone ? { contact_type: "phone", contact_value: phone, label: "Telefon", is_primary: true } : null,
       email ? { contact_type: "email", contact_value: email, label: "E-posta", is_primary: !phone } : null,
-      website ? { contact_type: website.includes("doctolib.") ? "appointment_url" : "website", contact_value: website, label: "Web Sitesi", is_primary: false } : null,
+      website
+        ? {
+            contact_type: website.includes("doctolib.") ? "appointment_url" : "website",
+            contact_value: website,
+            label: "Web Sitesi",
+            is_primary: false,
+          }
+        : null,
     ].filter(Boolean),
     location: {
       country_code: country,
@@ -247,10 +257,11 @@ export async function upsertImportRecord(supabase, record, categoryId, sourceTyp
   });
   if (resetError) throw resetError;
 
-  const { error: categoryError } = await supabase.from("catalog_item_categories").upsert(
-    [{ item_id: itemIdValue, category_id: categoryId, is_primary: true }],
-    { onConflict: "item_id,category_id" },
-  );
+  const { error: categoryError } = await supabase
+    .from("catalog_item_categories")
+    .upsert([{ item_id: itemIdValue, category_id: categoryId, is_primary: true }], {
+      onConflict: "item_id,category_id",
+    });
   if (categoryError) throw categoryError;
 
   if (record.contacts.length > 0) {
@@ -328,7 +339,8 @@ async function upsertExtensionRecord(supabase, itemId, record) {
       consultation_modes: ["in_person"],
       languages: record.languages,
       supports_online_consultation: false,
-      appointment_url: record.contacts.find((contact) => contact.contact_type === "appointment_url")?.contact_value ?? null,
+      appointment_url:
+        record.contacts.find((contact) => contact.contact_type === "appointment_url")?.contact_value ?? null,
     });
     if (error) throw error;
   }
@@ -337,7 +349,8 @@ async function upsertExtensionRecord(supabase, itemId, record) {
     const { error } = await supabase.from("business_details").upsert({
       item_id: itemId,
       supports_online_booking: false,
-      appointment_url: record.contacts.find((contact) => contact.contact_type === "appointment_url")?.contact_value ?? null,
+      appointment_url:
+        record.contacts.find((contact) => contact.contact_type === "appointment_url")?.contact_value ?? null,
     });
     if (error) throw error;
   }

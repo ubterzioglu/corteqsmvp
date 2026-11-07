@@ -10,7 +10,7 @@ describe("buildKadroCsv", () => {
     const lines = csv.split("\n");
 
     expect(lines[0]).toBe(
-      "Rol ID,Pozisyon,Departman,Eksen,Çalışma Tipi,Dalga,Durum,Öncelik,Sahip,Rapor Yöneticisi,KPI'lar,Not"
+      "Rol ID,Pozisyon,Departman,Eksen,Çalışma Tipi,Dalga,Durum,Öncelik,Sahip,Rapor Yöneticisi,KPI'lar,Not",
     );
   });
 

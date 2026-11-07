@@ -12,7 +12,6 @@ export const adminQueryKeys = {
   overrides: () => [...adminQueryKeys.all, "overrides"] as const,
   roleMatrixRoles: () => [...adminQueryKeys.all, "role-matrix", "roles"] as const,
   roleMatrixCatalog: () => [...adminQueryKeys.all, "role-matrix", "catalog"] as const,
-  roleMatrixBundle: (roleKey: string) =>
-    [...adminQueryKeys.all, "role-matrix", "bundle", roleKey] as const,
+  roleMatrixBundle: (roleKey: string) => [...adminQueryKeys.all, "role-matrix", "bundle", roleKey] as const,
   notificationState: () => [...adminQueryKeys.all, "notification-state"] as const,
 };

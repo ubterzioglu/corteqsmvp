@@ -54,7 +54,9 @@ function isRateLimited(failure: AuthFailure): boolean {
 export function formatRetryHint(message: string | null | undefined): string {
   const seconds = Number(/retry_after=(\d+)/.exec(message ?? "")?.[1]);
   if (!Number.isFinite(seconds) || seconds <= 0) return "";
-  return seconds < 90 ? ` Yaklaşık ${seconds} sn sonra tekrar dene.` : ` Yaklaşık ${Math.ceil(seconds / 60)} dk sonra tekrar dene.`;
+  return seconds < 90
+    ? ` Yaklaşık ${seconds} sn sonra tekrar dene.`
+    : ` Yaklaşık ${Math.ceil(seconds / 60)} dk sonra tekrar dene.`;
 }
 
 /**

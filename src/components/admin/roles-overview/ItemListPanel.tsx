@@ -16,7 +16,11 @@ const ItemListPanel = ({ items, selectedItemId, onSelectItem, totalCount, isLoad
     <CardHeader className="pb-2">
       <CardTitle className="text-sm font-semibold">
         Katalog / Genel Item
-        {!isLoading && <Badge variant="secondary" className="ml-2">{totalCount}</Badge>}
+        {!isLoading && (
+          <Badge variant="secondary" className="ml-2">
+            {totalCount}
+          </Badge>
+        )}
       </CardTitle>
     </CardHeader>
     <CardContent className="p-0 flex-1 overflow-auto">
@@ -44,7 +48,9 @@ const ItemListPanel = ({ items, selectedItemId, onSelectItem, totalCount, isLoad
                     {item.kind === "catalog_item" ? "KTG" : item.kind === "member_profile" ? "MEM" : "KUL"}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-[10px] text-muted-foreground py-1.5">{item.platformRoleKey ?? "-"}</TableCell>
+                <TableCell className="text-[10px] text-muted-foreground py-1.5">
+                  {item.platformRoleKey ?? "-"}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

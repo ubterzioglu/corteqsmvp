@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 import { findRouteChunkFiles, routeModulePreloadPlugin } from "./route-modulepreload.mjs";
 
 const bundle = {
-  "assets/main-a.js": { type: "chunk", fileName: "assets/main-a.js", facadeModuleId: "C:\\repo\\index.html", imports: [] },
+  "assets/main-a.js": {
+    type: "chunk",
+    fileName: "assets/main-a.js",
+    facadeModuleId: "C:\\repo\\index.html",
+    imports: [],
+  },
   "assets/LandingTrialPage-b.js": {
     type: "chunk",
     fileName: "assets/LandingTrialPage-b.js",

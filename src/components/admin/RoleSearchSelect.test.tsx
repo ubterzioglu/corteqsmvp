@@ -21,13 +21,7 @@ describe("RoleSearchSelect", () => {
   });
 
   it("renders selected role label", () => {
-    render(
-      <RoleSearchSelect
-        roles={roles}
-        value="Consultant_RealEstate"
-        onValueChange={vi.fn()}
-      />,
-    );
+    render(<RoleSearchSelect roles={roles} value="Consultant_RealEstate" onValueChange={vi.fn()} />);
     expect(screen.getByText("Gayrimenkul Danışmanı")).toBeInTheDocument();
   });
 
@@ -58,21 +52,12 @@ describe("RoleSearchSelect", () => {
   });
 
   it("is disabled when disabled prop is true", () => {
-    render(
-      <RoleSearchSelect roles={roles} value="" onValueChange={vi.fn()} disabled />,
-    );
+    render(<RoleSearchSelect roles={roles} value="" onValueChange={vi.fn()} disabled />);
     expect(screen.getByRole("combobox")).toBeDisabled();
   });
 
   it("renders custom placeholder", () => {
-    render(
-      <RoleSearchSelect
-        roles={roles}
-        value=""
-        onValueChange={vi.fn()}
-        placeholder="Bir rol seçiniz..."
-      />,
-    );
+    render(<RoleSearchSelect roles={roles} value="" onValueChange={vi.fn()} placeholder="Bir rol seçiniz..." />);
     expect(screen.getByText("Bir rol seçiniz...")).toBeInTheDocument();
   });
 

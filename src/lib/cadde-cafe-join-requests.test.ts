@@ -51,7 +51,9 @@ describe("Cadde cafe join request summary (workshop m92)", () => {
     expect(sql).toContain("upa.approval_status = 'approved'");
     expect(sql).toContain("catalog_item_is_publicly_visible");
     expect(sql).toContain("revoke all on function public.list_cadde_cafe_join_requests_v1(uuid) from public, anon");
-    expect(sql).toContain("grant execute on function public.list_cadde_cafe_join_requests_v1(uuid) to authenticated, service_role");
+    expect(sql).toContain(
+      "grant execute on function public.list_cadde_cafe_join_requests_v1(uuid) to authenticated, service_role",
+    );
     expect(sql).not.toContain("auth.users");
     expect(sql).not.toMatch(/select[\s\S]*\b(email|phone_e164|whatsapp)\b/);
   });

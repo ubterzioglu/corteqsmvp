@@ -22,7 +22,9 @@ const AdminRadarRunsPage = () => {
     }
   }, [toast]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const totalInserted = runs.reduce((s, r) => s + r.inserted_count, 0);
   const totalFetched = runs.reduce((s, r) => s + r.fetched_count, 0);
@@ -34,9 +36,7 @@ const AdminRadarRunsPage = () => {
           <div className="flex items-start justify-between gap-3">
             <div>
               <CardTitle>Tarama Geçmişi</CardTitle>
-              <CardDescription>
-                Günlük cron ve manuel taramaların sonuçlarını izleyin.
-              </CardDescription>
+              <CardDescription>Günlük cron ve manuel taramaların sonuçlarını izleyin.</CardDescription>
             </div>
             <Button variant="outline" size="sm" onClick={() => void load()} disabled={loading}>
               <RefreshCw className={`mr-1 h-3 w-3 ${loading ? "animate-spin" : ""}`} />

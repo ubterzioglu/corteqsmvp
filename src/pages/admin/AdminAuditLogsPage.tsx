@@ -47,7 +47,11 @@ const AdminAuditLogsPage = () => {
       accent="sky"
       filters={
         <AdminFilterBar className="grid gap-3 xl:grid-cols-4">
-          <Input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Action / entity ara" />
+          <Input
+            value={searchText}
+            onChange={(event) => setSearchText(event.target.value)}
+            placeholder="Action / entity ara"
+          />
           <Select value={actionFilter} onValueChange={setActionFilter}>
             <SelectTrigger>
               <SelectValue placeholder="Action filtrele" />
@@ -106,13 +110,17 @@ const AdminAuditLogsPage = () => {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="font-medium">{log.action}</p>
-                  <p className="text-xs text-muted-foreground">Actor: {resolveAdminUserLabel(users, log.actor_user_id)}</p>
-                  <p className="text-xs text-muted-foreground">Target: {resolveAdminUserLabel(users, log.target_user_id)}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Actor: {resolveAdminUserLabel(users, log.actor_user_id)}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Target: {resolveAdminUserLabel(users, log.target_user_id)}
+                  </p>
                   <p className="text-xs text-muted-foreground">{new Date(log.created_at).toLocaleString("tr-TR")}</p>
                 </div>
                 {/* min-w-0 + minmax(0,1fr) kolonlar: pre overflow'u kart içinde kalsın;
                   basis-64: dar ekranda meta kolonunun altına kırılsın */}
-              <div className="grid min-w-0 flex-1 basis-64 grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="grid min-w-0 flex-1 basis-64 grid-cols-1 gap-3 md:grid-cols-2">
                   <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
                     {JSON.stringify(log.before_value ?? {}, null, 2)}
                   </pre>

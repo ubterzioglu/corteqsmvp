@@ -39,9 +39,7 @@ describe("Cadde yüzey sözleşmesi", () => {
   // 1) TEK YARIÇAP
   it("yalnız iki yarıçap sınıfı kullanır: rounded-lg ve rounded-full", () => {
     const offenders = SURFACE_SOURCE.flatMap(({ file, source }) =>
-      [...source.matchAll(/rounded-(?!lg\b|full\b)([a-z0-9[\]]+)/g)].map(
-        (match) => `${file}: rounded-${match[1]}`,
-      ),
+      [...source.matchAll(/rounded-(?!lg\b|full\b)([a-z0-9[\]]+)/g)].map((match) => `${file}: rounded-${match[1]}`),
     );
 
     // rounded-full YALNIZ pill buton ve avatar içindir (dokümandaki tek istisna);
@@ -74,9 +72,7 @@ describe("Cadde yüzey sözleşmesi", () => {
     // Ölçüldü: slate-400 beyaz üzerinde 2.56:1, slate-300 1.48:1 — ikisi de AA (4.5)
     // altında. slate-500 4.76:1 ile geçer ve kod tabanının paleti slate.
     const offenders = SURFACE_SOURCE.flatMap(({ file, source }) =>
-      [...source.matchAll(/text-(?:slate|gray|zinc|neutral)-(?:300|400)/g)].map(
-        (match) => `${file}: ${match[0]}`,
-      ),
+      [...source.matchAll(/text-(?:slate|gray|zinc|neutral)-(?:300|400)/g)].map((match) => `${file}: ${match[0]}`),
     );
 
     expect(offenders).toEqual([]);

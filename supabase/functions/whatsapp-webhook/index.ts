@@ -1,9 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
-import {
-  createWhatsAppWebhookHandler,
-  type StoredWhatsAppWebhookEvent,
-} from "../_shared/whatsapp-webhook.ts";
+import { createWhatsAppWebhookHandler, type StoredWhatsAppWebhookEvent } from "../_shared/whatsapp-webhook.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -50,7 +47,7 @@ const handler = createWhatsAppWebhookHandler({
     try {
       const autoreplyUrl = `${supabaseUrl}/functions/v1/whatsapp-autoreply`;
       const autoreplySecret = Deno.env.get("WHATSAPP_AUTOREPLY_SECRET");
-      
+
       if (!autoreplySecret) {
         console.error("whatsapp-webhook: WHATSAPP_AUTOREPLY_SECRET not configured");
         return;

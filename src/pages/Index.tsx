@@ -32,8 +32,7 @@ const Index = () => {
   useSeo(
     {
       title: "Ana Sayfa Taslağı | CorteQS",
-      description:
-        "CorteQS ana sayfasının eski taslak sürümü. Yayındaki sayfa için corteqs.net adresine gidin.",
+      description: "CorteQS ana sayfasının eski taslak sürümü. Yayındaki sayfa için corteqs.net adresine gidin.",
       robots: "noindex, follow",
     },
     [],

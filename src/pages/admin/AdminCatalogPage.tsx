@@ -148,8 +148,7 @@ const AdminCatalogPage = () => {
   useEffect(() => {
     // member_profile records are catalog_items rows (item_type = 'member'),
     // so they load through the same catalog detail RPC as catalog_item.
-    const isCatalogBacked =
-      selectedRecord?.kind === "catalog_item" || selectedRecord?.kind === "member_profile";
+    const isCatalogBacked = selectedRecord?.kind === "catalog_item" || selectedRecord?.kind === "member_profile";
 
     if (!isCatalogBacked) {
       setSelectedCatalogDetail(null);
@@ -206,14 +205,17 @@ const AdminCatalogPage = () => {
   }, [currentPage, totalCount]);
 
   const statusOptions = useMemo(
-    () => Array.from(new Set(records.map((record) => record.status))).sort((left, right) => left.localeCompare(right, "tr")),
+    () =>
+      Array.from(new Set(records.map((record) => record.status))).sort((left, right) =>
+        left.localeCompare(right, "tr"),
+      ),
     [records],
   );
 
   const verificationOptions = useMemo(
     () =>
-      Array.from(new Set(records.map((record) => record.verificationStatus).filter(Boolean) as string[])).sort((left, right) =>
-        left.localeCompare(right, "tr"),
+      Array.from(new Set(records.map((record) => record.verificationStatus).filter(Boolean) as string[])).sort(
+        (left, right) => left.localeCompare(right, "tr"),
       ),
     [records],
   );
@@ -228,15 +230,12 @@ const AdminCatalogPage = () => {
 
   const countryOptions = useMemo(
     () =>
-      Array.from(new Set(records.map((record) => record.primaryCountryCode).filter(Boolean) as string[])).sort((left, right) =>
-        left.localeCompare(right, "tr"),
+      Array.from(new Set(records.map((record) => record.primaryCountryCode).filter(Boolean) as string[])).sort(
+        (left, right) => left.localeCompare(right, "tr"),
       ),
     [records],
   );
-  const roleLabelByKey = useMemo(
-    () => new Map(roles.map((role) => [role.key, role.label])),
-    [roles],
-  );
+  const roleLabelByKey = useMemo(() => new Map(roles.map((role) => [role.key, role.label])), [roles]);
 
   const handleFilterChange = <K extends keyof AdminCatalogFilters>(key: K, value: AdminCatalogFilters[K]) => {
     setFilters((current) => ({ ...current, [key]: value }));
@@ -250,25 +249,35 @@ const AdminCatalogPage = () => {
   const handleCatalogRoleChange = async (itemId: string, roleKey: string | null) => {
     try {
       await setCatalogItemRole(itemId, roleKey);
-      setSelectedCatalogDetail((prev) => prev ? { ...prev, platformRoleKey: roleKey } : prev);
-      setRecords((prev) =>
-        prev.map((r) => r.id === itemId ? { ...r, platformRoleKey: roleKey } : r),
-      );
-      toast({ title: "Katalog rolü güncellendi", description: roleKey ? `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}` : "Rol kaldırıldı." });
+      setSelectedCatalogDetail((prev) => (prev ? { ...prev, platformRoleKey: roleKey } : prev));
+      setRecords((prev) => prev.map((r) => (r.id === itemId ? { ...r, platformRoleKey: roleKey } : r)));
+      toast({
+        title: "Katalog rolü güncellendi",
+        description: roleKey ? `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}` : "Rol kaldırıldı.",
+      });
     } catch (error) {
-      toast({ title: "Rol güncellenemedi", description: error instanceof Error ? error.message : "Beklenmeyen hata.", variant: "destructive" });
+      toast({
+        title: "Rol güncellenemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen hata.",
+        variant: "destructive",
+      });
     }
   };
 
   const handleProfileRoleChange = async (userId: string, roleKey: string) => {
     try {
       await setUserRoleAsAdmin(userId, roleKey);
-      setRecords((prev) =>
-        prev.map((r) => r.id === userId ? { ...r, platformRoleKey: roleKey } : r),
-      );
-      toast({ title: "Kullanıcı rolü güncellendi", description: `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}` });
+      setRecords((prev) => prev.map((r) => (r.id === userId ? { ...r, platformRoleKey: roleKey } : r)));
+      toast({
+        title: "Kullanıcı rolü güncellendi",
+        description: `Yeni rol: ${roleLabelByKey.get(roleKey) ?? roleKey}`,
+      });
     } catch (error) {
-      toast({ title: "Rol güncellenemedi", description: error instanceof Error ? error.message : "Beklenmeyen hata.", variant: "destructive" });
+      toast({
+        title: "Rol güncellenemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen hata.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -277,7 +286,8 @@ const AdminCatalogPage = () => {
       await reviewCatalogImport(itemId, decision, note);
       toast({
         title: decision === "approved" ? "Kayıt onaylandı" : "Kayıt reddedildi",
-        description: decision === "approved" ? "Kayıt yayına alındı ve herkese açık." : "Kayıt reddedildi ve gizli kaldı.",
+        description:
+          decision === "approved" ? "Kayıt yayına alındı ve herkese açık." : "Kayıt reddedildi ve gizli kaldı.",
       });
       setSelectedRecord(null);
       setReloadKey((key) => key + 1);
@@ -308,7 +318,9 @@ const AdminCatalogPage = () => {
             <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <CardTitle>Kayıt Listesi</CardTitle>
-                <CardDescription>Rol, durum, kaynak ve lokasyon bilgisi üzerinden tüm kayıtları filtrele.</CardDescription>
+                <CardDescription>
+                  Rol, durum, kaynak ve lokasyon bilgisi üzerinden tüm kayıtları filtrele.
+                </CardDescription>
               </div>
               <Button
                 variant="outline"

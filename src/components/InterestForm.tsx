@@ -5,31 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, CheckCircle2, Upload, X, Hourglass, Target, Globe2, Rocket } from "lucide-react";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 
-export type InterestCategory =
-  | "founders_1000"
-  | "yarisma"
-  | "kariyer"
-  | "genel";
+export type InterestCategory = "founders_1000" | "yarisma" | "kariyer" | "genel";
 
 export const INTEREST_CATEGORIES: { value: string; label: string }[] = [
   { value: "danisman", label: "Danışman / Profesyonel" },
@@ -119,7 +103,7 @@ const InterestForm = ({
     const urls: string[] = [];
     for (const f of files) {
       const ext = f.name.split(".").pop() || "bin";
-      const path = `${(form.selected_category || context)}/${Date.now()}-${Math.random()
+      const path = `${form.selected_category || context}/${Date.now()}-${Math.random()
         .toString(36)
         .slice(2, 8)}.${ext}`;
       const { error } = await supabase.storage
@@ -162,7 +146,11 @@ const InterestForm = ({
       setSubmitted(true);
       toast({ title: "Kaydınız alındı", description: "En kısa sürede sizinle iletişime geçeceğiz." });
     } catch (err: unknown) {
-      toast({ title: "Bir şeyler ters gitti", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
+      toast({
+        title: "Bir şeyler ters gitti",
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -191,12 +179,17 @@ const InterestForm = ({
           <CheckCircle2 className="h-14 w-14 text-turquoise" />
           <h3 className="text-xl font-bold">Teşekkürler!</h3>
           <p className="text-sm text-muted-foreground max-w-sm">
-            Kaydınız alındı. Platform açılır açılmaz size ilk haber vereceğiz. Erken kayıt olanlar avantajlı şartlarla yer alacak.
+            Kaydınız alındı. Platform açılır açılmaz size ilk haber vereceğiz. Erken kayıt olanlar avantajlı şartlarla
+            yer alacak.
           </p>
           {modal ? (
-            <Button onClick={() => onOpenChange?.(false)} className="mt-2">Kapat</Button>
+            <Button onClick={() => onOpenChange?.(false)} className="mt-2">
+              Kapat
+            </Button>
           ) : (
-            <Button variant="outline" onClick={reset} className="mt-2">Yeni Kayıt</Button>
+            <Button variant="outline" onClick={reset} className="mt-2">
+              Yeni Kayıt
+            </Button>
           )}
         </div>
       ) : (
@@ -224,18 +217,24 @@ const InterestForm = ({
               </SelectTrigger>
               <SelectContent>
                 {INTEREST_CATEGORIES.map((c) => (
-                  <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            {lockCategory && (
-              <p className="text-[11px] text-muted-foreground mt-1">Bu kategori sabittir.</p>
-            )}
+            {lockCategory && <p className="text-[11px] text-muted-foreground mt-1">Bu kategori sabittir.</p>}
           </div>
 
           <div>
             <Label htmlFor="name">Ad Soyad *</Label>
-            <Input id="name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Adınız Soyadınız" required />
+            <Input
+              id="name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Adınız Soyadınız"
+              required
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -262,22 +261,44 @@ const InterestForm = ({
 
           <div>
             <Label htmlFor="org">İşletme / Kuruluş (opsiyonel)</Label>
-            <Input id="org" value={form.organization} onChange={(e) => setForm({ ...form, organization: e.target.value })} placeholder="Şirket veya kuruluş adı" />
+            <Input
+              id="org"
+              value={form.organization}
+              onChange={(e) => setForm({ ...form, organization: e.target.value })}
+              placeholder="Şirket veya kuruluş adı"
+            />
           </div>
 
           <div>
             <Label htmlFor="interest">İştigal / İlgi Sahası</Label>
-            <Input id="interest" value={form.interest_area} onChange={(e) => setForm({ ...form, interest_area: e.target.value })} placeholder="Faaliyet veya ilgi alanınız" />
+            <Input
+              id="interest"
+              value={form.interest_area}
+              onChange={(e) => setForm({ ...form, interest_area: e.target.value })}
+              placeholder="Faaliyet veya ilgi alanınız"
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="email">E-posta *</Label>
-              <Input id="email" type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="ornek@mail.com" required />
+              <Input
+                id="email"
+                type="email"
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+                placeholder="ornek@mail.com"
+                required
+              />
             </div>
             <div>
               <Label htmlFor="phone">Telefon (ülke kodu ile)</Label>
-              <Input id="phone" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} placeholder="+49 170 1234567" />
+              <Input
+                id="phone"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                placeholder="+49 170 1234567"
+              />
               <p className="text-[11px] text-muted-foreground mt-1">+ ile başlatın, ülke kodu zorunlu.</p>
             </div>
           </div>
@@ -298,7 +319,8 @@ const InterestForm = ({
               placeholder="Örn: İş arıyorum • Aracımı satıyorum • Parti biletim var • Eleman arıyorum • Ev kiralıyorum..."
             />
             <p className="text-[11px] text-muted-foreground mt-1">
-              🎯 <span className="text-turquoise font-semibold">Detaylı veri AI eşleşme kalitesini artıracaktır</span> — sizi doğru kişilerle daha hızlı eşleştirelim.
+              🎯 <span className="text-turquoise font-semibold">Detaylı veri AI eşleşme kalitesini artıracaktır</span> —
+              sizi doğru kişilerle daha hızlı eşleştirelim.
             </p>
           </div>
 
@@ -308,14 +330,24 @@ const InterestForm = ({
             <label className="mt-1 flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed border-border rounded-lg cursor-pointer hover:border-turquoise/60 hover:bg-turquoise/5 transition-colors">
               <Upload className="h-4 w-4 text-turquoise" />
               <span className="text-sm text-muted-foreground">Dosya seç (PDF, PPTX, DOCX, max 10MB)</span>
-              <input type="file" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.png,.jpg,.jpeg" className="hidden" onChange={handleFiles} />
+              <input
+                type="file"
+                multiple
+                accept=".pdf,.ppt,.pptx,.doc,.docx,.png,.jpg,.jpeg"
+                className="hidden"
+                onChange={handleFiles}
+              />
             </label>
             {files.length > 0 && (
               <ul className="mt-2 space-y-1">
                 {files.map((f, i) => (
                   <li key={i} className="flex items-center justify-between text-xs bg-muted/50 px-2 py-1 rounded">
-                    <span className="truncate">{f.name} <span className="text-muted-foreground">({(f.size / 1024).toFixed(0)}KB)</span></span>
-                    <button type="button" onClick={() => removeFile(i)} className="text-destructive"><X className="h-3.5 w-3.5" /></button>
+                    <span className="truncate">
+                      {f.name} <span className="text-muted-foreground">({(f.size / 1024).toFixed(0)}KB)</span>
+                    </span>
+                    <button type="button" onClick={() => removeFile(i)} className="text-destructive">
+                      <X className="h-3.5 w-3.5" />
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -325,7 +357,8 @@ const InterestForm = ({
           <div className="flex items-start gap-2 p-3 rounded-lg bg-orange-50 border border-orange-200">
             <Hourglass className="h-4 w-4 text-orange-600 shrink-0 mt-0.5" />
             <p className="text-xs text-foreground">
-              <span className="font-semibold">Yakında!</span> Platform açılır açılmaz size ilk haber vereceğiz. Erken kayıt olanlar avantajlı şartlarla yer alır.
+              <span className="font-semibold">Yakında!</span> Platform açılır açılmaz size ilk haber vereceğiz. Erken
+              kayıt olanlar avantajlı şartlarla yer alır.
             </p>
           </div>
 

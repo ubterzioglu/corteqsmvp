@@ -10,12 +10,7 @@ import {
   type MarqueeItemRow,
   type MarqueeItemType,
 } from "@/lib/marquee";
-import {
-  applySeo,
-  SEO_CANONICAL_ORIGIN,
-  SEO_DEFAULT_OG_IMAGE,
-  SEO_SITE_NAME,
-} from "@/lib/seo";
+import { applySeo, SEO_CANONICAL_ORIGIN, SEO_DEFAULT_OG_IMAGE, SEO_SITE_NAME } from "@/lib/seo";
 
 const getType = (type: string): MarqueeItemType =>
   type === "news" || type === "stat" || type === "announcement" ? type : "announcement";
@@ -38,12 +33,14 @@ const DiasporaDetailPage = () => {
 
     getPublicMarqueeItemBySlug(slug)
       .then((data) => {
-        const fallback = fallbackMarqueeItems.find((fallbackItem) => fallbackItem.slug === slug && fallbackItem.link_enabled) ?? null;
+        const fallback =
+          fallbackMarqueeItems.find((fallbackItem) => fallbackItem.slug === slug && fallbackItem.link_enabled) ?? null;
         if (mounted) setItem(data ?? fallback);
       })
       .catch((error) => {
         console.error("Diaspora detail could not be loaded", error);
-        const fallback = fallbackMarqueeItems.find((fallbackItem) => fallbackItem.slug === slug && fallbackItem.link_enabled) ?? null;
+        const fallback =
+          fallbackMarqueeItems.find((fallbackItem) => fallbackItem.slug === slug && fallbackItem.link_enabled) ?? null;
         if (mounted) setItem(fallback);
       })
       .finally(() => {
@@ -137,9 +134,7 @@ const DiasporaDetailPage = () => {
               <p className="max-w-3xl text-lg leading-relaxed text-muted-foreground">{item.summary}</p>
             </div>
 
-            <div className="prose prose-neutral max-w-none whitespace-pre-line text-foreground">
-              {detailText}
-            </div>
+            <div className="prose prose-neutral max-w-none whitespace-pre-line text-foreground">{detailText}</div>
           </div>
         </div>
       </article>

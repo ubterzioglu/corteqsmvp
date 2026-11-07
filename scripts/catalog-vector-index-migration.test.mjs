@@ -10,9 +10,7 @@ describe("B21.2 catalog vector index migration", () => {
     const migrationPath = existsSync(pendingPath) ? pendingPath : appliedPath;
     const sql = readFileSync(migrationPath, "utf8");
 
-    expect(sql).toContain(
-      "drop index if exists public.idx_catalog_search_documents_embedding;",
-    );
+    expect(sql).toContain("drop index if exists public.idx_catalog_search_documents_embedding;");
     expect(sql).toMatch(
       /create index idx_catalog_search_documents_embedding[\s\S]+using hnsw \(embedding vector_cosine_ops\)/,
     );

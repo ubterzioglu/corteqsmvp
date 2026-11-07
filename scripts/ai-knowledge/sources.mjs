@@ -152,9 +152,7 @@ async function loadCatalogDocuments(client) {
     // İki küçük tablo (647 + 78 satır) — canlı sunucu 1 GB RAM altında olduğu için
     // satır-başına fonksiyon çalıştıran bir JOIN yerine istemcide eşleştiriliyor.
     fetchAllRows(() => client.from("catalog_items").select("id, platform_role_key").order("id")),
-    fetchAllRows(() =>
-      client.from("roles").select("key, label, is_directory_visible").order("key"),
-    ),
+    fetchAllRows(() => client.from("roles").select("key, label, is_directory_visible").order("key")),
   ]);
 
   const roleByKey = new Map(roles.map((role) => [role.key, role]));
@@ -185,12 +183,7 @@ async function loadCatalogDocuments(client) {
       // kişiydi). Rol etiketi kullanıcıların aradığı asıl kelimedir.
       const location = [row.city, row.country_code].filter(Boolean).join(", ");
       const text = collapseWhitespace(
-        [
-          row.title,
-          role?.label ? `Rol: ${role.label}` : "",
-          location ? `Konum: ${location}` : "",
-          row.search_text,
-        ]
+        [row.title, role?.label ? `Rol: ${role.label}` : "", location ? `Konum: ${location}` : "", row.search_text]
           .filter(Boolean)
           .join("\n\n"),
       );
@@ -229,7 +222,7 @@ export function buildAdminMenuDocuments(catalog) {
 
 function buildAdminMenuDocument(item, items, byId) {
   if (!item?.id || !item.label || !item.number) return null;
-  const parent = item.parentId ? byId.get(item.parentId) ?? null : null;
+  const parent = item.parentId ? (byId.get(item.parentId) ?? null) : null;
   const children = items.filter((entry) => entry?.parentId === item.id);
 
   const paragraphs = [
@@ -279,9 +272,7 @@ async function loadBlogDocuments(client) {
     .map((row) => {
       const header = [row.country_label, row.category_label].filter(Boolean).join(" · ");
       const body = markdownToPlainText(row.content_markdown ?? "");
-      const text = collapseWhitespace(
-        [row.title, header, row.excerpt, body].filter(Boolean).join("\n\n"),
-      );
+      const text = collapseWhitespace([row.title, header, row.excerpt, body].filter(Boolean).join("\n\n"));
 
       return {
         externalId: row.slug,

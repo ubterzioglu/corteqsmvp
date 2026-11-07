@@ -39,12 +39,7 @@ interface GroupOwnershipClaimProps {
  * "Şikayet et" bu bileşende DEĞİL: G14'te ayrı `GroupReportButton` olarak
  * detay sayfasının `reportSlot` yuvasına, bu bölümün yanına eklendi.
  */
-export function GroupOwnershipClaim({
-  landing,
-  isSignedIn,
-  onRequestSignIn,
-  onVerified,
-}: GroupOwnershipClaimProps) {
+export function GroupOwnershipClaim({ landing, isSignedIn, onRequestSignIn, onVerified }: GroupOwnershipClaimProps) {
   const [pending, setPending] = useState<PendingClaimRow | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [errorText, setErrorText] = useState<string | null>(null);
@@ -148,9 +143,7 @@ export function GroupOwnershipClaim({
       setScreenshotOpen(false);
       setFile(null);
       setNote("");
-      setQueueMessage(
-        "Talebin moderatör kuyruğuna düştü. Ekibimiz ekran görüntüsünü inceleyip karar verecek.",
-      );
+      setQueueMessage("Talebin moderatör kuyruğuna düştü. Ekibimiz ekran görüntüsünü inceleyip karar verecek.");
       await loadPending();
     } catch (error) {
       setErrorText(getErrorMessage(error));
@@ -172,20 +165,27 @@ export function GroupOwnershipClaim({
         Bu grup sizin mi?
       </h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        Grubun gerçek adminiysen sahipliğini doğrula: sayfa sana bağlanır, gönderiler önce senin
-        onayına düşer ve kartta "Sahibi doğruladı" rozeti görünür.
+        Grubun gerçek adminiysen sahipliğini doğrula: sayfa sana bağlanır, gönderiler önce senin onayına düşer ve kartta
+        "Sahibi doğruladı" rozeti görünür.
       </p>
 
       {errorText ? (
-        <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700">
+        <p
+          role="alert"
+          className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700"
+        >
           {errorText}
         </p>
       ) : null}
       {message ? (
-        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">{message}</p>
+        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">
+          {message}
+        </p>
       ) : null}
       {queueMessage ? (
-        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">{queueMessage}</p>
+        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">
+          {queueMessage}
+        </p>
       ) : null}
       {outcome && outcome.result !== "verified" ? (
         <p role="status" className="mt-4 text-left text-sm text-slate-700">
@@ -209,7 +209,10 @@ export function GroupOwnershipClaim({
       ) : null}
 
       {screenshotClaim ? (
-        <p role="status" className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-left text-sm font-semibold text-emerald-800">
+        <p
+          role="status"
+          className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-left text-sm font-semibold text-emerald-800"
+        >
           Bu grup için bekleyen bir ekran görüntüsü talebin var — moderatör kuyruğunda.
         </p>
       ) : codeClaim ? (
@@ -270,7 +273,9 @@ export function GroupOwnershipClaim({
             className="mt-2"
             onChange={(event) => setFile(event.target.files?.[0] ?? null)}
           />
-          <Label htmlFor="claim-note" className="mt-3 block">Not (isteğe bağlı)</Label>
+          <Label htmlFor="claim-note" className="mt-3 block">
+            Not (isteğe bağlı)
+          </Label>
           <Textarea
             id="claim-note"
             rows={2}
@@ -289,8 +294,8 @@ export function GroupOwnershipClaim({
             Talebi gönder
           </Button>
           <p className="mt-2 text-xs text-slate-500">
-            Talebin moderatör kuyruğuna düşer; grup bu arada yayında kalır. Grup zaten sahiplenilmişse
-            otomatik devir YOKTUR — karar moderatörün.
+            Talebin moderatör kuyruğuna düşer; grup bu arada yayında kalır. Grup zaten sahiplenilmişse otomatik devir
+            YOKTUR — karar moderatörün.
           </p>
         </div>
       ) : null}

@@ -26,8 +26,7 @@ const OUTPUT = path.join(rootDir, "public", "rss.xml");
 
 const CHANNEL = {
   title: "CorteQS Blog",
-  description:
-    "Yurt dışındaki Türk diasporası için ülke ve şehir rehberleri, yaşam, kariyer ve topluluk yazıları.",
+  description: "Yurt dışındaki Türk diasporası için ülke ve şehir rehberleri, yaşam, kariyer ve topluluk yazıları.",
   // /blog bir 301 kaynağıdır (src/lib/redirects.ts → /radar/rehberler); kanal linki
   // yönlendirme zincirine değil hedefe işaret eder.
   link: `${SITE_ORIGIN}/radar/rehberler`,
@@ -67,9 +66,7 @@ function buildRss(posts) {
     .filter((p) => p?.slug)
     .slice()
     .sort((a, b) =>
-      String(b.published_at ?? b.updated_at ?? "").localeCompare(
-        String(a.published_at ?? a.updated_at ?? ""),
-      ),
+      String(b.published_at ?? b.updated_at ?? "").localeCompare(String(a.published_at ?? a.updated_at ?? "")),
     );
 
   const newest = items.length > 0 ? toRfc822(items[0].published_at ?? items[0].updated_at) : null;

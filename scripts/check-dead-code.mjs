@@ -173,9 +173,7 @@ export function resolveLocalModule(fromFile, specifier, sourceFiles) {
     ? [normalizedBase]
     : [
         ...SOURCE_EXTENSIONS.map((candidateExtension) => `${normalizedBase}${candidateExtension}`),
-        ...SOURCE_EXTENSIONS.map((candidateExtension) =>
-          `${normalizedBase}/index${candidateExtension}`,
-        ),
+        ...SOURCE_EXTENSIONS.map((candidateExtension) => `${normalizedBase}/index${candidateExtension}`),
       ];
 
   return candidates.find((candidate) => sourceFiles.has(candidate)) ?? null;
@@ -218,9 +216,7 @@ export function analyzeSourceGraph({
     .filter((filePath) => !reachable.has(filePath))
     .filter((filePath) => !isTestFile(filePath))
     .filter((filePath) => !configReferencedExceptions.has(filePath))
-    .filter(
-      (filePath) => !(filePath.startsWith(TEST_SUPPORT_DIR) && testReachable.has(filePath)),
-    )
+    .filter((filePath) => !(filePath.startsWith(TEST_SUPPORT_DIR) && testReachable.has(filePath)))
     .sort();
 
   return {
@@ -266,8 +262,8 @@ function main() {
   }
 
   console.log(
-    `[check-dead] 0 yeni erişilemez dosya · ${result.knownDead.length} bilinen borç · `
-      + `${result.reachable.size} erişilebilir kaynak.`,
+    `[check-dead] 0 yeni erişilemez dosya · ${result.knownDead.length} bilinen borç · ` +
+      `${result.reachable.size} erişilebilir kaynak.`,
   );
 }
 

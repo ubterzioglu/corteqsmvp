@@ -116,7 +116,10 @@ export async function resolveCountryIdByName(countryName: string | null | undefi
   return data?.id ?? null;
 }
 
-export async function resolveCityIdByName(cityName: string | null | undefined, countryId: string | null): Promise<string | null> {
+export async function resolveCityIdByName(
+  cityName: string | null | undefined,
+  countryId: string | null,
+): Promise<string | null> {
   const trimmed = cityName?.trim() ?? "";
   if (!trimmed) return null;
   let query = db.from("cadde_cities").select("id").eq("name", trimmed);
@@ -132,7 +135,10 @@ export async function resolveCountryIdsByNames(countryNames: readonly string[]):
   return ((data ?? []) as Array<{ id: string }>).map((row) => row.id);
 }
 
-export async function resolveCityIdsByNames(cityNames: readonly string[], countryIds: readonly string[]): Promise<string[]> {
+export async function resolveCityIdsByNames(
+  cityNames: readonly string[],
+  countryIds: readonly string[],
+): Promise<string[]> {
   const names = cityNames.map((name) => name.trim()).filter(Boolean);
   if (names.length === 0) return [];
   let query = db.from("cadde_cities").select("id").in("name", names);
@@ -140,4 +146,3 @@ export async function resolveCityIdsByNames(cityNames: readonly string[], countr
   const { data } = await query;
   return ((data ?? []) as Array<{ id: string }>).map((row) => row.id);
 }
-

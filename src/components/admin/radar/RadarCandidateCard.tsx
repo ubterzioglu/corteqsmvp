@@ -54,7 +54,9 @@ function ReasonTags({ reasons }: { reasons: RelevanceReason[] }) {
           key={i}
           className={`rounded px-1.5 py-0.5 text-xs ${r.score < 0 ? "bg-destructive/10 text-destructive" : "bg-primary/10 text-primary"}`}
         >
-          {r.rule}{r.value ? `: ${r.value}` : ""} ({r.score > 0 ? "+" : ""}{r.score})
+          {r.rule}
+          {r.value ? `: ${r.value}` : ""} ({r.score > 0 ? "+" : ""}
+          {r.score})
         </span>
       ))}
     </div>
@@ -63,7 +65,13 @@ function ReasonTags({ reasons }: { reasons: RelevanceReason[] }) {
 
 function formatDate(val: string | null) {
   if (!val) return "—";
-  return new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(new Date(val));
+  return new Intl.DateTimeFormat("tr-TR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(val));
 }
 
 export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish, onReject, onMarkDuplicate }: Props) {
@@ -91,8 +99,16 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
             <p className="font-semibold leading-snug text-foreground">{candidate.title}</p>
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               <span className="font-medium text-foreground">{candidate.source_name}</span>
-              {candidate.language && <Badge variant="outline" className="h-4 px-1 text-[10px]">{candidate.language.toUpperCase()}</Badge>}
-              {categoryLabel && <Badge variant="secondary" className="h-4 px-1 text-[10px]">{categoryLabel}</Badge>}
+              {candidate.language && (
+                <Badge variant="outline" className="h-4 px-1 text-[10px]">
+                  {candidate.language.toUpperCase()}
+                </Badge>
+              )}
+              {categoryLabel && (
+                <Badge variant="secondary" className="h-4 px-1 text-[10px]">
+                  {categoryLabel}
+                </Badge>
+              )}
               {candidate.country && <span>{candidate.country}</span>}
               {candidate.city && <span>• {candidate.city}</span>}
             </div>
@@ -103,9 +119,7 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
-        {candidate.summary && (
-          <p className="text-sm text-muted-foreground line-clamp-3">{candidate.summary}</p>
-        )}
+        {candidate.summary && <p className="text-sm text-muted-foreground line-clamp-3">{candidate.summary}</p>}
 
         <ReasonTags reasons={toRelevanceReasons(candidate.relevance_reasons)} />
 
@@ -115,7 +129,9 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
               src={candidate.image_source_url}
               alt={candidate.title}
               className="h-32 w-full object-cover"
-              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
             />
             <p className="px-2 py-1 text-[10px] text-muted-foreground">
               Yalnızca admin önizleme — harici URL, public'e açılmaz
@@ -153,34 +169,27 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
                 disabled={busy !== null}
                 className="bg-green-600 hover:bg-green-700 text-white"
               >
-                {busy === "publish" ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <CheckCircle className="mr-1 h-3 w-3" />}
+                {busy === "publish" ? (
+                  <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <CheckCircle className="mr-1 h-3 w-3" />
+                )}
                 Onayla ve Radar'a Yayınla
               </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => void handle("pool")}
-                disabled={busy !== null}
-              >
+              <Button size="sm" variant="outline" onClick={() => void handle("pool")} disabled={busy !== null}>
                 {busy === "pool" ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : null}
                 Sadece Haber Havuzuna Onayla
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => onMarkDuplicate(candidate.id)}
-                disabled={busy !== null}
-              >
+              <Button size="sm" variant="ghost" onClick={() => onMarkDuplicate(candidate.id)} disabled={busy !== null}>
                 <Copy className="mr-1 h-3 w-3" />
                 Duplicate
               </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={() => void handle("reject")}
-                disabled={busy !== null}
-              >
-                {busy === "reject" ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <XCircle className="mr-1 h-3 w-3" />}
+              <Button size="sm" variant="destructive" onClick={() => void handle("reject")} disabled={busy !== null}>
+                {busy === "reject" ? (
+                  <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <XCircle className="mr-1 h-3 w-3" />
+                )}
                 Reddet
               </Button>
             </div>
@@ -188,10 +197,7 @@ export function RadarCandidateCard({ candidate, onApprovePool, onApprovePublish,
         )}
 
         {candidate.review_status !== "pending" && (
-          <Badge
-            variant={candidate.review_status === "approved" ? "outline" : "secondary"}
-            className="capitalize"
-          >
+          <Badge variant={candidate.review_status === "approved" ? "outline" : "secondary"} className="capitalize">
             {candidate.review_status}
           </Badge>
         )}

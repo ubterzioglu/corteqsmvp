@@ -2,28 +2,25 @@
 // Düzenlenen satır tüm kolonları kaplayan tek bir hücreye dönüşür (colSpan=9);
 // kolon genişlikleri düzenleyici açıkken bozulmasın diye böyle yapılmıştır.
 
-import { Dispatch, SetStateAction } from 'react'
-import { Save, X } from 'lucide-react'
+import { Dispatch, SetStateAction } from "react";
+import { Save, X } from "lucide-react";
 import {
   COMMAND_CENTER_PRIORITY_OPTIONS,
   getCommandCenterAssigneeLabel,
   getCommandCenterStatusLabel,
-} from '@/lib/dashboard/command-center-items'
-import type {
-  CommandCenterFormState,
-  CommandCenterItem,
-} from '@/lib/dashboard/command-center-items'
-import { MEETING_CATEGORIES } from '@/lib/dashboard/meeting-notes-data'
-import { TODO_ASSIGNEES, TODO_CATEGORIES, TODO_STATUSES } from '@/lib/dashboard/todo-items'
-import { BTN_CLS, CHECKBOX_CLS, INLINE_EDITOR_LABEL_CLS, TABLE_INPUT_CLS } from './styles'
+} from "@/lib/dashboard/command-center-items";
+import type { CommandCenterFormState, CommandCenterItem } from "@/lib/dashboard/command-center-items";
+import { MEETING_CATEGORIES } from "@/lib/dashboard/meeting-notes-data";
+import { TODO_ASSIGNEES, TODO_CATEGORIES, TODO_STATUSES } from "@/lib/dashboard/todo-items";
+import { BTN_CLS, CHECKBOX_CLS, INLINE_EDITOR_LABEL_CLS, TABLE_INPUT_CLS } from "./styles";
 
 interface ItemsTableEditorRowProps {
-  item: CommandCenterItem
-  rowState: CommandCenterFormState
-  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>
-  isSubmitting: boolean
-  onUpdate: (itemId: string) => void
-  onCancelEdit: () => void
+  item: CommandCenterItem;
+  rowState: CommandCenterFormState;
+  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>;
+  isSubmitting: boolean;
+  onUpdate: (itemId: string) => void;
+  onCancelEdit: () => void;
 }
 
 export default function ItemsTableEditorRow({
@@ -109,7 +106,7 @@ export default function ItemsTableEditorRow({
                   onChange={(event) =>
                     setEditingState((current) => ({
                       ...current,
-                      priority: Number(event.target.value) as CommandCenterFormState['priority'],
+                      priority: Number(event.target.value) as CommandCenterFormState["priority"],
                     }))
                   }
                   className={TABLE_INPUT_CLS}
@@ -143,7 +140,7 @@ export default function ItemsTableEditorRow({
 
               <div className="space-y-1.5 rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white/90 p-3">
                 <label className={INLINE_EDITOR_LABEL_CLS}>Kategori</label>
-                {rowState.itemType === 'meeting_note' ? (
+                {rowState.itemType === "meeting_note" ? (
                   <select
                     value={rowState.legacySourceCategory}
                     onChange={(event) =>
@@ -183,9 +180,9 @@ export default function ItemsTableEditorRow({
 
               <div className="space-y-1.5 rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white/90 p-3">
                 <label className={INLINE_EDITOR_LABEL_CLS}>
-                  {rowState.itemType === 'meeting_note' ? 'Tarih etiketi' : 'Tarih tipi'}
+                  {rowState.itemType === "meeting_note" ? "Tarih etiketi" : "Tarih tipi"}
                 </label>
-                {rowState.itemType === 'meeting_note' ? (
+                {rowState.itemType === "meeting_note" ? (
                   <input
                     type="text"
                     value={rowState.legacySourceDateLabel}
@@ -193,7 +190,7 @@ export default function ItemsTableEditorRow({
                       setEditingState((current) => ({
                         ...current,
                         legacySourceDateLabel: event.target.value,
-                        categoryLabel: '',
+                        categoryLabel: "",
                       }))
                     }
                     className={TABLE_INPUT_CLS}
@@ -213,7 +210,7 @@ export default function ItemsTableEditorRow({
                   onChange={(event) =>
                     setEditingState((current) => ({
                       ...current,
-                      assignee: event.target.value as CommandCenterFormState['assignee'],
+                      assignee: event.target.value as CommandCenterFormState["assignee"],
                     }))
                   }
                   className={TABLE_INPUT_CLS}
@@ -233,7 +230,7 @@ export default function ItemsTableEditorRow({
                   onChange={(event) =>
                     setEditingState((current) => ({
                       ...current,
-                      status: event.target.value as CommandCenterFormState['status'],
+                      status: event.target.value as CommandCenterFormState["status"],
                     }))
                   }
                   className={TABLE_INPUT_CLS}
@@ -265,5 +262,5 @@ export default function ItemsTableEditorRow({
         </div>
       </td>
     </tr>
-  )
+  );
 }

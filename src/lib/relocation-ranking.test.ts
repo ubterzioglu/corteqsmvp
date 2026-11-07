@@ -74,8 +74,7 @@ describe("computeRuleScore", () => {
       community_fit: 0.91,
       flight_access: 0.88,
     };
-    const expected =
-      0.72 * 0.3 + 0.35 * 0.2 + 0.85 * 0.15 + 0.9 * 0.15 + 0.91 * 0.1 + 0.88 * 0.1;
+    const expected = 0.72 * 0.3 + 0.35 * 0.2 + 0.85 * 0.15 + 0.9 * 0.15 + 0.91 * 0.1 + 0.88 * 0.1;
     expect(computeRuleScore(breakdown)).toBeCloseTo(Math.round(expected * 10000) / 10000, 4);
   });
 });
@@ -97,20 +96,12 @@ describe("blendFinalScore (Faz 3 hibrit harman)", () => {
 
 describe("passesHardFilter", () => {
   it("tüm koşullar sağlanırsa geçer", () => {
-    expect(
-      passesHardFilter({ targetCountryMatch: true, moveWindowValid: true, dataFresh: true }),
-    ).toBe(true);
+    expect(passesHardFilter({ targetCountryMatch: true, moveWindowValid: true, dataFresh: true })).toBe(true);
   });
 
   it("herhangi bir koşul başarısızsa düşer", () => {
-    expect(
-      passesHardFilter({ targetCountryMatch: false, moveWindowValid: true, dataFresh: true }),
-    ).toBe(false);
-    expect(
-      passesHardFilter({ targetCountryMatch: true, moveWindowValid: false, dataFresh: true }),
-    ).toBe(false);
-    expect(
-      passesHardFilter({ targetCountryMatch: true, moveWindowValid: true, dataFresh: false }),
-    ).toBe(false);
+    expect(passesHardFilter({ targetCountryMatch: false, moveWindowValid: true, dataFresh: true })).toBe(false);
+    expect(passesHardFilter({ targetCountryMatch: true, moveWindowValid: false, dataFresh: true })).toBe(false);
+    expect(passesHardFilter({ targetCountryMatch: true, moveWindowValid: true, dataFresh: false })).toBe(false);
   });
 });

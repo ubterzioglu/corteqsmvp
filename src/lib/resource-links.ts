@@ -36,10 +36,7 @@ export type ResourceLinkUpdate = TablesUpdate<"social_media_links">;
 export type AdvisorResourceLinkInsert = TablesInsert<"consultant_social_media_links">;
 export type AdvisorResourceLinkUpdate = TablesUpdate<"consultant_social_media_links">;
 export type AdvisorContactStatusKey =
-  | "contacted_whatsapp"
-  | "contacted_instagram"
-  | "contacted_email"
-  | "contacted_phone";
+  "contacted_whatsapp" | "contacted_instagram" | "contacted_email" | "contacted_phone";
 
 export type ResourceLinkFormState = {
   platform: ResourceLinkPlatform;
@@ -66,15 +63,11 @@ export type AdvisorResourceLinkFormState = {
 // ki eski/yanlış bir satır formu bozmak yerine varsayılana düşsün. `as` ile
 // susturmak, geçersiz değeri select'e taşıyıp boş bir seçim bırakırdı.
 function toResourceLinkPlatform(value: string | null): ResourceLinkPlatform {
-  return (resourceLinkPlatforms as readonly string[]).includes(value ?? "")
-    ? (value as ResourceLinkPlatform)
-    : "Diğer";
+  return (resourceLinkPlatforms as readonly string[]).includes(value ?? "") ? (value as ResourceLinkPlatform) : "Diğer";
 }
 
 function toResourceLinkAuthor(value: string | null): ResourceLinkAuthor {
-  return (resourceLinkAuthors as readonly string[]).includes(value ?? "")
-    ? (value as ResourceLinkAuthor)
-    : "UBT";
+  return (resourceLinkAuthors as readonly string[]).includes(value ?? "") ? (value as ResourceLinkAuthor) : "UBT";
 }
 
 export function createEmptyResourceLinkFormState(): ResourceLinkFormState {
@@ -181,20 +174,14 @@ export function safeResourceHref(value: string | null) {
 }
 
 export async function listResourceLinks(tableName: ResourceLinkTableName): Promise<ResourceLinkRow[]> {
-  const { data, error } = await supabase
-    .from(tableName)
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data, error } = await supabase.from(tableName).select("*").order("created_at", { ascending: false });
 
   if (error) throw error;
   return data ?? [];
 }
 
 export async function listAdvisorResourceLinks(tableName: AdvisorProfileTableName): Promise<AdvisorResourceLinkRow[]> {
-  const { data, error } = await supabase
-    .from(tableName)
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data, error } = await supabase.from(tableName).select("*").order("created_at", { ascending: false });
 
   if (error) throw error;
   return data ?? [];
@@ -233,12 +220,7 @@ export async function updateAdvisorResourceLink(
   id: string,
   payload: AdvisorResourceLinkUpdate,
 ): Promise<AdvisorResourceLinkRow> {
-  const { data, error } = await supabase
-    .from(tableName)
-    .update(payload)
-    .eq("id", id)
-    .select("*")
-    .single();
+  const { data, error } = await supabase.from(tableName).update(payload).eq("id", id).select("*").single();
   if (error) throw error;
   return data;
 }

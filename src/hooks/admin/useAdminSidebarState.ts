@@ -16,8 +16,8 @@ export type AdminSidebarState = {
 };
 
 export function useAdminSidebarState(): AdminSidebarState {
-  const [collapsed, setCollapsed] = useState<boolean>(() =>
-    readAdminStorage<boolean>(ADMIN_STORAGE_KEYS.sidebarCollapsed, false) === true,
+  const [collapsed, setCollapsed] = useState<boolean>(
+    () => readAdminStorage<boolean>(ADMIN_STORAGE_KEYS.sidebarCollapsed, false) === true,
   );
   const [mobileOpen, setMobileOpen] = useState(false);
 

@@ -22,7 +22,8 @@ export type SubmissionDocumentsBucketStats = {
   usageRatio: number;
 };
 export type SubmissionDocumentsBucketLevel = "normal" | "info" | "warning" | "critical";
-export type ReferralValidationStatus = "missing" | "not_found" | "inactive" | "expired" | "out_of_window" | "locked" | "valid";
+export type ReferralValidationStatus =
+  "missing" | "not_found" | "inactive" | "expired" | "out_of_window" | "locked" | "valid";
 
 type ErrorWithMessage = {
   message?: string;
@@ -59,12 +60,8 @@ export const referralSourceOptions = REFERRAL_SOURCE_OPTIONS;
 // Anahtar tipi bilerek `string`: bu haritalar DB'den gelen SERBEST metni sorgular ve
 // bilinmeyen değerde `?? value` ile ham değere düşer. Dar union anahtar, çağıranı
 // olmayan bir garantiye zorlar (getCategoryLabel'a `string | null` geliyor).
-const categoryLabelMap = new Map<string, string>(
-  categoryOptions.map((option) => [option.value, option.label]),
-);
-const referralLabelMap = new Map<string, string>(
-  referralSourceOptions.map((option) => [option.value, option.label]),
-);
+const categoryLabelMap = new Map<string, string>(categoryOptions.map((option) => [option.value, option.label]));
+const referralLabelMap = new Map<string, string>(referralSourceOptions.map((option) => [option.value, option.label]));
 
 const statusLabelMap: Record<SubmissionStatus, string> = {
   new: "Yeni",
@@ -216,8 +213,7 @@ function parseUploadedDocument(input: unknown): UploadedDocument | null {
     "sizeBytes" in input && typeof input.sizeBytes === "number" && Number.isFinite(input.sizeBytes)
       ? input.sizeBytes
       : null;
-  const contentType =
-    "contentType" in input && typeof input.contentType === "string" ? input.contentType : null;
+  const contentType = "contentType" in input && typeof input.contentType === "string" ? input.contentType : null;
 
   if (!name || (!url && !path)) return null;
 
@@ -228,13 +224,17 @@ export function getSubmissionDocuments(
   submission: Pick<Submission, "documents" | "document_url" | "document_name">,
 ): UploadedDocument[] {
   const documents = Array.isArray(submission.documents)
-    ? submission.documents.map(parseUploadedDocument).filter((document): document is UploadedDocument => Boolean(document))
+    ? submission.documents
+        .map(parseUploadedDocument)
+        .filter((document): document is UploadedDocument => Boolean(document))
     : [];
 
   if (documents.length > 0) return documents;
 
   if (submission.document_url && submission.document_name) {
-    return [{ url: submission.document_url, path: null, name: submission.document_name, sizeBytes: null, contentType: null }];
+    return [
+      { url: submission.document_url, path: null, name: submission.document_name, sizeBytes: null, contentType: null },
+    ];
   }
 
   return [];
@@ -242,9 +242,7 @@ export function getSubmissionDocuments(
 
 export async function getSubmissionDocumentAccessUrl(document: UploadedDocument): Promise<string> {
   if (document.path) {
-    const { data, error } = await supabase.storage
-      .from("submission-documents")
-      .createSignedUrl(document.path, 300);
+    const { data, error } = await supabase.storage.from("submission-documents").createSignedUrl(document.path, 300);
 
     if (error || !data?.signedUrl) {
       throw error ?? new Error("Doküman için signed URL üretilemedi.");
@@ -346,7 +344,9 @@ export function toSubmissionInsert(
     business: normalizeOptionalTurkishText(String(values.business ?? "")),
     company_name: isBacker ? normalizeOptionalTurkishText(String(values.company_name ?? "")) : null,
     field: isBacker
-      ? (normalizeTurkishText(String(values.donor_type ?? "")) === "company" ? "Firma Bağışı" : "Bireysel Bağışçı")
+      ? normalizeTurkishText(String(values.donor_type ?? "")) === "company"
+        ? "Firma Bağışı"
+        : "Bireysel Bağışçı"
       : normalizeTurkishText(String(values.field ?? "")),
     email: normalizeTurkishText(String(values.email ?? "")),
     phone: normalizeTurkishText(String(values.phone ?? "")),
@@ -428,8 +428,11 @@ function getMissingColumnName(error: unknown): string | null {
   const message =
     error instanceof Error
       ? error.message
-      : error && typeof error === "object" && "message" in error && typeof (error as ErrorWithMessage).message === "string"
-        ? (error as ErrorWithMessage).message ?? ""
+      : error &&
+          typeof error === "object" &&
+          "message" in error &&
+          typeof (error as ErrorWithMessage).message === "string"
+        ? ((error as ErrorWithMessage).message ?? "")
         : "";
 
   const match = message.match(/column ["']?([a-zA-Z0-9_]+)["']? .* does not exist/i);
@@ -439,8 +442,12 @@ function getMissingColumnName(error: unknown): string | null {
 function isRowLevelSecurityError(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
 
-  const code = "code" in error && typeof (error as ErrorWithMessage).code === "string" ? (error as ErrorWithMessage).code : "";
-  const message = "message" in error && typeof (error as ErrorWithMessage).message === "string" ? (error as ErrorWithMessage).message : "";
+  const code =
+    "code" in error && typeof (error as ErrorWithMessage).code === "string" ? (error as ErrorWithMessage).code : "";
+  const message =
+    "message" in error && typeof (error as ErrorWithMessage).message === "string"
+      ? (error as ErrorWithMessage).message
+      : "";
 
   return code === "42501" || /row-level security policy/i.test(message ?? "");
 }
@@ -448,8 +455,12 @@ function isRowLevelSecurityError(error: unknown): boolean {
 function isOnboardingDuplicateError(error: unknown): boolean {
   if (!error || typeof error !== "object") return false;
 
-  const code = "code" in error && typeof (error as ErrorWithMessage).code === "string" ? (error as ErrorWithMessage).code : "";
-  const message = "message" in error && typeof (error as ErrorWithMessage).message === "string" ? (error as ErrorWithMessage).message : "";
+  const code =
+    "code" in error && typeof (error as ErrorWithMessage).code === "string" ? (error as ErrorWithMessage).code : "";
+  const message =
+    "message" in error && typeof (error as ErrorWithMessage).message === "string"
+      ? (error as ErrorWithMessage).message
+      : "";
 
   return code === "23505" && /onboarding_key/i.test(message ?? "");
 }

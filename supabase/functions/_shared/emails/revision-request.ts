@@ -43,8 +43,7 @@ const BORDER = "#d4d4d8";
 const DEFAULT_SITE_URL = "https://corteqs.net";
 const ADMIN_PATH = "/admin/revision-requests";
 
-const FOOTNOTE =
-  "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
+const FOOTNOTE = "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
 
 /**
  * Durum etiketleri src/lib/admin-shell/revision-requests.ts'teki REVISION_STATUS_LABELS ile

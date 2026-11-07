@@ -1,10 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const {
-  rpcMock,
-  fromMock,
-  getCurrentMemberCatalogProfileMock,
-} = vi.hoisted(() => {
+const { rpcMock, fromMock, getCurrentMemberCatalogProfileMock } = vi.hoisted(() => {
   return {
     rpcMock: vi.fn(),
     fromMock: vi.fn(),
@@ -97,9 +93,7 @@ describe("updateProfileAttribute — referral_code (B11)", () => {
       throw new Error("update_profile_attribute cagrilmamaliydi");
     });
 
-    await expect(updateProfileAttribute("referral_code", "YOKBOYLEKOD")).rejects.toThrow(
-      "Referral kodu bulunamadi.",
-    );
+    await expect(updateProfileAttribute("referral_code", "YOKBOYLEKOD")).rejects.toThrow("Referral kodu bulunamadi.");
     expect(rpcMock).toHaveBeenCalledTimes(1);
     expect(rpcMock.mock.calls[0][0]).toBe("validate_and_bind_referral_code");
   });
@@ -142,9 +136,9 @@ describe("requestNewCatalogItem", () => {
   it("throws when the RPC returns an error", async () => {
     rpcMock.mockResolvedValue({ data: null, error: { message: "a pending new profile request already exists" } });
 
-    await expect(
-      requestNewCatalogItem("Consultant_HealthcareDoctor", "Başlık", ""),
-    ).rejects.toEqual({ message: "a pending new profile request already exists" });
+    await expect(requestNewCatalogItem("Consultant_HealthcareDoctor", "Başlık", "")).rejects.toEqual({
+      message: "a pending new profile request already exists",
+    });
   });
 });
 
@@ -205,9 +199,9 @@ describe("upsertIndividualProfileDetailsPatch (B6)", () => {
 
     fromMock.mockReturnValueOnce({ select });
 
-    await expect(
-      upsertIndividualProfileDetailsPatch("user-3", () => ({})),
-    ).rejects.toEqual({ message: "select failed" });
+    await expect(upsertIndividualProfileDetailsPatch("user-3", () => ({}))).rejects.toEqual({
+      message: "select failed",
+    });
     expect(fromMock).toHaveBeenCalledTimes(1);
   });
 
@@ -219,8 +213,8 @@ describe("upsertIndividualProfileDetailsPatch (B6)", () => {
 
     fromMock.mockReturnValueOnce({ select }).mockReturnValueOnce({ upsert });
 
-    await expect(
-      upsertIndividualProfileDetailsPatch("user-4", () => ({ mentor_opt_in: true })),
-    ).rejects.toEqual({ message: "upsert failed" });
+    await expect(upsertIndividualProfileDetailsPatch("user-4", () => ({ mentor_opt_in: true }))).rejects.toEqual({
+      message: "upsert failed",
+    });
   });
 });

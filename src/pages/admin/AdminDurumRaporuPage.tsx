@@ -52,21 +52,86 @@ interface ReportSummary {
 }
 
 const REPORTS: ReportSummary[] = [
-  { id: "00", title: "Preflight Uzlaştırma", summary: "İki tutarsızlık çözüldü: rol sayısı 82→76 (6 legacy çıkarıldı), attribute '55' başlık hatası → gerçek 53. Push-blocker'lar temizlendi." },
-  { id: "01", title: "Mevcut Sistem Denetimi", summary: "~45 tablo, ~100 RPC, 62 trigger, ~80 RLS politikası envanteri. Legacy teardown hedefleri belirlendi." },
-  { id: "02", title: "Flat Rol Envanteri", summary: "76 bağımsız flat rol + silinecek 6 legacy rol. Rol ailesi/parent-child YOK." },
-  { id: "03", title: "AFS Katalog Envanteri", summary: "53 attribute / 42 feature / 7 section. Normalizasyon-mükerrer çiftleri haritalandı (silinmedi)." },
-  { id: "04", title: "Rol↔AFS Matrisi", summary: "Canlı matris %100 uniform: her rol aynı 24 attr / 30 feat / 7 section. Option A ile aynen üretildi." },
-  { id: "05", title: "Yeni Veritabanı Tasarımı", summary: "Rename stratejisi: 9 tablo yeni isimlere; family kolonları kaldırıldı; catalog_item_roles eklendi." },
-  { id: "06", title: "ER Diyagramı", summary: "CATALOG ITEMS → FLAT ROLES → (Attributes, Features, Sections). Family/parent yok." },
-  { id: "07", title: "Backend Entegrasyonu", summary: "44+ DB fonksiyonu rename edilmiş tablolara rewire edildi (010c programatik + 010d/010e elle onarım)." },
-  { id: "08", title: "Frontend Entegrasyonu", summary: "Frontend zaten flat çalışıyordu; .from() ve embedded-join referansları yeni isimlere güncellendi; types.ts yenilendi." },
-  { id: "09", title: "Admin Menü/Guide/Infogram", summary: "Admin Veritabanı menüsü + new-member guide + infogram family'den arındırıldı, flat'e güncellendi." },
-  { id: "10", title: "Legacy Cleanup Manifest", summary: "Drop edilenler: 6 legacy rol, catalog_item_types + item_type_*, role_taxonomy_rules, ilgili FK'lar. Satellite'ler korundu." },
-  { id: "11", title: "E2E / Test Raporu", summary: "DB verify PASSED; build PASS; 287/288 unit test geçti (1 alakasız UI-nav fail)." },
-  { id: "12", title: "Migration Push", summary: "18 rebuild migration Management API ile prod'a uygulandı. Prod-only FK blocker'ları için 016 iteratif güçlendirildi." },
-  { id: "13", title: "Cleanup Grep", summary: "Runtime'da 0 eski tablo ismi + 0 rol-family kavramı. Landing submissions kategorileri bilinçli istisna." },
-  { id: "14", title: "Değişen Dosyalar", summary: "19 migration, ~20 src dosyası, infogram, 15 rapor. catalog_items.title & managers.role rename'leri geri alındı." },
+  {
+    id: "00",
+    title: "Preflight Uzlaştırma",
+    summary:
+      "İki tutarsızlık çözüldü: rol sayısı 82→76 (6 legacy çıkarıldı), attribute '55' başlık hatası → gerçek 53. Push-blocker'lar temizlendi.",
+  },
+  {
+    id: "01",
+    title: "Mevcut Sistem Denetimi",
+    summary: "~45 tablo, ~100 RPC, 62 trigger, ~80 RLS politikası envanteri. Legacy teardown hedefleri belirlendi.",
+  },
+  {
+    id: "02",
+    title: "Flat Rol Envanteri",
+    summary: "76 bağımsız flat rol + silinecek 6 legacy rol. Rol ailesi/parent-child YOK.",
+  },
+  {
+    id: "03",
+    title: "AFS Katalog Envanteri",
+    summary: "53 attribute / 42 feature / 7 section. Normalizasyon-mükerrer çiftleri haritalandı (silinmedi).",
+  },
+  {
+    id: "04",
+    title: "Rol↔AFS Matrisi",
+    summary: "Canlı matris %100 uniform: her rol aynı 24 attr / 30 feat / 7 section. Option A ile aynen üretildi.",
+  },
+  {
+    id: "05",
+    title: "Yeni Veritabanı Tasarımı",
+    summary: "Rename stratejisi: 9 tablo yeni isimlere; family kolonları kaldırıldı; catalog_item_roles eklendi.",
+  },
+  {
+    id: "06",
+    title: "ER Diyagramı",
+    summary: "CATALOG ITEMS → FLAT ROLES → (Attributes, Features, Sections). Family/parent yok.",
+  },
+  {
+    id: "07",
+    title: "Backend Entegrasyonu",
+    summary: "44+ DB fonksiyonu rename edilmiş tablolara rewire edildi (010c programatik + 010d/010e elle onarım).",
+  },
+  {
+    id: "08",
+    title: "Frontend Entegrasyonu",
+    summary:
+      "Frontend zaten flat çalışıyordu; .from() ve embedded-join referansları yeni isimlere güncellendi; types.ts yenilendi.",
+  },
+  {
+    id: "09",
+    title: "Admin Menü/Guide/Infogram",
+    summary: "Admin Veritabanı menüsü + new-member guide + infogram family'den arındırıldı, flat'e güncellendi.",
+  },
+  {
+    id: "10",
+    title: "Legacy Cleanup Manifest",
+    summary:
+      "Drop edilenler: 6 legacy rol, catalog_item_types + item_type_*, role_taxonomy_rules, ilgili FK'lar. Satellite'ler korundu.",
+  },
+  {
+    id: "11",
+    title: "E2E / Test Raporu",
+    summary: "DB verify PASSED; build PASS; 287/288 unit test geçti (1 alakasız UI-nav fail).",
+  },
+  {
+    id: "12",
+    title: "Migration Push",
+    summary:
+      "18 rebuild migration Management API ile prod'a uygulandı. Prod-only FK blocker'ları için 016 iteratif güçlendirildi.",
+  },
+  {
+    id: "13",
+    title: "Cleanup Grep",
+    summary: "Runtime'da 0 eski tablo ismi + 0 rol-family kavramı. Landing submissions kategorileri bilinçli istisna.",
+  },
+  {
+    id: "14",
+    title: "Değişen Dosyalar",
+    summary:
+      "19 migration, ~20 src dosyası, infogram, 15 rapor. catalog_items.title & managers.role rename'leri geri alındı.",
+  },
 ];
 
 const MetricCard = ({
@@ -80,19 +145,12 @@ const MetricCard = ({
   target?: number;
   invert?: boolean;
 }) => {
-  const ok =
-    target === undefined
-      ? true
-      : invert
-        ? value === target
-        : value === target;
+  const ok = target === undefined ? true : invert ? value === target : value === target;
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="text-2xl font-bold tabular-nums">
         {value ?? "—"}
-        {target !== undefined && (
-          <span className="ml-2 text-xs font-normal text-muted-foreground">/ {target}</span>
-        )}
+        {target !== undefined && <span className="ml-2 text-xs font-normal text-muted-foreground">/ {target}</span>}
       </div>
       <div className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
         {target !== undefined &&
@@ -167,11 +225,12 @@ const AdminDurumRaporuPage = () => {
               )}
               <div>
                 <div className="font-semibold">
-                  {allGreen ? "Rebuild doğrulandı — tüm hedefler tutuyor." : "Rebuild uygulandı — bazı hedefler dikkat istiyor."}
+                  {allGreen
+                    ? "Rebuild doğrulandı — tüm hedefler tutuyor."
+                    : "Rebuild uygulandı — bazı hedefler dikkat istiyor."}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Son güncelleme:{" "}
-                  {report.generated_at ? new Date(report.generated_at).toLocaleString("tr-TR") : "—"}
+                  Son güncelleme: {report.generated_at ? new Date(report.generated_at).toLocaleString("tr-TR") : "—"}
                 </div>
               </div>
             </CardContent>
@@ -245,14 +304,14 @@ const AdminDurumRaporuPage = () => {
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
               <p>
-                <span className="font-semibold tabular-nums">{report.items_without_primary_role}</span> gerçek
-                katalog kaydının (placeholder olmayan) atanmış bir <strong>primary flat rolü yok</strong>.
+                <span className="font-semibold tabular-nums">{report.items_without_primary_role}</span> gerçek katalog
+                kaydının (placeholder olmayan) atanmış bir <strong>primary flat rolü yok</strong>.
               </p>
               <p className="text-muted-foreground">
-                Legacy roller silinirken (016), onlara bağlı 127 üye kaydının rol linki koparıldı
-                (<code>platform_role_key</code> null'landı, <code>catalog_item_roles</code> legacy bağlantıları temizlendi).
-                Bu kayıtlar korundu ancak uygun bir flat role (örn. <code>User_DiasporaMember</code>) yeniden bağlanmalı.
-                Detay: <code>docs/catalog-role-afs-rebuild/12-migration-push-report.md §5</code>.
+                Legacy roller silinirken (016), onlara bağlı 127 üye kaydının rol linki koparıldı (
+                <code>platform_role_key</code> null'landı, <code>catalog_item_roles</code> legacy bağlantıları
+                temizlendi). Bu kayıtlar korundu ancak uygun bir flat role (örn. <code>User_DiasporaMember</code>)
+                yeniden bağlanmalı. Detay: <code>docs/catalog-role-afs-rebuild/12-migration-push-report.md §5</code>.
               </p>
             </CardContent>
           </Card>

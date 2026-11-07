@@ -25,8 +25,7 @@ export const EVENT_RPC_ERROR_MESSAGES: Record<string, string> = {
   event_field_required: "Başlık, açıklama, kategori, tür ve tarih zorunludur.",
   event_active_limit: `Aynı anda en fazla ${EVENTS_ACTIVE_LIMIT} aktif etkinliğiniz olabilir. Geçmiş etkinlikler sayılmaz.`,
   // M03 — events_guard_status (T1)
-  event_status_direct_update_forbidden:
-    "Etkinliğin yayın durumu yalnız moderatörlerce değiştirilebilir.",
+  event_status_direct_update_forbidden: "Etkinliğin yayın durumu yalnız moderatörlerce değiştirilebilir.",
   // M04 — katılım
   event_not_found: "Etkinlik bulunamadı.",
   event_not_published: "Bu etkinlik yayında değil; katılım yalnız yayındaki etkinliklere açık.",

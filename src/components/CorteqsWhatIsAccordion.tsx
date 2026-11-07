@@ -2,14 +2,7 @@ import { useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
+import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 type CorteqsWhatIsAccordionProps = {
   className?: string;
@@ -32,9 +25,7 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
                 "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 42%, rgba(255,255,255,0) 100%)",
             }}
           />
-          <span className="relative z-10">
-            CorteQS Nedir?
-          </span>
+          <span className="relative z-10">CorteQS Nedir?</span>
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-md overflow-hidden rounded-[2rem] border border-[#f1d7ad] bg-[linear-gradient(145deg,#fffdf8_0%,#fff7e8_40%,#ffffff_100%)] p-0 shadow-[0_36px_120px_-42px_rgba(15,23,42,0.45)]">
@@ -65,9 +56,8 @@ const CorteqsWhatIsAccordion = ({ className }: CorteqsWhatIsAccordionProps) => {
 
           {/* Açıklama */}
           <DialogDescription className="mt-5 text-center text-sm leading-relaxed text-slate-700 sm:text-base">
-            CorteQS, dünyanın farklı şehirlerinde yaşayan Türkleri birbirine bağlayan bir platformdur.
-            İnsanlar burada toplulukları bulur, yeni bağlantılar kurar ve iş, destek veya işbirliği
-            fırsatlarına ulaşır.
+            CorteQS, dünyanın farklı şehirlerinde yaşayan Türkleri birbirine bağlayan bir platformdur. İnsanlar burada
+            toplulukları bulur, yeni bağlantılar kurar ve iş, destek veya işbirliği fırsatlarına ulaşır.
           </DialogDescription>
 
           {/* Alt butonlar */}

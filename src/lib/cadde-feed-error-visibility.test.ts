@@ -102,7 +102,7 @@ describe("cadde feed okuma yolu hata görünürlüğü", () => {
     expect(catchStart).toBeGreaterThan(-1);
     const catchBody = fnBody.slice(catchStart);
 
-    expect(catchBody).toContain("throw caddeReadError(\"listCaddeFeed\", error)");
+    expect(catchBody).toContain('throw caddeReadError("listCaddeFeed", error)');
     expect(catchBody).not.toContain("return { items: [], nextPage: null }");
   });
 });

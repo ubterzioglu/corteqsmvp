@@ -1,7 +1,24 @@
 const ALLOWED_FILE_EXTENSIONS = new Set([
-  "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
-  "png", "jpg", "jpeg", "gif", "svg", "webp",
-  "zip", "rar", "7z", "txt", "csv", "md", "json",
+  "pdf",
+  "doc",
+  "docx",
+  "xls",
+  "xlsx",
+  "ppt",
+  "pptx",
+  "png",
+  "jpg",
+  "jpeg",
+  "gif",
+  "svg",
+  "webp",
+  "zip",
+  "rar",
+  "7z",
+  "txt",
+  "csv",
+  "md",
+  "json",
 ]);
 
 const CV_ALLOWED_EXTENSIONS = new Set(["pdf", "doc", "docx"]);

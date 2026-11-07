@@ -30,9 +30,7 @@ describe("CampaignHubPage", () => {
   it("kampanya kartlarını detay sayfalarına bağlar", () => {
     renderPage();
 
-    const hrefs = screen
-      .getAllByRole("link")
-      .map((link) => link.getAttribute("href"));
+    const hrefs = screen.getAllByRole("link").map((link) => link.getAttribute("href"));
 
     expect(hrefs).toEqual(["/campaign/founding-1000", "/campaign/vlogger", "/campaign/blogger"]);
   });

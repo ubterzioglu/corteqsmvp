@@ -83,10 +83,7 @@ describe("buildContextBlock", () => {
 
 describe("collectSources", () => {
   it("ayni belgenin parcalarini teke indirir", () => {
-    const sources = collectSources([
-      hit({ title: "Vize Rehberi (1/3)" }),
-      hit({ title: "Vize Rehberi (2/3)" }),
-    ]);
+    const sources = collectSources([hit({ title: "Vize Rehberi (1/3)" }), hit({ title: "Vize Rehberi (2/3)" })]);
 
     expect(sources).toHaveLength(1);
   });
@@ -163,9 +160,7 @@ describe("buildAdminModeNote (N05)", () => {
   });
 
   it("/admin sayfasinda vurguyu guclendirir, halka acik sayfada guclendirmez", () => {
-    expect(buildAdminModeNote(true, { path: "/admin/members" })).toContain(
-      "şu an yönetici panelinde",
-    );
+    expect(buildAdminModeNote(true, { path: "/admin/members" })).toContain("şu an yönetici panelinde");
     const publicPage = buildAdminModeNote(true, { path: "/blog/vize" });
     expect(publicPage).not.toContain("şu an yönetici panelinde");
     expect(publicPage).toContain(ADMIN_MENU_PROMPT_BLOCK);

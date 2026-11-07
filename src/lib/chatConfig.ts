@@ -1,7 +1,4 @@
-import {
-  categoryOptions,
-  getCategoryLabel,
-} from "@/lib/submissions";
+import { categoryOptions, getCategoryLabel } from "@/lib/submissions";
 
 export type ChatStep =
   | "welcome"
@@ -113,14 +110,52 @@ const CATEGORY_QUICK_REPLIES: QuickReply[] = categoryOptions
 const SKIP_REPLY: QuickReply = { label: "Ge\u00e7 \u23ed\ufe0f", value: "__skip__" };
 
 const categoryAliasMap: Array<{ value: string; aliases: string[] }> = [
-  { value: "danisman", aliases: ["danisman", "danışman", "doktor", "avukat", "muhasebe", "mali musavir", "mali müşavir", "terapist", "koc", "koç", "uzman", "consultant"] },
-  { value: "isletme", aliases: ["isletme", "işletme", "sirket", "şirket", "firma", "girisim", "girişim", "startup", "restoran", "kafe", "ajans", "emlak"] },
+  {
+    value: "danisman",
+    aliases: [
+      "danisman",
+      "danışman",
+      "doktor",
+      "avukat",
+      "muhasebe",
+      "mali musavir",
+      "mali müşavir",
+      "terapist",
+      "koc",
+      "koç",
+      "uzman",
+      "consultant",
+    ],
+  },
+  {
+    value: "isletme",
+    aliases: [
+      "isletme",
+      "işletme",
+      "sirket",
+      "şirket",
+      "firma",
+      "girisim",
+      "girişim",
+      "startup",
+      "restoran",
+      "kafe",
+      "ajans",
+      "emlak",
+    ],
+  },
   { value: "dernek", aliases: ["dernek", "stk", "ngo"] },
   { value: "vakif", aliases: ["vakif", "vakıf", "foundation"] },
   { value: "radyo-tv", aliases: ["radyo", "tv", "televizyon", "podcast", "media", "medya"] },
   { value: "blogger-vlogger", aliases: ["blogger", "vlogger", "blog", "vlog", "youtube", "youtuber"] },
-  { value: "influencer", aliases: ["influencer", "creator", "icerik ureticisi", "içerik üreticisi", "content creator"] },
-  { value: "sehir-elcisi", aliases: ["sehir elcisi", "şehir elçisi", "elci", "elçi", "community lead", "topluluk lideri"] },
+  {
+    value: "influencer",
+    aliases: ["influencer", "creator", "icerik ureticisi", "içerik üreticisi", "content creator"],
+  },
+  {
+    value: "sehir-elcisi",
+    aliases: ["sehir elcisi", "şehir elçisi", "elci", "elçi", "community lead", "topluluk lideri"],
+  },
   { value: "bireysel", aliases: ["bireysel", "kullanici", "kullanıcı", "user", "birey"] },
 ];
 
@@ -167,18 +202,9 @@ export function shouldRedirectToKnowledgeAssistant(input: string) {
   if (trimmed.includes("?")) return true;
 
   const folded = foldForComparison(trimmed);
-  return [
-    "corteqs",
-    "nedir",
-    "nasil",
-    "nasıl",
-    "ne ise yarar",
-    "ne işe yarar",
-    "hangi",
-    "kim",
-    "neden",
-    "niye",
-  ].some((pattern) => folded.includes(foldForComparison(pattern)));
+  return ["corteqs", "nedir", "nasil", "nasıl", "ne ise yarar", "ne işe yarar", "hangi", "kim", "neden", "niye"].some(
+    (pattern) => folded.includes(foldForComparison(pattern)),
+  );
 }
 
 export function shouldStartRegistration(input: string) {
@@ -246,13 +272,15 @@ export function getStepMessage(
 
     case "business":
       return {
-        content: "Ba\u011fl\u0131 oldu\u011fun bir i\u015fletme veya olu\u015fum varsa yazabilirsin.\nYoksa 'ge\u00e7' yaz.",
+        content:
+          "Ba\u011fl\u0131 oldu\u011fun bir i\u015fletme veya olu\u015fum varsa yazabilirsin.\nYoksa 'ge\u00e7' yaz.",
         quickReplies: [SKIP_REPLY],
       };
 
     case "field":
       return {
-        content: "Ne yapt\u0131\u011f\u0131n\u0131 veya ilgi alan\u0131n\u0131 k\u0131saca yazar m\u0131s\u0131n?\n(\u00f6rn: yaz\u0131l\u0131m testi, avukatl\u0131k, i\u00e7erik \u00fcretimi)",
+        content:
+          "Ne yapt\u0131\u011f\u0131n\u0131 veya ilgi alan\u0131n\u0131 k\u0131saca yazar m\u0131s\u0131n?\n(\u00f6rn: yaz\u0131l\u0131m testi, avukatl\u0131k, i\u00e7erik \u00fcretimi)",
       };
 
     case "email":
@@ -262,7 +290,8 @@ export function getStepMessage(
 
     case "phone":
       return {
-        content: "WhatsApp kulland\u0131\u011f\u0131n telefon numaran\u0131 \u00fclke koduyla yaz l\u00fctfen\n(\u00f6rn: +49 170 1234567)",
+        content:
+          "WhatsApp kulland\u0131\u011f\u0131n telefon numaran\u0131 \u00fclke koduyla yaz l\u00fctfen\n(\u00f6rn: +49 170 1234567)",
       };
 
     case "referral_code":
@@ -273,13 +302,15 @@ export function getStepMessage(
 
     case "offers_needs":
       return {
-        content: "K\u0131saca ne arad\u0131\u011f\u0131n\u0131 veya ne sunabilece\u011fini yazabilir misin?\n(\u00f6rn: i\u015f ar\u0131yorum, m\u00fc\u015fteri ar\u0131yorum, ev ar\u0131yorum)\n\nDetayl\u0131 veri e\u015fle\u015fme kalitesini art\u0131r\u0131r. \ud83e\udd16",
+        content:
+          "K\u0131saca ne arad\u0131\u011f\u0131n\u0131 veya ne sunabilece\u011fini yazabilir misin?\n(\u00f6rn: i\u015f ar\u0131yorum, m\u00fc\u015fteri ar\u0131yorum, ev ar\u0131yorum)\n\nDetayl\u0131 veri e\u015fle\u015fme kalitesini art\u0131r\u0131r. \ud83e\udd16",
         quickReplies: [SKIP_REPLY],
       };
 
     case "documents":
       return {
-        content: "CV, portf\u00f6y veya sertifika y\u00fcklemek ister misin?\n(PDF, DOC, DOCX, JPG, PNG, WEBP \u2014 dosya ba\u015f\u0131na maks. 50 MB, en fazla 5 dosya)",
+        content:
+          "CV, portf\u00f6y veya sertifika y\u00fcklemek ister misin?\n(PDF, DOC, DOCX, JPG, PNG, WEBP \u2014 dosya ba\u015f\u0131na maks. 50 MB, en fazla 5 dosya)",
         quickReplies: [SKIP_REPLY],
       };
 
@@ -294,7 +325,8 @@ export function getStepMessage(
 
     case "consent":
       return {
-        content: "Son bir ad\u0131m! Ki\u015fisel bilgilerini CorteQS taraf\u0131ndan taraf\u0131ma ula\u015f\u0131lmas\u0131 amac\u0131yla payla\u015fmay\u0131 onayl\u0131yor musun? Bilgilerim \u00fc\u00e7\u00fcnc\u00fc \u015fah\u0131slarla payla\u015f\u0131lmayacakt\u0131r.",
+        content:
+          "Son bir ad\u0131m! Ki\u015fisel bilgilerini CorteQS taraf\u0131ndan taraf\u0131ma ula\u015f\u0131lmas\u0131 amac\u0131yla payla\u015fmay\u0131 onayl\u0131yor musun? Bilgilerim \u00fc\u00e7\u00fcnc\u00fc \u015fah\u0131slarla payla\u015f\u0131lmayacakt\u0131r.",
         quickReplies: [{ label: "Onayl\u0131yorum \u2705", value: "yes" }],
       };
 
@@ -303,7 +335,8 @@ export function getStepMessage(
 
     case "completed":
       return {
-        content: "\ud83c\udf89 Kayd\u0131n ba\u015far\u0131yla al\u0131nd\u0131!\n\nSeni CorteQS diaspora a\u011f\u0131na dahil edece\u011fiz.\n\n\ud83d\udc49 Web: https://corteqs.net\n\ud83d\udc49 WhatsApp: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib\n\nYak\u0131nda seninle ileti\u015fime ge\u00e7ece\u011fiz. Ho\u015f geldin! \ud83c\udf0d",
+        content:
+          "\ud83c\udf89 Kayd\u0131n ba\u015far\u0131yla al\u0131nd\u0131!\n\nSeni CorteQS diaspora a\u011f\u0131na dahil edece\u011fiz.\n\n\ud83d\udc49 Web: https://corteqs.net\n\ud83d\udc49 WhatsApp: https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib\n\nYak\u0131nda seninle ileti\u015fime ge\u00e7ece\u011fiz. Ho\u015f geldin! \ud83c\udf0d",
       };
 
     default:
@@ -311,7 +344,11 @@ export function getStepMessage(
   }
 }
 
-function buildSummaryMessage(data: ChatCollectedData): { content: string; quickReplies?: QuickReply[]; isSummary?: boolean } {
+function buildSummaryMessage(data: ChatCollectedData): {
+  content: string;
+  quickReplies?: QuickReply[];
+  isSummary?: boolean;
+} {
   const lines = [
     "Bilgilerini kontrol edelim:\n",
     "\ud83d\udccb Kay\u0131t \u00d6zeti",
@@ -359,7 +396,10 @@ export function validateStep(step: ChatStep, input: string, _data: ChatCollected
     case "fullname": {
       const words = trimmed.split(/\s+/).filter(Boolean);
       if (words.length < 2) {
-        return { ok: false, message: "L\u00fctfen ad\u0131n\u0131 ve soyad\u0131n\u0131 yaz (\u00f6rn: Ahmet Y\u0131lmaz)." };
+        return {
+          ok: false,
+          message: "L\u00fctfen ad\u0131n\u0131 ve soyad\u0131n\u0131 yaz (\u00f6rn: Ahmet Y\u0131lmaz).",
+        };
       }
       const digitCount = (trimmed.match(/\d/g) || []).length;
       if (digitCount / trimmed.length > 0.5) {
@@ -385,14 +425,19 @@ export function validateStep(step: ChatStep, input: string, _data: ChatCollected
 
     case "email": {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(trimmed)) return { ok: false, message: "Ge\u00e7erli bir e-posta adresi gir (\u00f6rn: ornek@mail.com)." };
+      if (!emailRegex.test(trimmed))
+        return { ok: false, message: "Ge\u00e7erli bir e-posta adresi gir (\u00f6rn: ornek@mail.com)." };
       return { ok: true };
     }
 
     case "phone": {
       const cleaned = trimmed.replace(/[\s\-().]/g, "");
       const e164 = /^\+[1-9]\d{7,14}$/;
-      if (!e164.test(cleaned)) return { ok: false, message: "Telefon + ile ba\u015flamal\u0131 ve \u00fclke kodu i\u00e7ermeli (\u00f6rn: +49 170 1234567)." };
+      if (!e164.test(cleaned))
+        return {
+          ok: false,
+          message: "Telefon + ile ba\u015flamal\u0131 ve \u00fclke kodu i\u00e7ermeli (\u00f6rn: +49 170 1234567).",
+        };
       return { ok: true };
     }
 
@@ -446,7 +491,10 @@ export function generateId(): string {
   return crypto.randomUUID();
 }
 
-export function getProgressInfo(step: ChatStep, data: ChatCollectedData): { completed: number; total: number; percentage: number } {
+export function getProgressInfo(
+  step: ChatStep,
+  data: ChatCollectedData,
+): { completed: number; total: number; percentage: number } {
   const total = REQUIRED_STEPS.length;
 
   const completedFields: ChatStep[] = [];

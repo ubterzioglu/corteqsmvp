@@ -83,10 +83,7 @@ const REHBERLER: Rehber[] = [
     baslik: "Kariyer ve Kadro",
     tarih: "7 Ekim 2026",
     tarihSirala: "2026-10-07",
-    ozet: [
-      "Kariyer sayfası yenileme: 17 ilan + başvuru formu",
-      "Kadro modülü: 52 rol yönetimi, ilan, başvuru, matris",
-    ],
+    ozet: ["Kariyer sayfası yenileme: 17 ilan + başvuru formu", "Kadro modülü: 52 rol yönetimi, ilan, başvuru, matris"],
     dosyaAdi: "corteqs-kariyer-ve-kadro-2026-10-07.html",
     html: kariyerHtml,
   },
@@ -160,8 +157,7 @@ export default function AdminYenilikRehberiPage() {
 
   useSeo({
     title: "Yenilikler ve Kullanım Kılavuzları | CorteQS Admin",
-    description:
-      "Son iki haftada yapılan değişikliklerin adım adım anlatımı. Her rehber bağımsız indirilebilir.",
+    description: "Son iki haftada yapılan değişikliklerin adım adım anlatımı. Her rehber bağımsız indirilebilir.",
     robots: "noindex, nofollow",
   });
 
@@ -196,9 +192,7 @@ export default function AdminYenilikRehberiPage() {
   const indir = useCallback(
     (rehber: Rehber) => {
       try {
-        const url =
-          blobUrlMap.get(rehber.id) ??
-          URL.createObjectURL(new Blob([rehber.html], { type: "text/html" }));
+        const url = blobUrlMap.get(rehber.id) ?? URL.createObjectURL(new Blob([rehber.html], { type: "text/html" }));
         const a = document.createElement("a");
         a.href = url;
         a.download = rehber.dosyaAdi;
@@ -221,8 +215,8 @@ export default function AdminYenilikRehberiPage() {
           Yenilikler ve Kullanım Kılavuzları
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Son iki haftada yapılan değişikliklerin adım adım anlatımı. Her rehber bağımsız
-          indirilebilir ve yeni sekmede açılabilir.
+          Son iki haftada yapılan değişikliklerin adım adım anlatımı. Her rehber bağımsız indirilebilir ve yeni sekmede
+          açılabilir.
         </p>
       </div>
 
@@ -248,11 +242,7 @@ export default function AdminYenilikRehberiPage() {
                     ))}
                   </ul>
                   <div className="mt-3 flex flex-col gap-2 sm:flex-row">
-                    <Button
-                      onClick={() => indir(rehber)}
-                      size="sm"
-                      className="min-h-[36px]"
-                    >
+                    <Button onClick={() => indir(rehber)} size="sm" className="min-h-[36px]">
                       <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                       HTML olarak indir
                     </Button>
@@ -283,8 +273,8 @@ export default function AdminYenilikRehberiPage() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Rehberler siteye yüklenmez; yalnız bu yönetici sayfasından indirilir. Bağlantıyı
-            paylaşmak yetmez — açan kişinin yönetici girişi olması gerekir.
+            Rehberler siteye yüklenmez; yalnız bu yönetici sayfasından indirilir. Bağlantıyı paylaşmak yetmez — açan
+            kişinin yönetici girişi olması gerekir.
           </p>
         </CardContent>
       </Card>

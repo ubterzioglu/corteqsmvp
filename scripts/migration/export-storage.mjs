@@ -47,10 +47,7 @@ function loadEnvFile(path) {
     const eq = line.indexOf("=");
     if (eq === -1) continue;
     let value = line.slice(eq + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     out[line.slice(0, eq).trim()] = value;

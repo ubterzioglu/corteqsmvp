@@ -60,7 +60,9 @@ export function resolveZohoSmtpConfig(): ZohoSmtpConfig | null {
     // Supabase Edge Runtime giden 25/587 portlarını ENGELLER; 465 dışı port sessiz
     // timeout + retry döngüsü üretir. Bilerek engellenmiyor (başka runtime ihtimali)
     // ama yüksek sesle loglanıyor.
-    console.error(`Zoho SMTP: port ${port} — Supabase Edge yalniz 465'e (implicit TLS) izin verir, gonderim buyuk olasilikla timeout olacak.`);
+    console.error(
+      `Zoho SMTP: port ${port} — Supabase Edge yalniz 465'e (implicit TLS) izin verir, gonderim buyuk olasilikla timeout olacak.`,
+    );
   }
 
   return { hostname, port, username, password };
@@ -190,12 +192,12 @@ function buildMimeMessage(mail: OutgoingMail): string {
       ...headers,
       "",
       `--${boundary}`,
-      'Content-Type: text/plain; charset=utf-8',
+      "Content-Type: text/plain; charset=utf-8",
       "Content-Transfer-Encoding: base64",
       "",
       toBase64Lines(mail.text),
       `--${boundary}`,
-      'Content-Type: text/html; charset=utf-8',
+      "Content-Type: text/html; charset=utf-8",
       "Content-Transfer-Encoding: base64",
       "",
       toBase64Lines(mail.html),
@@ -204,7 +206,7 @@ function buildMimeMessage(mail: OutgoingMail): string {
     ].join("\r\n");
   }
 
-  headers.push('Content-Type: text/html; charset=utf-8', "Content-Transfer-Encoding: base64");
+  headers.push("Content-Type: text/html; charset=utf-8", "Content-Transfer-Encoding: base64");
   return [...headers, "", toBase64Lines(mail.html), ""].join("\r\n");
 }
 

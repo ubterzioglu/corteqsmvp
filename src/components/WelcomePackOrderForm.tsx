@@ -115,7 +115,11 @@ const WelcomePackOrderForm = ({
       setOpen(false);
       onSuccess?.();
     } catch (err: unknown) {
-      toast({ title: "Hata oluştu", description: err instanceof Error ? err.message : undefined, variant: "destructive" });
+      toast({
+        title: "Hata oluştu",
+        description: err instanceof Error ? err.message : undefined,
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -167,7 +171,7 @@ const WelcomePackOrderForm = ({
             <Label className="text-sm font-medium flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" /> Geliş Tarihi *
             </Label>
-            <Input type="date" value={form.arrivalDate} onChange={e => update("arrivalDate", e.target.value)} />
+            <Input type="date" value={form.arrivalDate} onChange={(e) => update("arrivalDate", e.target.value)} />
           </div>
 
           {/* People */}
@@ -176,11 +180,23 @@ const WelcomePackOrderForm = ({
               <Label className="text-sm font-medium flex items-center gap-1.5">
                 <Users className="h-3.5 w-3.5" /> Yetişkin
               </Label>
-              <Input type="number" min={1} max={10} value={form.adults} onChange={e => update("adults", parseInt(e.target.value) || 1)} />
+              <Input
+                type="number"
+                min={1}
+                max={10}
+                value={form.adults}
+                onChange={(e) => update("adults", parseInt(e.target.value) || 1)}
+              />
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">Çocuk</Label>
-              <Input type="number" min={0} max={10} value={form.children} onChange={e => update("children", parseInt(e.target.value) || 0)} />
+              <Input
+                type="number"
+                min={0}
+                max={10}
+                value={form.children}
+                onChange={(e) => update("children", parseInt(e.target.value) || 0)}
+              />
             </div>
           </div>
 
@@ -195,11 +211,39 @@ const WelcomePackOrderForm = ({
                 { key: "needsCarRental", icon: Car, label: "🚗 Araç Kiralama" },
                 { key: "needsBabySeat", icon: Baby, label: "👶 Bebek Koltuğu" },
                 { key: "needsMentor", icon: UserCheck, label: "🧭 Relokasyon Mentörü" },
-              ].map(item => (
-                <label key={item.key} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+              ].map((item) => (
+                <label
+                  key={item.key}
+                  className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer"
+                >
                   <Checkbox
-                    checked={form[item.key as keyof Pick<WelcomePackFormState, "needsFlightDiscount" | "needsSimCard" | "needsAirportTransfer" | "needsCarRental" | "needsBabySeat" | "needsMentor">]}
-                    onCheckedChange={v => update(item.key as keyof Pick<WelcomePackFormState, "needsFlightDiscount" | "needsSimCard" | "needsAirportTransfer" | "needsCarRental" | "needsBabySeat" | "needsMentor">, !!v)}
+                    checked={
+                      form[
+                        item.key as keyof Pick<
+                          WelcomePackFormState,
+                          | "needsFlightDiscount"
+                          | "needsSimCard"
+                          | "needsAirportTransfer"
+                          | "needsCarRental"
+                          | "needsBabySeat"
+                          | "needsMentor"
+                        >
+                      ]
+                    }
+                    onCheckedChange={(v) =>
+                      update(
+                        item.key as keyof Pick<
+                          WelcomePackFormState,
+                          | "needsFlightDiscount"
+                          | "needsSimCard"
+                          | "needsAirportTransfer"
+                          | "needsCarRental"
+                          | "needsBabySeat"
+                          | "needsMentor"
+                        >,
+                        !!v,
+                      )
+                    }
                   />
                   <span className="text-sm font-medium">{item.label}</span>
                 </label>
@@ -211,8 +255,13 @@ const WelcomePackOrderForm = ({
           {form.needsMentor && (
             <div className="space-y-2 ml-2">
               <Label className="text-sm font-medium">Mentör Tercihi</Label>
-              <Select value={form.mentorType} onValueChange={v => update("mentorType", v as WelcomePackFormState["mentorType"])}>
-                <SelectTrigger><SelectValue placeholder="Ücretli / Gönüllü" /></SelectTrigger>
+              <Select
+                value={form.mentorType}
+                onValueChange={(v) => update("mentorType", v as WelcomePackFormState["mentorType"])}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Ücretli / Gönüllü" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="paid">💼 Ücretli Mentör</SelectItem>
                   <SelectItem value="volunteer">🤝 Gönüllü Mentör</SelectItem>
@@ -224,7 +273,7 @@ const WelcomePackOrderForm = ({
           {/* Pet */}
           <div className="space-y-2">
             <label className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
-              <Checkbox checked={form.hasPet} onCheckedChange={v => update("hasPet", !!v)} />
+              <Checkbox checked={form.hasPet} onCheckedChange={(v) => update("hasPet", !!v)} />
               <span className="text-sm font-medium flex items-center gap-1.5">
                 <PawPrint className="h-3.5 w-3.5" /> Evcil Hayvan Var
               </span>
@@ -233,7 +282,7 @@ const WelcomePackOrderForm = ({
               <Input
                 placeholder="Hayvan türü, boyutu, kafes ihtiyacı..."
                 value={form.petDetails}
-                onChange={e => update("petDetails", e.target.value)}
+                onChange={(e) => update("petDetails", e.target.value)}
                 className="ml-8"
               />
             )}
@@ -245,14 +294,20 @@ const WelcomePackOrderForm = ({
             <Textarea
               placeholder="Özel istekleriniz, tercihleriniz..."
               value={form.notes}
-              onChange={e => update("notes", e.target.value)}
+              onChange={(e) => update("notes", e.target.value)}
               rows={2}
             />
           </div>
 
           <ConsentCheckboxes compact value={consent} onChange={setConsent} />
 
-          <Button onClick={handleSubmit} disabled={loading || !isConsentValid(consent)} className="w-full gap-2" variant="hero" size="lg">
+          <Button
+            onClick={handleSubmit}
+            disabled={loading || !isConsentValid(consent)}
+            className="w-full gap-2"
+            variant="hero"
+            size="lg"
+          >
             <Gift className="h-4 w-4" />
             {loading ? "Oluşturuluyor..." : "🎉 Paketi Oluştur ve Teklif Al"}
           </Button>

@@ -78,12 +78,8 @@ describe("AdminNotificationSettingsPage", () => {
     expect(screen.getByLabelText("Hoş geldin maili açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Revizyon isteği bildirimleri açık")).toBeInTheDocument();
     expect(screen.getByLabelText("Yeni üye kaydolduğunda bana mail gelsin")).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Yeni güncelleme yayınlandığında bana mail gelsin"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin"),
-    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Yeni güncelleme yayınlandığında bana mail gelsin")).toBeInTheDocument();
+    expect(screen.getByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin")).toBeInTheDocument();
   });
 
   it("hoş geldin anahtarı üyeye giden maili yönetir ve kişisel abonelik karşılığı yoktur", async () => {
@@ -92,9 +88,7 @@ describe("AdminNotificationSettingsPage", () => {
     renderPage();
     await userEvent.click(await screen.findByLabelText("Hoş geldin maili açık"));
 
-    await waitFor(() =>
-      expect(setSettingMock).toHaveBeenCalledWith("email.member_welcome.enabled", true),
-    );
+    await waitFor(() => expect(setSettingMock).toHaveBeenCalledWith("email.member_welcome.enabled", true));
     // Mail üyeye gider; admin bu bildirime abone olamaz.
     expect(screen.queryByLabelText(/Hoş geldin.*bana mail gelsin/i)).not.toBeInTheDocument();
   });
@@ -117,9 +111,7 @@ describe("AdminNotificationSettingsPage", () => {
     renderPage();
     await screen.findByLabelText("Yeni üye bildirimleri açık");
 
-    expect(
-      screen.queryByRole("button", { name: /örnek hoş geldin maili/i }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /örnek hoş geldin maili/i })).not.toBeInTheDocument();
   });
 
   it("genel anahtarı çevirince set_notification_setting çağrılır", async () => {
@@ -128,9 +120,7 @@ describe("AdminNotificationSettingsPage", () => {
     renderPage();
     await userEvent.click(await screen.findByLabelText("Yeni üye bildirimleri açık"));
 
-    await waitFor(() =>
-      expect(setSettingMock).toHaveBeenCalledWith("email.new_member.enabled", true),
-    );
+    await waitFor(() => expect(setSettingMock).toHaveBeenCalledWith("email.new_member.enabled", true));
   });
 
   it("kişisel abonelikte diğer tercihleri korur", async () => {
@@ -144,9 +134,7 @@ describe("AdminNotificationSettingsPage", () => {
     );
 
     renderPage();
-    await userEvent.click(
-      await screen.findByLabelText("Yeni üye kaydolduğunda bana mail gelsin"),
-    );
+    await userEvent.click(await screen.findByLabelText("Yeni üye kaydolduğunda bana mail gelsin"));
 
     // React Query mutationFn'e ikinci argüman olarak context geçer; yalnız payload denetlenir.
     await waitFor(() => expect(setSubscriptionMock).toHaveBeenCalledTimes(1));
@@ -164,9 +152,7 @@ describe("AdminNotificationSettingsPage", () => {
     renderPage();
     await userEvent.click(await screen.findByLabelText("Revizyon isteği bildirimleri açık"));
 
-    await waitFor(() =>
-      expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true),
-    );
+    await waitFor(() => expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true));
   });
 
   it("revizyon isteği aboneliğini açarken diğer tercihleri korur", async () => {
@@ -179,9 +165,7 @@ describe("AdminNotificationSettingsPage", () => {
     );
 
     renderPage();
-    await userEvent.click(
-      await screen.findByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin"),
-    );
+    await userEvent.click(await screen.findByLabelText("Yeni revizyon isteği açıldığında bana mail gelsin"));
 
     await waitFor(() => expect(setSubscriptionMock).toHaveBeenCalledTimes(1));
     expect(setSubscriptionMock.mock.calls[0][0]).toEqual({
@@ -204,9 +188,7 @@ describe("AdminNotificationSettingsPage", () => {
   });
 
   it("kişisel tercih açık ama genel anahtar kapalıysa uyarı gösterir", async () => {
-    fetchStateMock.mockResolvedValue(
-      makeState({ newMemberEnabled: false, myNewMemberEmail: true }),
-    );
+    fetchStateMock.mockResolvedValue(makeState({ newMemberEnabled: false, myNewMemberEmail: true }));
 
     renderPage();
 

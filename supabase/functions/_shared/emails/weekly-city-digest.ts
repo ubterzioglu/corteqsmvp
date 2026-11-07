@@ -51,7 +51,9 @@ function asText(value: unknown): string {
 }
 
 function asList(value: unknown): Array<Record<string, unknown>> {
-  return Array.isArray(value) ? (value.filter((v) => v && typeof v === "object") as Array<Record<string, unknown>>) : [];
+  return Array.isArray(value)
+    ? (value.filter((v) => v && typeof v === "object") as Array<Record<string, unknown>>)
+    : [];
 }
 
 function asStringList(value: unknown): string[] {
@@ -59,11 +61,7 @@ function asStringList(value: unknown): string[] {
 }
 
 /** [{id,title}] → başlık + bağlantı listesi (HTML). Bilinen alanlar DIŞI çizilmez. */
-function itemRows(
-  items: Array<Record<string, unknown>>,
-  pathPrefix: string,
-  emptyLabel: string,
-): string {
+function itemRows(items: Array<Record<string, unknown>>, pathPrefix: string, emptyLabel: string): string {
   if (items.length === 0) {
     return `<p style="font-size:13px;color:${MUTED};margin:4px 0 0;">${escapeHtml(emptyLabel)}</p>`;
   }
@@ -100,7 +98,9 @@ export function buildWeeklyCityDigestEmail(
 ): BuiltWeeklyCityDigestEmail {
   const base = asText(siteUrl).replace(/\/+$/, "") || DEFAULT_SITE_URL;
   const week = asText(payload?.week);
-  const cities = asList(payload?.cities).map((c) => asText(c.city)).filter(Boolean);
+  const cities = asList(payload?.cities)
+    .map((c) => asText(c.city))
+    .filter(Boolean);
   const events = asList(payload?.events);
   const recommendations = asList(payload?.recommendations);
   const unmatched = asStringList(payload?.unmatched_cities);
@@ -123,10 +123,14 @@ export function buildWeeklyCityDigestEmail(
       <h3 style="font-size:15px;margin:16px 0 0;">Yeni tavsiye talepleri (${recommendations.length})</h3>
       ${itemRows(recommendations, `${base}/tavsiye`, "Bu hafta yeni tavsiye talebi yok.")}
 
-      ${unmatched.length > 0 ? `
+      ${
+        unmatched.length > 0
+          ? `
       <p style="font-size:12px;color:${MUTED};margin-top:16px;">
         ${escapeHtml(unmatched.join(", "))} için bu hafta yeni içerik yok.
-      </p>` : ""}
+      </p>`
+          : ""
+      }
 
       <p style="margin:20px 0;">
         <a href="${escapeHtml(`${base}/settings/notifications`)}"

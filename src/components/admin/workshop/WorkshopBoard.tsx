@@ -113,10 +113,7 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
   // Sayaçlar ve ilerleme çubuğu seçili workshop oturumunu yansıtır: WS2'ye
   // süzüldüğünde WS1'in bitmiş maddeleri oranı şişirmemeli.
   const scopedItems = useMemo(
-    () =>
-      sessionFilter === ALL_SESSIONS_VALUE
-        ? items
-        : items.filter((item) => item.sessionKey === sessionFilter),
+    () => (sessionFilter === ALL_SESSIONS_VALUE ? items : items.filter((item) => item.sessionKey === sessionFilter)),
     [items, sessionFilter],
   );
   const progress = useMemo(() => calculateWorkshopProgress(scopedItems), [scopedItems]);
@@ -191,8 +188,7 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, draft }: { id: string; draft: WorkshopItemDraft }) =>
-      updateWorkshopItem(id, draft),
+    mutationFn: ({ id, draft }: { id: string; draft: WorkshopItemDraft }) => updateWorkshopItem(id, draft),
     onSuccess: async () => {
       await invalidate();
       toast({ title: "Madde güncellendi" });
@@ -209,8 +205,7 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
     onError: showError,
   });
 
-  const resolvedNewSection =
-    newSection === NEW_SECTION_VALUE || newSection === "" ? customSection : newSection;
+  const resolvedNewSection = newSection === NEW_SECTION_VALUE || newSection === "" ? customSection : newSection;
   // Toplantı sırasında eklenen madde varsayılan olarak en son workshop'a düşer.
   const resolvedNewSession = newSession || latestWorkshopSession(items);
 
@@ -248,11 +243,7 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
       stats={
         <AdminStatsGrid columns={4}>
           <StatCard label="Toplam madde" value={String(progress.total)} />
-          <StatCard
-            label="UBT onayı"
-            value={`${progress.ubtDone}/${progress.total}`}
-            hint="UBT işaretledi"
-          />
+          <StatCard label="UBT onayı" value={`${progress.ubtDone}/${progress.total}`} hint="UBT işaretledi" />
           <StatCard
             label="Burak onayı"
             value={`${progress.burakDone}/${progress.total}`}
@@ -270,11 +261,17 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
         </AdminStatsGrid>
       }
       filters={
-        <AdminFilterBar onReset={hasActiveFilters ? () => {
-          setSessionFilter(ALL_SESSIONS_VALUE);
-          setStatusFilter("all");
-          setSearchText("");
-        } : undefined}>
+        <AdminFilterBar
+          onReset={
+            hasActiveFilters
+              ? () => {
+                  setSessionFilter(ALL_SESSIONS_VALUE);
+                  setStatusFilter("all");
+                  setSearchText("");
+                }
+              : undefined
+          }
+        >
           <Select value={sessionFilter} onValueChange={setSessionFilter}>
             <SelectTrigger className="h-9 w-full sm:w-44">
               <SelectValue />
@@ -315,16 +312,10 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
       {itemsQuery.isLoading ? <AdminLoadingState /> : null}
 
       {itemsQuery.isError ? (
-        <AdminErrorState
-          description="Workshop maddeleri yüklenemedi."
-          onRetry={() => itemsQuery.refetch()}
-        />
+        <AdminErrorState description="Workshop maddeleri yüklenemedi." onRetry={() => itemsQuery.refetch()} />
       ) : null}
 
-      {!itemsQuery.isLoading &&
-      !itemsQuery.isError &&
-      topSections.length === 0 &&
-      completedSections.length === 0 ? (
+      {!itemsQuery.isLoading && !itemsQuery.isError && topSections.length === 0 && completedSections.length === 0 ? (
         <AdminEmptyState
           title={hasActiveFilters ? "Filtreye uyan madde yok" : "Henüz madde yok"}
           description={
@@ -366,9 +357,7 @@ export function WorkshopBoard({ workshopKey, title, description }: WorkshopBoard
             <AccordionTrigger className="py-3 hover:no-underline">
               <div className="flex items-center gap-2">
                 <CheckCircle2 aria-hidden="true" className="h-4 w-4 text-emerald-500" />
-                <span className="text-sm font-medium text-foreground">
-                  Tamamlananlar ({completedCount})
-                </span>
+                <span className="text-sm font-medium text-foreground">Tamamlananlar ({completedCount})</span>
               </div>
             </AccordionTrigger>
             <AccordionContent className="px-0 pb-2">

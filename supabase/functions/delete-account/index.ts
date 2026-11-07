@@ -44,7 +44,10 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: `Bearer ${jwt}` } },
     });
 
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAuth.auth.getUser();
     if (authError || !user) {
       return jsonResponse({ error: "Geçersiz JWT" }, 401, corsHeaders);
     }
@@ -52,10 +55,9 @@ Deno.serve(async (req) => {
     const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // 2. Engel kontrolü
-    const { data: blocks, error: blocksError } = await supabaseAdmin.rpc(
-      "check_account_deletion_blocks_v1",
-      { p_user_id: user.id }
-    );
+    const { data: blocks, error: blocksError } = await supabaseAdmin.rpc("check_account_deletion_blocks_v1", {
+      p_user_id: user.id,
+    });
 
     if (blocksError) {
       console.error("Blocks check error:", blocksError);
@@ -63,10 +65,14 @@ Deno.serve(async (req) => {
     }
 
     if (!blocks?.can_delete) {
-      return jsonResponse({
-        error: "Hesap silinemez",
-        blocks: blocks?.blocks ?? [],
-      }, 403, corsHeaders);
+      return jsonResponse(
+        {
+          error: "Hesap silinemez",
+          blocks: blocks?.blocks ?? [],
+        },
+        403,
+        corsHeaders,
+      );
     }
 
     // 3. Anonimleştirme
@@ -96,10 +102,14 @@ Deno.serve(async (req) => {
     // 5. Silme günlüğü
     // ⚠️ account_deletion_log tablosu YOK, oluşturulmalı.
 
-    return jsonResponse({
-      success: true,
-      message: "Hesap silme talebi alındı (DRY RUN). Gerçek silme henüz aktif değil.",
-    }, 200, corsHeaders);
+    return jsonResponse(
+      {
+        success: true,
+        message: "Hesap silme talebi alındı (DRY RUN). Gerçek silme henüz aktif değil.",
+      },
+      200,
+      corsHeaders,
+    );
   } catch (error) {
     console.error("delete-account error:", error);
     return jsonResponse({ error: "Sunucu hatası" }, 500, corsHeaders);

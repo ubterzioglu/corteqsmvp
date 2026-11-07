@@ -7,7 +7,8 @@ import type { PublicSectionRendererProps } from "./renderer-registry";
 const contactIcon = (type: string) => {
   if (type === "phone" || type === "whatsapp") return <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />;
   if (type === "email") return <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />;
-  if (type === "website" || type === "appointment_url") return <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />;
+  if (type === "website" || type === "appointment_url")
+    return <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />;
   return <LinkIcon className="h-4 w-4 shrink-0 text-muted-foreground" />;
 };
 
@@ -18,9 +19,7 @@ const isContactRow = (row: unknown): row is ContactRowViewModel =>
   typeof (row as ContactRowViewModel).label === "string";
 
 const ContactListSection = ({ section }: PublicSectionRendererProps) => {
-  const contacts = Array.isArray(section.content.contacts)
-    ? section.content.contacts.filter(isContactRow)
-    : [];
+  const contacts = Array.isArray(section.content.contacts) ? section.content.contacts.filter(isContactRow) : [];
   if (contacts.length === 0) return null;
 
   return (

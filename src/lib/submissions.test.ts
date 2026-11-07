@@ -58,10 +58,10 @@ describe("submission helpers", () => {
         business: "",
         field: "AI",
         email: "ada@example.com",
-      phone: "+49 555",
-      referral_source: "whatsapp",
-      referral_detail: "Berlin Diaspora",
-      referral_code: " abc42 ",
+        phone: "+49 555",
+        referral_source: "whatsapp",
+        referral_detail: "Berlin Diaspora",
+        referral_code: " abc42 ",
         document_url: "",
         document_name: "cv.pdf",
         documents: documents as unknown as FormDataEntryValue,
@@ -160,7 +160,9 @@ describe("submission helpers", () => {
         document_url: "https://example.com/legacy.pdf",
         document_name: "legacy.pdf",
       }),
-    ).toEqual([{ url: "https://example.com/legacy.pdf", path: null, name: "legacy.pdf", sizeBytes: null, contentType: null }]);
+    ).toEqual([
+      { url: "https://example.com/legacy.pdf", path: null, name: "legacy.pdf", sizeBytes: null, contentType: null },
+    ]);
   });
 
   it("classifies bucket usage thresholds and formats sizes", () => {

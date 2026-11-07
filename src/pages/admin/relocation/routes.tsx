@@ -16,16 +16,10 @@ import { lazyWithReload } from "@/lib/lazy-with-reload";
 
 const RelocationJobsPage = lazyWithReload(() => import("./RelocationJobsPage"));
 const RelocationCandidatesPage = lazyWithReload(() => import("./RelocationCandidatesPage"));
-const RelocationToolsQuestionCountsPage = lazyWithReload(
-  () => import("./RelocationToolsQuestionCountsPage"),
-);
+const RelocationToolsQuestionCountsPage = lazyWithReload(() => import("./RelocationToolsQuestionCountsPage"));
 
 function PageFallback() {
-  return (
-    <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
-      Yükleniyor...
-    </div>
-  );
+  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
 }
 
 export const relocationAdminRoutes = (

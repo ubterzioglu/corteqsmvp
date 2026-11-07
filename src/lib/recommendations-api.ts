@@ -8,10 +8,7 @@
 // tiplerde YOK — `as never` deseni bilinçli (emsal: events/careers).
 // ⚠️ RPC hataları DÜZ NESNE — tip daraltması (instanceof) YASAK; resolveRecommendationRpcErrorMessage.
 import { supabase } from "@/integrations/supabase/client";
-import {
-  RECOMMENDATION_MATCH_DEFAULT_LIMIT,
-  resolveRecommendationRpcErrorMessage,
-} from "@/lib/recommendations-rules";
+import { RECOMMENDATION_MATCH_DEFAULT_LIMIT, resolveRecommendationRpcErrorMessage } from "@/lib/recommendations-rules";
 import type {
   CreateRecommendationInput,
   MatchedProfessional,
@@ -32,14 +29,17 @@ export type RecommendationFilters = {
  * Hata: `resolveRecommendationRpcErrorMessage` düz nesneden Türkçe üretir.
  */
 export async function createRecommendationRequest(input: CreateRecommendationInput): Promise<string> {
-  const { data, error } = await supabase.rpc("create_recommendation_request_v1" as never, {
-    p_title: input.title,
-    p_body: input.body,
-    p_category_slug: input.category_slug ?? null,
-    p_country: input.country ?? null,
-    p_city: input.city ?? null,
-    p_diaspora_key: input.diaspora_key ?? "tr",
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "create_recommendation_request_v1" as never,
+    {
+      p_title: input.title,
+      p_body: input.body,
+      p_category_slug: input.category_slug ?? null,
+      p_country: input.country ?? null,
+      p_city: input.city ?? null,
+      p_diaspora_key: input.diaspora_key ?? "tr",
+    } as never,
+  );
 
   if (error) throw new Error(resolveRecommendationRpcErrorMessage(error));
   return String(data);
@@ -47,10 +47,13 @@ export async function createRecommendationRequest(input: CreateRecommendationInp
 
 /** Talebe yanıt verir (RPC-only yazma). is_professional SUNUCUDA türetilir (istemci göndermez). */
 export async function answerRecommendation(requestId: string, body: string): Promise<string> {
-  const { data, error } = await supabase.rpc("answer_recommendation_v1" as never, {
-    p_request_id: requestId,
-    p_body: body,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "answer_recommendation_v1" as never,
+    {
+      p_request_id: requestId,
+      p_body: body,
+    } as never,
+  );
 
   if (error) throw new Error(resolveRecommendationRpcErrorMessage(error));
   return String(data);
@@ -81,7 +84,7 @@ export async function fetchRecommendations(
 
   const { data, error } = await query;
   if (error) throw new Error(resolveRecommendationRpcErrorMessage(error));
-  return ((data ?? []) as unknown) as RecommendationRequestRow[];
+  return (data ?? []) as unknown as RecommendationRequestRow[];
 }
 
 /** Tek talep + yanıtları (detay sayfası). */
@@ -103,8 +106,8 @@ export async function fetchRecommendationDetail(
   if (ansError) throw new Error(resolveRecommendationRpcErrorMessage(ansError));
 
   return {
-    request: reqRow ? (((reqRow as unknown) as RecommendationRequestRow)) : null,
-    answers: ((answers ?? []) as unknown) as RecommendationAnswerRow[],
+    request: reqRow ? (reqRow as unknown as RecommendationRequestRow) : null,
+    answers: (answers ?? []) as unknown as RecommendationAnswerRow[],
   };
 }
 
@@ -116,11 +119,14 @@ export async function matchRecommendationProfessionals(
   requestId: string,
   limit: number = RECOMMENDATION_MATCH_DEFAULT_LIMIT,
 ): Promise<MatchedProfessional[]> {
-  const { data, error } = await supabase.rpc("match_recommendation_professionals" as never, {
-    p_request_id: requestId,
-    p_limit: limit,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "match_recommendation_professionals" as never,
+    {
+      p_request_id: requestId,
+      p_limit: limit,
+    } as never,
+  );
 
   if (error) throw new Error(resolveRecommendationRpcErrorMessage(error));
-  return ((data ?? []) as unknown) as MatchedProfessional[];
+  return (data ?? []) as unknown as MatchedProfessional[];
 }

@@ -29,10 +29,7 @@ describe("FooterSection", () => {
     );
 
     const foundersLinks = Array.from(container.querySelectorAll('a[href="/founders"]'));
-    const visibleFoundersLink = foundersLinks.find(
-      (el) => el.textContent?.toLowerCase().includes("founders"),
-    );
+    const visibleFoundersLink = foundersLinks.find((el) => el.textContent?.toLowerCase().includes("founders"));
     expect(visibleFoundersLink).toBeUndefined();
   });
-
 });

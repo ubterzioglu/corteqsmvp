@@ -76,9 +76,7 @@ describe("M04 · sayaç aggregate RPC (satır değil sayı)", () => {
     expect(count).not.toContain("return query");
     expect(count).toContain("count(*)");
     expect(count).toContain("'viewer_status', v_status");
-    expect(flat()).toContain(
-      "grant execute on function public.event_attendee_count(uuid) to anon, authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.event_attendee_count(uuid) to anon, authenticated;");
   });
 });
 
@@ -113,9 +111,7 @@ describe("M04 · join_event_v1 — kapasite SQL'de ve KİLİTLİ", () => {
   });
 
   it("grant yalnız authenticated", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.join_event_v1(uuid) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.join_event_v1(uuid) to authenticated;");
   });
 });
 
@@ -137,6 +133,6 @@ describe("M04 · salt ekleme", () => {
     expect(sql).not.toMatch(/drop\s+column/i);
     expect(sql).not.toMatch(/drop\s+table/i);
     expect(sql).not.toContain("create or replace function public.create_event_v1");
-    expect(sql).not.toContain("drop policy if exists \"Users can");
+    expect(sql).not.toContain('drop policy if exists "Users can');
   });
 });

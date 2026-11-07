@@ -57,9 +57,7 @@ export function applyReactionToFeedPages<T extends InfiniteFeedData>(
       if (!page.items.some((item) => item.id === postId)) return page;
       return {
         ...page,
-        items: page.items.map((item) =>
-          item.id === postId ? toggleViewerReaction(item, reactionType) : item,
-        ),
+        items: page.items.map((item) => (item.id === postId ? toggleViewerReaction(item, reactionType) : item)),
       };
     }),
   };

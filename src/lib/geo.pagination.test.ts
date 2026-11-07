@@ -54,9 +54,7 @@ describe("listGeoCities pagination", () => {
     const countryBuilder = makeCountryBuilder({ data: [countryRow], error: null });
     const { builder: cityBuilder, rangeMock } = makeCityBuilder(cityRows);
 
-    fromMock.mockImplementation((table: string) =>
-      table === "geo_countries" ? countryBuilder : cityBuilder,
-    );
+    fromMock.mockImplementation((table: string) => (table === "geo_countries" ? countryBuilder : cityBuilder));
 
     const cities = await listGeoCities("Almanya");
 
@@ -80,9 +78,7 @@ describe("listGeoCities pagination", () => {
     const countryBuilder = makeCountryBuilder({ data: [countryRow], error: null });
     const { builder: cityBuilder, rangeMock } = makeCityBuilder(cityRows);
 
-    fromMock.mockImplementation((table: string) =>
-      table === "geo_countries" ? countryBuilder : cityBuilder,
-    );
+    fromMock.mockImplementation((table: string) => (table === "geo_countries" ? countryBuilder : cityBuilder));
 
     const cities = await listGeoCities("AT");
 

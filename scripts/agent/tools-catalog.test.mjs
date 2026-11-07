@@ -6,11 +6,7 @@ import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import {
-  extractEdgeTool,
-  extractWorkerTool,
-  extractLibTool,
-} from "./extract.mjs";
+import { extractEdgeTool, extractWorkerTool, extractLibTool } from "./extract.mjs";
 import { buildOpenApi } from "./openapi.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -95,9 +91,7 @@ describe("edge functions — tool-by-tool", () => {
   });
 
   it("aktif edge function'lar deprecated değil", () => {
-    const active = catalog.tools.filter(
-      (t) => t.family === "edge_function" && t.tool_key !== "edge.lansman_admin",
-    );
+    const active = catalog.tools.filter((t) => t.family === "edge_function" && t.tool_key !== "edge.lansman_admin");
     expect(active.every((t) => t.status === "active")).toBe(true);
   });
 });
@@ -112,9 +106,7 @@ describe("workers — tool-by-tool", () => {
     const pkgRel = `${tool.entrypoint}package.json`;
     const pkg = JSON.parse(read(pkgRel));
     expect(tool.node_engine).toBe(pkg.engines?.node ?? null);
-    expect(tool.version_pins["@supabase/supabase-js"]).toBe(
-      pkg.dependencies?.["@supabase/supabase-js"],
-    );
+    expect(tool.version_pins["@supabase/supabase-js"]).toBe(pkg.dependencies?.["@supabase/supabase-js"]);
     // Yeniden türetme idempotent.
     const fresh = extractWorkerTool(pkgRel, read(pkgRel), "");
     expect(fresh.tool_name).toBe(tool.tool_name);
@@ -133,10 +125,7 @@ describe("ui modülleri — tool-by-tool", () => {
       expect(fresh.exports, `${tool.tool_key} exports`).toEqual(tool.exports);
       expect(fresh.rpcs, `${tool.tool_key} rpcs`).toEqual(tool.rpcs);
       // En az bir export veya RPC olmalı (boş api modülü = ingestion hatası işareti).
-      expect(
-        tool.exports.length + tool.rpcs.length,
-        `${tool.tool_key} boş görünüyor`,
-      ).toBeGreaterThan(0);
+      expect(tool.exports.length + tool.rpcs.length, `${tool.tool_key} boş görünüyor`).toBeGreaterThan(0);
     }
   });
 
@@ -153,9 +142,7 @@ describe("openapi sözleşmesi", () => {
     const yaml = buildOpenApi(catalog);
     const edges = catalog.tools.filter((t) => t.family === "edge_function");
     for (const e of edges) {
-      expect(yaml, `${e.tool_name} path eksik`).toContain(
-        `/functions/v1/${e.tool_name}:`,
-      );
+      expect(yaml, `${e.tool_name} path eksik`).toContain(`/functions/v1/${e.tool_name}:`);
       expect(yaml).toContain(`x-tool-key: ${e.tool_key}`);
     }
   });

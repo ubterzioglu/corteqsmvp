@@ -241,10 +241,14 @@ describe("fetchRolesOverviewTopBundle", () => {
 
   it("returns the four catalog lists together", async () => {
     fromMock.mockImplementation((table: string) => {
-      if (table === "roles") return makeQuery([{ id: "r1", key: "User_X", label: "X", is_active: true, sort_order: 0 }]);
-      if (table === "afs_attributes") return makeQuery([{ key: "full_name", label: "Ad", description: null, data_type: "text", sort_order: 0 }]);
-      if (table === "afs_features") return makeQuery([{ key: "feat_x", label: "Özellik", description: null, scope_role: null, sort_order: 0 }]);
-      if (table === "afs_sections") return makeQuery([{ key: "sect_x", label: "Bölüm", description: null, section_area: null, sort_order: 0 }]);
+      if (table === "roles")
+        return makeQuery([{ id: "r1", key: "User_X", label: "X", is_active: true, sort_order: 0 }]);
+      if (table === "afs_attributes")
+        return makeQuery([{ key: "full_name", label: "Ad", description: null, data_type: "text", sort_order: 0 }]);
+      if (table === "afs_features")
+        return makeQuery([{ key: "feat_x", label: "Özellik", description: null, scope_role: null, sort_order: 0 }]);
+      if (table === "afs_sections")
+        return makeQuery([{ key: "sect_x", label: "Bölüm", description: null, section_area: null, sort_order: 0 }]);
       throw new Error(`Unexpected table: ${table}`);
     });
 
@@ -276,13 +280,23 @@ describe("fetchRoleAssignmentDetail", () => {
       const eq = vi.fn();
       if (table === "role_attributes") {
         eq.mockResolvedValue({
-          data: [{ is_enabled: true, is_required: false, is_public_default: true, afs_attributes: { key: "full_name", label: "Ad" } }],
+          data: [
+            {
+              is_enabled: true,
+              is_required: false,
+              is_public_default: true,
+              afs_attributes: { key: "full_name", label: "Ad" },
+            },
+          ],
           error: null,
         });
       } else if (table === "role_features") {
         eq.mockResolvedValue({ data: [{ feature_key: "feat_x", is_enabled: true }], error: null });
       } else if (table === "role_sections") {
-        eq.mockResolvedValue({ data: [{ is_enabled: true, afs_sections: { key: "sect_x", label: "Bölüm" } }], error: null });
+        eq.mockResolvedValue({
+          data: [{ is_enabled: true, afs_sections: { key: "sect_x", label: "Bölüm" } }],
+          error: null,
+        });
       } else {
         throw new Error(`Unexpected table: ${table}`);
       }

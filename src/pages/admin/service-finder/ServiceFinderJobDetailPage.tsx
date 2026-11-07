@@ -6,14 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   ServiceFinderFetchStatusBadge,
   ServiceFinderJobStatusBadge,
@@ -26,11 +19,7 @@ import {
   useRetryServiceFinderJob,
   useServiceFinderJobDetail,
 } from "@/hooks/useServiceFinder";
-import {
-  formatConfidence,
-  formatDateTime,
-  formatUsd,
-} from "@/lib/service-finder-format";
+import { formatConfidence, formatDateTime, formatUsd } from "@/lib/service-finder-format";
 import type { ServiceFinderCandidateRow } from "@/lib/service-finder-schemas";
 
 export default function ServiceFinderJobDetailPage() {
@@ -82,7 +71,12 @@ export default function ServiceFinderJobDetailPage() {
             </Button>
           )}
           {retryable && (
-            <Button variant="outline" size="sm" disabled={retryJob.isPending} onClick={() => retryJob.mutate({ jobId: job.id })}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={retryJob.isPending}
+              onClick={() => retryJob.mutate({ jobId: job.id })}
+            >
               Yeniden Dene
             </Button>
           )}
@@ -152,7 +146,9 @@ export default function ServiceFinderJobDetailPage() {
                     >
                       <TableCell className="font-medium">{candidate.canonical_name}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{candidate.city ?? "—"}</TableCell>
-                      <TableCell className="text-sm tabular-nums">{formatConfidence(candidate.confidence_score)}</TableCell>
+                      <TableCell className="text-sm tabular-nums">
+                        {formatConfidence(candidate.confidence_score)}
+                      </TableCell>
                       <TableCell>
                         <ServiceFinderReviewStatusBadge status={candidate.review_status} />
                       </TableCell>
@@ -186,7 +182,9 @@ export default function ServiceFinderJobDetailPage() {
                       <TableCell className="max-w-80 truncate text-sm">{query.query_text}</TableCell>
                       <TableCell className="text-sm text-muted-foreground">{query.provider_key}</TableCell>
                       <TableCell className="text-right text-sm tabular-nums">{query.result_count}</TableCell>
-                      <TableCell className="text-right text-sm tabular-nums">{formatUsd(query.estimated_cost_usd)}</TableCell>
+                      <TableCell className="text-right text-sm tabular-nums">
+                        {formatUsd(query.estimated_cost_usd)}
+                      </TableCell>
                       <TableCell className="text-sm text-muted-foreground">{query.status}</TableCell>
                     </TableRow>
                   ))}
@@ -211,7 +209,12 @@ export default function ServiceFinderJobDetailPage() {
                   {sources.map((source) => (
                     <TableRow key={source.id}>
                       <TableCell className="max-w-96 truncate text-sm">
-                        <a href={source.source_url} target="_blank" rel="noreferrer noopener" className="hover:underline">
+                        <a
+                          href={source.source_url}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                          className="hover:underline"
+                        >
                           {source.source_title ?? source.source_url}
                         </a>
                       </TableCell>
@@ -285,10 +288,7 @@ export default function ServiceFinderJobDetailPage() {
         </TabsContent>
       </Tabs>
 
-      <ServiceFinderCandidateDrawer
-        candidate={selectedCandidate}
-        onClose={() => setSelectedCandidate(null)}
-      />
+      <ServiceFinderCandidateDrawer candidate={selectedCandidate} onClose={() => setSelectedCandidate(null)} />
     </div>
   );
 }

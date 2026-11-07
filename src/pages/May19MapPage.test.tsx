@@ -6,8 +6,13 @@ import May19MapPage from "@/pages/May19MapPage";
 
 vi.mock("react-simple-maps", () => ({
   ComposableMap: ({ children }: { children: React.ReactNode }) => <svg data-testid="map-shell">{children}</svg>,
-  Geographies: ({ children }: { children: (arg: { geographies: Array<{ rsmKey: string; id: string; properties: { name: string } }> }) => React.ReactNode }) =>
-    <g>{children({ geographies: [{ rsmKey: "geo-1", id: "geo-1", properties: { name: "Geo" } }] })}</g>,
+  Geographies: ({
+    children,
+  }: {
+    children: (arg: {
+      geographies: Array<{ rsmKey: string; id: string; properties: { name: string } }>;
+    }) => React.ReactNode;
+  }) => <g>{children({ geographies: [{ rsmKey: "geo-1", id: "geo-1", properties: { name: "Geo" } }] })}</g>,
   Geography: () => <path data-testid="geography" />,
   Graticule: () => <path />,
   Line: () => <path />,

@@ -19,11 +19,7 @@ export type AdminAccent =
   | "red"; // Sistem ve Güvenlik
 
 /** Sidebar / palette item'larında gösterilebilecek dinamik badge türleri. */
-export type AdminNavBadgeKind =
-  | "approval-count"
-  | "claim-count"
-  | "system-warning"
-  | "static";
+export type AdminNavBadgeKind = "approval-count" | "claim-count" | "system-warning" | "static";
 
 export type AdminNavItem = {
   /** Registry genelinde benzersiz, kebab-case kimlik. */

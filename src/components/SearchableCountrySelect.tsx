@@ -2,19 +2,8 @@ import { useMemo, useState } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { allCountries } from "@/data/countryCities";
 import { filterByQuery } from "@/lib/country-city-search";
 import { useGeoCountries } from "@/hooks/useGeo";
@@ -63,15 +52,11 @@ const SearchableCountrySelect = ({
   );
   const list = countries ?? (liveCountries.length > 0 ? liveCountries : allCountries);
 
-  const displayValue = value === allOptionValue && includeAllOptionLabel
-    ? includeAllOptionLabel
-    : value || "";
+  const displayValue = value === allOptionValue && includeAllOptionLabel ? includeAllOptionLabel : value || "";
 
   const filteredList = useMemo(() => {
     const deduped = list.filter((item, index) => list.indexOf(item) === index);
-    return includeAllOptionLabel
-      ? [allOptionValue, ...deduped.filter((item) => item !== allOptionValue)]
-      : deduped;
+    return includeAllOptionLabel ? [allOptionValue, ...deduped.filter((item) => item !== allOptionValue)] : deduped;
   }, [allOptionValue, includeAllOptionLabel, list]);
 
   const valueExists = value && (value === allOptionValue || list.includes(value));
@@ -86,15 +71,9 @@ const SearchableCountrySelect = ({
             role="combobox"
             aria-expanded={open}
             disabled={disabled}
-            className={cn(
-              "w-full justify-between font-normal",
-              sizeClasses[size],
-              !value && "text-muted-foreground",
-            )}
+            className={cn("w-full justify-between font-normal", sizeClasses[size], !value && "text-muted-foreground")}
           >
-            <span className="truncate">
-              {displayValue || placeholder}
-            </span>
+            <span className="truncate">{displayValue || placeholder}</span>
             <span className="flex items-center gap-0.5 shrink-0">
               {allowClear && value && !disabled && (
                 <span
@@ -121,10 +100,12 @@ const SearchableCountrySelect = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
-          <Command filter={(itemValue, search) => {
-            const normalized = filterByQuery([itemValue], search);
-            return normalized.length > 0 ? 1 : 0;
-          }}>
+          <Command
+            filter={(itemValue, search) => {
+              const normalized = filterByQuery([itemValue], search);
+              return normalized.length > 0 ? 1 : 0;
+            }}
+          >
             <CommandInput placeholder="Ara..." />
             <CommandList>
               <CommandEmpty>Sonuç bulunamadı</CommandEmpty>
@@ -150,12 +131,7 @@ const SearchableCountrySelect = ({
                       setOpen(false);
                     }}
                   >
-                    <Check
-                      className={cn(
-                        "mr-2 h-4 w-4",
-                        value === country ? "opacity-100" : "opacity-0",
-                      )}
-                    />
+                    <Check className={cn("mr-2 h-4 w-4", value === country ? "opacity-100" : "opacity-0")} />
                     {country === allOptionValue ? includeAllOptionLabel : country}
                   </CommandItem>
                 ))}

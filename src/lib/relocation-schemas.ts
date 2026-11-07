@@ -32,13 +32,10 @@ export const moveCreateSchema = z
     allow_personalization: z.boolean().default(true),
     allow_partner_referrals: z.boolean().default(false),
   })
-  .refine(
-    (v) =>
-      !v.move_window_start ||
-      !v.move_window_end ||
-      v.move_window_start <= v.move_window_end,
-    { message: "Taşınma penceresi başlangıcı bitişten sonra olamaz", path: ["move_window_end"] },
-  );
+  .refine((v) => !v.move_window_start || !v.move_window_end || v.move_window_start <= v.move_window_end, {
+    message: "Taşınma penceresi başlangıcı bitişten sonra olamaz",
+    path: ["move_window_end"],
+  });
 
 export type MoveCreateInput = z.infer<typeof moveCreateSchema>;
 

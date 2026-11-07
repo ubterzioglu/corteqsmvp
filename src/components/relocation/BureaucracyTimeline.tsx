@@ -37,38 +37,35 @@ export function BureaucracyTimeline({
             {group.map((step) => {
               const documents = step.required_documents ?? [];
               return (
-              <Card key={step.id}>
-                <CardContent className="space-y-2 pt-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-foreground">{step.name}</span>
-                    {step.deadline_rule && (
-                      <Badge variant="outline" className="shrink-0 text-xs">
-                        {deadlineLabel}: {step.deadline_rule}
-                      </Badge>
+                <Card key={step.id}>
+                  <CardContent className="space-y-2 pt-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-semibold text-foreground">{step.name}</span>
+                      {step.deadline_rule && (
+                        <Badge variant="outline" className="shrink-0 text-xs">
+                          {deadlineLabel}: {step.deadline_rule}
+                        </Badge>
+                      )}
+                    </div>
+                    {step.description && <p className="text-xs text-muted-foreground">{step.description}</p>}
+                    {documents.length > 0 && (
+                      <p className="text-xs text-muted-foreground">
+                        <span className="font-medium">{documentsLabel}:</span> {documents.join(", ")}
+                      </p>
                     )}
-                  </div>
-                  {step.description && (
-                    <p className="text-xs text-muted-foreground">{step.description}</p>
-                  )}
-                  {documents.length > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      <span className="font-medium">{documentsLabel}:</span>{" "}
-                      {documents.join(", ")}
-                    </p>
-                  )}
-                  {step.official_url && (
-                    <a
-                      href={step.official_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-xs text-primary hover:underline"
-                    >
-                      {step.official_url_label ?? step.official_url}
-                      <ExternalLink className="h-3 w-3" />
-                    </a>
-                  )}
-                </CardContent>
-              </Card>
+                    {step.official_url && (
+                      <a
+                        href={step.official_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs text-primary hover:underline"
+                      >
+                        {step.official_url_label ?? step.official_url}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    )}
+                  </CardContent>
+                </Card>
               );
             })}
           </div>

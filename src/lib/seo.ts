@@ -102,21 +102,15 @@ export function applySeo(opts: SeoOptions): () => void {
   // ── Önceki değerleri sakla (geri yükleme için) ──
   const prev = {
     title: document.title,
-    description: document.head
-      .querySelector('meta[name="description"]')
-      ?.getAttribute("content"),
+    description: document.head.querySelector('meta[name="description"]')?.getAttribute("content"),
     canonical: document.head.querySelector('link[rel="canonical"]')?.getAttribute("href"),
     ogTitle: document.head.querySelector('meta[property="og:title"]')?.getAttribute("content"),
-    ogDescription: document.head
-      .querySelector('meta[property="og:description"]')
-      ?.getAttribute("content"),
+    ogDescription: document.head.querySelector('meta[property="og:description"]')?.getAttribute("content"),
     ogUrl: document.head.querySelector('meta[property="og:url"]')?.getAttribute("content"),
     ogImage: document.head.querySelector('meta[property="og:image"]')?.getAttribute("content"),
     ogType: document.head.querySelector('meta[property="og:type"]')?.getAttribute("content"),
     twTitle: document.head.querySelector('meta[name="twitter:title"]')?.getAttribute("content"),
-    twDescription: document.head
-      .querySelector('meta[name="twitter:description"]')
-      ?.getAttribute("content"),
+    twDescription: document.head.querySelector('meta[name="twitter:description"]')?.getAttribute("content"),
     twImage: document.head.querySelector('meta[name="twitter:image"]')?.getAttribute("content"),
     robots: document.head.querySelector('meta[name="robots"]')?.getAttribute("content"),
     // og:image'in YAN etiketleri. index.html kabuğu bunları varsayılan görsele göre
@@ -134,23 +128,14 @@ export function applySeo(opts: SeoOptions): () => void {
   if (opts.title) document.title = opts.title;
 
   if (opts.description !== undefined) {
-    upsertMeta('meta[name="description"]', "name", "description").setAttribute(
-      "content",
-      opts.description,
-    );
+    upsertMeta('meta[name="description"]', "name", "description").setAttribute("content", opts.description);
   }
 
   upsertCanonicalLink().setAttribute("href", canonical);
 
   if (opts.title) {
-    upsertMeta('meta[property="og:title"]', "property", "og:title").setAttribute(
-      "content",
-      opts.title,
-    );
-    upsertMeta('meta[name="twitter:title"]', "name", "twitter:title").setAttribute(
-      "content",
-      opts.title,
-    );
+    upsertMeta('meta[property="og:title"]', "property", "og:title").setAttribute("content", opts.title);
+    upsertMeta('meta[name="twitter:title"]', "name", "twitter:title").setAttribute("content", opts.title);
   }
   if (opts.description !== undefined) {
     upsertMeta('meta[property="og:description"]', "property", "og:description").setAttribute(
@@ -165,10 +150,7 @@ export function applySeo(opts: SeoOptions): () => void {
   upsertMeta('meta[property="og:url"]', "property", "og:url").setAttribute("content", canonical);
   upsertMeta('meta[property="og:type"]', "property", "og:type").setAttribute("content", ogType);
   upsertMeta('meta[property="og:image"]', "property", "og:image").setAttribute("content", ogImage);
-  upsertMeta('meta[name="twitter:image"]', "name", "twitter:image").setAttribute(
-    "content",
-    ogImage,
-  );
+  upsertMeta('meta[name="twitter:image"]', "name", "twitter:image").setAttribute("content", ogImage);
 
   // ── og:image YAN etiketleri ──
   // Sayfa KENDİ görselini verdiyse (etkinlik kapağı, profil avatarı) kabuktaki sabit
@@ -182,14 +164,8 @@ export function applySeo(opts: SeoOptions): () => void {
     document.head.querySelector('meta[property="og:image:type"]')?.remove();
 
     if (opts.title) {
-      upsertMeta('meta[property="og:image:alt"]', "property", "og:image:alt").setAttribute(
-        "content",
-        opts.title,
-      );
-      upsertMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt").setAttribute(
-        "content",
-        opts.title,
-      );
+      upsertMeta('meta[property="og:image:alt"]', "property", "og:image:alt").setAttribute("content", opts.title);
+      upsertMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt").setAttribute("content", opts.title);
     } else {
       document.head.querySelector('meta[property="og:image:alt"]')?.remove();
       document.head.querySelector('meta[name="twitter:image:alt"]')?.remove();

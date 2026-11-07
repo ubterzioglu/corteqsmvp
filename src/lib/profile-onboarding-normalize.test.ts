@@ -67,9 +67,7 @@ describe("profile onboarding normalize helpers", () => {
   });
 
   it("accepts a referral source that is not in the catalog anymore", () => {
-    const result = normalizePendingFormPayload(
-      makePayload({ referral_source: "artik-olmayan-kaynak" }),
-    );
+    const result = normalizePendingFormPayload(makePayload({ referral_source: "artik-olmayan-kaynak" }));
 
     expect(result.form.referral_source).toBe("artik-olmayan-kaynak");
   });

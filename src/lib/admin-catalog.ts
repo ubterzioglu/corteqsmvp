@@ -152,7 +152,10 @@ type RawCatalogEditorRow = {
   role: CatalogItemEditor["membershipRole"];
   status: CatalogItemEditor["status"];
   created_at: string;
-  profiles?: { full_name?: string | null; email?: string | null } | { full_name?: string | null; email?: string | null }[] | null;
+  profiles?:
+    | { full_name?: string | null; email?: string | null }
+    | { full_name?: string | null; email?: string | null }[]
+    | null;
 };
 
 type RawUnifiedRecordRow = {
@@ -370,9 +373,9 @@ export async function listAdminCatalogItemTypes(): Promise<AdminCatalogItemType[
     .from("catalog_items")
     .select("item_type")
     .not("item_type", "is", null) as unknown as Promise<{
-      data: Array<{ item_type: string | null }> | null;
-      error: QueryError | null;
-    }>);
+    data: Array<{ item_type: string | null }> | null;
+    error: QueryError | null;
+  }>);
 
   if (error) throw error;
 
@@ -392,9 +395,9 @@ export async function listAdminCatalogRoles(): Promise<AdminCatalogRoleOption[]>
     .select("key, label")
     .eq("is_active", true)
     .order("sort_order", { ascending: true }) as unknown as Promise<{
-      data: Array<{ key: string; label: string }> | null;
-      error: QueryError | null;
-    }>);
+    data: Array<{ key: string; label: string }> | null;
+    error: QueryError | null;
+  }>);
 
   if (error) throw error;
 
@@ -409,9 +412,7 @@ export async function listAdminRoleRecordCounts(): Promise<AdminRoleRecordCount[
 
   if (error) throw error;
 
-  return (
-    (data as Array<{ role_key: string; role_label: string; record_count: number }> | null) ?? []
-  ).map((row) => ({
+  return ((data as Array<{ role_key: string; role_label: string; record_count: number }> | null) ?? []).map((row) => ({
     roleKey: row.role_key,
     roleLabel: row.role_label,
     recordCount: Number(row.record_count),
@@ -428,9 +429,27 @@ export async function listAdminRoleRecordCounts(): Promise<AdminRoleRecordCount[
 // Bu fonksiyonlar da AYNEN öyle davranır (throw YOK); "sessiz yutma" bir kusur olabilir
 // ama bu batch'in kapsamı SADECE taşımak, davranış düzeltmek değil.
 export type RoleCatalogRow = { id: string; key: string; label: string; is_active: boolean; sort_order: number };
-export type AfsAttributeCatalogRow = { key: string; label: string; description: string | null; data_type: string; sort_order: number };
-export type AfsFeatureCatalogRow = { key: string; label: string; description: string | null; scope_role: string | null; sort_order: number };
-export type AfsSectionCatalogRow = { key: string; label: string; description: string | null; section_area: string | null; sort_order: number };
+export type AfsAttributeCatalogRow = {
+  key: string;
+  label: string;
+  description: string | null;
+  data_type: string;
+  sort_order: number;
+};
+export type AfsFeatureCatalogRow = {
+  key: string;
+  label: string;
+  description: string | null;
+  scope_role: string | null;
+  sort_order: number;
+};
+export type AfsSectionCatalogRow = {
+  key: string;
+  label: string;
+  description: string | null;
+  section_area: string | null;
+  sort_order: number;
+};
 
 export type RolesOverviewTopBundle = {
   roles: RoleCatalogRow[];
@@ -442,10 +461,18 @@ export type RolesOverviewTopBundle = {
 export async function fetchRolesOverviewTopBundle(): Promise<RolesOverviewTopBundle> {
   const [rolesRes, attrRes, featRes, sectRes] = await Promise.all([
     supabase.from("roles").select("id, key, label, is_active, sort_order").eq("is_active", true).order("sort_order"),
-    supabase.from("afs_attributes").select("key, label, description, data_type, sort_order").eq("is_active", true).order("sort_order"),
+    supabase
+      .from("afs_attributes")
+      .select("key, label, description, data_type, sort_order")
+      .eq("is_active", true)
+      .order("sort_order"),
     supabase.from("afs_features").select("key, label, description, scope_role, sort_order").order("sort_order"),
     // afs_sections generated types'ta yok (B1) — B1 çözülünce cast kalkacak.
-    supabase.from("afs_sections").select("key, label, description, section_area, sort_order").eq("is_active", true).order("sort_order"),
+    supabase
+      .from("afs_sections")
+      .select("key, label, description, section_area, sort_order")
+      .eq("is_active", true)
+      .order("sort_order"),
   ]);
 
   return {
@@ -495,9 +522,9 @@ export async function getAdminCatalogItemDetail(itemId: string): Promise<AdminCa
     .select(ADMIN_CATALOG_SELECT)
     .eq("id", itemId)
     .single() as unknown as Promise<{
-      data: RawCatalogRow | null;
-      error: QueryError | null;
-    }>);
+    data: RawCatalogRow | null;
+    error: QueryError | null;
+  }>);
 
   if (error) throw error;
   if (!data) {
@@ -750,9 +777,9 @@ export async function listCatalogItemEditors(itemId: string): Promise<CatalogIte
     .eq("item_id", itemId)
     .in("role", ["owner", "manager", "editor"])
     .order("created_at", { ascending: false }) as unknown as Promise<{
-      data: Array<Pick<RawCatalogEditorRow, "user_id" | "role" | "status" | "created_at">> | null;
-      error: QueryError | null;
-    }>);
+    data: Array<Pick<RawCatalogEditorRow, "user_id" | "role" | "status" | "created_at">> | null;
+    error: QueryError | null;
+  }>);
 
   if (error) throw error;
 

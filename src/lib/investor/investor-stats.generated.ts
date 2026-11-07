@@ -2,16 +2,16 @@
 // Güncellemek için: npm run investor:stats
 
 export const INVESTOR_REPO_STATS = {
-  "measuredAt": "2026-10-09",
-  "sourceFiles": 1055,
-  "productionLines": 153738,
-  "testFiles": 496,
+  "measuredAt": "2026-11-07",
+  "sourceFiles": 1067,
+  "productionLines": 159045,
+  "testFiles": 506,
   "e2eSpecs": 11,
-  "pages": 183,
-  "components": 412,
-  "lazyRoutes": 68,
+  "pages": 185,
+  "components": 416,
+  "lazyRoutes": 74,
   "edgeFunctions": 19,
-  "migrations": 529,
+  "migrations": 532,
   "versions": {
     "react": "18.3.1",
     "typescript": "5.8.3",

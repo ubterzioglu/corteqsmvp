@@ -89,10 +89,7 @@ describe("toggleViewerReaction", () => {
 
 describe("applyReactionToFeedPages", () => {
   it("doğru sayfadaki doğru postu çevirir, diğerlerine dokunmaz", () => {
-    const data = makeData([
-      [makePost({ id: "a" }), makePost({ id: "b" })],
-      [makePost({ id: "c" })],
-    ]);
+    const data = makeData([[makePost({ id: "a" }), makePost({ id: "b" })], [makePost({ id: "c" })]]);
 
     const result = applyReactionToFeedPages(data, "c", "like");
 

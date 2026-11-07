@@ -58,13 +58,28 @@ export const ProfileDocumentCard = ({
           <p className="mt-1 text-[11px] text-slate-600">{statusLabel}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onUploadClick} disabled={isUploading || isRemoving}>
+          <Button
+            size="sm"
+            className={AMBER_BUTTON_PRIMARY}
+            onClick={onUploadClick}
+            disabled={isUploading || isRemoving}
+          >
             {isUploading ? "Yükleniyor..." : document ? "Dosyayı Değiştir" : "Dosya Yükle"}
           </Button>
-          <Button size="sm" className={AMBER_BUTTON_OUTLINE} onClick={onOpenClick} disabled={!document || isOpening || isUploading}>
+          <Button
+            size="sm"
+            className={AMBER_BUTTON_OUTLINE}
+            onClick={onOpenClick}
+            disabled={!document || isOpening || isUploading}
+          >
             {isOpening ? "Açılıyor..." : "Dosyayı Aç"}
           </Button>
-          <Button size="sm" className={AMBER_BUTTON_OUTLINE} onClick={onRemoveClick} disabled={!document || isRemoving || isUploading}>
+          <Button
+            size="sm"
+            className={AMBER_BUTTON_OUTLINE}
+            onClick={onRemoveClick}
+            disabled={!document || isRemoving || isUploading}
+          >
             {isRemoving ? "Siliniyor..." : "Dosyayı Kaldır"}
           </Button>
         </div>

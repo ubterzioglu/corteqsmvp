@@ -51,7 +51,7 @@ function getCorsHeaders(req: Request): Record<string, string> {
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 }
 
@@ -93,7 +93,10 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const userClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await userClient.auth.getUser();
     if (authError || !user) {
       return json({ error: "Yetkisiz erişim" }, 401);
     }
@@ -111,7 +114,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
   let body: { triggerType?: string; sourceIds?: string[]; dryRun?: boolean } = {};
   try {
     body = await req.json();
-  } catch { /* body opsiyonel */ }
+  } catch {
+    /* body opsiyonel */
+  }
 
   const dryRun = body.dryRun === true;
   const filterSourceIds: string[] | null = body.sourceIds?.length ? body.sourceIds : null;
@@ -129,11 +134,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   const runId = dryRun ? "dry-run" : await openScanRun(supabase, triggerType, callerUserId);
 
   // ── Kaynakları yükle ──
-  let sourcesQuery = supabase
-    .from("radar_news_sources")
-    .select("*")
-    .eq("is_enabled", true)
-    .eq("terms_checked", true);
+  let sourcesQuery = supabase.from("radar_news_sources").select("*").eq("is_enabled", true).eq("terms_checked", true);
 
   if (filterSourceIds) {
     sourcesQuery = sourcesQuery.in("id", filterSourceIds);
@@ -141,18 +142,23 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   const { data: sources, error: sourcesError } = await sourcesQuery;
   if (sourcesError) {
-    if (!dryRun) await closeScanRun(supabase, runId, "failed", {
-      source_count: 0, fetched_count: 0, inserted_count: 0,
-      duplicate_count: 0, filtered_count: 0, failed_source_count: 0,
-      error_message: sourcesError.message,
-    });
+    if (!dryRun)
+      await closeScanRun(supabase, runId, "failed", {
+        source_count: 0,
+        fetched_count: 0,
+        inserted_count: 0,
+        duplicate_count: 0,
+        filtered_count: 0,
+        failed_source_count: 0,
+        error_message: sourcesError.message,
+      });
     return json({ error: sourcesError.message }, 500);
   }
 
   // ── Provider rotation: hangi sağlayıcıları kullanacağımızı seç ──
   const enabledProviders = getEnabledProviders();
   const rotationStrategy = getRotationStrategy();
-  
+
   // Kaynakları provider'a göre grupla (adapter_key üzerinden)
   const sourcesByProvider = new Map<string, RadarNewsSource[]>();
   for (const source of (sources ?? []) as RadarNewsSource[]) {
@@ -166,7 +172,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
   // Rotasyon stratejisine göre bu taramada kullanılacak provider'ları seç
   let selectedSources: RadarNewsSource[] = [];
-  
+
   if (rotationStrategy === "fallback") {
     // Fallback: tüm enabled provider'ları kullan, sırayla dene
     for (const provider of enabledProviders) {
@@ -185,7 +191,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
     const dayOfWeek = new Date().getDay();
     const dayNames = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
     const scheduleRaw = Deno.env.get("RADAR_PROVIDER_SCHEDULE");
-    
+
     if (scheduleRaw) {
       try {
         const schedule = JSON.parse(scheduleRaw) as Record<string, string>;
@@ -193,9 +199,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
         if (providerKey) {
           selectedSources = sourcesByProvider.get(providerKey) ?? [];
         }
-      } catch { /* fallback to all */ }
+      } catch {
+        /* fallback to all */
+      }
     }
-    
+
     // Schedule yoksa veya parse hatasıysa tüm provider'ları kullan
     if (selectedSources.length === 0) {
       for (const provider of enabledProviders) {
@@ -211,7 +219,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
         const weights = JSON.parse(weightsRaw) as Record<string, number>;
         const totalWeight = enabledProviders.reduce((sum, p) => sum + (weights[p.key] ?? 1), 0);
         let random = Math.random() * totalWeight;
-        
+
         for (const provider of enabledProviders) {
           random -= weights[provider.key] ?? 1;
           if (random <= 0) {
@@ -219,9 +227,11 @@ Deno.serve(async (req: Request): Promise<Response> => {
             break;
           }
         }
-      } catch { /* fallback to all */ }
+      } catch {
+        /* fallback to all */
+      }
     }
-    
+
     // Weights yoksa veya parse hatasıysa tüm provider'ları kullan
     if (selectedSources.length === 0) {
       for (const provider of enabledProviders) {
@@ -275,7 +285,15 @@ Deno.serve(async (req: Request): Promise<Response> => {
     }
     const adapter = ADAPTERS[source.adapter_key];
     if (!adapter) {
-      results.push({ sourceId: source.id, sourceName: source.name, fetched: 0, inserted: 0, duplicate: 0, filtered: 0, error: `Adapter bulunamadı: ${source.adapter_key}` });
+      results.push({
+        sourceId: source.id,
+        sourceName: source.name,
+        fetched: 0,
+        inserted: 0,
+        duplicate: 0,
+        filtered: 0,
+        error: `Adapter bulunamadı: ${source.adapter_key}`,
+      });
       failedSources++;
       continue;
     }
@@ -293,36 +311,42 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
       for (const raw of rawItems) {
         const normalized = await normalizeItem(raw, source, dbKeywords);
-        if (!normalized) { filtered++; continue; }
+        if (!normalized) {
+          filtered++;
+          continue;
+        }
 
         if (normalized.relevanceScore < MIN_SCORE_TO_QUEUE) {
           filtered++;
           if (!dryRun) {
             // Arşive yaz (tuning için 2 hafta sakla)
-            await supabase.from("radar_news_candidates").insert({
-              source_id: source.id,
-              scan_run_id: runId,
-              source_external_id: normalized.sourceExternalId,
-              source_name: normalized.sourceName,
-              source_url: normalized.sourceUrl,
-              original_url: normalized.originalUrl,
-              canonical_url: normalized.canonicalUrl,
-              title: normalized.title,
-              normalized_title: normalized.normalizedTitle,
-              summary: normalized.summary,
-              image_source_url: normalized.imageSourceUrl,
-              category: normalized.category,
-              language: normalized.language,
-              country: normalized.country,
-              city: normalized.city,
-              published_at: normalized.publishedAt,
-              relevance_score: normalized.relevanceScore,
-              relevance_reasons: normalized.relevanceReasons,
-              canonical_url_hash: normalized.canonicalUrlHash,
-              content_hash: normalized.contentHash,
-              review_status: "archived",
-              raw_payload: normalized.rawPayload,
-            }).maybeSingle();
+            await supabase
+              .from("radar_news_candidates")
+              .insert({
+                source_id: source.id,
+                scan_run_id: runId,
+                source_external_id: normalized.sourceExternalId,
+                source_name: normalized.sourceName,
+                source_url: normalized.sourceUrl,
+                original_url: normalized.originalUrl,
+                canonical_url: normalized.canonicalUrl,
+                title: normalized.title,
+                normalized_title: normalized.normalizedTitle,
+                summary: normalized.summary,
+                image_source_url: normalized.imageSourceUrl,
+                category: normalized.category,
+                language: normalized.language,
+                country: normalized.country,
+                city: normalized.city,
+                published_at: normalized.publishedAt,
+                relevance_score: normalized.relevanceScore,
+                relevance_reasons: normalized.relevanceReasons,
+                canonical_url_hash: normalized.canonicalUrlHash,
+                content_hash: normalized.contentHash,
+                review_status: "archived",
+                raw_payload: normalized.rawPayload,
+              })
+              .maybeSingle();
           }
           continue;
         }
@@ -374,7 +398,8 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
       // Kaynak son başarı zamanını güncelle
       if (!dryRun) {
-        await supabase.from("radar_news_sources")
+        await supabase
+          .from("radar_news_sources")
           .update({ last_success_at: new Date().toISOString(), last_error_message: null })
           .eq("id", source.id);
       }
@@ -382,24 +407,29 @@ Deno.serve(async (req: Request): Promise<Response> => {
       sourceError = err instanceof Error ? err.message : String(err);
       failedSources++;
       if (!dryRun) {
-        await supabase.from("radar_news_sources")
+        await supabase
+          .from("radar_news_sources")
           .update({ last_error_at: new Date().toISOString(), last_error_message: sourceError })
           .eq("id", source.id);
       }
     }
 
-    results.push({ sourceId: source.id, sourceName: source.name, fetched, inserted, duplicate, filtered, error: sourceError });
+    results.push({
+      sourceId: source.id,
+      sourceName: source.name,
+      fetched,
+      inserted,
+      duplicate,
+      filtered,
+      error: sourceError,
+    });
     totalInserted += inserted;
     totalDuplicate += duplicate;
     totalFiltered += filtered;
   }
 
   const durationMs = Date.now() - startMs;
-  const finalStatus = failedSources === sourceList.length
-    ? "failed"
-    : failedSources > 0
-    ? "partial"
-    : "completed";
+  const finalStatus = failedSources === sourceList.length ? "failed" : failedSources > 0 ? "partial" : "completed";
 
   if (!dryRun) {
     await closeScanRun(supabase, runId, finalStatus, {

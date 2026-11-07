@@ -61,10 +61,7 @@ describe("buildQueries", () => {
   });
 
   it("seed sorguları şablon sorgularından önce gelir", () => {
-    const queries = buildQueries(
-      makeJob({ seed_queries: ["özel sorgu {{city}}"] }),
-      makeTemplate(),
-    );
+    const queries = buildQueries(makeJob({ seed_queries: ["özel sorgu {{city}}"] }), makeTemplate());
     expect(queries[0]).toBe("özel sorgu Dortmund");
   });
 

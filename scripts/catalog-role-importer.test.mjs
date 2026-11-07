@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  buildImportRecord,
-  parseCsv,
-  parseDelimitedLine,
-  resolveRoleConfig,
-} from "./catalog-role-importer.mjs";
+import { buildImportRecord, parseCsv, parseDelimitedLine, resolveRoleConfig } from "./catalog-role-importer.mjs";
 
 const roleMap = {
   roles: {
@@ -34,7 +29,7 @@ const roleMap = {
 
 describe("catalog-role-importer", () => {
   it("parses semicolon CSV rows with quoted delimiters", () => {
-    expect(parseDelimitedLine('isim;soyisim;uzmanlik\n'.trim())).toEqual(["isim", "soyisim", "uzmanlik"]);
+    expect(parseDelimitedLine("isim;soyisim;uzmanlik\n".trim())).toEqual(["isim", "soyisim", "uzmanlik"]);
     const rows = parseCsv('isim;soyisim;uzmanlik\n"Ali";"Veli";"Genel Tıp, Dahiliye"');
     expect(rows[0].values).toMatchObject({
       isim: "Ali",

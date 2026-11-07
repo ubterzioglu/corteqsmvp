@@ -84,9 +84,7 @@ describe("CityFollowCard", () => {
   });
 
   it("tavan doluyken ekleme bölümü ÇİZİLMEZ + tavan notu görünür", async () => {
-    followsMock.mockResolvedValue(
-      Array.from({ length: 10 }, (_, i) => follow(`c${i}`, `Stadt${i}`)),
-    );
+    followsMock.mockResolvedValue(Array.from({ length: 10 }, (_, i) => follow(`c${i}`, `Stadt${i}`)));
     renderCard();
 
     expect(await screen.findByText(/Takip tavanına ulaştın \(10 şehir\)/i)).toBeInTheDocument();

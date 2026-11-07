@@ -64,20 +64,18 @@ export interface ClaimCodeStart {
 
 /** Kod talebi başlat (idempotent: aktif kod aynı kullanıcıya aynen döner). */
 export async function startClaimCode(landingDbId: string): Promise<ClaimCodeStart> {
-  const { data, error } = await supabase.rpc("group_claim_start_code" as never, {
-    p_landing_id: landingDbId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "group_claim_start_code" as never,
+    {
+      p_landing_id: landingDbId,
+    } as never,
+  );
 
   if (error) throw mapClaimError(error, "Kod talebi başlatılamadı.");
   return data as ClaimCodeStart;
 }
 
-export type ClaimVerifyResult =
-  | "verified"
-  | "not_found"
-  | "expired"
-  | "invalid_link"
-  | "unknown";
+export type ClaimVerifyResult = "verified" | "not_found" | "expired" | "invalid_link" | "unknown";
 
 export interface ClaimVerifyOutcome {
   result: ClaimVerifyResult;
@@ -117,8 +115,7 @@ export const CLAIM_VERIFY_RESULT_MESSAGES: Record<ClaimVerifyResult, string> = {
   verified: "Sahiplik doğrulandı — artık bu grubun sahibisin. Kodu artık silebilirsin.",
   not_found: "Kod grup adında bulunamadı.",
   expired: "Kodun süresi doldu. Yeni bir kod isteyebilirsin.",
-  invalid_link:
-    "Davet linki çalışmıyor görünüyor — bu deneme sayılmadı. Linki kontrol edip tekrar dene.",
+  invalid_link: "Davet linki çalışmıyor görünüyor — bu deneme sayılmadı. Linki kontrol edip tekrar dene.",
   unknown:
     "Davet sayfası okunamadı — bu deneme sayılmadı. Birkaç dakika sonra tekrar dene ya da ekran görüntüsü yolunu kullan.",
 };
@@ -130,19 +127,16 @@ export const CLAIM_SCREENSHOT_BUCKET = "group-claim-screenshots";
  * KULLANICININ KENDİ klasörüne yüklenir (`{uid}/screenshot-…` — storage
  * politikası ve RPC aynı deseni zorunlu kılar), sonra talep RPC'si çağrılır.
  */
-export async function submitClaimScreenshot(
-  landingDbId: string,
-  file: File,
-  note?: string,
-): Promise<string> {
+export async function submitClaimScreenshot(landingDbId: string, file: File, note?: string): Promise<string> {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   const uid = userData.user?.id;
   if (userError || !uid) throw new Error(GROUP_CLAIM_ERROR_MESSAGES.group_claim_auth_required);
 
-  const safeName = file.name
-    .replace(/[^A-Za-z0-9._-]/g, "-")
-    .replace(/-+/g, "-")
-    .slice(-100) || "kanit";
+  const safeName =
+    file.name
+      .replace(/[^A-Za-z0-9._-]/g, "-")
+      .replace(/-+/g, "-")
+      .slice(-100) || "kanit";
   const path = `${uid}/screenshot-${Date.now()}-${safeName}`;
 
   const { error: uploadError } = await supabase.storage
@@ -150,11 +144,14 @@ export async function submitClaimScreenshot(
     .upload(path, file, { contentType: file.type || "image/png", upsert: false });
   if (uploadError) throw new Error("Ekran görüntüsü yüklenemedi. Lütfen tekrar dene.");
 
-  const { data, error } = await supabase.rpc("group_claim_submit_screenshot" as never, {
-    p_landing_id: landingDbId,
-    p_screenshot_path: path,
-    p_note: note?.trim() ? note.trim().slice(0, 500) : null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "group_claim_submit_screenshot" as never,
+    {
+      p_landing_id: landingDbId,
+      p_screenshot_path: path,
+      p_note: note?.trim() ? note.trim().slice(0, 500) : null,
+    } as never,
+  );
   if (error) throw mapClaimError(error, "Sahiplik talebi gönderilemedi.");
   return data as string;
 }

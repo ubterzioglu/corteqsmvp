@@ -52,11 +52,7 @@ describe("job-listings-api — SQL⇄TS çift yönlü sözleşme", () => {
     // - career_listing_limit_reached
     // Bu test, TS haritasının SQL ile senkron olduğunu doğrular.
 
-    const expectedCodes = [
-      "career_login_required",
-      "career_listing_not_found",
-      "career_listing_limit_reached",
-    ];
+    const expectedCodes = ["career_login_required", "career_listing_not_found", "career_listing_limit_reached"];
 
     // Her kod için resolveJobListingError fallback dışı mesaj dönmeli
     for (const code of expectedCodes) {

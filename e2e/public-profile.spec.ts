@@ -146,10 +146,7 @@ test("anonymous claim action redirects to signup with next url", async ({ page }
   await page.goto("/directory/catalog/member-arkin-kara");
 
   const claimCta = page.getByRole("link", { name: "Düzenleme Yetkisi Talep Et" });
-  await expect(claimCta).toHaveAttribute(
-    "href",
-    "/login?mode=signup&next=%2Fdirectory%2Fcatalog%2Fmember-arkin-kara",
-  );
+  await expect(claimCta).toHaveAttribute("href", "/login?mode=signup&next=%2Fdirectory%2Fcatalog%2Fmember-arkin-kara");
 });
 
 test("private or unpublished profile does not leak details", async ({ page }) => {
@@ -192,12 +189,54 @@ test("fully populated member renders hero badges, tagline and link pills", async
     page,
     makePayload({
       attributes: [
-        { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
-        { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: null, valueJson: true },
-        { key: "moving_soon_opt_in", label: "Yakında Taşınacağım", dataType: "boolean", sortOrder: 3, valueText: null, valueJson: true },
-        { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 4, valueText: "https://www.linkedin.com/in/arkin-kara", valueJson: null },
-        { key: "instagram_url", label: "Instagram", dataType: "url", sortOrder: 5, valueText: "https://www.instagram.com/arkinkara", valueJson: null },
-        { key: "expertise_area", label: "Uzmanlık Alanı", dataType: "text", sortOrder: 6, valueText: "Genel Tıp", valueJson: null },
+        {
+          key: "job_seeking_opt_in",
+          label: "İş Arıyorum",
+          dataType: "boolean",
+          sortOrder: 1,
+          valueText: null,
+          valueJson: true,
+        },
+        {
+          key: "volunteer_mentorship_opt_in",
+          label: "Gönüllü Mentörlük",
+          dataType: "boolean",
+          sortOrder: 2,
+          valueText: null,
+          valueJson: true,
+        },
+        {
+          key: "moving_soon_opt_in",
+          label: "Yakında Taşınacağım",
+          dataType: "boolean",
+          sortOrder: 3,
+          valueText: null,
+          valueJson: true,
+        },
+        {
+          key: "linkedin_url",
+          label: "LinkedIn",
+          dataType: "url",
+          sortOrder: 4,
+          valueText: "https://www.linkedin.com/in/arkin-kara",
+          valueJson: null,
+        },
+        {
+          key: "instagram_url",
+          label: "Instagram",
+          dataType: "url",
+          sortOrder: 5,
+          valueText: "https://www.instagram.com/arkinkara",
+          valueJson: null,
+        },
+        {
+          key: "expertise_area",
+          label: "Uzmanlık Alanı",
+          dataType: "text",
+          sortOrder: 6,
+          valueText: "Genel Tıp",
+          valueJson: null,
+        },
       ],
     }),
   );

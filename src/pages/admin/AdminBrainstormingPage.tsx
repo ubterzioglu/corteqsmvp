@@ -12,12 +12,7 @@ import { BrainstormingCommentThread } from "@/components/admin/brainstorming/Bra
 import { BrainstormingRowTable } from "@/components/admin/brainstorming/BrainstormingRowTable";
 import { RowFormDialog } from "@/components/admin/brainstorming/RowFormDialog";
 import { SectionFormDialog } from "@/components/admin/brainstorming/SectionFormDialog";
-import {
-  AdminEmptyState,
-  AdminErrorState,
-  AdminLoadingState,
-  AdminPageShell,
-} from "@/components/admin/page";
+import { AdminEmptyState, AdminErrorState, AdminLoadingState, AdminPageShell } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -33,10 +28,7 @@ import {
   type BrainstormingRow,
   type BrainstormingSection,
 } from "@/lib/brainstorming-api";
-import type {
-  BrainstormingRowForm,
-  BrainstormingSectionForm,
-} from "@/lib/brainstorming-schemas";
+import type { BrainstormingRowForm, BrainstormingSectionForm } from "@/lib/brainstorming-schemas";
 
 const SECTIONS_KEY = ["brainstorming-sections"] as const;
 
@@ -71,9 +63,7 @@ const AdminBrainstormingPage = () => {
 
   const sectionMutation = useMutation({
     mutationFn: (form: BrainstormingSectionForm) =>
-      editingSection
-        ? updateSection(editingSection.id, form)
-        : createSection(form, sections.length),
+      editingSection ? updateSection(editingSection.id, form) : createSection(form, sections.length),
     onSuccess: async () => {
       const wasCreate = !editingSection;
       setSectionFormOpen(false);
@@ -108,9 +98,7 @@ const AdminBrainstormingPage = () => {
   const rowMutation = useMutation({
     mutationFn: (form: BrainstormingRowForm) => {
       if (!activeSection) throw new Error("Bölüm bulunamadı.");
-      return editingRow
-        ? updateRow(editingRow.id, form)
-        : createRow(activeSection.id, form, activeSection.rows.length);
+      return editingRow ? updateRow(editingRow.id, form) : createRow(activeSection.id, form, activeSection.rows.length);
     },
     onSuccess: async () => {
       const wasCreate = !editingRow;
@@ -232,9 +220,7 @@ const AdminBrainstormingPage = () => {
                     </p>
                   ) : null}
                   <h2 className="text-base font-semibold text-foreground">{section.title}</h2>
-                  {section.intro ? (
-                    <p className="mt-1 text-sm text-muted-foreground">{section.intro}</p>
-                  ) : null}
+                  {section.intro ? <p className="mt-1 text-sm text-muted-foreground">{section.intro}</p> : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-0.5">
                   <Button

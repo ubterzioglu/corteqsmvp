@@ -11,8 +11,7 @@ const listPublicCatalogRowsMock = vi.fn();
 const useAuthMock = vi.fn();
 
 vi.mock("@/lib/public-catalog-api", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/lib/public-catalog-api")>("@/lib/public-catalog-api");
+  const actual = await vi.importActual<typeof import("@/lib/public-catalog-api")>("@/lib/public-catalog-api");
   return {
     ...actual,
     listPublicCatalogRows: (...args: unknown[]) => listPublicCatalogRowsMock(...args),

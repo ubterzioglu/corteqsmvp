@@ -24,16 +24,20 @@ describe("contributor resource submissions", () => {
   });
 
   it("rejects unsafe URLs and missing evidence fields", () => {
-    expect(validateContributorResourceInput({
-      ...validInput,
-      displayName: " ",
-      sourceUrl: "javascript:alert(1)",
-      verifiedOn: "",
-    })).toMatch(/ad|http|kontrol/i);
-    expect(validateContributorResourceInput({
-      ...validInput,
-      sourceUrl: "https://user:secret@example.org/private",
-    })).toMatch(/kullanıcı adı|parola/i);
+    expect(
+      validateContributorResourceInput({
+        ...validInput,
+        displayName: " ",
+        sourceUrl: "javascript:alert(1)",
+        verifiedOn: "",
+      }),
+    ).toMatch(/ad|http|kontrol/i);
+    expect(
+      validateContributorResourceInput({
+        ...validInput,
+        sourceUrl: "https://user:secret@example.org/private",
+      }),
+    ).toMatch(/kullanıcı adı|parola/i);
   });
 
   it("does not trust unknown database statuses", () => {

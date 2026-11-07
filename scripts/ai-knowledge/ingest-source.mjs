@@ -24,9 +24,7 @@ export async function ingestSource(client, source, { dryRun }) {
     }
     // Diğer kaynaklarda 0 kayıt neredeyse her zaman bir okuma hatasıdır; budamaya
     // gidilirse tüm kaynak silinirdi. Hata burada, sebebi belliyken verilir.
-    throw new Error(
-      `${source.key}: kaynak 0 kayit dondurdu — okuma hatasi olabilir, silme yapilmadi.`,
-    );
+    throw new Error(`${source.key}: kaynak 0 kayit dondurdu — okuma hatasi olabilir, silme yapilmadi.`);
   }
 
   const report = emptyReport();

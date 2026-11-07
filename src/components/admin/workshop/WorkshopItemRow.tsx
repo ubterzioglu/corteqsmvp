@@ -79,13 +79,7 @@ export function WorkshopItemRow({ item, onToggle, onSave, onDelete, disabled }: 
               <Check aria-hidden="true" className="h-4 w-4" />
               <span className="sr-only">Kaydet</span>
             </Button>
-            <Button
-              type="button"
-              size="icon"
-              variant="ghost"
-              className="h-8 w-8"
-              onClick={() => setEditing(false)}
-            >
+            <Button type="button" size="icon" variant="ghost" className="h-8 w-8" onClick={() => setEditing(false)}>
               <X aria-hidden="true" className="h-4 w-4" />
               <span className="sr-only">Vazgeç</span>
             </Button>

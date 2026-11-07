@@ -11,10 +11,7 @@ import {
 } from "./referral-qr";
 
 async function decodeQrImage(image: Buffer): Promise<string | undefined> {
-  const { data, info } = await sharp(image)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true });
+  const { data, info } = await sharp(image).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   return jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data;
 }
 

@@ -36,8 +36,9 @@ test.describe("canlı font/CSP tanısı", () => {
       const heading = document.querySelector("h1, h2, .font-display") ?? document.body;
       const family = getComputedStyle(heading).fontFamily;
       const bodyFamily = getComputedStyle(document.body).fontFamily;
-      const loaded = Array.from((document as unknown as { fonts: { values: () => Iterable<FontFace> } }).fonts.values())
-        .map((f) => `${f.family}:${f.status}`);
+      const loaded = Array.from(
+        (document as unknown as { fonts: { values: () => Iterable<FontFace> } }).fonts.values(),
+      ).map((f) => `${f.family}:${f.status}`);
       return { links, family, bodyFamily, loaded: loaded.slice(0, 12) };
     });
 

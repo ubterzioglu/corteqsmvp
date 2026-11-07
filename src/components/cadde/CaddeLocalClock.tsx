@@ -41,10 +41,7 @@ const CaddeLocalClock = ({ target, now }: CaddeLocalClockProps) => {
       title={`${target.cityName} yerel saati`}
       className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700"
     >
-      <Icon
-        aria-hidden
-        className={`h-3.5 w-3.5 ${reading.isDay ? "text-amber-500" : "text-indigo-400"}`}
-      />
+      <Icon aria-hidden className={`h-3.5 w-3.5 ${reading.isDay ? "text-amber-500" : "text-indigo-400"}`} />
       {/* tabular-nums: rakam genişliği sabit kalsın, saat her tikte oynamasın. */}
       <span className="font-medium tabular-nums">{reading.time}</span>
       <span className="text-slate-500">{target.cityName}</span>

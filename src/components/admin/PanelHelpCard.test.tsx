@@ -18,21 +18,14 @@ describe("PanelHelpCard", () => {
 
     expect(screen.getByText("Bu panel ne anlatıyor?")).toBeInTheDocument();
     expect(screen.getByText(/İstek ve token sayılarını/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Kılavuzu aç" })).toHaveAttribute(
-      "href",
-      "/admin/guide#agent-altyapisi",
-    );
+    expect(screen.getByRole("link", { name: "Kılavuzu aç" })).toHaveAttribute("href", "/admin/guide#agent-altyapisi");
   });
 
   it("asistan bağlantısına panel bağlamını güvenli query parametresiyle ekler", () => {
     const assistantPrompt = "Agent kullanım analitiğini nasıl yorumlamalıyım?";
     render(
       <MemoryRouter>
-        <PanelHelpCard
-          title="Yardım"
-          description="Açıklama"
-          assistantPrompt={assistantPrompt}
-        />
+        <PanelHelpCard title="Yardım" description="Açıklama" assistantPrompt={assistantPrompt} />
       </MemoryRouter>,
     );
 

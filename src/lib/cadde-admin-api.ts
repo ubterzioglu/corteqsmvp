@@ -2,13 +2,7 @@
 // Yetki RLS'deki is_admin_user() policy'lerine dayanır; admin işlemleri kullanıcı
 // self-service API'sinden (cadde-api.ts) bilinçli olarak ayrı tutulur.
 
-import {
-  caddeReadError,
-  caddeWriteError,
-  db,
-  resolveCityIdByName,
-  resolveCountryIdByName,
-} from "./cadde-internal";
+import { caddeReadError, caddeWriteError, db, resolveCityIdByName, resolveCountryIdByName } from "./cadde-internal";
 import type {
   CaddeAdminBillboardInput,
   CaddeAdminCafeInput,
@@ -84,12 +78,20 @@ export async function listAdminCaddeBillboardCards(): Promise<CaddeBillboardRow[
   return (data ?? []) as CaddeBillboardRow[];
 }
 
-export async function saveAdminCaddeBillboardCard(id: string | null, payload: CaddeAdminBillboardInput): Promise<CaddeBillboardRow> {
+export async function saveAdminCaddeBillboardCard(
+  id: string | null,
+  payload: CaddeAdminBillboardInput,
+): Promise<CaddeBillboardRow> {
   const countryId = await resolveCountryIdByName(payload.country_id);
   const cityId = await resolveCityIdByName(payload.city_id, countryId);
   const normalizedPayload = { ...payload, country_id: countryId, city_id: cityId };
   if (id) {
-    const { data, error } = await db.from("cadde_billboard_cards").update(normalizedPayload).eq("id", id).select("*").single();
+    const { data, error } = await db
+      .from("cadde_billboard_cards")
+      .update(normalizedPayload)
+      .eq("id", id)
+      .select("*")
+      .single();
     if (error) throw caddeWriteError("saveAdminCaddeBillboardCard", error);
     return data as CaddeBillboardRow;
   }
@@ -104,17 +106,28 @@ export async function deleteAdminCaddeBillboardCard(id: string): Promise<void> {
 }
 
 export async function listAdminCaddeSponsoredPlacements(): Promise<CaddeSponsoredRow[]> {
-  const { data, error } = await db.from("cadde_sponsored_placements").select("*").order("sort_order", { ascending: true });
+  const { data, error } = await db
+    .from("cadde_sponsored_placements")
+    .select("*")
+    .order("sort_order", { ascending: true });
   if (error) throw caddeReadError("listAdminCaddeSponsoredPlacements", error);
   return (data ?? []) as CaddeSponsoredRow[];
 }
 
-export async function saveAdminCaddeSponsoredPlacement(id: string | null, payload: CaddeAdminSponsoredInput): Promise<CaddeSponsoredRow> {
+export async function saveAdminCaddeSponsoredPlacement(
+  id: string | null,
+  payload: CaddeAdminSponsoredInput,
+): Promise<CaddeSponsoredRow> {
   const countryId = await resolveCountryIdByName(payload.country_id);
   const cityId = await resolveCityIdByName(payload.city_id, countryId);
   const normalizedPayload = { ...payload, country_id: countryId, city_id: cityId };
   if (id) {
-    const { data, error } = await db.from("cadde_sponsored_placements").update(normalizedPayload).eq("id", id).select("*").single();
+    const { data, error } = await db
+      .from("cadde_sponsored_placements")
+      .update(normalizedPayload)
+      .eq("id", id)
+      .select("*")
+      .single();
     if (error) throw caddeWriteError("saveAdminCaddeSponsoredPlacement", error);
     return data as CaddeSponsoredRow;
   }

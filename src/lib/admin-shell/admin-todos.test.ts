@@ -40,15 +40,11 @@ describe("ADMIN_TODOS", () => {
   });
 
   it("tamamlanmış migration runner işini açık iş olarak göstermiyor", () => {
-    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain(
-      "20260805-migration-surum-kaydi-unutuluyor",
-    );
+    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain("20260805-migration-surum-kaydi-unutuluyor");
   });
 
   it("tamamlanmış Cadde konum köprüsü işini açık iş olarak göstermiyor", () => {
-    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain(
-      "20260805-cadde-profil-konum-serbest-metin",
-    );
+    expect(ADMIN_TODOS.map((todo) => todo.id)).not.toContain("20260805-cadde-profil-konum-serbest-metin");
   });
 
   it("cevaplanmış sonuç CTA kararını açık iş olarak göstermiyor", () => {

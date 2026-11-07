@@ -207,10 +207,7 @@ export function roleKeysOf(groups: readonly RoleGroup[]): string[] {
 }
 
 /** Rol anahtarı → Türkçe etiket. Bilinmeyen anahtar için `null`. */
-export function roleLabelOf(
-  groups: readonly RoleGroup[],
-  key: string | null | undefined,
-): string | null {
+export function roleLabelOf(groups: readonly RoleGroup[], key: string | null | undefined): string | null {
   if (!key) return null;
   for (const group of groups) {
     const match = group.roles.find((role) => role.key === key);

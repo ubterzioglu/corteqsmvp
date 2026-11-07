@@ -46,10 +46,7 @@ function parseEnvFile(content) {
     if (separatorIndex <= 0) continue;
     const key = line.slice(0, separatorIndex).trim();
     let value = line.slice(separatorIndex + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     result[key] = value;
@@ -135,7 +132,9 @@ async function listUsersByEmail(supabase, emailNormalized) {
 async function fetchResumeRows(supabase) {
   const { data, error } = await supabase
     .from("profile_onboarding_imports")
-    .select("id, batch_id, source_submission_id, email_normalized, auth_user_id, profile_user_id, source_type, status, retry_count, snapshot")
+    .select(
+      "id, batch_id, source_submission_id, email_normalized, auth_user_id, profile_user_id, source_type, status, retry_count, snapshot",
+    )
     .eq("status", "invite_failed")
     .order("created_at", { ascending: true })
     .limit(limit ?? batchSize);
@@ -148,7 +147,9 @@ async function fetchCandidateSubmissions(supabase) {
   const size = Math.min(limit ?? batchSize, 250);
   const { data, error } = await supabase
     .from("submissions")
-    .select("id, form_type, category, fullname, country, city, business, field, email, referral_code, referral_source, source_type, created_at, user_id")
+    .select(
+      "id, form_type, category, fullname, country, city, business, field, email, referral_code, referral_source, source_type, created_at, user_id",
+    )
     .eq("form_type", "register")
     .eq("category", "bireysel")
     .is("user_id", null)
@@ -181,10 +182,7 @@ async function upsertImportRow(supabase, payload) {
 }
 
 async function updateResumeRow(supabase, rowId, patch) {
-  const { error } = await supabase
-    .from("profile_onboarding_imports")
-    .update(patch)
-    .eq("id", rowId);
+  const { error } = await supabase.from("profile_onboarding_imports").update(patch).eq("id", rowId);
 
   if (error) throw error;
 }

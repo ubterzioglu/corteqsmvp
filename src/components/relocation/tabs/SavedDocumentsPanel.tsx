@@ -7,10 +7,7 @@ import { Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type {
-  RelocationMoveDocumentRow,
-  RelocationMoveDocumentType,
-} from "@/lib/relocation-content-types";
+import type { RelocationMoveDocumentRow, RelocationMoveDocumentType } from "@/lib/relocation-content-types";
 
 const TYPE_LABELS: Record<RelocationMoveDocumentType, string> = {
   checklist: "Checklist",
@@ -35,16 +32,10 @@ interface SavedDocumentsPanelProps {
 function formatDate(iso: string): string {
   const date = new Date(iso);
   if (Number.isNaN(date.getTime())) return "";
-  return new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" }).format(
-    date,
-  );
+  return new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" }).format(date);
 }
 
-export function SavedDocumentsPanel({
-  documents,
-  onDelete,
-  isLoading,
-}: SavedDocumentsPanelProps) {
+export function SavedDocumentsPanel({ documents, onDelete, isLoading }: SavedDocumentsPanelProps) {
   if (isLoading) {
     return <p className="text-sm text-muted-foreground">Dökümanlar yükleniyor…</p>;
   }

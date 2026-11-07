@@ -117,9 +117,7 @@ export async function createRegistration(data: LansmanRegistrationFormData) {
     status: "pending",
   };
 
-  const { error } = await supabase
-    .from("lansman_registrations")
-    .insert(payload);
+  const { error } = await supabase.from("lansman_registrations").insert(payload);
 
   if (error) throw error;
   return payload;
@@ -128,20 +126,13 @@ export async function createRegistration(data: LansmanRegistrationFormData) {
 /** ⚠️ TAM liste (S07b): başvuru sayısı eksik gösterilemez — sessiz kesme yasak. */
 export async function getAllRegistrations() {
   const rows = await fetchAllRows((from, to) =>
-    supabase
-      .from("lansman_registrations")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .range(from, to),
+    supabase.from("lansman_registrations").select("*").order("created_at", { ascending: false }).range(from, to),
   );
   // Cast orijinal koddan devralındı: `status` sütunu şemada `string`, burada dar birlik.
   return rows as LansmanRegistration[];
 }
 
-export async function updateRegistrationStatus(
-  id: string,
-  status: LansmanRegistrationStatus,
-) {
+export async function updateRegistrationStatus(id: string, status: LansmanRegistrationStatus) {
   if (status !== "approved" && status !== "rejected") {
     throw new Error("Geçersiz durum güncellemesi.");
   }

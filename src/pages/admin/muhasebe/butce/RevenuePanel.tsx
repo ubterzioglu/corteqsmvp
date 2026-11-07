@@ -1,22 +1,15 @@
 // src/pages/admin/muhasebe/butce/RevenuePanel.tsx
 // Bütçe sekmesi — platform gelir kalemleri tablosu (adet × birim fiyat × komisyon).
 
-import { CircleDollarSign, Percent, TrendingUp } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
-import { MonthRow } from '@/components/admin/muhasebe/BudgetMonthTable';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { revComm, revGross, revNet } from '@/lib/muhasebe-butce-aggregations';
-import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { CircleDollarSign, Percent, TrendingUp } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
+import { MonthRow } from "@/components/admin/muhasebe/BudgetMonthTable";
+import { formatCurrency } from "@/lib/muhasebe-format";
+import { revComm, revGross, revNet } from "@/lib/muhasebe-butce-aggregations";
+import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
 
 export interface RevenuePanelProps {
   state: ButceYearState;
@@ -33,7 +26,7 @@ export function RevenuePanel({ state, onChange }: RevenuePanelProps): JSX.Elemen
   function addItem() {
     onChange({
       ...state,
-      revenue: [...items, { id: makeId(), name: 'Yeni gelir kalemi', price: 0, comm: 0, qty: zeroMonths() }],
+      revenue: [...items, { id: makeId(), name: "Yeni gelir kalemi", price: 0, comm: 0, qty: zeroMonths() }],
     });
   }
 
@@ -100,7 +93,9 @@ export function RevenuePanel({ state, onChange }: RevenuePanelProps): JSX.Elemen
               <TableHead className="text-right">Birim fiyat $</TableHead>
               <TableHead className="text-right">Komisyon %</TableHead>
               {BUTCE_MONTHS.map((m) => (
-                <TableHead key={m} className="text-right">{m}</TableHead>
+                <TableHead key={m} className="text-right">
+                  {m}
+                </TableHead>
               ))}
               <TableHead className="text-right">Toplam</TableHead>
               <TableHead />
@@ -112,14 +107,18 @@ export function RevenuePanel({ state, onChange }: RevenuePanelProps): JSX.Elemen
               return (
                 <TableRow key={r.id}>
                   <TableCell>
-                    <Input value={r.name} className="h-8 font-medium" onChange={(e) => updateItem(r.id, { name: e.target.value })} />
+                    <Input
+                      value={r.name}
+                      className="h-8 font-medium"
+                      onChange={(e) => updateItem(r.id, { name: e.target.value })}
+                    />
                   </TableCell>
                   <TableCell>
                     <Input
                       type="number"
                       step="any"
                       className="h-8 w-20 text-right"
-                      value={r.price || ''}
+                      value={r.price || ""}
                       onChange={(e) => updateItem(r.id, { price: Number(e.target.value) || 0 })}
                     />
                   </TableCell>
@@ -128,18 +127,24 @@ export function RevenuePanel({ state, onChange }: RevenuePanelProps): JSX.Elemen
                       type="number"
                       step="any"
                       className="h-8 w-20 text-right"
-                      value={r.comm || ''}
+                      value={r.comm || ""}
                       onChange={(e) => updateItem(r.id, { comm: Number(e.target.value) || 0 })}
                     />
                   </TableCell>
                   <MonthRow
                     values={r.qty}
                     ariaLabelPrefix={`${r.name} adet`}
-                    onChange={(month, value) => updateItem(r.id, { qty: r.qty.map((v, m) => (m === month ? value : v)) })}
+                    onChange={(month, value) =>
+                      updateItem(r.id, { qty: r.qty.map((v, m) => (m === month ? value : v)) })
+                    }
                   />
-                  <TableCell className="text-right font-mono">{formatCurrency(rowTotal, 'USD', { showCode: true })}</TableCell>
+                  <TableCell className="text-right font-mono">
+                    {formatCurrency(rowTotal, "USD", { showCode: true })}
+                  </TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm" aria-label="Kalemi sil" onClick={() => removeItem(r.id)}>✕</Button>
+                    <Button variant="ghost" size="sm" aria-label="Kalemi sil" onClick={() => removeItem(r.id)}>
+                      ✕
+                    </Button>
                   </TableCell>
                 </TableRow>
               );
@@ -148,10 +153,13 @@ export function RevenuePanel({ state, onChange }: RevenuePanelProps): JSX.Elemen
         </Table>
       </div>
 
-      <Button variant="outline" onClick={addItem}>+ Gelir kalemi ekle</Button>
+      <Button variant="outline" onClick={addItem}>
+        + Gelir kalemi ekle
+      </Button>
 
       <p className="text-xs text-muted-foreground">
-        Sponsor gibi tek tutarlı gelirlerde birim fiyatı sözleşme tutarı, adedi 1 olarak girin. Komisyon referansları: Subscription (MoR) ~%7,5 · B2B reklam/sponsor (Stripe) ~%3,5 · Çarşı (Stripe Connect) ~%5.
+        Sponsor gibi tek tutarlı gelirlerde birim fiyatı sözleşme tutarı, adedi 1 olarak girin. Komisyon referansları:
+        Subscription (MoR) ~%7,5 · B2B reklam/sponsor (Stripe) ~%3,5 · Çarşı (Stripe Connect) ~%5.
       </p>
     </div>
   );

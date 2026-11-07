@@ -79,7 +79,13 @@ export const initialJoinForm: JoinFormState = {
 
 export function getErrorMessage(error: unknown, fallback = "Beklenmeyen hata") {
   if (error instanceof Error && error.message.trim()) return error.message;
-  if (typeof error === "object" && error && "message" in error && typeof error.message === "string" && error.message.trim()) {
+  if (
+    typeof error === "object" &&
+    error &&
+    "message" in error &&
+    typeof error.message === "string" &&
+    error.message.trim()
+  ) {
     return error.message;
   }
   if (typeof error === "string" && error.trim()) return error;

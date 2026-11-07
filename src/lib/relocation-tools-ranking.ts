@@ -41,10 +41,7 @@ export function computeScoreBreakdown(
  * Ağırlıklı skor (0..1): sum(breakdown[k] * weights[k]) / sum(weights).
  * Eksik anahtar nötr 0.5. 4 ondalık. SQL rl_tool_weighted_score birebir aynası.
  */
-export function computeWeightedScore(
-  breakdown: ScoreBreakdown,
-  weights: DimensionWeights,
-): number {
+export function computeWeightedScore(breakdown: ScoreBreakdown, weights: DimensionWeights): number {
   let weightSum = 0;
   let scoreSum = 0;
   for (const dim of Object.keys(weights)) {

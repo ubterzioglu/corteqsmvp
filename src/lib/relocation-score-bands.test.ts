@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  SCORE_BAND_LABELS,
-  SCORE_BAND_ORDER,
-  SCORE_BAND_STYLES,
-  scoreBand,
-} from "@/lib/relocation-score-bands";
+import { SCORE_BAND_LABELS, SCORE_BAND_ORDER, SCORE_BAND_STYLES, scoreBand } from "@/lib/relocation-score-bands";
 import { dimensionBandLabel } from "@/lib/relocation-tools-copy";
 
 describe("scoreBand", () => {

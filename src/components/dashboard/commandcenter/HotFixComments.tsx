@@ -93,11 +93,7 @@ const HotFixComments = ({ hotFixId, defaultAuthorName = "" }: HotFixCommentsProp
         <MessageSquare className="h-3.5 w-3.5" />
         {/* Sayı ETİKETİN İÇİNDE: yalnız rozet göstermek "4 ne demek?" sorusunu
             doğuruyordu ve kapalıyken hiç okunmuyordu. */}
-        {open
-          ? "Soru / cevabı gizle"
-          : comments.length > 0
-            ? `Soru / cevap (${comments.length})`
-            : "Soru / cevap ekle"}
+        {open ? "Soru / cevabı gizle" : comments.length > 0 ? `Soru / cevap (${comments.length})` : "Soru / cevap ekle"}
       </button>
 
       {open ? (

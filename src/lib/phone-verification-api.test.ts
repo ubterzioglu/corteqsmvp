@@ -133,7 +133,7 @@ describe("phone-verification-api", () => {
       } as never);
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.auth_required
+        PHONE_VERIFICATION_ERROR_MESSAGES.auth_required,
       );
     });
 
@@ -143,9 +143,7 @@ describe("phone-verification-api", () => {
         error: null,
       } as never);
 
-      await expect(sendPhoneVerificationCode("12345")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.invalid_phone
-      );
+      await expect(sendPhoneVerificationCode("12345")).rejects.toThrow(PHONE_VERIFICATION_ERROR_MESSAGES.invalid_phone);
     });
 
     it("aynı telefon zaten doğrulanmışsa hata fırlatır", async () => {
@@ -167,7 +165,7 @@ describe("phone-verification-api", () => {
       mockSupabase.from = fromMock as never;
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.same_phone
+        PHONE_VERIFICATION_ERROR_MESSAGES.same_phone,
       );
     });
 
@@ -218,11 +216,15 @@ describe("phone-verification-api", () => {
       // GoTrue'nun gerçek sınır yolu: updateUser FIRLATMAZ, `status: 429` taşıyan hata DÖNER.
       mockSupabase.auth.updateUser.mockResolvedValueOnce({
         data: { user: null },
-        error: { message: "For security purposes, you can only request this after 52 seconds.", status: 429, code: "over_sms_send_rate_limit" },
+        error: {
+          message: "For security purposes, you can only request this after 52 seconds.",
+          status: 429,
+          code: "over_sms_send_rate_limit",
+        },
       } as never);
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited
+        PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited,
       );
     });
 
@@ -244,7 +246,7 @@ describe("phone-verification-api", () => {
       } as never);
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed
+        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed,
       );
     });
 
@@ -283,7 +285,7 @@ describe("phone-verification-api", () => {
       }) as never;
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.same_phone
+        PHONE_VERIFICATION_ERROR_MESSAGES.same_phone,
       );
       expect(mockSupabase.auth.updateUser).not.toHaveBeenCalled();
     });
@@ -310,7 +312,7 @@ describe("phone-verification-api", () => {
       } as never);
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited
+        PHONE_VERIFICATION_ERROR_MESSAGES.rate_limited,
       );
     });
 
@@ -331,7 +333,7 @@ describe("phone-verification-api", () => {
       mockSupabase.auth.updateUser.mockRejectedValueOnce(new Error("network down"));
 
       await expect(sendPhoneVerificationCode("+491701234567")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed
+        PHONE_VERIFICATION_ERROR_MESSAGES.send_failed,
       );
     });
   });
@@ -344,7 +346,7 @@ describe("phone-verification-api", () => {
       } as never);
 
       await expect(verifyPhoneVerificationCode("123456")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.auth_required
+        PHONE_VERIFICATION_ERROR_MESSAGES.auth_required,
       );
     });
 
@@ -406,7 +408,7 @@ describe("phone-verification-api", () => {
       } as never);
 
       await expect(verifyPhoneVerificationCode("wrong")).rejects.toThrow(
-        PHONE_VERIFICATION_ERROR_MESSAGES.verify_failed
+        PHONE_VERIFICATION_ERROR_MESSAGES.verify_failed,
       );
     });
   });
@@ -428,10 +430,7 @@ describe("phone-verification-api", () => {
       const { readFileSync } = await import("node:fs");
       const { resolve } = await import("node:path");
 
-      const apiSource = readFileSync(
-        resolve(__dirname, "phone-verification-api.ts"),
-        "utf8"
-      );
+      const apiSource = readFileSync(resolve(__dirname, "phone-verification-api.ts"), "utf8");
 
       expect(apiSource).not.toMatch(/countryFromPhone/);
       expect(apiSource).not.toMatch(/\bdial(?:l?ing)?_?[Cc]ode\b/);

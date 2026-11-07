@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
 // Aktif (gizlenmemiş) kayıt listesi. Düzenlenen satır normal satırın YERİNE
 // düzenleme formunu çizer — liste ayrı bir kip/görünüme geçmez.
 
-import type { ResourceEntry, ResourceFormState } from '@/lib/dashboard/resource-items'
-import ResourceEntryEditRow from './ResourceEntryEditRow'
-import ResourceEntryRow from './ResourceEntryRow'
-import type { ResourceFieldSetter } from './useLinkManager'
+import type { ResourceEntry, ResourceFormState } from "@/lib/dashboard/resource-items";
+import ResourceEntryEditRow from "./ResourceEntryEditRow";
+import ResourceEntryRow from "./ResourceEntryRow";
+import type { ResourceFieldSetter } from "./useLinkManager";
 
 interface ResourceEntryListProps {
-  entries: ResourceEntry[]
-  editingId: string | null
-  editingState: ResourceFormState
-  expandedEntryIds: Set<string>
-  isSubmitting: boolean
-  isEditing: boolean
-  sectionOptions: string[]
-  getSubsectionOptionsForSection: (section: string) => string[]
-  onEditingChange: ResourceFieldSetter
-  onFileChange: (file: File | null) => void
-  onSaveEdit: (entry: ResourceEntry) => void
-  onCancelEdit: () => void
-  onToggleDetails: (entryId: string) => void
-  onStartEdit: (entry: ResourceEntry) => void
-  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void
-  onOpenStoredFile: (entry: ResourceEntry, shouldDownload: boolean) => void
-  onDelete: (entry: ResourceEntry) => void
+  entries: ResourceEntry[];
+  editingId: string | null;
+  editingState: ResourceFormState;
+  expandedEntryIds: Set<string>;
+  isSubmitting: boolean;
+  isEditing: boolean;
+  sectionOptions: string[];
+  getSubsectionOptionsForSection: (section: string) => string[];
+  onEditingChange: ResourceFieldSetter;
+  onFileChange: (file: File | null) => void;
+  onSaveEdit: (entry: ResourceEntry) => void;
+  onCancelEdit: () => void;
+  onToggleDetails: (entryId: string) => void;
+  onStartEdit: (entry: ResourceEntry) => void;
+  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void;
+  onOpenStoredFile: (entry: ResourceEntry, shouldDownload: boolean) => void;
+  onDelete: (entry: ResourceEntry) => void;
 }
 
 export default function ResourceEntryList({
@@ -54,7 +54,7 @@ export default function ResourceEntryList({
           Aktif listede kayıt bulunamadı.
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -89,5 +89,5 @@ export default function ResourceEntryList({
         ),
       )}
     </div>
-  )
+  );
 }

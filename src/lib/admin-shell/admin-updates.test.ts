@@ -28,9 +28,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("taşınma kaydı 'kalan iş içerik' ve 'Coolify fonksiyon yayınlamaz' uyarılarını taşır", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260920-tasinma-rehberi-ve-yapay-zeka-asistani",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260920-tasinma-rehberi-ve-yapay-zeka-asistani");
     const detail = update?.items.join(" ") ?? "";
 
     // ⚠️ EN KRİTİK CÜMLE: kalan iş koda değil İÇERİĞE bağlı. Bu düşerse okuyan
@@ -47,9 +45,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("uzmanlar kaydı, asıl işin kod değil 61 kaydın ONAYI olduğunu söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260920-isletmeler-uzmanlar-sehir-elcileri-sayfalari",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260920-isletmeler-uzmanlar-sehir-elcileri-sayfalari");
     const detail = update?.items.join(" ") ?? "";
 
     // ⚠️ EN KRİTİK CÜMLE: en yüksek getirili iş panelde onay vermek. Bu düşerse
@@ -64,9 +60,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("arama denetimi kaydı dört kök nedeni de ayrı ayrı sayar", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260920-arama-denetimi-ve-linksiz-sayfalar",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260920-arama-denetimi-ve-linksiz-sayfalar");
     const detail = update?.items.join(" ") ?? "";
 
     // Tek bir "arama düzeltildi" cümlesi bu dört ayrı işi gizler; dördü de kalmalı.
@@ -85,9 +79,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("altyapı kaydı yedeği, ücretsiz plan bedelini ve iki açık riski birlikte söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260920-yedek-maliyet-ve-iki-guvenlik-riski",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260920-yedek-maliyet-ve-iki-guvenlik-riski");
     const detail = update?.items.join(" ") ?? "";
 
     expect(detail).toContain("299 MB");
@@ -134,9 +126,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("14 Eylül toplu özet kaydı kapanan todo'ları sayar ama 'yapıldı' sanılmasını ENGELLER", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260914-13-eylul-toplu-ozet-ve-kapanan-todolar",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260914-13-eylul-toplu-ozet-ve-kapanan-todolar");
     const detail = update?.items.join(" ") ?? "";
 
     // ⚠️ EN KRİTİK CÜMLE: 57 madde "kapandı" ≠ 57 iş yapıldı. Bir kısmı
@@ -278,9 +268,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("13 Eylül dördüncü parti kaydı taşınan sekiz ekranı ve Komuta Merkezi senkronunu söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260913-on-madde-daha-ve-komuta-merkezi-senkronu",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-on-madde-daha-ve-komuta-merkezi-senkronu");
     const detail = update?.items.join(" ") ?? "";
 
     expect(detail).toContain("MVP Yapısal Liste");
@@ -297,9 +285,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("13 Eylül üçüncü parti kaydı taşınan dört ekranı ve dokunulmayan bulguları birlikte söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260913-dort-domain-daha-api-katmanina-tasindi",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-dort-domain-daha-api-katmanina-tasindi");
     const detail = update?.items.join(" ") ?? "";
 
     // Taşınan dört ekran adıyla geçmeli — biri düşerse duyuru eksik kalır.
@@ -335,9 +321,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("13 Eylül ilk parti kaydı unutulmuş çalışma kopyasını ve çelişki bulgusunu söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260913-worktree-kurtarma-async-cafe-ve-gozle-denetim",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260913-worktree-kurtarma-async-cafe-ve-gozle-denetim");
     const detail = update?.items.join(" ") ?? "";
 
     expect(detail).toContain("CAFE ODALARI ARTIK GÜNLERCE AÇIK KALIYOR");
@@ -447,9 +431,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("günün ikinci partisini günlük dille, ölçülen sonuçlarla duyurur", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260905-ikinci-parti-cadde-carsi-araclar",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260905-ikinci-parti-cadde-carsi-araclar");
     const detail = update?.items.join(" ") ?? "";
 
     // Üç sessiz canlı kusur da adıyla anlatılmalı: bunlar build/test kırmadan
@@ -480,9 +462,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("3 Eylül Profiller toplantısının panele işlendiğini duyurur", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260904-profil-toplantisi-ve-workshop-panosu",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260904-profil-toplantisi-ve-workshop-panosu");
     const detail = update?.items.join(" ") ?? "";
 
     expect(detail).toContain("24 kayıt");
@@ -492,9 +472,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("TOP 10 HOT FIX listesinin sınır kuralını günlük dille anlatır", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260903-top-10-hot-fix-ve-yonetici-yetkisi",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260903-top-10-hot-fix-ve-yonetici-yetkisi");
     const detail = update?.items.join(" ") ?? "";
 
     expect(update?.date).toBe("3 Eylül 2026");
@@ -505,9 +483,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("30 Ağustos'tan eksik kalan teknik işleri günlük kayıtlarda korur", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20260831-30-agustos-eksik-teknik-isler",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20260831-30-agustos-eksik-teknik-isler");
     const normalizedDetail = (update?.items.join(" ") ?? "").toLocaleLowerCase("tr-TR");
 
     expect(update?.date).toBe("31 Ağustos 2026");
@@ -528,15 +504,11 @@ describe("ADMIN_UPDATES", () => {
     expect(detail).toContain("22/22");
     expect(detail).toContain("Referral QR");
     expect(detail).toContain("0 güvenlik açığı");
-    expect(detail.toLocaleLowerCase("tr-TR")).toContain(
-      "kendi hesabından kaynak gönderebiliyor",
-    );
+    expect(detail.toLocaleLowerCase("tr-TR")).toContain("kendi hesabından kaynak gönderebiliyor");
   });
 
   it("kariyer kaydı, başvuruların nereden okunacağını ve CV'nin maile konmadığını söyler", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20261002-kariyer-sayfasi-ve-basvuru-sistemi",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20261002-kariyer-sayfasi-ve-basvuru-sistemi");
     const detail = update?.items.join(" ") ?? "";
 
     expect(update?.date).toBe("2 Ekim 2026");
@@ -565,9 +537,7 @@ describe("ADMIN_UPDATES", () => {
   });
 
   it("güvenlik kaydı iki açığı da ayrı ayrı adlandırır", () => {
-    const update = ADMIN_UPDATES.find(
-      ({ id }) => id === "20261001-whatsapp-gruplari-guvenlik-acigi",
-    );
+    const update = ADMIN_UPDATES.find(({ id }) => id === "20261001-whatsapp-gruplari-guvenlik-acigi");
     const detail = update?.items.join(" ") ?? "";
 
     expect(update?.date).toBe("1 Ekim 2026");

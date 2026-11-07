@@ -85,7 +85,11 @@ export default defineConfig(({ mode }) => ({
         // öncelikte olmalı ki React'i başka bir grup yutmasın.
         codeSplitting: {
           groups: [
-            { name: "vendor-react", priority: 100, test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/ },
+            {
+              name: "vendor-react",
+              priority: 100,
+              test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/,
+            },
             { name: "vendor-supabase", priority: 90, test: /[\\/]node_modules[\\/]@supabase[\\/]/ },
             { name: "vendor-query", priority: 90, test: /[\\/]node_modules[\\/]@tanstack[\\/]/ },
             { name: "vendor-icons", priority: 80, test: /[\\/]node_modules[\\/]lucide-react[\\/]/ },
@@ -103,10 +107,26 @@ export default defineConfig(({ mode }) => ({
             // social-test-tools.ts, burak-share-tools.ts) hem de parça dosyalar
             // (social-diaspora-posts/posts-XX-YY.ts, social-test-tools/tools-XX-YY.ts,
             // burak-share-tools/tool-XX.ts) aynı chunk'a girsin.
-            { name: "social-vault-diaspora", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-diaspora-posts/ },
-            { name: "social-vault-tests", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-test-tools/ },
-            { name: "social-vault-burak", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]burak-share-tools/ },
-            { name: "social-vault-tools", priority: 10, test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-share-vault\.ts/ },
+            {
+              name: "social-vault-diaspora",
+              priority: 10,
+              test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-diaspora-posts/,
+            },
+            {
+              name: "social-vault-tests",
+              priority: 10,
+              test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-test-tools/,
+            },
+            {
+              name: "social-vault-burak",
+              priority: 10,
+              test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]burak-share-tools/,
+            },
+            {
+              name: "social-vault-tools",
+              priority: 10,
+              test: /[\\/]src[\\/]lib[\\/]admin-shell[\\/]social-share-vault\.ts/,
+            },
           ],
         },
       },
@@ -134,6 +154,13 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(import.meta.dirname, "./src"),
     },
-    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
+    dedupe: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
 }));

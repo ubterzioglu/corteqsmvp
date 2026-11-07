@@ -75,7 +75,9 @@ const ReferralCreateForm = ({
     <CardContent className="space-y-4">
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         <Select value={sourceId} onValueChange={onSourceChange}>
-          <SelectTrigger><SelectValue placeholder="Source seçin" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Source seçin" />
+          </SelectTrigger>
           <SelectContent>
             {sources.map((source) => (
               <SelectItem key={source.id} value={source.id}>
@@ -85,7 +87,9 @@ const ReferralCreateForm = ({
           </SelectContent>
         </Select>
         <Select value={groupId} onValueChange={onGroupChange}>
-          <SelectTrigger><SelectValue placeholder="Group seçin" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Group seçin" />
+          </SelectTrigger>
           <SelectContent>
             {groups.map((group) => (
               <SelectItem key={group.id} value={group.id}>
@@ -95,7 +99,9 @@ const ReferralCreateForm = ({
           </SelectContent>
         </Select>
         <Select value={typeId} onValueChange={onTypeChange}>
-          <SelectTrigger><SelectValue placeholder="Type seçin" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Type seçin" />
+          </SelectTrigger>
           <SelectContent>
             {types.map((type) => (
               <SelectItem key={type.id} value={type.id}>
@@ -104,17 +110,34 @@ const ReferralCreateForm = ({
             ))}
           </SelectContent>
         </Select>
-        <Input type="date" value={validFrom} onChange={(event) => onValidFromChange(event.target.value)} placeholder="Başlangıç" />
-        <Input type="date" value={validUntil} onChange={(event) => onValidUntilChange(event.target.value)} placeholder="Bitiş" />
+        <Input
+          type="date"
+          value={validFrom}
+          onChange={(event) => onValidFromChange(event.target.value)}
+          placeholder="Başlangıç"
+        />
+        <Input
+          type="date"
+          value={validUntil}
+          onChange={(event) => onValidUntilChange(event.target.value)}
+          placeholder="Bitiş"
+        />
       </div>
       <Button onClick={onCreate} disabled={creating || loading}>
         {creating ? "Üretiliyor..." : "Generate + Save"}
       </Button>
-      <Textarea value={note} onChange={(event) => onNoteChange(event.target.value)} placeholder="Not (opsiyonel)" rows={3} />
+      <Textarea
+        value={note}
+        onChange={(event) => onNoteChange(event.target.value)}
+        placeholder="Not (opsiyonel)"
+        rows={3}
+      />
       <div className="rounded-md border bg-muted/20 p-3">
         <p className="text-xs text-muted-foreground">Önizleme</p>
         <p className="font-mono text-lg font-semibold">{summary}</p>
-        <p className="mt-1 text-xs text-muted-foreground">Valid: {validFrom} - {validUntil}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Valid: {validFrom} - {validUntil}
+        </p>
       </div>
       {lastCreatedCode && (
         <div className="flex items-center justify-between rounded-md border bg-primary/5 p-3">
@@ -128,9 +151,15 @@ const ReferralCreateForm = ({
         </div>
       )}
       <div className="flex flex-wrap gap-2">
-        <Button asChild variant="outline" size="sm"><Link to="/admin/referral/sources">Source Yönetimi</Link></Button>
-        <Button asChild variant="outline" size="sm"><Link to="/admin/referral/groups">Group Yönetimi</Link></Button>
-        <Button asChild variant="outline" size="sm"><Link to="/admin/referral/types">Type Yönetimi</Link></Button>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/admin/referral/sources">Source Yönetimi</Link>
+        </Button>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/admin/referral/groups">Group Yönetimi</Link>
+        </Button>
+        <Button asChild variant="outline" size="sm">
+          <Link to="/admin/referral/types">Type Yönetimi</Link>
+        </Button>
       </div>
     </CardContent>
   </Card>

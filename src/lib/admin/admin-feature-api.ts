@@ -11,7 +11,11 @@ export async function setRoleFeatureFlagAsAdmin(roleKey: string, featureKey: str
   if (error) throw error;
 }
 
-export async function setUserFeatureOverrideAsAdmin(userId: string, featureKey: IndividualFeatureKey | string, isEnabled: boolean) {
+export async function setUserFeatureOverrideAsAdmin(
+  userId: string,
+  featureKey: IndividualFeatureKey | string,
+  isEnabled: boolean,
+) {
   const { error } = await supabase.rpc("admin_set_user_feature_override", {
     target_user_id: userId,
     feature_key: featureKey,

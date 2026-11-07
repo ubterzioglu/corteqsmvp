@@ -2,25 +2,21 @@
 // Aktif listedeki kayıtların hangi toplantı / WhatsApp yazışmasından geldiğini
 // gösterir; bölüm sırası ve sayılar `buildCommandCenterSourceBreakdown`'dan gelir.
 
-import type { CommandCenterSourceBreakdown } from '@/lib/dashboard/command-center-items'
+import type { CommandCenterSourceBreakdown } from "@/lib/dashboard/command-center-items";
 
 const SOURCE_SECTION_COLORS: Record<string, string> = {
-  meeting: '#1A6DC2',
-  wa: '#FA7B17',
-  todo: '#8B5CF6',
-}
+  meeting: "#1A6DC2",
+  wa: "#FA7B17",
+  todo: "#8B5CF6",
+};
 
-export default function SourceBreakdownList({
-  breakdown,
-}: {
-  breakdown: CommandCenterSourceBreakdown
-}) {
+export default function SourceBreakdownList({ breakdown }: { breakdown: CommandCenterSourceBreakdown }) {
   if (breakdown.sections.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed border-[rgba(139,92,246,0.3)] bg-white/80 p-6 text-center text-sm text-gray-500">
         Henüz kaynak bilgisi olan kayıt yok.
       </div>
-    )
+    );
   }
 
   return (
@@ -30,7 +26,7 @@ export default function SourceBreakdownList({
       </p>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {breakdown.sections.map((section) => {
-          const color = SOURCE_SECTION_COLORS[section.kind] ?? '#1A6DC2'
+          const color = SOURCE_SECTION_COLORS[section.kind] ?? "#1A6DC2";
 
           return (
             <div
@@ -66,9 +62,9 @@ export default function SourceBreakdownList({
                 ))}
               </ul>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }

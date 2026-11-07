@@ -29,7 +29,7 @@ describe("buildMemberWelcomeEmail", () => {
 
   it("ad ve e-postadaki HTML'i kaçırır", () => {
     const email = buildMemberWelcomeEmail({
-      email: "hacker\"@example.com",
+      email: 'hacker"@example.com',
       fullName: "<script>alert(1)</script>",
     });
 

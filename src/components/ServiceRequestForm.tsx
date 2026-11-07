@@ -5,14 +5,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Upload, X, FileText, Send, Clock, MapPin, DollarSign, Briefcase, Building2, Users, Target } from "lucide-react";
+  Upload,
+  X,
+  FileText,
+  Send,
+  Clock,
+  MapPin,
+  DollarSign,
+  Briefcase,
+  Building2,
+  Users,
+  Target,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { safeStorageFileName, validateServiceAttachment } from "@/lib/security";
 import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
@@ -26,49 +32,184 @@ const SERVICE_REQUEST_FEE = 19;
 type CategoryDef = { value: string; label: string; subcategories: string[] };
 
 const TARGET_TYPES = [
-  { value: "consultant", label: "Danışman", description: "Bireysel uzman / profesyonel", icon: Briefcase, color: "text-emerald-500" },
-  { value: "business", label: "İşletme", description: "Şirket, restoran, mağaza, hizmet sağlayıcı", icon: Building2, color: "text-amber-500" },
+  {
+    value: "consultant",
+    label: "Danışman",
+    description: "Bireysel uzman / profesyonel",
+    icon: Briefcase,
+    color: "text-emerald-500",
+  },
+  {
+    value: "business",
+    label: "İşletme",
+    description: "Şirket, restoran, mağaza, hizmet sağlayıcı",
+    icon: Building2,
+    color: "text-amber-500",
+  },
 ];
 
 const CONSULTANT_CATEGORIES: CategoryDef[] = [
-  { value: "yasam-relokasyon", label: "Yaşam ve Relokasyon", subcategories: ["Taşınma Danışmanlığı", "Entegrasyon", "Dil Desteği", "Konut Arama", "Okul/Eğitim Danışmanlığı"] },
-  { value: "finans", label: "Finans & Vergi", subcategories: ["Vergi Danışmanlığı", "Yatırım", "Bankacılık", "Sigorta", "Emeklilik Planlama", "Kripto/Web3"] },
-  { value: "hukuk", label: "Hukuk", subcategories: ["İş Hukuku", "Aile Hukuku", "Sözleşme", "Vatandaşlık", "Ceza Hukuku", "Miras Hukuku"] },
-  { value: "sirket-kurulusu", label: "Şirket Kuruluşu", subcategories: ["GmbH / LTD Kuruluşu", "Freelance Kayıt", "Muhasebe", "Ticari Danışmanlık", "KOBİ Danışmanlığı"] },
-  { value: "vize-gocmenlik", label: "Vize / Göçmenlik", subcategories: ["Çalışma Vizesi", "Mavi Kart", "Aile Birleşimi", "Oturma İzni", "Vatandaşlık Başvurusu", "Öğrenci Vizesi"] },
-  { value: "gayrimenkul-danismanlik", label: "Gayrimenkul Danışmanlığı", subcategories: ["Kiralama", "Satın Alma", "Yatırım", "Değerleme", "Mortgage"] },
-  { value: "saglik-danismanlik", label: "Sağlık Danışmanlığı", subcategories: ["Hastane Yönlendirme", "Sigorta", "Diş", "Estetik", "Psikoterapi", "İkinci Görüş"] },
-  { value: "kariyer-egitim", label: "Kariyer & Eğitim", subcategories: ["CV / LinkedIn", "Mülakat Koçluğu", "Kariyer Geçişi", "Diploma Denkliği", "Sertifika"] },
-  { value: "psikoloji-aile", label: "Psikoloji & Aile", subcategories: ["Bireysel Terapi", "Çift / Aile Terapisi", "Çocuk Psikolojisi", "Yaşam Koçluğu"] },
-  { value: "dijital-pazarlama", label: "Dijital & Pazarlama", subcategories: ["SEO/SEM", "Sosyal Medya", "Web Tasarım", "İçerik Üretimi", "Marka Danışmanlığı"] },
+  {
+    value: "yasam-relokasyon",
+    label: "Yaşam ve Relokasyon",
+    subcategories: ["Taşınma Danışmanlığı", "Entegrasyon", "Dil Desteği", "Konut Arama", "Okul/Eğitim Danışmanlığı"],
+  },
+  {
+    value: "finans",
+    label: "Finans & Vergi",
+    subcategories: ["Vergi Danışmanlığı", "Yatırım", "Bankacılık", "Sigorta", "Emeklilik Planlama", "Kripto/Web3"],
+  },
+  {
+    value: "hukuk",
+    label: "Hukuk",
+    subcategories: ["İş Hukuku", "Aile Hukuku", "Sözleşme", "Vatandaşlık", "Ceza Hukuku", "Miras Hukuku"],
+  },
+  {
+    value: "sirket-kurulusu",
+    label: "Şirket Kuruluşu",
+    subcategories: ["GmbH / LTD Kuruluşu", "Freelance Kayıt", "Muhasebe", "Ticari Danışmanlık", "KOBİ Danışmanlığı"],
+  },
+  {
+    value: "vize-gocmenlik",
+    label: "Vize / Göçmenlik",
+    subcategories: [
+      "Çalışma Vizesi",
+      "Mavi Kart",
+      "Aile Birleşimi",
+      "Oturma İzni",
+      "Vatandaşlık Başvurusu",
+      "Öğrenci Vizesi",
+    ],
+  },
+  {
+    value: "gayrimenkul-danismanlik",
+    label: "Gayrimenkul Danışmanlığı",
+    subcategories: ["Kiralama", "Satın Alma", "Yatırım", "Değerleme", "Mortgage"],
+  },
+  {
+    value: "saglik-danismanlik",
+    label: "Sağlık Danışmanlığı",
+    subcategories: ["Hastane Yönlendirme", "Sigorta", "Diş", "Estetik", "Psikoterapi", "İkinci Görüş"],
+  },
+  {
+    value: "kariyer-egitim",
+    label: "Kariyer & Eğitim",
+    subcategories: ["CV / LinkedIn", "Mülakat Koçluğu", "Kariyer Geçişi", "Diploma Denkliği", "Sertifika"],
+  },
+  {
+    value: "psikoloji-aile",
+    label: "Psikoloji & Aile",
+    subcategories: ["Bireysel Terapi", "Çift / Aile Terapisi", "Çocuk Psikolojisi", "Yaşam Koçluğu"],
+  },
+  {
+    value: "dijital-pazarlama",
+    label: "Dijital & Pazarlama",
+    subcategories: ["SEO/SEM", "Sosyal Medya", "Web Tasarım", "İçerik Üretimi", "Marka Danışmanlığı"],
+  },
 ];
 
 const BUSINESS_CATEGORIES: CategoryDef[] = [
-  { value: "restoran-gida", label: "Restoran & Gıda", subcategories: ["Restoran", "Cafe", "Catering", "Market / Bakkal", "Pastane / Fırın", "Helal Et / Kasap"] },
-  { value: "saglik-medikal", label: "Sağlık & Medikal", subcategories: ["Hastane / Klinik", "Diş Hekimi", "Eczane", "Optik", "Estetik", "Fizyoterapi"] },
-  { value: "guzellik-bakim", label: "Güzellik & Bakım", subcategories: ["Berber", "Kuaför", "SPA / Masaj", "Tırnak / Cilt Bakımı"] },
-  { value: "perakende", label: "Perakende & Mağaza", subcategories: ["Giyim", "Mücevher", "Elektronik", "Hediyelik", "Kitap"] },
+  {
+    value: "restoran-gida",
+    label: "Restoran & Gıda",
+    subcategories: ["Restoran", "Cafe", "Catering", "Market / Bakkal", "Pastane / Fırın", "Helal Et / Kasap"],
+  },
+  {
+    value: "saglik-medikal",
+    label: "Sağlık & Medikal",
+    subcategories: ["Hastane / Klinik", "Diş Hekimi", "Eczane", "Optik", "Estetik", "Fizyoterapi"],
+  },
+  {
+    value: "guzellik-bakim",
+    label: "Güzellik & Bakım",
+    subcategories: ["Berber", "Kuaför", "SPA / Masaj", "Tırnak / Cilt Bakımı"],
+  },
+  {
+    value: "perakende",
+    label: "Perakende & Mağaza",
+    subcategories: ["Giyim", "Mücevher", "Elektronik", "Hediyelik", "Kitap"],
+  },
   { value: "otomotiv", label: "Otomotiv", subcategories: ["Servis", "Galeri", "Kiralama", "Lastik", "Yıkama"] },
-  { value: "insaat-tadilat", label: "İnşaat & Tadilat", subcategories: ["Tadilat", "Boya", "Tesisat", "Elektrik", "Mobilya / Mutfak"] },
-  { value: "lojistik-tasimacilik", label: "Lojistik & Taşımacılık", subcategories: ["Evden Eve Nakliyat", "Kargo", "Uluslararası Taşıma", "Depolama"] },
-  { value: "egitim-okul", label: "Eğitim & Okul", subcategories: ["Anaokulu", "Özel Ders", "Dil Kursu", "Müzik / Sanat"] },
-  { value: "turizm-konaklama", label: "Turizm & Konaklama", subcategories: ["Otel", "Apart", "Tur Operatörü", "Bilet / Acente"] },
-  { value: "etkinlik-organizasyon", label: "Etkinlik & Organizasyon", subcategories: ["Düğün", "Catering", "Fotoğraf / Video", "DJ / Müzik"] },
-  { value: "teknoloji-yazilim", label: "Teknoloji & Yazılım", subcategories: ["Yazılım Ajansı", "IT Servis", "E-ticaret", "Donanım Satış"] },
-  { value: "finans-sigorta", label: "Finans & Sigorta", subcategories: ["Banka Şubesi", "Sigorta Acentesi", "Döviz / Transfer", "Muhasebe Bürosu"] },
+  {
+    value: "insaat-tadilat",
+    label: "İnşaat & Tadilat",
+    subcategories: ["Tadilat", "Boya", "Tesisat", "Elektrik", "Mobilya / Mutfak"],
+  },
+  {
+    value: "lojistik-tasimacilik",
+    label: "Lojistik & Taşımacılık",
+    subcategories: ["Evden Eve Nakliyat", "Kargo", "Uluslararası Taşıma", "Depolama"],
+  },
+  {
+    value: "egitim-okul",
+    label: "Eğitim & Okul",
+    subcategories: ["Anaokulu", "Özel Ders", "Dil Kursu", "Müzik / Sanat"],
+  },
+  {
+    value: "turizm-konaklama",
+    label: "Turizm & Konaklama",
+    subcategories: ["Otel", "Apart", "Tur Operatörü", "Bilet / Acente"],
+  },
+  {
+    value: "etkinlik-organizasyon",
+    label: "Etkinlik & Organizasyon",
+    subcategories: ["Düğün", "Catering", "Fotoğraf / Video", "DJ / Müzik"],
+  },
+  {
+    value: "teknoloji-yazilim",
+    label: "Teknoloji & Yazılım",
+    subcategories: ["Yazılım Ajansı", "IT Servis", "E-ticaret", "Donanım Satış"],
+  },
+  {
+    value: "finans-sigorta",
+    label: "Finans & Sigorta",
+    subcategories: ["Banka Şubesi", "Sigorta Acentesi", "Döviz / Transfer", "Muhasebe Bürosu"],
+  },
 ];
 
 const ASSOCIATION_CATEGORIES: CategoryDef[] = [
-  { value: "kultur-sanat", label: "Kültür & Sanat Derneği", subcategories: ["Folklor", "Müzik", "Tiyatro", "Edebiyat"] },
-  { value: "egitim-bilim", label: "Eğitim & Bilim Vakfı", subcategories: ["Burs", "Kurs", "Akademik", "Öğrenci Topluluğu"] },
-  { value: "yardimlasma", label: "Yardımlaşma & Dayanışma", subcategories: ["İhtiyaç Sahipleri", "Afet", "Sağlık Yardımı", "Gıda Bankası"] },
+  {
+    value: "kultur-sanat",
+    label: "Kültür & Sanat Derneği",
+    subcategories: ["Folklor", "Müzik", "Tiyatro", "Edebiyat"],
+  },
+  {
+    value: "egitim-bilim",
+    label: "Eğitim & Bilim Vakfı",
+    subcategories: ["Burs", "Kurs", "Akademik", "Öğrenci Topluluğu"],
+  },
+  {
+    value: "yardimlasma",
+    label: "Yardımlaşma & Dayanışma",
+    subcategories: ["İhtiyaç Sahipleri", "Afet", "Sağlık Yardımı", "Gıda Bankası"],
+  },
   { value: "din-ibadet", label: "Din & İbadet Kurumu", subcategories: ["Cami", "Cemevi", "Kültür Merkezi"] },
-  { value: "spor-genclik", label: "Spor & Gençlik Kulübü", subcategories: ["Futbol", "Basketbol", "Geleneksel Sporlar", "Gençlik Kampı"] },
-  { value: "is-meslek", label: "İş & Meslek Odası", subcategories: ["Ticaret Odası", "Sanayici Derneği", "Profesyonel Birlik", "KOBİ Ağı"] },
-  { value: "kadin-aile", label: "Kadın & Aile Derneği", subcategories: ["Kadın Hakları", "Aile Danışmanlığı", "Çocuk Destek"] },
+  {
+    value: "spor-genclik",
+    label: "Spor & Gençlik Kulübü",
+    subcategories: ["Futbol", "Basketbol", "Geleneksel Sporlar", "Gençlik Kampı"],
+  },
+  {
+    value: "is-meslek",
+    label: "İş & Meslek Odası",
+    subcategories: ["Ticaret Odası", "Sanayici Derneği", "Profesyonel Birlik", "KOBİ Ağı"],
+  },
+  {
+    value: "kadin-aile",
+    label: "Kadın & Aile Derneği",
+    subcategories: ["Kadın Hakları", "Aile Danışmanlığı", "Çocuk Destek"],
+  },
   { value: "hemseri", label: "Hemşeri Derneği", subcategories: ["Şehir Derneği", "Bölge Derneği", "Köy Derneği"] },
-  { value: "siyasi-lobi", label: "Siyasi & Lobi Kuruluşu", subcategories: ["Düşünce Kuruluşu", "Lobi", "Sivil Platform"] },
-  { value: "konsolosluk-resmi", label: "Konsolosluk / Resmi Kurum", subcategories: ["Konsolosluk", "Büyükelçilik", "Ticaret Müşaviri"] },
+  {
+    value: "siyasi-lobi",
+    label: "Siyasi & Lobi Kuruluşu",
+    subcategories: ["Düşünce Kuruluşu", "Lobi", "Sivil Platform"],
+  },
+  {
+    value: "konsolosluk-resmi",
+    label: "Konsolosluk / Resmi Kurum",
+    subcategories: ["Konsolosluk", "Büyükelçilik", "Ticaret Müşaviri"],
+  },
 ];
 
 const CATEGORIES_BY_TARGET: Record<string, CategoryDef[]> = {
@@ -115,11 +256,13 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
   // Auto-fill city/country from user profile
   useEffect(() => {
     (async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) return;
       const { getAttributesBatch } = await import("@/lib/profile-helpers");
       const attrs = await getAttributesBatch(user.id, ["city", "country"]);
-      setForm(p => ({
+      setForm((p) => ({
         ...p,
         city: p.city || attrs.city || "",
         country: p.country || attrs.country || "",
@@ -128,8 +271,8 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
   }, []);
 
   const availableCategories = CATEGORIES_BY_TARGET[targetType] || [];
-  const selectedCategory = availableCategories.find(c => c.value === category);
-  const selectedTarget = TARGET_TYPES.find(t => t.value === targetType);
+  const selectedCategory = availableCategories.find((c) => c.value === category);
+  const selectedTarget = TARGET_TYPES.find((t) => t.value === targetType);
   const isOtherCategory = category === "__other__";
   const isOtherSubcategory = subcategory === "__other__";
 
@@ -156,17 +299,17 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         });
       }
 
-      setFiles(prev => [...prev, ...accepted].slice(0, 5));
+      setFiles((prev) => [...prev, ...accepted].slice(0, 5));
       // Aynı dosya tekrar seçilebilsin diye girdi sıfırlanır.
       e.target.value = "";
     }
   };
 
   const removeFile = (index: number) => {
-    setFiles(prev => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const finalCategoryLabel = isOtherCategory ? customCategory.trim() : (selectedCategory?.label || "");
+  const finalCategoryLabel = isOtherCategory ? customCategory.trim() : selectedCategory?.label || "";
   const finalSubcategory = isOtherSubcategory ? customSubcategory.trim() : subcategory;
 
   // Form gönderimi: önce doğrula, sonra göstermelik Stripe ödeme ekranını aç.
@@ -174,7 +317,11 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!targetType || !category || (isOtherCategory && !finalCategoryLabel) || !form.title || !form.description) {
-      toast({ title: "Eksik bilgi", description: "Hedef tür, kategori, başlık ve açıklama zorunludur.", variant: "destructive" });
+      toast({
+        title: "Eksik bilgi",
+        description: "Hedef tür, kategori, başlık ve açıklama zorunludur.",
+        variant: "destructive",
+      });
       return;
     }
     if (isOtherSubcategory && !finalSubcategory) {
@@ -186,7 +333,9 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       toast({ title: "Giriş yapmalısınız", variant: "destructive" });
       return;
@@ -200,7 +349,9 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
   const submitRequest = async () => {
     setLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) {
         toast({ title: "Giriş yapmalısınız", variant: "destructive" });
         return;
@@ -225,9 +376,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         // ⚠️ Ham `file.name` anahtara GİRMEZ — `../` ile dizin dışına çıkma denemesi
         // ve sahte klasör oluşturma bu yüzden engellenir.
         const filePath = `${user.id}/${Date.now()}-${safeStorageFileName(file.name)}`;
-        const { error: uploadError } = await supabase.storage
-          .from("service-attachments")
-          .upload(filePath, file);
+        const { error: uploadError } = await supabase.storage.from("service-attachments").upload(filePath, file);
         if (uploadError) {
           // ⚠️ Eskiden hata SESSİZCE yutuluyordu: dosya yüklenmese de talep
           // gönderiliyor, kullanıcı ekini iletmiş sanıyordu.
@@ -275,16 +424,22 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Target Type */}
       <div className="space-y-2">
-        <Label className="flex items-center gap-1.5"><Target className="h-3.5 w-3.5" /> Talebiniz kime yönelik? *</Label>
+        <Label className="flex items-center gap-1.5">
+          <Target className="h-3.5 w-3.5" /> Talebiniz kime yönelik? *
+        </Label>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-          {TARGET_TYPES.map(t => {
+          {TARGET_TYPES.map((t) => {
             const Icon = t.icon;
             const active = targetType === t.value;
             return (
               <button
                 key={t.value}
                 type="button"
-                onClick={() => { setTargetType(t.value); setCategory(""); setSubcategory(""); }}
+                onClick={() => {
+                  setTargetType(t.value);
+                  setCategory("");
+                  setSubcategory("");
+                }}
                 className={`flex items-start gap-3 p-3 rounded-xl border-2 text-left transition-all ${
                   active ? "border-primary bg-primary/5 shadow-sm" : "border-border hover:border-primary/40"
                 }`}
@@ -305,16 +460,27 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Category */}
         <div className="space-y-2">
-          <Label className="flex items-center gap-1.5"><Briefcase className="h-3.5 w-3.5" /> Kategori *</Label>
+          <Label className="flex items-center gap-1.5">
+            <Briefcase className="h-3.5 w-3.5" /> Kategori *
+          </Label>
           <Select
             value={category}
-            onValueChange={(v) => { setCategory(v); setSubcategory(""); setCustomSubcategory(""); if (v !== "__other__") setCustomCategory(""); }}
+            onValueChange={(v) => {
+              setCategory(v);
+              setSubcategory("");
+              setCustomSubcategory("");
+              if (v !== "__other__") setCustomCategory("");
+            }}
             disabled={!targetType}
           >
-            <SelectTrigger><SelectValue placeholder={targetType ? "Kategori seçin" : "Önce hedef türünü seçin"} /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder={targetType ? "Kategori seçin" : "Önce hedef türünü seçin"} />
+            </SelectTrigger>
             <SelectContent>
-              {availableCategories.map(c => (
-                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+              {availableCategories.map((c) => (
+                <SelectItem key={c.value} value={c.value}>
+                  {c.label}
+                </SelectItem>
               ))}
               <SelectItem value="__other__">✏️ Diğer (kendim yazayım)</SelectItem>
             </SelectContent>
@@ -323,7 +489,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
             <Input
               placeholder="Kategoriyi yazın"
               value={customCategory}
-              onChange={e => setCustomCategory(e.target.value)}
+              onChange={(e) => setCustomCategory(e.target.value)}
               maxLength={80}
             />
           )}
@@ -334,13 +500,20 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
           <Label>Alt Kategori</Label>
           <Select
             value={subcategory}
-            onValueChange={(v) => { setSubcategory(v); if (v !== "__other__") setCustomSubcategory(""); }}
+            onValueChange={(v) => {
+              setSubcategory(v);
+              if (v !== "__other__") setCustomSubcategory("");
+            }}
             disabled={!category}
           >
-            <SelectTrigger><SelectValue placeholder="Alt kategori seçin" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Alt kategori seçin" />
+            </SelectTrigger>
             <SelectContent>
-              {selectedCategory?.subcategories.map(sc => (
-                <SelectItem key={sc} value={sc}>{sc}</SelectItem>
+              {selectedCategory?.subcategories.map((sc) => (
+                <SelectItem key={sc} value={sc}>
+                  {sc}
+                </SelectItem>
               ))}
               <SelectItem value="__other__">✏️ Diğer (kendim yazayım)</SelectItem>
             </SelectContent>
@@ -349,7 +522,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
             <Input
               placeholder="Alt kategoriyi yazın"
               value={customSubcategory}
-              onChange={e => setCustomSubcategory(e.target.value)}
+              onChange={(e) => setCustomSubcategory(e.target.value)}
               maxLength={80}
             />
           )}
@@ -362,7 +535,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         <Input
           placeholder="Örn: Almanya'da GmbH kurulumu hakkında danışmanlık"
           value={form.title}
-          onChange={e => setForm(p => ({ ...p, title: e.target.value }))}
+          onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
           maxLength={200}
         />
       </div>
@@ -373,7 +546,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         <Textarea
           placeholder="Hizmet talebinizi detaylı açıklayın..."
           value={form.description}
-          onChange={e => setForm(p => ({ ...p, description: e.target.value }))}
+          onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
           rows={4}
           maxLength={2000}
         />
@@ -382,15 +555,25 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* City */}
         <div className="space-y-2">
-          <Label className="flex items-center gap-1.5"><MapPin className="h-3.5 w-3.5" /> Şehir</Label>
-          <Input placeholder="Örn: Berlin" value={form.city} onChange={e => setForm(p => ({ ...p, city: e.target.value }))} />
+          <Label className="flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5" /> Şehir
+          </Label>
+          <Input
+            placeholder="Örn: Berlin"
+            value={form.city}
+            onChange={(e) => setForm((p) => ({ ...p, city: e.target.value }))}
+          />
           <p className="text-[10px] text-muted-foreground">Profilinizden otomatik dolduruldu — değiştirebilirsiniz.</p>
         </div>
 
         {/* Country */}
         <div className="space-y-2">
           <Label>Ülke</Label>
-          <Input placeholder="Örn: Almanya" value={form.country} onChange={e => setForm(p => ({ ...p, country: e.target.value }))} />
+          <Input
+            placeholder="Örn: Almanya"
+            value={form.country}
+            onChange={(e) => setForm((p) => ({ ...p, country: e.target.value }))}
+          />
           <p className="text-[10px] text-muted-foreground">Profilinizden otomatik dolduruldu — değiştirebilirsiniz.</p>
         </div>
       </div>
@@ -398,19 +581,35 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Budget */}
         <div className="space-y-2">
-          <Label className="flex items-center gap-1.5"><DollarSign className="h-3.5 w-3.5" /> Min Bütçe (€)</Label>
-          <Input type="number" placeholder="100" value={form.budgetMin} onChange={e => setForm(p => ({ ...p, budgetMin: e.target.value }))} />
+          <Label className="flex items-center gap-1.5">
+            <DollarSign className="h-3.5 w-3.5" /> Min Bütçe (€)
+          </Label>
+          <Input
+            type="number"
+            placeholder="100"
+            value={form.budgetMin}
+            onChange={(e) => setForm((p) => ({ ...p, budgetMin: e.target.value }))}
+          />
         </div>
         <div className="space-y-2">
           <Label>Max Bütçe (€)</Label>
-          <Input type="number" placeholder="500" value={form.budgetMax} onChange={e => setForm(p => ({ ...p, budgetMax: e.target.value }))} />
+          <Input
+            type="number"
+            placeholder="500"
+            value={form.budgetMax}
+            onChange={(e) => setForm((p) => ({ ...p, budgetMax: e.target.value }))}
+          />
         </div>
 
         {/* Preferred Time */}
         <div className="space-y-2">
-          <Label className="flex items-center gap-1.5"><Clock className="h-3.5 w-3.5" /> Tercih Edilen Zaman</Label>
-          <Select value={form.preferredTime} onValueChange={v => setForm(p => ({ ...p, preferredTime: v }))}>
-            <SelectTrigger><SelectValue placeholder="Zaman seçin" /></SelectTrigger>
+          <Label className="flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" /> Tercih Edilen Zaman
+          </Label>
+          <Select value={form.preferredTime} onValueChange={(v) => setForm((p) => ({ ...p, preferredTime: v }))}>
+            <SelectTrigger>
+              <SelectValue placeholder="Zaman seçin" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="weekday-morning">Hafta İçi Sabah</SelectItem>
               <SelectItem value="weekday-afternoon">Hafta İçi Öğleden Sonra</SelectItem>
@@ -426,11 +625,11 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
       <div className="space-y-2">
         <Label>Aciliyet</Label>
         <div className="flex flex-wrap gap-2">
-          {URGENCY_OPTIONS.map(u => (
+          {URGENCY_OPTIONS.map((u) => (
             <Badge
               key={u.value}
               className={`cursor-pointer transition-all ${form.urgency === u.value ? u.color + " ring-2 ring-ring" : "bg-muted/50 text-muted-foreground hover:bg-muted"}`}
-              onClick={() => setForm(p => ({ ...p, urgency: u.value }))}
+              onClick={() => setForm((p) => ({ ...p, urgency: u.value }))}
             >
               {u.label}
             </Badge>
@@ -440,9 +639,18 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
 
       {/* File Upload */}
       <div className="space-y-2">
-        <Label className="flex items-center gap-1.5"><Upload className="h-3.5 w-3.5" /> Dosya Ekle (max 5)</Label>
+        <Label className="flex items-center gap-1.5">
+          <Upload className="h-3.5 w-3.5" /> Dosya Ekle (max 5)
+        </Label>
         <div className="border-2 border-dashed border-border rounded-xl p-4 text-center hover:border-primary/50 transition-colors">
-          <input type="file" multiple onChange={handleFileChange} className="hidden" id="file-upload" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp" />
+          <input
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
+            id="file-upload"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.webp"
+          />
           <label htmlFor="file-upload" className="cursor-pointer">
             <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">Dosya seçmek için tıklayın</p>
@@ -478,7 +686,9 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
           <Send className="h-4 w-4" /> {loading ? "Gönderiliyor..." : `Ödemeye Geç · €${SERVICE_REQUEST_FEE}`}
         </Button>
         {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel}>İptal</Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            İptal
+          </Button>
         )}
       </div>
 

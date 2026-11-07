@@ -14,11 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { listAdminCatalogRoles, type AdminCatalogRoleOption } from "@/lib/admin-catalog";
-import {
-  bulkImportCatalogItems,
-  parseImportText,
-  type ImportFormat,
-} from "@/lib/catalog-import-api";
+import { bulkImportCatalogItems, parseImportText, type ImportFormat } from "@/lib/catalog-import-api";
 import type { BulkImportResult, ImportRecord } from "@/lib/catalog-import-schemas";
 
 const DEFAULT_ROLE = "User_DiasporaMember";
@@ -70,7 +66,13 @@ const AdminBulkImportPage = () => {
   }, [toast]);
 
   const roleOptions = useMemo(
-    () => roles.map((role) => ({ value: role.key, label: role.label, hint: role.key, searchText: `${role.label} ${role.key}` })),
+    () =>
+      roles.map((role) => ({
+        value: role.key,
+        label: role.label,
+        hint: role.key,
+        searchText: `${role.label} ${role.key}`,
+      })),
     [roles],
   );
 
@@ -97,7 +99,11 @@ const AdminBulkImportPage = () => {
 
   const handleImport = async () => {
     if (!sourceType.trim()) {
-      toast({ title: "Kaynak adı gerekli", description: "Bu içe aktarmaya bir kaynak adı verin (ör. melbourne-deep-research-20260617).", variant: "destructive" });
+      toast({
+        title: "Kaynak adı gerekli",
+        description: "Bu içe aktarmaya bir kaynak adı verin (ör. melbourne-deep-research-20260617).",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -140,8 +146,8 @@ const AdminBulkImportPage = () => {
           <CardHeader>
             <CardTitle className="text-base">1. Veriyi Yapıştır veya Yükle</CardTitle>
             <CardDescription>
-              Beklenen alanlar: <code>name</code> (zorunlu), company, city, country, profession, phone, email, web, address.
-              JSON bir nesne dizisi; CSV başlık satırı Türkçe/İngilizce sütun adlarını kabul eder.
+              Beklenen alanlar: <code>name</code> (zorunlu), company, city, country, profession, phone, email, web,
+              address. JSON bir nesne dizisi; CSV başlık satırı Türkçe/İngilizce sütun adlarını kabul eder.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -205,7 +211,9 @@ const AdminBulkImportPage = () => {
           <Card>
             <CardHeader>
               <CardTitle className="text-base">2. Önizleme — {preview.length} kayıt</CardTitle>
-              <CardDescription>İçe aktarmadan önce kayıtları kontrol edin. Tümü "beklemede" olarak girer.</CardDescription>
+              <CardDescription>
+                İçe aktarmadan önce kayıtları kontrol edin. Tümü "beklemede" olarak girer.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto rounded-xl border">
@@ -289,8 +297,8 @@ const AdminBulkImportPage = () => {
                 <Badge variant="outline">Parti: {result.batch_id}</Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Bu kayıtlar "İncelemede" (pending_review) olarak girdi ve henüz herkese açık değil.
-                Onaylamak veya reddetmek için Kayıt Veritabanı'na gidin ve durum filtresinden "İncelemede"yi seçin.
+                Bu kayıtlar "İncelemede" (pending_review) olarak girdi ve henüz herkese açık değil. Onaylamak veya
+                reddetmek için Kayıt Veritabanı'na gidin ve durum filtresinden "İncelemede"yi seçin.
               </p>
               <Button asChild variant="outline">
                 <Link to="/admin/data">

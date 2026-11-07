@@ -20,10 +20,7 @@ import {
 import { useGeoCountries } from "@/hooks/useGeo";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
-import {
-  searchPublicContent,
-  type PublicContentSearchResult,
-} from "@/lib/public-content-search";
+import { searchPublicContent, type PublicContentSearchResult } from "@/lib/public-content-search";
 import { reportClientError } from "@/lib/client-error-reports";
 const mascot = "/lmaskot.png";
 
@@ -89,8 +86,7 @@ const DirectoryPage = () => {
     draftCity !== cityFilter ||
     draftFeatured !== featuredOnly;
 
-  const hasActiveFilters =
-    draftRole !== "all" || Boolean(draftCountry) || Boolean(draftCity) || draftFeatured;
+  const hasActiveFilters = draftRole !== "all" || Boolean(draftCountry) || Boolean(draftCity) || draftFeatured;
 
   /**
    * Sayfalama durumu, İÇİNDE bağlı olduğu filtre imzasını taşır.
@@ -137,9 +133,7 @@ const DirectoryPage = () => {
 
         if (!isMounted) return;
 
-        setRows((previous) =>
-          activeOffset === 0 ? result.rows : [...previous, ...result.rows],
-        );
+        setRows((previous) => (activeOffset === 0 ? result.rows : [...previous, ...result.rows]));
         setResultTotal(result.totalCount);
         setRoleOptions(nextRoles);
         setIsLoading(false);
@@ -158,15 +152,7 @@ const DirectoryPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [
-    activeOffset,
-    cityFilter,
-    countryFilter,
-    featuredOnly,
-    isAuthLoading,
-    roleFilter,
-    searchText,
-  ]);
+  }, [activeOffset, cityFilter, countryFilter, featuredOnly, isAuthLoading, roleFilter, searchText]);
 
   /**
    * "Daha fazla var mı" sorusu, çekilen SAYFA ilerlemesinden hesaplanır —
@@ -287,9 +273,10 @@ const DirectoryPage = () => {
           <div className="flex items-center justify-between gap-6 p-6 md:p-8">
             {/* Left: text content */}
             <div className="min-w-0 flex-1">
-
               <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
-                <span className="bg-[linear-gradient(90deg,#EA4335_0%,#FBBC05_28%,#34A853_52%,#4285F4_76%,#A259FF_100%)] bg-clip-text text-transparent">CorteQS</span>{" "}
+                <span className="bg-[linear-gradient(90deg,#EA4335_0%,#FBBC05_28%,#34A853_52%,#4285F4_76%,#A259FF_100%)] bg-clip-text text-transparent">
+                  CorteQS
+                </span>{" "}
                 <span>Türk Diaspora Ağı</span>
               </h1>
               <p className="mt-3 max-w-xl text-sm text-muted-foreground md:text-base">
@@ -311,11 +298,7 @@ const DirectoryPage = () => {
             </div>
             {/* Right: mascot */}
             <div className="hidden shrink-0 sm:block">
-              <img
-                src={mascot}
-                alt="CorteQS maskot"
-                className="h-32 w-auto drop-shadow-xl md:h-40"
-              />
+              <img src={mascot} alt="CorteQS maskot" className="h-32 w-auto drop-shadow-xl md:h-40" />
             </div>
           </div>
         </section>
@@ -326,19 +309,14 @@ const DirectoryPage = () => {
             kullanıcı giriş sonrası aradığı yerden devam eder. */}
         {!isAuthLoading && !user ? (
           <section className="mb-6 rounded-[28px] border border-primary/20 bg-white/70 p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl">
-            <h2 className="text-base font-semibold text-foreground">
-              Dizinde arama herkese açık.
-            </h2>
+            <h2 className="text-base font-semibold text-foreground">Dizinde arama herkese açık.</h2>
             <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
-              Ücretsiz giriş yaptığında profillerle iletişime geçebilir, kendi kaydını
-              açabilir ve aramalarını kaydedebilirsin.
+              Ücretsiz giriş yaptığında profillerle iletişime geçebilir, kendi kaydını açabilir ve aramalarını
+              kaydedebilirsin.
             </p>
             <div className="mt-3">
               <Button asChild size="sm">
-                <a
-                  href={`/login?next=${encodeURIComponent(`/directory?${searchParams.toString()}`)}`}
-                  rel="nofollow"
-                >
+                <a href={`/login?next=${encodeURIComponent(`/directory?${searchParams.toString()}`)}`} rel="nofollow">
                   Giriş Yap
                 </a>
               </Button>
@@ -347,117 +325,104 @@ const DirectoryPage = () => {
         ) : null}
 
         <div className="mb-4">
-              <DirectorySearchBar
-                value={searchText}
-                onChange={(value) => updateFilter("q", value || null)}
-              />
-            </div>
+          <DirectorySearchBar value={searchText} onChange={(value) => updateFilter("q", value || null)} />
+        </div>
 
-            <div className="mb-6 rounded-[28px] border-4 border-orange-300 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
-              <DirectoryFilters
-                roleOptions={roleOptions}
-                roleFilter={draftRole}
-                onRoleChange={setDraftRole}
-                countryFilter={draftCountry}
-                cityFilter={draftCity}
-                featuredOnly={draftFeatured}
-                countryOptions={(countriesQuery.data ?? []).map((country) => country.name)}
-                onCountryChange={(value) => {
-                  setDraftCountry(value === "all" ? "" : value);
-                  setDraftCity("");
-                }}
-                onCityChange={(value) => setDraftCity(value === "all" ? "" : value)}
-                onFeaturedChange={setDraftFeatured}
-                onApply={applyDraftFilters}
-                onClear={clearDraftFilters}
-                hasPendingChanges={hasPendingChanges}
-                hasActiveFilters={hasActiveFilters}
-              />
-            </div>
+        <div className="mb-6 rounded-[28px] border-4 border-orange-300 bg-white/60 p-4 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] backdrop-blur-xl md:p-5">
+          <DirectoryFilters
+            roleOptions={roleOptions}
+            roleFilter={draftRole}
+            onRoleChange={setDraftRole}
+            countryFilter={draftCountry}
+            cityFilter={draftCity}
+            featuredOnly={draftFeatured}
+            countryOptions={(countriesQuery.data ?? []).map((country) => country.name)}
+            onCountryChange={(value) => {
+              setDraftCountry(value === "all" ? "" : value);
+              setDraftCity("");
+            }}
+            onCityChange={(value) => setDraftCity(value === "all" ? "" : value)}
+            onFeaturedChange={setDraftFeatured}
+            onApply={applyDraftFilters}
+            onClear={clearDraftFilters}
+            hasPendingChanges={hasPendingChanges}
+            hasActiveFilters={hasActiveFilters}
+          />
+        </div>
 
-            <div ref={resultsRef} className="scroll-mt-24" />
+        <div ref={resultsRef} className="scroll-mt-24" />
 
-            <PublicContentSearchResults
-              results={contentResults}
-              isLoading={isContentLoading}
-              error={contentError}
-            />
+        <PublicContentSearchResults results={contentResults} isLoading={isContentLoading} error={contentError} />
 
-            {isLoading ? (
-              <p className="py-8 text-center text-sm text-muted-foreground">Dizin yükleniyor...</p>
-            ) : null}
-            {errorMessage ? (
-              <p className="py-4 text-center text-sm text-destructive">
-                Dizin alınamadı: {errorMessage}
-              </p>
-            ) : null}
+        {isLoading ? <p className="py-8 text-center text-sm text-muted-foreground">Dizin yükleniyor...</p> : null}
+        {errorMessage ? (
+          <p className="py-4 text-center text-sm text-destructive">Dizin alınamadı: {errorMessage}</p>
+        ) : null}
 
-            {!isLoading && !errorMessage ? (
-              <div className="space-y-3">
-                {rows.length > 0 ? (
-                  <>
-                    {/* Sayı RPC'nin `total_count`'undan gelir — sonuç listesiyle
+        {!isLoading && !errorMessage ? (
+          <div className="space-y-3">
+            {rows.length > 0 ? (
+              <>
+                {/* Sayı RPC'nin `total_count`'undan gelir — sonuç listesiyle
                         AYNI filtreyi paylaşır. `rows.length` yalnız o ana kadar
                         ÇEKİLEN sayfaları gösterir; ikisini karıştırma. */}
-                    <p className="pb-1 text-xs font-medium text-muted-foreground">
-                      {(resultTotal ?? rows.length).toLocaleString("tr-TR")} sonuç bulundu
-                      {resultTotal !== null && rows.length < resultTotal
-                        ? ` · ${rows.length.toLocaleString("tr-TR")} tanesi gösteriliyor`
-                        : ""}
-                    </p>
-                    {/* m32ae55b9: kurum kaydı kartta, kişi kaydı satırda. Kurumun
+                <p className="pb-1 text-xs font-medium text-muted-foreground">
+                  {(resultTotal ?? rows.length).toLocaleString("tr-TR")} sonuç bulundu
+                  {resultTotal !== null && rows.length < resultTotal
+                    ? ` · ${rows.length.toLocaleString("tr-TR")} tanesi gösteriliyor`
+                    : ""}
+                </p>
+                {/* m32ae55b9: kurum kaydı kartta, kişi kaydı satırda. Kurumun
                         taşıdığı bilgi (logo, açıklama, hizmet etiketi) satıra
                         sığmıyordu; kişi ise kartta boş duruyordu. Başlıklar yalnız
                         İKİ grup da doluyken çizilir — tek tip sonuçta gereksiz. */}
-                    {catalogItems.length > 0 ? (
-                      <section className="space-y-3">
-                        {members.length > 0 ? (
-                          <h2 className="text-sm font-semibold text-foreground">Kuruluşlar ve işletmeler</h2>
-                        ) : null}
-                        <div className="grid gap-3 sm:grid-cols-2">
-                          {catalogItems.map((row) => (
-                            <DirectoryResultCard key={`${row.recordType}-${row.id}`} row={row} />
-                          ))}
-                        </div>
-                      </section>
-                    ) : null}
-
+                {catalogItems.length > 0 ? (
+                  <section className="space-y-3">
                     {members.length > 0 ? (
-                      <section className="space-y-3">
-                        {catalogItems.length > 0 ? (
-                          <h2 className="pt-2 text-sm font-semibold text-foreground">Kişiler</h2>
-                        ) : null}
-                        <div className="space-y-3">
-                          {members.map((row) => (
-                            <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
-                          ))}
-                        </div>
-                      </section>
+                      <h2 className="text-sm font-semibold text-foreground">Kuruluşlar ve işletmeler</h2>
                     ) : null}
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {catalogItems.map((row) => (
+                        <DirectoryResultCard key={`${row.recordType}-${row.id}`} row={row} />
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
 
-                    {hasMore ? (
-                      <div className="pt-4 text-center">
-                        <Button
-                          variant="outline"
-                          disabled={isLoadingMore}
-                          onClick={() =>
-                            setPager({ key: filterKey, offset: activeOffset + DIRECTORY_PAGE_SIZE })
-                          }
-                        >
-                          {isLoadingMore ? "Yükleniyor..." : "Daha fazla göster"}
-                        </Button>
-                      </div>
+                {members.length > 0 ? (
+                  <section className="space-y-3">
+                    {catalogItems.length > 0 ? (
+                      <h2 className="pt-2 text-sm font-semibold text-foreground">Kişiler</h2>
                     ) : null}
-                  </>
-                ) : (
-                  <p className="py-8 text-center text-sm text-muted-foreground">
-                    {roleFilter !== "all"
-                      ? "Bu kategoride henüz görünür profil yok. İlk başvurular yakında burada görünecek — dilersen aramayı genişletip diğer kategorilere göz atabilirsin."
-                      : "Aramana uygun görünür profil bulunamadı. Farklı bir şehir, kategori veya anahtar kelime deneyebilirsin."}
-                  </p>
-                )}
-              </div>
-            ) : null}
+                    <div className="space-y-3">
+                      {members.map((row) => (
+                        <DirectoryResultRow key={`${row.recordType}-${row.id}`} row={row} />
+                      ))}
+                    </div>
+                  </section>
+                ) : null}
+
+                {hasMore ? (
+                  <div className="pt-4 text-center">
+                    <Button
+                      variant="outline"
+                      disabled={isLoadingMore}
+                      onClick={() => setPager({ key: filterKey, offset: activeOffset + DIRECTORY_PAGE_SIZE })}
+                    >
+                      {isLoadingMore ? "Yükleniyor..." : "Daha fazla göster"}
+                    </Button>
+                  </div>
+                ) : null}
+              </>
+            ) : (
+              <p className="py-8 text-center text-sm text-muted-foreground">
+                {roleFilter !== "all"
+                  ? "Bu kategoride henüz görünür profil yok. İlk başvurular yakında burada görünecek — dilersen aramayı genişletip diğer kategorilere göz atabilirsin."
+                  : "Aramana uygun görünür profil bulunamadı. Farklı bir şehir, kategori veya anahtar kelime deneyebilirsin."}
+              </p>
+            )}
+          </div>
+        ) : null}
       </main>
     </div>
   );

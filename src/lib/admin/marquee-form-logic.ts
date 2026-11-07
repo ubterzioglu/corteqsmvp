@@ -74,9 +74,7 @@ export function emptyMarqueeForm(now: Date = new Date()): MarqueeFormState {
  */
 export function marqueeRowToFormState(item: MarqueeItemRow): MarqueeFormState {
   const type: MarqueeItemType =
-    item.type === "news" || item.type === "stat" || item.type === "announcement"
-      ? item.type
-      : "news";
+    item.type === "news" || item.type === "stat" || item.type === "announcement" ? item.type : "news";
 
   return {
     type,

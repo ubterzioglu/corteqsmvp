@@ -59,7 +59,11 @@ describe("AttributeInput", () => {
   it("son okul alanı 200 karakterle sınırlıdır", () => {
     render(
       <AttributeInput
-        attribute={makeAttribute({ attributeKey: "education_last_school", label: "Son bitirdiği üniversite/okul", dataType: "text" })}
+        attribute={makeAttribute({
+          attributeKey: "education_last_school",
+          label: "Son bitirdiği üniversite/okul",
+          dataType: "text",
+        })}
         value=""
         onChange={vi.fn()}
       />,

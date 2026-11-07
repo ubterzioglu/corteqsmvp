@@ -111,7 +111,8 @@ export async function fetchFeedbackList(): Promise<MemberFeedback[]> {
   let error: unknown = null;
   try {
     data = await fetchAllRows((from, to) =>
-      supabase.from("member_feedback")
+      supabase
+        .from("member_feedback")
         .select(FEEDBACK_SELECT)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
@@ -129,10 +130,7 @@ export async function fetchFeedbackList(): Promise<MemberFeedback[]> {
 }
 
 /** Feedback durumunu günceller (admin; updated_at trigger ile otomatik). */
-export async function updateFeedbackStatus(
-  id: string,
-  status: FeedbackStatus,
-): Promise<void> {
+export async function updateFeedbackStatus(id: string, status: FeedbackStatus): Promise<void> {
   if (!FEEDBACK_STATUSES.includes(status)) {
     throw new Error("Geçersiz durum.");
   }
@@ -146,7 +144,8 @@ export async function updateFeedbackStatus(
 
 /** Feedback'i soft-delete eder (admin). */
 export async function deleteFeedback(id: string): Promise<void> {
-  const { error } = await supabase.from("member_feedback")
+  const { error } = await supabase
+    .from("member_feedback")
     .update({ deleted_at: new Date().toISOString() })
     .eq("id", id);
 
@@ -154,4 +153,3 @@ export async function deleteFeedback(id: string): Promise<void> {
     throw new Error(sanitizeError(error, "Geri bildirim silinemedi."));
   }
 }
-

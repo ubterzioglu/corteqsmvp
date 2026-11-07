@@ -63,16 +63,10 @@ export const caddePostCreateSchema = z
     // Tarihsel sözleşme: bu alanlar ülke/şehir ADI taşır (bkz. cadde-types.ts notu).
     countryId: z.string().optional(),
     cityId: z.string().optional(),
-    targets: z
-      .array(caddePostTargetSchema)
-      .max(2, "Şu an en fazla bir ek hedef ekleyebilirsin.")
-      .optional(),
+    targets: z.array(caddePostTargetSchema).max(2, "Şu an en fazla bir ek hedef ekleyebilirsin.").optional(),
     isBridge: z.boolean(),
     needCategory: z.string().trim().optional(),
-    interests: z
-      .array(z.string().trim().min(1))
-      .max(3, "En fazla 3 etiket seçebilirsin.")
-      .optional(),
+    interests: z.array(z.string().trim().min(1)).max(3, "En fazla 3 etiket seçebilirsin.").optional(),
     cafeId: z.string().trim().min(1).optional(),
     diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
     media: caddeMediaSchema.optional(),
@@ -107,7 +101,11 @@ const caddeCafeCapacitySchema = z
 
 export const caddeCafeCreateSchema = z
   .object({
-    title: z.string().trim().min(3, "Cafe adı en az 3 karakter olmalı.").max(80, "Cafe adı en fazla 80 karakter olabilir."),
+    title: z
+      .string()
+      .trim()
+      .min(3, "Cafe adı en az 3 karakter olmalı.")
+      .max(80, "Cafe adı en fazla 80 karakter olabilir."),
     summary: z.string().trim().min(1, "Cafe özeti zorunlu.").max(500, "Özet en fazla 500 karakter olabilir."),
     themeKey: z.string().trim().min(1, "Tema seç."),
     country: z.string().optional(),
@@ -124,10 +122,18 @@ export const caddeCafeCreateSchema = z
   })
   .superRefine((value, ctx) => {
     if (value.entryMode === "referral" && (value.referralCode ?? "").length < 4) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["referralCode"], message: "Davet kodu en az 4 karakter olmalı." });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["referralCode"],
+        message: "Davet kodu en az 4 karakter olmalı.",
+      });
     }
     if (value.entryMode === "approval" && !(value.entryQuestion ?? "").trim()) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["entryQuestion"], message: "Onaylı giriş için bir soru gir." });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["entryQuestion"],
+        message: "Onaylı giriş için bir soru gir.",
+      });
     }
     if (value.startsAt && value.endsAt && new Date(value.endsAt) <= new Date(value.startsAt)) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["endsAt"], message: "Bitiş başlangıçtan sonra olmalı." });
@@ -140,40 +146,69 @@ export const caddeCafeJoinInputSchema = z.object({
   answer: z.string().trim().max(500, "Yanıt en fazla 500 karakter olabilir.").optional(),
 });
 
-export const carsiItemCreateSchema = z.object({
-  categoryKey: z.string().trim().min(1, "Kategori seç."),
-  title: z.string().trim().min(3, "İlan başlığı en az 3 karakter olmalı.").max(100, "İlan başlığı en fazla 100 karakter olabilir."),
-  description: z.string().trim().min(1, "İlan açıklaması zorunlu.").max(2000, "Açıklama en fazla 2000 karakter olabilir."),
-  priceAmount: z.number().min(0, "Fiyat negatif olamaz.").optional(),
-  priceCurrency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).").optional(),
-  country: z.string().optional(),
-  city: z.string().optional(),
-  imageUrls: z.array(httpUrl).max(6, "En fazla 6 görsel ekleyebilirsin.").optional(),
-  videoUrl: httpUrl.optional(),
-  contactMode: z.enum(["platform", "phone", "email"]).optional(),
-  contactValue: z.string().trim().max(120).optional(),
-  diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
-})
-.superRefine((value, ctx) => {
-  // phone/email seçildiyse değer zorunlu — SQL tarafında da aynı kural var.
-  if (value.contactMode === "phone" && !/^\+?[0-9 ()-]{7,20}$/.test(value.contactValue ?? "")) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactValue"], message: "Geçerli bir telefon numarası gir." });
-  }
-  if (value.contactMode === "email" && !/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(value.contactValue ?? "")) {
-    ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactValue"], message: "Geçerli bir e-posta adresi gir." });
-  }
-});
+export const carsiItemCreateSchema = z
+  .object({
+    categoryKey: z.string().trim().min(1, "Kategori seç."),
+    title: z
+      .string()
+      .trim()
+      .min(3, "İlan başlığı en az 3 karakter olmalı.")
+      .max(100, "İlan başlığı en fazla 100 karakter olabilir."),
+    description: z
+      .string()
+      .trim()
+      .min(1, "İlan açıklaması zorunlu.")
+      .max(2000, "Açıklama en fazla 2000 karakter olabilir."),
+    priceAmount: z.number().min(0, "Fiyat negatif olamaz.").optional(),
+    priceCurrency: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).")
+      .optional(),
+    country: z.string().optional(),
+    city: z.string().optional(),
+    imageUrls: z.array(httpUrl).max(6, "En fazla 6 görsel ekleyebilirsin.").optional(),
+    videoUrl: httpUrl.optional(),
+    contactMode: z.enum(["platform", "phone", "email"]).optional(),
+    contactValue: z.string().trim().max(120).optional(),
+    diasporaKey: z.enum(["tr", "in", "cn", "ph"]).optional(),
+  })
+  .superRefine((value, ctx) => {
+    // phone/email seçildiyse değer zorunlu — SQL tarafında da aynı kural var.
+    if (value.contactMode === "phone" && !/^\+?[0-9 ()-]{7,20}$/.test(value.contactValue ?? "")) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["contactValue"],
+        message: "Geçerli bir telefon numarası gir.",
+      });
+    }
+    if (value.contactMode === "email" && !/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(value.contactValue ?? "")) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["contactValue"], message: "Geçerli bir e-posta adresi gir." });
+    }
+  });
 
 export const caddePromotionCreateSchema = z
   .object({
     campaignType: z.enum(["business", "consultant", "event", "community", "city_highlight"]),
-    title: z.string().trim().min(3, "Kampanya başlığı en az 3 karakter olmalı.").max(100, "Başlık en fazla 100 karakter olabilir."),
-    description: z.string().trim().min(1, "Kampanya açıklaması zorunlu.").max(500, "Açıklama en fazla 500 karakter olabilir."),
+    title: z
+      .string()
+      .trim()
+      .min(3, "Kampanya başlığı en az 3 karakter olmalı.")
+      .max(100, "Başlık en fazla 100 karakter olabilir."),
+    description: z
+      .string()
+      .trim()
+      .min(1, "Kampanya açıklaması zorunlu.")
+      .max(500, "Açıklama en fazla 500 karakter olabilir."),
     targetUrl: z
       .string()
       .trim()
       .min(1, "Hedef URL zorunlu.")
-      .refine((value) => value.startsWith("/") || value.startsWith("http://") || value.startsWith("https://"), "Hedef URL '/' veya http(s) ile başlamalı."),
+      .refine(
+        (value) => value.startsWith("/") || value.startsWith("http://") || value.startsWith("https://"),
+        "Hedef URL '/' veya http(s) ile başlamalı.",
+      ),
     imageUrl: httpUrl.optional(),
     startsAt: z.string().optional(),
     endsAt: z.string().optional(),
@@ -194,27 +229,40 @@ export const caddePromotionCreateSchema = z
     if (value.startsAt && value.endsAt && new Date(value.endsAt) <= new Date(value.startsAt)) {
       ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["endsAt"], message: "Bitiş başlangıçtan sonra olmalı." });
     }
-    if (value.campaignType === "city_highlight" && value.placements.some((item) => item.key !== "city-ambassador-highlight")) {
-      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["placements"], message: "Şehir Elçisi öne çıkarması yalnız kendi placement'ında yayınlanır." });
+    if (
+      value.campaignType === "city_highlight" &&
+      value.placements.some((item) => item.key !== "city-ambassador-highlight")
+    ) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["placements"],
+        message: "Şehir Elçisi öne çıkarması yalnız kendi placement'ında yayınlanır.",
+      });
     }
   });
 
 export const carsiItemUpdateSchema = z.object({
   itemId: z.string().min(1),
-  title: z.string().trim().min(3, "İlan başlığı en az 3 karakter olmalı.").max(100, "İlan başlığı en fazla 100 karakter olabilir.").optional(),
+  title: z
+    .string()
+    .trim()
+    .min(3, "İlan başlığı en az 3 karakter olmalı.")
+    .max(100, "İlan başlığı en fazla 100 karakter olabilir.")
+    .optional(),
   description: z.string().trim().min(1).max(2000, "Açıklama en fazla 2000 karakter olabilir.").optional(),
   priceAmount: z.number().min(0, "Fiyat negatif olamaz.").optional(),
-  priceCurrency: z.string().trim().toUpperCase().regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).").optional(),
+  priceCurrency: z
+    .string()
+    .trim()
+    .toUpperCase()
+    .regex(/^[A-Z]{3}$/, "Para birimi 3 harfli kod olmalı (örn. EUR).")
+    .optional(),
   status: z.enum(["draft", "published", "paused", "expired"]).optional(),
 });
 
 export const caddeCommentCreateSchema = z.object({
   postId: z.string().min(1),
-  body: z
-    .string()
-    .trim()
-    .min(1, "Yorum boş olamaz.")
-    .max(2000, "Yorum en fazla 2000 karakter olabilir."),
+  body: z.string().trim().min(1, "Yorum boş olamaz.").max(2000, "Yorum en fazla 2000 karakter olabilir."),
 });
 
 export const caddeReactionSchema = z.object({

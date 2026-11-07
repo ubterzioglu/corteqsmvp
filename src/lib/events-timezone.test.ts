@@ -150,13 +150,9 @@ describe("saat dönüşümü", () => {
   it("yaz saati geçişinin OLDUĞU gün doğru çözülür", () => {
     // Avrupa yaz saati 29 Mart 2026 saat 02:00'de başlar. 01:00 hâlâ UTC+1'dir.
     // Tek ölçümlü saf uygulama burada bir saat sapar — bu test o sapmayı yakalar.
-    expect(eventInstant("2026-03-29", "01:00", "Europe/Berlin")?.toISOString()).toBe(
-      "2026-03-29T00:00:00.000Z",
-    );
+    expect(eventInstant("2026-03-29", "01:00", "Europe/Berlin")?.toISOString()).toBe("2026-03-29T00:00:00.000Z");
     // Aynı günün akşamı artık UTC+2'dir.
-    expect(eventInstant("2026-03-29", "19:00", "Europe/Berlin")?.toISOString()).toBe(
-      "2026-03-29T17:00:00.000Z",
-    );
+    expect(eventInstant("2026-03-29", "19:00", "Europe/Berlin")?.toISOString()).toBe("2026-03-29T17:00:00.000Z");
   });
 
   it("geçersiz girdi null döner, uydurma tarih üretmez", () => {
@@ -169,12 +165,8 @@ describe("saat dönüşümü", () => {
 
 describe("etkinlik günü", () => {
   it("takvim gününü kaydırmadan yazar", () => {
-    expect(formatEventDate("2026-10-05", { day: "numeric", month: "long", year: "numeric" })).toBe(
-      "5 Ekim 2026",
-    );
-    expect(formatEventDate("2026-01-01", { day: "numeric", month: "long", year: "numeric" })).toBe(
-      "1 Ocak 2026",
-    );
+    expect(formatEventDate("2026-10-05", { day: "numeric", month: "long", year: "numeric" })).toBe("5 Ekim 2026");
+    expect(formatEventDate("2026-01-01", { day: "numeric", month: "long", year: "numeric" })).toBe("1 Ocak 2026");
   });
 
   it("gün UTC'de yazılır — yerel saat dilimine göre kaymaz", () => {
@@ -207,10 +199,7 @@ describe("izleyici saat dilimi", () => {
   });
 
   it("etkinlik sayfaları izleyici için form varsayılanını KULLANMAZ", () => {
-    for (const relativePath of [
-      "src/pages/EventDetailPage.tsx",
-      "src/components/events/MyEventsPanel.tsx",
-    ]) {
+    for (const relativePath of ["src/pages/EventDetailPage.tsx", "src/components/events/MyEventsPanel.tsx"]) {
       const source = readSource(relativePath);
       expect(source).toContain("resolveViewerTimezone");
       expect(source).not.toContain("resolveBrowserEventTimezone");

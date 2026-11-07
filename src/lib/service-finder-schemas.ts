@@ -4,20 +4,9 @@
 import { z } from "zod";
 
 export type ServiceFinderJobStatus =
-  | "queued"
-  | "running"
-  | "review"
-  | "completed"
-  | "failed"
-  | "cancelled"
-  | "budget_stopped";
+  "queued" | "running" | "review" | "completed" | "failed" | "cancelled" | "budget_stopped";
 
-export type ServiceFinderReviewStatus =
-  | "pending"
-  | "approved"
-  | "rejected"
-  | "needs_edit"
-  | "published";
+export type ServiceFinderReviewStatus = "pending" | "approved" | "rejected" | "needs_edit" | "published";
 
 export interface ServiceFinderJobRow {
   id: string;

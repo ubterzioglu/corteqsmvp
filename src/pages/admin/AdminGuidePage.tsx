@@ -367,9 +367,7 @@ const AdminGuidePage = () => (
     <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
       <aside className="hidden self-start lg:sticky lg:top-20 lg:block">
         <nav aria-label="Kılavuz içindekiler" className="rounded-2xl border border-border bg-card p-3">
-          <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            İçindekiler
-          </p>
+          <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">İçindekiler</p>
           <div className="space-y-0.5">
             {guideBlocks.map((block) => (
               <a

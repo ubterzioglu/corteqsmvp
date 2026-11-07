@@ -18,9 +18,7 @@ const labels = { budget: "Bütçe uyumu", language: "Dil engeli" };
 
 describe("RankedListCard (#REV-034 kutulu renkli görsel)", () => {
   it("her öğeyi bant rengini taşıyan başlık şeridi olan bir kutuda çizer", () => {
-    const { container } = render(
-      <RankedListCard title="Sıralama" items={items} dimensionLabels={labels} />,
-    );
+    const { container } = render(<RankedListCard title="Sıralama" items={items} dimensionLabels={labels} />);
 
     // 88 → strong, 52 → fair. İkisi FARKLI renk almalı; aksi hâlde kutular
     // yeniden tek renge düşer ve revizyonun istediği ayrım kaybolur.

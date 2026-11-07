@@ -16,8 +16,8 @@ const formatDate = (value: string) =>
 const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
   "Tam Zamanlı": "Tam Zamanlı",
   "Yarı Zamanlı": "Yarı Zamanlı",
-  "Sözleşmeli": "Sözleşmeli",
-  "Staj": "Staj",
+  Sözleşmeli: "Sözleşmeli",
+  Staj: "Staj",
 };
 
 const LOCATION_TYPE_LABELS: Record<string, string> = {
@@ -40,9 +40,7 @@ export default function JobListingsPage() {
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-foreground">İş İlanları</h1>
-          <p className="mt-2 text-muted-foreground">
-            Topluluk üyelerinden güncel iş fırsatları
-          </p>
+          <p className="mt-2 text-muted-foreground">Topluluk üyelerinden güncel iş fırsatları</p>
         </header>
 
         {isLoading ? (
@@ -67,32 +65,20 @@ export default function JobListingsPage() {
             <CardContent className="p-8 text-center">
               <Briefcase className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-lg font-semibold text-foreground">Henüz ilan yok</p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                İlk ilanı vermek için giriş yapın.
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">İlk ilanı vermek için giriş yapın.</p>
             </CardContent>
           </Card>
         ) : (
           <div className="space-y-4">
             {listings.map((listing) => (
-              <Card
-                key={listing.id}
-                className="transition hover:border-primary/50 hover:shadow-md"
-              >
+              <Card key={listing.id} className="transition hover:border-primary/50 hover:shadow-md">
                 <CardContent className="p-6">
-                  <Link
-                    to={`/ilanlar/${listing.id}`}
-                    className="block space-y-3"
-                  >
+                  <Link to={`/ilanlar/${listing.id}`} className="block space-y-3">
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
-                        <h2 className="text-lg font-semibold text-foreground line-clamp-2">
-                          {listing.title}
-                        </h2>
+                        <h2 className="text-lg font-semibold text-foreground line-clamp-2">{listing.title}</h2>
                         {listing.business_name && !listing.hide_business_name ? (
-                          <p className="mt-1 text-sm text-muted-foreground">
-                            {listing.business_name}
-                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">{listing.business_name}</p>
                         ) : null}
                       </div>
                       <span className="shrink-0 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
@@ -116,9 +102,7 @@ export default function JobListingsPage() {
                         {LOCATION_TYPE_LABELS[listing.location_type] ?? listing.location_type}
                         {listing.city ? ` · ${listing.city}` : ""}
                       </span>
-                      <span className="ml-auto text-xs">
-                        {formatDate(listing.created_at)}
-                      </span>
+                      <span className="ml-auto text-xs">{formatDate(listing.created_at)}</span>
                     </div>
                   </Link>
                 </CardContent>

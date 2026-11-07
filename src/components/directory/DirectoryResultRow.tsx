@@ -17,8 +17,7 @@ const roleColorMap: Record<string, string> = {
   default: "bg-primary/10 text-primary border-primary/20",
 };
 
-const getRoleColor = (roleKey: string) =>
-  roleColorMap[roleKey] ?? roleColorMap.default;
+const getRoleColor = (roleKey: string) => roleColorMap[roleKey] ?? roleColorMap.default;
 
 const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
   const initials = trUpper(
@@ -26,7 +25,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
       .split(" ")
       .slice(0, 2)
       .map((w) => w[0] ?? "")
-      .join("")
+      .join(""),
   );
   const locationLabel = [row.city, row.country].filter(Boolean).join(" • ");
 
@@ -53,9 +52,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <span className="font-semibold text-foreground">{row.title}</span>
-          <span
-            className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${getRoleColor(row.roleKey)}`}
-          >
+          <span className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${getRoleColor(row.roleKey)}`}>
             {row.roleLabel}
           </span>
           {row.isVerified ? (
@@ -72,9 +69,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
         </div>
 
         <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-          {row.description ? (
-            <span className="line-clamp-1 max-w-xs">{row.description}</span>
-          ) : null}
+          {row.description ? <span className="line-clamp-1 max-w-xs">{row.description}</span> : null}
           {locationLabel ? (
             <span className="flex shrink-0 items-center gap-1 font-medium text-muted-foreground/80">
               <MapPin className="h-3.5 w-3.5 text-primary/60" />
@@ -83,8 +78,7 @@ const DirectoryResultRow = ({ row }: DirectoryResultRowProps) => {
           ) : null}
           {row.specialLabel && row.specialValue ? (
             <span className="shrink-0">
-              <span className="font-semibold text-foreground/70">{row.specialLabel}:</span>{" "}
-              {row.specialValue}
+              <span className="font-semibold text-foreground/70">{row.specialLabel}:</span> {row.specialValue}
             </span>
           ) : null}
         </div>

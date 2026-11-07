@@ -21,7 +21,8 @@ const MODULE_SCRIPT_TAG = /<script\b[^>]*\btype="module"[^>]*>/i;
 export function findEnvConfigOrderProblem(html) {
   const envMatch = ENV_CONFIG_TAG.exec(html);
   if (!envMatch) return "index.html içinde /env-config.js script etiketi yok.";
-  if (/\basync\b/i.test(envMatch[0])) return "/env-config.js `async` yüklenemez: modüllerden önce çalışma garantisi kalkar.";
+  if (/\basync\b/i.test(envMatch[0]))
+    return "/env-config.js `async` yüklenemez: modüllerden önce çalışma garantisi kalkar.";
 
   const moduleMatch = MODULE_SCRIPT_TAG.exec(html);
   if (moduleMatch && moduleMatch.index < envMatch.index) {

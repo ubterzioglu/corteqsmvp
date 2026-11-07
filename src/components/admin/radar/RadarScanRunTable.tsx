@@ -22,8 +22,11 @@ function formatDuration(start: string, end: string | null) {
 
 function formatDate(val: string) {
   return new Intl.DateTimeFormat("tr-TR", {
-    day: "2-digit", month: "short", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(new Date(val));
 }
 
@@ -47,18 +50,24 @@ export function RadarScanRunTable({ runs, loading }: Props) {
       <TableBody>
         {loading ? (
           <TableRow>
-            <TableCell colSpan={10} className="text-center text-muted-foreground">Yükleniyor...</TableCell>
+            <TableCell colSpan={10} className="text-center text-muted-foreground">
+              Yükleniyor...
+            </TableCell>
           </TableRow>
         ) : runs.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={10} className="text-center text-muted-foreground">Tarama geçmişi yok.</TableCell>
+            <TableCell colSpan={10} className="text-center text-muted-foreground">
+              Tarama geçmişi yok.
+            </TableCell>
           </TableRow>
         ) : (
           runs.map((run) => (
             <TableRow key={run.id}>
               <TableCell className="text-xs">{formatDate(run.started_at)}</TableCell>
               <TableCell>
-                <Badge variant="outline" className="text-xs capitalize">{run.trigger_type}</Badge>
+                <Badge variant="outline" className="text-xs capitalize">
+                  {run.trigger_type}
+                </Badge>
               </TableCell>
               <TableCell>
                 <Badge variant={STATUS_VARIANTS[run.status] ?? "secondary"} className="text-xs capitalize">

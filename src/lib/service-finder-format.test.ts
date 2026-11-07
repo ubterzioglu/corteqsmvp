@@ -83,9 +83,7 @@ describe("service-finder RPC hata kodu ↔ Türkçe mesaj sözleşmesi", () => {
 
   it("kod yakalayan regex rakam içeren kodları da tanır", () => {
     // Desen `sf_[a-z_]+` idi; `sf_budget_2x` gibi bir kod sessizce eşleşmezdi.
-    expect(sfErrorMessage(new Error("... sf_worker_id_required ..."))).toBe(
-      SF_ERROR_MESSAGES.sf_worker_id_required,
-    );
+    expect(sfErrorMessage(new Error("... sf_worker_id_required ..."))).toBe(SF_ERROR_MESSAGES.sf_worker_id_required);
   });
 });
 
@@ -95,15 +93,11 @@ describe("sfErrorMessage kullanıcıya ham kod göstermez", () => {
     // ⚠️ CLAUDE.md'de belgelenen sınıf: supabase-js RPC hataları `Error` örneği
     // DEĞİLDİR. Eski kod `instanceof Error` ile daraltıyordu; düz nesne
     // `String(error)` yolundan geçip "[object Object]" oluyordu.
-    expect(sfErrorMessage({ message: "sf_job_not_found", code: "P0001" })).toBe(
-      SF_ERROR_MESSAGES.sf_job_not_found,
-    );
+    expect(sfErrorMessage({ message: "sf_job_not_found", code: "P0001" })).toBe(SF_ERROR_MESSAGES.sf_job_not_found);
   });
 
   it("kodu `details`/`hint` alanında taşıyan hatayı da çözer", () => {
-    expect(sfErrorMessage({ message: "", details: "sf_admin_required" })).toBe(
-      SF_ERROR_MESSAGES.sf_admin_required,
-    );
+    expect(sfErrorMessage({ message: "", details: "sf_admin_required" })).toBe(SF_ERROR_MESSAGES.sf_admin_required);
   });
 
   it("EŞLENMEMİŞ kodu ham göstermez, Türkçe genel mesaja düşer", () => {
@@ -114,9 +108,7 @@ describe("sfErrorMessage kullanıcıya ham kod göstermez", () => {
   });
 
   it("ham Postgres gövdesini kullanıcıya geçirmez", () => {
-    expect(sfErrorMessage(new Error("raise exception 'rl_unknown'"))).toBe(
-      "Beklenmeyen bir hata oluştu.",
-    );
+    expect(sfErrorMessage(new Error("raise exception 'rl_unknown'"))).toBe("Beklenmeyen bir hata oluştu.");
   });
 
   it("gerçek bir cümleyi ise KORUR (ağ hatası gibi okunabilir metin)", () => {

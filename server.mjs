@@ -153,8 +153,7 @@ const writeRuntimeConfig = async () => {
 // (testi: scripts/server/request-path.test.mjs).
 const normalizeRequestPath = (requestUrl) => normalizeRequestPathIn(requestUrl, distDir);
 
-const hasFileExtension = (requestPath) =>
-  path.posix.extname(requestPath) !== "";
+const hasFileExtension = (requestPath) => path.posix.extname(requestPath) !== "";
 
 const getCacheHeaders = (requestPath, filePath) => {
   if (path.basename(filePath) === "env-config.js" || path.basename(filePath) === "index.html") {
@@ -233,9 +232,7 @@ const serveApp = async (req, res) => {
     }
 
     const requestHost = (req.headers.host ?? "").split(":")[0].toLowerCase();
-    const isAlternateHost = alternateHostPrefixes.some(
-      (prefix) => requestHost === `${prefix}${canonicalHost}`,
-    );
+    const isAlternateHost = alternateHostPrefixes.some((prefix) => requestHost === `${prefix}${canonicalHost}`);
     if (isAlternateHost) {
       redirect301(res, `https://${canonicalHost}${req.url ?? "/"}`);
       return;

@@ -107,7 +107,14 @@ describe("CaddeCafePage", () => {
   });
 
   it("shows the read-only archive state without join box or composer", async () => {
-    getCaddeCafeMock.mockResolvedValue(makeCafe({ archivedAt: new Date().toISOString(), isActive: false, viewerMemberStatus: "approved", joinedByViewer: true }));
+    getCaddeCafeMock.mockResolvedValue(
+      makeCafe({
+        archivedAt: new Date().toISOString(),
+        isActive: false,
+        viewerMemberStatus: "approved",
+        joinedByViewer: true,
+      }),
+    );
 
     renderPage();
 
@@ -131,7 +138,9 @@ describe("CaddeCafePage", () => {
   it("arşivlemeyi kebab menüsünün arkasına alır, ana pozisyonda bırakmaz", async () => {
     const user = userEvent.setup();
     useAuthMock.mockReturnValue({ session: { user: { id: "host-1" } }, user: { id: "host-1" }, isLoading: false });
-    getCaddeCafeMock.mockResolvedValue(makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }));
+    getCaddeCafeMock.mockResolvedValue(
+      makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }),
+    );
     listCafeMembersMock.mockResolvedValue([]);
 
     renderPage();
@@ -148,7 +157,9 @@ describe("CaddeCafePage", () => {
 
   it("shows the owner approval panel with pending members", async () => {
     useAuthMock.mockReturnValue({ session: { user: { id: "host-1" } }, user: { id: "host-1" }, isLoading: false });
-    getCaddeCafeMock.mockResolvedValue(makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }));
+    getCaddeCafeMock.mockResolvedValue(
+      makeCafe({ hostUserId: "host-1", viewerMemberStatus: "approved", joinedByViewer: true }),
+    );
     listCafeMembersMock.mockResolvedValue([
       {
         id: "m1",
@@ -206,8 +217,7 @@ describe("CaddeCafePage", () => {
 
   // WS2 m57/m59/m60/m61 — kafe içi sosyal katman.
   describe("kafe içi sosyal katman (WS2)", () => {
-    const joinedCafe = () =>
-      makeCafe({ entryMode: "open", viewerMemberStatus: "approved", joinedByViewer: true });
+    const joinedCafe = () => makeCafe({ entryMode: "open", viewerMemberStatus: "approved", joinedByViewer: true });
 
     const post = {
       id: "cafe-post-1",
@@ -253,7 +263,16 @@ describe("CaddeCafePage", () => {
       getCaddeCafeMock.mockResolvedValue(joinedCafe());
       listCafeFeedMock.mockResolvedValue([post]);
       listPostCommentsMock.mockResolvedValue({
-        items: [{ id: "c1", postId: post.id, userId: "u2", body: "İlk yorum", authorName: "Zeynep", createdAt: new Date().toISOString() }],
+        items: [
+          {
+            id: "c1",
+            postId: post.id,
+            userId: "u2",
+            body: "İlk yorum",
+            authorName: "Zeynep",
+            createdAt: new Date().toISOString(),
+          },
+        ],
         nextCursor: null,
       });
       createCommentMock.mockResolvedValue("new-comment");

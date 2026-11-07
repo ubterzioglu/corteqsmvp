@@ -53,9 +53,7 @@ const BusinessDetailPage = () => {
         <main className="pb-16 pt-24">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-2xl font-bold text-foreground">İşletme bulunamadı</h1>
-            <p className="mt-2 font-body text-muted-foreground">
-              Bu adreste bir işletme kaydı yok.
-            </p>
+            <p className="mt-2 font-body text-muted-foreground">Bu adreste bir işletme kaydı yok.</p>
             <Button asChild className="mt-5 gap-2">
               <Link to="/businesses">
                 <ArrowLeft className="h-4 w-4" aria-hidden="true" /> İşletmeler listesine dön
@@ -90,9 +88,7 @@ const BusinessDetailPage = () => {
               <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary">
                 {business.sector}
               </span>
-              <h1 className="mt-1.5 text-2xl font-bold text-foreground md:text-3xl">
-                {business.name}
-              </h1>
+              <h1 className="mt-1.5 text-2xl font-bold text-foreground md:text-3xl">{business.name}</h1>
               <p className="mt-1 flex items-center gap-1.5 font-body text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
                 {trTitleCasePlace(business.city)}, {business.country}
@@ -100,9 +96,7 @@ const BusinessDetailPage = () => {
             </div>
           </header>
 
-          <p className="mt-6 font-body leading-relaxed text-muted-foreground">
-            {business.description}
-          </p>
+          <p className="mt-6 font-body leading-relaxed text-muted-foreground">{business.description}</p>
 
           <dl className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="rounded-2xl border border-border bg-card p-4">
@@ -115,9 +109,7 @@ const BusinessDetailPage = () => {
               <dt className="flex items-center gap-1.5 font-body text-xs text-muted-foreground">
                 <Users className="h-3.5 w-3.5" aria-hidden="true" /> Çalışan
               </dt>
-              <dd className="mt-1 text-lg font-bold text-foreground">
-                {business.employees.toLocaleString("tr-TR")}
-              </dd>
+              <dd className="mt-1 text-lg font-bold text-foreground">{business.employees.toLocaleString("tr-TR")}</dd>
             </div>
             <div className="rounded-2xl border border-border bg-card p-4">
               <dt className="font-body text-xs text-muted-foreground">Açık pozisyon</dt>

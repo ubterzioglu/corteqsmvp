@@ -21,12 +21,7 @@ const BUCKET = "event-covers";
 export const EVENT_COVER_MAX_BYTES = 5 * 1024 * 1024;
 
 /** Bucket'taki `allowed_mime_types` ile AYNI olmak zorunda (ayna sözleşmesi). */
-export const EVENT_COVER_MIME_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/avif",
-] as const;
+export const EVENT_COVER_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/avif"] as const;
 
 /** `<input type="file" accept=...>` için. Sunucu listesiyle tek kaynaktan türetilir. */
 export const EVENT_COVER_ACCEPT = EVENT_COVER_MIME_TYPES.join(",");
@@ -59,7 +54,7 @@ export function validateEventCoverFile(file: File): string | null {
 
 /** Dosya adından güvenli uzantı türetir (uzantı teknik değerdir → düz toLowerCase doğru). */
 const safeExtension = (file: File): string => {
-  const raw = file.name.includes(".") ? file.name.split(".").pop() ?? "" : "";
+  const raw = file.name.includes(".") ? (file.name.split(".").pop() ?? "") : "";
   const cleaned = raw.toLowerCase().replace(/[^a-z0-9]/g, "");
   return cleaned ? `.${cleaned}` : "";
 };

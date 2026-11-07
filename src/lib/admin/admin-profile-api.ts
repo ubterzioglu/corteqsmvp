@@ -56,9 +56,9 @@ export async function upsertEntityMetadataAsAdmin(params: {
 }): Promise<void> {
   const { error } = await supabase.rpc("admin_upsert_entity_metadata", {
     p_entity_type: params.entityType,
-    p_entity_key:  params.entityKey,
+    p_entity_key: params.entityKey,
     p_description: params.description ?? null,
-    p_admin_note:  params.adminNote ?? null,
+    p_admin_note: params.adminNote ?? null,
   });
 
   if (error) throw error;

@@ -21,7 +21,10 @@ function parseArgs(argv) {
     }
     const sourceMatch = /^--source=(.+)$/.exec(arg);
     if (sourceMatch) {
-      args.sources = sourceMatch[1].split(",").map((value) => value.trim()).filter(Boolean);
+      args.sources = sourceMatch[1]
+        .split(",")
+        .map((value) => value.trim())
+        .filter(Boolean);
       continue;
     }
     throw new Error(`Bilinmeyen secenek: ${arg}`);

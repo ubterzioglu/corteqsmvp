@@ -4,17 +4,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import {
-  completeSession,
-  recordEvent,
-  saveAnswer,
-  startSession,
-} from "@/lib/relocation-tools-api";
-import type {
-  RelocationToolResultPayload,
-  ToolAnswerValue,
-  ToolMode,
-} from "@/lib/relocation-tools-types";
+import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation-tools-api";
+import type { RelocationToolResultPayload, ToolAnswerValue, ToolMode } from "@/lib/relocation-tools-types";
 
 interface UseRelocationToolSessionArgs {
   toolKey: string;
@@ -49,32 +40,38 @@ export function useRelocationToolSession({ toolKey, onError }: UseRelocationTool
   const startPromiseRef = useRef<Promise<string> | null>(null);
   const saveQueueRef = useRef<Promise<void>>(Promise.resolve());
 
-  const ensureSession = useCallback(async (mode: ToolMode, sourceMoveId?: string) => {
-    if (sessionIdRef.current) return sessionIdRef.current;
-    if (!startPromiseRef.current) {
-      startPromiseRef.current = startSession(toolKey, mode, sourceMoveId).then((session) => {
-        sessionIdRef.current = session.session_id;
-        setSessionId(session.session_id);
-        return session.session_id;
-      });
-    }
-    try {
-      return await startPromiseRef.current;
-    } finally {
-      startPromiseRef.current = null;
-    }
-  }, [toolKey]);
+  const ensureSession = useCallback(
+    async (mode: ToolMode, sourceMoveId?: string) => {
+      if (sessionIdRef.current) return sessionIdRef.current;
+      if (!startPromiseRef.current) {
+        startPromiseRef.current = startSession(toolKey, mode, sourceMoveId).then((session) => {
+          sessionIdRef.current = session.session_id;
+          setSessionId(session.session_id);
+          return session.session_id;
+        });
+      }
+      try {
+        return await startPromiseRef.current;
+      } finally {
+        startPromiseRef.current = null;
+      }
+    },
+    [toolKey],
+  );
 
-  const saveProgress = useCallback(({ mode, questionKey, answer, sourceMoveId }: SaveProgressArgs) => {
-    const operation = saveQueueRef.current
-      .catch(() => undefined)
-      .then(async () => {
-        const activeSessionId = await ensureSession(mode, sourceMoveId);
-        await saveAnswer(activeSessionId, questionKey, answer);
-      });
-    saveQueueRef.current = operation;
-    void operation.catch((error: unknown) => onError?.(errorMessage(error)));
-  }, [ensureSession, onError]);
+  const saveProgress = useCallback(
+    ({ mode, questionKey, answer, sourceMoveId }: SaveProgressArgs) => {
+      const operation = saveQueueRef.current
+        .catch(() => undefined)
+        .then(async () => {
+          const activeSessionId = await ensureSession(mode, sourceMoveId);
+          await saveAnswer(activeSessionId, questionKey, answer);
+        });
+      saveQueueRef.current = operation;
+      void operation.catch((error: unknown) => onError?.(errorMessage(error)));
+    },
+    [ensureSession, onError],
+  );
 
   const attachSession = useCallback((existingSessionId: string) => {
     sessionIdRef.current = existingSessionId;

@@ -19,11 +19,7 @@ import {
 } from "@/lib/careers/careers-api";
 import { CAREER_INTERNSHIP, CAREER_JOBS } from "@/lib/careers/careers-data";
 import { LEGACY_CAREER_POSITIONS } from "@/lib/careers/careers-legacy";
-import {
-  CAREER_MODELS,
-  careerApplicationSchema,
-  type CareerApplicationInput,
-} from "@/lib/careers/careers-schemas";
+import { CAREER_MODELS, careerApplicationSchema, type CareerApplicationInput } from "@/lib/careers/careers-schemas";
 
 import CareerFileDrop from "./CareerFileDrop";
 
@@ -128,14 +124,22 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
             Ad soyad <span className="text-destructive">*</span>
           </label>
           <Input id="career-fullName" className="mt-2" {...form.register("fullName")} />
-          {errors.fullName && <p role="alert" className="mt-1 text-sm text-destructive">{errors.fullName.message}</p>}
+          {errors.fullName && (
+            <p role="alert" className="mt-1 text-sm text-destructive">
+              {errors.fullName.message}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="career-email" className="text-sm font-medium">
             E-posta <span className="text-destructive">*</span>
           </label>
           <Input id="career-email" type="email" className="mt-2" {...form.register("email")} />
-          {errors.email && <p role="alert" className="mt-1 text-sm text-destructive">{errors.email.message}</p>}
+          {errors.email && (
+            <p role="alert" className="mt-1 text-sm text-destructive">
+              {errors.email.message}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="career-phone" className="text-sm font-medium">
@@ -154,7 +158,11 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
             Ülke <span className="text-destructive">*</span>
           </label>
           <Input id="career-country" className="mt-2" {...form.register("country")} />
-          {errors.country && <p role="alert" className="mt-1 text-sm text-destructive">{errors.country.message}</p>}
+          {errors.country && (
+            <p role="alert" className="mt-1 text-sm text-destructive">
+              {errors.country.message}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="career-city" className="text-sm font-medium">
@@ -189,7 +197,11 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
               ))}
             </optgroup>
           </select>
-          {errors.position && <p role="alert" className="mt-1 text-sm text-destructive">{errors.position.message}</p>}
+          {errors.position && (
+            <p role="alert" className="mt-1 text-sm text-destructive">
+              {errors.position.message}
+            </p>
+          )}
         </div>
         <div>
           <label htmlFor="career-model" className="text-sm font-medium">
@@ -206,7 +218,11 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
               </option>
             ))}
           </select>
-          {errors.model && <p role="alert" className="mt-1 text-sm text-destructive">{errors.model.message}</p>}
+          {errors.model && (
+            <p role="alert" className="mt-1 text-sm text-destructive">
+              {errors.model.message}
+            </p>
+          )}
         </div>
       </div>
 
@@ -216,7 +232,9 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
         </label>
         <Textarea id="career-cover" rows={5} className="mt-2" {...form.register("coverLetterText")} />
         {errors.coverLetterText && (
-          <p role="alert" className="mt-1 text-sm text-destructive">{errors.coverLetterText.message}</p>
+          <p role="alert" className="mt-1 text-sm text-destructive">
+            {errors.coverLetterText.message}
+          </p>
         )}
       </div>
 
@@ -250,7 +268,11 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
           validate={validateCareerPresentationFile}
         />
       </div>
-      {cvError && <p role="alert" className="text-sm text-destructive">{cvError}</p>}
+      {cvError && (
+        <p role="alert" className="text-sm text-destructive">
+          {cvError}
+        </p>
+      )}
 
       <div className="flex items-start gap-3 rounded-lg border border-border/60 bg-muted/30 p-4">
         <Checkbox
@@ -274,7 +296,11 @@ export function CareerApplicationForm({ selectedPosition }: CareerApplicationFor
           kapsamında işlenmesini kabul ediyorum. <span className="text-destructive">*</span>
         </label>
       </div>
-      {errors.consent && <p role="alert" className="text-sm text-destructive">{errors.consent.message}</p>}
+      {errors.consent && (
+        <p role="alert" className="text-sm text-destructive">
+          {errors.consent.message}
+        </p>
+      )}
 
       <Button type="submit" size="lg" disabled={submitting}>
         {submitting ? "Gönderiliyor…" : "Başvurumu gönder"}

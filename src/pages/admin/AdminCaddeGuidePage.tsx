@@ -177,15 +177,16 @@ const AdminCaddeGuidePage = () => {
         <CardHeader>
           <CardTitle>Cadde Kural Kitabı</CardTitle>
           <CardDescription>
-            Cadde'nin üye tarafında nasıl yaşadığını ve admin tarafında nasıl yönetildiğini günlük dille, adım adım anlatır.
+            Cadde'nin üye tarafında nasıl yaşadığını ve admin tarafında nasıl yönetildiğini günlük dille, adım adım
+            anlatır.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
             Bu rehber iki bölümdür: önce üyenin gözünden Cadde (1-8), sonra senin gözünden yönetim (9-12). Teknik bilgi
-            gerektirmez; amaç, Cadde'yle ilgili bir karar verirken veya bir üye sorusu cevaplarken tek sayfada doğru bilgiye
-            ulaşmandır. Kuralların asıl uygulayıcısı sistemin kendisidir — burada anlatılanlar sistemin zaten otomatik
-            işlettiği kurallardır.
+            gerektirmez; amaç, Cadde'yle ilgili bir karar verirken veya bir üye sorusu cevaplarken tek sayfada doğru
+            bilgiye ulaşmandır. Kuralların asıl uygulayıcısı sistemin kendisidir — burada anlatılanlar sistemin zaten
+            otomatik işlettiği kurallardır.
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <Button asChild variant="outline">

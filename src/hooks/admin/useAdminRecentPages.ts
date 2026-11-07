@@ -38,10 +38,7 @@ export function useAdminRecentPages(): AdminRecentPagesState {
 
   const recordVisit = useCallback((page: AdminRecentPage) => {
     setRecentPages((previous) => {
-      const next = [page, ...previous.filter((entry) => entry.path !== page.path)].slice(
-        0,
-        MAX_RECENT_PAGES,
-      );
+      const next = [page, ...previous.filter((entry) => entry.path !== page.path)].slice(0, MAX_RECENT_PAGES);
       writeAdminStorage(ADMIN_STORAGE_KEYS.recentPages, next);
       return next;
     });

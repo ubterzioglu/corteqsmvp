@@ -142,9 +142,7 @@ export async function createMay19CampaignFileSignedUrl(
   storagePath: string,
   expiresInSeconds = 300,
 ) {
-  const { data, error } = await supabase.storage
-    .from(storageBucket)
-    .createSignedUrl(storagePath, expiresInSeconds);
+  const { data, error } = await supabase.storage.from(storageBucket).createSignedUrl(storagePath, expiresInSeconds);
 
   if (error) {
     throw error;
@@ -153,10 +151,7 @@ export async function createMay19CampaignFileSignedUrl(
   return data.signedUrl;
 }
 
-export async function listMay19CampaignEntries(
-  kind: May19SubmissionKind,
-  status: May19SubmissionStatus,
-) {
+export async function listMay19CampaignEntries(kind: May19SubmissionKind, status: May19SubmissionStatus) {
   // ⚠️ TAM liste (S07c): kampanya katılım sayısı eksik çıkamaz.
   let data: unknown[] | null = null;
   let error: unknown = null;
@@ -185,10 +180,7 @@ export async function updateMay19CampaignEntry(
   id: string,
   updates: Pick<TablesUpdate<"may19_campaign_submissions">, "status" | "review_notes">,
 ) {
-  const { error } = await supabase
-    .from("may19_campaign_submissions")
-    .update(updates)
-    .eq("id", id);
+  const { error } = await supabase.from("may19_campaign_submissions").update(updates).eq("id", id);
 
   if (error) {
     throw error;
@@ -196,10 +188,7 @@ export async function updateMay19CampaignEntry(
 }
 
 export async function deleteMay19CampaignEntry(id: string) {
-  const { error } = await supabase
-    .from("may19_campaign_submissions")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("may19_campaign_submissions").delete().eq("id", id);
 
   if (error) {
     throw error;

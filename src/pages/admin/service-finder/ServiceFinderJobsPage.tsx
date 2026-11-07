@@ -4,27 +4,10 @@ import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ServiceFinderJobStatusBadge } from "@/components/admin/service-finder/ServiceFinderBadges";
-import {
-  useCancelServiceFinderJob,
-  useRetryServiceFinderJob,
-  useServiceFinderJobs,
-} from "@/hooks/useServiceFinder";
+import { useCancelServiceFinderJob, useRetryServiceFinderJob, useServiceFinderJobs } from "@/hooks/useServiceFinder";
 import { JOB_STATUS_LABELS, formatDateTime, formatUsd } from "@/lib/service-finder-format";
 import type { ServiceFinderJobStatus } from "@/lib/service-finder-schemas";
 
@@ -105,10 +88,7 @@ export default function ServiceFinderJobsPage() {
                 return (
                   <TableRow key={job.id}>
                     <TableCell>
-                      <Link
-                        to={`/admin/service-finder/jobs/${job.id}`}
-                        className="font-medium hover:underline"
-                      >
+                      <Link to={`/admin/service-finder/jobs/${job.id}`} className="font-medium hover:underline">
                         {job.title}
                       </Link>
                     </TableCell>
@@ -119,9 +99,7 @@ export default function ServiceFinderJobsPage() {
                     <TableCell className="text-right text-sm tabular-nums">
                       {formatUsd(job.cost_total_usd)} / {formatUsd(job.hard_cap_usd)}
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {formatDateTime(job.created_at)}
-                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">{formatDateTime(job.created_at)}</TableCell>
                     <TableCell className="text-right">
                       {cancellable && (
                         <Button
@@ -160,12 +138,7 @@ export default function ServiceFinderJobsPage() {
           <span className="text-sm text-muted-foreground">
             {page + 1} / {pageCount}
           </span>
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page + 1 >= pageCount}
-            onClick={() => setPage(page + 1)}
-          >
+          <Button variant="outline" size="sm" disabled={page + 1 >= pageCount} onClick={() => setPage(page + 1)}>
             Sonraki
           </Button>
         </div>

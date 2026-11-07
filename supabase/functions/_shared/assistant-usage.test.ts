@@ -2,13 +2,9 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  normalizeAssistantUsage,
-  recordAssistantUsage,
-} from "./assistant-usage";
+import { normalizeAssistantUsage, recordAssistantUsage } from "./assistant-usage";
 
-const migrationPath =
-  "supabase/migrations/applied/20260922110000_ai_assistant_usage.sql";
+const migrationPath = "supabase/migrations/applied/20260922110000_ai_assistant_usage.sql";
 
 describe("ai_assistant_usage migration", () => {
   it("creates an admin-readable, service-role-written usage ledger", () => {
@@ -25,19 +21,23 @@ describe("ai_assistant_usage migration", () => {
 
 describe("normalizeAssistantUsage", () => {
   it("normalizes Gemini token metadata", () => {
-    expect(normalizeAssistantUsage({
-      promptTokenCount: 12,
-      candidatesTokenCount: 8,
-      totalTokenCount: 20,
-    })).toEqual({ inputTokens: 12, outputTokens: 8, totalTokens: 20 });
+    expect(
+      normalizeAssistantUsage({
+        promptTokenCount: 12,
+        candidatesTokenCount: 8,
+        totalTokenCount: 20,
+      }),
+    ).toEqual({ inputTokens: 12, outputTokens: 8, totalTokens: 20 });
   });
 
   it("normalizes Groq token metadata and rejects invalid values", () => {
-    expect(normalizeAssistantUsage({
-      prompt_tokens: 10,
-      completion_tokens: 5,
-      total_tokens: 15,
-    })).toEqual({ inputTokens: 10, outputTokens: 5, totalTokens: 15 });
+    expect(
+      normalizeAssistantUsage({
+        prompt_tokens: 10,
+        completion_tokens: 5,
+        total_tokens: 15,
+      }),
+    ).toEqual({ inputTokens: 10, outputTokens: 5, totalTokens: 15 });
     expect(normalizeAssistantUsage({ total_tokens: -4 })).toEqual({
       inputTokens: 0,
       outputTokens: 0,
@@ -79,14 +79,16 @@ describe("recordAssistantUsage", () => {
       })),
     };
 
-    await expect(recordAssistantUsage(client, {
-      userId: "user-1",
-      functionName: "relocation-assistant",
-      provider: "gemini",
-      usage: null,
-      status: "error",
-      httpStatus: 502,
-    })).resolves.toBeUndefined();
+    await expect(
+      recordAssistantUsage(client, {
+        userId: "user-1",
+        functionName: "relocation-assistant",
+        provider: "gemini",
+        usage: null,
+        status: "error",
+        httpStatus: 502,
+      }),
+    ).resolves.toBeUndefined();
   });
 
   it("both assistants persist successful model usage", () => {

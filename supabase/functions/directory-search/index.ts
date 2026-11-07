@@ -3,11 +3,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
-import {
-  buildAssistantCorsHeaders,
-  isAssistantOriginAllowed,
-  readJsonWithLimit,
-} from "../_shared/edge-security.ts";
+import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { jsonResponse } from "../_shared/http.ts";
 
@@ -16,15 +12,17 @@ const RATE_LIMIT_MAX = 60;
 const RATE_LIMIT_WINDOW_SECONDS = 600;
 const EMBEDDING_MODEL = Deno.env.get("GEMINI_EMBEDDING_MODEL") ?? "models/gemini-embedding-001";
 
-const RequestSchema = z.object({
-  p_search_text: z.string().trim().min(1).max(200),
-  p_role_key: z.string().trim().max(120).nullable(),
-  p_country_code: z.string().trim().max(8).nullable(),
-  p_city: z.string().trim().max(160).nullable(),
-  p_featured_only: z.boolean(),
-  p_limit: z.number().int().min(1).max(100),
-  p_offset: z.number().int().min(0).max(10_000),
-}).strict();
+const RequestSchema = z
+  .object({
+    p_search_text: z.string().trim().min(1).max(200),
+    p_role_key: z.string().trim().max(120).nullable(),
+    p_country_code: z.string().trim().max(8).nullable(),
+    p_city: z.string().trim().max(160).nullable(),
+    p_featured_only: z.boolean(),
+    p_limit: z.number().int().min(1).max(100),
+    p_offset: z.number().int().min(0).max(10_000),
+  })
+  .strict();
 
 async function embedQuery(searchText: string, apiKey: string | undefined): Promise<number[] | null> {
   if (!apiKey) return null;

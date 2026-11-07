@@ -1,8 +1,8 @@
 // src/hooks/useMuhasebe.ts
 // React Query hook'ları — muhasebe modülü
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import {
   fetchExpenses,
   createExpense,
@@ -16,22 +16,18 @@ import {
   fetchPersonSummary,
   fetchCategorySummary,
   fetchCashflowMonthly,
-} from '@/lib/muhasebe-api';
-import type {
-  ExpenseInput,
-  IncomeInput,
-} from '@/types/muhasebe';
+} from "@/lib/muhasebe-api";
+import type { ExpenseInput, IncomeInput } from "@/types/muhasebe";
 
 // Query keyleri tek yerde toplanır — ileride invalidate etmek kolay olur
 export const muhasebeKeys = {
-  all: ['muhasebe'] as const,
-  expenses: () => [...muhasebeKeys.all, 'expenses'] as const,
-  incomes: () => [...muhasebeKeys.all, 'incomes'] as const,
-  kpi: () => [...muhasebeKeys.all, 'kpi'] as const,
-  byPerson: () => [...muhasebeKeys.all, 'by-person'] as const,
-  byCategory: () => [...muhasebeKeys.all, 'by-category'] as const,
-  cashflow: (year?: number) =>
-    [...muhasebeKeys.all, 'cashflow', year ?? 'all'] as const,
+  all: ["muhasebe"] as const,
+  expenses: () => [...muhasebeKeys.all, "expenses"] as const,
+  incomes: () => [...muhasebeKeys.all, "incomes"] as const,
+  kpi: () => [...muhasebeKeys.all, "kpi"] as const,
+  byPerson: () => [...muhasebeKeys.all, "by-person"] as const,
+  byCategory: () => [...muhasebeKeys.all, "by-category"] as const,
+  cashflow: (year?: number) => [...muhasebeKeys.all, "cashflow", year ?? "all"] as const,
 };
 
 /** Tüm muhasebe query'lerini geçersiz kılar (mutation sonrası kullanılır) */
@@ -56,10 +52,10 @@ export function useCreateExpense() {
     mutationFn: (input: ExpenseInput) => createExpense(input),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gider kaydı eklendi');
+      toast.success("Gider kaydı eklendi");
     },
     onError: (err: Error) => {
-      toast.error('Gider eklenemedi', { description: err.message });
+      toast.error("Gider eklenemedi", { description: err.message });
     },
   });
 }
@@ -67,14 +63,13 @@ export function useCreateExpense() {
 export function useUpdateExpense() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (args: { id: string; input: Partial<ExpenseInput> }) =>
-      updateExpense(args.id, args.input),
+    mutationFn: (args: { id: string; input: Partial<ExpenseInput> }) => updateExpense(args.id, args.input),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gider kaydı güncellendi');
+      toast.success("Gider kaydı güncellendi");
     },
     onError: (err: Error) => {
-      toast.error('Gider güncellenemedi', { description: err.message });
+      toast.error("Gider güncellenemedi", { description: err.message });
     },
   });
 }
@@ -85,10 +80,10 @@ export function useDeleteExpense() {
     mutationFn: (id: string) => deleteExpense(id),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gider kaydı silindi');
+      toast.success("Gider kaydı silindi");
     },
     onError: (err: Error) => {
-      toast.error('Gider silinemedi', { description: err.message });
+      toast.error("Gider silinemedi", { description: err.message });
     },
   });
 }
@@ -110,10 +105,10 @@ export function useCreateIncome() {
     mutationFn: (input: IncomeInput) => createIncome(input),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gelir kaydı eklendi');
+      toast.success("Gelir kaydı eklendi");
     },
     onError: (err: Error) => {
-      toast.error('Gelir eklenemedi', { description: err.message });
+      toast.error("Gelir eklenemedi", { description: err.message });
     },
   });
 }
@@ -121,14 +116,13 @@ export function useCreateIncome() {
 export function useUpdateIncome() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (args: { id: string; input: Partial<IncomeInput> }) =>
-      updateIncome(args.id, args.input),
+    mutationFn: (args: { id: string; input: Partial<IncomeInput> }) => updateIncome(args.id, args.input),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gelir kaydı güncellendi');
+      toast.success("Gelir kaydı güncellendi");
     },
     onError: (err: Error) => {
-      toast.error('Gelir güncellenemedi', { description: err.message });
+      toast.error("Gelir güncellenemedi", { description: err.message });
     },
   });
 }
@@ -139,10 +133,10 @@ export function useDeleteIncome() {
     mutationFn: (id: string) => deleteIncome(id),
     onSuccess: () => {
       invalidateAll(qc);
-      toast.success('Gelir kaydı silindi');
+      toast.success("Gelir kaydı silindi");
     },
     onError: (err: Error) => {
-      toast.error('Gelir silinemedi', { description: err.message });
+      toast.error("Gelir silinemedi", { description: err.message });
     },
   });
 }

@@ -17,7 +17,9 @@ describe("phone OTP send-claim migration", () => {
         new RegExp(`revoke all on function public\\.${signature} from public, anon, authenticated;`),
       );
       expect(MIGRATION).toMatch(new RegExp(`grant execute on function public\\.${signature} to service_role;`));
-      expect(MIGRATION).not.toMatch(new RegExp(`grant execute on function public\\.${signature} to (anon|authenticated)`));
+      expect(MIGRATION).not.toMatch(
+        new RegExp(`grant execute on function public\\.${signature} to (anon|authenticated)`),
+      );
     }
   });
 

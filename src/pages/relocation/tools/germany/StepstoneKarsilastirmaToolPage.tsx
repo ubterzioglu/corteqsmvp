@@ -6,13 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
   STEPSTONE_COMPANY_SIZE_OPTIONS,
@@ -56,10 +50,14 @@ export default function StepstoneKarsilastirmaToolPage() {
           <div className="space-y-2">
             <Label>Meslek grubu</Label>
             <Select value={sel.jobGroup ?? ""} onValueChange={(v) => set("jobGroup", v)}>
-              <SelectTrigger><SelectValue placeholder="Seç (opsiyonel)" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Seç (opsiyonel)" />
+              </SelectTrigger>
               <SelectContent>
                 {jobGroups.map((g) => (
-                  <SelectItem key={g} value={g}>{g}</SelectItem>
+                  <SelectItem key={g} value={g}>
+                    {g}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -69,10 +67,14 @@ export default function StepstoneKarsilastirmaToolPage() {
             <div className="space-y-2">
               <Label>Deneyim</Label>
               <Select value={sel.experience ?? ""} onValueChange={(v) => set("experience", v)}>
-                <SelectTrigger><SelectValue placeholder="Seç" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seç" />
+                </SelectTrigger>
                 <SelectContent>
                   {STEPSTONE_EXPERIENCE_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -80,10 +82,14 @@ export default function StepstoneKarsilastirmaToolPage() {
             <div className="space-y-2">
               <Label>Şirket büyüklüğü</Label>
               <Select value={sel.companySize ?? ""} onValueChange={(v) => set("companySize", v)}>
-                <SelectTrigger><SelectValue placeholder="Seç" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Seç" />
+                </SelectTrigger>
                 <SelectContent>
                   {STEPSTONE_COMPANY_SIZE_OPTIONS.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -93,10 +99,14 @@ export default function StepstoneKarsilastirmaToolPage() {
           <div className="space-y-2">
             <Label>Şehir</Label>
             <Select value={sel.city ?? ""} onValueChange={(v) => set("city", v)}>
-              <SelectTrigger><SelectValue placeholder="Seç (opsiyonel)" /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue placeholder="Seç (opsiyonel)" />
+              </SelectTrigger>
               <SelectContent>
                 {cities.map((c) => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -161,8 +171,8 @@ export default function StepstoneKarsilastirmaToolPage() {
           ))}
 
           <p className="pt-2 text-xs text-muted-foreground">
-            ⚠️ Veriler StepStone Gehaltsreport 2026 medyanlarına dayanır ve bilgilendirme amaçlıdır.
-            Gerçek maaş; firma, performans ve pazarlığa göre değişir.
+            ⚠️ Veriler StepStone Gehaltsreport 2026 medyanlarına dayanır ve bilgilendirme amaçlıdır. Gerçek maaş; firma,
+            performans ve pazarlığa göre değişir.
           </p>
         </CardContent>
       </Card>

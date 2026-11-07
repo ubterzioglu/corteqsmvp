@@ -2,8 +2,7 @@ export type KadroDeptId = "kurucu" | "pazarlama" | "urun" | "operasyon" | "gelir
 export type KadroAxisId = "urun" | "islev" | "cografya" | "merkez";
 export type KadroWaveId = 1 | 2 | 3;
 export type KadroWorkType = "core" | "part" | "proje" | "topluluk" | "danisman" | "dis";
-export type KadroStatus =
-  | "dolu" | "destek" | "gorusme" | "aday" | "teklif" | "acik" | "beklemede";
+export type KadroStatus = "dolu" | "destek" | "gorusme" | "aday" | "teklif" | "acik" | "beklemede";
 export type KadroPriority = "kritik" | "yuksek" | "orta" | "dusuk";
 export type KadroCandidateStage = "aday" | "gorusme" | "teklif" | "kapandi";
 

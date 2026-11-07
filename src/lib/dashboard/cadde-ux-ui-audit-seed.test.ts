@@ -22,10 +22,7 @@ const COMMAND_CENTER_ROW_COUNT = 14;
 
 /** Seed dosyası uygulanınca `applied/` altına taşınır; her iki konumu da kabul et. */
 function readMigration(fileName: string): string {
-  const candidates = [
-    `supabase/migrations/${fileName}`,
-    `supabase/migrations/applied/${fileName}`,
-  ];
+  const candidates = [`supabase/migrations/${fileName}`, `supabase/migrations/applied/${fileName}`];
   const found = candidates.find((path) => existsSync(path));
   if (!found) {
     throw new Error(`Migration bulunamadı: ${fileName}`);
@@ -34,8 +31,7 @@ function readMigration(fileName: string): string {
 }
 
 const ws3Sql = () => readMigration("20260907140000_workshop_items_ws3_cadde_ux_ui.sql");
-const centerSql = () =>
-  readMigration("20260907141000_seed_command_center_cadde_ux_ui_audit.sql");
+const centerSql = () => readMigration("20260907141000_seed_command_center_cadde_ux_ui_audit.sql");
 
 describe("Cadde Workshop WS3 seed'i", () => {
   it("beklenen sayıda madde ekler ve sayıyı SQL içinde doğrular", () => {

@@ -29,7 +29,7 @@ function extractText(value: unknown): string | undefined {
   if (!value) return undefined;
   if (typeof value === "string") return value.trim() || undefined;
   const obj = value as Record<string, unknown>;
-  return (String(obj["#text"] ?? obj["_"] ?? "")).trim() || undefined;
+  return String(obj["#text"] ?? obj["_"] ?? "").trim() || undefined;
 }
 
 export const atomAdapter: RadarNewsAdapter = {
@@ -71,7 +71,9 @@ export const atomAdapter: RadarNewsAdapter = {
     const rawEntries = feed["entry"];
     const entries: Record<string, unknown>[] = Array.isArray(rawEntries)
       ? rawEntries
-      : rawEntries ? [rawEntries as Record<string, unknown>] : [];
+      : rawEntries
+        ? [rawEntries as Record<string, unknown>]
+        : [];
 
     const items: RawNewsItem[] = [];
     for (const raw of entries.slice(0, source.max_items_per_scan)) {

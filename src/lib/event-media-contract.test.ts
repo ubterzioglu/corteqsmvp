@@ -46,10 +46,7 @@ describe("validateEventCoverFile", () => {
 // ⚠️ Test yine de yalnız SQL METNİNİ denetler, canlı durumu değil — testin yeşil
 // olması bucket'ın canlıda var olduğunu KANITLAMAZ.
 describe("event-covers bucket'ı istemci denetimiyle hizada (A10a)", () => {
-  const sql = readFileSync(
-    "supabase/migrations/applied/20260928140000_event_covers_bucket.sql",
-    "utf8",
-  );
+  const sql = readFileSync("supabase/migrations/applied/20260928140000_event_covers_bucket.sql", "utf8");
 
   it("boyut tavanı istemcideki 5 MB ile AYNI", () => {
     expect(sql).toContain("5242880");

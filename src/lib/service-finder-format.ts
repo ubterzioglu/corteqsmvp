@@ -2,10 +2,7 @@
 // Durum/maliyet/güven formatlama + RPC hata kodlarının Türkçe mesaj haritası
 // (cadde-rules.ts deseni — yeni sf_* kodu eklenince buraya da eklenmelidir).
 
-import type {
-  ServiceFinderJobStatus,
-  ServiceFinderReviewStatus,
-} from "@/lib/service-finder-schemas";
+import type { ServiceFinderJobStatus, ServiceFinderReviewStatus } from "@/lib/service-finder-schemas";
 import { extractRpcErrorText } from "./rpc-error-text";
 
 export const SF_ERROR_MESSAGES: Record<string, string> = {
@@ -34,8 +31,7 @@ export const SF_ERROR_MESSAGES: Record<string, string> = {
   // Üçü de worker/maliyet yolunda; arayüzden değil işleyiciden tetiklenir.
   sf_worker_id_required: "İşleyici kimliği zorunludur.",
   sf_cost_payload_invalid: "Maliyet kaydı eksik veya geçersiz (iş ve olay türü zorunlu).",
-  sf_invalid_final_status:
-    "Geçersiz bitiş durumu; yalnızca inceleme, tamamlandı veya bütçe-durduruldu olabilir.",
+  sf_invalid_final_status: "Geçersiz bitiş durumu; yalnızca inceleme, tamamlandı veya bütçe-durduruldu olabilir.",
 };
 
 /** Kullanıcıya gösterilemeyecek kadar teknik olan ham metinler için genel karşılık. */

@@ -1,11 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useSeo } from "@/lib/seo";
-import {
-  clearInvestorSession,
-  getInvestorVerifier,
-  hasInvestorSession,
-} from "@/lib/investor/investor-access";
+import { clearInvestorSession, getInvestorVerifier, hasInvestorSession } from "@/lib/investor/investor-access";
 import {
   CODE_METRICS,
   DB_METRICS,

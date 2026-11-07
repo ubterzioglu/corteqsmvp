@@ -9,8 +9,7 @@ export default function ZgenToolPage() {
         <span className="mb-1 block text-3xl">🧬</span>
         <h1 className="text-2xl font-extrabold text-foreground">ZGEN – Nesil Bulucu</h1>
         <p className="text-sm text-muted-foreground">
-          Doğum yılını gir; hangi kuşaktan olduğunu, tipik özelliklerini ve diğer kuşaklarla nasıl
-          geçineceğini öğren.
+          Doğum yılını gir; hangi kuşaktan olduğunu, tipik özelliklerini ve diğer kuşaklarla nasıl geçineceğini öğren.
         </p>
       </div>
       <ZgenPanel />

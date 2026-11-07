@@ -8,9 +8,7 @@ import { INFORMATION_REDIRECTS, INVESTOR_PATH } from "@/lib/investor/investor-ro
 // tablodan gelir; tanımsız slug yatırımcı sayfasına döner.
 const InformationRedirect = () => {
   const { slug = "" } = useParams();
-  const target = Object.prototype.hasOwnProperty.call(INFORMATION_REDIRECTS, slug)
-    ? INFORMATION_REDIRECTS[slug]
-    : null;
+  const target = Object.prototype.hasOwnProperty.call(INFORMATION_REDIRECTS, slug) ? INFORMATION_REDIRECTS[slug] : null;
 
   useSeo({ title: "Yönlendiriliyor | CorteQS", robots: "noindex, nofollow" }, []);
 

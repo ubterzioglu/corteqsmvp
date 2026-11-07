@@ -40,10 +40,7 @@ export function CaddeLoadErrorCard({
           onClick={onRetry}
           disabled={isRetrying}
         >
-          <RefreshCw
-            className={isRetrying ? "h-4 w-4 animate-spin" : "h-4 w-4"}
-            aria-hidden="true"
-          />
+          <RefreshCw className={isRetrying ? "h-4 w-4 animate-spin" : "h-4 w-4"} aria-hidden="true" />
           {isRetrying ? "Deneniyor..." : "Tekrar dene"}
         </Button>
       </CardContent>

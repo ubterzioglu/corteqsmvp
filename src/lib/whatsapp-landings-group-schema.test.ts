@@ -82,12 +82,7 @@ describe("G10 · salt ekleme güvencesi", () => {
 
 describe("G10 · değerler paketten gelir", () => {
   it("durum makinesi tasarım §2'deki altı adı taşır", () => {
-    const values = sliceBetween(
-      code(),
-      "whatsapp_landings_listing_status_chk",
-      "end if;",
-      "listing_status CHECK",
-    );
+    const values = sliceBetween(code(), "whatsapp_landings_listing_status_chk", "end if;", "listing_status CHECK");
 
     for (const state of ["pending_review", "published", "rejected", "hidden", "suspended", "removed"]) {
       expect(values, state).toContain(`'${state}'`);

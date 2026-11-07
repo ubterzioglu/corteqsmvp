@@ -52,13 +52,10 @@ export default function LeaderboardPage() {
           <Trophy className="h-4 w-4" aria-hidden="true" />
           Davet Liderliği
         </p>
-        <h1 className="mt-2 text-2xl font-black text-slate-900 sm:text-3xl">
-          Topluluğu en çok büyüten üyeler
-        </h1>
+        <h1 className="mt-2 text-2xl font-black text-slate-900 sm:text-3xl">Topluluğu en çok büyüten üyeler</h1>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-slate-600">
-          Davet ettiğin arkadaşın kayıt olduğunda bir sıra yükselirsin. Bir üye yalnız bir
-          kez sayılır. Liste, dizinin görünürlük kurallarıyla aynıdır: yönetici, test ve
-          yer tutucu kayıtlar burada görünmez.
+          Davet ettiğin arkadaşın kayıt olduğunda bir sıra yükselirsin. Bir üye yalnız bir kez sayılır. Liste, dizinin
+          görünürlük kurallarıyla aynıdır: yönetici, test ve yer tutucu kayıtlar burada görünmez.
         </p>
       </header>
 
@@ -68,9 +65,7 @@ export default function LeaderboardPage() {
         </div>
       ) : (
         <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50/50 px-5 py-4 text-center">
-          <p className="text-sm text-slate-700">
-            Davet kodunu almak için giriş yap — liderliğe yükselmek iki tık.
-          </p>
+          <p className="text-sm text-slate-700">Davet kodunu almak için giriş yap — liderliğe yükselmek iki tık.</p>
           <Button asChild size="sm" className="mt-3 bg-emerald-600 text-white hover:bg-emerald-700">
             <Link to="/login">Giriş yap / üye ol</Link>
           </Button>
@@ -134,7 +129,10 @@ export default function LeaderboardPage() {
                           {entry.display_name}
                         </Link>
                         {badge ? (
-                          <Badge className="ml-2 border-emerald-600 bg-emerald-500 text-white" data-testid="leaderboard-badge">
+                          <Badge
+                            className="ml-2 border-emerald-600 bg-emerald-500 text-white"
+                            data-testid="leaderboard-badge"
+                          >
                             {badge.label}
                           </Badge>
                         ) : null}

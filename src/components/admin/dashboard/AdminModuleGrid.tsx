@@ -29,9 +29,7 @@ const AdminModuleGrid = () => (
 
       return (
         <div key={group.id} className="rounded-2xl border border-border bg-card p-4">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            {group.label}
-          </h3>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{group.label}</h3>
           <div className="mt-2.5 space-y-1">
             {links.map((item) => {
               const Icon = item.icon;

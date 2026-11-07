@@ -89,10 +89,7 @@ function riskFromConfidence(
   decisionParalysis: number | undefined,
   actionReadiness: number | undefined,
 ): number {
-  const conf =
-    confidence === undefined || Number.isNaN(confidence)
-      ? 0.5
-      : clamp01OrNeutral((confidence - 1) / 4);
+  const conf = confidence === undefined || Number.isNaN(confidence) ? 0.5 : clamp01OrNeutral((confidence - 1) / 4);
   const paralysis = scale01(decisionParalysis);
   const actionReady = scale01(actionReadiness);
   return Math.min((1 - conf) * 0.85 + paralysis * 0.1 + (1 - actionReady) * 0.05, 1.0);
@@ -102,42 +99,20 @@ function riskFromConfidence(
 function dependencyFactor(category: ChallengeCategory, answers: ChallengeAnswers): number {
   switch (category) {
     case "visa_docs":
-      return answers.documents_state === "confused"
-        ? 1.0
-        : answers.documents_state === "partial"
-          ? 0.5
-          : 0.0;
+      return answers.documents_state === "confused" ? 1.0 : answers.documents_state === "partial" ? 0.5 : 0.0;
     case "job_income":
-      return answers.income_state === "not_started"
-        ? 1.0
-        : answers.income_state === "searching"
-          ? 0.6
-          : 0.0;
+      return answers.income_state === "not_started" ? 1.0 : answers.income_state === "searching" ? 0.6 : 0.0;
     case "housing":
-      return answers.housing_state === "not_started"
-        ? 1.0
-        : answers.housing_state === "searching"
-          ? 0.6
-          : 0.0;
+      return answers.housing_state === "not_started" ? 1.0 : answers.housing_state === "searching" ? 0.6 : 0.0;
     case "language":
-      return answers.language_state === "stuck"
-        ? 1.0
-        : answers.language_state === "learning"
-          ? 0.5
-          : 0.0;
+      return answers.language_state === "stuck" ? 1.0 : answers.language_state === "learning" ? 0.5 : 0.0;
     case "finance": {
-      const financeScore =
-        answers.finance_state === "critical" ? 1.0 : answers.finance_state === "tight" ? 0.5 : 0.0;
-      const bufferScore =
-        answers.budget_buffer === "no" ? 1.0 : answers.budget_buffer === "partial" ? 0.5 : 0.0;
+      const financeScore = answers.finance_state === "critical" ? 1.0 : answers.finance_state === "tight" ? 0.5 : 0.0;
+      const bufferScore = answers.budget_buffer === "no" ? 1.0 : answers.budget_buffer === "partial" ? 0.5 : 0.0;
       return financeScore * 0.7 + bufferScore * 0.3;
     }
     case "community_support":
-      return answers.support_state === "none"
-        ? 1.0
-        : answers.support_state === "weak"
-          ? 0.5
-          : 0.0;
+      return answers.support_state === "none" ? 1.0 : answers.support_state === "weak" ? 0.5 : 0.0;
     case "healthcare_family": {
       const list = answers.health_family_complexity ?? [];
       return list.length > 0 && !list.includes("none") ? 1.0 : 0.0;
@@ -148,9 +123,7 @@ function dependencyFactor(category: ChallengeCategory, answers: ChallengeAnswers
 }
 
 /** 8 kategori skorunu hesaplar (0..~1; deterministic). SQL ile birebir. */
-export function computeChallengeScores(
-  answers: ChallengeAnswers,
-): Record<ChallengeCategory, number> {
+export function computeChallengeScores(answers: ChallengeAnswers): Record<ChallengeCategory, number> {
   const stress = answers.stressors ?? [];
   const blocked = answers.blocked_progress ?? [];
   const urgencyRisk =
@@ -164,9 +137,7 @@ export function computeChallengeScores(
     const userStress = keys.some((k) => stress.includes(k)) ? 1.0 : 0.0;
     const progressBlocker = keys.some((k) => blocked.includes(k)) ? 1.0 : 0.0;
     const dependency = dependencyFactor(cat, answers);
-    scores[cat] = round4(
-      userStress * 0.35 + progressBlocker * 0.35 + urgencyRisk * 0.2 + dependency * 0.1,
-    );
+    scores[cat] = round4(userStress * 0.35 + progressBlocker * 0.35 + urgencyRisk * 0.2 + dependency * 0.1);
   }
   return scores;
 }

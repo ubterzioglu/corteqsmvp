@@ -11,10 +11,7 @@ import { CalendarPlus, HeartHandshake, Gift, Users, type LucideIcon } from "luci
 import { Link } from "react-router-dom";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  COMMUNITY_QUICK_ACTIONS,
-  type CommunityQuickActionIcon,
-} from "@/lib/community-quick-actions";
+import { COMMUNITY_QUICK_ACTIONS, type CommunityQuickActionIcon } from "@/lib/community-quick-actions";
 import { GOOGLE_SOFT_CARD_BLUE_SECTION } from "./profile-card-styles";
 
 const ICONS: Record<CommunityQuickActionIcon, LucideIcon> = {
@@ -52,9 +49,7 @@ export function QuickActionsCard() {
                 </span>
                 <span className="min-w-0 text-left">
                   <span className="block text-sm font-semibold text-slate-900">{action.label}</span>
-                  <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">
-                    {action.description}
-                  </span>
+                  <span className="mt-0.5 block text-xs leading-relaxed text-slate-500">{action.description}</span>
                 </span>
               </Link>
             );

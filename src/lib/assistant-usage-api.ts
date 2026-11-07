@@ -37,7 +37,10 @@ type UsageQueryResult = PromiseLike<{
 export type AssistantUsageClient = {
   from: (table: "ai_assistant_usage") => {
     select: (columns: string) => {
-      gte: (column: "created_at", value: string) => {
+      gte: (
+        column: "created_at",
+        value: string,
+      ) => {
         order: (
           column: "created_at",
           options: { ascending: boolean },
@@ -95,18 +98,17 @@ export function summarizeAssistantUsage(rows: AssistantUsageRow[]): AssistantUsa
   );
 }
 
-export function getGeminiQuotaAlert(
-  rows: AssistantUsageRow[],
-  now = new Date(),
-): GeminiQuotaAlert {
+export function getGeminiQuotaAlert(rows: AssistantUsageRow[], now = new Date()): GeminiQuotaAlert {
   const cutoff = now.getTime() - QUOTA_LOOKBACK_MS;
   const eventCount = rows.filter((row) => {
     const createdAt = Date.parse(row.created_at);
-    return row.provider.toLocaleLowerCase("en-US") === "gemini"
-      && (row.status === "quota_exceeded" || row.http_status === 429)
-      && Number.isFinite(createdAt)
-      && createdAt >= cutoff
-      && createdAt <= now.getTime();
+    return (
+      row.provider.toLocaleLowerCase("en-US") === "gemini" &&
+      (row.status === "quota_exceeded" || row.http_status === 429) &&
+      Number.isFinite(createdAt) &&
+      createdAt >= cutoff &&
+      createdAt <= now.getTime()
+    );
   }).length;
 
   return {

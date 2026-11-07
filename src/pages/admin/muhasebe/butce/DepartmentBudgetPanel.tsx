@@ -1,29 +1,16 @@
 // src/pages/admin/muhasebe/butce/DepartmentBudgetPanel.tsx
 // Bütçe sekmesi — bir departmanın gider tablosu, alokasyon ayarı ve özet kartları.
 
-import { Fragment } from 'react';
-import { TrendingDown, TrendingUp, Wallet, Scale } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
-import { MonthRow } from '@/components/admin/muhasebe/BudgetMonthTable';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { departmentTotals } from '@/lib/muhasebe-butce-aggregations';
+import { Fragment } from "react";
+import { TrendingDown, TrendingUp, Wallet, Scale } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
+import { MonthRow } from "@/components/admin/muhasebe/BudgetMonthTable";
+import { formatCurrency } from "@/lib/muhasebe-format";
+import { departmentTotals } from "@/lib/muhasebe-butce-aggregations";
 import {
   BUTCE_CURRENCIES,
   BUTCE_MONTHS,
@@ -33,7 +20,7 @@ import {
   type ButceCurrency,
   type ButceYearState,
   type DeptId,
-} from '@/lib/muhasebe-butce-schemas';
+} from "@/lib/muhasebe-butce-schemas";
 
 export interface DepartmentBudgetPanelProps {
   deptId: DeptId;
@@ -64,7 +51,7 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
         ...state.expenses,
         [deptId]: [
           ...items,
-          { id: makeId(), name: 'Yeni kalem', cur: 'USD' as ButceCurrency, plan: zeroMonths(), actual: zeroMonths() },
+          { id: makeId(), name: "Yeni kalem", cur: "USD" as ButceCurrency, plan: zeroMonths(), actual: zeroMonths() },
         ],
       },
     });
@@ -77,7 +64,7 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
     });
   }
 
-  function setAllocMode(mode: 'fixed' | 'pct') {
+  function setAllocMode(mode: "fixed" | "pct") {
     onChange({ ...state, alloc: { ...state.alloc, [deptId]: { ...alloc, mode } } });
   }
 
@@ -103,10 +90,8 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
       </div>
 
       <div className="flex flex-wrap items-center gap-3 rounded-lg border bg-card p-3">
-        <span className="text-xs font-mono uppercase text-muted-foreground">
-          Bütçe alokasyonu (USD)
-        </span>
-        <Select value={alloc.mode} onValueChange={(v) => setAllocMode(v as 'fixed' | 'pct')}>
+        <span className="text-xs font-mono uppercase text-muted-foreground">Bütçe alokasyonu (USD)</span>
+        <Select value={alloc.mode} onValueChange={(v) => setAllocMode(v as "fixed" | "pct")}>
           <SelectTrigger className="w-48" aria-label="Alokasyon modu">
             <SelectValue />
           </SelectTrigger>
@@ -115,12 +100,12 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
             <SelectItem value="pct">Net gelirin %'si</SelectItem>
           </SelectContent>
         </Select>
-        {alloc.mode === 'pct' ? (
+        {alloc.mode === "pct" ? (
           <Input
             type="number"
             step="any"
             className="h-8 w-24"
-            value={alloc.pct || ''}
+            value={alloc.pct || ""}
             placeholder="%"
             aria-label="Alokasyon yüzdesi"
             onChange={(e) => setAllocPct(Number(e.target.value) || 0)}
@@ -171,7 +156,9 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
               <TableHead>Kalem</TableHead>
               <TableHead>Birim</TableHead>
               {BUTCE_MONTHS.map((m) => (
-                <TableHead key={m} className="text-right">{m}</TableHead>
+                <TableHead key={m} className="text-right">
+                  {m}
+                </TableHead>
               ))}
               <TableHead className="text-right">Toplam</TableHead>
               <TableHead />
@@ -198,7 +185,9 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
                         </SelectTrigger>
                         <SelectContent>
                           {BUTCE_CURRENCIES.map((c) => (
-                            <SelectItem key={c} value={c}>{c}</SelectItem>
+                            <SelectItem key={c} value={c}>
+                              {c}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
@@ -210,7 +199,9 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
                         updateItem(item.id, { plan: item.plan.map((v, m) => (m === month ? value : v)) })
                       }
                     />
-                    <TableCell className="text-right font-mono">{formatCurrency(planTotal, item.cur, { showCode: true })}</TableCell>
+                    <TableCell className="text-right font-mono">
+                      {formatCurrency(planTotal, item.cur, { showCode: true })}
+                    </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="sm" aria-label="Kalemi sil" onClick={() => removeItem(item.id)}>
                         ✕
@@ -228,7 +219,9 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
                         updateItem(item.id, { actual: item.actual.map((v, m) => (m === month ? value : v)) })
                       }
                     />
-                    <TableCell className="text-right font-mono text-xs">{formatCurrency(actualTotal, item.cur, { showCode: true })}</TableCell>
+                    <TableCell className="text-right font-mono text-xs">
+                      {formatCurrency(actualTotal, item.cur, { showCode: true })}
+                    </TableCell>
                     <TableCell />
                   </TableRow>
                 </Fragment>
@@ -238,10 +231,13 @@ export function DepartmentBudgetPanel({ deptId, state, onChange }: DepartmentBud
         </Table>
       </div>
 
-      <Button variant="outline" onClick={addItem}>+ Kalem ekle</Button>
+      <Button variant="outline" onClick={addItem}>
+        + Kalem ekle
+      </Button>
 
       <p className="text-xs text-muted-foreground">
-        Kur varsayımları Konsolide ekranından yönetilir. Gerçekleşen satırı boşsa fark hesabı yalnız alokasyona göre okunur.
+        Kur varsayımları Konsolide ekranından yönetilir. Gerçekleşen satırı boşsa fark hesabı yalnız alokasyona göre
+        okunur.
       </p>
     </div>
   );

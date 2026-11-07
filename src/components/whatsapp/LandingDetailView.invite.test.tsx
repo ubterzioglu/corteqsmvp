@@ -38,13 +38,13 @@ function renderDetail(invite: LandingInviteState, onRequestSignIn = vi.fn()) {
     <MemoryRouter>
       <TooltipProvider>
         <LandingDetailView
-        loading={false}
-        landing={landing}
-        canEdit={false}
-        copied={false}
-        invite={invite}
-        onBackToList={vi.fn()}
-        onShare={vi.fn()}
+          loading={false}
+          landing={landing}
+          canEdit={false}
+          copied={false}
+          invite={invite}
+          onBackToList={vi.fn()}
+          onShare={vi.fn()}
           onRequestSignIn={onRequestSignIn}
         />
       </TooltipProvider>
@@ -105,13 +105,13 @@ describe("G03b · LandingDetailView davet düğmesi", () => {
         <MemoryRouter>
           <TooltipProvider>
             <LandingDetailView
-            loading={false}
-            landing={landing}
-            canEdit={false}
-            copied={false}
-            invite={state}
-            onBackToList={vi.fn()}
-            onShare={vi.fn()}
+              loading={false}
+              landing={landing}
+              canEdit={false}
+              copied={false}
+              invite={state}
+              onBackToList={vi.fn()}
+              onShare={vi.fn()}
               onRequestSignIn={vi.fn()}
             />
           </TooltipProvider>

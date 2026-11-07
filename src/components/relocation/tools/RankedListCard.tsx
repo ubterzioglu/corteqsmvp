@@ -19,11 +19,7 @@
 // DEĞİŞMEDİ — buradan yalnız `className` geçilir, bileşenin kendisine dokunulmaz.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreBandBar } from "@/components/relocation/tools/ScoreBand";
-import {
-  SCORE_BAND_LABELS,
-  SCORE_BAND_STYLES,
-  scoreBand,
-} from "@/lib/relocation-score-bands";
+import { SCORE_BAND_LABELS, SCORE_BAND_STYLES, scoreBand } from "@/lib/relocation-score-bands";
 import { cn } from "@/lib/utils";
 
 interface RankedItem {
@@ -58,10 +54,7 @@ export function RankedListCard({ title, items, dimensionLabels = {} }: RankedLis
           // Öğe puanı 0..100, `scoreBand` 0..1 bekler.
           const band = hasScore ? scoreBand((item.score as number) / 100) : null;
           return (
-            <div
-              key={item.key ?? idx}
-              className="overflow-hidden rounded-xl border border-border bg-card shadow-sm"
-            >
+            <div key={item.key ?? idx} className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
               <div
                 className={cn(
                   "flex flex-wrap items-center gap-x-3 gap-y-1 border-b px-3 py-2.5",
@@ -94,11 +87,7 @@ export function RankedListCard({ title, items, dimensionLabels = {} }: RankedLis
                         {/* Bant rengi burada da geçerli: sıralı listede zayıf boyut
                             bir bakışta ayırt edilebilmeli. Rozet YOK — satır dar ve
                             etiket zaten solda; renk + sayı yeterli, rozet satırı kırardı. */}
-                        <ScoreBandBar
-                          value01={value01}
-                          ariaLabel={dimensionLabels[dim] ?? dim}
-                          className="h-2.5"
-                        />
+                        <ScoreBandBar value01={value01} ariaLabel={dimensionLabels[dim] ?? dim} className="h-2.5" />
                         <span
                           className={cn(
                             "w-8 shrink-0 text-right text-xs font-medium tabular-nums",

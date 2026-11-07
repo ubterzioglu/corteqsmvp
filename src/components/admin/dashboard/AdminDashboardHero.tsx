@@ -43,9 +43,7 @@ const AdminDashboardHero = ({ email, summary }: AdminDashboardHeroProps) => (
       {greetingByHour(new Date().getHours())}
       {email ? `, ${email}` : ""}
     </h1>
-    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-      {attentionSentence(summary)}
-    </p>
+    <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{attentionSentence(summary)}</p>
   </section>
 );
 

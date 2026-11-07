@@ -34,10 +34,7 @@ const PublicProfileMobileActionBar = ({ actions, onShare }: PublicProfileMobileA
           const Icon = ACTION_ICONS[action.key];
           return (
             <Button key={action.key} asChild className="min-h-[44px] flex-1 rounded-full">
-              <a
-                href={action.href}
-                {...(action.external ? { target: "_blank", rel: "noreferrer" } : {})}
-              >
+              <a href={action.href} {...(action.external ? { target: "_blank", rel: "noreferrer" } : {})}>
                 <Icon className="mr-1.5 h-4 w-4" aria-hidden="true" />
                 {action.label}
               </a>

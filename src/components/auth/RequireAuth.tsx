@@ -22,4 +22,3 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
 };
 
 export default RequireAuth;
-

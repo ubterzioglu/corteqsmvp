@@ -9,10 +9,7 @@ function norm(value: unknown): string {
     .slice(0, 80);
 }
 
-export function buildDuplicateKey(
-  targetKind: string,
-  payload: Record<string, unknown>,
-): string {
+export function buildDuplicateKey(targetKind: string, payload: Record<string, unknown>): string {
   const country = norm(payload.country_code);
   const city = norm(payload.city_code);
   if (targetKind === "service") {

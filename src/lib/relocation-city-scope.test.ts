@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  TARGET_COUNTRIES_QUESTION_KEY,
-  cityScopeFromAnswers,
-} from "@/lib/relocation-city-scope";
+import { TARGET_COUNTRIES_QUESTION_KEY, cityScopeFromAnswers } from "@/lib/relocation-city-scope";
 import type { ToolAnswerValue } from "@/lib/relocation-tools-types";
 
 const answers = (value: ToolAnswerValue | undefined): Record<string, ToolAnswerValue> =>

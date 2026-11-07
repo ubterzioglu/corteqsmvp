@@ -133,9 +133,7 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
         </CardTitle>
         <CardDescription className="text-[11px]">
           Cadde akışın bu seçimlere göre kişiselleşir; şehrindeki eşleşen ihtiyaçlar üstte görünür.
-          {canHide
-            ? null
-            : " İlgi alanların herkese açık görünür — eşleştirme ve ağ önerileri bunlarla çalışır."}
+          {canHide ? null : " İlgi alanların herkese açık görünür — eşleştirme ve ağ önerileri bunlarla çalışır."}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -160,7 +158,10 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
         </div>
         <div className="flex items-center justify-end gap-2">
           {canHide ? (
-            <div className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2" style={{ height: "32px" }}>
+            <div
+              className="flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-2"
+              style={{ height: "32px" }}
+            >
               {draftVisibility === "public" ? (
                 <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
               ) : (
@@ -183,7 +184,13 @@ const CaddeInterestsCard = ({ onSaved, visibility = "public", canHide = true }: 
               Herkese açık
             </span>
           )}
-          <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => saveMutation.mutate()} disabled={!isDirty || saveMutation.isPending}>
+          <Button
+            size="sm"
+            variant="outline"
+            className="cadde-secondary-action"
+            onClick={() => saveMutation.mutate()}
+            disabled={!isDirty || saveMutation.isPending}
+          >
             {saveMutation.isPending ? "Kaydediliyor..." : "İlgi Alanlarını Kaydet"}
           </Button>
         </div>

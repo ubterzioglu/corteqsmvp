@@ -3,10 +3,9 @@ import LegalLayout from "./LegalLayout";
 const KVKK = () => (
   <LegalLayout title="KVKK / GDPR / CCPA Aydınlatma Metni" seoKey="kvkk">
     <p>
-      İşbu Aydınlatma Metni; <strong>6698 sayılı KVKK m.10</strong>,{" "}
-      <strong>GDPR Art. 13-14</strong>, <strong>CCPA §1798.100</strong>, <strong>PIPEDA Principle 4.8</strong>,{" "}
-      <strong>APP 5</strong> ve <strong>LGPD Art. 9</strong> kapsamında, veri sahibi olarak sizi
-      bilgilendirmek amacıyla hazırlanmıştır.
+      İşbu Aydınlatma Metni; <strong>6698 sayılı KVKK m.10</strong>, <strong>GDPR Art. 13-14</strong>,{" "}
+      <strong>CCPA §1798.100</strong>, <strong>PIPEDA Principle 4.8</strong>, <strong>APP 5</strong> ve{" "}
+      <strong>LGPD Art. 9</strong> kapsamında, veri sahibi olarak sizi bilgilendirmek amacıyla hazırlanmıştır.
     </p>
 
     <h2>1. Veri Sorumlusunun Kimliği</h2>
@@ -44,9 +43,8 @@ const KVKK = () => (
 
     <h2>5. Aktarım</h2>
     <p>
-      Veriler; bulut altyapı (Supabase, AB/CH bölgesi), e-posta servisleri (Resend), ödeme
-      sağlayıcılar (Stripe) ve yasal merciler ile gerektiğinde paylaşılabilir. Yurtdışı
-      aktarımlar KVKK m.9 ve GDPR Bölüm V'e uygun yapılır.
+      Veriler; bulut altyapı (Supabase, AB/CH bölgesi), e-posta servisleri (Resend), ödeme sağlayıcılar (Stripe) ve
+      yasal merciler ile gerektiğinde paylaşılabilir. Yurtdışı aktarımlar KVKK m.9 ve GDPR Bölüm V'e uygun yapılır.
     </p>
 
     <h2>6. Veri Sahibi Hakları (KVKK m.11 / GDPR Art. 15-22)</h2>
@@ -64,18 +62,16 @@ const KVKK = () => (
 
     <h2>7. Başvuru Yöntemi</h2>
     <p>
-      Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca yazılı olarak veya
-      kayıtlı elektronik posta ile <a href="mailto:info@corteqs.net">info@corteqs.net</a>{" "}
-      adresine başvurabilirsiniz. Başvurunuz en geç 30 gün içinde ücretsiz olarak
-      sonuçlandırılır.
+      Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ uyarınca yazılı olarak veya kayıtlı elektronik posta ile{" "}
+      <a href="mailto:info@corteqs.net">info@corteqs.net</a> adresine başvurabilirsiniz. Başvurunuz en geç 30 gün içinde
+      ücretsiz olarak sonuçlandırılır.
     </p>
 
     <h2>8. Açık Rıza Beyanı</h2>
     <p>
-      Kayıt formlarında "Kişisel verilerimin işlenmesine açık rıza veriyorum" kutusunu
-      işaretleyerek; yukarıda belirtilen kişisel verilerinizin, belirtilen amaçlarla, belirtilen
-      yöntem ve hukuki sebeplerle işlenmesine, gerektiğinde yurt içi ve yurt dışına
-      aktarılmasına özgür iradenizle açık rıza vermiş olursunuz.
+      Kayıt formlarında "Kişisel verilerimin işlenmesine açık rıza veriyorum" kutusunu işaretleyerek; yukarıda
+      belirtilen kişisel verilerinizin, belirtilen amaçlarla, belirtilen yöntem ve hukuki sebeplerle işlenmesine,
+      gerektiğinde yurt içi ve yurt dışına aktarılmasına özgür iradenizle açık rıza vermiş olursunuz.
     </p>
   </LegalLayout>
 );

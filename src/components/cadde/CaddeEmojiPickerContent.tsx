@@ -21,13 +21,17 @@ const CaddeEmojiPickerContent = ({ onSelect }: CaddeEmojiPickerContentProps) => 
       <EmojiPicker.List
         components={{
           CategoryHeader: ({ category, className, ...props }) => (
-            <div {...props} className={cn("sticky top-0 z-10 bg-white/95 px-1 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500", className)}>
+            <div
+              {...props}
+              className={cn(
+                "sticky top-0 z-10 bg-white/95 px-1 py-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500",
+                className,
+              )}
+            >
               {category.label}
             </div>
           ),
-          Row: ({ className, ...props }) => (
-            <div {...props} className={cn("grid grid-cols-8 gap-0.5", className)} />
-          ),
+          Row: ({ className, ...props }) => <div {...props} className={cn("grid grid-cols-8 gap-0.5", className)} />,
           Emoji: ({ emoji, className, ...props }) => (
             <button
               {...props}

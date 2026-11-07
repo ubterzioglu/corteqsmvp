@@ -1,24 +1,24 @@
-'use client'
+"use client";
 
 // Satır içi düzenleme kipi: aynı satırın yerine formun kendisi çizilir.
 // Aynı anda tek satır düzenlenebilir (diğer satırların kalem düğmesi kapanır).
 
-import { Save, X } from 'lucide-react'
-import type { ResourceEntry, ResourceFormState } from '@/lib/dashboard/resource-items'
-import ResourceFormFields from './ResourceFormFields'
-import type { ResourceFieldSetter } from './useLinkManager'
-import { BTN_CLS } from './link-manager-styles'
+import { Save, X } from "lucide-react";
+import type { ResourceEntry, ResourceFormState } from "@/lib/dashboard/resource-items";
+import ResourceFormFields from "./ResourceFormFields";
+import type { ResourceFieldSetter } from "./useLinkManager";
+import { BTN_CLS } from "./link-manager-styles";
 
 interface ResourceEntryEditRowProps {
-  entry: ResourceEntry
-  state: ResourceFormState
-  sectionOptions: string[]
-  subsectionOptions: string[]
-  isSubmitting: boolean
-  onChange: ResourceFieldSetter
-  onFileChange: (file: File | null) => void
-  onSave: (entry: ResourceEntry) => void
-  onCancel: () => void
+  entry: ResourceEntry;
+  state: ResourceFormState;
+  sectionOptions: string[];
+  subsectionOptions: string[];
+  isSubmitting: boolean;
+  onChange: ResourceFieldSetter;
+  onFileChange: (file: File | null) => void;
+  onSave: (entry: ResourceEntry) => void;
+  onCancel: () => void;
 }
 
 export default function ResourceEntryEditRow({
@@ -68,5 +68,5 @@ export default function ResourceEntryEditRow({
         />
       </div>
     </div>
-  )
+  );
 }

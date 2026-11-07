@@ -1,32 +1,24 @@
-'use client'
+"use client";
 
 // Aktif listedeki tek bir kaydın satırı: rozetler, başlık, eylem düğmeleri ve
 // açılır detay bloğu. Depolanmış dosyası olmayan kayıtta görüntüle/indir
 // düğmeleri hiç çizilmez.
 
-import {
-  ChevronDown,
-  Download,
-  ExternalLink,
-  Eye,
-  EyeOff,
-  Pencil,
-  Trash2,
-} from 'lucide-react'
-import type { ResourceEntry } from '@/lib/dashboard/resource-items'
-import { safeHref } from '@/lib/security'
-import { ICON_BTN_CLS } from './link-manager-styles'
+import { ChevronDown, Download, ExternalLink, Eye, EyeOff, Pencil, Trash2 } from "lucide-react";
+import type { ResourceEntry } from "@/lib/dashboard/resource-items";
+import { safeHref } from "@/lib/security";
+import { ICON_BTN_CLS } from "./link-manager-styles";
 
 interface ResourceEntryRowProps {
-  entry: ResourceEntry
-  isExpanded: boolean
-  isSubmitting: boolean
-  isEditing: boolean
-  onToggleDetails: (entryId: string) => void
-  onStartEdit: (entry: ResourceEntry) => void
-  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void
-  onOpenStoredFile: (entry: ResourceEntry, shouldDownload: boolean) => void
-  onDelete: (entry: ResourceEntry) => void
+  entry: ResourceEntry;
+  isExpanded: boolean;
+  isSubmitting: boolean;
+  isEditing: boolean;
+  onToggleDetails: (entryId: string) => void;
+  onStartEdit: (entry: ResourceEntry) => void;
+  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void;
+  onOpenStoredFile: (entry: ResourceEntry, shouldDownload: boolean) => void;
+  onDelete: (entry: ResourceEntry) => void;
 }
 
 export default function ResourceEntryRow({
@@ -40,7 +32,7 @@ export default function ResourceEntryRow({
   onOpenStoredFile,
   onDelete,
 }: ResourceEntryRowProps) {
-  const hasStoredFile = Boolean(entry.storageBucket && entry.storagePath)
+  const hasStoredFile = Boolean(entry.storageBucket && entry.storagePath);
 
   return (
     <div className="rounded-xl border border-[rgba(66,133,244,0.1)] bg-white px-3 py-2 shadow-[0_4px_10px_rgba(60,64,67,0.03)]">
@@ -51,7 +43,7 @@ export default function ResourceEntryRow({
               {entry.section}
             </span>
             <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 font-semibold text-indigo-700">
-              {entry.subsection || '-'}
+              {entry.subsection || "-"}
             </span>
             <span className="rounded-full border border-gray-200 bg-gray-50 px-2 py-0.5 font-semibold text-gray-600">
               {entry.recordKind}
@@ -71,9 +63,7 @@ export default function ResourceEntryRow({
           </div>
           <p className="mt-1 truncate text-xs text-gray-900">
             <span className="font-medium">{entry.title}</span>
-            {entry.description ? (
-              <span className="font-normal text-gray-500"> — {entry.description}</span>
-            ) : null}
+            {entry.description ? <span className="font-normal text-gray-500"> — {entry.description}</span> : null}
           </p>
         </div>
 
@@ -82,15 +72,15 @@ export default function ResourceEntryRow({
             type="button"
             onClick={() => onToggleDetails(entry.id)}
             disabled={isSubmitting}
-            title={isExpanded ? 'Detayı kapat' : 'Detayı aç'}
-            aria-label={isExpanded ? 'Detayı kapat' : 'Detayı aç'}
+            title={isExpanded ? "Detayı kapat" : "Detayı aç"}
+            aria-label={isExpanded ? "Detayı kapat" : "Detayı aç"}
             className={`${ICON_BTN_CLS} border-gray-200 bg-white text-gray-600 hover:bg-gray-50`}
           >
             <ChevronDown
               size={13}
               aria-hidden="true"
               className="transition-transform"
-              style={{ transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)' }}
+              style={{ transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)" }}
             />
           </button>
           <button
@@ -151,13 +141,13 @@ export default function ResourceEntryRow({
       {isExpanded ? (
         <div className="mt-2 grid gap-2 rounded-lg border border-gray-200 bg-gray-50 p-2 text-[11px] text-gray-700 md:grid-cols-2">
           <p>
-            <span className="font-semibold text-gray-800">Açıklama:</span> {entry.description ?? '-'}
+            <span className="font-semibold text-gray-800">Açıklama:</span> {entry.description ?? "-"}
           </p>
           <p>
             <span className="font-semibold text-gray-800">Ekleyen:</span> {entry.addedBy}
           </p>
           <p>
-            <span className="font-semibold text-gray-800">Dosya Adı:</span> {entry.fileName ?? '-'}
+            <span className="font-semibold text-gray-800">Dosya Adı:</span> {entry.fileName ?? "-"}
           </p>
           <p>
             <span className="font-semibold text-gray-800">Kayıt Türü:</span> {entry.recordKind}
@@ -165,5 +155,5 @@ export default function ResourceEntryRow({
         </div>
       ) : null}
     </div>
-  )
+  );
 }

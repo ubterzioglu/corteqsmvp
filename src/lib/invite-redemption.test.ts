@@ -86,9 +86,7 @@ describe("M13 · redeemInviteCodeSafely — asla fırlatmaz", () => {
     redeemRpcSpy.mockResolvedValue({ data: null, error: { message: "invite_code_not_found" } });
 
     await expect(redeemInviteCodeSafely("YOK123")).resolves.toBe(false);
-    expect(reportSpy).toHaveBeenCalledWith(
-      expect.objectContaining({ context: "redeemInviteCodeSafely" }),
-    );
+    expect(reportSpy).toHaveBeenCalledWith(expect.objectContaining({ context: "redeemInviteCodeSafely" }));
   });
 
   it("kendi kodu → false, sessiz (beklenen durum)", async () => {
@@ -134,9 +132,7 @@ describe("M13 · useInviteRedemption — oturum kurulunca bir kez", () => {
 
     renderHook(() => useInviteRedemption());
 
-    await vi.waitFor(() =>
-      expect(redeemRpcSpy).toHaveBeenCalledWith("redeem_invite_code", { p_code: "HKWXK6" }),
-    );
+    await vi.waitFor(() => expect(redeemRpcSpy).toHaveBeenCalledWith("redeem_invite_code", { p_code: "HKWXK6" }));
     expect(window.localStorage.getItem(INVITE_CARRIER_STORAGE_KEY)).toBeNull();
   });
 

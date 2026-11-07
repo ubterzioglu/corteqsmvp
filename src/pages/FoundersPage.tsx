@@ -46,18 +46,15 @@ const founderProfiles: FounderProfile[] = [
     sections: [
       {
         title: "Profesyonel Arka Plan",
-        body:
-          "35 yılı aşkın üretim, ticaret, girişimcilik, danışmanlık ve uluslararası iş geliştirme deneyimine sahiptir. Farklı sektörler ve coğrafyalarda edindiği saha pratiği; şirket yapılanması, operasyonel büyüme, stratejik dönüşüm ve bölgesel genişleme alanlarında güçlü bir perspektif geliştirmesini sağlamıştır. Amerika, Asya-Pasifik ve GCC bölgelerindeki deneyimleri sayesinde farklı pazar dinamikleri ve kültürler üzerine uluslararası bir bakış açısı kazanmıştır.",
+        body: "35 yılı aşkın üretim, ticaret, girişimcilik, danışmanlık ve uluslararası iş geliştirme deneyimine sahiptir. Farklı sektörler ve coğrafyalarda edindiği saha pratiği; şirket yapılanması, operasyonel büyüme, stratejik dönüşüm ve bölgesel genişleme alanlarında güçlü bir perspektif geliştirmesini sağlamıştır. Amerika, Asya-Pasifik ve GCC bölgelerindeki deneyimleri sayesinde farklı pazar dinamikleri ve kültürler üzerine uluslararası bir bakış açısı kazanmıştır.",
       },
       {
         title: "CorteQS Vizyonu ile Bağlantısı",
-        body:
-          "CorteQS’i yalnızca bir networking platformu değil; şehir, sektör ve güven temelli bağlantılar üzerinden global Türk diasporasını organize edebilecek yeni nesil bir dijital ekosistem olarak konumlandırmaktadır. Platformun; profesyonelleri, girişimcileri, yatırımcıları ve toplulukları aynı altyapıda daha sistematik biçimde bir araya getirerek ekonomik, sosyal ve profesyonel etkileşimi güçlendirmesini hedeflemektedir.",
+        body: "CorteQS’i yalnızca bir networking platformu değil; şehir, sektör ve güven temelli bağlantılar üzerinden global Türk diasporasını organize edebilecek yeni nesil bir dijital ekosistem olarak konumlandırmaktadır. Platformun; profesyonelleri, girişimcileri, yatırımcıları ve toplulukları aynı altyapıda daha sistematik biçimde bir araya getirerek ekonomik, sosyal ve profesyonel etkileşimi güçlendirmesini hedeflemektedir.",
       },
       {
         title: "Stratejik ve Yatırımcı Perspektifi",
-        body:
-          "CorteQS’e; yüksek ölçeklenme potansiyeline sahip, çok katmanlı bir dijital büyüme altyapısı olarak yaklaşmaktadır. Şehir bazlı yapılanma modeli, diaspora dinamiği ve topluluk odaklı yapısı sayesinde platformun uzun vadede güçlü bir network-effect ekonomisi oluşturabileceğine inanmaktadır. CorteQS’in uzun vadeli sürdürülebilir bir ekosisteme dönüşmesini hedefliyor.",
+        body: "CorteQS’e; yüksek ölçeklenme potansiyeline sahip, çok katmanlı bir dijital büyüme altyapısı olarak yaklaşmaktadır. Şehir bazlı yapılanma modeli, diaspora dinamiği ve topluluk odaklı yapısı sayesinde platformun uzun vadede güçlü bir network-effect ekonomisi oluşturabileceğine inanmaktadır. CorteQS’in uzun vadeli sürdürülebilir bir ekosisteme dönüşmesini hedefliyor.",
       },
     ],
   },
@@ -84,18 +81,15 @@ const founderProfiles: FounderProfile[] = [
     sections: [
       {
         title: "Profesyonel Arka Plan",
-        body:
-          "18 yılı aşan kariyeri boyunca Türkiye ve Almanya’da; Daimler / Mercedes-Benz ve Swisslog gibi yüksek karmaşıklığa sahip yapılarda görev aldı. Yalnızca test süreçlerinde bulunmakla kalmayıp kalite sistemleri kurdu, test stratejileri geliştirdi, otomasyon yapıları tasarladı ve global kullanıcıları etkileyen projelerde sürdürülebilir operasyonel yapıların nasıl inşa edilmesi gerektiğine dair güçlü bir birikim kazandı.",
+        body: "18 yılı aşan kariyeri boyunca Türkiye ve Almanya’da; Daimler / Mercedes-Benz ve Swisslog gibi yüksek karmaşıklığa sahip yapılarda görev aldı. Yalnızca test süreçlerinde bulunmakla kalmayıp kalite sistemleri kurdu, test stratejileri geliştirdi, otomasyon yapıları tasarladı ve global kullanıcıları etkileyen projelerde sürdürülebilir operasyonel yapıların nasıl inşa edilmesi gerektiğine dair güçlü bir birikim kazandı.",
       },
       {
         title: "CorteQS Vizyonu ile Bağlantısı",
-        body:
-          "CorteQS’i, yurt dışında yaşayan Türklerin güvenilir bağlantı, erişim, görünürlük ve fırsat ihtiyaçlarına yanıt verecek bir dijital altyapı olarak konumluyor. Onun bakışında platformun asıl değeri; dağınık insan gücünü, bilgi birikimini, hizmetleri ve topluluk etkisini organize ederek ölçülebilir bir güven ve etki sistemine dönüştürmesinde yatıyor.",
+        body: "CorteQS’i, yurt dışında yaşayan Türklerin güvenilir bağlantı, erişim, görünürlük ve fırsat ihtiyaçlarına yanıt verecek bir dijital altyapı olarak konumluyor. Onun bakışında platformun asıl değeri; dağınık insan gücünü, bilgi birikimini, hizmetleri ve topluluk etkisini organize ederek ölçülebilir bir güven ve etki sistemine dönüştürmesinde yatıyor.",
       },
       {
         title: "Stratejik ve Yatırımcı Perspektifi",
-        body:
-          "Kurumsal kalite ve ölçeklenebilirlik refleksini topluluk inşa motivasyonuyla birleştirerek CorteQS’in kısa vadeli bir proje değil, şehir şehir genişleyebilecek sürdürülebilir bir diaspora altyapısı olmasını hedefliyor. Bu nedenle platformu; üyelik, premium görünürlük, listeleme, iş birlikleri, topluluk araçları, etkinlikler ve diaspora odaklı reklam modelleriyle ölçeklenebilir bir girişim temeli üzerinde değerlendiriyor.",
+        body: "Kurumsal kalite ve ölçeklenebilirlik refleksini topluluk inşa motivasyonuyla birleştirerek CorteQS’in kısa vadeli bir proje değil, şehir şehir genişleyebilecek sürdürülebilir bir diaspora altyapısı olmasını hedefliyor. Bu nedenle platformu; üyelik, premium görünürlük, listeleme, iş birlikleri, topluluk araçları, etkinlikler ve diaspora odaklı reklam modelleriyle ölçeklenebilir bir girişim temeli üzerinde değerlendiriyor.",
       },
     ],
   },
@@ -113,15 +107,7 @@ const sectionCardClass =
 const linkedinButtonClass =
   "group inline-flex items-center justify-center gap-2 rounded-full border border-[#0f6fc2]/20 bg-[linear-gradient(135deg,#f7fbff_0%,#e7f4ff_38%,#d7ecff_100%)] px-5 py-2.5 text-sm font-semibold text-[#0a4f96] shadow-[0_16px_36px_rgba(15,111,194,0.16),inset_0_1px_0_rgba(255,255,255,0.88)] transition duration-300 hover:-translate-y-0.5 hover:border-[#0f6fc2]/35 hover:bg-[linear-gradient(135deg,#ffffff_0%,#dff1ff_48%,#cde7ff_100%)] hover:text-[#083d75] hover:shadow-[0_20px_42px_rgba(15,111,194,0.22),0_0_0_6px_rgba(15,111,194,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0f6fc2]/35 focus-visible:ring-offset-2";
 
-const FounderPortrait = ({
-  src,
-  alt,
-  initials,
-}: {
-  src?: string;
-  alt: string;
-  initials: string;
-}) => {
+const FounderPortrait = ({ src, alt, initials }: { src?: string; alt: string; initials: string }) => {
   const [hasError, setHasError] = useState(false);
 
   if (!src || hasError) {
@@ -226,9 +212,7 @@ const FoundersPage = () => {
                     <div className="px-6 pb-6 pt-0 md:px-8 md:pb-8">
                       <div className="grid gap-8">
                         <div>
-                          <p className="text-base leading-8 text-slate-600">
-                            {founder.summary}
-                          </p>
+                          <p className="text-base leading-8 text-slate-600">{founder.summary}</p>
 
                           <div className={`mt-6 rounded-2xl border p-4 ${strengthCardClass}`}>
                             <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[#0a4f96]">
@@ -247,14 +231,9 @@ const FoundersPage = () => {
 
                         <div className="grid gap-4">
                           {founder.sections.map((section) => (
-                            <div
-                              key={section.title}
-                              className={`rounded-[1.6rem] border p-5 ${sectionCardClass}`}
-                            >
+                            <div key={section.title} className={`rounded-[1.6rem] border p-5 ${sectionCardClass}`}>
                               <h3 className="text-lg font-bold text-[#071c3f]">{section.title}</h3>
-                              <p className="mt-3 text-sm leading-7 text-slate-600">
-                                {section.body}
-                              </p>
+                              <p className="mt-3 text-sm leading-7 text-slate-600">{section.body}</p>
                             </div>
                           ))}
                         </div>
@@ -267,7 +246,6 @@ const FoundersPage = () => {
           </section>
         </div>
       </main>
-
     </div>
   );
 };

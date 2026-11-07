@@ -24,10 +24,7 @@ import {
   revisionAttachmentExtension,
 } from "./revision-attachment-media";
 
-const sql = readFileSync(
-  "supabase/migrations/applied/20260929120000_revision_attachments_document_mimes.sql",
-  "utf8",
-);
+const sql = readFileSync("supabase/migrations/applied/20260929120000_revision_attachments_document_mimes.sql", "utf8");
 
 describe("revision-attachments bucket'ı istemci denetimiyle hizada (A09b)", () => {
   it("boyut tavanı istemcideki 15 MB ile AYNI", () => {
@@ -85,10 +82,7 @@ describe("A09c yardımcıları — görsel/belge ayrımı ve boyut etiketi", () 
     expect(isRevisionAttachmentImage("image/gif", "x.gif")).toBe(true);
     expect(isRevisionAttachmentImage("application/pdf", "x.pdf")).toBe(false);
     expect(
-      isRevisionAttachmentImage(
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "x.xlsx",
-      ),
+      isRevisionAttachmentImage("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "x.xlsx"),
     ).toBe(false);
   });
 

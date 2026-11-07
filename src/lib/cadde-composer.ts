@@ -1,7 +1,13 @@
 // Composer'ın veri sözleşmesi — CaddeComposer bileşeni ile CaddePage arasında paylaşılır.
 // Bileşen dosyasından ayrı durur ki React Fast Refresh bozulmasın (yalnız bileşen export'u kalsın).
 
-import type { CaddeMediaAsset, CaddePostMention, CaddePostTargetInput, CaddePostType, CarsiContactMode } from "@/lib/cadde-types";
+import type {
+  CaddeMediaAsset,
+  CaddePostMention,
+  CaddePostTargetInput,
+  CaddePostType,
+  CarsiContactMode,
+} from "@/lib/cadde-types";
 
 // NOT (F6+F8, workshop m5/m17): POST_TYPE_LABELS kaldırıldı — tür seçici composer'dan,
 // tür rozeti feed kartından söküldü; tip etiketi artık hiçbir yerde gösterilmiyor.

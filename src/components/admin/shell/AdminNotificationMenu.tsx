@@ -31,12 +31,7 @@ function ToggleLine({ label, checked, disabled, onCheckedChange }: ToggleLinePro
   return (
     <div className="flex items-center justify-between gap-3 px-2 py-1.5">
       <span className="text-sm leading-tight">{label}</span>
-      <Switch
-        aria-label={label}
-        checked={checked}
-        disabled={disabled}
-        onCheckedChange={onCheckedChange}
-      />
+      <Switch aria-label={label} checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
     </div>
   );
 }
@@ -62,13 +57,7 @@ const AdminNotificationMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          aria-label="Bildirim e-postaları"
-          className="relative"
-        >
+        <Button type="button" variant="ghost" size="icon" aria-label="Bildirim e-postaları" className="relative">
           <Mail className="h-4 w-4" />
           {isReceiving && (
             <span

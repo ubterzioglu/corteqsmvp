@@ -22,7 +22,11 @@ import {
 } from "@/lib/cadde-moderation-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
-const ACTION_BUTTONS: Array<{ action: CaddeModerationAction; label: string; variant: "default" | "outline" | "destructive" }> = [
+const ACTION_BUTTONS: Array<{
+  action: CaddeModerationAction;
+  label: string;
+  variant: "default" | "outline" | "destructive";
+}> = [
   { action: "dismiss", label: "Kapat (sorun yok)", variant: "outline" },
   { action: "hide", label: "Gizle", variant: "default" },
   { action: "publish", label: "Geri Yayınla", variant: "outline" },
@@ -55,7 +59,11 @@ const AdminCaddeModerationPage = () => {
       toast({ title: "Moderasyon aksiyonu uygulandı" });
     },
     onError: (error) => {
-      toast({ title: "Aksiyon uygulanamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Aksiyon uygulanamadı",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -73,7 +81,9 @@ const AdminCaddeModerationPage = () => {
             Cadde Moderasyon Kuyruğu
           </CardTitle>
           <CardDescription>
-            {queueQuery.isLoading ? "Yükleniyor..." : `${items.length} açık kayıt. Aksiyonlar audit notuyla birlikte kaydedilir.`}
+            {queueQuery.isLoading
+              ? "Yükleniyor..."
+              : `${items.length} açık kayıt. Aksiyonlar audit notuyla birlikte kaydedilir.`}
           </CardDescription>
           <div className="flex flex-wrap gap-2 pt-2">
             <button
@@ -106,7 +116,9 @@ const AdminCaddeModerationPage = () => {
               <span className="text-xs text-slate-500">{new Date(item.createdAt).toLocaleString("tr-TR")}</span>
             </div>
             <CardTitle className="text-sm">Sebep: {item.reason}</CardTitle>
-            <CardDescription className="font-mono text-xs">{item.entityType}/{item.entityId}</CardDescription>
+            <CardDescription className="font-mono text-xs">
+              {item.entityType}/{item.entityId}
+            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
             <Textarea

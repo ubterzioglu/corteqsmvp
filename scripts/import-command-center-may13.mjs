@@ -46,10 +46,7 @@ function parseEnvFile(content) {
     const key = line.slice(0, separatorIndex).trim();
     let value = line.slice(separatorIndex + 1).trim();
 
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
 
@@ -698,7 +695,9 @@ async function fetchExistingMap(supabase) {
   const keys = records.map((record) => record.legacy_source_title);
   const { data, error } = await supabase
     .from("command_center_items")
-    .select("id, item_type, title, assignee, priority, due_date, urgent, legacy_source_title, legacy_source_category, legacy_source_date_label")
+    .select(
+      "id, item_type, title, assignee, priority, due_date, urgent, legacy_source_title, legacy_source_category, legacy_source_date_label",
+    )
     .in("legacy_source_title", keys);
 
   if (error) {
@@ -722,7 +721,7 @@ function printPreview() {
         `  urgent=${record.urgent}`,
         `  due=${record.due_date ?? "-"}`,
         `  key=${record.legacy_source_title}`,
-      ].join("\n")
+      ].join("\n"),
     );
   }
 }
@@ -730,11 +729,9 @@ function printPreview() {
 function verifyInsertedRows(rows) {
   const barisRows = rows.filter((row) => row.legacy_source_category === "Barış");
   const burakRows = rows.filter((row) => row.legacy_source_category === "Burak");
-  const p0Rows = rows.filter(
-    (row) => row.item_type === "todo" && row.legacy_source_date_label === `${IMPORT_DATE} P0`
-  );
+  const p0Rows = rows.filter((row) => row.item_type === "todo" && row.legacy_source_date_label === `${IMPORT_DATE} P0`);
   const meetingRow = rows.find(
-    (row) => row.item_type === "meeting_note" && row.legacy_source_title === "cc-import-2026-05-13-shared-decisions"
+    (row) => row.item_type === "meeting_note" && row.legacy_source_title === "cc-import-2026-05-13-shared-decisions",
   );
 
   if (!p0Rows.every((row) => row.priority === 9 && row.urgent === true && row.due_date === P0_DUE_DATE)) {
@@ -807,13 +804,9 @@ async function main() {
   const afterCount = afterMap.size;
   const actualInsertedCount = Math.max(0, afterCount - beforeCount);
   const insertedTodoCount =
-    actualInsertedCount === 0
-      ? 0
-      : recordsToInsert.filter((record) => record.item_type === "todo").length;
+    actualInsertedCount === 0 ? 0 : recordsToInsert.filter((record) => record.item_type === "todo").length;
   const insertedMeetingCount =
-    actualInsertedCount === 0
-      ? 0
-      : recordsToInsert.filter((record) => record.item_type === "meeting_note").length;
+    actualInsertedCount === 0 ? 0 : recordsToInsert.filter((record) => record.item_type === "meeting_note").length;
 
   ok(`Import tamamlandı. Eklenen todo: ${insertedTodoCount}`);
   ok(`Import tamamlandı. Eklenen meeting note: ${insertedMeetingCount}`);

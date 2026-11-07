@@ -77,14 +77,12 @@ describe("CatalogEntityProfilePanel", () => {
 
     expect(screen.getByText("Ulke")).toBeInTheDocument();
 
-    const fullNameInput = screen.getAllByRole("textbox").find(
-      (el) => (el as HTMLInputElement).value === "Umut Baris Terzioglu",
-    );
+    const fullNameInput = screen
+      .getAllByRole("textbox")
+      .find((el) => (el as HTMLInputElement).value === "Umut Baris Terzioglu");
     expect(fullNameInput).toBeInTheDocument();
 
-    const countryInput = screen.getAllByRole("textbox").find(
-      (el) => (el as HTMLInputElement).value === "Türkiye",
-    );
+    const countryInput = screen.getAllByRole("textbox").find((el) => (el as HTMLInputElement).value === "Türkiye");
     expect(countryInput).toBeInTheDocument();
 
     expect(getCatalogItemProfileMock).toHaveBeenCalledWith("item-abc");
@@ -153,9 +151,7 @@ describe("CatalogEntityProfilePanel", () => {
       ],
     };
 
-    getCatalogItemProfileMock
-      .mockResolvedValueOnce(baseProfile)
-      .mockResolvedValueOnce(updatedProfile);
+    getCatalogItemProfileMock.mockResolvedValueOnce(baseProfile).mockResolvedValueOnce(updatedProfile);
 
     render(<CatalogEntityProfilePanel itemId="item-abc" />);
 
@@ -168,9 +164,7 @@ describe("CatalogEntityProfilePanel", () => {
 
     await waitFor(() => {
       const inputs = screen.getAllByRole("textbox");
-      const overrideInput = inputs.find(
-        (el) => (el as HTMLInputElement).value === "Override Isim",
-      );
+      const overrideInput = inputs.find((el) => (el as HTMLInputElement).value === "Override Isim");
       expect(overrideInput).toBeInTheDocument();
     });
 
@@ -237,9 +231,7 @@ describe("CatalogEntityProfilePanel", () => {
     render(<CatalogEntityProfilePanel itemId="item-abc" />);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Bu kayıt için attribute kuralı bulunmuyor."),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Bu kayıt için attribute kuralı bulunmuyor.")).toBeInTheDocument();
     });
   });
 

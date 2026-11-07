@@ -54,11 +54,7 @@ export function escapeOrFilterValue(value: string): string {
 }
 
 export async function fetchPublishedEvents(filters?: EventFilters): Promise<EventRow[]> {
-  let query = supabase
-    .from("events")
-    .select("*")
-    .eq("status", "published")
-    .order("event_date", { ascending: true });
+  let query = supabase.from("events").select("*").eq("status", "published").order("event_date", { ascending: true });
 
   if (filters?.type && filters.type !== "all") {
     query = query.eq("type", filters.type);
@@ -102,10 +98,7 @@ export async function fetchMyEvents(userId: string): Promise<EventRow[]> {
 }
 
 export async function fetchAllEventsAdmin(): Promise<EventRow[]> {
-  const { data, error } = await supabase
-    .from("events")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data, error } = await supabase.from("events").select("*").order("created_at", { ascending: false });
   if (error) throw error;
   return (data as EventRow[]) ?? [];
 }
@@ -151,27 +144,30 @@ export type CreateEventResult = {
  * `resolveEventRpcErrorMessage` ile Türkçeleştirilir.
  */
 export async function createEvent(input: CreateEventInput): Promise<CreateEventResult> {
-  const { data, error } = await supabase.rpc("create_event_v1" as never, {
-    p_title: input.title,
-    p_description: input.description,
-    p_category: input.category,
-    p_type: input.type,
-    p_event_date: input.eventDate,
-    p_start_time: input.startTime,
-    p_end_time: input.endTime,
-    p_country: input.country,
-    p_city: input.city,
-    p_location: input.location,
-    p_online_url: input.onlineUrl,
-    p_price: input.price,
-    p_max_attendees: input.maxAttendees,
-    p_cover_image: input.coverImage,
-    p_tags: input.tags.length > 0 ? input.tags : null,
-    p_organizer_name: input.organizerName,
-    p_organizer_type: input.organizerType,
-    p_registration_url: input.registrationUrl,
-    p_timezone: input.timezone,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "create_event_v1" as never,
+    {
+      p_title: input.title,
+      p_description: input.description,
+      p_category: input.category,
+      p_type: input.type,
+      p_event_date: input.eventDate,
+      p_start_time: input.startTime,
+      p_end_time: input.endTime,
+      p_country: input.country,
+      p_city: input.city,
+      p_location: input.location,
+      p_online_url: input.onlineUrl,
+      p_price: input.price,
+      p_max_attendees: input.maxAttendees,
+      p_cover_image: input.coverImage,
+      p_tags: input.tags.length > 0 ? input.tags : null,
+      p_organizer_name: input.organizerName,
+      p_organizer_type: input.organizerType,
+      p_registration_url: input.registrationUrl,
+      p_timezone: input.timezone,
+    } as never,
+  );
 
   if (error) throw new Error(resolveEventRpcErrorMessage(error, "Etkinlik oluşturulamadı."));
 
@@ -195,9 +191,12 @@ export type EventAttendeeSummary = {
 
 /** Katılım durumu (aggregate RPC — istemci katılımcı satırlarını görmez). */
 export async function joinEvent(eventId: string): Promise<EventAttendeeSummary> {
-  const { data, error } = await supabase.rpc("join_event_v1" as never, {
-    p_event_id: eventId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "join_event_v1" as never,
+    {
+      p_event_id: eventId,
+    } as never,
+  );
   if (error) throw new Error(resolveEventRpcErrorMessage(error, "Etkinliğe katılamadın."));
   const result = data as { going_count: number; is_full: boolean };
   return {
@@ -209,9 +208,12 @@ export async function joinEvent(eventId: string): Promise<EventAttendeeSummary> 
 }
 
 export async function leaveEvent(eventId: string): Promise<EventAttendeeSummary> {
-  const { data, error } = await supabase.rpc("leave_event_v1" as never, {
-    p_event_id: eventId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "leave_event_v1" as never,
+    {
+      p_event_id: eventId,
+    } as never,
+  );
   if (error) throw new Error(resolveEventRpcErrorMessage(error, "Katılım iptal edilemedi."));
   const result = data as { going_count: number };
   return {
@@ -228,9 +230,12 @@ export async function leaveEvent(eventId: string): Promise<EventAttendeeSummary>
  * yüzey kalıbı).
  */
 export async function fetchEventAttendeeCount(eventId: string): Promise<EventAttendeeSummary | null> {
-  const { data, error } = await supabase.rpc("event_attendee_count" as never, {
-    p_event_id: eventId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "event_attendee_count" as never,
+    {
+      p_event_id: eventId,
+    } as never,
+  );
   if (error || !data) return null;
   const result = data as {
     going_count: number;
@@ -242,7 +247,8 @@ export async function fetchEventAttendeeCount(eventId: string): Promise<EventAtt
     goingCount: result.going_count,
     maxAttendees: result.max_attendees,
     isFull: result.is_full,
-    viewerStatus: result.viewer_status === "going" || result.viewer_status === "cancelled" ? result.viewer_status : null,
+    viewerStatus:
+      result.viewer_status === "going" || result.viewer_status === "cancelled" ? result.viewer_status : null,
   };
 }
 

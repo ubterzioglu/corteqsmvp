@@ -7,13 +7,7 @@
 // localStorage'da tutuyordu; burada hepsi veri tabanından gelir.
 
 /** Yaşam masrafı kalemi. DB'de CHECK kısıtı ile kilitli — yeni kalem eklemek migration ister. */
-export type RelocationCostItemKey =
-  | "rent"
-  | "groceries"
-  | "transport"
-  | "insurance"
-  | "utilities"
-  | "childcare";
+export type RelocationCostItemKey = "rent" | "groceries" | "transport" | "insurance" | "utilities" | "childcare";
 
 export type RelocationCostPeriod = "monthly" | "one_off";
 

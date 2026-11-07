@@ -81,7 +81,11 @@ export async function listCarsiCategories(): Promise<CarsiCategory[]> {
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
     if (error) throw error;
-    return (data as CarsiCategoryRow[]).map((row) => ({ key: row.key, labelTr: row.label_tr, sortOrder: row.sort_order }));
+    return (data as CarsiCategoryRow[]).map((row) => ({
+      key: row.key,
+      labelTr: row.label_tr,
+      sortOrder: row.sort_order,
+    }));
   } catch (error: unknown) {
     // BİLEREK boş döner (S06b kararı): kategori listesi yardımcı bir sözlüktür, içerik
     // değildir. Okunamazsa çarşı kategori çipleri olmadan ÇALIŞMAYA DEVAM eder;
@@ -113,10 +117,19 @@ async function fetchReferenceMaps(rows: CarsiItemRow[]): Promise<ReferenceMaps> 
       : Promise.resolve({ data: [] }),
   ]);
   return {
-    countries: new Map(((countriesRes.data ?? []) as Array<{ id: string; name: string }>).map((row) => [row.id, row.name])),
+    countries: new Map(
+      ((countriesRes.data ?? []) as Array<{ id: string; name: string }>).map((row) => [row.id, row.name]),
+    ),
     cities: new Map(((citiesRes.data ?? []) as Array<{ id: string; name: string }>).map((row) => [row.id, row.name])),
-    categories: new Map(((categoriesRes.data ?? []) as Array<{ key: string; label_tr: string }>).map((row) => [row.key, row.label_tr])),
-    owners: new Map(((ownersRes.data ?? []) as Array<{ user_id: string; value_text: string | null }>).map((row) => [row.user_id, row.value_text ?? FALLBACK_PROFILE_NAME])),
+    categories: new Map(
+      ((categoriesRes.data ?? []) as Array<{ key: string; label_tr: string }>).map((row) => [row.key, row.label_tr]),
+    ),
+    owners: new Map(
+      ((ownersRes.data ?? []) as Array<{ user_id: string; value_text: string | null }>).map((row) => [
+        row.user_id,
+        row.value_text ?? FALLBACK_PROFILE_NAME,
+      ]),
+    ),
   };
 }
 
@@ -131,8 +144,8 @@ function mapItem(row: CarsiItemRow, maps: ReferenceMaps): CarsiItem {
     description: row.description,
     priceAmount: row.price_amount,
     priceCurrency: row.price_currency,
-    country: row.country_id ? maps.countries.get(row.country_id) ?? null : null,
-    city: row.city_id ? maps.cities.get(row.city_id) ?? null : null,
+    country: row.country_id ? (maps.countries.get(row.country_id) ?? null) : null,
+    city: row.city_id ? (maps.cities.get(row.city_id) ?? null) : null,
     imageUrls: row.image_urls ?? [],
     videoUrl: row.video_url ?? null,
     contactMode: row.contact_mode,
@@ -207,7 +220,12 @@ export async function getCarsiItem(itemId: string): Promise<CarsiItem | null> {
   if (!isSupabaseConfigured) return null;
 
   try {
-    const { data, error } = await db.from("carsi_items").select(ITEM_SELECT_COLUMNS).eq("id", itemId).is("deleted_at", null).maybeSingle();
+    const { data, error } = await db
+      .from("carsi_items")
+      .select(ITEM_SELECT_COLUMNS)
+      .eq("id", itemId)
+      .is("deleted_at", null)
+      .maybeSingle();
     if (error) throw error;
     if (!data) return null;
     const row = data as CarsiItemRow;
@@ -243,7 +261,14 @@ export async function createCarsiItem(input: CarsiItemCreateInput): Promise<stri
 }
 
 /** İlan durumu geçişi (yayına al / pasife al) ve alan güncellemeleri. */
-export async function updateCarsiItem(input: { itemId: string; title?: string; description?: string; priceAmount?: number; priceCurrency?: string; status?: CarsiItemStatus }): Promise<void> {
+export async function updateCarsiItem(input: {
+  itemId: string;
+  title?: string;
+  description?: string;
+  priceAmount?: number;
+  priceCurrency?: string;
+  status?: CarsiItemStatus;
+}): Promise<void> {
   const parsed = parseWithUserError(carsiItemUpdateSchema, input);
   const { error } = await db.rpc("update_carsi_item_v1", {
     p_item_id: parsed.itemId,

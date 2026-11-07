@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  STEPSTONE_2026,
-  compareStepstone,
-  getStepstoneCities,
-  getStepstoneJobGroups,
-} from "@/lib/germany-stepstone";
+import { STEPSTONE_2026, compareStepstone, getStepstoneCities, getStepstoneJobGroups } from "@/lib/germany-stepstone";
 
 // Kaynak: ref101 StepStone Gehaltsreport 2026.
 

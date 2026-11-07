@@ -4,12 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
 import type { MetaReplyPayload } from "./whatsapp-reply";
-import {
-  buildGraphMessagesUrl,
-  DEFAULT_GRAPH_VERSION,
-  resolveGraphVersion,
-  sendGraphMessage,
-} from "./whatsapp-graph";
+import { buildGraphMessagesUrl, DEFAULT_GRAPH_VERSION, resolveGraphVersion, sendGraphMessage } from "./whatsapp-graph";
 
 const TOKEN = "test-access-token-xyz";
 const PHONE_ID = "123456789";
@@ -33,9 +28,7 @@ function mockFetch(response: { ok: boolean; status: number; body: unknown }) {
   return vi.fn().mockResolvedValue({
     ok: response.ok,
     status: response.status,
-    json: typeof response.body === "function"
-      ? response.body
-      : () => Promise.resolve(response.body),
+    json: typeof response.body === "function" ? response.body : () => Promise.resolve(response.body),
   });
 }
 
@@ -89,9 +82,9 @@ describe("sendGraphMessage", () => {
   it("throws meta_http_<status> on HTTP errors", async () => {
     for (const status of [401, 429, 500]) {
       const fetchMock = mockFetch({ ok: false, status, body: {} });
-      await expect(
-        sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch),
-      ).rejects.toThrow(`meta_http_${status}`);
+      await expect(sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch)).rejects.toThrow(
+        `meta_http_${status}`,
+      );
     }
   });
 
@@ -101,35 +94,35 @@ describe("sendGraphMessage", () => {
       status: 502,
       json: () => Promise.reject(new Error("parse error")),
     });
-    await expect(
-      sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch),
-    ).rejects.toThrow("meta_http_502");
+    await expect(sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch)).rejects.toThrow(
+      "meta_http_502",
+    );
   });
 
   it("throws meta_http_200 when 200 but body is null or non-object", async () => {
     for (const badBody of [null, "not-json"]) {
       const fetchMock = mockFetch({ ok: true, status: 200, body: badBody });
-      await expect(
-        sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch),
-      ).rejects.toThrow("meta_http_200");
+      await expect(sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch)).rejects.toThrow(
+        "meta_http_200",
+      );
     }
   });
 
   it("throws meta_response_invalid when messages is missing or empty", async () => {
     for (const body of [{}, { messages: [] }]) {
       const fetchMock = mockFetch({ ok: true, status: 200, body });
-      await expect(
-        sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch),
-      ).rejects.toThrow("meta_response_invalid");
+      await expect(sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch)).rejects.toThrow(
+        "meta_response_invalid",
+      );
     }
   });
 
   it("throws meta_response_invalid when id lacks wamid. prefix or is wrong type", async () => {
     for (const body of [{ messages: [{ id: "abc" }] }, { messages: [{ id: 42 }] }, { messages: [{}] }]) {
       const fetchMock = mockFetch({ ok: true, status: 200, body });
-      await expect(
-        sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch),
-      ).rejects.toThrow("meta_response_invalid");
+      await expect(sendGraphMessage(config(), TEXT_PAYLOAD, fetchMock as unknown as typeof fetch)).rejects.toThrow(
+        "meta_response_invalid",
+      );
     }
   });
 
@@ -164,8 +157,8 @@ describe("single-client contract", () => {
     expect(sourceFiles.length).toBeGreaterThan(10); // tarama gerçekten dosya buldu (boş küme sahte geçer)
     expect(sourceFiles).toContain(allowed);
 
-    const filesContainingGraph = sourceFiles.filter(
-      (file) => readFileSync(file, "utf8").includes("graph.facebook.com"),
+    const filesContainingGraph = sourceFiles.filter((file) =>
+      readFileSync(file, "utf8").includes("graph.facebook.com"),
     );
 
     expect(filesContainingGraph).toEqual([allowed]);

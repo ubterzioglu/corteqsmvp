@@ -108,8 +108,8 @@ describe("etkinlik yayın durumu", () => {
     // 20.09.2026'ya kadar bu iki switch AdminEventsPage.tsx içine gömülüydü.
     // Üye paneli eklenince ikinci kopya çıkacaktı; iki kopya zamanla ayrışır.
     const admin = readSource("src/pages/admin/AdminEventsPage.tsx");
-    expect(admin).not.toContain('function statusLabel(');
-    expect(admin).not.toContain('function statusTone(');
+    expect(admin).not.toContain("function statusLabel(");
+    expect(admin).not.toContain("function statusTone(");
     expect(admin).toContain("eventStatusLabel");
   });
 });

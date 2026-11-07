@@ -61,13 +61,8 @@ export function scoreExam(
   answers: Record<number, string>,
   realExam: boolean,
 ): ExamScore {
-  const correct = questions.reduce(
-    (acc, q) => acc + (isCorrect(q, answers[q.id]) ? 1 : 0),
-    0,
-  );
+  const correct = questions.reduce((acc, q) => acc + (isCorrect(q, answers[q.id]) ? 1 : 0), 0);
   const total = questions.length;
-  const passed = realExam
-    ? correct >= REAL_EXAM_PASS_THRESHOLD
-    : total > 0 && correct / total >= 0.5;
+  const passed = realExam ? correct >= REAL_EXAM_PASS_THRESHOLD : total > 0 && correct / total >= 0.5;
   return { correct, total, passed };
 }

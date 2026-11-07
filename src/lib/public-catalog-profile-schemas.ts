@@ -6,11 +6,14 @@ import { z } from "zod";
  * defaults missing arrays to [] and refuses structurally broken payloads.
  */
 
-const nullableText = z.string().nullish().transform((value) => {
-  if (typeof value !== "string") return null;
-  const trimmed = value.trim();
-  return trimmed ? trimmed : null;
-});
+const nullableText = z
+  .string()
+  .nullish()
+  .transform((value) => {
+    if (typeof value !== "string") return null;
+    const trimmed = value.trim();
+    return trimmed ? trimmed : null;
+  });
 
 export const publicProfileCategorySchema = z.object({
   slug: z.string().min(1),
@@ -23,7 +26,10 @@ export const publicProfileSectionSchema = z.object({
   label: z.string().min(1),
   description: nullableText,
   sectionArea: z.enum(["preview_card", "detail_card"]).catch("detail_card"),
-  componentKey: z.string().nullish().transform((value) => value ?? null),
+  componentKey: z
+    .string()
+    .nullish()
+    .transform((value) => value ?? null),
   sortOrder: z.number().int().catch(100),
   content: z.record(z.unknown()).catch({}),
 });
@@ -34,7 +40,10 @@ export const publicProfileAttributeSchema = z.object({
   dataType: z.string().catch("text"),
   sortOrder: z.number().int().catch(100),
   valueText: nullableText,
-  valueJson: z.unknown().nullish().transform((value) => value ?? null),
+  valueJson: z
+    .unknown()
+    .nullish()
+    .transform((value) => value ?? null),
 });
 
 export const publicProfileContactSchema = z.object({

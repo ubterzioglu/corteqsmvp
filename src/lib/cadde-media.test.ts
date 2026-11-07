@@ -154,18 +154,14 @@ describe("uploadCaddeMedia", () => {
 
   it("oturum yoksa Türkçe hatayla reddeder, upload denemez", async () => {
     getUserMock.mockResolvedValue({ data: { user: null } });
-    await expect(uploadCaddeMedia(fakeFile("a.jpg", "image/jpeg", 10), "post")).rejects.toThrow(
-      "giriş yapın",
-    );
+    await expect(uploadCaddeMedia(fakeFile("a.jpg", "image/jpeg", 10), "post")).rejects.toThrow("giriş yapın");
     expect(uploadMock).not.toHaveBeenCalled();
   });
 
   it("storage hatasında kullanıcı-dostu mesajla fırlatır", async () => {
     const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     uploadMock.mockResolvedValue({ error: { message: "boom" } });
-    await expect(uploadCaddeMedia(fakeFile("a.jpg", "image/jpeg", 10), "carsi")).rejects.toThrow(
-      "Dosya yüklenemedi",
-    );
+    await expect(uploadCaddeMedia(fakeFile("a.jpg", "image/jpeg", 10), "carsi")).rejects.toThrow("Dosya yüklenemedi");
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[cadde_media_upload_error]",
       expect.objectContaining({ scope: "carsi" }),

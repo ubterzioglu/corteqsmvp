@@ -45,12 +45,7 @@ export default function SurveyQuestionRenderer({ question, value, onChange, erro
         <div className="space-y-2">
           {options.map((opt) => (
             <label key={opt} className="flex items-center gap-2 text-sm text-slate-700">
-              <input
-                type="radio"
-                name={question.id}
-                checked={value === opt}
-                onChange={() => onChange(opt)}
-              />
+              <input type="radio" name={question.id} checked={value === opt} onChange={() => onChange(opt)} />
               {opt}
             </label>
           ))}
@@ -68,9 +63,7 @@ export default function SurveyQuestionRenderer({ question, value, onChange, erro
                   type="checkbox"
                   checked={checked}
                   onChange={(event) => {
-                    const next = event.target.checked
-                      ? [...current, opt]
-                      : current.filter((item) => item !== opt);
+                    const next = event.target.checked ? [...current, opt] : current.filter((item) => item !== opt);
                     onChange(next);
                   }}
                 />

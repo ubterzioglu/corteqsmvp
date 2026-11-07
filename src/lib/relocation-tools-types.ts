@@ -5,13 +5,7 @@
 
 export type ToolMode = "quick" | "detailed";
 
-export type ToolResultKind =
-  | "score"
-  | "ranked_list"
-  | "persona"
-  | "checklist"
-  | "match_list"
-  | "comparison";
+export type ToolResultKind = "score" | "ranked_list" | "persona" | "checklist" | "match_list" | "comparison";
 
 export type ToolAnswerType =
   | "single"
@@ -27,15 +21,7 @@ export type ToolAnswerType =
   | "consent";
 
 export type ToolEventType =
-  | "start"
-  | "answer"
-  | "skip"
-  | "complete"
-  | "result_view"
-  | "cta_click"
-  | "save"
-  | "share"
-  | "abandon";
+  "start" | "answer" | "skip" | "complete" | "result_view" | "cta_click" | "save" | "share" | "abandon";
 
 /** Soru seçeneği (single/multi). score = boyut katkısı (0..1). */
 export interface ToolQuestionOption {
@@ -82,12 +68,7 @@ export interface RelocationToolWithQuestions extends RelocationToolRow {
 }
 
 /** Cevap değeri — soru tipine göre değişir. */
-export type ToolAnswerValue =
-  | string
-  | number
-  | boolean
-  | string[]
-  | Record<string, unknown>;
+export type ToolAnswerValue = string | number | boolean | string[] | Record<string, unknown>;
 
 /** start_session RPC dönüşü. */
 export interface ToolSessionStart {
@@ -158,9 +139,7 @@ export interface ToolPrimaryResultFlags {
  * 0 eşleşme) — kullanıcı "aradığın kriterde şehir bulunamadı" diye anlamsız bir sonuç
  * görüyordu (revizyon 371da675). Bayrağın adını değiştirirsen migration'ı da değiştir.
  */
-export function hasNoTargetMatchFallback(
-  primaryResult: Record<string, unknown> | null | undefined,
-): boolean {
+export function hasNoTargetMatchFallback(primaryResult: Record<string, unknown> | null | undefined): boolean {
   return primaryResult?.fallback_no_target_match === true;
 }
 

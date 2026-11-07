@@ -15,10 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  getPublicIndependentProfile,
-  type IndependentProfile,
-} from "@/lib/independent-profiles";
+import { getPublicIndependentProfile, type IndependentProfile } from "@/lib/independent-profiles";
 import { useSeo } from "@/lib/seo";
 
 const formatAnnouncementDate = (value?: string) => {
@@ -73,7 +70,10 @@ const IndependentProfilePage = () => {
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto max-w-6xl px-4 pb-16 pt-24">
-        <Link to="/associations" className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground">
+        <Link
+          to="/associations"
+          className="mb-6 inline-flex items-center gap-2 text-sm text-muted-foreground transition hover:text-foreground"
+        >
           <ArrowLeft className="h-4 w-4" />
           Kuruluşlara dön
         </Link>
@@ -103,11 +103,7 @@ const IndependentProfilePage = () => {
             <section className="overflow-hidden rounded-[2rem] border border-border bg-[linear-gradient(135deg,#ffffff_0%,#f8fafc_50%,#eef6ff_100%)] shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
               {profile.heroImageUrl ? (
                 <div className="relative">
-                  <img
-                    src={profile.heroImageUrl}
-                    alt={profile.title}
-                    className="h-72 w-full object-cover md:h-80"
-                  />
+                  <img src={profile.heroImageUrl} alt={profile.title} className="h-72 w-full object-cover md:h-80" />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/35 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-8">
                     <HeroCopy profile={profile} dark />
@@ -156,11 +152,16 @@ const IndependentProfilePage = () => {
                     </div>
                     <div className="space-y-3">
                       {profile.announcements.map((announcement) => (
-                        <div key={`${announcement.title}:${announcement.date ?? ""}`} className="rounded-2xl border border-border bg-muted/30 p-4">
+                        <div
+                          key={`${announcement.title}:${announcement.date ?? ""}`}
+                          className="rounded-2xl border border-border bg-muted/30 p-4"
+                        >
                           <div className="flex flex-wrap items-center gap-2">
                             <p className="font-semibold text-foreground">{announcement.title}</p>
                             {announcement.type ? <Badge variant="outline">{announcement.type}</Badge> : null}
-                            {announcement.date ? <Badge variant="secondary">{formatAnnouncementDate(announcement.date)}</Badge> : null}
+                            {announcement.date ? (
+                              <Badge variant="secondary">{formatAnnouncementDate(announcement.date)}</Badge>
+                            ) : null}
                           </div>
                           {announcement.description ? (
                             <p className="mt-2 text-sm text-muted-foreground">{announcement.description}</p>
@@ -177,10 +178,18 @@ const IndependentProfilePage = () => {
                   <CardContent className="space-y-4 p-6">
                     <h2 className="text-lg font-bold text-foreground">İletişim</h2>
                     <ContactRow icon={MapPin} label="Konum" value={[profile.city, profile.country].join(", ")} />
-                    {profile.addressText ? <ContactRow icon={Navigation} label="Adres" value={profile.addressText} /> : null}
-                    {profile.workingHours ? <ContactRow icon={CalendarDays} label="Çalışma Saatleri" value={profile.workingHours} /> : null}
-                    {profile.contactPhone ? <ContactRow icon={Phone} label="Telefon" value={profile.contactPhone} /> : null}
-                    {profile.contactEmail ? <ContactRow icon={Mail} label="E-posta" value={profile.contactEmail} /> : null}
+                    {profile.addressText ? (
+                      <ContactRow icon={Navigation} label="Adres" value={profile.addressText} />
+                    ) : null}
+                    {profile.workingHours ? (
+                      <ContactRow icon={CalendarDays} label="Çalışma Saatleri" value={profile.workingHours} />
+                    ) : null}
+                    {profile.contactPhone ? (
+                      <ContactRow icon={Phone} label="Telefon" value={profile.contactPhone} />
+                    ) : null}
+                    {profile.contactEmail ? (
+                      <ContactRow icon={Mail} label="E-posta" value={profile.contactEmail} />
+                    ) : null}
                     {profile.websiteUrl ? <ContactRow icon={Globe} label="Website" value={profile.websiteUrl} /> : null}
                   </CardContent>
                 </Card>
@@ -230,7 +239,9 @@ const IndependentProfilePage = () => {
 const HeroCopy = ({ profile, dark = false }: { profile: IndependentProfile; dark?: boolean }) => (
   <div className="space-y-3">
     <div className="flex flex-wrap items-center gap-3">
-      <div className={`flex h-16 w-16 items-center justify-center rounded-2xl border text-3xl shadow-sm ${dark ? "border-white/20 bg-white/10" : "border-border bg-card"}`}>
+      <div
+        className={`flex h-16 w-16 items-center justify-center rounded-2xl border text-3xl shadow-sm ${dark ? "border-white/20 bg-white/10" : "border-border bg-card"}`}
+      >
         {profile.logoUrl || "🏛️"}
       </div>
       <div className="space-y-2">
@@ -238,11 +249,15 @@ const HeroCopy = ({ profile, dark = false }: { profile: IndependentProfile; dark
           <Badge variant={dark ? "secondary" : "outline"}>{profile.typeLabel}</Badge>
           <Badge variant={dark ? "secondary" : "secondary"}>{profileKindLabel(profile.profileKind)}</Badge>
         </div>
-        <h1 className={`text-3xl font-black md:text-5xl ${dark ? "text-white" : "text-foreground"}`}>{profile.title}</h1>
+        <h1 className={`text-3xl font-black md:text-5xl ${dark ? "text-white" : "text-foreground"}`}>
+          {profile.title}
+        </h1>
       </div>
     </div>
     {profile.subtitle ? (
-      <p className={`max-w-3xl text-sm md:text-lg ${dark ? "text-slate-100" : "text-muted-foreground"}`}>{profile.subtitle}</p>
+      <p className={`max-w-3xl text-sm md:text-lg ${dark ? "text-slate-100" : "text-muted-foreground"}`}>
+        {profile.subtitle}
+      </p>
     ) : null}
     <div className={`flex flex-wrap items-center gap-3 text-sm ${dark ? "text-slate-100" : "text-muted-foreground"}`}>
       <span className="inline-flex items-center gap-1.5">
@@ -250,7 +265,12 @@ const HeroCopy = ({ profile, dark = false }: { profile: IndependentProfile; dark
         {profile.city}, {profile.country}
       </span>
       {profile.websiteUrl ? (
-        <a href={profile.websiteUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 hover:underline">
+        <a
+          href={profile.websiteUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 hover:underline"
+        >
           <Globe className="h-4 w-4" />
           Resmi web sitesi
         </a>
@@ -259,15 +279,7 @@ const HeroCopy = ({ profile, dark = false }: { profile: IndependentProfile; dark
   </div>
 );
 
-const ContactRow = ({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MapPin;
-  label: string;
-  value: string;
-}) => (
+const ContactRow = ({ icon: Icon, label, value }: { icon: typeof MapPin; label: string; value: string }) => (
   <div className="rounded-2xl border border-border bg-muted/30 p-4">
     <div className="flex items-start gap-3">
       <div className="mt-0.5 rounded-xl bg-background p-2">

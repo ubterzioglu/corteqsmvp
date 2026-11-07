@@ -7,27 +7,23 @@
 // `const db = supabase as any` satırında da uygulanmıştır. Sızıntı riski yok:
 // sonuç `data as CommandCenterItemRow[]` ile dar tipe geri döner.
 
-import { getSupabaseBrowserClient } from '../supabase'
-import { buildCommandCenterFilters } from './filters'
-import { COMMAND_CENTER_SELECT, mapCommandCenterRow } from './row-mapping'
-import {
-  buildCommandCenterSortOrders,
-  isDefaultCommandCenterSort,
-  sortCommandCenterItems,
-} from './sorting'
+import { getSupabaseBrowserClient } from "../supabase";
+import { buildCommandCenterFilters } from "./filters";
+import { COMMAND_CENTER_SELECT, mapCommandCenterRow } from "./row-mapping";
+import { buildCommandCenterSortOrders, isDefaultCommandCenterSort, sortCommandCenterItems } from "./sorting";
 import type {
   CommandCenterItem,
   CommandCenterItemRow,
   CommandCenterItemsResult,
   FetchCommandCenterItemsOptions,
-} from './types'
+} from "./types";
 
 export async function fetchCommandCenterItems(
-  options?: FetchCommandCenterItemsOptions
+  options?: FetchCommandCenterItemsOptions,
 ): Promise<CommandCenterItemsResult> {
-  const supabase = getSupabaseBrowserClient()
-  const page = Math.max(1, options?.page ?? 1)
-  const pageSize = Math.max(1, options?.pageSize ?? 50)
+  const supabase = getSupabaseBrowserClient();
+  const page = Math.max(1, options?.page ?? 1);
+  const pageSize = Math.max(1, options?.pageSize ?? 50);
 
   if (!supabase) {
     return {
@@ -35,11 +31,11 @@ export async function fetchCommandCenterItems(
       totalCount: 0,
       page,
       pageSize,
-    }
+    };
   }
 
-  const from = (page - 1) * pageSize
-  const to = from + pageSize - 1
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
 
   // Filtreler .order()/.range() zincirinden ONCE uygulanir. TS2589'un gercek
   // sebebi jenerik degil, DERIN builder tipine yeniden atamaydi: her .eq() yeni
@@ -53,114 +49,112 @@ export async function fetchCommandCenterItems(
   // ile asagida zaten dar tipe geri donuyor.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = supabase
-    .from('command_center_items')
-    .select(COMMAND_CENTER_SELECT, { count: 'exact' })
-    .is('deleted_at', null)
-    .is('archived_at', null)
+    .from("command_center_items")
+    .select(COMMAND_CENTER_SELECT, { count: "exact" })
+    .is("deleted_at", null)
+    .is("archived_at", null);
 
   for (const op of buildCommandCenterFilters(options)) {
-    if (op.kind === 'eq') query = query.eq(op.column, op.value)
-    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
-    else query = query.or(op.filters)
+    if (op.kind === "eq") query = query.eq(op.column, op.value);
+    else if (op.kind === "neq") query = query.neq(op.column, op.value);
+    else query = query.or(op.filters);
   }
 
   // A08b: sıralama anahtarı parametrik; varsayılan zincir (priority desc)
   // korunur. `.order()` çağrıları filtrelerden SONRA, `.range()`ten önce.
   for (const order of buildCommandCenterSortOrders(options?.sortKey, options?.sortDirection)) {
-    query = query.order(order.column, { ascending: order.ascending })
+    query = query.order(order.column, { ascending: order.ascending });
   }
 
-  const { data, error, count } = await query.range(from, to)
+  const { data, error, count } = await query.range(from, to);
   if (error || !data) {
     return {
       items: [],
       totalCount: 0,
       page,
       pageSize,
-    }
+    };
   }
 
-  const rows = (data as CommandCenterItemRow[]).map(mapCommandCenterRow)
+  const rows = (data as CommandCenterItemRow[]).map(mapCommandCenterRow);
   return {
     // İstemci tarafı ince ayar sıralaması YALNIZ varsayılan anahtarda uygulanır;
     // özel sıralamada sunucu sırasını bozmamak için ham sıra korunur.
-    items: isDefaultCommandCenterSort(options?.sortKey, options?.sortDirection)
-      ? sortCommandCenterItems(rows)
-      : rows,
+    items: isDefaultCommandCenterSort(options?.sortKey, options?.sortDirection) ? sortCommandCenterItems(rows) : rows,
     totalCount: count ?? 0,
     page,
     pageSize,
-  }
+  };
 }
 
 export async function fetchDeletedCommandCenterItems(
-  options?: FetchCommandCenterItemsOptions
+  options?: FetchCommandCenterItemsOptions,
 ): Promise<CommandCenterItem[]> {
-  const supabase = getSupabaseBrowserClient()
+  const supabase = getSupabaseBrowserClient();
   if (!supabase) {
-    return []
+    return [];
   }
 
   // Filtreler .order()/.range() zincirinden ONCE uygulanir; `query` tipi Q6
   // (tsc TS2589) nedeniyle bilerek `any` — açıklama fetchCommandCenterItems'ta.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = supabase
-    .from('command_center_items')
+    .from("command_center_items")
     .select(COMMAND_CENTER_SELECT)
-    .is('archived_at', null)
-    .not('deleted_at', 'is', null)
+    .is("archived_at", null)
+    .not("deleted_at", "is", null);
 
   for (const op of buildCommandCenterFilters(options)) {
-    if (op.kind === 'eq') query = query.eq(op.column, op.value)
-    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
-    else query = query.or(op.filters)
+    if (op.kind === "eq") query = query.eq(op.column, op.value);
+    else if (op.kind === "neq") query = query.neq(op.column, op.value);
+    else query = query.or(op.filters);
   }
 
   const { data, error } = await query
-    .order('deleted_at', { ascending: false })
-    .order('priority', { ascending: false })
-    .order('item_type', { ascending: true })
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false })
+    .order("deleted_at", { ascending: false })
+    .order("priority", { ascending: false })
+    .order("item_type", { ascending: true })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
   if (error || !data) {
-    return []
+    return [];
   }
 
-  return (data as CommandCenterItemRow[]).map(mapCommandCenterRow)
+  return (data as CommandCenterItemRow[]).map(mapCommandCenterRow);
 }
 
 export async function fetchArchivedCommandCenterItems(
-  options?: FetchCommandCenterItemsOptions
+  options?: FetchCommandCenterItemsOptions,
 ): Promise<CommandCenterItem[]> {
-  const supabase = getSupabaseBrowserClient()
+  const supabase = getSupabaseBrowserClient();
   if (!supabase) {
-    return []
+    return [];
   }
 
   // Filtreler .order()/.range() zincirinden ONCE uygulanir; `query` tipi Q6
   // (tsc TS2589) nedeniyle bilerek `any` — açıklama fetchCommandCenterItems'ta.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query: any = supabase
-    .from('command_center_items')
+    .from("command_center_items")
     .select(COMMAND_CENTER_SELECT)
-    .is('deleted_at', null)
-    .not('archived_at', 'is', null)
+    .is("deleted_at", null)
+    .not("archived_at", "is", null);
 
   for (const op of buildCommandCenterFilters(options)) {
-    if (op.kind === 'eq') query = query.eq(op.column, op.value)
-    else if (op.kind === 'neq') query = query.neq(op.column, op.value)
-    else query = query.or(op.filters)
+    if (op.kind === "eq") query = query.eq(op.column, op.value);
+    else if (op.kind === "neq") query = query.neq(op.column, op.value);
+    else query = query.or(op.filters);
   }
 
   const { data, error } = await query
-    .order('archived_at', { ascending: false })
-    .order('priority', { ascending: false })
-    .order('item_type', { ascending: true })
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false })
+    .order("archived_at", { ascending: false })
+    .order("priority", { ascending: false })
+    .order("item_type", { ascending: true })
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
   if (error || !data) {
-    return []
+    return [];
   }
 
-  return (data as CommandCenterItemRow[]).map(mapCommandCenterRow)
+  return (data as CommandCenterItemRow[]).map(mapCommandCenterRow);
 }

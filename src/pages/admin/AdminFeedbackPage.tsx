@@ -16,13 +16,7 @@ import {
   type AdminStatusTone,
 } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { fetchUserEmails } from "@/lib/admin-shell/revision-requests";
 import {
@@ -70,8 +64,7 @@ const AdminFeedbackPage = () => {
   const emails = emailsQuery.data ?? {};
 
   const statusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: FeedbackStatus }) =>
-      updateFeedbackStatus(id, status),
+    mutationFn: ({ id, status }: { id: string; status: FeedbackStatus }) => updateFeedbackStatus(id, status),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: FEEDBACK_KEY });
       toast({ title: "Durum güncellendi" });
@@ -111,10 +104,7 @@ const AdminFeedbackPage = () => {
       {feedbackQuery.isLoading ? (
         <AdminLoadingState label="Geri bildirimler yükleniyor" rows={4} />
       ) : feedbackQuery.isError ? (
-        <AdminErrorState
-          description="Geri bildirimler yüklenemedi."
-          onRetry={() => feedbackQuery.refetch()}
-        />
+        <AdminErrorState description="Geri bildirimler yüklenemedi." onRetry={() => feedbackQuery.refetch()} />
       ) : feedbackList.length === 0 ? (
         <AdminEmptyState
           icon={Inbox}
@@ -141,10 +131,8 @@ const AdminFeedbackPage = () => {
                 </div>
                 <p className="whitespace-pre-wrap text-sm text-foreground">{feedback.body}</p>
                 <p className="mt-1.5 text-xs text-muted-foreground">
-                  {feedback.createdBy
-                    ? emails[feedback.createdBy] || "Üye"
-                    : "Bilinmeyen üye"}{" "}
-                  · {formatDate(feedback.createdAt)}
+                  {feedback.createdBy ? emails[feedback.createdBy] || "Üye" : "Bilinmeyen üye"} ·{" "}
+                  {formatDate(feedback.createdAt)}
                 </p>
               </div>
 

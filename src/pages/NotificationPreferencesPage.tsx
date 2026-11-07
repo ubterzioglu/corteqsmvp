@@ -4,10 +4,7 @@ import { Bell, Loader2 } from "lucide-react";
 import CityFollowCard from "@/components/profile/CityFollowCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import {
-  getRelocationReminderPreference,
-  setRelocationReminderOptOut,
-} from "@/lib/relocation-reminders-api";
+import { getRelocationReminderPreference, setRelocationReminderOptOut } from "@/lib/relocation-reminders-api";
 import { useSeo } from "@/lib/seo";
 
 const QUERY_KEY = ["notification-preferences", "relocation-tool-reminders"] as const;
@@ -43,7 +40,9 @@ export default function NotificationPreferencesPage() {
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Tercihler yükleniyor…
             </p>
           ) : preferenceQuery.isError ? (
-            <p role="alert" className="text-sm text-destructive">Bildirim tercihleri yüklenemedi.</p>
+            <p role="alert" className="text-sm text-destructive">
+              Bildirim tercihleri yüklenemedi.
+            </p>
           ) : (
             <div className="flex items-start justify-between gap-4 rounded-lg border p-4">
               <div className="space-y-1">
@@ -69,7 +68,9 @@ export default function NotificationPreferencesPage() {
             </div>
           )}
           {mutation.isError && (
-            <p role="alert" className="text-sm text-destructive">Tercih kaydedilemedi.</p>
+            <p role="alert" className="text-sm text-destructive">
+              Tercih kaydedilemedi.
+            </p>
           )}
         </CardContent>
       </Card>

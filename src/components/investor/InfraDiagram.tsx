@@ -15,14 +15,26 @@ const H = 84;
 const BOXES: readonly Box[] = [
   { x: 20, y: 138, title: "Kullanıcı", lines: ["Tarayıcı · mobil"], tone: "light" },
   { x: 260, y: 26, title: "CDN · TLS", lines: ["Önbellek ve şifreleme"], tone: "light" },
-  { x: 500, y: 26, title: "nginx konteyneri", lines: ["Docker · kendi PaaS'ımız", "Güvenlik başlıkları · CSP"], tone: "navy" },
+  {
+    x: 500,
+    y: 26,
+    title: "nginx konteyneri",
+    lines: ["Docker · kendi PaaS'ımız", "Güvenlik başlıkları · CSP"],
+    tone: "navy",
+  },
   { x: 260, y: 250, title: "Yönetilen API", lines: ["Kimlik · REST · Dosya", "Oturum jetonu + RLS"], tone: "navy" },
   { x: 500, y: 250, title: "PostgreSQL", lines: ["RLS · pgvector · PostGIS", "Zamanlanmış işler"], tone: "gold" },
-  { x: 740, y: 250, title: "Sunucu fonksiyonları", lines: ["Deno çalışma ortamı", "Yapay zekâ ve e-posta işleri"], tone: "navy" },
+  {
+    x: 740,
+    y: 250,
+    title: "Sunucu fonksiyonları",
+    lines: ["Deno çalışma ortamı", "Yapay zekâ ve e-posta işleri"],
+    tone: "navy",
+  },
   { x: 740, y: 26, title: "Dış servisler", lines: ["Yapay zekâ modeli", "E-posta gönderimi"], tone: "light" },
 ];
 
-const FILL ={ navy: "#10264a", gold: "#fbf6e9", light: "#ffffff" } as const;
+const FILL = { navy: "#10264a", gold: "#fbf6e9", light: "#ffffff" } as const;
 const STROKE = { navy: "#10264a", gold: "#c8a24a", light: "#cfd8e6" } as const;
 const TITLE = { navy: "#ffffff", gold: "#0a1a33", light: "#0a1a33" } as const;
 const TEXT = { navy: "#9fb0cb", gold: "#56657c", light: "#56657c" } as const;
@@ -41,8 +53,8 @@ const InfraDiagram = () => (
     <svg viewBox="0 0 960 360" role="img" aria-labelledby="inv-infra-title inv-infra-desc">
       <title id="inv-infra-title">Altyapı mimarisi</title>
       <desc id="inv-infra-desc">
-        Kullanıcı, uygulamayı CDN arkasındaki nginx konteynerinden alır; veri istekleri yönetilen API üzerinden
-        satır düzeyi güvenlikle PostgreSQL'e gider. Sunucu fonksiyonları dış yapay zekâ ve e-posta servislerini çağırır.
+        Kullanıcı, uygulamayı CDN arkasındaki nginx konteynerinden alır; veri istekleri yönetilen API üzerinden satır
+        düzeyi güvenlikle PostgreSQL'e gider. Sunucu fonksiyonları dış yapay zekâ ve e-posta servislerini çağırır.
       </desc>
       <defs>
         <marker id="inv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">

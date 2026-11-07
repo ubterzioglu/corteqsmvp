@@ -24,7 +24,9 @@ export function LandingDetailMetaCards({ landing }: LandingDetailMetaCardsProps)
         <MapPin className="h-4.5 w-4.5 shrink-0" />
         <div className="min-w-0">
           <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">Lokasyon</p>
-          <p className="truncate text-sm font-semibold">{landing.city}, {landing.country}</p>
+          <p className="truncate text-sm font-semibold">
+            {landing.city}, {landing.country}
+          </p>
         </div>
       </div>
 

@@ -3,14 +3,7 @@
 import { readdir, stat } from "node:fs/promises";
 import path from "node:path";
 
-const DEFAULT_SKIP_DIRS = new Set([
-  "node_modules",
-  ".git",
-  "dist",
-  "coverage",
-  "build",
-  ".vite",
-]);
+const DEFAULT_SKIP_DIRS = new Set(["node_modules", ".git", "dist", "coverage", "build", ".vite"]);
 
 /**
  * @param {string} rootDir Mutlak kök dizin (genelde process.cwd()).

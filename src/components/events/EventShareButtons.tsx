@@ -88,12 +88,7 @@ export function EventShareButtons({ share, variant = "full" }: EventShareButtons
   return (
     <div className="flex flex-wrap gap-2">
       {EVENT_SHARE_TARGETS.map((target) => (
-        <Button
-          key={target.key}
-          variant="outline"
-          size="sm"
-          onClick={() => openShare(target.buildHref(share))}
-        >
+        <Button key={target.key} variant="outline" size="sm" onClick={() => openShare(target.buildHref(share))}>
           {target.label}
         </Button>
       ))}

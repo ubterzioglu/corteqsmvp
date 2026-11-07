@@ -7,7 +7,8 @@ export const ADMIN_UPDATES_2026_06: AdminUpdateEntry[] = [
   {
     id: "20260630-statusreport3006-cadde-premium-durum-raporu",
     date: "30 Haziran 2026",
-    title: "Cadde 3.0 ve premium panelin eksiklerini tek sayfada toplayan bir durum/karar raporu hazırlandı (/statusreport3006)",
+    title:
+      "Cadde 3.0 ve premium panelin eksiklerini tek sayfada toplayan bir durum/karar raporu hazırlandı (/statusreport3006)",
     items: [
       "Ortakla (Burak & UBT) tartışmak için, sitenin Cadde 3.0 bölümünün ve premium profil panelinin BUGÜNKÜ durumunu — neyin gerçekten çalıştığını, neyin henüz 'maket/yakında' olduğunu, nelerin eksik kaldığını ve nelere karar verilmesi gerektiğini — tek bir sayfada toplayan kapsamlı bir durum raporu hazırlandı. Adres: corteqs.net/statusreport3006 (giriş gerektirmez, linke tıklayan açar).",
       "Rapor iki bölümden oluşuyor. Bölüm 1 (Cadde 3.0): modülün altyapı eksikleri (telefon doğrulama/SMS, eski tabloların temizliği, types yenileme, görsel moderasyonu vb.) ve kullanıcıya görünen yüzey eksikleri (public profilde çarşı vitrini, diaspora seçici, premium kademe) frontend/backend ayrı ayrı, her birine 'tamam / kısmen / açık' rozetiyle. Bölüm 2 (Premium Panel): paneldeki 11 sekmenin hangisinin çalıştığı, hangisinin boş maket olduğu sekme sekme; ayrıca 'çalışıyor görünüp aslında demo olan' parçalar (Stripe ödemesi, kupon, takip) ayrı bir uyarı kutusunda.",
@@ -18,7 +19,8 @@ export const ADMIN_UPDATES_2026_06: AdminUpdateEntry[] = [
   {
     id: "20260630-veritabani-migration-senkronu",
     date: "30 Haziran 2026",
-    title: "Veritabanı sürüm geçmişi (migration) canlı durumla yeniden hizalandı — 33 kayıt düzeltildi, 1 eksik uygulandı",
+    title:
+      "Veritabanı sürüm geçmişi (migration) canlı durumla yeniden hizalandı — 33 kayıt düzeltildi, 1 eksik uygulandı",
     items: [
       "Veritabanı değişikliklerini takip eden sürüm sistemiyle (migration geçmişi) canlı veritabanının gerçek durumu arasında bir uyumsuzluk tespit edildi: 33 değişiklik 'uygulanmamış' görünüyordu. Tek tek kontrol edildiğinde 32'sinin aslında daha önce canlıya elle uygulandığı, fakat sistemin takip defterine işlenmediği görüldü; yalnızca 1 tanesi gerçekten eksikti.",
       "Gerçekten eksik olan tek değişiklik (28 Haziran'da eklenen 'Sosyal Paylaşım Takibi' bölümünün veritabanı tabloları — social_share_log + notlar tablosu) canlıya uygulandı ve doğrulandı. Böylece /admin/social-share-vault sayfasının arka planı artık tam olarak canlıda.",

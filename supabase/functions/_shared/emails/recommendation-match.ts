@@ -80,10 +80,14 @@ export function buildRecommendationMatchEmail(
           <td style="border:1px solid ${BORDER};"><strong>Talep</strong></td>
           <td style="border:1px solid ${BORDER};">${escapeHtml(title)}</td>
         </tr>
-        ${location ? `<tr>
+        ${
+          location
+            ? `<tr>
           <td style="border:1px solid ${BORDER};"><strong>Konum</strong></td>
           <td style="border:1px solid ${BORDER};">${escapeHtml(location)}</td>
-        </tr>` : ""}
+        </tr>`
+            : ""
+        }
       </table>
       <p style="margin:20px 0;">
         <a href="${escapeHtml(requestUrl)}"

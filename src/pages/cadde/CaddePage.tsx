@@ -37,7 +37,6 @@ import { PAGE_SEO } from "@/lib/page-seo";
 // kaldırıldı — üst ana menü zaten aynı hedefleri taşıyor, cadde login-gated olduğu için
 // Giriş/Kayıt linkleri buraya hiç düşmüyordu.
 
-
 const CaddePage = () => {
   const { session, user } = useAuth();
   const queryClient = useQueryClient();
@@ -187,8 +186,8 @@ const CaddePage = () => {
       onRetry={() => void actorContextQuery.refetch()}
       isRetrying={actorContextQuery.isFetching}
     >
-    <main className="cadde-shell">
-      {/* Y1 (m151, 09.09.2026): kimlik şeridi KALDIRILDI.
+      <main className="cadde-shell">
+        {/* Y1 (m151, 09.09.2026): kimlik şeridi KALDIRILDI.
           Kritik "logo bandı ile sayfa başlığını birleştir" diyordu, ama ölçünce
           birleştirilecek bir şey olmadığı çıktı: şeridin yüksekliğini metin değil
           ZİL belirliyordu (h-11 = 44px + kart py-3 + kenarlık). Yani başlığı paylaşılan
@@ -200,11 +199,11 @@ const CaddePage = () => {
           tanıtım cümlesi. Tek işlevsel öge zildi ve kapsam şeridine taşındı.
           ⚠️ Akışın üstüne yeni bir tam genişlik bloğu ekleme — aşağıdaki 05.08.2026
           notunu oku. */}
-      {/* Sayfanın ilk ve tek h1'i. Bugüne kadar /cadde'de HİÇ h1 yoktu (başlık bir
+        {/* Sayfanın ilk ve tek h1'i. Bugüne kadar /cadde'de HİÇ h1 yoktu (başlık bir
           CardTitle = h3'tü); şerit kalkarken bu a11y/SEO açığı 0px maliyetle kapandı. */}
-      <h1 className="sr-only">Diaspora Cadde</h1>
+        <h1 className="sr-only">Diaspora Cadde</h1>
 
-      {/* Izgara 2 kolon: akış + sağ kolon. Akışın ÜSTÜNDE hiçbir tam genişlik bloğu
+        {/* Izgara 2 kolon: akış + sağ kolon. Akışın ÜSTÜNDE hiçbir tam genişlik bloğu
           yoktur — kullanıcı kararı 05.08.2026 (üçüncü ve son revizyon): akış doğrudan
           ilk sırada gelir. Konum + Aktif Cafeler + İnsanları Keşfet günün ilk iki
           denemesinde (önce üç satır, sonra üç kolon) akışın üstündeydi; ikisi de
@@ -214,48 +213,45 @@ const CaddePage = () => {
           Buraya yeni bir tam genişlik bloğu eklemeden önce bu geçmişi oku: akışın
           üstüne konan her blok katlama sorununu geri getirir.
           pt-4/pb-5: şerit gidince üstteki 20px boşluk fazla kaldı, 16px'e indi. */}
-      <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 pb-5 pt-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
-        {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
+        <section className="mx-auto grid w-full max-w-7xl gap-5 px-4 pb-5 pt-4 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-6">
+          {/* m85: orta kolon = paylaşım kutusu + akış, başka hiçbir şey. Buradaki
             "Diaspora Cadde" başlık kartı üst şeridin birebir kopyasıydı, akışı bir kart
             aşağı itiyordu — silindi, filtre özeti üst şeritte duruyor. */}
-        <CaddeFeedView
-          composerState={composerState}
-          engagement={engagement}
-          feedState={feedState}
-          layout={layout}
-          filters={filters}
-          updateFilters={updateFilters}
-          scrollToComposer={scrollToComposer}
-          feedQuery={feedQuery}
-          countriesQuery={countriesQuery}
-          allCitiesQuery={allCitiesQuery}
-          hasNewPosts={hasNewPosts}
-          resetNewPosts={resetNewPosts}
-          setSearchParams={setSearchParams}
-        />
+          <CaddeFeedView
+            composerState={composerState}
+            engagement={engagement}
+            feedState={feedState}
+            layout={layout}
+            filters={filters}
+            updateFilters={updateFilters}
+            scrollToComposer={scrollToComposer}
+            feedQuery={feedQuery}
+            countriesQuery={countriesQuery}
+            allCitiesQuery={allCitiesQuery}
+            hasNewPosts={hasNewPosts}
+            resetNewPosts={resetNewPosts}
+            setSearchParams={setSearchParams}
+          />
 
-        {/* A06c: sağ kolon BİREBİR taşındı — CaddeRightRail.tsx. Sıra/konum
+          {/* A06c: sağ kolon BİREBİR taşındı — CaddeRightRail.tsx. Sıra/konum
             değişmedi (K01'e bağlı değil); prop'lar gruplu (A06b dersi). */}
-        <CaddeRightRail
-          layout={layout}
-          filters={filters}
-          updateFilters={updateFilters}
-          countriesQuery={countriesQuery}
-          citiesQuery={citiesQuery}
-          cafesQuery={cafesQuery}
-          peopleSearch={peopleSearch}
-          debouncedPeopleQuery={debouncedPeopleQuery}
-          peopleQueryText={peopleQueryText}
-          setPeopleQueryText={setPeopleQueryText}
-          hasSession={Boolean(session)}
-        />
-      </section>
-    </main>
+          <CaddeRightRail
+            layout={layout}
+            filters={filters}
+            updateFilters={updateFilters}
+            countriesQuery={countriesQuery}
+            citiesQuery={citiesQuery}
+            cafesQuery={cafesQuery}
+            peopleSearch={peopleSearch}
+            debouncedPeopleQuery={debouncedPeopleQuery}
+            peopleQueryText={peopleQueryText}
+            setPeopleQueryText={setPeopleQueryText}
+            hasSession={Boolean(session)}
+          />
+        </section>
+      </main>
     </CaddeProfileGate>
   );
 };
 
 export default CaddePage;
-
-
-

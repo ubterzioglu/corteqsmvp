@@ -1,7 +1,19 @@
 const TRACKING_PARAMS = new Set([
-  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
-  "fbclid", "gclid", "mc_cid", "mc_eid", "ref", "source",
-  "_ga", "msclkid", "twclid", "igshid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "fbclid",
+  "gclid",
+  "mc_cid",
+  "mc_eid",
+  "ref",
+  "source",
+  "_ga",
+  "msclkid",
+  "twclid",
+  "igshid",
 ]);
 
 export function canonicalizeUrl(rawUrl: string): string | null {

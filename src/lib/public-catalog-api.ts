@@ -67,9 +67,7 @@ const SELECT_COLUMNS =
  */
 const PAGE_SIZE = 500;
 
-const countryNameByCode = new Map(
-  geoCountrySeeds.map((seed) => [seed.code.toUpperCase(), seed.name]),
-);
+const countryNameByCode = new Map(geoCountrySeeds.map((seed) => [seed.code.toUpperCase(), seed.name]));
 
 /** `DE` → `Almanya`. Bilinmeyen kod kendisi olarak döner (boş rozet yerine kod). */
 export function countryNameOf(code: string | null | undefined): string | null {

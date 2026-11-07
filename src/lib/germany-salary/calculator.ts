@@ -13,10 +13,7 @@ function toMonthly(amount: number, period: SalaryPeriod): number {
 }
 
 /** Brütten neti hesapla (tüm kesintiler + şirket aracı menfaati). */
-function netFromGross(
-  grossMonthly: number,
-  input: SalaryInput,
-): Omit<SalaryResult, "grossMonthly" | "grossYearly"> {
+function netFromGross(grossMonthly: number, input: SalaryInput): Omit<SalaryResult, "grossMonthly" | "grossYearly"> {
   const companyCarBenefit = calcCompanyCarBenefit(
     input.companyCar ?? {
       enabled: false,
@@ -122,9 +119,7 @@ function findGrossForTargetNet(
     const mid = (lo + hi) / 2;
     const out = netFromGross(mid, { ...input, amount: mid, period: "monthly", type: "gross" });
 
-    if (
-      Math.abs(out.netMonthly - targetNetMonthly) < Math.abs(bestOut.netMonthly - targetNetMonthly)
-    ) {
+    if (Math.abs(out.netMonthly - targetNetMonthly) < Math.abs(bestOut.netMonthly - targetNetMonthly)) {
       bestGross = mid;
       bestOut = out;
     }

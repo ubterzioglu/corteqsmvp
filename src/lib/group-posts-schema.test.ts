@@ -51,8 +51,7 @@ describe("G16 · salt ekleme güvencesi", () => {
 });
 
 describe("G16 · group_posts tablosu", () => {
-  const table = () =>
-    sliceBetween(code(), "create table if not exists public.group_posts", ");", "posts tablosu");
+  const table = () => sliceBetween(code(), "create table if not exists public.group_posts", ");", "posts tablosu");
 
   it("alanlar tam: durum · eskalasyon saati · moderasyon izi", () => {
     for (const column of [
@@ -72,9 +71,7 @@ describe("G16 · group_posts tablosu", () => {
   });
 
   it("post_status §3.D'deki beş değer", () => {
-    expect(table()).toContain(
-      "'published', 'pending_group_admin', 'pending_platform', 'rejected', 'removed'",
-    );
+    expect(table()).toContain("'published', 'pending_group_admin', 'pending_platform', 'rejected', 'removed'");
   });
 
   it("eskalasyon cron'u için kısmi indeks (kabul #7 zemini)", () => {
@@ -107,12 +104,7 @@ describe("G16 · istemciye yazma yolu YOK", () => {
   });
 
   it("select görünürlüğü dört dal: published+published · yazar · admin · sahip kuyruğu", () => {
-    const policy = sliceBetween(
-      code(),
-      "create policy group_posts_select_visible",
-      ";",
-      "select politika",
-    );
+    const policy = sliceBetween(code(), "create policy group_posts_select_visible", ";", "select politika");
 
     expect(policy).toContain("post_status = 'published'");
     expect(policy).toContain("w.listing_status = 'published'");
@@ -162,9 +154,7 @@ describe("G16 · güvenilir üye (grup bazlı)", () => {
   });
 
   it("authenticated'a açık, anon'a kapalı (rozet gösterimi)", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.group_member_is_trusted(uuid, uuid) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.group_member_is_trusted(uuid, uuid) to authenticated;");
   });
 });
 
@@ -266,9 +256,7 @@ describe("G16 · 48 saat eskalasyonu (kabul #7)", () => {
   it("YALNIZ service_role çağırabilir (cron G22)", () => {
     const sql = flat();
 
-    expect(sql).toContain(
-      "revoke all on function public.group_posts_escalate_due() from public, anon, authenticated;",
-    );
+    expect(sql).toContain("revoke all on function public.group_posts_escalate_due() from public, anon, authenticated;");
     expect(sql).toContain("grant execute on function public.group_posts_escalate_due() to service_role;");
   });
 });

@@ -35,13 +35,7 @@ interface PublicProfileSectionFrameProps {
  * değerinde üst üste çiziliyordu. Tek bölümlü profillerde kusur GÖRÜNMEZ
  * (h-full o zaman kartın kendi boyuna eşit), bu yüzden sessizce yaşadı.
  */
-const PublicProfileSectionFrame = ({
-  title,
-  description,
-  Icon,
-  accent,
-  children,
-}: PublicProfileSectionFrameProps) => (
+const PublicProfileSectionFrame = ({ title, description, Icon, accent, children }: PublicProfileSectionFrameProps) => (
   <section className="rounded-[22px] border border-border bg-background/70 p-4 md:p-5">
     <div className="mb-3 flex items-center gap-2">
       <Icon className={`h-4 w-4 shrink-0 ${ICON_TEXT_BY_ACCENT[accent]}`} aria-hidden="true" />

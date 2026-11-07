@@ -98,7 +98,10 @@ const BloggerContestPage = () => {
           style={{ backgroundImage: `url(${bloggerVisual})`, backgroundSize: "cover", backgroundPosition: "center" }}
           aria-hidden
         />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/85 via-background/92 to-background" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/85 via-background/92 to-background"
+          aria-hidden
+        />
 
         <div className="container mx-auto px-4 py-16 lg:py-24 relative z-10">
           {/* HERO */}
@@ -107,21 +110,18 @@ const BloggerContestPage = () => {
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 mb-6">
                 <PenLine className="w-4 h-4 text-primary" />
                 <span className="text-primary text-sm font-semibold tracking-wider uppercase">
-                ✍️ CorteQS Blogger İçerik Yarışması
+                  ✍️ CorteQS Blogger İçerik Yarışması
                 </span>
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-                Global Türklerin en büyük{" "}
-                <span className="text-accent">yazılı anlatı arşivini</span>{" "}
-                birlikte oluşturuyoruz.
+                Global Türklerin en büyük <span className="text-accent">yazılı anlatı arşivini</span> birlikte
+                oluşturuyoruz.
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
                 Hikâyeni, gözlemini veya diaspora anlatını yaz. CorteQS'te yayınla. Dünyaya duyur.
               </p>
-
-
             </div>
 
             <div className="relative mx-auto w-full max-w-lg overflow-hidden rounded-2xl border border-white/60 bg-card/80 shadow-2xl shadow-primary/10 backdrop-blur-sm">
@@ -133,14 +133,20 @@ const BloggerContestPage = () => {
                 height={1024}
                 loading="eager"
               />
-              <div className="absolute inset-0 bg-gradient-to-tr from-card/55 via-transparent to-primary/15" aria-hidden />
+              <div
+                className="absolute inset-0 bg-gradient-to-tr from-card/55 via-transparent to-primary/15"
+                aria-hidden
+              />
             </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-20 border-t border-border pt-8">
             {statCards.map((s) => (
-              <div key={s.label} className="rounded-xl border border-white/60 bg-card/85 p-5 text-center shadow-sm backdrop-blur-sm transition-all hover:border-primary/35 hover:shadow-lg">
+              <div
+                key={s.label}
+                className="rounded-xl border border-white/60 bg-card/85 p-5 text-center shadow-sm backdrop-blur-sm transition-all hover:border-primary/35 hover:shadow-lg"
+              >
                 <s.icon className="w-6 h-6 text-primary mx-auto mb-3" />
                 <div className="text-2xl md:text-3xl font-extrabold text-foreground">{s.value}</div>
                 <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
@@ -152,20 +158,19 @@ const BloggerContestPage = () => {
           <div className="max-w-4xl mx-auto mb-20 space-y-5 rounded-2xl border border-white/60 bg-card/80 p-6 text-lg leading-relaxed text-muted-foreground shadow-sm backdrop-blur-sm md:p-8">
             <p>
               CorteQS Blogger İçerik Yarışması, dünyanın farklı ülkelerinde yaşayan{" "}
-              <span className="text-primary font-semibold">Global Türklerin</span> kişisel hikâyelerini,
-              diaspora deneyimlerini, kültürel gözlemlerini, mücadelelerini, mizahını ve gusto anlayışını
-              yazılı anlatı olarak bir araya getirir.
+              <span className="text-primary font-semibold">Global Türklerin</span> kişisel hikâyelerini, diaspora
+              deneyimlerini, kültürel gözlemlerini, mücadelelerini, mizahını ve gusto anlayışını yazılı anlatı olarak
+              bir araya getirir.
             </p>
             <p>
-              İçerik yalnızca kişinin kendi yaşam hikâyesiyle sınırlı değildir. Katılımcılar yaşadıkları
-              ülkedeki Türk diasporasını, topluluk başarılarını, kültürel karşılaşmaları, iş hayatını,
-              sosyal yaşamı, yeni nesil göç hikâyelerini ve Global Türklerin ortak meselelerini de konu
-              edinebilir.
+              İçerik yalnızca kişinin kendi yaşam hikâyesiyle sınırlı değildir. Katılımcılar yaşadıkları ülkedeki Türk
+              diasporasını, topluluk başarılarını, kültürel karşılaşmaları, iş hayatını, sosyal yaşamı, yeni nesil göç
+              hikâyelerini ve Global Türklerin ortak meselelerini de konu edinebilir.
             </p>
             <p>
-              Uygun blog yazıları CorteQS platformunda yayınlanır. Yazılar; sosyal medya teaser'ları,
-              görsel anlatımlar, podcast, seslendirme, özgün müzik, kısa video teaser'lar ve yaratıcı medya
-              bileşenleriyle daha geniş kitlelere ulaştırılabilir.
+              Uygun blog yazıları CorteQS platformunda yayınlanır. Yazılar; sosyal medya teaser'ları, görsel anlatımlar,
+              podcast, seslendirme, özgün müzik, kısa video teaser'lar ve yaratıcı medya bileşenleriyle daha geniş
+              kitlelere ulaştırılabilir.
             </p>
           </div>
 
@@ -177,9 +182,12 @@ const BloggerContestPage = () => {
             <div className={`${softCardClass} flex items-start gap-4 md:p-8`}>
               <Users className="w-7 h-7 text-primary shrink-0 mt-1" />
               <p className="text-muted-foreground text-lg leading-relaxed">
-                Yarışmaya <span className="text-foreground font-semibold">bloggerlar, yazarlar, hikâye anlatıcıları,
-                içerik üreticileri, öğrenciler, profesyoneller, araştırmacılar</span> ve Global Türkler
-                topluluğuna yazılı anlatıyla katkı sunmak isteyen herkes katılabilir.
+                Yarışmaya{" "}
+                <span className="text-foreground font-semibold">
+                  bloggerlar, yazarlar, hikâye anlatıcıları, içerik üreticileri, öğrenciler, profesyoneller,
+                  araştırmacılar
+                </span>{" "}
+                ve Global Türkler topluluğuna yazılı anlatıyla katkı sunmak isteyen herkes katılabilir.
               </p>
             </div>
           </div>
@@ -215,9 +223,8 @@ const BloggerContestPage = () => {
                   <h3 className="font-bold text-foreground text-xl">Otantik İçerik</h3>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Tamamen katılımcının kendi üretimi olan, AI kullanılmamış ve intihal içermeyen özgün
-                  yazılardır. AI kullanımı, intihal veya daha önce yayınlanmış içerik tespiti diskalifiye
-                  sebebi olabilir.
+                  Tamamen katılımcının kendi üretimi olan, AI kullanılmamış ve intihal içermeyen özgün yazılardır. AI
+                  kullanımı, intihal veya daha önce yayınlanmış içerik tespiti diskalifiye sebebi olabilir.
                 </p>
               </div>
               <div className={softCardClass}>
@@ -228,8 +235,8 @@ const BloggerContestPage = () => {
                   <h3 className="font-bold text-foreground text-xl">AI Serbest İçerik</h3>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  AI ile üretilmiş, hibrit veya teknoloji destekli içerikler kabul edilir. AI kullanımı
-                  beyan edilmelidir. Bu kategoride de intihal, telif ihlali ve izinsiz kullanım yasaktır.
+                  AI ile üretilmiş, hibrit veya teknoloji destekli içerikler kabul edilir. AI kullanımı beyan
+                  edilmelidir. Bu kategoride de intihal, telif ihlali ve izinsiz kullanım yasaktır.
                 </p>
               </div>
             </div>
@@ -238,9 +245,7 @@ const BloggerContestPage = () => {
           {/* PARTICIPATION & FEE */}
           <div className="max-w-4xl mx-auto mb-20">
             <div className="rounded-2xl border border-accent/20 bg-gradient-to-br from-accent/10 via-card to-primary/10 p-8 shadow-sm md:p-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-                Katılım Limiti ve Ücret
-              </h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Katılım Limiti ve Ücret</h2>
               <div className="grid sm:grid-cols-2 gap-5">
                 <div className="rounded-xl border border-white/60 bg-card/80 p-6">
                   <div className="text-primary text-sm font-semibold uppercase tracking-wider mb-2">
@@ -252,9 +257,7 @@ const BloggerContestPage = () => {
                   </p>
                 </div>
                 <div className="rounded-xl border border-white/60 bg-card/80 p-6">
-                  <div className="text-primary text-sm font-semibold uppercase tracking-wider mb-2">
-                    Katılım Bedeli
-                  </div>
+                  <div className="text-primary text-sm font-semibold uppercase tracking-wider mb-2">Katılım Bedeli</div>
                   <div className="text-4xl font-extrabold text-foreground mb-2">€25</div>
                   <p className="text-muted-foreground text-sm">
                     Her içerik başvurusu için katılım bedeli — başvuru sırasında ödenir.
@@ -267,13 +270,10 @@ const BloggerContestPage = () => {
           {/* TEASER PACKAGE */}
           <div className="max-w-5xl mx-auto mb-20">
             <div className="text-center mb-10">
-              <h2 className={sectionTitleClass}>
-                Blog İçeriği ve Teaser Paketi
-              </h2>
+              <h2 className={sectionTitleClass}>Blog İçeriği ve Teaser Paketi</h2>
               <p className="text-muted-foreground text-lg leading-relaxed max-w-3xl mx-auto">
-                Ana içerik CorteQS platformunda yayınlanacak blog yazısıdır. Yazılar fotoğraf, görsel,
-                alıntı kutusu, ses kaydı, harita, zaman çizelgesi veya diğer yaratıcı medya bileşenleriyle
-                desteklenebilir.
+                Ana içerik CorteQS platformunda yayınlanacak blog yazısıdır. Yazılar fotoğraf, görsel, alıntı kutusu,
+                ses kaydı, harita, zaman çizelgesi veya diğer yaratıcı medya bileşenleriyle desteklenebilir.
               </p>
             </div>
 
@@ -324,10 +324,11 @@ const BloggerContestPage = () => {
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3">Podcast Yayını</h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  CorteQS, uygun gördüğü blog yazılarını <span className="text-foreground font-semibold">Spotify
-                  ve diğer podcast mecralarında</span> özgün seslendirme, müzik veya ses tasarımıyla
-                  podcast formatında yayınlayabilir. Podcast yayınlarından gelen dinlenme, paylaşım, takip,
-                  kaydetme ve platforma yönlendirme verileri değerlendirmeye dahil edilebilir.
+                  CorteQS, uygun gördüğü blog yazılarını{" "}
+                  <span className="text-foreground font-semibold">Spotify ve diğer podcast mecralarında</span> özgün
+                  seslendirme, müzik veya ses tasarımıyla podcast formatında yayınlayabilir. Podcast yayınlarından gelen
+                  dinlenme, paylaşım, takip, kaydetme ve platforma yönlendirme verileri değerlendirmeye dahil
+                  edilebilir.
                 </p>
               </div>
             </div>
@@ -362,8 +363,16 @@ const BloggerContestPage = () => {
             <div className="grid md:grid-cols-3 gap-5 mb-6">
               {[
                 { rank: "1.", prize: "€1.500", desc: "Birincilik para ödülü", glow: true },
-                { rank: "2.", prize: "Dubai Uçak Bileti", desc: "İstanbul-Dubai standardı; eşdeğer alternatif sunulabilir" },
-                { rank: "3.", prize: "Big Chefs Akşam Yemeği", desc: "2 kişilik; ülkeye göre eşdeğer deneyim sunulabilir" },
+                {
+                  rank: "2.",
+                  prize: "Dubai Uçak Bileti",
+                  desc: "İstanbul-Dubai standardı; eşdeğer alternatif sunulabilir",
+                },
+                {
+                  rank: "3.",
+                  prize: "Big Chefs Akşam Yemeği",
+                  desc: "2 kişilik; ülkeye göre eşdeğer deneyim sunulabilir",
+                },
               ].map((p) => (
                 <div
                   key={p.rank}
@@ -384,9 +393,9 @@ const BloggerContestPage = () => {
             <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex items-start gap-3">
               <BadgeCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <p className="text-foreground text-sm leading-relaxed">
-                Öne çıkan <span className="font-bold text-primary">ilk 20 içerik üreticisine</span>{" "}
-                CorteQS platformunda <span className="font-semibold">1 yıl süreyle Onursal
-                Blogger/Vlogger Badge'i</span> verilir ve platformda özel tanıtım yapılır.
+                Öne çıkan <span className="font-bold text-primary">ilk 20 içerik üreticisine</span> CorteQS platformunda{" "}
+                <span className="font-semibold">1 yıl süreyle Onursal Blogger/Vlogger Badge'i</span> verilir ve
+                platformda özel tanıtım yapılır.
               </p>
             </div>
             <p className="text-xs text-muted-foreground mt-4 text-center">
@@ -420,18 +429,14 @@ const BloggerContestPage = () => {
           {/* APPLICATION */}
           <div className="max-w-3xl mx-auto text-center rounded-2xl bg-gradient-to-br from-accent/12 via-card to-primary/12 border border-accent/25 p-10 shadow-lg shadow-accent/10 md:p-14">
             <PenLine className="w-12 h-12 text-accent mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4 leading-tight">
-              Başvuru
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4 leading-tight">Başvuru</h2>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              Katılımcı formu doldurur, içeriğini ve teaser materyallerini yükler, onayları verir ve her
-              içerik için <span className="text-accent font-bold">€25 katılım bedelini</span> öder.
+              Katılımcı formu doldurur, içeriğini ve teaser materyallerini yükler, onayları verir ve her içerik için{" "}
+              <span className="text-accent font-bold">€25 katılım bedelini</span> öder.
             </p>
-
           </div>
         </div>
       </section>
-
     </div>
   );
 };

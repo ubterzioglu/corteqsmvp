@@ -149,10 +149,7 @@ async function main() {
   if (slow.length) {
     console.log("[warm-prerender] En yavaş 5:");
     for (const r of slow) {
-      console.log(
-        `  ${r.ms.toFixed(0).padStart(6)}ms  HTTP ${r.status}` +
-          `${r.prerendered ? " [PR]" : ""}  ${r.url}`,
-      );
+      console.log(`  ${r.ms.toFixed(0).padStart(6)}ms  HTTP ${r.status}` + `${r.prerendered ? " [PR]" : ""}  ${r.url}`);
     }
   }
 

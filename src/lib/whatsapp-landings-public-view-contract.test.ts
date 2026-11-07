@@ -88,12 +88,8 @@ describe("G03a · get_whatsapp_landing_invite RPC", () => {
   });
 
   it("anon ve public'ten EXECUTE geri alınır, yalnız authenticated alır", () => {
-    expect(sql).toContain(
-      "revoke all on function public.get_whatsapp_landing_invite(text) from public, anon",
-    );
-    expect(sql).toContain(
-      "grant execute on function public.get_whatsapp_landing_invite(text) to authenticated",
-    );
+    expect(sql).toContain("revoke all on function public.get_whatsapp_landing_invite(text) from public, anon");
+    expect(sql).toContain("grant execute on function public.get_whatsapp_landing_invite(text) to authenticated");
   });
 });
 

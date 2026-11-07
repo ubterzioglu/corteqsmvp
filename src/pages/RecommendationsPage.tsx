@@ -18,14 +18,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
 import { listGeoCountries } from "@/lib/geo";
-import {
-  useCreateRecommendation,
-  useRecommendations,
-} from "@/hooks/use-recommendations";
-import {
-  RECOMMENDATION_BODY_MAX,
-  RECOMMENDATION_TITLE_MAX,
-} from "@/lib/recommendations-rules";
+import { useCreateRecommendation, useRecommendations } from "@/hooks/use-recommendations";
+import { RECOMMENDATION_BODY_MAX, RECOMMENDATION_TITLE_MAX } from "@/lib/recommendations-rules";
 import type { CreateRecommendationInput } from "@/lib/recommendations-schemas";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -97,8 +91,8 @@ export default function RecommendationsPage() {
             Tavsiye İste
           </h1>
           <p className="text-sm text-muted-foreground">
-            Topluluktan tavsiye iste — güvenilir esnaf, sağlık, danışmanlık ve daha fazlası.
-            Talebini aç; eşleşen profesyoneller ve üyeler yanıtlasın. Liste herkese açık.
+            Topluluktan tavsiye iste — güvenilir esnaf, sağlık, danışmanlık ve daha fazlası. Talebini aç; eşleşen
+            profesyoneller ve üyeler yanıtlasın. Liste herkese açık.
           </p>
         </header>
 
@@ -198,12 +192,7 @@ export default function RecommendationsPage() {
                 </div>
               </div>
               {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-              <Button
-                type="button"
-                className="rounded-full"
-                disabled={createMutation.isPending}
-                onClick={submit}
-              >
+              <Button type="button" className="rounded-full" disabled={createMutation.isPending} onClick={submit}>
                 {createMutation.isPending ? "Gönderiliyor…" : "Talebi yayınla"}
               </Button>
             </CardContent>

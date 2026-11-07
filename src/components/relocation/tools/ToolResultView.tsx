@@ -22,11 +22,7 @@ import {
   dimensionLabelsForResult,
   dimensionWeightsForResult,
 } from "@/lib/relocation-tools-copy";
-import {
-  hasNoTargetMatchFallback,
-  type RelocationToolResultPayload,
-  type ToolCta,
-} from "@/lib/relocation-tools-types";
+import { hasNoTargetMatchFallback, type RelocationToolResultPayload, type ToolCta } from "@/lib/relocation-tools-types";
 
 /**
  * "Hedef ülkede veri yok" şeridinin metni. TOOLS_UI_COPY'de DEĞİL çünkü yalnız bu
@@ -66,20 +62,10 @@ function ResultHeadline({ result }: { result: RelocationToolResultPayload }) {
   }
   // #9 (top_relocation_challenge) bucket = kategori anahtarı (kalite bandı değil) → rozet gösterme.
   const showBucket = result.tool_key !== "top_relocation_challenge";
-  return (
-    <ScoreMeter
-      score={result.total_score}
-      bucketLabel={showBucket ? bucketLabel(result.score_bucket) : null}
-    />
-  );
+  return <ScoreMeter score={result.total_score} bucketLabel={showBucket ? bucketLabel(result.score_bucket) : null} />;
 }
 
-export function ToolResultView({
-  result,
-  onCtaClick,
-  onRequestIntro,
-  onRetake,
-}: ToolResultViewProps) {
+export function ToolResultView({ result, onCtaClick, onRequestIntro, onRetake }: ToolResultViewProps) {
   const labels = dimensionLabelsForResult(result.result_kind, result.tool_key);
   const descriptions = dimensionDescriptionsForResult(result.result_kind, result.tool_key);
   const weights = dimensionWeightsForResult(result.tool_key);
@@ -87,17 +73,14 @@ export function ToolResultView({
   // weakest3 SQL'de üretilip primary_result'a yazılıyor ama bugüne kadar hiç
   // çizilmiyordu. persona/ranked_list gibi türlerde alan yok → boş dizi döner.
   const weakestAreas = parseWeakestAreas(result.primary_result);
-  const bucketNote =
-    result.tool_key === "top_relocation_challenge" ? "" : bucketDescription(result.score_bucket);
+  const bucketNote = result.tool_key === "top_relocation_challenge" ? "" : bucketDescription(result.score_bucket);
   // SQL 2026-07-30'dan beri bu bayrağı yazıyor; arayüz bugüne kadar hiç okumuyordu.
   const noTargetMatchFallback = hasNoTargetMatchFallback(result.primary_result);
   const rankedItems = Array.isArray(result.recommendations)
     ? (result.recommendations as Array<Record<string, unknown>>)
     : [];
   // checklist: görevler primary_result.tasks içinde.
-  const checklistTasks = Array.isArray(
-    (result.primary_result as Record<string, unknown>)?.tasks,
-  )
+  const checklistTasks = Array.isArray((result.primary_result as Record<string, unknown>)?.tasks)
     ? ((result.primary_result as Record<string, unknown>).tasks as Array<Record<string, unknown>>)
     : [];
 
@@ -138,19 +121,11 @@ export function ToolResultView({
       {result.result_kind === "checklist" ? (
         <ChecklistTimeline title={TOOLS_UI_COPY.checklistTitle} tasks={checklistTasks} />
       ) : result.result_kind === "match_list" ? (
-        <MatchList
-          title={TOOLS_UI_COPY.matchListTitle}
-          matches={rankedItems}
-          onRequestIntro={onRequestIntro}
-        />
+        <MatchList title={TOOLS_UI_COPY.matchListTitle} matches={rankedItems} onRequestIntro={onRequestIntro} />
       ) : result.result_kind === "comparison" ? (
         <ComparisonTable title={TOOLS_UI_COPY.comparisonTitle} rows={rankedItems} />
       ) : result.result_kind === "ranked_list" ? (
-        <RankedListCard
-          title={TOOLS_UI_COPY.rankedListTitle}
-          items={rankedItems}
-          dimensionLabels={labels}
-        />
+        <RankedListCard title={TOOLS_UI_COPY.rankedListTitle} items={rankedItems} dimensionLabels={labels} />
       ) : (
         <>
           <ScoreBreakdownCard

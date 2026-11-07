@@ -85,18 +85,12 @@ const PublicListingPage = ({
     [realRows, demoRows],
   );
 
-  const demoIds = useMemo(
-    () => new Set((demoRows ?? []).map((row) => row.id)),
-    [demoRows],
-  );
+  const demoIds = useMemo(() => new Set((demoRows ?? []).map((row) => row.id)), [demoRows]);
 
   const [filter, setFilter] = useState<ListingFilterState>(EMPTY_LISTING_FILTER);
 
   const countryOptions = useMemo(() => deriveCountryOptions(rows), [rows]);
-  const cityOptions = useMemo(
-    () => deriveCityOptions(rows, filter.country),
-    [rows, filter.country],
-  );
+  const cityOptions = useMemo(() => deriveCityOptions(rows, filter.country), [rows, filter.country]);
   const groupCounts = useMemo(() => deriveGroupCounts(rows, filter, groups), [rows, filter, groups]);
   const filtered = useMemo(() => filterListingRows(rows, filter, groups), [rows, filter, groups]);
 

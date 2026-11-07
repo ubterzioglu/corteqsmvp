@@ -66,13 +66,13 @@ export async function handleWhatsAppAutoReply(
   // 2. Check handover keywords
   const lowerText = request.messageText.toLowerCase();
   const handoverKeywords = settings.handover_keywords || ["insan", "temsilci", "yetkili"];
-  if (handoverKeywords.some(keyword => lowerText.includes(keyword))) {
+  if (handoverKeywords.some((keyword) => lowerText.includes(keyword))) {
     // Mark thread as handed over
     await supabase
       .from("whatsapp_customer_threads")
       .update({ bot_handed_over_at: new Date().toISOString(), status: "in_progress" })
       .eq("id", request.threadId);
-    
+
     return { success: true, skipped: "handover_keyword" };
   }
 
@@ -102,7 +102,7 @@ export async function handleWhatsAppAutoReply(
 
   const now = new Date();
   const windowStart = rateLimit?.window_started_at ? new Date(rateLimit.window_started_at) : null;
-  const isNewWindow = !windowStart || (now.getTime() - windowStart.getTime()) > 24 * 60 * 60 * 1000;
+  const isNewWindow = !windowStart || now.getTime() - windowStart.getTime() > 24 * 60 * 60 * 1000;
 
   if (!isNewWindow && rateLimit && rateLimit.request_count >= settings.max_replies_per_sender_per_day) {
     return { success: true, skipped: "rate_limited" };
@@ -110,14 +110,15 @@ export async function handleWhatsAppAutoReply(
 
   // Update or insert rate limit
   if (isNewWindow) {
-    await supabase
-      .from("edge_rate_limits")
-      .upsert({
+    await supabase.from("edge_rate_limits").upsert(
+      {
         scope: "whatsapp-autoreply",
         client_key: rateLimitKey,
         window_started_at: now.toISOString(),
         request_count: 1,
-      }, { onConflict: "scope,client_key" });
+      },
+      { onConflict: "scope,client_key" },
+    );
   } else {
     await supabase
       .from("edge_rate_limits")
@@ -153,15 +154,12 @@ export async function handleWhatsAppAutoReply(
   }
 
   // 6. Search knowledge base (audience=["public"] only)
-  const { data: searchResults, error: searchError } = await supabase.rpc(
-    "ai_knowledge_search",
-    {
-      p_embedding: queryEmbedding,
-      p_audiences: ["public"],
-      p_limit: 5,
-      p_max_distance: SEARCH_THRESHOLD,
-    }
-  );
+  const { data: searchResults, error: searchError } = await supabase.rpc("ai_knowledge_search", {
+    p_embedding: queryEmbedding,
+    p_audiences: ["public"],
+    p_limit: 5,
+    p_max_distance: SEARCH_THRESHOLD,
+  });
 
   if (searchError) {
     await recordAssistantUsage(supabase, {
@@ -243,26 +241,20 @@ export async function handleWhatsAppAutoReply(
   // 8. Decrypt recipient
   let recipientPhone: string;
   try {
-    recipientPhone = await decryptWhatsAppIdentifier(
-      request.waIdCiphertext,
-      config.whatsappAppSecret
-    );
+    recipientPhone = await decryptWhatsAppIdentifier(request.waIdCiphertext, config.whatsappAppSecret);
   } catch (error) {
     return { success: false, error: "decrypt_failed" };
   }
 
   // 9. Prepare reply via bot_prepare_whatsapp_reply
   const requestId = crypto.randomUUID();
-  const { data: prepareData, error: prepareError } = await supabase.rpc(
-    "bot_prepare_whatsapp_reply",
-    {
-      p_request_id: requestId,
-      p_thread_id: request.threadId,
-      p_body: responseText,
-      p_template_name: null,
-      p_template_language: null,
-    }
-  );
+  const { data: prepareData, error: prepareError } = await supabase.rpc("bot_prepare_whatsapp_reply", {
+    p_request_id: requestId,
+    p_thread_id: request.threadId,
+    p_body: responseText,
+    p_template_name: null,
+    p_template_language: null,
+  });
 
   if (prepareError || !prepareData || prepareData.length === 0) {
     await recordAssistantUsage(supabase, {
@@ -299,7 +291,7 @@ export async function handleWhatsAppAutoReply(
         phoneNumberId: config.whatsappPhoneNumberId,
         graphVersion: config.whatsappGraphVersion,
       },
-      payload
+      payload,
     );
   } catch (error) {
     await supabase.rpc("bot_finalize_whatsapp_reply", {

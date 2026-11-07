@@ -14,13 +14,7 @@ export type AdminEmptyStateProps = {
   className?: string;
 };
 
-export function AdminEmptyState({
-  title,
-  description,
-  icon: Icon = Inbox,
-  action,
-  className,
-}: AdminEmptyStateProps) {
+export function AdminEmptyState({ title, description, icon: Icon = Inbox, action, className }: AdminEmptyStateProps) {
   return (
     <div
       className={cn(

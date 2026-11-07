@@ -53,7 +53,10 @@ Deno.serve(async (req) => {
       global: { headers: { Authorization: `Bearer ${jwt}` } },
     });
 
-    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAuth.auth.getUser();
     if (authError || !user) {
       return jsonResponse({ error: "Geçersiz JWT" }, 401, corsHeaders);
     }
@@ -82,12 +85,13 @@ Deno.serve(async (req) => {
       .in(
         "role_id",
         // Kullanıcının aktif rollerini bul
-        (await supabaseAdmin
-          .from("user_role_assignments")
-          .select("role_id")
-          .eq("user_id", user.id)
-          .eq("status", "active"))
-          .data?.map((r) => r.role_id) ?? []
+        (
+          await supabaseAdmin
+            .from("user_role_assignments")
+            .select("role_id")
+            .eq("user_id", user.id)
+            .eq("status", "active")
+        ).data?.map((r) => r.role_id) ?? [],
       )
       .eq("is_enabled", true)
       .maybeSingle();
@@ -144,7 +148,7 @@ Deno.serve(async (req) => {
 async function generateSignedUrl(
   targetUserId: string,
   supabaseAdmin: ReturnType<typeof createClient>,
-  corsHeaders: Record<string, string>
+  corsHeaders: Record<string, string>,
 ): Promise<Response> {
   // A5.2: cv_doc attribute'ünü afs_attributes'tan bul
   const { data: cvAttrDef, error: cvAttrDefError } = await supabaseAdmin

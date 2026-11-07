@@ -74,12 +74,8 @@ const directoryRpcClient = supabase as unknown as DirectoryRpcClient;
 const directoryFunctionsClient = supabase as unknown as DirectoryFunctionsClient;
 
 type RolesQueryClient = {
-  from: (
-    tableName: "roles",
-  ) => {
-    select: (
-      columns: string,
-    ) => {
+  from: (tableName: "roles") => {
+    select: (columns: string) => {
       eq: (
         column: string,
         value: unknown,
@@ -157,10 +153,7 @@ const HIDDEN_DIRECTORY_ROLE_LABEL_PATTERNS = [
   /deneysel/i,
 ];
 
-export function isPublicDirectoryRole(
-  key: string | null | undefined,
-  label: string | null | undefined,
-): boolean {
+export function isPublicDirectoryRole(key: string | null | undefined, label: string | null | undefined): boolean {
   if (key) {
     const foldedKey = foldRoleKey(key);
     if (HIDDEN_DIRECTORY_ROLE_KEY_PREFIXES.some((prefix) => foldedKey.startsWith(prefix))) {
@@ -292,13 +285,8 @@ export type DirectorySearchResult = {
   totalCount: number;
 };
 
-export async function listUnifiedDirectoryRows(
-  filters: DirectorySearchFilters,
-): Promise<DirectorySearchResult> {
-  const limit = Math.min(
-    Math.max(filters.limit ?? DIRECTORY_PAGE_SIZE, 1),
-    DIRECTORY_MAX_PAGE_SIZE,
-  );
+export async function listUnifiedDirectoryRows(filters: DirectorySearchFilters): Promise<DirectorySearchResult> {
+  const limit = Math.min(Math.max(filters.limit ?? DIRECTORY_PAGE_SIZE, 1), DIRECTORY_MAX_PAGE_SIZE);
   const offset = Math.max(filters.offset ?? 0, 0);
 
   const rpcArgs: DirectoryRpcArgs = {
@@ -372,9 +360,7 @@ export async function listUnifiedDirectoryRows(
     // İKİNCİ savunma hattı olarak KALIR: RPC gövdesi ileride yeniden yazılırsa
     // (canlıda pg_get_functiondef ile yamandığı için bu gerçekten oluyor)
     // sızıntı kullanıcıya ulaşmasın.
-    rows: rpcRows
-      .filter((row) => isPublicDirectoryRole(row.role_key, row.role_label))
-      .map(mapDirectorySearchRow),
+    rows: rpcRows.filter((row) => isPublicDirectoryRole(row.role_key, row.role_label)).map(mapDirectorySearchRow),
     // Sunucunun saydığı değer esas alınır; boş sayfada 0.
     totalCount: rpcRows[0]?.total_count ?? 0,
   };

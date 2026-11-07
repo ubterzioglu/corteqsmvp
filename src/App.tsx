@@ -244,7 +244,14 @@ const App = () => (
                       }
                     />
                     <Route path="/events" element={<EventsPage />} />
-                    <Route path="/events/create" element={<RequireAuth><CreateEventPage /></RequireAuth>} />
+                    <Route
+                      path="/events/create"
+                      element={
+                        <RequireAuth>
+                          <CreateEventPage />
+                        </RequireAuth>
+                      }
+                    />
                     <Route path="/events/:id" element={<EventDetailPage />} />
                     <Route path="/liderlik" element={<LeaderboardPage />} />
                     <Route path="/tavsiye" element={<RecommendationsPage />} />
@@ -266,7 +273,10 @@ const App = () => (
                       path="/cadde"
                       element={
                         <RequireAuth>
-                          <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <RequireFeature
+                            feature={GENERIC_FEATURE_KEYS.caddeAccess}
+                            fallback={<Navigate to="/" replace />}
+                          >
                             <CaddePage />
                           </RequireFeature>
                         </RequireAuth>
@@ -276,7 +286,10 @@ const App = () => (
                       path="/cadde/cafe/:cafeId"
                       element={
                         <RequireAuth>
-                          <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <RequireFeature
+                            feature={GENERIC_FEATURE_KEYS.caddeAccess}
+                            fallback={<Navigate to="/" replace />}
+                          >
                             <CaddeCafePage />
                           </RequireFeature>
                         </RequireAuth>
@@ -286,7 +299,10 @@ const App = () => (
                       path="/cadde/carsi"
                       element={
                         <RequireAuth>
-                          <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <RequireFeature
+                            feature={GENERIC_FEATURE_KEYS.caddeAccess}
+                            fallback={<Navigate to="/" replace />}
+                          >
                             <CaddeCarsiPage />
                           </RequireFeature>
                         </RequireAuth>
@@ -296,7 +312,10 @@ const App = () => (
                       path="/cadde/carsi/:itemId"
                       element={
                         <RequireAuth>
-                          <RequireFeature feature={GENERIC_FEATURE_KEYS.caddeAccess} fallback={<Navigate to="/" replace />}>
+                          <RequireFeature
+                            feature={GENERIC_FEATURE_KEYS.caddeAccess}
+                            fallback={<Navigate to="/" replace />}
+                          >
                             <CaddeCarsiItemPage />
                           </RequireFeature>
                         </RequireAuth>

@@ -1,20 +1,20 @@
 // Komuta Merkezi — masaüstü tablosunun okuma satırı.
 // Kolon sırası tablo başlığıyla (colgroup + thead) birebir eşleşmelidir.
 
-import { Archive, Pencil, Trash2 } from 'lucide-react'
-import { getCommandCenterDateGroupInfo } from '@/lib/dashboard/command-center-items'
-import type { CommandCenterItem } from '@/lib/dashboard/command-center-items'
-import { AssigneeCell, CategoryBadge, StatusBadge, UrgentIndicator } from './cells'
-import { formatCreatedAt, getItemDetail } from './formatters'
-import { BTN_CLS } from './styles'
+import { Archive, Pencil, Trash2 } from "lucide-react";
+import { getCommandCenterDateGroupInfo } from "@/lib/dashboard/command-center-items";
+import type { CommandCenterItem } from "@/lib/dashboard/command-center-items";
+import { AssigneeCell, CategoryBadge, StatusBadge, UrgentIndicator } from "./cells";
+import { formatCreatedAt, getItemDetail } from "./formatters";
+import { BTN_CLS } from "./styles";
 
 interface ItemsTableRowProps {
-  item: CommandCenterItem
-  editingId: string | null
-  isSubmitting: boolean
-  onStartEdit: (item: CommandCenterItem) => void
-  onArchive: (itemId: string) => void
-  onDelete: (itemId: string) => void
+  item: CommandCenterItem;
+  editingId: string | null;
+  isSubmitting: boolean;
+  onStartEdit: (item: CommandCenterItem) => void;
+  onArchive: (itemId: string) => void;
+  onDelete: (itemId: string) => void;
 }
 
 export default function ItemsTableRow({
@@ -25,7 +25,7 @@ export default function ItemsTableRow({
   onArchive,
   onDelete,
 }: ItemsTableRowProps) {
-  const dateGroupInfo = getCommandCenterDateGroupInfo(item)
+  const dateGroupInfo = getCommandCenterDateGroupInfo(item);
 
   return (
     <tr className="align-middle transition-colors hover:bg-[rgba(66,133,244,0.03)]">
@@ -41,9 +41,7 @@ export default function ItemsTableRow({
         <CategoryBadge item={item} />
       </td>
       <td className="px-2.5 py-3 align-middle">
-        <span className="text-[10px] font-medium text-gray-600">
-          {dateGroupInfo.label}
-        </span>
+        <span className="text-[10px] font-medium text-gray-600">{dateGroupInfo.label}</span>
       </td>
       <td className="px-2.5 py-3 align-middle text-gray-600">
         <div className="space-y-1">
@@ -57,9 +55,7 @@ export default function ItemsTableRow({
       <td className="px-2.5 py-3 align-middle">
         <StatusBadge status={item.status} />
       </td>
-      <td className="whitespace-nowrap px-2.5 py-3 align-middle text-gray-600">
-        {formatCreatedAt(item.createdAt)}
-      </td>
+      <td className="whitespace-nowrap px-2.5 py-3 align-middle text-gray-600">{formatCreatedAt(item.createdAt)}</td>
       <td className="whitespace-nowrap px-1.5 py-3 align-middle pr-4">
         <div className="flex flex-nowrap items-center justify-center gap-1.5">
           <button
@@ -95,5 +91,5 @@ export default function ItemsTableRow({
         </div>
       </td>
     </tr>
-  )
+  );
 }

@@ -43,147 +43,146 @@ export interface MentionTextareaHandle {
   focusAt: (caret: number) => void;
 }
 
-const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(({
-  value,
-  onChange,
-  onMentionAdd,
-  onSelectionChange,
-  placeholder,
-  rows = 3,
-  maxLength,
-  ariaLabel,
-  className,
-}, ref) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [caret, setCaret] = useState(0);
-  const [highlight, setHighlight] = useState(0);
-  const [dismissed, setDismissed] = useState(false);
+const MentionTextarea = forwardRef<MentionTextareaHandle, MentionTextareaProps>(
+  (
+    { value, onChange, onMentionAdd, onSelectionChange, placeholder, rows = 3, maxLength, ariaLabel, className },
+    ref,
+  ) => {
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [caret, setCaret] = useState(0);
+    const [highlight, setHighlight] = useState(0);
+    const [dismissed, setDismissed] = useState(false);
 
-  const active = useMemo(() => activeMentionToken(value, caret), [value, caret]);
-  const query = active?.token ?? "";
-  const enabled = !dismissed && query.length >= 2;
+    const active = useMemo(() => activeMentionToken(value, caret), [value, caret]);
+    const query = active?.token ?? "";
+    const enabled = !dismissed && query.length >= 2;
 
-  const suggestionsQuery = useQuery({
-    queryKey: ["cadde", "mention-search", query],
-    queryFn: () => searchCaddeMentions(query),
-    enabled,
-    staleTime: 30_000,
-  });
-
-  const suggestions = enabled ? suggestionsQuery.data ?? [] : [];
-
-  useEffect(() => setHighlight(0), [query]);
-  useImperativeHandle(ref, () => ({
-    focusAt: (nextCaret) => {
-      const safeCaret = Math.min(Math.max(nextCaret, 0), value.length);
-      textareaRef.current?.focus();
-      textareaRef.current?.setSelectionRange(safeCaret, safeCaret);
-      setCaret(safeCaret);
-      onSelectionChange?.({ start: safeCaret, end: safeCaret });
-    },
-  }), [onSelectionChange, value.length]);
-
-  const applySuggestion = (suggestion: CaddeMentionSuggestion) => {
-    if (!active) return;
-    const before = value.slice(0, active.start);
-    const after = value.slice(caret);
-    const inserted = `@${suggestion.label} `;
-    onChange(`${before}${inserted}${after}`);
-    onMentionAdd({ type: suggestion.type, id: suggestion.id, label: suggestion.label });
-    setDismissed(true);
-
-    // İmleci eklenen metnin sonuna taşı.
-    const nextCaret = before.length + inserted.length;
-    requestAnimationFrame(() => {
-      textareaRef.current?.focus();
-      textareaRef.current?.setSelectionRange(nextCaret, nextCaret);
-      setCaret(nextCaret);
-      onSelectionChange?.({ start: nextCaret, end: nextCaret });
+    const suggestionsQuery = useQuery({
+      queryKey: ["cadde", "mention-search", query],
+      queryFn: () => searchCaddeMentions(query),
+      enabled,
+      staleTime: 30_000,
     });
-  };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (suggestions.length === 0) return;
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      setHighlight((current) => (current + 1) % suggestions.length);
-    } else if (event.key === "ArrowUp") {
-      event.preventDefault();
-      setHighlight((current) => (current - 1 + suggestions.length) % suggestions.length);
-    } else if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
-      applySuggestion(suggestions[highlight]);
-    } else if (event.key === "Escape") {
+    const suggestions = enabled ? (suggestionsQuery.data ?? []) : [];
+
+    useEffect(() => setHighlight(0), [query]);
+    useImperativeHandle(
+      ref,
+      () => ({
+        focusAt: (nextCaret) => {
+          const safeCaret = Math.min(Math.max(nextCaret, 0), value.length);
+          textareaRef.current?.focus();
+          textareaRef.current?.setSelectionRange(safeCaret, safeCaret);
+          setCaret(safeCaret);
+          onSelectionChange?.({ start: safeCaret, end: safeCaret });
+        },
+      }),
+      [onSelectionChange, value.length],
+    );
+
+    const applySuggestion = (suggestion: CaddeMentionSuggestion) => {
+      if (!active) return;
+      const before = value.slice(0, active.start);
+      const after = value.slice(caret);
+      const inserted = `@${suggestion.label} `;
+      onChange(`${before}${inserted}${after}`);
+      onMentionAdd({ type: suggestion.type, id: suggestion.id, label: suggestion.label });
       setDismissed(true);
-    }
-  };
 
-  const syncSelection = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
-    const selection = {
-      start: event.currentTarget.selectionStart ?? 0,
-      end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
+      // İmleci eklenen metnin sonuna taşı.
+      const nextCaret = before.length + inserted.length;
+      requestAnimationFrame(() => {
+        textareaRef.current?.focus();
+        textareaRef.current?.setSelectionRange(nextCaret, nextCaret);
+        setCaret(nextCaret);
+        onSelectionChange?.({ start: nextCaret, end: nextCaret });
+      });
     };
-    setCaret(selection.start);
-    onSelectionChange?.(selection);
-  };
 
-  return (
-    <div className="relative">
-      <Textarea
-        ref={textareaRef}
-        value={value}
-        onChange={(event) => {
-          setDismissed(false);
-          syncSelection(event);
-          onChange(event.target.value);
-        }}
-        onKeyUp={syncSelection}
-        onClick={syncSelection}
-        onSelect={syncSelection}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-        rows={rows}
-        maxLength={maxLength}
-        aria-label={ariaLabel}
-        className={className}
-      />
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (suggestions.length === 0) return;
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setHighlight((current) => (current + 1) % suggestions.length);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setHighlight((current) => (current - 1 + suggestions.length) % suggestions.length);
+      } else if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        applySuggestion(suggestions[highlight]);
+      } else if (event.key === "Escape") {
+        setDismissed(true);
+      }
+    };
 
-      {suggestions.length > 0 ? (
-        <ul
-          role="listbox"
-          aria-label="Etiketleme önerileri"
-          className="absolute z-30 mt-1 max-h-64 w-full max-w-sm overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
-        >
-          {suggestions.map((suggestion, index) => {
-            const Icon = TYPE_ICON[suggestion.type];
-            return (
-              <li key={`${suggestion.type}-${suggestion.id}`}>
-                <button
-                  type="button"
-                  role="option"
-                  aria-selected={index === highlight}
-                  onMouseDown={(event) => {
-                    // mousedown: textarea blur olmadan seçim uygulanmalı.
-                    event.preventDefault();
-                    applySuggestion(suggestion);
-                  }}
-                  onMouseEnter={() => setHighlight(index)}
-                  className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition ${
-                    index === highlight ? "bg-slate-100" : "hover:bg-slate-50"
-                  }`}
-                >
-                  <Icon className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
-                  <span className="min-w-0 flex-1 truncate font-medium text-slate-900">{suggestion.label}</span>
-                  <span className="shrink-0 text-xs text-slate-500">{suggestion.subtitle}</span>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      ) : null}
-    </div>
-  );
-});
+    const syncSelection = (event: React.SyntheticEvent<HTMLTextAreaElement>) => {
+      const selection = {
+        start: event.currentTarget.selectionStart ?? 0,
+        end: event.currentTarget.selectionEnd ?? event.currentTarget.selectionStart ?? 0,
+      };
+      setCaret(selection.start);
+      onSelectionChange?.(selection);
+    };
+
+    return (
+      <div className="relative">
+        <Textarea
+          ref={textareaRef}
+          value={value}
+          onChange={(event) => {
+            setDismissed(false);
+            syncSelection(event);
+            onChange(event.target.value);
+          }}
+          onKeyUp={syncSelection}
+          onClick={syncSelection}
+          onSelect={syncSelection}
+          onKeyDown={handleKeyDown}
+          placeholder={placeholder}
+          rows={rows}
+          maxLength={maxLength}
+          aria-label={ariaLabel}
+          className={className}
+        />
+
+        {suggestions.length > 0 ? (
+          <ul
+            role="listbox"
+            aria-label="Etiketleme önerileri"
+            className="absolute z-30 mt-1 max-h-64 w-full max-w-sm overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg"
+          >
+            {suggestions.map((suggestion, index) => {
+              const Icon = TYPE_ICON[suggestion.type];
+              return (
+                <li key={`${suggestion.type}-${suggestion.id}`}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={index === highlight}
+                    onMouseDown={(event) => {
+                      // mousedown: textarea blur olmadan seçim uygulanmalı.
+                      event.preventDefault();
+                      applySuggestion(suggestion);
+                    }}
+                    onMouseEnter={() => setHighlight(index)}
+                    className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-sm transition ${
+                      index === highlight ? "bg-slate-100" : "hover:bg-slate-50"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4 shrink-0 text-slate-500" aria-hidden />
+                    <span className="min-w-0 flex-1 truncate font-medium text-slate-900">{suggestion.label}</span>
+                    <span className="shrink-0 text-xs text-slate-500">{suggestion.subtitle}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        ) : null}
+      </div>
+    );
+  },
+);
 MentionTextarea.displayName = "MentionTextarea";
 
 export default MentionTextarea;

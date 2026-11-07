@@ -11,13 +11,7 @@ import { isSupabaseConfigured } from "@/integrations/supabase/client";
 import type { Json } from "@/integrations/supabase/types";
 
 import { DEMO_POSTS } from "./cadde-demo-data";
-import {
-  FALLBACK_PROFILE_NAME,
-  db,
-  caddeReadError,
-  caddeWriteError,
-  reportCaddeApiError,
-} from "./cadde-internal";
+import { FALLBACK_PROFILE_NAME, db, caddeReadError, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
 import { fetchCaddeUserNameMap as fetchUserNameMap } from "./cadde-api-support";
 import type { CaddeFeedReach } from "./cadde-reach";
 import { mapActorContext, type CaddeActorContext } from "./cadde-rules";
@@ -74,7 +68,11 @@ export async function getCaddeActorContext(): Promise<CaddeActorContext | null> 
   return mapActorContext(data);
 }
 
-export async function listCaddePostComments(postId: string, limit = 5, cursor: CaddeCommentCursor = null): Promise<CaddeCommentPage> {
+export async function listCaddePostComments(
+  postId: string,
+  limit = 5,
+  cursor: CaddeCommentCursor = null,
+): Promise<CaddeCommentPage> {
   if (!postId) return { items: [], nextCursor: null };
 
   const pageSize = Math.max(1, limit);
@@ -86,7 +84,7 @@ export async function listCaddePostComments(postId: string, limit = 5, cursor: C
     const page = afterCursor.slice(0, pageSize);
     return {
       items: page,
-      nextCursor: afterCursor.length > pageSize ? page[page.length - 1]?.createdAt ?? null : null,
+      nextCursor: afterCursor.length > pageSize ? (page[page.length - 1]?.createdAt ?? null) : null,
     };
   }
 
@@ -115,7 +113,7 @@ export async function listCaddePostComments(postId: string, limit = 5, cursor: C
 
     return {
       items,
-      nextCursor: (data ?? []).length > pageSize ? items[items.length - 1]?.createdAt ?? null : null,
+      nextCursor: (data ?? []).length > pageSize ? (items[items.length - 1]?.createdAt ?? null) : null,
     };
   } catch (error: unknown) {
     reportCaddeApiError("listCaddePostComments", error);
@@ -152,10 +150,7 @@ export async function createCaddePost(input: CaddePostInput): Promise<string> {
     p_media: parsed.media ?? [],
     p_mentions: parsed.mentions ?? [],
   };
-  const { data, error } = await db.rpc(
-    rpcName,
-    parsed.cafeId ? rpcPayload : { ...rpcPayload, p_targets: targets },
-  );
+  const { data, error } = await db.rpc(rpcName, parsed.cafeId ? rpcPayload : { ...rpcPayload, p_targets: targets });
   if (error) throw caddeWriteError("createCaddePost", error);
   return data as string;
 }
@@ -252,11 +247,14 @@ export async function listCaddePostReactors(
   if (!isSupabaseConfigured) return [];
 
   try {
-    const { data, error } = await db.rpc("list_cadde_post_reactors_v1" as never, {
-      p_post_id: postId,
-      p_reaction_type: reactionType,
-      p_limit: limit,
-    } as never);
+    const { data, error } = await db.rpc(
+      "list_cadde_post_reactors_v1" as never,
+      {
+        p_post_id: postId,
+        p_reaction_type: reactionType,
+        p_limit: limit,
+      } as never,
+    );
     if (error) throw error;
     return (data ?? []) as CaddePostReactor[];
   } catch (error: unknown) {

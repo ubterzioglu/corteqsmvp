@@ -131,10 +131,7 @@ export async function upsertProvider(
 }
 
 export async function fetchTemplates(): Promise<ServiceFinderTemplateRow[]> {
-  const { data, error } = await supabase
-    .from("service_finder_profession_templates")
-    .select("*")
-    .order("label");
+  const { data, error } = await supabase.from("service_finder_profession_templates").select("*").order("label");
   if (error) throw error;
   return (data ?? []) as ServiceFinderTemplateRow[];
 }
@@ -162,9 +159,7 @@ export interface CostSummaryRow {
 }
 
 export async function fetchCostSummary(sinceIso?: string): Promise<CostSummaryRow[]> {
-  let query = supabase
-    .from("service_finder_cost_ledger")
-    .select("provider_key, event_type, amount_usd");
+  let query = supabase.from("service_finder_cost_ledger").select("provider_key, event_type, amount_usd");
   if (sinceIso) {
     query = query.gte("created_at", sinceIso);
   }

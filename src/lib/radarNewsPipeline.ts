@@ -53,36 +53,24 @@ export function toRelevanceReasons(value: unknown): RelevanceReason[] {
 // ─── Kaynak API ───────────────────────────────────────────────────────────────
 
 export async function listRadarSources(): Promise<RadarNewsSource[]> {
-  const { data, error } = await db
-    .from("radar_news_sources")
-    .select("*")
-    .order("name", { ascending: true });
+  const { data, error } = await db.from("radar_news_sources").select("*").order("name", { ascending: true });
   if (error) throw error;
   return data ?? [];
 }
 
-export async function updateRadarSource(
-  id: string,
-  payload: Partial<RadarNewsSource>,
-): Promise<RadarNewsSource> {
-  const { data, error } = await db
-    .from("radar_news_sources")
-    .update(payload)
-    .eq("id", id)
-    .select("*")
-    .single();
+export async function updateRadarSource(id: string, payload: Partial<RadarNewsSource>): Promise<RadarNewsSource> {
+  const { data, error } = await db.from("radar_news_sources").update(payload).eq("id", id).select("*").single();
   if (error) throw error;
   return data;
 }
 
 export async function createRadarSource(
-  payload: Omit<RadarNewsSource, "id" | "created_at" | "updated_at" | "last_success_at" | "last_error_at" | "last_error_message">,
+  payload: Omit<
+    RadarNewsSource,
+    "id" | "created_at" | "updated_at" | "last_success_at" | "last_error_at" | "last_error_message"
+  >,
 ): Promise<RadarNewsSource> {
-  const { data, error } = await db
-    .from("radar_news_sources")
-    .insert(payload)
-    .select("*")
-    .single();
+  const { data, error } = await db.from("radar_news_sources").insert(payload).select("*").single();
   if (error) throw error;
   return data;
 }
@@ -173,11 +161,7 @@ export async function approveCandidate(
     approved_at: new Date().toISOString(),
   };
 
-  const { data: newsPost, error: newsErr } = await db
-    .from("news_posts")
-    .insert(newsPayload)
-    .select("id")
-    .single();
+  const { data: newsPost, error: newsErr } = await db.from("news_posts").insert(newsPayload).select("id").single();
   if (newsErr) throw newsErr;
 
   const newsPostId: number = newsPost.id;
@@ -195,14 +179,12 @@ export async function approveCandidate(
 
   // Audit log
   const action = opts.publishToMarquee ? "approve_and_publish" : "approve_to_pool";
-  await db
-    .from("radar_news_review_logs")
-    .insert({
-      candidate_id: candidateId,
-      action,
-      note: opts.reviewNote ?? null,
-      after_value: { news_post_id: newsPostId },
-    });
+  await db.from("radar_news_review_logs").insert({
+    candidate_id: candidateId,
+    action,
+    note: opts.reviewNote ?? null,
+    after_value: { news_post_id: newsPostId },
+  });
 
   if (!opts.publishToMarquee) {
     return { newsPostId };
@@ -215,10 +197,7 @@ export async function approveCandidate(
   return { newsPostId, marqueeItemId: marqueeItem.id };
 }
 
-export async function rejectCandidate(
-  candidateId: string,
-  note?: string,
-): Promise<void> {
+export async function rejectCandidate(candidateId: string, note?: string): Promise<void> {
   await db
     .from("radar_news_candidates")
     .update({
@@ -228,16 +207,10 @@ export async function rejectCandidate(
     })
     .eq("id", candidateId);
 
-  await db
-    .from("radar_news_review_logs")
-    .insert({ candidate_id: candidateId, action: "reject", note: note ?? null });
+  await db.from("radar_news_review_logs").insert({ candidate_id: candidateId, action: "reject", note: note ?? null });
 }
 
-export async function markDuplicate(
-  candidateId: string,
-  duplicateOfId: string,
-  note?: string,
-): Promise<void> {
+export async function markDuplicate(candidateId: string, duplicateOfId: string, note?: string): Promise<void> {
   await db
     .from("radar_news_candidates")
     .update({
@@ -248,14 +221,12 @@ export async function markDuplicate(
     })
     .eq("id", candidateId);
 
-  await db
-    .from("radar_news_review_logs")
-    .insert({
-      candidate_id: candidateId,
-      action: "mark_duplicate",
-      note: note ?? null,
-      after_value: { duplicate_of: duplicateOfId },
-    });
+  await db.from("radar_news_review_logs").insert({
+    candidate_id: candidateId,
+    action: "mark_duplicate",
+    note: note ?? null,
+    after_value: { duplicate_of: duplicateOfId },
+  });
 }
 
 // ─── Manuel tarama tetikleme ──────────────────────────────────────────────────
@@ -267,7 +238,9 @@ export async function triggerManualScan(opts?: {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
   if (!session) throw new Error("Oturum gerekli");
 
   const response = await fetch(`${supabaseUrl}/functions/v1/radar-news-scan`, {
@@ -294,11 +267,7 @@ export async function triggerManualScan(opts?: {
 // ─── Keyword API ──────────────────────────────────────────────────────────────
 
 export async function listRadarKeywords(): Promise<RadarNewsKeyword[]> {
-  const { data, error } = await db
-    .from("radar_news_keywords")
-    .select("*")
-    .order("language")
-    .order("keyword");
+  const { data, error } = await db.from("radar_news_keywords").select("*").order("language").order("keyword");
   if (error) throw error;
   return data ?? [];
 }

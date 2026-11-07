@@ -27,7 +27,11 @@ describe("ReportDeliveryCard", () => {
       location_country: "Almanya",
       location_city: "Berlin",
     });
-    render(<MemoryRouter><ReportDeliveryCard result={RESULT} /></MemoryRouter>);
+    render(
+      <MemoryRouter>
+        <ReportDeliveryCard result={RESULT} />
+      </MemoryRouter>,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Raporu gönder" }));
 
@@ -42,8 +46,6 @@ describe("ReportDeliveryCard", () => {
     expect(reportErrorMessage(new Error("rl_report_verified_email_required"))).toBe(
       "Rapor için doğrulanmış bir e-posta adresi gerekli.",
     );
-    expect(reportErrorMessage(new Error("rl_report_rate_limited"))).toBe(
-      "24 saatlik rapor gönderim sınırına ulaştın.",
-    );
+    expect(reportErrorMessage(new Error("rl_report_rate_limited"))).toBe("24 saatlik rapor gönderim sınırına ulaştın.");
   });
 });

@@ -72,22 +72,30 @@ describe("G18 · salt ekleme güvencesi", () => {
   });
 
   it("kategori CHECK'i eski 10 değeri KORUR + yeni 7'yi ekler", () => {
-    const constraint = sliceBetween(
-      code(),
-      "add constraint whatsapp_landings_category_check",
-      ");",
-      "category check",
-    );
+    const constraint = sliceBetween(code(), "add constraint whatsapp_landings_category_check", ");", "category check");
 
     for (const legacy of [
-      "alumni", "hobi", "is", "doktor", "yatirim", "akademik", "dayanisma",
-      "hr", "kisisel-gelisim", "diger",
+      "alumni",
+      "hobi",
+      "is",
+      "doktor",
+      "yatirim",
+      "akademik",
+      "dayanisma",
+      "hr",
+      "kisisel-gelisim",
+      "diger",
     ]) {
       expect(constraint, `eski anahtar korunmalı: ${legacy}`).toContain(`'${legacy}'`);
     }
     for (const motor of [
-      "sehir-yasam", "meslek-kariyer", "is-girisim", "alumni-akademik",
-      "dayanisma-yardim", "aile-cocuk", "hobi-kultur",
+      "sehir-yasam",
+      "meslek-kariyer",
+      "is-girisim",
+      "alumni-akademik",
+      "dayanisma-yardim",
+      "aile-cocuk",
+      "hobi-kultur",
     ]) {
       expect(constraint, `yeni anahtar eklenmeli: ${motor}`).toContain(`'${motor}'`);
     }
@@ -105,7 +113,12 @@ describe("G18 · kabul #1 — dedup invite_code ile (G10 tek kaynak)", () => {
 
   it("aynı kod zaten listedeyse INSERT YAPILMADAN already_listed döner", () => {
     const fn = rpc();
-    const dedupBlock = sliceBetween(fn, "where invite_code = v_invite", "raise exception 'group_submission_banned'", "dedup→ban");
+    const dedupBlock = sliceBetween(
+      fn,
+      "where invite_code = v_invite",
+      "raise exception 'group_submission_banned'",
+      "dedup→ban",
+    );
 
     expect(dedupBlock).toContain("'already_listed'");
     expect(dedupBlock).toContain("return jsonb_build_object");
@@ -151,9 +164,7 @@ describe("G18 · platform üç yerde birebir şema-çıpalı", () => {
 
 describe("G18 · kabul #2/#3 — hızlı şerit matrisi", () => {
   it("publish kararı DÖRT koşulun HEPSİNE bağlı", () => {
-    expect(rpc()).toContain(
-      "v_publish := v_fast and v_is_admin and p_claims_admin and cardinality(v_flags) = 0;",
-    );
+    expect(rpc()).toContain("v_publish := v_fast and v_is_admin and p_claims_admin and cardinality(v_flags) = 0;");
   });
 
   it("şerit bayrağı group_settings'ten (kodda sabit yok)", () => {
@@ -161,9 +172,7 @@ describe("G18 · kabul #2/#3 — hızlı şerit matrisi", () => {
   });
 
   it("varsayılan durum pending_review; publish yalnız v_publish ile", () => {
-    expect(rpc()).toContain(
-      "v_listing := case when v_publish then 'published' else 'pending_review' end",
-    );
+    expect(rpc()).toContain("v_listing := case when v_publish then 'published' else 'pending_review' end");
   });
 
   it("hızlı şerit yayını moderasyon loguna yazılır (kabul #12 zinciri)", () => {
@@ -207,9 +216,7 @@ describe("G18 · kabul #10 (bugünkü hâl) — aile-cocuk sunucuda kilitli", ()
 
     expect(fn).toContain("if p_category = 'aile-cocuk' then");
     expect(fn).toContain("group_submit_category_locked");
-    expect(fn.indexOf("group_submit_category_locked")).toBeLessThan(
-      fn.indexOf("group_submit_invalid_category"),
-    );
+    expect(fn.indexOf("group_submit_category_locked")).toBeLessThan(fn.indexOf("group_submit_invalid_category"));
   });
 });
 
@@ -291,7 +298,7 @@ describe("G18 · group-preview edge — yetki ve sınır", () => {
     const src = edge();
 
     expect(src).toContain('enforceRateLimit(service, req, "group-preview"');
-    expect(src).toContain("isAssistantOriginAllowed(req.headers.get(\"Origin\"))");
+    expect(src).toContain('isAssistantOriginAllowed(req.headers.get("Origin"))');
     expect(src).toContain("readJsonWithLimit(req, MAX_BODY_BYTES)");
   });
 

@@ -26,8 +26,7 @@ type Props = {
 const KIND_META: Record<string, { short: string; className: string }> = {
   attribute: {
     short: "A",
-    className:
-      "border-[#ef8c3f]/35 bg-[linear-gradient(135deg,#fff0de_0%,#ffd6af_52%,#ffbc7b_100%)] text-[#c96a1a]",
+    className: "border-[#ef8c3f]/35 bg-[linear-gradient(135deg,#fff0de_0%,#ffd6af_52%,#ffbc7b_100%)] text-[#c96a1a]",
   },
   feature: {
     short: "F",
@@ -59,15 +58,9 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
   const [descDraft, setDescDraft] = useState("");
 
   // Build quick-lookup maps from bundle
-  const attrMap = new Map<string, RoleManagementAttribute>(
-    (bundle?.attributes ?? []).map((a) => [a.key, a]),
-  );
-  const featMap = new Map<string, RoleManagementFeature>(
-    (bundle?.features ?? []).map((f) => [f.key, f]),
-  );
-  const sectMap = new Map<string, RoleManagementSection>(
-    (bundle?.sections ?? []).map((s) => [s.key, s]),
-  );
+  const attrMap = new Map<string, RoleManagementAttribute>((bundle?.attributes ?? []).map((a) => [a.key, a]));
+  const featMap = new Map<string, RoleManagementFeature>((bundle?.features ?? []).map((f) => [f.key, f]));
+  const sectMap = new Map<string, RoleManagementSection>((bundle?.sections ?? []).map((s) => [s.key, s]));
 
   const saveDescription = async (row: CatalogRow, newDesc: string) => {
     try {
@@ -88,20 +81,23 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     }
   };
 
-  const handleAttrToggle = async (
-    row: CatalogRow,
-    field: keyof RoleManagementAttribute["rule"],
-    checked: boolean,
-  ) => {
+  const handleAttrToggle = async (row: CatalogRow, field: keyof RoleManagementAttribute["rule"], checked: boolean) => {
     if (!bundle) return;
     const existing = attrMap.get(row.key);
     const currentRule = existing?.rule ?? {
-      is_enabled: false, is_required: false, is_public_default: false,
-      user_can_edit: true, user_can_hide: true,
-      requires_admin_approval_on_change: false, sort_order: row.sortOrder,
+      is_enabled: false,
+      is_required: false,
+      is_public_default: false,
+      user_can_edit: true,
+      user_can_hide: true,
+      requires_admin_approval_on_change: false,
+      sort_order: row.sortOrder,
     };
     const nextRule = { ...currentRule, [field]: checked };
-    const nextAttr = { ...(existing ?? { key: row.key, label: row.label, description: row.description, admin_note: row.adminNote }), rule: nextRule };
+    const nextAttr = {
+      ...(existing ?? { key: row.key, label: row.label, description: row.description, admin_note: row.adminNote }),
+      rule: nextRule,
+    };
     const nextAttrs = bundle.attributes.some((a) => a.key === row.key)
       ? bundle.attributes.map((a) => (a.key === row.key ? nextAttr : a))
       : [...bundle.attributes, nextAttr as RoleManagementAttribute];
@@ -112,7 +108,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
       toast({ title: "Attribute kuralı güncellendi", description: `${row.label}` });
     } catch (err: unknown) {
       onBundleChange({ attributes: bundle.attributes });
-      toast({ title: "Kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -122,16 +122,24 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     if (!bundle) return;
     const existing = attrMap.get(row.key);
     const currentRule = existing?.rule ?? {
-      is_enabled: false, is_required: false, is_public_default: false,
-      user_can_edit: true, user_can_hide: true,
-      requires_admin_approval_on_change: false, sort_order: row.sortOrder,
+      is_enabled: false,
+      is_required: false,
+      is_public_default: false,
+      user_can_edit: true,
+      user_can_hide: true,
+      requires_admin_approval_on_change: false,
+      sort_order: row.sortOrder,
     };
     const nextRule = { ...currentRule, sort_order: sortOrder };
     setSavingKey(`attr:${row.key}:sort`);
     try {
       await setAttributeRuleAsAdmin(bundle.role.key, row.key, nextRule);
     } catch (err: unknown) {
-      toast({ title: "Sıra kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Sıra kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -140,9 +148,18 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
   const handleFeatRoleToggle = async (row: CatalogRow, checked: boolean) => {
     if (!bundle) return;
     const existing = featMap.get(row.key);
-    const nextFeat = { ...(existing ?? { key: row.key, label: row.label, description: row.description, admin_note: row.adminNote, is_active_globally: row.isActiveGlobally ?? false }), is_enabled: checked };
+    const nextFeat = {
+      ...(existing ?? {
+        key: row.key,
+        label: row.label,
+        description: row.description,
+        admin_note: row.adminNote,
+        is_active_globally: row.isActiveGlobally ?? false,
+      }),
+      is_enabled: checked,
+    };
     const nextFeats = bundle.features.some((f) => f.key === row.key)
-      ? bundle.features.map((f) => (f.key === row.key ? nextFeat as RoleManagementFeature : f))
+      ? bundle.features.map((f) => (f.key === row.key ? (nextFeat as RoleManagementFeature) : f))
       : [...bundle.features, nextFeat as RoleManagementFeature];
     onBundleChange({ features: nextFeats });
     setSavingKey(`feat:role:${row.key}`);
@@ -151,7 +168,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
       toast({ title: "Feature güncellendi", description: `${row.label} ${checked ? "açıldı" : "kapatıldı"}` });
     } catch (err: unknown) {
       onBundleChange({ features: bundle.features });
-      toast({ title: "Kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -160,35 +181,56 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
   const handleFeatGlobalToggle = async (row: CatalogRow, checked: boolean) => {
     if (!bundle) return;
     const existing = featMap.get(row.key);
-    const nextFeat = { ...(existing ?? { key: row.key, label: row.label, description: row.description, admin_note: row.adminNote, is_enabled: false }), is_active_globally: checked };
+    const nextFeat = {
+      ...(existing ?? {
+        key: row.key,
+        label: row.label,
+        description: row.description,
+        admin_note: row.adminNote,
+        is_enabled: false,
+      }),
+      is_active_globally: checked,
+    };
     const nextFeats = bundle.features.some((f) => f.key === row.key)
-      ? bundle.features.map((f) => (f.key === row.key ? nextFeat as RoleManagementFeature : f))
+      ? bundle.features.map((f) => (f.key === row.key ? (nextFeat as RoleManagementFeature) : f))
       : [...bundle.features, nextFeat as RoleManagementFeature];
     onBundleChange({ features: nextFeats });
     setSavingKey(`feat:global:${row.key}`);
     try {
       await setFeatureGlobalStateAsAdmin(row.key, checked);
-      toast({ title: "Global durum güncellendi", description: `${row.key} ${checked ? "global açık" : "global kapalı"}` });
+      toast({
+        title: "Global durum güncellendi",
+        description: `${row.key} ${checked ? "global açık" : "global kapalı"}`,
+      });
     } catch (err: unknown) {
       onBundleChange({ features: bundle.features });
-      toast({ title: "Kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
   };
 
-  const handleSectToggle = async (
-    row: CatalogRow,
-    field: "is_enabled" | "requires_approval",
-    checked: boolean,
-  ) => {
+  const handleSectToggle = async (row: CatalogRow, field: "is_enabled" | "requires_approval", checked: boolean) => {
     if (!bundle) return;
     const existing = sectMap.get(row.key);
     const currentRule = existing?.rule ?? { is_enabled: false, requires_approval: false, sort_order: row.sortOrder };
     const nextRule = { ...currentRule, [field]: checked };
-    const nextSect = { ...(existing ?? { key: row.key, label: row.label, description: row.description, admin_note: row.adminNote, section_area: row.sectionArea ?? "" }), rule: nextRule };
+    const nextSect = {
+      ...(existing ?? {
+        key: row.key,
+        label: row.label,
+        description: row.description,
+        admin_note: row.adminNote,
+        section_area: row.sectionArea ?? "",
+      }),
+      rule: nextRule,
+    };
     const nextSects = bundle.sections.some((s) => s.key === row.key)
-      ? bundle.sections.map((s) => (s.key === row.key ? nextSect as RoleManagementSection : s))
+      ? bundle.sections.map((s) => (s.key === row.key ? (nextSect as RoleManagementSection) : s))
       : [...bundle.sections, nextSect as RoleManagementSection];
     onBundleChange({ sections: nextSects });
     setSavingKey(`sect:${row.key}:${field}`);
@@ -203,7 +245,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
       toast({ title: "Bölüm kuralı güncellendi", description: row.label });
     } catch (err: unknown) {
       onBundleChange({ sections: bundle.sections });
-      toast({ title: "Kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -224,7 +270,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
         sortOrder,
       });
     } catch (err: unknown) {
-      toast({ title: "Sıra kaydedilemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+      toast({
+        title: "Sıra kaydedilemedi",
+        description: err instanceof Error ? err.message : "Beklenmeyen hata",
+        variant: "destructive",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -235,9 +285,13 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
 
     if (row.kind === "attribute") {
       const rule = attrMap.get(row.key)?.rule ?? {
-        is_enabled: false, is_required: false, is_public_default: false,
-        user_can_edit: true, user_can_hide: true,
-        requires_admin_approval_on_change: false, sort_order: row.sortOrder,
+        is_enabled: false,
+        is_required: false,
+        is_public_default: false,
+        user_can_edit: true,
+        user_can_hide: true,
+        requires_admin_approval_on_change: false,
+        sort_order: row.sortOrder,
       };
       return (
         <div className="flex flex-wrap items-center gap-1.5">
@@ -302,7 +356,11 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
     }
 
     if (row.kind === "profile_section") {
-      const rule = sectMap.get(row.key)?.rule ?? { is_enabled: false, requires_approval: false, sort_order: row.sortOrder };
+      const rule = sectMap.get(row.key)?.rule ?? {
+        is_enabled: false,
+        requires_approval: false,
+        sort_order: row.sortOrder,
+      };
       return (
         <div className="flex flex-wrap items-center gap-1.5">
           <div className="inline-flex shrink-0 items-center gap-1">
@@ -380,7 +438,9 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
               </TableCell>
               <TableCell className="px-2 py-2 align-top">
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <p className="max-w-full break-words text-[12px] font-medium" title={row.label}>{row.label}</p>
+                  <p className="max-w-full break-words text-[12px] font-medium" title={row.label}>
+                    {row.label}
+                  </p>
                   {row.dataType && (
                     <span className="shrink-0 rounded border border-muted-foreground/20 bg-muted/40 px-1.5 py-0.5 text-[9px] text-muted-foreground">
                       {row.dataType}
@@ -406,25 +466,36 @@ const UnifiedRulesTable = ({ rows, bundle, onBundleChange }: Props) => {
                       }}
                       autoFocus
                     />
-                    <button type="button" className="shrink-0 text-[10px] text-primary" onClick={() => void saveDescription(row, descDraft)}>Kaydet</button>
-                    <button type="button" className="shrink-0 text-[10px] text-muted-foreground" onClick={() => setEditingDesc(null)}>İptal</button>
+                    <button
+                      type="button"
+                      className="shrink-0 text-[10px] text-primary"
+                      onClick={() => void saveDescription(row, descDraft)}
+                    >
+                      Kaydet
+                    </button>
+                    <button
+                      type="button"
+                      className="shrink-0 text-[10px] text-muted-foreground"
+                      onClick={() => setEditingDesc(null)}
+                    >
+                      İptal
+                    </button>
                   </div>
                 ) : (
                   <button
                     type="button"
                     className="block max-w-full break-words text-left text-[11px] text-muted-foreground hover:text-foreground"
                     title={row.description || "Açıklama ekle"}
-                    onClick={() => { setEditingDesc(`${row.kind}:${row.key}`); setDescDraft(row.description ?? ""); }}
+                    onClick={() => {
+                      setEditingDesc(`${row.kind}:${row.key}`);
+                      setDescDraft(row.description ?? "");
+                    }}
                   >
                     {row.description || "Açıklama ekle…"}
                   </button>
                 )}
               </TableCell>
-              {bundle && (
-                <TableCell className="px-2 py-2 align-top">
-                  {renderEditControls(row)}
-                </TableCell>
-              )}
+              {bundle && <TableCell className="px-2 py-2 align-top">{renderEditControls(row)}</TableCell>}
             </TableRow>
           ))}
         </TableBody>

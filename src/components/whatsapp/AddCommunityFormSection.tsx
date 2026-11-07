@@ -57,8 +57,7 @@ export function AddCommunityFormSection({
   onOpenExistingGroup,
 }: AddCommunityFormSectionProps) {
   const platform = detectMotorPlatform(form.link);
-  const submitDisabled =
-    submitting || banned || !form.pledgeAccepted || previewBlocksSubmit(preview);
+  const submitDisabled = submitting || banned || !form.pledgeAccepted || previewBlocksSubmit(preview);
 
   return (
     <div className="mt-8 rounded-[1.9rem] border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(236,253,245,0.96)_0%,rgba(255,255,255,0.98)_42%,rgba(239,246,255,0.94)_100%)] p-3 shadow-[0_20px_60px_rgba(15,23,42,0.08)] ring-1 ring-white/80 backdrop-blur-sm">
@@ -69,7 +68,9 @@ export function AddCommunityFormSection({
               <Sparkles className="h-4.5 w-4.5 text-emerald-700" />
             </span>
             <div className="space-y-1">
-              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">Dijital Grup Eklemek İstiyorum</h2>
+              <h2 className="text-base font-bold tracking-[0.01em] text-slate-900 md:text-lg">
+                Dijital Grup Eklemek İstiyorum
+              </h2>
               <p className="text-sm text-slate-600">
                 Linki yapıştır, gerisi otomatik dolsun. Admin onayından sonra listede yayınlanacak.
               </p>
@@ -117,8 +118,8 @@ export function AddCommunityFormSection({
                 role="alert"
                 className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700"
               >
-                Grup ekleme yetkin askıya alınmış. Bir ihlal kaydı sonrası bu engel uygulanır;
-                detay için ekiple iletişime geç.
+                Grup ekleme yetkin askıya alınmış. Bir ihlal kaydı sonrası bu engel uygulanır; detay için ekiple
+                iletişime geç.
               </div>
             ) : null}
 
@@ -165,10 +166,10 @@ export function AddCommunityFormSection({
                     role="alert"
                     className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left text-sm text-amber-800"
                   >
-                    <p className="font-bold">Bu grup zaten listede{preview.data.group_name ? `: ${preview.data.group_name}` : ""}.</p>
-                    <p className="mt-1">
-                      Sahibi misin? Grup sayfasından sahiplik doğrulamayı başlatabilirsin.
+                    <p className="font-bold">
+                      Bu grup zaten listede{preview.data.group_name ? `: ${preview.data.group_name}` : ""}.
                     </p>
+                    <p className="mt-1">Sahibi misin? Grup sayfasından sahiplik doğrulamayı başlatabilirsin.</p>
                     {preview.data.slug ? (
                       <Button
                         type="button"
@@ -184,8 +185,8 @@ export function AddCommunityFormSection({
                 ) : null}
                 {preview.status === "done" && !preview.data.exists && preview.data.read_result === "invalid" ? (
                   <p className="text-left text-sm font-semibold text-red-600" role="alert">
-                    Davet sayfası geçersiz görünüyor (grup dolu, kapalı ya da link uydurma olabilir).
-                    Gönderim bu linkle yapılamaz.
+                    Davet sayfası geçersiz görünüyor (grup dolu, kapalı ya da link uydurma olabilir). Gönderim bu linkle
+                    yapılamaz.
                   </p>
                 ) : null}
                 {preview.status === "done" && !preview.data.exists && preview.data.read_result === "unknown" ? (
@@ -195,7 +196,8 @@ export function AddCommunityFormSection({
                 ) : null}
                 {preview.status === "done" && !preview.data.exists && preview.data.read_result === "ok" ? (
                   <p className="text-left text-sm font-semibold text-emerald-700" role="status">
-                    Davet sayfası okundu{preview.data.name ? `: ${preview.data.name}` : ""}. Ad ve görsel otomatik dolduruldu.
+                    Davet sayfası okundu{preview.data.name ? `: ${preview.data.name}` : ""}. Ad ve görsel otomatik
+                    dolduruldu.
                   </p>
                 ) : null}
 
@@ -301,10 +303,7 @@ export function AddCommunityFormSection({
                     placeholder="Grup hakkında 1-2 cümle (en fazla 160 karakter)"
                     aria-describedby="group-short-description-count"
                   />
-                  <p
-                    id="group-short-description-count"
-                    className="mt-1 text-right text-xs tabular-nums text-slate-500"
-                  >
+                  <p id="group-short-description-count" className="mt-1 text-right text-xs tabular-nums text-slate-500">
                     {form.shortDescription.length}/{SHORT_DESCRIPTION_MAX}
                   </p>
                 </div>
@@ -320,16 +319,20 @@ export function AddCommunityFormSection({
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="yes" id="claims-admin-yes" />
-                      <Label htmlFor="claims-admin-yes" className="cursor-pointer font-normal">Evet</Label>
+                      <Label htmlFor="claims-admin-yes" className="cursor-pointer font-normal">
+                        Evet
+                      </Label>
                     </div>
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="no" id="claims-admin-no" />
-                      <Label htmlFor="claims-admin-no" className="cursor-pointer font-normal">Hayır</Label>
+                      <Label htmlFor="claims-admin-no" className="cursor-pointer font-normal">
+                        Hayır
+                      </Label>
                     </div>
                   </RadioGroup>
                   <p className="mt-1 text-left text-xs text-slate-500">
-                    "Evet" dersen sahipliğini doğrulamanı isteyeceğiz (grup adına geçici bir kod
-                    ekleyerek ya da ekran görüntüsüyle).
+                    "Evet" dersen sahipliğini doğrulamanı isteyeceğiz (grup adına geçici bir kod ekleyerek ya da ekran
+                    görüntüsüyle).
                   </p>
                 </div>
 

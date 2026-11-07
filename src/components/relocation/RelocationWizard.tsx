@@ -33,12 +33,7 @@ interface RelocationWizardProps {
   isSubmitting: boolean;
 }
 
-export function RelocationWizard({
-  countryOptions,
-  labels,
-  onSubmit,
-  isSubmitting,
-}: RelocationWizardProps) {
+export function RelocationWizard({ countryOptions, labels, onSubmit, isSubmitting }: RelocationWizardProps) {
   const { toast } = useToast();
   const [targets, setTargets] = useState<string[]>([]);
   const [windowStart, setWindowStart] = useState("");
@@ -51,9 +46,7 @@ export function RelocationWizard({
   const canSubmit = useMemo(() => targets.length > 0 && !isSubmitting, [targets, isSubmitting]);
 
   function toggleTarget(code: string) {
-    setTargets((prev) =>
-      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code],
-    );
+    setTargets((prev) => (prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]));
   }
 
   function handleSubmit() {
@@ -127,13 +120,7 @@ export function RelocationWizard({
 
         <div className="space-y-1">
           <Label className="text-xs">{labels.budget} (EUR)</Label>
-          <Input
-            type="number"
-            min={0}
-            value={budget}
-            onChange={(e) => setBudget(e.target.value)}
-            placeholder="1800"
-          />
+          <Input type="number" min={0} value={budget} onChange={(e) => setBudget(e.target.value)} placeholder="1800" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">

@@ -110,16 +110,12 @@ const BlogPostPage = () => {
         </Link>
 
         {state === "loading" ? (
-          <div className="rounded-lg border border-border bg-card p-6 text-muted-foreground">
-            Yükleniyor...
-          </div>
+          <div className="rounded-lg border border-border bg-card p-6 text-muted-foreground">Yükleniyor...</div>
         ) : state === "notfound" || !post ? (
           <div className="space-y-4 rounded-lg border border-border bg-card p-8 text-center">
             <BookOpen className="mx-auto h-10 w-10 text-muted-foreground" />
             <h1 className="text-xl font-bold text-foreground">Yazı bulunamadı</h1>
-            <p className="text-muted-foreground">
-              Aradığınız yazı yayından kaldırılmış veya adresi değişmiş olabilir.
-            </p>
+            <p className="text-muted-foreground">Aradığınız yazı yayından kaldırılmış veya adresi değişmiş olabilir.</p>
             <Link
               to="/radar/rehberler"
               className="inline-flex rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
@@ -140,12 +136,8 @@ const BlogPostPage = () => {
                   {blogCategoryLabels[post.category]}
                 </span>
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">
-                {post.title}
-              </h1>
-              {post.excerpt && (
-                <p className="text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>
-              )}
+              <h1 className="text-3xl font-extrabold tracking-tight text-foreground md:text-4xl">{post.title}</h1>
+              {post.excerpt && <p className="text-lg leading-relaxed text-muted-foreground">{post.excerpt}</p>}
               {publishedLabel && (
                 <p className="text-sm text-muted-foreground">
                   Yayın: <time dateTime={post.published_at ?? post.created_at}>{publishedLabel}</time>
@@ -177,9 +169,7 @@ const BlogPostPage = () => {
                       <Link to={`/blog/${item.slug}`} className="font-semibold text-primary hover:underline">
                         {item.title}
                       </Link>
-                      {item.excerpt && (
-                        <p className="line-clamp-2 text-sm text-muted-foreground">{item.excerpt}</p>
-                      )}
+                      {item.excerpt && <p className="line-clamp-2 text-sm text-muted-foreground">{item.excerpt}</p>}
                     </li>
                   ))}
                 </ul>

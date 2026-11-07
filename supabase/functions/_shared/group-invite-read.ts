@@ -55,14 +55,8 @@ export function decodeHtmlEntities(input: string): string {
 export function parseOgMeta(html: string, property: string): string | null {
   const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const patterns = [
-    new RegExp(
-      `<meta[^>]+property=["']${escaped}["'][^>]+content=["']([^"']*)["']`,
-      "i",
-    ),
-    new RegExp(
-      `<meta[^>]+content=["']([^"']*)["'][^>]+property=["']${escaped}["']`,
-      "i",
-    ),
+    new RegExp(`<meta[^>]+property=["']${escaped}["'][^>]+content=["']([^"']*)["']`, "i"),
+    new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+property=["']${escaped}["']`, "i"),
   ];
   for (const pattern of patterns) {
     const match = html.match(pattern);
@@ -109,7 +103,10 @@ const BROWSER_UA =
 
 const TELEGRAM_GENERIC_TITLE = "join group chat on telegram";
 
-type FetchLike = (url: string, init?: { headers?: Record<string, string>; signal?: AbortSignal }) => Promise<{
+type FetchLike = (
+  url: string,
+  init?: { headers?: Record<string, string>; signal?: AbortSignal },
+) => Promise<{
   ok: boolean;
   status: number;
   text: () => Promise<string>;
@@ -137,10 +134,10 @@ export async function readInvitePage(
     if (!code) return unknown;
     try {
       // Discord API — safeFetch kullan
-      const response = await safeFetch(
-        `https://discord.com/api/v10/invites/${code}?with_counts=true`,
-        { headers: { "User-Agent": BROWSER_UA }, fetchImpl },
-      );
+      const response = await safeFetch(`https://discord.com/api/v10/invites/${code}?with_counts=true`, {
+        headers: { "User-Agent": BROWSER_UA },
+        fetchImpl,
+      });
       if (response.status === 404) return { result: "invalid", name: null, description: null, image: null };
       if (!response.ok) return unknown;
       const payload = (await response.json()) as {
@@ -152,9 +149,7 @@ export async function readInvitePage(
         payload?.guild?.id && payload?.guild?.icon
           ? `https://cdn.discordapp.com/icons/${payload.guild.id}/${payload.guild.icon}.png`
           : null;
-      return name
-        ? { result: "ok", name, description: null, image }
-        : unknown;
+      return name ? { result: "ok", name, description: null, image } : unknown;
     } catch (error) {
       // SSRF hatası veya ağ hatası
       if (error instanceof SSRFError) {

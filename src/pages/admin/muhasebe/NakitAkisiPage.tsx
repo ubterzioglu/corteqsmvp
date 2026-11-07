@@ -1,91 +1,62 @@
 // src/pages/admin/muhasebe/NakitAkisiPage.tsx
 // Aylık nakit akışı — seçili para birimi üzerinden pivot görünümü
 
-import { useMemo, useState, Fragment } from 'react';
-import {
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  Legend,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { useMemo, useState, Fragment } from "react";
+import { Bar, CartesianGrid, ComposedChart, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { useExpenses, useIncomes } from '@/hooks/useMuhasebe';
-import { aggregateCashflowMonthly, getCurrencyTotal } from '@/lib/muhasebe-aggregations';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { CURRENCY_CODES, MONTH_LABELS_TR, type CurrencyCode } from '@/types/muhasebe';
+import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
+import { aggregateCashflowMonthly, getCurrencyTotal } from "@/lib/muhasebe-aggregations";
+import { formatCurrency } from "@/lib/muhasebe-format";
+import { CURRENCY_CODES, MONTH_LABELS_TR, type CurrencyCode } from "@/types/muhasebe";
 
 type RowKey =
-  | 'income_by_currency'
-  | 'expense_by_currency'
-  | 'net_by_currency'
-  | 'burak_expense_by_currency'
-  | 'baris_expense_by_currency'
-  | 'ortak_expense_by_currency'
-  | 'expense_paid_by_currency'
-  | 'expense_pending_by_currency'
-  | 'income_collected_by_currency'
-  | 'income_pending_by_currency';
+  | "income_by_currency"
+  | "expense_by_currency"
+  | "net_by_currency"
+  | "burak_expense_by_currency"
+  | "baris_expense_by_currency"
+  | "ortak_expense_by_currency"
+  | "expense_paid_by_currency"
+  | "expense_pending_by_currency"
+  | "income_collected_by_currency"
+  | "income_pending_by_currency";
 
 interface RowDef {
   key: RowKey;
   label: string;
-  section: 'summary' | 'persons' | 'expense_status' | 'income_status';
+  section: "summary" | "persons" | "expense_status" | "income_status";
   emphasize?: boolean;
 }
 
 const ROW_DEFS: RowDef[] = [
-  { key: 'income_by_currency', label: 'Toplam Gelir', section: 'summary' },
-  { key: 'expense_by_currency', label: 'Toplam Gider', section: 'summary' },
-  { key: 'net_by_currency', label: 'Net Nakit Akışı', section: 'summary', emphasize: true },
-  { key: 'burak_expense_by_currency', label: 'Burak Giderleri', section: 'persons' },
-  { key: 'baris_expense_by_currency', label: 'Barış Giderleri', section: 'persons' },
-  { key: 'ortak_expense_by_currency', label: 'Ortak Giderler', section: 'persons' },
-  { key: 'expense_paid_by_currency', label: 'Ödendi (Gider)', section: 'expense_status' },
-  { key: 'expense_pending_by_currency', label: 'Bekliyor (Gider)', section: 'expense_status' },
-  { key: 'income_collected_by_currency', label: 'Tahsil Edildi (Gelir)', section: 'income_status' },
-  { key: 'income_pending_by_currency', label: 'Bekliyor (Gelir)', section: 'income_status' },
+  { key: "income_by_currency", label: "Toplam Gelir", section: "summary" },
+  { key: "expense_by_currency", label: "Toplam Gider", section: "summary" },
+  { key: "net_by_currency", label: "Net Nakit Akışı", section: "summary", emphasize: true },
+  { key: "burak_expense_by_currency", label: "Burak Giderleri", section: "persons" },
+  { key: "baris_expense_by_currency", label: "Barış Giderleri", section: "persons" },
+  { key: "ortak_expense_by_currency", label: "Ortak Giderler", section: "persons" },
+  { key: "expense_paid_by_currency", label: "Ödendi (Gider)", section: "expense_status" },
+  { key: "expense_pending_by_currency", label: "Bekliyor (Gider)", section: "expense_status" },
+  { key: "income_collected_by_currency", label: "Tahsil Edildi (Gelir)", section: "income_status" },
+  { key: "income_pending_by_currency", label: "Bekliyor (Gelir)", section: "income_status" },
 ];
 
-const SECTION_LABELS: Record<RowDef['section'], string | null> = {
+const SECTION_LABELS: Record<RowDef["section"], string | null> = {
   summary: null,
-  persons: 'Kişi Bazlı Giderler',
-  expense_status: 'Gider Durumu',
-  income_status: 'Gelir Durumu',
+  persons: "Kişi Bazlı Giderler",
+  expense_status: "Gider Durumu",
+  income_status: "Gelir Durumu",
 };
 
 export default function NakitAkisiPage() {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState<number>(currentYear);
-  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>('TRY');
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("TRY");
   const { data: expenses = [], isLoading: expensesLoading } = useExpenses();
   const { data: incomes = [], isLoading: incomesLoading } = useIncomes();
   const isLoading = expensesLoading || incomesLoading;
@@ -104,10 +75,7 @@ export default function NakitAkisiPage() {
   const totals = useMemo(() => {
     const t = {} as Record<RowKey, number>;
     ROW_DEFS.forEach((def) => {
-      t[def.key] = monthlyData.reduce(
-        (sum, month) => sum + getCurrencyTotal(month[def.key], selectedCurrency),
-        0,
-      );
+      t[def.key] = monthlyData.reduce((sum, month) => sum + getCurrencyTotal(month[def.key], selectedCurrency), 0);
     });
     return t;
   }, [monthlyData, selectedCurrency]);
@@ -134,10 +102,7 @@ export default function NakitAkisiPage() {
         </div>
 
         <div className="flex items-center gap-3 flex-wrap">
-          <Tabs
-            value={selectedCurrency}
-            onValueChange={(value) => setSelectedCurrency(value as CurrencyCode)}
-          >
+          <Tabs value={selectedCurrency} onValueChange={(value) => setSelectedCurrency(value as CurrencyCode)}>
             <TabsList>
               {CURRENCY_CODES.map((currency) => (
                 <TabsTrigger key={currency} value={currency}>
@@ -147,10 +112,7 @@ export default function NakitAkisiPage() {
             </TabsList>
           </Tabs>
 
-          <Select
-            value={String(selectedYear)}
-            onValueChange={(v) => setSelectedYear(Number(v))}
-          >
+          <Select value={String(selectedYear)} onValueChange={(v) => setSelectedYear(Number(v))}>
             <SelectTrigger className="w-[140px]">
               <SelectValue />
             </SelectTrigger>
@@ -184,8 +146,8 @@ export default function NakitAkisiPage() {
                   <YAxis
                     tick={{ fontSize: 12 }}
                     tickFormatter={(v) =>
-                      new Intl.NumberFormat('tr-TR', {
-                        notation: 'compact',
+                      new Intl.NumberFormat("tr-TR", {
+                        notation: "compact",
                         maximumFractionDigits: 1,
                       }).format(v as number)
                     }
@@ -197,13 +159,7 @@ export default function NakitAkisiPage() {
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Gelir" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Gider" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                  <Line
-                    type="monotone"
-                    dataKey="Net"
-                    stroke="#6366f1"
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                  />
+                  <Line type="monotone" dataKey="Net" stroke="#6366f1" strokeWidth={2} dot={{ r: 3 }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -223,17 +179,13 @@ export default function NakitAkisiPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="sticky left-0 bg-background z-10 min-w-[200px]">
-                    Kalem
-                  </TableHead>
+                  <TableHead className="sticky left-0 bg-background z-10 min-w-[200px]">Kalem</TableHead>
                   {MONTH_LABELS_TR.map((month) => (
                     <TableHead key={month} className="text-right whitespace-nowrap">
                       {month}
                     </TableHead>
                   ))}
-                  <TableHead className="text-right whitespace-nowrap font-bold bg-muted/50">
-                    TOPLAM
-                  </TableHead>
+                  <TableHead className="text-right whitespace-nowrap font-bold bg-muted/50">TOPLAM</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -254,7 +206,7 @@ export default function NakitAkisiPage() {
                           </TableCell>
                         </TableRow>
                       )}
-                      <TableRow className={def.emphasize ? 'font-semibold' : ''}>
+                      <TableRow className={def.emphasize ? "font-semibold" : ""}>
                         <TableCell className="sticky left-0 bg-background z-10 whitespace-nowrap">
                           {def.label}
                         </TableCell>

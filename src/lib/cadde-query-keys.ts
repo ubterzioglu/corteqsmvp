@@ -9,9 +9,11 @@ export const caddeQueryKeys = {
   countries: () => ["cadde", "countries"] as const,
   cities: (countries: string[]) => ["cadde", "cities", countries] as const,
   feedRoot: ["cadde", "feed"] as const,
-  feed: (filters: CaddeFilterState, userId: string | null, diaspora = "tr") => ["cadde", "feed", filters, userId, diaspora] as const,
+  feed: (filters: CaddeFilterState, userId: string | null, diaspora = "tr") =>
+    ["cadde", "feed", filters, userId, diaspora] as const,
   cafesRoot: ["cadde", "cafes"] as const,
-  cafes: (filters: CaddeFilterState, userId: string | null, diaspora = "tr") => ["cadde", "cafes", filters, userId, diaspora] as const,
+  cafes: (filters: CaddeFilterState, userId: string | null, diaspora = "tr") =>
+    ["cadde", "cafes", filters, userId, diaspora] as const,
   cafe: (cafeId: string, userId: string | null) => ["cadde", "cafes", "detail", cafeId, userId] as const,
   myCafes: (userId: string | null) => ["cadde", "cafes", "mine", userId] as const,
   cafeMembers: (cafeId: string) => ["cadde", "cafes", "members", cafeId] as const,
@@ -26,13 +28,15 @@ export const caddeQueryKeys = {
   notifications: (userId: string | null) => ["cadde", "notifications", userId] as const,
   moderationQueue: (status: string) => ["cadde", "moderation-queue", status] as const,
   promotionsRoot: ["cadde", "promotions"] as const,
-  promotions: (placementKey: string, filters: { countries: string[]; cities: string[]; diaspora?: string }) => ["cadde", "promotions", placementKey, filters] as const,
+  promotions: (placementKey: string, filters: { countries: string[]; cities: string[]; diaspora?: string }) =>
+    ["cadde", "promotions", placementKey, filters] as const,
   promotionPlacements: ["cadde", "promotions", "placements"] as const,
   myPromotions: (userId: string | null) => ["cadde", "promotions", "mine", userId] as const,
   pendingPromotions: ["cadde", "promotions", "pending"] as const,
   carsiRoot: ["cadde", "carsi"] as const,
   carsiCategories: ["cadde", "carsi", "categories"] as const,
-  carsiItems: (filters: { countries: string[]; cities: string[]; categoryKey?: string; diasporaKey?: string }) => ["cadde", "carsi", "items", filters] as const,
+  carsiItems: (filters: { countries: string[]; cities: string[]; categoryKey?: string; diasporaKey?: string }) =>
+    ["cadde", "carsi", "items", filters] as const,
   carsiItem: (itemId: string) => ["cadde", "carsi", "item", itemId] as const,
   myCarsiItems: (userId: string | null) => ["cadde", "carsi", "mine", userId] as const,
 };

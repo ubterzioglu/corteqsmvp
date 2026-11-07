@@ -43,7 +43,11 @@ export const ProfileHelpCard = forwardRef<HTMLDivElement, ProfileHelpCardProps>(
         <CardContent id="help-card-content" className="pt-0">
           <Accordion type="single" collapsible className="w-full space-y-2">
             {sections.map((section) => (
-              <AccordionItem key={section.key} value={section.key} className={`rounded-lg border border-white/80 px-3 shadow-[0_18px_32px_-30px_rgba(66,133,244,0.28)] ${section.accentClassName}`}>
+              <AccordionItem
+                key={section.key}
+                value={section.key}
+                className={`rounded-lg border border-white/80 px-3 shadow-[0_18px_32px_-30px_rgba(66,133,244,0.28)] ${section.accentClassName}`}
+              >
                 <AccordionTrigger className="py-2 text-sm font-medium hover:no-underline">
                   <span className="inline-flex items-center gap-2">
                     <BookOpen className="h-4 w-4 text-primary" />

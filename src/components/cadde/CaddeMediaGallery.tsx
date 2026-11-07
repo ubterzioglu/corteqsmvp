@@ -53,8 +53,10 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
   useEffect(() => {
     if (lightboxIndex === null) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "ArrowRight") setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
-      if (event.key === "ArrowLeft") setLightboxIndex((current) => (current === null ? null : (current - 1 + images.length) % images.length));
+      if (event.key === "ArrowRight")
+        setLightboxIndex((current) => (current === null ? null : (current + 1) % images.length));
+      if (event.key === "ArrowLeft")
+        setLightboxIndex((current) => (current === null ? null : (current - 1 + images.length) % images.length));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -77,12 +79,7 @@ const CaddeMediaGallery = ({ media, contextLabel }: CaddeMediaGalleryProps) => {
               className={`group relative overflow-hidden bg-slate-100 ${cellClassFor(images.length, index)}`}
               aria-label={`${altFor(index)} — büyüt`}
             >
-              <img
-                src={asset.url}
-                alt={altFor(index)}
-                loading="lazy"
-                className={imageClassFor(images.length)}
-              />
+              <img src={asset.url} alt={altFor(index)} loading="lazy" className={imageClassFor(images.length)} />
             </button>
           ))}
         </div>
@@ -151,7 +148,10 @@ export const CaddeMediaPreviewStrip = ({ media, onRemove, disabled }: CaddeMedia
   return (
     <div className="flex flex-wrap gap-2" data-testid="cadde-media-preview">
       {media.map((asset) => (
-        <div key={asset.path} className="relative h-20 w-20 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+        <div
+          key={asset.path}
+          className="relative h-20 w-20 overflow-hidden rounded-lg border border-slate-200 bg-slate-100"
+        >
           {asset.kind === "image" ? (
             <img src={asset.url} alt="Yüklenen görsel" className="h-full w-full object-cover" />
           ) : (

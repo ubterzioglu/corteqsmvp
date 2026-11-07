@@ -39,7 +39,9 @@ describe("App admin cadde routing", () => {
   });
 
   it("renders the cadde admin route inside the shared admin shell", async () => {
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Admin Cadde Page")).toBeInTheDocument();
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();

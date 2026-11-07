@@ -17,9 +17,7 @@ const source = readFileSync("src/components/cadde/CaddeFeedView.tsx", "utf8");
 
 describe("CaddeFeedView · CD03 düzenleme kablolaması", () => {
   it("composer onSubmit edit modunda updateMutation'a dallanır", () => {
-    expect(source).toContain(
-      "onSubmit={() => (editingPostId ? updateMutation.mutate() : postMutation.mutate())}",
-    );
+    expect(source).toContain("onSubmit={() => (editingPostId ? updateMutation.mutate() : postMutation.mutate())}");
     expect(source).toContain("isSubmitting={postMutation.isPending || updateMutation.isPending}");
   });
 

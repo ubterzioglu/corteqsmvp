@@ -10,12 +10,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { walkRepo, moduleFamilyOf, kindOf } from "./agent/walk.mjs";
-import {
-  extractEdgeTool,
-  extractWorkerTool,
-  extractLibTool,
-  extractScriptTool,
-} from "./agent/extract.mjs";
+import { extractEdgeTool, extractWorkerTool, extractLibTool, extractScriptTool } from "./agent/extract.mjs";
 
 const rootDir = process.cwd();
 const OUT_DIR = path.join(rootDir, "docs", "agent");
@@ -35,9 +30,7 @@ async function readSafe(relPath) {
 }
 
 async function collectEdgeTools(files) {
-  const indexes = files.filter(
-    (f) => /^supabase\/functions\/[^/]+\/index\.ts$/.test(f),
-  );
+  const indexes = files.filter((f) => /^supabase\/functions\/[^/]+\/index\.ts$/.test(f));
   const tools = [];
   for (const rel of indexes) {
     const source = await readSafe(rel);
@@ -64,9 +57,7 @@ async function collectWorkerTools(files) {
 }
 
 async function collectLibTools(files) {
-  const libs = files.filter(
-    (f) => /^src\/lib\/[a-zA-Z0-9-]+-api\.ts$/.test(f),
-  );
+  const libs = files.filter((f) => /^src\/lib\/[a-zA-Z0-9-]+-api\.ts$/.test(f));
   const tools = [];
   for (const rel of libs) {
     const source = await readSafe(rel);
@@ -118,8 +109,8 @@ async function main() {
   const libTools = await collectLibTools(files);
   const scriptTool = extractScriptTool(scripts);
 
-  const tools = [...edgeTools, ...workerTools, ...libTools, scriptTool].sort(
-    (a, b) => a.tool_key.localeCompare(b.tool_key),
+  const tools = [...edgeTools, ...workerTools, ...libTools, scriptTool].sort((a, b) =>
+    a.tool_key.localeCompare(b.tool_key),
   );
 
   const catalog = {

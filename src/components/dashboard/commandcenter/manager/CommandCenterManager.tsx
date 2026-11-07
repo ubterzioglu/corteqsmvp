@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 // Komuta Merkezi — ekran kabuğu.
 // Tüm durum ve eylemler `useCommandCenterManager` içindedir; bu dosya yalnız
@@ -6,44 +6,44 @@
 // rehber → kaynaklar → rozetler → hot fix → yeni kayıt → filtreler → liste →
 // tamamlananlar → arşiv → silinmişler.
 
-import { AlertTriangle } from 'lucide-react'
-import AccordionCard from '@/components/dashboard/AccordionCard'
-import type { CommandCenterItemType } from '@/lib/dashboard/command-center-items'
-import HotFixPanel from '../HotFixPanel'
-import ArchivedItemsList from './ArchivedItemsList'
-import CommandCenterCountsBar from './CommandCenterCountsBar'
-import CommandCenterCreateForm from './CommandCenterCreateForm'
-import CommandCenterFilterBar from './CommandCenterFilterBar'
-import CommandCenterItemsTable from './CommandCenterItemsTable'
-import CommandCenterPagination from './CommandCenterPagination'
-import DeletedItemsList from './DeletedItemsList'
-import SourceBreakdownList from './SourceBreakdownList'
-import { COMMAND_CENTER_GUIDE_ITEMS } from './guide-items'
-import { useCommandCenterManager } from './useCommandCenterManager'
+import { AlertTriangle } from "lucide-react";
+import AccordionCard from "@/components/dashboard/AccordionCard";
+import type { CommandCenterItemType } from "@/lib/dashboard/command-center-items";
+import HotFixPanel from "../HotFixPanel";
+import ArchivedItemsList from "./ArchivedItemsList";
+import CommandCenterCountsBar from "./CommandCenterCountsBar";
+import CommandCenterCreateForm from "./CommandCenterCreateForm";
+import CommandCenterFilterBar from "./CommandCenterFilterBar";
+import CommandCenterItemsTable from "./CommandCenterItemsTable";
+import CommandCenterPagination from "./CommandCenterPagination";
+import DeletedItemsList from "./DeletedItemsList";
+import SourceBreakdownList from "./SourceBreakdownList";
+import { COMMAND_CENTER_GUIDE_ITEMS } from "./guide-items";
+import { useCommandCenterManager } from "./useCommandCenterManager";
 
 interface CommandCenterManagerProps {
-  title?: string
-  description?: string
-  compatibilityMessage?: string
-  lockedItemType?: CommandCenterItemType
+  title?: string;
+  description?: string;
+  compatibilityMessage?: string;
+  lockedItemType?: CommandCenterItemType;
 }
 
 export default function CommandCenterManager({
-  title = 'Command Center',
-  description = 'Todo ve toplantı kayıtlarını tek merkezden yönetin.',
+  title = "Command Center",
+  description = "Todo ve toplantı kayıtlarını tek merkezden yönetin.",
   compatibilityMessage,
   lockedItemType,
 }: CommandCenterManagerProps) {
-  const manager = useCommandCenterManager(lockedItemType)
+  const manager = useCommandCenterManager(lockedItemType);
 
   return (
     <section className="space-y-6" aria-labelledby="command-center-heading">
       <AccordionCard
         items={[
           {
-            id: 'command-center-guide',
-            title: title || 'Command Center',
-            accentColor: '#1A6DC2',
+            id: "command-center-guide",
+            title: title || "Command Center",
+            accentColor: "#1A6DC2",
             children: (
               <div className="space-y-4">
                 {description ? <p className="text-sm text-gray-500">{description}</p> : null}
@@ -68,10 +68,10 @@ export default function CommandCenterManager({
       <AccordionCard
         items={[
           {
-            id: 'command-center-sources',
-            title: 'Kayıt Kaynakları',
+            id: "command-center-sources",
+            title: "Kayıt Kaynakları",
             badge: String(manager.sourceBreakdown.total),
-            accentColor: '#8B5CF6',
+            accentColor: "#8B5CF6",
             children: <SourceBreakdownList breakdown={manager.sourceBreakdown} />,
           },
         ]}
@@ -96,9 +96,9 @@ export default function CommandCenterManager({
       <AccordionCard
         items={[
           {
-            id: 'new-command-center-item',
-            title: 'Yeni Kayıt Ekle',
-            accentColor: '#1A6DC2',
+            id: "new-command-center-item",
+            title: "Yeni Kayıt Ekle",
+            accentColor: "#1A6DC2",
             children: (
               <CommandCenterCreateForm
                 formState={manager.formState}
@@ -144,8 +144,8 @@ export default function CommandCenterManager({
         ) : manager.totalCount === 0 ? (
           <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500">
             {manager.hasActiveFilter
-              ? 'Filtreye uygun kayıt bulunamadı.'
-              : 'Henüz kayıt yok. Yukarıdaki formu kullanarak ilk kaydı ekleyin.'}
+              ? "Filtreye uygun kayıt bulunamadı."
+              : "Henüz kayıt yok. Yukarıdaki formu kullanarak ilk kaydı ekleyin."}
           </div>
         ) : (
           <>
@@ -197,10 +197,10 @@ export default function CommandCenterManager({
             <AccordionCard
               items={[
                 {
-                  id: 'completed-command-center-items',
-                  title: 'Tamamlanan Görevler',
+                  id: "completed-command-center-items",
+                  title: "Tamamlanan Görevler",
                   badge: String(manager.completedItems.length),
-                  accentColor: '#4CAF50',
+                  accentColor: "#4CAF50",
                   children:
                     manager.completedItems.length === 0 ? (
                       <div className="rounded-2xl border border-dashed border-green-200 bg-white/80 p-6 text-center text-sm text-gray-500">
@@ -231,10 +231,10 @@ export default function CommandCenterManager({
             <AccordionCard
               items={[
                 {
-                  id: 'archived-command-center-items',
-                  title: 'Arşivlenen Kayıtlar',
+                  id: "archived-command-center-items",
+                  title: "Arşivlenen Kayıtlar",
                   badge: String(manager.archivedItems.length),
-                  accentColor: '#D97706',
+                  accentColor: "#D97706",
                   children: <ArchivedItemsList items={manager.archivedItems} />,
                 },
               ]}
@@ -244,10 +244,10 @@ export default function CommandCenterManager({
             <AccordionCard
               items={[
                 {
-                  id: 'deleted-command-center-items',
-                  title: 'Silinmiş Görevler',
+                  id: "deleted-command-center-items",
+                  title: "Silinmiş Görevler",
                   badge: String(manager.deletedItems.length),
-                  accentColor: '#DC2626',
+                  accentColor: "#DC2626",
                   children: <DeletedItemsList items={manager.deletedItems} />,
                 },
               ]}
@@ -257,5 +257,5 @@ export default function CommandCenterManager({
         )}
       </div>
     </section>
-  )
+  );
 }

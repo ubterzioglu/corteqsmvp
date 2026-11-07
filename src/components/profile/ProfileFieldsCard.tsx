@@ -15,11 +15,7 @@ import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
 
 import { ProfileAttributeEditor } from "./ProfileAttributeEditor";
 import { ProfilePhoneField } from "./ProfilePhoneField";
-import {
-  AMBER_BUTTON_PRIMARY,
-  GOOGLE_SOFT_CARD_BLUE_SECTION,
-  GOOGLE_SOFT_SWITCH_PANEL,
-} from "./profile-card-styles";
+import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_BLUE_SECTION, GOOGLE_SOFT_SWITCH_PANEL } from "./profile-card-styles";
 
 export type ProfileFieldsCardProps = {
   displayNameAttribute: ProfileAttributeState;
@@ -71,8 +67,7 @@ export const ProfileFieldsCard = ({
   isSavingEducationAttributes = false,
   onEducationSave,
 }: ProfileFieldsCardProps) => {
-  const displayNameVisibility =
-    draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility;
+  const displayNameVisibility = draftVisibilities[displayNameAttribute.attributeKey] ?? displayNameAttribute.visibility;
 
   return (
     <Card className={GOOGLE_SOFT_CARD_BLUE_SECTION}>
@@ -101,7 +96,9 @@ export const ProfileFieldsCard = ({
           <div className="flex items-center gap-1.5 shrink-0 w-32">
             <span className="text-[10px] font-medium text-foreground truncate">{displayNameLabel}</span>
             {displayNameAttribute.isRequired ? (
-              <Badge variant="secondary" className="px-1.5 py-0 text-[9px] shrink-0">Zorunlu</Badge>
+              <Badge variant="secondary" className="px-1.5 py-0 text-[9px] shrink-0">
+                Zorunlu
+              </Badge>
             ) : null}
           </div>
           <Input
@@ -111,7 +108,10 @@ export const ProfileFieldsCard = ({
             placeholder={displayNameAttribute.label}
             className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
           />
-          <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+          <div
+            className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`}
+            style={{ height: "32px" }}
+          >
             {displayNameVisibility === "public" ? (
               <Eye className="h-3.5 w-3.5 shrink-0 text-primary" />
             ) : (
@@ -126,8 +126,17 @@ export const ProfileFieldsCard = ({
               aria-label={`${displayNameLabel} görünürlük`}
             />
           </div>
-          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onDisplayNameSave} disabled={!displayNameAttribute.userCanEdit || isDisplayNameSaving}>
-            {isDisplayNameSaving ? "Kaydediliyor..." : displayNameAttribute.attributeKey === "full_name" ? "Ad Soyadı Kaydet" : "İsmi Kaydet"}
+          <Button
+            size="sm"
+            className={AMBER_BUTTON_PRIMARY}
+            onClick={onDisplayNameSave}
+            disabled={!displayNameAttribute.userCanEdit || isDisplayNameSaving}
+          >
+            {isDisplayNameSaving
+              ? "Kaydediliyor..."
+              : displayNameAttribute.attributeKey === "full_name"
+                ? "Ad Soyadı Kaydet"
+                : "İsmi Kaydet"}
           </Button>
         </div>
 
@@ -177,7 +186,10 @@ export const ProfileFieldsCard = ({
                 ))}
             </div>
             <div className="flex items-center gap-2 shrink-0">
-              <div className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+              <div
+                className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}
+                style={{ height: "32px" }}
+              >
                 {commonAllVisible ? (
                   <Eye className="h-3.5 w-3.5 text-primary" />
                 ) : (
@@ -189,7 +201,12 @@ export const ProfileFieldsCard = ({
                   onCheckedChange={onCommonAllVisibleChange}
                 />
               </div>
-              <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onCommonSave} disabled={isSavingCommonAttributes}>
+              <Button
+                size="sm"
+                className={AMBER_BUTTON_PRIMARY}
+                onClick={onCommonSave}
+                disabled={isSavingCommonAttributes}
+              >
                 {isSavingCommonAttributes ? "Kaydediliyor..." : "Ortak Alanları Kaydet"}
               </Button>
             </div>
@@ -212,7 +229,9 @@ export const ProfileFieldsCard = ({
                     size="sm"
                     className={AMBER_BUTTON_PRIMARY}
                     onClick={onEducationSave}
-                    disabled={isSavingEducationAttributes || educationAttributes.every((attribute) => !attribute.userCanEdit)}
+                    disabled={
+                      isSavingEducationAttributes || educationAttributes.every((attribute) => !attribute.userCanEdit)
+                    }
                   >
                     {isSavingEducationAttributes ? "Kaydediliyor..." : "Öğrenim Bilgilerini Kaydet"}
                   </Button>

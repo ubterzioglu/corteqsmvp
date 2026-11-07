@@ -24,7 +24,5 @@ export function formatCafeOccupancy(memberCount: number, capacity: number | null
   if (!capacity || capacity <= 0) return `${memberCount} üye`;
 
   const ratio = memberCount / capacity;
-  return ratio >= CAFE_OCCUPANCY_DENOMINATOR_THRESHOLD
-    ? `${memberCount}/${capacity} üye`
-    : `${memberCount} üye`;
+  return ratio >= CAFE_OCCUPANCY_DENOMINATOR_THRESHOLD ? `${memberCount}/${capacity} üye` : `${memberCount} üye`;
 }

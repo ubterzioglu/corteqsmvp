@@ -56,8 +56,7 @@ const NO_SEO_NEEDED: Record<string, string> = {
  */
 const KNOWN_GAPS: Record<string, string> = {
   "/ilanlar/:id": "JobListingDetailPage — ilan detayı ana sayfa başlığıyla çıkıyor",
-  "/directory/profile/:userId":
-    "DirectoryProfilePage — canonical hedefi /directory/catalog/:slug olmalı (kopya riski)",
+  "/directory/profile/:userId": "DirectoryProfilePage — canonical hedefi /directory/catalog/:slug olmalı (kopya riski)",
 };
 
 // ---------------------------------------------------------------------------
@@ -78,9 +77,7 @@ function resolveComponentFiles(component: string): string[] {
   if (INLINE_COMPONENTS[component]) return INLINE_COMPONENTS[component];
   const specifier = IMPORTS.get(component);
   if (!specifier) return [];
-  const base = specifier.startsWith("@/")
-    ? specifier.replace("@/", "src/")
-    : `src/${specifier.replace("./", "")}`;
+  const base = specifier.startsWith("@/") ? specifier.replace("@/", "src/") : `src/${specifier.replace("./", "")}`;
   const found = [base, `${base}.tsx`, `${base}.ts`].find(
     (candidate) => /\.tsx?$/.test(candidate) && existsSync(resolve(ROOT, candidate)),
   );
@@ -90,12 +87,7 @@ function resolveComponentFiles(component: string): string[] {
 function parsePublicRoutes(): PublicRoute[] {
   // Çocuk rotaların hepsi kendiliğinden kapanır (`/>`); ilk `</Route>` PublicLayout
   // grubunun kapanışıdır ve `*` rotası ondan ÖNCEDİR.
-  const region = sliceBetween(
-    APP,
-    "<Route element={<PublicLayout />}>",
-    "</Route>",
-    "PublicLayout rota bloğu",
-  );
+  const region = sliceBetween(APP, "<Route element={<PublicLayout />}>", "</Route>", "PublicLayout rota bloğu");
 
   return region
     .split(/(?=<Route\s)/)
@@ -104,9 +96,7 @@ function parsePublicRoutes(): PublicRoute[] {
     .map((block) => {
       const path = block.match(/path="([^"]+)"/)?.[1] ?? "";
       const component =
-        [...block.matchAll(/<([A-Z]\w+)\s*\/>/g)]
-          .map((m) => m[1])
-          .find((name) => name !== "Navigate") ?? "";
+        [...block.matchAll(/<([A-Z]\w+)\s*\/>/g)].map((m) => m[1]).find((name) => name !== "Navigate") ?? "";
       return { path, component, files: resolveComponentFiles(component) };
     });
 }
@@ -120,8 +110,7 @@ function callsSeo(file: string): boolean {
   return Object.keys(SEO_WRAPPERS).some((wrapper) => source.includes(`<${wrapper}`));
 }
 
-const routeHasSeo = (route: PublicRoute): boolean =>
-  route.files.length > 0 && route.files.every(callsSeo);
+const routeHasSeo = (route: PublicRoute): boolean => route.files.length > 0 && route.files.every(callsSeo);
 
 // ---------------------------------------------------------------------------
 // Sözleşme 1 — genel rota SEO çağırır

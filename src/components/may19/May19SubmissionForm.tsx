@@ -7,11 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import {
-  submitMay19CampaignEntry,
-  uploadMay19CampaignFile,
-  type May19SubmissionKind,
-} from "@/lib/may19-campaign";
+import { submitMay19CampaignEntry, uploadMay19CampaignFile, type May19SubmissionKind } from "@/lib/may19-campaign";
 
 type FormState = {
   fullName: string;
@@ -88,9 +84,7 @@ export default function May19SubmissionForm({ kind }: May19SubmissionFormProps) 
       toast({
         title: "Gönderim tamamlanamadı",
         description:
-          error instanceof Error
-            ? error.message
-            : "Gönderim sırasında bir sorun oluştu. Lütfen tekrar deneyin.",
+          error instanceof Error ? error.message : "Gönderim sırasında bir sorun oluştu. Lütfen tekrar deneyin.",
         variant: "destructive",
       });
     } finally {
@@ -103,35 +97,67 @@ export default function May19SubmissionForm({ kind }: May19SubmissionFormProps) 
       <div className="grid grid-cols-2 gap-3">
         <div className="col-span-2">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">Ad Soyad</Label>
-          <Input required className={inputClass} value={form.fullName} onChange={(event) => update("fullName", event.target.value)} />
+          <Input
+            required
+            className={inputClass}
+            value={form.fullName}
+            onChange={(event) => update("fullName", event.target.value)}
+          />
         </div>
 
         <div className="col-span-2 sm:col-span-1">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">E-posta</Label>
-          <Input required type="email" className={inputClass} value={form.email} onChange={(event) => update("email", event.target.value)} />
+          <Input
+            required
+            type="email"
+            className={inputClass}
+            value={form.email}
+            onChange={(event) => update("email", event.target.value)}
+          />
         </div>
 
         <div className="col-span-2 sm:col-span-1">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">Ülke</Label>
-          <Input required className={inputClass} value={form.country} onChange={(event) => update("country", event.target.value)} />
+          <Input
+            required
+            className={inputClass}
+            value={form.country}
+            onChange={(event) => update("country", event.target.value)}
+          />
         </div>
         <div className="col-span-2 sm:col-span-1">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">Şehir</Label>
-          <Input required className={inputClass} value={form.city} onChange={(event) => update("city", event.target.value)} />
+          <Input
+            required
+            className={inputClass}
+            value={form.city}
+            onChange={(event) => update("city", event.target.value)}
+          />
         </div>
 
         <div className="col-span-2">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">
             {kind === "idea" ? "Fikir başlığı" : "İçerik başlığı"}
           </Label>
-          <Input required className={inputClass} value={form.title} onChange={(event) => update("title", event.target.value)} />
+          <Input
+            required
+            className={inputClass}
+            value={form.title}
+            onChange={(event) => update("title", event.target.value)}
+          />
         </div>
 
         <div className="col-span-2">
           <Label className="mb-1.5 block text-xs font-semibold text-slate-600">
             {kind === "idea" ? "Fikir açıklaması" : "Kısa açıklama"}
           </Label>
-          <Textarea required rows={3} className="rounded-xl border-slate-200 bg-white/90 text-sm" value={form.description} onChange={(event) => update("description", event.target.value)} />
+          <Textarea
+            required
+            rows={3}
+            className="rounded-xl border-slate-200 bg-white/90 text-sm"
+            value={form.description}
+            onChange={(event) => update("description", event.target.value)}
+          />
         </div>
 
         <div className="col-span-2">
@@ -159,7 +185,11 @@ export default function May19SubmissionForm({ kind }: May19SubmissionFormProps) 
         </div>
 
         <label className="col-span-2 flex items-start gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-xs text-slate-700">
-          <Checkbox checked={form.consent} onCheckedChange={(checked) => update("consent", Boolean(checked))} className="mt-0.5" />
+          <Checkbox
+            checked={form.consent}
+            onCheckedChange={(checked) => update("consent", Boolean(checked))}
+            className="mt-0.5"
+          />
           <span>Bu içeriğin CorteQS tarafından incelenip kampanya içinde kullanılmasına izin veriyorum.</span>
         </label>
 
@@ -169,7 +199,11 @@ export default function May19SubmissionForm({ kind }: May19SubmissionFormProps) 
             size="sm"
             onClick={() => void handleSubmit()}
             disabled={isSubmitting}
-            className={kind === "idea" ? "bg-amber-500 text-white hover:bg-amber-600" : "bg-orange-500 text-white hover:bg-orange-600"}
+            className={
+              kind === "idea"
+                ? "bg-amber-500 text-white hover:bg-amber-600"
+                : "bg-orange-500 text-white hover:bg-orange-600"
+            }
           >
             {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {submitLabel}

@@ -22,12 +22,7 @@ import { PROOF_STATS } from "./home-trial.data";
  * Sütun başına bir marka rengi. `PROOF_STATS` saf veri kalsın diye renk burada
  * eşlenir; liste uzar/kısalırsa modulo ile döner, eksik renk kalmaz.
  */
-const STAT_TONES = [
-  "var(--glow-teal)",
-  "var(--brand-blue)",
-  "var(--brand-indigo)",
-  "var(--brand-pink)",
-] as const;
+const STAT_TONES = ["var(--glow-teal)", "var(--brand-blue)", "var(--brand-indigo)", "var(--brand-pink)"] as const;
 
 /**
  * Zemin yıkamaları — köşelerden gelen, birbirine karışan marka renkleri.
@@ -82,11 +77,7 @@ const ProofBandSection = () => {
                   className="font-display text-4xl font-bold tracking-tight sm:text-5xl"
                   style={{ color: `hsl(${tone})` }}
                 >
-                  {stat.value === null ? (
-                    <span>{stat.display}</span>
-                  ) : (
-                    <CountUp to={stat.value} />
-                  )}
+                  {stat.value === null ? <span>{stat.display}</span> : <CountUp to={stat.value} />}
                   {stat.suffix ? <span>{stat.suffix}</span> : null}
                 </dt>
                 {/* Rakamı etiketine bağlayan kısa renkli çizgi — süs değil, eşleme. */}

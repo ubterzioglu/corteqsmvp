@@ -32,9 +32,7 @@ describe("CatalogItemEditorsPanel", () => {
         grantedAt: "2026-06-04T10:00:00.000Z",
       },
     ]);
-    searchAdminProfilesMock.mockResolvedValue([
-      { id: "user-1", fullName: "Ayşe Yılmaz", email: "ayse@example.com" },
-    ]);
+    searchAdminProfilesMock.mockResolvedValue([{ id: "user-1", fullName: "Ayşe Yılmaz", email: "ayse@example.com" }]);
     grantCatalogItemEditorMock.mockResolvedValue(undefined);
     revokeCatalogItemEditorMock.mockResolvedValue(undefined);
   });

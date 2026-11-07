@@ -56,13 +56,7 @@ async function main() {
   // NOT: AGENT_CONTEXT.md ve ARCHITECTURE.md 2026-08-04'te kökten docs/ altına taşındı.
   // Bu yollar drift-rules.mjs'teki `docs` dizisiyle BİREBİR aynı olmalı — eşleşmezse
   // ctx.read("") döner ve kural sessizce hiç bulgu üretmez.
-  const preload = [
-    "README.md",
-    "docs/AGENT_CONTEXT.md",
-    "docs/ARCHITECTURE.md",
-    "CLAUDE.md",
-    "package.json",
-  ];
+  const preload = ["README.md", "docs/AGENT_CONTEXT.md", "docs/ARCHITECTURE.md", "CLAUDE.md", "package.json"];
   const loaded = new Map();
   for (const p of preload) loaded.set(p, await reader(p));
   const read = (relPath) => loaded.get(relPath) ?? "";
@@ -105,9 +99,7 @@ async function main() {
 
   console.log(`[check-drift] ${findings.length} drift bulundu:`);
   for (const f of findings) {
-    const where = f.evidence
-      .map((e) => (e.line ? `${e.path}:${e.line}` : e.path))
-      .join(", ");
+    const where = f.evidence.map((e) => (e.line ? `${e.path}:${e.line}` : e.path)).join(", ");
     console.log(`  [${f.severity}] ${f.rule} — ${f.message}`);
     if (where) console.log(`      → ${where}`);
   }

@@ -8,11 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import type { AttributeVisibility, ProfileAttributeState } from "@/lib/member-profile";
 
-import {
-  AMBER_BUTTON_PRIMARY,
-  GOOGLE_SOFT_CARD_SECTION,
-  GOOGLE_SOFT_SWITCH_PANEL,
-} from "./profile-card-styles";
+import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_SECTION, GOOGLE_SOFT_SWITCH_PANEL } from "./profile-card-styles";
 
 export type StandaloneLinkAttributeCardProps = {
   attribute: ProfileAttributeState;
@@ -79,9 +75,20 @@ export const StandaloneLinkAttributeCard = ({
             placeholder={attribute.label}
             className="h-8 flex-1 text-[10px] placeholder:text-[10px]"
           />
-          <div className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
-            {visible ? <Eye className="h-3.5 w-3.5 text-primary" /> : <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />}
-            <Switch checked={visible} disabled={!attribute.userCanHide} onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")} />
+          <div
+            className={`flex items-center gap-1.5 rounded-full px-2 shrink-0 ${GOOGLE_SOFT_SWITCH_PANEL}`}
+            style={{ height: "32px" }}
+          >
+            {visible ? (
+              <Eye className="h-3.5 w-3.5 text-primary" />
+            ) : (
+              <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+            )}
+            <Switch
+              checked={visible}
+              disabled={!attribute.userCanHide}
+              onCheckedChange={(checked) => onVisibilityChange(checked ? "public" : "private")}
+            />
           </div>
           <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving}>
             {isSaving ? "Kaydediliyor..." : "Kaydet"}

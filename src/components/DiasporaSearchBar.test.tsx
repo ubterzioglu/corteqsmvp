@@ -99,9 +99,7 @@ describe("DiasporaSearchBar", () => {
     fireEvent.click(screen.getByRole("button", { name: /Vize/i }));
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith(
-        "/directory?q=Vize%20dan%C4%B1%C5%9Fman%C4%B1",
-      );
+      expect(mockNavigate).toHaveBeenCalledWith("/directory?q=Vize%20dan%C4%B1%C5%9Fman%C4%B1");
     });
   });
 });

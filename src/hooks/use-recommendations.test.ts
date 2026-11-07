@@ -35,11 +35,7 @@ vi.mock("@/lib/recommendations-api", () => ({
   matchRecommendationProfessionals: vi.fn(),
 }));
 
-import {
-  useMatchedProfessionals,
-  useRecommendationDetail,
-  useRecommendations,
-} from "./use-recommendations";
+import { useMatchedProfessionals, useRecommendationDetail, useRecommendations } from "./use-recommendations";
 
 const lastOptions = () => capturedOptions[capturedOptions.length - 1];
 

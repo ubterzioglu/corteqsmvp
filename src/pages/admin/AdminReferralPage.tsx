@@ -30,11 +30,7 @@ import {
 } from "@/lib/admin";
 import type { ReferralCodeRow, ReferralGroupRow, ReferralSourceRow, ReferralTypeRow } from "@/lib/referral-codes";
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
-import {
-  buildReferralTargetUrl,
-  generateReferralQrPngDataUrl,
-  generateReferralQrSvg,
-} from "@/lib/referral-qr";
+import { buildReferralTargetUrl, generateReferralQrPngDataUrl, generateReferralQrSvg } from "@/lib/referral-qr";
 
 const AdminReferralPage = () => {
   const { session } = useAdminOutletContext();
@@ -166,7 +162,11 @@ const AdminReferralPage = () => {
     }
 
     if (new Date(validUntil) < new Date(validFrom)) {
-      toast({ title: "Tarih aralığı geçersiz", description: "Bitiş tarihi başlangıçtan önce olamaz.", variant: "destructive" });
+      toast({
+        title: "Tarih aralığı geçersiz",
+        description: "Bitiş tarihi başlangıçtan önce olamaz.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -268,7 +268,11 @@ const AdminReferralPage = () => {
       return;
     }
     if (new Date(editingValidUntil) < new Date(editingValidFrom)) {
-      toast({ title: "Tarih aralığı geçersiz", description: "Bitiş tarihi başlangıçtan önce olamaz.", variant: "destructive" });
+      toast({
+        title: "Tarih aralığı geçersiz",
+        description: "Bitiş tarihi başlangıçtan önce olamaz.",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -359,7 +363,9 @@ const AdminReferralPage = () => {
       <Card>
         <CardHeader>
           <CardTitle>Üretilen Referral Kodları</CardTitle>
-          <CardDescription>Son 100 kod, kullanım ve kayıt raporu. Hard delete sadece kullanılmamış kodlarda çalışır.</CardDescription>
+          <CardDescription>
+            Son 100 kod, kullanım ve kayıt raporu. Hard delete sadece kullanılmamış kodlarda çalışır.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="relative mb-4">
@@ -391,14 +397,17 @@ const AdminReferralPage = () => {
                         <div className="flex flex-col">
                           <span className="font-mono text-sm font-semibold">{referral.code}</span>
                           <span className="text-xs text-muted-foreground">
-                            {new Date(referral.created_at).toLocaleString("tr-TR")} · {referral.source_code}/{referral.group_code}/{referral.type_code}
+                            {new Date(referral.created_at).toLocaleString("tr-TR")} · {referral.source_code}/
+                            {referral.group_code}/{referral.type_code}
                           </span>
                           <span className="max-w-[70ch] truncate text-xs text-muted-foreground">
                             Not: {referral.note?.trim() || "Yok"}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant={referral.is_active ? "outline" : "secondary"}>{referral.is_active ? "Aktif" : "Pasif"}</Badge>
+                          <Badge variant={referral.is_active ? "outline" : "secondary"}>
+                            {referral.is_active ? "Aktif" : "Pasif"}
+                          </Badge>
                           <Badge variant={isExpired ? "secondary" : "outline"}>{isExpired ? "Expired" : "Valid"}</Badge>
                         </div>
                       </div>
@@ -417,12 +426,33 @@ const AdminReferralPage = () => {
                             <Download className="mr-1 h-4 w-4" /> QR PNG indir
                           </Button>
                         </div>
-                        <div>Source/Group/Type: <span className="font-mono text-foreground">{referral.source_code}/{referral.group_code}/{referral.type_code}</span></div>
-                        <div>Valid Window: <span className="text-foreground">{referral.valid_from} - {referral.valid_until}</span></div>
-                        <div>Random: <span className="font-mono text-foreground">{referral.random_part}</span></div>
-                        <div>Usage Count: <span className="text-foreground">{referral.usage_count}</span></div>
-                        <div>Son Kullanım: <span className="text-foreground">{referral.used_at ? new Date(referral.used_at).toLocaleString("tr-TR") : "-"}</span></div>
-                        <div className="md:col-span-2">Not: <span className="text-foreground">{referral.note || "Yok"}</span></div>
+                        <div>
+                          Source/Group/Type:{" "}
+                          <span className="font-mono text-foreground">
+                            {referral.source_code}/{referral.group_code}/{referral.type_code}
+                          </span>
+                        </div>
+                        <div>
+                          Valid Window:{" "}
+                          <span className="text-foreground">
+                            {referral.valid_from} - {referral.valid_until}
+                          </span>
+                        </div>
+                        <div>
+                          Random: <span className="font-mono text-foreground">{referral.random_part}</span>
+                        </div>
+                        <div>
+                          Usage Count: <span className="text-foreground">{referral.usage_count}</span>
+                        </div>
+                        <div>
+                          Son Kullanım:{" "}
+                          <span className="text-foreground">
+                            {referral.used_at ? new Date(referral.used_at).toLocaleString("tr-TR") : "-"}
+                          </span>
+                        </div>
+                        <div className="md:col-span-2">
+                          Not: <span className="text-foreground">{referral.note || "Yok"}</span>
+                        </div>
                         <div className="md:col-span-2 flex flex-wrap gap-2">
                           <Button
                             variant="outline"
@@ -442,12 +472,22 @@ const AdminReferralPage = () => {
                               >
                                 Kaydet
                               </Button>
-                              <Button variant="secondary" size="sm" onClick={cancelEdit} disabled={Boolean(busyById[referral.id])}>
+                              <Button
+                                variant="secondary"
+                                size="sm"
+                                onClick={cancelEdit}
+                                disabled={Boolean(busyById[referral.id])}
+                              >
                                 Vazgeç
                               </Button>
                             </>
                           ) : (
-                            <Button variant="outline" size="sm" onClick={() => startEdit(referral)} disabled={Boolean(busyById[referral.id])}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => startEdit(referral)}
+                              disabled={Boolean(busyById[referral.id])}
+                            >
                               Duzenle
                             </Button>
                           )}

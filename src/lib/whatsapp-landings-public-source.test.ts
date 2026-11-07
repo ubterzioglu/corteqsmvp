@@ -17,15 +17,9 @@ import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { sliceBetween } from "@/test/source-slice";
-import {
-  LANDING_INVITE_FAILURE_MESSAGES,
-  type LandingInviteFailure,
-} from "@/lib/whatsapp-landings";
+import { LANDING_INVITE_FAILURE_MESSAGES, type LandingInviteFailure } from "@/lib/whatsapp-landings";
 
-const source = readFileSync(
-  resolve(__dirname, "../..", "src/lib/whatsapp-landings.ts"),
-  "utf8",
-);
+const source = readFileSync(resolve(__dirname, "../..", "src/lib/whatsapp-landings.ts"), "utf8");
 
 describe("G03b · halka açık okuma yüzeyi", () => {
   it("getLanding view'dan okur, tabandan DEĞİL", () => {

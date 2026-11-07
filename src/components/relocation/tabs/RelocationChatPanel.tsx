@@ -52,8 +52,8 @@ export function RelocationChatPanel({
       {!hasPlatformData && (
         <Card className="border-amber-500/40 bg-amber-500/5">
           <CardContent className="py-3 text-xs text-muted-foreground">
-            Hedef ülkeniz için platformda henüz maliyet ve belge verisi yok. Asistan genel
-            rehberlik yapar; kesin rakam ve belge listesi için resmî kaynakları teyit edin.
+            Hedef ülkeniz için platformda henüz maliyet ve belge verisi yok. Asistan genel rehberlik yapar; kesin rakam
+            ve belge listesi için resmî kaynakları teyit edin.
           </CardContent>
         </Card>
       )}
@@ -62,9 +62,7 @@ export function RelocationChatPanel({
         <CardContent className="space-y-3 py-4">
           {messages.length === 0 ? (
             <div className="space-y-3 py-6 text-center">
-              <p className="text-sm text-muted-foreground">
-                Taşınma planınızla ilgili istediğinizi sorun.
-              </p>
+              <p className="text-sm text-muted-foreground">Taşınma planınızla ilgili istediğinizi sorun.</p>
               <div className="flex flex-wrap justify-center gap-2">
                 {SUGGESTIONS.map((suggestion) => (
                   <button
@@ -88,9 +86,7 @@ export function RelocationChatPanel({
                 >
                   <div
                     className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-3 py-2 text-sm ${
-                      message.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted text-foreground"
+                      message.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
                     }`}
                   >
                     {message.content}
@@ -139,13 +135,7 @@ export function RelocationChatPanel({
       </Card>
 
       {messages.length > 0 && (
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          className="gap-2"
-          onClick={onSaveTranscript}
-        >
+        <Button type="button" variant="outline" size="sm" className="gap-2" onClick={onSaveTranscript}>
           <Save className="h-3.5 w-3.5" />
           Sohbeti dökümanlarıma kaydet
         </Button>

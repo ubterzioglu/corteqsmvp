@@ -1,14 +1,13 @@
 import { act, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "@/App";
-import {
-  commercialDocuments,
-  publicCommercialDocuments,
-} from "@/lib/commercial-documents";
+import { commercialDocuments, publicCommercialDocuments } from "@/lib/commercial-documents";
 
 const renderAtRoute = async (path: string) => {
   window.history.pushState({}, "", path);
-  await act(async () => { render(<App />); });
+  await act(async () => {
+    render(<App />);
+  });
 };
 
 const documentHeadings: Record<string, RegExp> = {
@@ -32,7 +31,7 @@ describe("commercial routes", () => {
         screen.getByRole("heading", {
           name: /paylaşım ve teklif görüşmeleri için/i,
         }),
-      ).toBeInTheDocument()
+      ).toBeInTheDocument(),
     );
 
     for (const document of publicCommercialDocuments) {
@@ -44,29 +43,24 @@ describe("commercial routes", () => {
     await renderAtRoute("/commercial");
 
     await waitFor(() =>
-      expect(
-        screen.getByRole("heading", { name: /paylaşım ve teklif görüşmeleri için/i }),
-      ).toBeInTheDocument()
+      expect(screen.getByRole("heading", { name: /paylaşım ve teklif görüşmeleri için/i })).toBeInTheDocument(),
     );
 
     for (const document of commercialDocuments.filter((item) => item.isPublic === false)) {
-      expect(
-        screen.queryByRole("link", { name: new RegExp(document.title, "i") }),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: new RegExp(document.title, "i") })).not.toBeInTheDocument();
     }
   });
 
   it("links the document cards to the SPA routes", async () => {
     await renderAtRoute("/commercial");
 
-    await waitFor(() =>
-      expect(screen.getByRole("link", { name: /contributor/i })).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByRole("link", { name: /contributor/i })).toBeInTheDocument());
 
     for (const document of publicCommercialDocuments) {
-      expect(
-        screen.getByRole("link", { name: new RegExp(document.title, "i") }),
-      ).toHaveAttribute("href", `/commercial/${document.slug}`);
+      expect(screen.getByRole("link", { name: new RegExp(document.title, "i") })).toHaveAttribute(
+        "href",
+        `/commercial/${document.slug}`,
+      );
     }
   });
 
@@ -75,14 +69,10 @@ describe("commercial routes", () => {
       await renderAtRoute(`/commercial/${document.slug}`);
 
       await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 }),
-        ).toBeInTheDocument()
+        expect(screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 })).toBeInTheDocument(),
       );
 
-      expect(
-        screen.getByRole("link", { name: /commercial alanına dön/i }),
-      ).toHaveAttribute("href", "/commercial");
+      expect(screen.getByRole("link", { name: /commercial alanına dön/i })).toHaveAttribute("href", "/commercial");
     });
 
     it(`redirects the short /${document.slug} route into the commercial flow`, async () => {
@@ -90,9 +80,7 @@ describe("commercial routes", () => {
 
       expect(window.location.pathname).toBe(`/commercial/${document.slug}`);
       await waitFor(() =>
-        expect(
-          screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 }),
-        ).toBeInTheDocument()
+        expect(screen.getByRole("heading", { name: documentHeadings[document.slug], level: 1 })).toBeInTheDocument(),
       );
     });
   }
@@ -100,8 +88,6 @@ describe("commercial routes", () => {
   it("renders not found for an unknown commercial document", async () => {
     await renderAtRoute("/commercial/unknown-doc");
 
-    await waitFor(() =>
-      expect(screen.getByRole("heading", { name: /bu sayfa/i })).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByRole("heading", { name: /bu sayfa/i })).toBeInTheDocument());
   });
 });

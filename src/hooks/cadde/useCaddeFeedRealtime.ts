@@ -14,11 +14,7 @@ export function useCaddeFeedRealtime(enabled: boolean): { hasNewPosts: boolean; 
 
     const channel = supabase
       .channel("cadde-feed-realtime")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "cadde_posts" },
-        () => setHasNewPosts(true),
-      )
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "cadde_posts" }, () => setHasNewPosts(true))
       .subscribe();
 
     return () => {

@@ -89,7 +89,12 @@ const AdminReferralGroupsPage = () => {
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-[2fr_1fr_auto]">
           <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Group adı" />
-          <Input value={code} onChange={(event) => setCode(event.target.value.toUpperCase())} placeholder="Code (OK)" maxLength={2} />
+          <Input
+            value={code}
+            onChange={(event) => setCode(event.target.value.toUpperCase())}
+            placeholder="Code (OK)"
+            maxLength={2}
+          />
           <Button onClick={() => void handleCreate()} disabled={submitting || !name || !code}>
             {submitting ? "Ekleniyor..." : "Group Ekle"}
           </Button>
@@ -113,16 +118,22 @@ const AdminReferralGroupsPage = () => {
             </TableHeader>
             <TableBody>
               {loading ? (
-                <TableRow><TableCell colSpan={5}>Yükleniyor...</TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={5}>Yükleniyor...</TableCell>
+                </TableRow>
               ) : items.length === 0 ? (
-                <TableRow><TableCell colSpan={5}>Kayıt yok.</TableCell></TableRow>
+                <TableRow>
+                  <TableCell colSpan={5}>Kayıt yok.</TableCell>
+                </TableRow>
               ) : (
                 items.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell>
                       <Input
                         value={draftNames[item.id] ?? item.name}
-                        onChange={(event) => setDraftNames((current) => ({ ...current, [item.id]: event.target.value }))}
+                        onChange={(event) =>
+                          setDraftNames((current) => ({ ...current, [item.id]: event.target.value }))
+                        }
                       />
                     </TableCell>
                     <TableCell className="font-mono">{item.code}</TableCell>
@@ -132,7 +143,12 @@ const AdminReferralGroupsPage = () => {
                       <Button variant="outline" size="sm" onClick={() => void renameGroup(item.id)}>
                         Kaydet
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => void deleteGroup(item.id)} disabled={!item.is_active}>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => void deleteGroup(item.id)}
+                        disabled={!item.is_active}
+                      >
                         Sil
                       </Button>
                     </TableCell>

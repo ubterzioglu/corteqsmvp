@@ -62,7 +62,7 @@ function formatEventDate(isoDate: string): string {
 }
 
 /**
-  * "Etkinliğiniz yayında" mailini üretir.
+ * "Etkinliğiniz yayında" mailini üretir.
  *
  * @param payload Outbox payload (event_id içerir)
  * @param details Edge function tarafından DB'den çekilen etkinlik detayları
@@ -100,18 +100,26 @@ export function buildEventPublishedEmail(
           <td style="border:1px solid ${BORDER};"><strong>Tarih</strong></td>
           <td style="border:1px solid ${BORDER};">${escapeHtml(eventDate)}</td>
         </tr>
-        ${location ? `
+        ${
+          location
+            ? `
         <tr>
           <td style="border:1px solid ${BORDER};"><strong>Konum</strong></td>
           <td style="border:1px solid ${BORDER};">${escapeHtml(location)}</td>
         </tr>
-        ` : ""}
-        ${description ? `
+        `
+            : ""
+        }
+        ${
+          description
+            ? `
         <tr>
           <td style="border:1px solid ${BORDER};"><strong>Açıklama</strong></td>
           <td style="border:1px solid ${BORDER};">${escapeHtml(description.slice(0, 200))}${description.length > 200 ? "…" : ""}</td>
         </tr>
-        ` : ""}
+        `
+            : ""
+        }
       </table>
       <p style="font-size:14px;line-height:1.6;margin:16px 0 8px;">
         <a href="${eventUrl}" style="display:inline-block;background:${ACCENT};color:#ffffff;padding:10px 20px;text-decoration:none;border-radius:6px;font-weight:600;">

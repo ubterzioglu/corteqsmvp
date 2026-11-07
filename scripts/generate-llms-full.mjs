@@ -32,8 +32,7 @@ const FETCH_TIMEOUT_MS = 15_000;
 
 function supabaseEnv() {
   const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
 }
 
@@ -120,9 +119,7 @@ async function getServiceDescription() {
       name: parsed.name,
       description: parsed.description,
       serviceType: parsed.serviceType,
-      areas: (parsed.areaServed ?? [])
-        .map((a) => a.name)
-        .filter(Boolean),
+      areas: (parsed.areaServed ?? []).map((a) => a.name).filter(Boolean),
       audience: parsed.audience?.audienceType,
     };
   } catch {

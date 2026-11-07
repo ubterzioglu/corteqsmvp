@@ -22,9 +22,7 @@ const GenericPublicSection = ({ section }: PublicSectionRendererProps) => {
         return { key, kind: "text" as const, text: value ? "Evet" : "Hayır", badges: [] as string[] };
       }
       if (Array.isArray(value)) {
-        const badges = value.filter(
-          (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
-        );
+        const badges = value.filter((entry): entry is string => typeof entry === "string" && entry.trim() !== "");
         if (badges.length > 0) {
           return { key, kind: "badges" as const, text: "", badges };
         }

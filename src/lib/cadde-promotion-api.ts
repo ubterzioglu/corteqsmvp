@@ -2,7 +2,13 @@ import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import { DEMO_BILLBOARDS, DEMO_SPONSORED } from "./cadde-demo-data";
 import { db, reportCaddeApiError, resolveCityIdsByNames, resolveCountryIdsByNames } from "./cadde-internal";
-import type { CaddeBillboardCard, CaddeBillboardRow, CaddeFilterState, CaddeSponsoredPlacement, CaddeSponsoredRow } from "./cadde-types";
+import type {
+  CaddeBillboardCard,
+  CaddeBillboardRow,
+  CaddeFilterState,
+  CaddeSponsoredPlacement,
+  CaddeSponsoredRow,
+} from "./cadde-types";
 
 export function mapCaddeBillboardRow(row: CaddeBillboardRow): CaddeBillboardCard {
   return {
@@ -39,7 +45,9 @@ export async function listCaddeBillboardCards(filters: CaddeFilterState): Promis
     const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_billboard_cards")
-      .select("id, card_type, title, subtitle, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, is_featured, sort_order")
+      .select(
+        "id, card_type, title, subtitle, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, is_featured, sort_order",
+      )
       .eq("content_mode", "real")
       .eq("status", "published")
       .order("is_featured", { ascending: false })
@@ -64,7 +72,9 @@ export async function getCaddeSponsoredPlacement(filters: CaddeFilterState): Pro
     const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
     let query = db
       .from("cadde_sponsored_placements")
-      .select("id, placement_key, title, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, sort_order")
+      .select(
+        "id, placement_key, title, description, badge_text, cta_label, cta_url, image_url, content_mode, status, country_id, city_id, sort_order",
+      )
       .eq("content_mode", "real")
       .eq("status", "published")
       .eq("placement_key", "feed-inline")

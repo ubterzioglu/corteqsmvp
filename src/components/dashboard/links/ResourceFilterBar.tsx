@@ -1,26 +1,23 @@
-'use client'
+"use client";
 
 // Bölüm / alt bölüm / serbest metin filtre şeridi. Filtreleme mantığı burada
 // DEĞİL, `@/lib/dashboard/resource-filters` içindedir; bu bileşen saf çizimdir.
 
-import { Search } from 'lucide-react'
-import type {
-  ResourceSectionFilter,
-  ResourceSubsectionFilter,
-} from '@/lib/dashboard/resource-items'
-import { FILTER_BTN_CLS, INPUT_CLS } from './link-manager-styles'
+import { Search } from "lucide-react";
+import type { ResourceSectionFilter, ResourceSubsectionFilter } from "@/lib/dashboard/resource-items";
+import { FILTER_BTN_CLS, INPUT_CLS } from "./link-manager-styles";
 
 interface ResourceFilterBarProps {
-  sectionFilter: ResourceSectionFilter
-  sectionOptions: string[]
-  selectedSubsection: ResourceSubsectionFilter
-  subsectionFilterOptions: string[]
-  searchTerm: string
-  hasActiveFilters: boolean
-  onSectionFilterChange: (value: ResourceSectionFilter) => void
-  onSubsectionFilterChange: (value: ResourceSubsectionFilter) => void
-  onSearchTermChange: (value: string) => void
-  onClearFilters: () => void
+  sectionFilter: ResourceSectionFilter;
+  sectionOptions: string[];
+  selectedSubsection: ResourceSubsectionFilter;
+  subsectionFilterOptions: string[];
+  searchTerm: string;
+  hasActiveFilters: boolean;
+  onSectionFilterChange: (value: ResourceSectionFilter) => void;
+  onSubsectionFilterChange: (value: ResourceSubsectionFilter) => void;
+  onSearchTermChange: (value: string) => void;
+  onClearFilters: () => void;
 }
 
 export default function ResourceFilterBar({
@@ -38,9 +35,7 @@ export default function ResourceFilterBar({
   return (
     <div className="grid gap-3 lg:grid-cols-4">
       <div className="docs-surface p-3 sm:p-4">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">
-          Bölüm Filtresi
-        </p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">Bölüm Filtresi</p>
         <select
           className={`${INPUT_CLS} mt-2 h-9 py-1.5 text-xs`}
           value={sectionFilter}
@@ -56,15 +51,11 @@ export default function ResourceFilterBar({
       </div>
 
       <div className="docs-surface p-3 sm:p-4">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">
-          Alt Bölüm Filtresi
-        </p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">Alt Bölüm Filtresi</p>
         <select
           className={`${INPUT_CLS} mt-2 h-9 py-1.5 text-xs`}
           value={selectedSubsection}
-          onChange={(event) =>
-            onSubsectionFilterChange(event.target.value as ResourceSubsectionFilter)
-          }
+          onChange={(event) => onSubsectionFilterChange(event.target.value as ResourceSubsectionFilter)}
         >
           <option value="all">Tümü</option>
           {subsectionFilterOptions.map((subsection) => (
@@ -76,9 +67,7 @@ export default function ResourceFilterBar({
       </div>
 
       <div className="docs-surface p-3 sm:p-4 lg:col-span-2">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">
-          Arama
-        </p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary-600">Arama</p>
         <div className="mt-2 flex flex-col gap-2 sm:flex-row">
           <label className="relative w-full">
             <Search
@@ -104,5 +93,5 @@ export default function ResourceFilterBar({
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -90,9 +90,7 @@ async function run() {
     throw new Error(`Mevcut kapak görselleri okunamadı: ${assetsError.message}`);
   }
   const filledCoverSlots = new Set(
-    (existingAssets ?? [])
-      .filter((row) => row.image_bucket && row.image_path)
-      .map((row) => row.slot_key),
+    (existingAssets ?? []).filter((row) => row.image_bucket && row.image_path).map((row) => row.slot_key),
   );
 
   const { data: existingExtras, error: extrasError } = await client
@@ -149,17 +147,15 @@ async function run() {
           .upload(storagePath, fileBuffer, { contentType: "image/png", upsert: false });
         if (uploadError) throw new Error(uploadError.message);
 
-        const { error: upsertError } = await client
-          .from("social_share_assets")
-          .upsert(
-            {
-              slot_key: slotKey,
-              image_bucket: BUCKET,
-              image_path: storagePath,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "slot_key" },
-          );
+        const { error: upsertError } = await client.from("social_share_assets").upsert(
+          {
+            slot_key: slotKey,
+            image_bucket: BUCKET,
+            image_path: storagePath,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "slot_key" },
+        );
         if (upsertError) throw new Error(upsertError.message);
 
         coverUploaded += 1;

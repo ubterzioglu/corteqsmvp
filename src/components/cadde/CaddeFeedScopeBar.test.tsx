@@ -7,9 +7,7 @@ import CaddeFeedScopeBar from "@/components/cadde/CaddeFeedScopeBar";
 const renderBar = (scope: Parameters<typeof CaddeFeedScopeBar>[0]["scope"] = "all") => {
   const onScopeChange = vi.fn();
   const onClearHashtag = vi.fn();
-  render(
-    <CaddeFeedScopeBar scope={scope} hashtag="" onScopeChange={onScopeChange} onClearHashtag={onClearHashtag} />,
-  );
+  render(<CaddeFeedScopeBar scope={scope} hashtag="" onScopeChange={onScopeChange} onClearHashtag={onClearHashtag} />);
   return { onScopeChange };
 };
 
@@ -50,9 +48,7 @@ describe("CaddeFeedScopeBar", () => {
       "title",
       "Yalnız senin şehrinden paylaşımlar.",
     );
-    expect(screen.getByTestId("cadde-scope-description")).toHaveTextContent(
-      "Yalnız senin şehrinden paylaşımlar.",
-    );
+    expect(screen.getByTestId("cadde-scope-description")).toHaveTextContent("Yalnız senin şehrinden paylaşımlar.");
   });
 
   it("çip tıklaması kapsamı değiştirir", () => {

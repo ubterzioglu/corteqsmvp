@@ -7,8 +7,7 @@ import type { ProfileAttributeState } from "@/lib/member-profile";
 const attr = (attributeKey: string): ProfileAttributeState =>
   ({ attributeKey, valueText: null, valueJson: null }) as unknown as ProfileAttributeState;
 
-const keysOf = (items: ProfileAttributeState[]): string[] =>
-  items.map((item) => item.attributeKey);
+const keysOf = (items: ProfileAttributeState[]): string[] => items.map((item) => item.attributeKey);
 
 describe("groupProfileAttributes", () => {
   it("boş/tanımsız girdide dört boş bölüm döndürür", () => {
@@ -43,25 +42,13 @@ describe("groupProfileAttributes", () => {
     // Kanonik sıra `SOCIAL_ATTRIBUTE_CONFIGS`ten gelir:
     // instagram → facebook → youtube → tiktok → x → reddit.
     // Bilerek ters sırada veriliyor.
-    const grouped = groupProfileAttributes([
-      attr("youtube_url"),
-      attr("facebook_url"),
-      attr("instagram_url"),
-    ]);
+    const grouped = groupProfileAttributes([attr("youtube_url"), attr("facebook_url"), attr("instagram_url")]);
 
-    expect(keysOf(grouped.socialMedia)).toEqual([
-      "instagram_url",
-      "facebook_url",
-      "youtube_url",
-    ]);
+    expect(keysOf(grouped.socialMedia)).toEqual(["instagram_url", "facebook_url", "youtube_url"]);
   });
 
   it("bir nitelik yalnız TEK bölüme girer", () => {
-    const grouped = groupProfileAttributes([
-      attr("country"),
-      attr("instagram_url"),
-      attr("serbest_alan"),
-    ]);
+    const grouped = groupProfileAttributes([attr("country"), attr("instagram_url"), attr("serbest_alan")]);
 
     const all = [
       ...keysOf(grouped.common),

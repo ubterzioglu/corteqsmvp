@@ -21,8 +21,12 @@ function renderProfilePage(initialEntry: string, options?: { includeRedirectTarg
       <MemoryRouter initialEntries={[initialEntry]}>
         <Routes>
           <Route path="/profile/:type" element={<ProfilePage />} />
-          {options?.includeRedirectTargets ? <Route path="/profile/bireysel" element={<div>Bireysel Profil</div>} /> : null}
-          {options?.includeRedirectTargets ? <Route path="/profile/danisman" element={<div>Danisman Profil</div>} /> : null}
+          {options?.includeRedirectTargets ? (
+            <Route path="/profile/bireysel" element={<div>Bireysel Profil</div>} />
+          ) : null}
+          {options?.includeRedirectTargets ? (
+            <Route path="/profile/danisman" element={<div>Danisman Profil</div>} />
+          ) : null}
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -518,7 +522,13 @@ describe("ProfilePage", () => {
     useCurrentUserProfileMock.mockReturnValue({
       isLoading: false,
       errorMessage: null,
-      profile: { ...baseProfile, profileType: "danisman", roleKey: "danisman", roleLabel: "Consultant", roleSlug: "consultant" },
+      profile: {
+        ...baseProfile,
+        profileType: "danisman",
+        roleKey: "danisman",
+        roleLabel: "Consultant",
+        roleSlug: "consultant",
+      },
       refreshProfile: vi.fn(),
     });
 
@@ -754,7 +764,9 @@ describe("ProfilePage", () => {
     // Legacy hero, bio metnini "Profil özeti: ..." önekiyle ikinci kez
     // tekrarlardı; premium hero tek kopya render eder (bkz. satır 682).
     expect(screen.getByText(/Diaspora için iş birliği ve mentorluk fırsatlarına açığım\./i)).toBeInTheDocument();
-    expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByDisplayValue("mentorluk, topluluk, networking")).not.toBeInTheDocument();
     expect(screen.getByDisplayValue("Corteqs Labs")).toBeInTheDocument();
     expect(screen.getByDisplayValue("Network tasarımı")).toBeInTheDocument();
@@ -826,9 +838,13 @@ describe("ProfilePage", () => {
     renderProfilePage("/profile/bireysel");
 
     expect(await screen.findByRole("heading", { name: "firmascope" })).toBeInTheDocument();
-    expect(screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Hizmet almak, etkinliklere katılmak ve diaspora ağınızı keşfetmek için"),
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/Profil özeti:/i)).not.toBeInTheDocument();
-    expect(screen.queryByText("Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet.")).not.toBeInTheDocument();
+    expect(
+      screen.queryByText("Profil kartını, görünürlüğünü ve taleplerini tek yerden yönet."),
+    ).not.toBeInTheDocument();
   });
 
   it("saves display name separately from the shared profile section", async () => {
@@ -1235,9 +1251,7 @@ describe("ProfilePage", () => {
     const readMenuLabels = (): string[] => {
       const nav = document.querySelector("nav");
       if (!nav) return [];
-      return Array.from(nav.querySelectorAll("button")).map((button) =>
-        (button.textContent ?? "").trim(),
-      );
+      return Array.from(nav.querySelectorAll("button")).map((button) => (button.textContent ?? "").trim());
     };
 
     it("menü öğelerini beklenen sırayla çizer", async () => {

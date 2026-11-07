@@ -61,9 +61,7 @@ describe("useAdminFavorites", () => {
     fetchMock.mockResolvedValue(["approvals", "boyle-bir-id-yok"]);
     const { result } = renderHook(() => useAdminFavorites(USER_ID));
 
-    await waitFor(() =>
-      expect(result.current.favoriteEntries.map((entry) => entry.item.id)).toEqual(["approvals"]),
-    );
+    await waitFor(() => expect(result.current.favoriteEntries.map((entry) => entry.item.id)).toEqual(["approvals"]));
   });
 
   it("DB okuması hata verirse boş listeyle graceful fallback yapar", async () => {

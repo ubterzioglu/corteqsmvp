@@ -82,8 +82,7 @@ export function computeDiasporaBreakdown(
 
   const geo =
     me.targetCountry !== "" &&
-    (cand.targetCountryCodes.includes(me.targetCountry) ||
-      cand.currentCountry === me.targetCountry)
+    (cand.targetCountryCodes.includes(me.targetCountry) || cand.currentCountry === me.targetCountry)
       ? 1.0
       : cand.targetCountryCodes.length === 0
         ? 0.5
@@ -105,9 +104,7 @@ export function computeDiasporaBreakdown(
 
   const langMatch = intersectCount(me.languages, cand.languages) > 0 ? 1.0 : 0.3;
   const responseMatch =
-    me.responseTimeExpectation != null && cand.responseTimeExpectation === me.responseTimeExpectation
-      ? 1.0
-      : 0.9;
+    me.responseTimeExpectation != null && cand.responseTimeExpectation === me.responseTimeExpectation ? 1.0 : 0.9;
   const langTz = langMatch * responseMatch;
 
   const trustBase = Math.min(cand.trustSignals.length / 3, 1);

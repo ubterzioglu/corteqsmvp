@@ -34,13 +34,9 @@ export async function normalizeItem(
 
   const title = item.title.trim().slice(0, 500);
   const nt = normalizeTitle(title);
-  const summary = item.summary
-    ? sanitizeHtml(item.summary).slice(0, MAX_SUMMARY_LENGTH)
-    : null;
+  const summary = item.summary ? sanitizeHtml(item.summary).slice(0, MAX_SUMMARY_LENGTH) : null;
 
-  const publishedAt = item.publishedAt
-    ? new Date(item.publishedAt).toISOString()
-    : null;
+  const publishedAt = item.publishedAt ? new Date(item.publishedAt).toISOString() : null;
   if (item.publishedAt && !publishedAt) return null; // invalid date
 
   const canonicalUrlHash = await buildCanonicalUrlHash(canonical);

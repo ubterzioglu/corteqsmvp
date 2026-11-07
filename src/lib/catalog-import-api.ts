@@ -81,21 +81,12 @@ const FIELD_KEYS = Object.keys(CSV_HEADER_ALIASES) as (keyof ImportRecord)[];
 
 /** Bir CSV başlığını ImportRecord alanına eşler (Türkçe/İngilizce alias toleranslı). */
 function resolveHeaderField(header: string): keyof ImportRecord | null {
-  const normalized = header
-    .trim()
-    .toLocaleLowerCase("tr-TR")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/ı/g, "i");
+  const normalized = header.trim().toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ı/g, "i");
 
   for (const field of FIELD_KEYS) {
     const aliases = CSV_HEADER_ALIASES[field];
     for (const alias of aliases) {
-      const aliasNormalized = alias
-        .toLocaleLowerCase("tr-TR")
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .replace(/ı/g, "i");
+      const aliasNormalized = alias.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ı/g, "i");
       if (aliasNormalized === normalized) return field;
     }
   }

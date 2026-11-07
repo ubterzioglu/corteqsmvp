@@ -44,10 +44,7 @@ export function GettingStartedCard({ userId, completion }: GettingStartedCardPro
     enabled: Boolean(userId),
   });
 
-  const profileDone =
-    completion.requiredTotal > 0
-      ? completion.requiredCompleted >= completion.requiredTotal
-      : true; // required alan yoksa profil "tamam" sayılır (SQL: total 0 → %100)
+  const profileDone = completion.requiredTotal > 0 ? completion.requiredCompleted >= completion.requiredTotal : true; // required alan yoksa profil "tamam" sayılır (SQL: total 0 → %100)
   const eventsCount = eventsQuery.data?.length ?? 0;
   const carsiCount = carsiQuery.data?.length ?? 0;
 
@@ -122,7 +119,11 @@ export function GettingStartedCard({ userId, completion }: GettingStartedCardPro
                 ) : (
                   <span
                     className={`text-sm font-semibold ${
-                      row.state === "passive" ? "text-slate-400" : row.state === "done" ? "text-emerald-700" : "text-slate-900"
+                      row.state === "passive"
+                        ? "text-slate-400"
+                        : row.state === "done"
+                          ? "text-emerald-700"
+                          : "text-slate-900"
                     }`}
                   >
                     {row.label}

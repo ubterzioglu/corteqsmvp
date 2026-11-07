@@ -69,8 +69,10 @@ async function main() {
     console.log("[check-functions] Sapma yok — canlı ve repo fonksiyonları eşleşiyor.");
     return;
   }
-  if (result.repoOnly.length) console.error(`[check-functions] REPO'DA VAR, CANLIDA YOK: ${result.repoOnly.join(", ")}`);
-  if (result.liveOnly.length) console.error(`[check-functions] CANLIDA VAR, REPO'DA YOK: ${result.liveOnly.join(", ")}`);
+  if (result.repoOnly.length)
+    console.error(`[check-functions] REPO'DA VAR, CANLIDA YOK: ${result.repoOnly.join(", ")}`);
+  if (result.liveOnly.length)
+    console.error(`[check-functions] CANLIDA VAR, REPO'DA YOK: ${result.liveOnly.join(", ")}`);
   process.exit(1);
 }
 

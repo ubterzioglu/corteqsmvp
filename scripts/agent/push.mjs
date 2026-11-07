@@ -14,10 +14,7 @@ function parseEnvFile(content) {
     if (sep <= 0) continue;
     const key = line.slice(0, sep).trim();
     let value = line.slice(sep + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     result[key] = value;
@@ -54,17 +51,11 @@ function sqlJsonb(value) {
  */
 export async function pushCatalog(rootDir, catalog, nowIso) {
   const env = await loadEnv(rootDir);
-  const token =
-    process.env.SUPABASE_ACCESS_TOKEN || env.SUPABASE_ACCESS_TOKEN;
-  const ref =
-    process.env.VITE_SUPABASE_PROJECT_ID ||
-    env.VITE_SUPABASE_PROJECT_ID ||
-    env.SUPABASE_PROJECT_ID;
+  const token = process.env.SUPABASE_ACCESS_TOKEN || env.SUPABASE_ACCESS_TOKEN;
+  const ref = process.env.VITE_SUPABASE_PROJECT_ID || env.VITE_SUPABASE_PROJECT_ID || env.SUPABASE_PROJECT_ID;
 
   if (!token || !ref) {
-    throw new Error(
-      "SUPABASE_ACCESS_TOKEN veya VITE_SUPABASE_PROJECT_ID eksik (.env.local veya ortam değişkeni).",
-    );
+    throw new Error("SUPABASE_ACCESS_TOKEN veya VITE_SUPABASE_PROJECT_ID eksik (.env.local veya ortam değişkeni).");
   }
 
   const stamp = nowIso ?? new Date().toISOString();
@@ -110,17 +101,14 @@ on conflict (tool_key) do update set
   updated_at = excluded.updated_at;
 `;
 
-  const res = await fetch(
-    `https://api.supabase.com/v1/projects/${ref}/database/query`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ query: sql }),
+  const res = await fetch(`https://api.supabase.com/v1/projects/${ref}/database/query`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({ query: sql }),
+  });
 
   if (!res.ok) {
     const text = await res.text();

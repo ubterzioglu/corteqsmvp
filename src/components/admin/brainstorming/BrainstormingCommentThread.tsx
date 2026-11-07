@@ -10,12 +10,7 @@ import { AdminEmptyState } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import {
-  addComment,
-  fetchComments,
-  fetchUserEmails,
-  type BrainstormingComment,
-} from "@/lib/brainstorming-api";
+import { addComment, fetchComments, fetchUserEmails, type BrainstormingComment } from "@/lib/brainstorming-api";
 
 const commentsKey = (sectionKey: string) => ["brainstorming-comments", sectionKey] as const;
 
@@ -84,10 +79,7 @@ export function BrainstormingCommentThread({ sectionKey }: BrainstormingCommentT
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         ) : comments.length === 0 ? (
-          <AdminEmptyState
-            title="Henüz yorum yok"
-            description="İlk yorumu ekleyerek tartışmayı başlatın."
-          />
+          <AdminEmptyState title="Henüz yorum yok" description="İlk yorumu ekleyerek tartışmayı başlatın." />
         ) : (
           comments.map((comment) => (
             <div key={comment.id} className="rounded-lg border border-border bg-muted/30 p-3">

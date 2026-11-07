@@ -53,9 +53,7 @@ describe("withReloadGuard / lazyWithReload", () => {
 
   it("yenileme sürerken import undefined dönerse BEKLER (.default okunmaz)", async () => {
     expect(recoverFromWhiteScreen()).toBe(true);
-    const load = withReloadGuard(
-      async () => undefined as unknown as LazyModule<typeof Page>,
-    );
+    const load = withReloadGuard(async () => undefined as unknown as LazyModule<typeof Page>);
     expect(await settleState(load())).toBe("pending");
   });
 

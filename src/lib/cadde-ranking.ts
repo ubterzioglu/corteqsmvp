@@ -110,7 +110,9 @@ export function computeCaddeGeoMatch(input: CaddeGeoMatchInput): { sameCity: boo
     ...(input.targets ?? []),
   ];
   const sameCity = Boolean(input.viewerCityId && targets.some((target) => target.cityId === input.viewerCityId));
-  const sameCountry = Boolean(input.viewerCountryId && targets.some((target) => target.countryId === input.viewerCountryId));
+  const sameCountry = Boolean(
+    input.viewerCountryId && targets.some((target) => target.countryId === input.viewerCountryId),
+  );
   return { sameCity, sameCountry };
 }
 
@@ -149,20 +151,17 @@ function freshnessScore(ageHours: number): number {
 
 /** SQL skor ifadesinin birebir aynası. Geo skoru tekil: aynı şehir 100 VEYA aynı ülke 60. */
 export function computeCaddeScore(input: CaddeRankInput): number {
-  const geo = input.sameCity
-    ? CADDE_RANK_WEIGHTS.sameCity
-    : input.sameCountry
-      ? CADDE_RANK_WEIGHTS.sameCountry
-      : 0;
+  const geo = input.sameCity ? CADDE_RANK_WEIGHTS.sameCity : input.sameCountry ? CADDE_RANK_WEIGHTS.sameCountry : 0;
 
   const isGlobal = !input.sameCity && !input.sameCountry;
-  const engagementBonus = isGlobal && input.avgEngagement > 0
-    ? input.engagementScore >= 2 * input.avgEngagement
-      ? CADDE_RANK_WEIGHTS.highEngagementBand
-      : input.engagementScore >= 1.5 * input.avgEngagement
-        ? CADDE_RANK_WEIGHTS.midEngagementBand
-        : 0
-    : 0;
+  const engagementBonus =
+    isGlobal && input.avgEngagement > 0
+      ? input.engagementScore >= 2 * input.avgEngagement
+        ? CADDE_RANK_WEIGHTS.highEngagementBand
+        : input.engagementScore >= 1.5 * input.avgEngagement
+          ? CADDE_RANK_WEIGHTS.midEngagementBand
+          : 0
+      : 0;
 
   return (
     geo +

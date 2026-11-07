@@ -47,8 +47,8 @@ const AdminWorkspaceHomePage = () => (
       </div>
       <h2 className="text-2xl font-semibold tracking-tight text-slate-950">Birleşik Dashboard Alanı</h2>
       <p className="max-w-3xl text-sm leading-6 text-slate-600">
-        `cordocu` içerikleri artık bu repo içinde yaşıyor. Operasyon ekranları, kaynak merkezi ve bilgi panelleri
-        ayrı dashboard linki olmadan `/admin` altında açılıyor.
+        `cordocu` içerikleri artık bu repo içinde yaşıyor. Operasyon ekranları, kaynak merkezi ve bilgi panelleri ayrı
+        dashboard linki olmadan `/admin` altında açılıyor.
       </p>
     </section>
 
@@ -76,7 +76,9 @@ const AdminWorkspaceHomePage = () => (
     <section className="space-y-3">
       <div className="space-y-1">
         <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">Bilgi Panelleri</h3>
-        <p className="text-xs text-slate-600">Eski dashboard dokümanları yeni admin içinde okunabilir hale getirildi.</p>
+        <p className="text-xs text-slate-600">
+          Eski dashboard dokümanları yeni admin içinde okunabilir hale getirildi.
+        </p>
       </div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {docCards.map((card) => (

@@ -107,9 +107,7 @@ describe("toggleShare", () => {
 
   it("throws when the upsert errors", async () => {
     fromMock.mockReturnValue({ upsert: vi.fn().mockResolvedValue({ error: new Error("nope") }) });
-    await expect(
-      toggleShare({ globalId: "item-8", platform: "x", shared: false }),
-    ).rejects.toThrow("nope");
+    await expect(toggleShare({ globalId: "item-8", platform: "x", shared: false })).rejects.toThrow("nope");
   });
 });
 

@@ -4,16 +4,7 @@ import { fetchAllRows } from "./supabase-chunked";
 
 export type LandingMode = "visual" | "text";
 export type LandingCategory =
-  | "alumni"
-  | "hobi"
-  | "is"
-  | "doktor"
-  | "yatirim"
-  | "akademik"
-  | "dayanisma"
-  | "hr"
-  | "kisisel-gelisim"
-  | "diger";
+  "alumni" | "hobi" | "is" | "doktor" | "yatirim" | "akademik" | "dayanisma" | "hr" | "kisisel-gelisim" | "diger";
 export type LandingStatus = "pending" | "approved" | "rejected";
 export type LandingSubmitterRole = "manager" | "member";
 export type LandingLanguage = "tr" | "en" | "de" | "ar";
@@ -291,7 +282,11 @@ export function stripLandingMetadataTags(description?: string | null) {
 }
 
 export function parseAdminContact(adminContact?: string) {
-  const lines = adminContact?.split("\n").map((line) => line.trim()).filter(Boolean) ?? [];
+  const lines =
+    adminContact
+      ?.split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean) ?? [];
   const emailLine = lines.find((line) => line.toLowerCase().startsWith("e-posta:"));
   const phoneLine = lines.find((line) => line.toLowerCase().startsWith("telefon:"));
   const emailMatch = adminContact?.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);
@@ -363,7 +358,7 @@ export function rowToLanding(row: WhatsAppLandingPublicRow): WhatsAppLanding {
     // etiketine çevrilir (CTA meta 'WhatsApp' büyük hâliyle eşleşiyor);
     // kolon boşsa description etiketi yedek (eski satırlar).
     platform: row.platform
-      ? MOTOR_PLATFORM_LABEL_BY_CODE[row.platform] ?? row.platform
+      ? (MOTOR_PLATFORM_LABEL_BY_CODE[row.platform] ?? row.platform)
       : parseTagValue(row.description, "Platform"),
     category: normalizeLandingCategory(row.category),
     country: normalizeCommunityText(row.country),
@@ -425,11 +420,7 @@ async function getOptionalUser() {
 export async function getLanding(slug: string): Promise<WhatsAppLanding | undefined> {
   // G03b: PII'siz view. `whatsappLink` burada daima boş gelir — davet linki
   // `fetchLandingInviteUrl` ile, yalnız girişli kullanıcıya verilir.
-  const { data, error } = await supabase
-    .from(PUBLIC_LANDINGS_SOURCE)
-    .select("*")
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data, error } = await supabase.from(PUBLIC_LANDINGS_SOURCE).select("*").eq("slug", slug).maybeSingle();
 
   if (!error && data) return rowToLanding(data as WhatsAppLandingPublicRow);
   return undefined;
@@ -571,11 +562,7 @@ export async function submitLanding(input: SaveLandingInput): Promise<{ slug: st
 
   if (error) throw error;
 
-  const { data } = await supabase
-    .from("whatsapp_landings")
-    .select("id")
-    .eq("slug", slug)
-    .maybeSingle();
+  const { data } = await supabase.from("whatsapp_landings").select("id").eq("slug", slug).maybeSingle();
 
   return { id: data?.id ?? "", slug };
 }
@@ -587,15 +574,11 @@ export async function uploadWhatsAppLandingHeroImage(file: File): Promise<string
   const ownerSegment = user?.id ?? "anon";
   const filePath = `${ownerSegment}/${Date.now()}-${safeBase}.${extension}`;
 
-  const { error } = await supabase.storage
-    .from(WHATSAPP_LANDING_HERO_BUCKET)
-    .upload(filePath, file, { upsert: false });
+  const { error } = await supabase.storage.from(WHATSAPP_LANDING_HERO_BUCKET).upload(filePath, file, { upsert: false });
 
   if (error) throw error;
 
-  const { data } = supabase.storage
-    .from(WHATSAPP_LANDING_HERO_BUCKET)
-    .getPublicUrl(filePath);
+  const { data } = supabase.storage.from(WHATSAPP_LANDING_HERO_BUCKET).getPublicUrl(filePath);
 
   return data.publicUrl;
 }
@@ -735,14 +718,16 @@ export async function listLandingEditorAssignmentsAsAdmin(): Promise<LandingEdit
   // açılmadığı için null kalır — admin-user-labels.ts ile aynı sözleşme.
   const { data, error } = await supabase
     .from("whatsapp_landing_editors")
-    .select(`
+    .select(
+      `
       id,
       landing_id,
       user_id,
       created_at,
       updated_at,
       whatsapp_landings!inner(id, slug, group_name)
-    `)
+    `,
+    )
     .order("created_at", { ascending: false });
 
   if (error) throw error;

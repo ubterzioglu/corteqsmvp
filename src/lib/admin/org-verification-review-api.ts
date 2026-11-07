@@ -35,13 +35,8 @@ export interface OrgVerificationQueueRow {
  * İnceleme kuyruğu. `status` verilmezse RPC 'pending' döner (migration default).
  * Admin değilse RPC `org_verification_review_auth_required` fırlatır (düz nesne).
  */
-export async function fetchOrgVerificationQueue(
-  status: string = "pending",
-): Promise<OrgVerificationQueueRow[]> {
-  const { data, error } = await supabase.rpc(
-    "admin_list_org_verifications" as never,
-    { p_status: status } as never,
-  );
+export async function fetchOrgVerificationQueue(status: string = "pending"): Promise<OrgVerificationQueueRow[]> {
+  const { data, error } = await supabase.rpc("admin_list_org_verifications" as never, { p_status: status } as never);
   if (error) throw new Error(orgVerificationReviewErrorMessage(error));
   return (data ?? []) as OrgVerificationQueueRow[];
 }
@@ -50,16 +45,15 @@ export async function fetchOrgVerificationQueue(
  * Talebi incele: `approve=true` → verification_status='verified' + claim approved;
  * `approve=false` → claim rejected + reason (ZORUNLU, migration reason_required).
  */
-export async function reviewOrgVerification(
-  claimId: string,
-  approve: boolean,
-  reason?: string | null,
-): Promise<void> {
-  const { error } = await supabase.rpc("review_org_verification_v1" as never, {
-    p_claim_id: claimId,
-    p_approve: approve,
-    p_reason: reason?.trim() ? reason.trim() : null,
-  } as never);
+export async function reviewOrgVerification(claimId: string, approve: boolean, reason?: string | null): Promise<void> {
+  const { error } = await supabase.rpc(
+    "review_org_verification_v1" as never,
+    {
+      p_claim_id: claimId,
+      p_approve: approve,
+      p_reason: reason?.trim() ? reason.trim() : null,
+    } as never,
+  );
   if (error) throw new Error(orgVerificationReviewErrorMessage(error));
 }
 
@@ -77,13 +71,11 @@ export const ORG_VERIFICATION_REVIEW_ERROR_MESSAGES: Record<string, string> = {
   org_verification_review_auth_required: "Bu işlem için yönetici yetkisi gerekiyor.",
   org_verification_review_claim_not_found: "Doğrulama talebi bulunamadı.",
   org_verification_review_not_verification: "Bu talep bir kurumsal doğrulama talebi değil.",
-  org_verification_review_already_reviewed:
-    "Bu talep zaten incelenmiş — yalnız bekleyen talepler incelenebilir.",
+  org_verification_review_already_reviewed: "Bu talep zaten incelenmiş — yalnız bekleyen talepler incelenebilir.",
   org_verification_review_reason_required: "Ret için bir sebep yazmalısın (talep sahibi görsün).",
 };
 
-const ORG_VERIFICATION_REVIEW_GENERIC_ERROR =
-  "İnceleme işlemi yapılamadı. Lütfen tekrar deneyin.";
+const ORG_VERIFICATION_REVIEW_GENERIC_ERROR = "İnceleme işlemi yapılamadı. Lütfen tekrar deneyin.";
 
 /**
  * ⚠️ Supabase RPC hataları **düz nesnedir, `Error` örneği DEĞİLDİR** — tip

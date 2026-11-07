@@ -25,11 +25,7 @@ vi.mock("@/hooks/useGeo", () => ({
 
 const renderWithQuery = (ui: ReactElement) => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  return render(
-    <QueryClientProvider client={queryClient}>
-      {ui}
-    </QueryClientProvider>,
-  );
+  return render(<QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>);
 };
 
 describe("Searchable location selects", () => {
@@ -51,13 +47,7 @@ describe("Searchable location selects", () => {
   });
 
   it("keeps rendering an existing city value even when it is not in the fetched list", () => {
-    renderWithQuery(
-      <SearchableCitySelect
-        value="Londra"
-        onChange={() => undefined}
-        countryName="Türkiye"
-      />,
-    );
+    renderWithQuery(<SearchableCitySelect value="Londra" onChange={() => undefined} countryName="Türkiye" />);
 
     expect(screen.getByRole("combobox")).toHaveTextContent("Londra");
   });

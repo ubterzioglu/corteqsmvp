@@ -123,9 +123,7 @@ export function buildAdminMenuCatalog(groups: AdminNavGroup[] = adminNavGroups):
 }
 
 /** `id → numara` haritası. Sidebar ve komut paleti bunu okur. */
-export function buildAdminMenuNumberById(
-  groups: AdminNavGroup[] = adminNavGroups,
-): Map<string, string> {
+export function buildAdminMenuNumberById(groups: AdminNavGroup[] = adminNavGroups): Map<string, string> {
   return new Map(buildAdminMenuCatalog(groups).map((entry) => [entry.id, entry.number]));
 }
 

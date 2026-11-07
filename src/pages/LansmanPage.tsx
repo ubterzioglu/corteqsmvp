@@ -1,10 +1,5 @@
 import LansmanForm from "@/components/LansmanForm";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { PAGE_SEO } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
@@ -75,7 +70,9 @@ const LansmanPage = () => {
                   Influencer Partner modeliyle global diaspora ağına davetlisin
                 </h1>
                 <p className="max-w-xl text-sm leading-6 text-slate-600 sm:text-base">
-                  Seni sadece bir davetli olarak değil, erken dönem görünür partnerlerimizden biri olarak lansmanda aramızda görmek istiyoruz. CorteQS; toplulukları, danışmanları, işletmeleri ve içerik üreticilerini aynı büyüme ağı içinde bir araya getiriyor.
+                  Seni sadece bir davetli olarak değil, erken dönem görünür partnerlerimizden biri olarak lansmanda
+                  aramızda görmek istiyoruz. CorteQS; toplulukları, danışmanları, işletmeleri ve içerik üreticilerini
+                  aynı büyüme ağı içinde bir araya getiriyor.
                 </p>
               </div>
 
@@ -119,10 +116,7 @@ const LansmanPage = () => {
       <div className="container mx-auto space-y-6 px-4 pb-20 pt-14 lg:max-w-5xl lg:px-6 lg:pt-16">
         <section className="space-y-6">
           <Accordion type="single" collapsible className="space-y-6">
-            <AccordionItem
-              value="benefits-panel"
-              className={`${launchPanelClass} overflow-hidden py-0`}
-            >
+            <AccordionItem value="benefits-panel" className={`${launchPanelClass} overflow-hidden py-0`}>
               <AccordionTrigger className="min-h-[92px] px-0 py-0 hover:no-underline">
                 <span className="flex items-center gap-4 text-left">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-[linear-gradient(135deg,rgba(43,139,230,0.12),rgba(233,122,31,0.08))] shadow-[0_12px_26px_rgba(15,23,42,0.08)]">
@@ -148,10 +142,7 @@ const LansmanPage = () => {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem
-              value="agenda-panel"
-              className={`${launchPanelClass} overflow-hidden py-0`}
-            >
+            <AccordionItem value="agenda-panel" className={`${launchPanelClass} overflow-hidden py-0`}>
               <AccordionTrigger className="min-h-[92px] px-0 py-0 hover:no-underline">
                 <span className="flex items-center gap-4 text-left">
                   <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-slate-200/80 bg-[linear-gradient(135deg,rgba(43,139,230,0.12),rgba(233,122,31,0.08))] shadow-[0_12px_26px_rgba(15,23,42,0.08)]">

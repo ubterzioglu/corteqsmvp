@@ -31,7 +31,10 @@ export class RobotsBlockedError extends Error {
 export class ProviderRateLimitError extends Error {
   readonly code = "provider_rate_limited";
   readonly retryable = true;
-  constructor(provider: string, public readonly retryAfterSeconds = 60) {
+  constructor(
+    provider: string,
+    public readonly retryAfterSeconds = 60,
+  ) {
     super(`Sağlayıcı rate limit: ${provider}`);
     this.name = "ProviderRateLimitError";
   }
@@ -63,10 +66,7 @@ export class LeaseLostError extends Error {
 }
 
 export function isRetryable(error: unknown): boolean {
-  return (
-    error instanceof ProviderRateLimitError ||
-    error instanceof ProviderTemporaryError
-  );
+  return error instanceof ProviderRateLimitError || error instanceof ProviderTemporaryError;
 }
 
 export function errorCode(error: unknown): string {

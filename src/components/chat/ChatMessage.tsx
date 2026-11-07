@@ -42,13 +42,7 @@ const ChatMessage = ({ message }: Props) => {
             if (segment.kind === "link") {
               // Güvenlik sözleşmesi parseRichText'te: hedef ya iç yol ya https.
               return segment.external ? (
-                <a
-                  key={i}
-                  href={segment.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={LINK_CLASS}
-                >
+                <a key={i} href={segment.href} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
                   {segment.text}
                 </a>
               ) : (

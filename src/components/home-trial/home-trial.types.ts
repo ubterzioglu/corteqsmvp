@@ -39,22 +39,10 @@ export interface EcosystemCard {
 }
 
 /** Ekosistem kartlarına atanan logo paleti tonu (6 renk, 6 kart birebir). */
-export type EcosystemAccent =
-  | "teal"
-  | "blue"
-  | "indigo"
-  | "pink"
-  | "orange"
-  | "yellow";
+export type EcosystemAccent = "teal" | "blue" | "indigo" | "pink" | "orange" | "yellow";
 
 /** Ekosistem kartlarında kullanılan ikon anahtarları (lucide-react eşlemesi bileşende). */
-export type EcosystemIconKey =
-  | "people"
-  | "communities"
-  | "organizations"
-  | "experts"
-  | "businesses"
-  | "ambassadors";
+export type EcosystemIconKey = "people" | "communities" | "organizations" | "experts" | "businesses" | "ambassadors";
 
 /** Kanıt bandındaki tek bir kavramsal/ölçüsel ifade. */
 export interface ProofStat {

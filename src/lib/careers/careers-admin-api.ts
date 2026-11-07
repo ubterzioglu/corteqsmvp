@@ -27,10 +27,7 @@ export async function listCareerApplications(): Promise<CareerApplicationRow[]> 
   return (data ?? []) as CareerApplicationRow[];
 }
 
-export async function updateCareerApplicationStatus(
-  id: string,
-  status: CareerApplicationStatus,
-): Promise<void> {
+export async function updateCareerApplicationStatus(id: string, status: CareerApplicationStatus): Promise<void> {
   const { error } = await supabase.from("career_applications").update({ status }).eq("id", id);
   if (error) throw error;
 }

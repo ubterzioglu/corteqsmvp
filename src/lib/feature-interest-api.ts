@@ -34,14 +34,15 @@ export async function fetchMyFeatureInterests(): Promise<string[]> {
 
 /** İlgi kaydı (idempotent — sunucu aynı ilgiyi ikinci kez saymaz). */
 export async function registerFeatureInterest(featureKey: FeatureInterestKey): Promise<boolean> {
-  const { data, error } = await supabase.rpc("register_feature_interest" as never, {
-    p_feature_key: featureKey,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "register_feature_interest" as never,
+    {
+      p_feature_key: featureKey,
+    } as never,
+  );
 
   if (error) {
-    const message =
-      FEATURE_INTEREST_ERROR_MESSAGES[error.message ?? ""] ??
-      "İlgi kaydı alınamadı. Lütfen tekrar dene.";
+    const message = FEATURE_INTEREST_ERROR_MESSAGES[error.message ?? ""] ?? "İlgi kaydı alınamadı. Lütfen tekrar dene.";
     throw new Error(message);
   }
   return Boolean((data as { registered?: boolean } | null)?.registered);

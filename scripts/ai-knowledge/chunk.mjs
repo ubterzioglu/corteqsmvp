@@ -34,7 +34,9 @@ export function chunkText(text, options = {}) {
   const maxChars = Math.max(options.maxChars ?? DEFAULT_MAX_CHARS, MIN_CHUNK_CHARS);
   const overlapChars = Math.max(Math.min(options.overlapChars ?? DEFAULT_OVERLAP_CHARS, maxChars - 1), 0);
 
-  const normalized = String(text ?? "").replace(/\r\n/g, "\n").trim();
+  const normalized = String(text ?? "")
+    .replace(/\r\n/g, "\n")
+    .trim();
   if (!normalized) return [];
 
   const units = splitIntoUnits(normalized, maxChars);
@@ -100,8 +102,7 @@ function safeBoundaryEnd(value, end) {
   if (end <= 0 || end >= value.length) return Math.min(Math.max(end, 0), value.length);
   const previousCode = value.charCodeAt(end - 1);
   const nextCode = value.charCodeAt(end);
-  const splitsPair =
-    previousCode >= 0xd800 && previousCode <= 0xdbff && nextCode >= 0xdc00 && nextCode <= 0xdfff;
+  const splitsPair = previousCode >= 0xd800 && previousCode <= 0xdbff && nextCode >= 0xdc00 && nextCode <= 0xdfff;
   return splitsPair ? end - 1 : end;
 }
 
@@ -110,7 +111,10 @@ function safeBoundaryEnd(value, end) {
  * karakter sınırından böler. Dönen her birim `maxChars`'tan kısadır ya da eşittir.
  */
 function splitIntoUnits(text, maxChars) {
-  const paragraphs = text.split(/\n\s*\n/).map((part) => part.trim()).filter(Boolean);
+  const paragraphs = text
+    .split(/\n\s*\n/)
+    .map((part) => part.trim())
+    .filter(Boolean);
   const units = [];
 
   for (const paragraph of paragraphs) {

@@ -21,7 +21,8 @@ const DemoPageBanner = ({ categoryLabel, listingHref }: DemoPageBannerProps) => 
           <Sparkles className="h-3.5 w-3.5 text-gold shrink-0" />
           <span className="font-semibold uppercase tracking-wider text-foreground">DEMO</span>
           <span className="text-muted-foreground leading-relaxed">
-            – Bu profil örnek içeriktir. {categoryLabel} kategorimize başvurular değerlendirildikçe gerçek profiller yayına alınır.
+            – Bu profil örnek içeriktir. {categoryLabel} kategorimize başvurular değerlendirildikçe gerçek profiller
+            yayına alınır.
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -31,7 +32,11 @@ const DemoPageBanner = ({ categoryLabel, listingHref }: DemoPageBannerProps) => 
             </Button>
           </Link>
           <Link to={`${listingHref}#kayit-form`}>
-            <Button size="sm" variant="outline" className="h-7 text-xs gap-1 border-turquoise text-turquoise hover:bg-turquoise/10">
+            <Button
+              size="sm"
+              variant="outline"
+              className="h-7 text-xs gap-1 border-turquoise text-turquoise hover:bg-turquoise/10"
+            >
               <UserPlus className="h-3 w-3" /> Kayıt Ol
             </Button>
           </Link>

@@ -56,9 +56,7 @@ describe("EventCoverUpload", () => {
 
   it("görsel varken önizlemeyi çizer ve kaldırma dosyayı da siler", async () => {
     const onChange = vi.fn();
-    render(
-      <EventCoverUpload value={{ url: "https://cdn/a.jpg", path: "uid/a.jpg" }} onChange={onChange} />,
-    );
+    render(<EventCoverUpload value={{ url: "https://cdn/a.jpg", path: "uid/a.jpg" }} onChange={onChange} />);
 
     expect(screen.getByRole("img", { name: /önizleme/i })).toHaveAttribute("src", "https://cdn/a.jpg");
 
@@ -70,9 +68,7 @@ describe("EventCoverUpload", () => {
 
   it("yerine yeni görsel yüklenince ESKİSİNİ siler (yetim dosya bırakmaz)", async () => {
     uploadEventCover.mockResolvedValue({ url: "https://cdn/yeni.jpg", path: "uid/yeni.jpg" });
-    render(
-      <EventCoverUpload value={{ url: "https://cdn/eski.jpg", path: "uid/eski.jpg" }} onChange={vi.fn()} />,
-    );
+    render(<EventCoverUpload value={{ url: "https://cdn/eski.jpg", path: "uid/eski.jpg" }} onChange={vi.fn()} />);
 
     selectFile("yeni.jpg");
 

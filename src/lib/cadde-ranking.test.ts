@@ -37,15 +37,27 @@ describe("cadde global threshold mirror", () => {
   });
 
   it("always keeps viewer-local content eligible for its local feed", () => {
-    expect(isCaddeGlobalEligible({ sameCity: true, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 })).toBe(true);
-    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 })).toBe(true);
+    expect(
+      isCaddeGlobalEligible({ sameCity: true, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 }),
+    ).toBe(true);
+    expect(
+      isCaddeGlobalEligible({ sameCity: false, sameCountry: true, reactionCount: 0, commentCount: 0, shareCount: 0 }),
+    ).toBe(true);
   });
 
   it("lets non-local content reach global when any configured engagement threshold is met", () => {
-    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 10, commentCount: 0, shareCount: 0 })).toBe(true);
-    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 5, shareCount: 0 })).toBe(true);
-    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 0, shareCount: 10 })).toBe(true);
-    expect(isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 9, commentCount: 4, shareCount: 9 })).toBe(false);
+    expect(
+      isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 10, commentCount: 0, shareCount: 0 }),
+    ).toBe(true);
+    expect(
+      isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 5, shareCount: 0 }),
+    ).toBe(true);
+    expect(
+      isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 0, commentCount: 0, shareCount: 10 }),
+    ).toBe(true);
+    expect(
+      isCaddeGlobalEligible({ sameCity: false, sameCountry: false, reactionCount: 9, commentCount: 4, shareCount: 9 }),
+    ).toBe(false);
   });
 
   it("blocks non-local global promotion when the SQL setting disables it", () => {
@@ -199,9 +211,15 @@ describe("computeCaddeScore (CKS §11.2 ağırlıkları)", () => {
   });
 
   it("engagement band bonusu yalnız global içeriğe uygulanır", () => {
-    expect(computeCaddeScore({ ...baseInput, engagementScore: 10, avgEngagement: 5 })).toBe(CADDE_RANK_WEIGHTS.highEngagementBand);
-    expect(computeCaddeScore({ ...baseInput, engagementScore: 8, avgEngagement: 5 })).toBe(CADDE_RANK_WEIGHTS.midEngagementBand);
-    expect(computeCaddeScore({ ...baseInput, sameCity: true, engagementScore: 10, avgEngagement: 5 })).toBe(CADDE_RANK_WEIGHTS.sameCity);
+    expect(computeCaddeScore({ ...baseInput, engagementScore: 10, avgEngagement: 5 })).toBe(
+      CADDE_RANK_WEIGHTS.highEngagementBand,
+    );
+    expect(computeCaddeScore({ ...baseInput, engagementScore: 8, avgEngagement: 5 })).toBe(
+      CADDE_RANK_WEIGHTS.midEngagementBand,
+    );
+    expect(computeCaddeScore({ ...baseInput, sameCity: true, engagementScore: 10, avgEngagement: 5 })).toBe(
+      CADDE_RANK_WEIGHTS.sameCity,
+    );
   });
 
   it("tazelik bucket'ları: 6 saat +25, 24 saat +15, 7 gün +5, sonrası 0", () => {
@@ -214,7 +232,9 @@ describe("computeCaddeScore (CKS §11.2 ağırlıkları)", () => {
 
 describe("deterministicCaddeRand (CKS §11.3)", () => {
   it("aynı gün + aynı scope için stabildir", () => {
-    expect(deterministicCaddeRand("post-1", "2026-06-10", "Berlin")).toBe(deterministicCaddeRand("post-1", "2026-06-10", "Berlin"));
+    expect(deterministicCaddeRand("post-1", "2026-06-10", "Berlin")).toBe(
+      deterministicCaddeRand("post-1", "2026-06-10", "Berlin"),
+    );
   });
 
   it("gün veya scope değişince sıra değişebilir (en az bir girişte fark üretir)", () => {
@@ -225,7 +245,12 @@ describe("deterministicCaddeRand (CKS §11.3)", () => {
   });
 });
 
-const makeItem = (id: string, band: number, score: number, rand: number): CaddeRankedItem => ({ id, band, score, rand });
+const makeItem = (id: string, band: number, score: number, rand: number): CaddeRankedItem => ({
+  id,
+  band,
+  score,
+  rand,
+});
 
 describe("compareCaddeRank + cursor pagination", () => {
   const items: CaddeRankedItem[] = [

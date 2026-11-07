@@ -38,9 +38,10 @@ describe("AdminGuidePage", () => {
     expect(screen.getByRole("heading", { name: /Roller ve AFS/ })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Muhasebe/ })).toBeInTheDocument();
 
-    expect(
-      screen.getByRole("link", { name: "Derin referans: Sistem Kullanım Kılavuzu (AFS)" }),
-    ).toHaveAttribute("href", "/admin/new-member/guide");
+    expect(screen.getByRole("link", { name: "Derin referans: Sistem Kullanım Kılavuzu (AFS)" })).toHaveAttribute(
+      "href",
+      "/admin/new-member/guide",
+    );
     expect(screen.getByRole("link", { name: "Ürün Güncellemeleri" })).toHaveAttribute("href", "/admin/about");
   });
 });

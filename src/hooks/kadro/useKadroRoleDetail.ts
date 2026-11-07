@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { 
-  fetchKadroRoleEvents, 
-  fetchKadroCandidates, 
+import {
+  fetchKadroRoleEvents,
+  fetchKadroCandidates,
   saveKadroRoleState,
   createKadroCandidate,
   updateKadroCandidate,
-  deleteKadroCandidate
+  deleteKadroCandidate,
 } from "@/lib/kadro/kadro-api";
 import { KADRO_QUERY_KEY } from "./useKadroBoard";
 import type { KadroRoleState, KadroCandidateDraft } from "@/lib/kadro/kadro-types";

@@ -27,7 +27,9 @@ describe("App admin routing", () => {
   });
 
   it("renders the admin landing page on /admin", async () => {
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Admin landing page")).toBeInTheDocument();

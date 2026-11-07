@@ -14,11 +14,7 @@
 // Bu testler eşlemeyi kilitler. Sütun adı değişirse burada düşer, canlıda değil.
 import { describe, expect, it } from "vitest";
 
-import {
-  mapKadroCandidate,
-  mapKadroRoleEvent,
-  mapKadroRoleState,
-} from "@/lib/kadro/kadro-api";
+import { mapKadroCandidate, mapKadroRoleEvent, mapKadroRoleState } from "@/lib/kadro/kadro-api";
 
 describe("mapKadroRoleState", () => {
   const row = {

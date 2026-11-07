@@ -62,10 +62,7 @@ describe("kaynak kayıt defteri — kitle sınırı bayrağı", () => {
     expect(findSource("docs-member").allowEmpty).toBe(true);
   });
 
-  it.each(["docs-admin", "catalog", "blog", "admin-menu"])(
-    "%s allowEmpty TAŞIMAZ (0 kayıt = okuma hatası)",
-    (key) => {
-      expect(findSource(key).allowEmpty).toBeFalsy();
-    },
-  );
+  it.each(["docs-admin", "catalog", "blog", "admin-menu"])("%s allowEmpty TAŞIMAZ (0 kayıt = okuma hatası)", (key) => {
+    expect(findSource(key).allowEmpty).toBeFalsy();
+  });
 });

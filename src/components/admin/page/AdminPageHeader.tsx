@@ -43,14 +43,10 @@ export function AdminPageHeader({
         ) : null}
         <div className="min-w-0">
           {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              {eyebrow}
-            </p>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">{eyebrow}</p>
           ) : null}
           <h1 className="text-2xl font-bold leading-tight text-foreground">{title}</h1>
-          {description ? (
-            <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p>
-          ) : null}
+          {description ? <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p> : null}
         </div>
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}

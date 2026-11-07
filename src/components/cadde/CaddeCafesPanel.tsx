@@ -120,8 +120,8 @@ const CaddeCafesPanel = ({
                 >
                   <p className="text-xs font-semibold text-slate-900">Cafe nedir?</p>
                   <p className="text-xs leading-relaxed text-slate-600">
-                    Kendi teması olan, istersen davetli ve kapalı bir sohbet uygulamasıdır.
-                    Süreli bir WhatsApp grubu gibi düşünebilirsin.
+                    Kendi teması olan, istersen davetli ve kapalı bir sohbet uygulamasıdır. Süreli bir WhatsApp grubu
+                    gibi düşünebilirsin.
                   </p>
                 </CaddeInfoPopover>
               </CardTitle>
@@ -138,7 +138,13 @@ const CaddeCafesPanel = ({
               </CardDescription>
             </div>
             {hasSession ? (
-              <CreateCafeForm trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">+ Cafe Aç</Button>} />
+              <CreateCafeForm
+                trigger={
+                  <Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">
+                    + Cafe Aç
+                  </Button>
+                }
+              />
             ) : null}
           </div>
         </CardHeader>
@@ -150,7 +156,10 @@ const CaddeCafesPanel = ({
                     m67: yükseklik iki satıra indi — özet meta satırına taşındı (truncate),
                     ayrı footer bloğu kalktı. */}
                 {visibleCafes.map((cafe) => (
-                  <div key={cafe.id} className="cadde-card cadde-card--cafe flex items-center gap-2.5 rounded-lg px-3 py-2.5">
+                  <div
+                    key={cafe.id}
+                    className="cadde-card cadde-card--cafe flex items-center gap-2.5 rounded-lg px-3 py-2.5"
+                  >
                     <CaddeCafeIcon className="h-5 w-5 shrink-0 text-orange-600" />
                     <div className="min-w-0 flex-1">
                       <p className="flex min-w-0 items-center gap-1.5">
@@ -178,7 +187,11 @@ const CaddeCafesPanel = ({
                     </div>
                     <Button size="sm" variant="outline" asChild className="cadde-secondary-action h-8 shrink-0">
                       <Link to={`/cadde/cafe/${cafe.id}`}>
-                        {cafe.joinedByViewer ? "Odaya Gir" : cafe.viewerMemberStatus === "pending" ? "Onay Bekliyor" : "Katıl"}
+                        {cafe.joinedByViewer
+                          ? "Odaya Gir"
+                          : cafe.viewerMemberStatus === "pending"
+                            ? "Onay Bekliyor"
+                            : "Katıl"}
                       </Link>
                     </Button>
                   </div>
@@ -205,10 +218,7 @@ const CaddeCafesPanel = ({
                 isRetrying={isRetrying}
               />
             ) : (
-              <div
-                data-testid="cadde-cafes-empty-state"
-                className="cadde-empty rounded-lg border border-dashed p-4"
-              >
+              <div data-testid="cadde-cafes-empty-state" className="cadde-empty rounded-lg border border-dashed p-4">
                 {/* m52: mesaj seçili konumu adıyla söyler; Türkçe bulunma eki bilinçli
                     üretilmiyor (yabancı adlarda ünlü uyumu güvenilir değil). */}
                 <p className="text-sm font-semibold text-slate-900">
@@ -222,7 +232,11 @@ const CaddeCafesPanel = ({
                 {hasSession ? (
                   <div className="mt-4">
                     <CreateCafeForm
-                      trigger={<Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">İlk Cafe'yi Aç</Button>}
+                      trigger={
+                        <Button size="sm" variant="outline" className="cadde-secondary-action rounded-lg">
+                          İlk Cafe'yi Aç
+                        </Button>
+                      }
                     />
                   </div>
                 ) : null}

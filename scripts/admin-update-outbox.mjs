@@ -35,16 +35,14 @@ export function toOutboxRow(entry, seedOnly = false) {
 export function isValidEntry(entry) {
   return Boolean(
     entry &&
-      typeof entry.id === "string" &&
-      entry.id.trim() !== "" &&
-      typeof entry.title === "string" &&
-      entry.title.trim() !== "",
+    typeof entry.id === "string" &&
+    entry.id.trim() !== "" &&
+    typeof entry.title === "string" &&
+    entry.title.trim() !== "",
   );
 }
 
 /** ADMIN_UPDATES listesini gönderilebilir outbox satırlarına çevirir. */
 export function buildOutboxRows(entries, seedOnly = false) {
-  return (Array.isArray(entries) ? entries : [])
-    .filter(isValidEntry)
-    .map((entry) => toOutboxRow(entry, seedOnly));
+  return (Array.isArray(entries) ? entries : []).filter(isValidEntry).map((entry) => toOutboxRow(entry, seedOnly));
 }

@@ -10,55 +10,36 @@ import {
   type MuhasebeKpiSummary,
   type PersonSummaryByCurrency,
   type PersonType,
-} from '@/types/muhasebe';
+} from "@/types/muhasebe";
 
 function emptyCurrencyTotals(): CurrencyTotals {
-  return Object.fromEntries(
-    CURRENCY_CODES.map((currency) => [currency, 0]),
-  ) as CurrencyTotals;
+  return Object.fromEntries(CURRENCY_CODES.map((currency) => [currency, 0])) as CurrencyTotals;
 }
 
-function addToCurrencyTotals(
-  totals: CurrencyTotals,
-  currency: CurrencyCode,
-  amount: number,
-): void {
+function addToCurrencyTotals(totals: CurrencyTotals, currency: CurrencyCode, amount: number): void {
   totals[currency] += Number(amount) || 0;
 }
 
-export function aggregateCurrencyTotals(
-  rows: Array<{ currency: CurrencyCode; amount: number }>,
-): CurrencyTotals {
+export function aggregateCurrencyTotals(rows: Array<{ currency: CurrencyCode; amount: number }>): CurrencyTotals {
   return rows.reduce((acc, row) => {
     addToCurrencyTotals(acc, row.currency, row.amount);
     return acc;
   }, emptyCurrencyTotals());
 }
 
-export function getCurrencyTotal(
-  totals: CurrencyTotals,
-  currency: CurrencyCode,
-): number {
+export function getCurrencyTotal(totals: CurrencyTotals, currency: CurrencyCode): number {
   return totals[currency] ?? 0;
 }
 
-export function aggregateKpiSummary(
-  expenses: ExpenseRow[],
-  incomes: IncomeRow[],
-): MuhasebeKpiSummary {
+export function aggregateKpiSummary(expenses: ExpenseRow[], incomes: IncomeRow[]): MuhasebeKpiSummary {
   const total_expense_by_currency = aggregateCurrencyTotals(expenses);
   const total_income_by_currency = aggregateCurrencyTotals(incomes);
-  const pending_expense_by_currency = aggregateCurrencyTotals(
-    expenses.filter((row) => row.status === 'bekliyor'),
-  );
-  const pending_income_by_currency = aggregateCurrencyTotals(
-    incomes.filter((row) => row.status === 'bekliyor'),
-  );
+  const pending_expense_by_currency = aggregateCurrencyTotals(expenses.filter((row) => row.status === "bekliyor"));
+  const pending_income_by_currency = aggregateCurrencyTotals(incomes.filter((row) => row.status === "bekliyor"));
   const net_by_currency = emptyCurrencyTotals();
 
   CURRENCY_CODES.forEach((currency) => {
-    net_by_currency[currency] =
-      total_income_by_currency[currency] - total_expense_by_currency[currency];
+    net_by_currency[currency] = total_income_by_currency[currency] - total_expense_by_currency[currency];
   });
 
   return {
@@ -71,10 +52,8 @@ export function aggregateKpiSummary(
   };
 }
 
-export function aggregateExpenseByPerson(
-  expenses: ExpenseRow[],
-): PersonSummaryByCurrency[] {
-  const people: PersonType[] = ['burak', 'baris', 'ortak'];
+export function aggregateExpenseByPerson(expenses: ExpenseRow[]): PersonSummaryByCurrency[] {
+  const people: PersonType[] = ["burak", "baris", "ortak"];
 
   return people.map((person) => {
     const personExpenses = expenses.filter((row) => row.person === person);
@@ -83,12 +62,8 @@ export function aggregateExpenseByPerson(
       person,
       record_count: personExpenses.length,
       total_by_currency: aggregateCurrencyTotals(personExpenses),
-      paid_by_currency: aggregateCurrencyTotals(
-        personExpenses.filter((row) => row.status === 'odendi'),
-      ),
-      pending_by_currency: aggregateCurrencyTotals(
-        personExpenses.filter((row) => row.status === 'bekliyor'),
-      ),
+      paid_by_currency: aggregateCurrencyTotals(personExpenses.filter((row) => row.status === "odendi")),
+      pending_by_currency: aggregateCurrencyTotals(personExpenses.filter((row) => row.status === "bekliyor")),
     };
   });
 }
@@ -135,18 +110,18 @@ export function aggregateCashflowMonthly(
     const month = months[date.getMonth()];
     addToCurrencyTotals(month.expense_by_currency, row.currency, row.amount);
 
-    if (row.person === 'burak') {
+    if (row.person === "burak") {
       addToCurrencyTotals(month.burak_expense_by_currency, row.currency, row.amount);
-    } else if (row.person === 'baris') {
+    } else if (row.person === "baris") {
       addToCurrencyTotals(month.baris_expense_by_currency, row.currency, row.amount);
     } else {
       addToCurrencyTotals(month.ortak_expense_by_currency, row.currency, row.amount);
     }
 
-    if (row.status === 'odendi') {
+    if (row.status === "odendi") {
       addToCurrencyTotals(month.expense_paid_by_currency, row.currency, row.amount);
     }
-    if (row.status === 'bekliyor') {
+    if (row.status === "bekliyor") {
       addToCurrencyTotals(month.expense_pending_by_currency, row.currency, row.amount);
     }
   });
@@ -158,18 +133,17 @@ export function aggregateCashflowMonthly(
     const month = months[date.getMonth()];
     addToCurrencyTotals(month.income_by_currency, row.currency, row.amount);
 
-    if (row.status === 'tahsil_edildi') {
+    if (row.status === "tahsil_edildi") {
       addToCurrencyTotals(month.income_collected_by_currency, row.currency, row.amount);
     }
-    if (row.status === 'bekliyor') {
+    if (row.status === "bekliyor") {
       addToCurrencyTotals(month.income_pending_by_currency, row.currency, row.amount);
     }
   });
 
   months.forEach((month) => {
     CURRENCY_CODES.forEach((currency) => {
-      month.net_by_currency[currency] =
-        month.income_by_currency[currency] - month.expense_by_currency[currency];
+      month.net_by_currency[currency] = month.income_by_currency[currency] - month.expense_by_currency[currency];
     });
   });
 

@@ -106,9 +106,9 @@ describe("caddeGlobalThresholdText", () => {
   // 10.08.2026: canlı eşikler 10/5/10 -> 0/0/0 yapıldı. "0 reaksiyon · 0 yorum ·
   // 0 paylaşım" cümlesi saçmalıyordu; sıfır hâli ayrı bir metin döndürmeli.
   it("eşikler sıfırlanınca sıfır listelemez, kapının açık olduğunu söyler", () => {
-    expect(
-      caddeGlobalThresholdText({ enabled: true, minReactions: 0, minComments: 0, minShares: 0 }),
-    ).toBe("Eşik yok — her paylaşım global akışa çıkıyor");
+    expect(caddeGlobalThresholdText({ enabled: true, minReactions: 0, minComments: 0, minShares: 0 })).toBe(
+      "Eşik yok — her paylaşım global akışa çıkıyor",
+    );
   });
 });
 

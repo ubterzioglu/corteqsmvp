@@ -327,7 +327,8 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
   {
     slug: "captablev2",
     title: "Cap Table V2",
-    description: "Cap table içeriğinin kısaltılmış erişim etiketi; aynı hisse yapısı dokümanına ikinci giriş noktası sağlar.",
+    description:
+      "Cap table içeriğinin kısaltılmış erişim etiketi; aynı hisse yapısı dokümanına ikinci giriş noktası sağlar.",
     badge: ["Alias", "Equity", "Reference"],
     sections: [
       {
@@ -391,7 +392,8 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
   {
     slug: "out-of-order",
     title: "Out of Order — Bekleyen Sistem Borçları",
-    description: "Bilerek arka planda tutulan, zamanı gelince devreye alınacak ya da silinecek kod ve sistemlerin envanteri.",
+    description:
+      "Bilerek arka planda tutulan, zamanı gelince devreye alınacak ya da silinecek kod ve sistemlerin envanteri.",
     badge: ["Teknik Borç", "Beklemede", "Karar Gerekiyor"],
     sections: [
       {
@@ -404,33 +406,30 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <strong>Durum:</strong> Bilerek arka planda, dokunulmadan bekliyor.
             </p>
             <p>
-              <strong>Ne var:</strong> <code>src/contexts/AuthContext.tsx</code> — Lovable-v2 overlay'inden gelen
-              ikinci bir AuthProvider. Kendi içinde session, profile, accountType, signOut ve refreshProfile
-              destekliyor. <code>profiles</code> tablosundan veri çekiyor.
+              <strong>Ne var:</strong> <code>src/contexts/AuthContext.tsx</code> — Lovable-v2 overlay'inden gelen ikinci
+              bir AuthProvider. Kendi içinde session, profile, accountType, signOut ve refreshProfile destekliyor.{" "}
+              <code>profiles</code> tablosundan veri çekiyor.
             </p>
             <p>
               <strong>Sorun:</strong> Bu provider <code>App.tsx</code>'te mount edilmemiş. Bu context'ten{" "}
-              <code>useAuth</code> import eden 38 dosya her zaman <code>user: null</code>,{" "}
-              <code>loading: true</code> alıyor — kullanıcı giriş yapmış olsa bile.
+              <code>useAuth</code> import eden 38 dosya her zaman <code>user: null</code>, <code>loading: true</code>{" "}
+              alıyor — kullanıcı giriş yapmış olsa bile.
             </p>
             <p>
-              <strong>Etkilenen dosyalar</strong> (2026-08-04 güncellemesi: listedeki{" "}
-              <code>MapSearch.tsx</code>, <code>PostGenerator.tsx</code>,{" "}
-              <code>CityNews.tsx</code>, <code>WhatsAppGroups.tsx</code> ve{" "}
-              <code>WhatsAppGroupLanding.tsx</code> ölü kod olarak silindi — hiçbir route'a
-              bağlı değillerdi ve var olmayan modülleri import ediyorlardı):
+              <strong>Etkilenen dosyalar</strong> (2026-08-04 güncellemesi: listedeki <code>MapSearch.tsx</code>,{" "}
+              <code>PostGenerator.tsx</code>, <code>CityNews.tsx</code>, <code>WhatsAppGroups.tsx</code> ve{" "}
+              <code>WhatsAppGroupLanding.tsx</code> ölü kod olarak silindi — hiçbir route'a bağlı değillerdi ve var
+              olmayan modülleri import ediyorlardı):
             </p>
             <p>
-              <strong>2026-09-04 güncellemesi:</strong> aşağıdaki 11 dosya da ölü kod olarak
-              silindi — hiçbiri (lazy/dynamic dahil) hiçbir yerden erişilebilir değildi ve
-              testleri yoktu: <code>profiles/</code> dizininin tamamı (ProfileAdmin,
-              ProfileAssociation, ProfileBlogger, ProfileBusiness, ProfileConsultant,
-              ProfileSetupBanner, MyFollowsSection, WhatsAppGroupsTab, WelcomePack),{" "}
-              <code>WelcomePackCTA.tsx</code> ve <code>booking/BloggerAnalytics.tsx</code>.
-              İkisi var olmayan <code>@/lib/diasporaBlogLinks</code> modülünü import ediyordu;{" "}
-              <code>ProfileSetupBanner</code> ise AuthProvider'ın hiç çekmediği alanları
-              okuduğu için her kullanıcıya kalıcı "Panel Kilitli" gösterecek durumdaydı.
-              Aşağıdaki liste bu dosyaları hâlâ içeriyor — tarihsel kayıt olarak bırakıldı.
+              <strong>2026-09-04 güncellemesi:</strong> aşağıdaki 11 dosya da ölü kod olarak silindi — hiçbiri
+              (lazy/dynamic dahil) hiçbir yerden erişilebilir değildi ve testleri yoktu: <code>profiles/</code>{" "}
+              dizininin tamamı (ProfileAdmin, ProfileAssociation, ProfileBlogger, ProfileBusiness, ProfileConsultant,
+              ProfileSetupBanner, MyFollowsSection, WhatsAppGroupsTab, WelcomePack), <code>WelcomePackCTA.tsx</code> ve{" "}
+              <code>booking/BloggerAnalytics.tsx</code>. İkisi var olmayan <code>@/lib/diasporaBlogLinks</code> modülünü
+              import ediyordu; <code>ProfileSetupBanner</code> ise AuthProvider'ın hiç çekmediği alanları okuduğu için
+              her kullanıcıya kalıcı "Panel Kilitli" gösterecek durumdaydı. Aşağıdaki liste bu dosyaları hâlâ içeriyor —
+              tarihsel kayıt olarak bırakıldı.
             </p>
             <ul className="list-disc space-y-1 pl-5">
               <li>src/pages/Feed.tsx</li>
@@ -468,22 +467,20 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <li>src/hooks/useCafes.ts</li>
             </ul>
             <p>
-              <strong>KAPANDI (6 Eylül 2026) — Seçenek B uygulandı.</strong> Kalan 16 dosyanın
-              tamamı canonical <code>@/components/auth/useAuth</code>'a geçirildi ve{" "}
-              <code>src/contexts/AuthContext.tsx</code> silindi.
+              <strong>KAPANDI (6 Eylül 2026) — Seçenek B uygulandı.</strong> Kalan 16 dosyanın tamamı canonical{" "}
+              <code>@/components/auth/useAuth</code>'a geçirildi ve <code>src/contexts/AuthContext.tsx</code> silindi.
             </p>
             <p>
-              Geçiş beklenenden risksiz çıktı: shim'in canonical'a kattığı TEK şey{" "}
-              <code>loading</code> alias'ıydı ve ölçüldüğünde <strong>hiçbir dosya onu
-              kullanmıyordu</strong> — 16 dosyanın hepsi yalnız <code>{"{ user }"}</code> (biri
-              ayrıca <code>refreshProfile</code>) alıyordu. Yani yukarıda uyarılan{" "}
-              <code>isLoading</code> / <code>loading</code> tip çakışması pratikte hiç yaşanmadı;
-              göç düz bir import yolu değişimiydi.
+              Geçiş beklenenden risksiz çıktı: shim'in canonical'a kattığı TEK şey <code>loading</code> alias'ıydı ve
+              ölçüldüğünde <strong>hiçbir dosya onu kullanmıyordu</strong> — 16 dosyanın hepsi yalnız{" "}
+              <code>{"{ user }"}</code> (biri ayrıca <code>refreshProfile</code>) alıyordu. Yani yukarıda uyarılan{" "}
+              <code>isLoading</code> / <code>loading</code> tip çakışması pratikte hiç yaşanmadı; göç düz bir import
+              yolu değişimiydi.
             </p>
             <p>
-              Tek gerçek tuzak testteydi: <code>MessagesInbox.test.tsx</code> shim yolunu{" "}
-              <code>vi.mock</code>'luyordu. Mock yolu bileşenin gerçekten import ettiği yol
-              olmazsa sessizce hiçbir şeyi değiştirmez — o da kanonik yola çevrildi.
+              Tek gerçek tuzak testteydi: <code>MessagesInbox.test.tsx</code> shim yolunu <code>vi.mock</code>'luyordu.
+              Mock yolu bileşenin gerçekten import ettiği yol olmazsa sessizce hiçbir şeyi değiştirmez — o da kanonik
+              yola çevrildi.
             </p>
           </div>
         ),
@@ -498,22 +495,26 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
               <strong>Durum:</strong> Her ikisi de aktif, canonical olan netleşmemiş.
             </p>
             <p>
-              <strong>Eski sistem:</strong> <code>public.admin_users</code> tablosu.{" "}
-              <code>src/lib/admin.ts</code>'deki <code>userIsAdmin()</code> bu tabloyu sorgular.{" "}
-              <code>AdminLayout</code> tüm admin bölümünü bu kontrol üzerinden kilitler.
+              <strong>Eski sistem:</strong> <code>public.admin_users</code> tablosu. <code>src/lib/admin.ts</code>'deki{" "}
+              <code>userIsAdmin()</code> bu tabloyu sorgular. <code>AdminLayout</code> tüm admin bölümünü bu kontrol
+              üzerinden kilitler.
             </p>
             <p>
-              <strong>Yeni sistem:</strong> <code>user_profiles_v2</code> + <code>rolesgo_*</code>{" "}
-              tabloları (RolesGo MVP, Mayıs 2026). <code>RequireFeature</code> ve{" "}
-              <code>useFeatureFlags</code> hook'ları bu sistemi kullanıyor.
+              <strong>Yeni sistem:</strong> <code>user_profiles_v2</code> + <code>rolesgo_*</code> tabloları (RolesGo
+              MVP, Mayıs 2026). <code>RequireFeature</code> ve <code>useFeatureFlags</code> hook'ları bu sistemi
+              kullanıyor.
             </p>
             <p>
               <strong>Zamanı gelince yapılacak:</strong>
             </p>
             <ul className="list-disc space-y-1 pl-5">
-              <li>Yeni sistemin (rolesgo) admin erişim kontrolünü de kapsayacağı kararlaştırıldığında
-                <code>AdminLayout</code>'taki <code>userIsAdmin()</code> çağrısı yeni sisteme taşınır.</li>
-              <li><code>admin_users</code> tablosu deprecated edilir, migration ile kaldırılır.</li>
+              <li>
+                Yeni sistemin (rolesgo) admin erişim kontrolünü de kapsayacağı kararlaştırıldığında
+                <code>AdminLayout</code>'taki <code>userIsAdmin()</code> çağrısı yeni sisteme taşınır.
+              </li>
+              <li>
+                <code>admin_users</code> tablosu deprecated edilir, migration ile kaldırılır.
+              </li>
               <li>Bu karar verilmeden profile/role logic'e dokunma.</li>
             </ul>
           </div>
@@ -526,16 +527,16 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
         content: (
           <div className="space-y-4 text-sm leading-7 text-slate-700">
             <p>
-              <strong>Durum:</strong> Orphaned auth context <code>profiles</code> tablosundan çekiyor,
-              yeni sistem <code>user_profiles_v2</code> kullanıyor.
+              <strong>Durum:</strong> Orphaned auth context <code>profiles</code> tablosundan çekiyor, yeni sistem{" "}
+              <code>user_profiles_v2</code> kullanıyor.
             </p>
             <p>
-              <strong>Sorun:</strong> İki ayrı profil tablosu var. Orphaned context mount edilseydi bile
-              yanlış tablodan veri okuyacaktı.
+              <strong>Sorun:</strong> İki ayrı profil tablosu var. Orphaned context mount edilseydi bile yanlış tablodan
+              veri okuyacaktı.
             </p>
             <p>
-              <strong>Zamanı gelince yapılacak:</strong> Auth sistemi kararı verildikten sonra orphaned
-              context'i <code>user_profiles_v2</code>'ye taşı ya da tamamen kaldır.
+              <strong>Zamanı gelince yapılacak:</strong> Auth sistemi kararı verildikten sonra orphaned context'i{" "}
+              <code>user_profiles_v2</code>'ye taşı ya da tamamen kaldır.
             </p>
           </div>
         ),
@@ -547,4 +548,3 @@ export const workspaceDocPages: WorkspaceDocPage[] = [
 export function getWorkspaceDocPage(slug: string) {
   return workspaceDocPages.find((page) => page.slug === slug) ?? null;
 }
-

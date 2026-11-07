@@ -38,7 +38,17 @@ describe("listLatestBlogPostCards", () => {
   it("BlogPosting JSON-LD'nin okuduğu kolonları içerir", async () => {
     await listLatestBlogPostCards(3);
     const columns = String(calls.find((c) => c.method === "select")?.args[0]);
-    for (const column of ["slug", "title", "excerpt", "published_at", "created_at", "updated_at", "country_label", "category", "cover_image"]) {
+    for (const column of [
+      "slug",
+      "title",
+      "excerpt",
+      "published_at",
+      "created_at",
+      "updated_at",
+      "country_label",
+      "category",
+      "cover_image",
+    ]) {
       expect(columns).toContain(column);
     }
   });

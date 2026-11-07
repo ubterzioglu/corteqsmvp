@@ -3,7 +3,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import type { ProfileAttributeState } from "@/lib/member-profile";
-import { EDUCATION_LAST_SCHOOL_ATTRIBUTE_KEY, EDUCATION_LAST_SCHOOL_MAX_LENGTH, getAttributeSelectOptions } from "@/lib/profile-education";
+import {
+  EDUCATION_LAST_SCHOOL_ATTRIBUTE_KEY,
+  EDUCATION_LAST_SCHOOL_MAX_LENGTH,
+  getAttributeSelectOptions,
+} from "@/lib/profile-education";
 
 import { GOOGLE_SOFT_CARD_SUBTLE } from "./profile-card-styles";
 
@@ -34,10 +38,7 @@ export const AttributeInput = ({ attribute, value, onChange, compact = false }: 
     const selectedValue = typeof value === "string" ? value : "";
     return (
       <Select value={selectedValue || undefined} onValueChange={(nextValue) => onChange(nextValue)}>
-        <SelectTrigger
-          className={compact ? "h-9 text-[10px]" : "text-[10px]"}
-          aria-label={attribute.label}
-        >
+        <SelectTrigger className={compact ? "h-9 text-[10px]" : "text-[10px]"} aria-label={attribute.label}>
           <SelectValue placeholder={`${attribute.label} seç`} />
         </SelectTrigger>
         <SelectContent>
@@ -53,7 +54,9 @@ export const AttributeInput = ({ attribute, value, onChange, compact = false }: 
 
   if (attribute.dataType === "boolean") {
     return (
-      <div className={`flex items-center justify-between rounded-xl px-3 ${GOOGLE_SOFT_CARD_SUBTLE} ${compact ? "h-9 py-1.5" : "py-2"}`}>
+      <div
+        className={`flex items-center justify-between rounded-xl px-3 ${GOOGLE_SOFT_CARD_SUBTLE} ${compact ? "h-9 py-1.5" : "py-2"}`}
+      >
         <p className={`${compact ? "text-[11px]" : "text-[11px]"} font-medium`}>{attribute.label}</p>
         <Switch checked={Boolean(value)} onCheckedChange={(checked) => onChange(checked)} />
       </div>
@@ -62,9 +65,13 @@ export const AttributeInput = ({ attribute, value, onChange, compact = false }: 
 
   return (
     <Input
-      className={compact ? "h-9 text-[10px] md:text-[10px] placeholder:text-[10px]" : "text-[10px] placeholder:text-[10px]"}
+      className={
+        compact ? "h-9 text-[10px] md:text-[10px] placeholder:text-[10px]" : "text-[10px] placeholder:text-[10px]"
+      }
       type={attribute.dataType === "url" ? "url" : "text"}
-      maxLength={attribute.attributeKey === EDUCATION_LAST_SCHOOL_ATTRIBUTE_KEY ? EDUCATION_LAST_SCHOOL_MAX_LENGTH : undefined}
+      maxLength={
+        attribute.attributeKey === EDUCATION_LAST_SCHOOL_ATTRIBUTE_KEY ? EDUCATION_LAST_SCHOOL_MAX_LENGTH : undefined
+      }
       value={typeof value === "string" ? value : ""}
       onChange={(event) => onChange(event.target.value)}
       placeholder={attribute.label}

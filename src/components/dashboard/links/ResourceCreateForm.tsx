@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
 // "Yeni Kayıt Ekle" akordeonu. Alanlar ResourceFormFields'tan gelir; burada
 // yalnız akordeon sarmalayıcısı ve gönder düğmesi vardır.
 
-import type { FormEvent } from 'react'
-import { Plus, Upload } from 'lucide-react'
-import AccordionCard from '@/components/dashboard/AccordionCard'
-import { requiresStoredFile, type ResourceFormState } from '@/lib/dashboard/resource-items'
-import ResourceFormFields from './ResourceFormFields'
-import type { ResourceFieldSetter } from './useLinkManager'
+import type { FormEvent } from "react";
+import { Plus, Upload } from "lucide-react";
+import AccordionCard from "@/components/dashboard/AccordionCard";
+import { requiresStoredFile, type ResourceFormState } from "@/lib/dashboard/resource-items";
+import ResourceFormFields from "./ResourceFormFields";
+import type { ResourceFieldSetter } from "./useLinkManager";
 
 interface ResourceCreateFormProps {
-  formState: ResourceFormState
-  sectionOptions: string[]
-  subsectionOptions: string[]
-  isSubmitting: boolean
-  onChange: ResourceFieldSetter
-  onFileChange: (file: File | null) => void
-  onSubmit: (event: FormEvent<HTMLFormElement>) => void
+  formState: ResourceFormState;
+  sectionOptions: string[];
+  subsectionOptions: string[];
+  isSubmitting: boolean;
+  onChange: ResourceFieldSetter;
+  onFileChange: (file: File | null) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 export default function ResourceCreateForm({
@@ -33,9 +33,9 @@ export default function ResourceCreateForm({
     <AccordionCard
       items={[
         {
-          id: 'new-resource',
-          title: 'Yeni Kayıt Ekle',
-          accentColor: '#1A6DC2',
+          id: "new-resource",
+          title: "Yeni Kayıt Ekle",
+          accentColor: "#1A6DC2",
           children: (
             <form onSubmit={onSubmit} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <ResourceFormFields
@@ -57,7 +57,7 @@ export default function ResourceCreateForm({
                   ) : (
                     <Plus size={16} className="mr-1 inline" aria-hidden="true" />
                   )}
-                  {isSubmitting ? 'Kaydediliyor...' : 'Kaydı oluştur'}
+                  {isSubmitting ? "Kaydediliyor..." : "Kaydı oluştur"}
                 </button>
               </div>
             </form>
@@ -65,5 +65,5 @@ export default function ResourceCreateForm({
         },
       ]}
     />
-  )
+  );
 }

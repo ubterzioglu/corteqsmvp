@@ -23,12 +23,7 @@ const CSS = readFileSync("src/index.css", "utf8");
 const HOOK = readFileSync("src/hooks/useCompactHeaderOnScroll.ts", "utf8");
 
 /** Üç dosyanın da tanıması gereken sınıf adları. */
-const CONTRACT_CLASSES = [
-  "site-header",
-  "site-header__nav",
-  "site-header__brand",
-  "site-header__logo",
-] as const;
+const CONTRACT_CLASSES = ["site-header", "site-header__nav", "site-header__brand", "site-header__logo"] as const;
 
 describe("header daraltma sözleşmesi", () => {
   // ⚠️ `toContain` BURADA YETMEZ ve bu ölçülerek görüldü (09.09.2026): sınıf adları
@@ -47,9 +42,7 @@ describe("header daraltma sözleşmesi", () => {
     // Öznitelik yokken (hook'u çağırmayan 60 public rota) hiçbir kural devreye
     // girmemeli — aksi halde Cadde için yapılan bir değişiklik tüm siteyi etkiler.
     const block = sliceFrom(CSS, "Y2 (m153)", "başlık sıkışık blok");
-    const selectorLines = block
-      .split("\n")
-      .filter((line) => line.includes(".site-header"));
+    const selectorLines = block.split("\n").filter((line) => line.includes(".site-header"));
 
     expect(selectorLines.length).toBeGreaterThan(0);
     for (const line of selectorLines) {

@@ -17,8 +17,8 @@ import { useJobListingDetail, useMyListingQuota, resolveJobListingError } from "
 const EMPLOYMENT_TYPE_LABELS: Record<string, string> = {
   "Tam Zamanlı": "Tam Zamanlı",
   "Yarı Zamanlı": "Yarı Zamanlı",
-  "Sözleşmeli": "Sözleşmeli",
-  "Staj": "Staj",
+  Sözleşmeli: "Sözleşmeli",
+  Staj: "Staj",
 };
 
 const LOCATION_TYPE_LABELS: Record<string, string> = {
@@ -56,8 +56,7 @@ export default function JobListingDetailPage() {
   }
 
   // Kota doldu → PremiumLockCard
-  const isLimitReached =
-    quota && !quota.has_unlimited && quota.remaining <= 0 && isError;
+  const isLimitReached = quota && !quota.has_unlimited && quota.remaining <= 0 && isError;
 
   if (isLimitReached) {
     return (
@@ -116,8 +115,8 @@ export default function JobListingDetailPage() {
     quota && !quota.has_unlimited ? (
       <Card className="mb-6 border-amber-200 bg-amber-50/60">
         <CardContent className="p-4 text-sm text-amber-900">
-          <strong>{quota.limit_total}</strong> ilandan <strong>{quota.viewed_count}</strong>'ini
-          görüntülediniz. Kalan: <strong>{quota.remaining}</strong>
+          <strong>{quota.limit_total}</strong> ilandan <strong>{quota.viewed_count}</strong>'ini görüntülediniz. Kalan:{" "}
+          <strong>{quota.remaining}</strong>
         </CardContent>
       </Card>
     ) : null;
@@ -125,12 +124,7 @@ export default function JobListingDetailPage() {
   return (
     <main className="min-h-screen bg-background">
       <div className="container mx-auto max-w-3xl px-4 py-8">
-        <Button
-          asChild
-          variant="ghost"
-          size="sm"
-          className="mb-6"
-        >
+        <Button asChild variant="ghost" size="sm" className="mb-6">
           <Link to="/ilanlar">
             <ArrowLeft className="mr-2 h-4 w-4" />
             İlan listesine dön
@@ -143,13 +137,9 @@ export default function JobListingDetailPage() {
           <CardContent className="p-8 space-y-6">
             {/* Başlık */}
             <div>
-              <h1 className="text-2xl font-bold text-foreground">
-                {detail.title}
-              </h1>
+              <h1 className="text-2xl font-bold text-foreground">{detail.title}</h1>
               {detail.business_name && !detail.hide_business_name ? (
-                <p className="mt-2 text-lg text-muted-foreground">
-                  {detail.business_name}
-                </p>
+                <p className="mt-2 text-lg text-muted-foreground">{detail.business_name}</p>
               ) : null}
             </div>
 
@@ -181,24 +171,16 @@ export default function JobListingDetailPage() {
             {/* Açıklama */}
             {detail.description ? (
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-2">
-                  Açıklama
-                </h2>
-                <p className="text-foreground whitespace-pre-wrap">
-                  {detail.description}
-                </p>
+                <h2 className="text-lg font-semibold text-foreground mb-2">Açıklama</h2>
+                <p className="text-foreground whitespace-pre-wrap">{detail.description}</p>
               </div>
             ) : null}
 
             {/* Gereksinimler */}
             {detail.requirements ? (
               <div>
-                <h2 className="text-lg font-semibold text-foreground mb-2">
-                  Gereksinimler
-                </h2>
-                <p className="text-foreground whitespace-pre-wrap">
-                  {detail.requirements}
-                </p>
+                <h2 className="text-lg font-semibold text-foreground mb-2">Gereksinimler</h2>
+                <p className="text-foreground whitespace-pre-wrap">{detail.requirements}</p>
               </div>
             ) : null}
           </CardContent>

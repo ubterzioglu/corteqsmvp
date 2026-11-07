@@ -63,16 +63,12 @@ function buildPathItem(tool) {
   const path = `/functions/v1/${tool.tool_name}`;
   const fields = tool.input_schema?.fields ?? [];
   const required = REQUIRED_HINTS[tool.tool_key] ?? [];
-  const statuses = tool.http_statuses?.length
-    ? tool.http_statuses
-    : [200, 400, 429, 500];
+  const statuses = tool.http_statuses?.length ? tool.http_statuses : [200, 400, 429, 500];
 
   const lines = [];
   lines.push(`${indent(1)}${path}:`);
   lines.push(`${indent(2)}post:`);
-  lines.push(
-    `${indent(3)}summary: ${yamlScalar(`${tool.tool_name} aracını çalıştır`)}`,
-  );
+  lines.push(`${indent(3)}summary: ${yamlScalar(`${tool.tool_name} aracını çalıştır`)}`);
   lines.push(`${indent(3)}operationId: ${opId}`);
   if (tool.status === "deprecated") {
     lines.push(`${indent(3)}deprecated: true`);
@@ -80,9 +76,7 @@ function buildPathItem(tool) {
   lines.push(`${indent(3)}x-tool-key: ${tool.tool_key}`);
   lines.push(`${indent(3)}x-status: ${tool.status}`);
   if (tool.tables_read_write?.length) {
-    lines.push(
-      `${indent(3)}x-tables: [${tool.tables_read_write.map(yamlScalar).join(", ")}]`,
-    );
+    lines.push(`${indent(3)}x-tables: [${tool.tables_read_write.map(yamlScalar).join(", ")}]`);
   }
 
   // Request body (varsa alanlar)
@@ -106,9 +100,7 @@ function buildPathItem(tool) {
   lines.push(`${indent(3)}responses:`);
   for (const code of statuses) {
     lines.push(`${indent(4)}"${code}":`);
-    lines.push(
-      `${indent(5)}description: ${yamlScalar(STATUS_DESCR[code] ?? "Yanıt")}`,
-    );
+    lines.push(`${indent(5)}description: ${yamlScalar(STATUS_DESCR[code] ?? "Yanıt")}`);
   }
   return lines.join("\n");
 }

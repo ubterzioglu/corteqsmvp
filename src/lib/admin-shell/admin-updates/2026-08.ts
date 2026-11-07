@@ -7,8 +7,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260831-30-agustos-eksik-teknik-isler",
     date: "31 Ağustos 2026",
-    title:
-      "30 Ağustos'un eksik kalan teknik işleri eklendi — veri işlemleri ve yayın kontrolleri güçlendi",
+    title: "30 Ağustos'un eksik kalan teknik işleri eklendi — veri işlemleri ve yayın kontrolleri güçlendi",
     items: [
       "GÜVENLİ MIGRATION ÇALIŞTIRICISI: Yeni veritabanı değişikliği ile uygulandığını gösteren ledger kaydı artık tek işlemde yazılıyor. İşlem yarıda kalırsa ikisi birlikte geri alınıyor. Çalıştırmadan önce dosya adı, konumu ve güvenlik kuralları denetlenebiliyor; geçmiş bir migration'ın yanlışlıkla yeniden çalıştırılması engelleniyor.",
       "SUPABASE SDK SÜRÜMLERİ HİZALANDI: Site, sunucu fonksiyonları ve arka plan işçileri aynı güncel SDK sürümüne çekildi. Böylece farklı parçaların farklı istemci davranışı göstermesine yol açabilecek sürüm sapması kaldırıldı.",
@@ -36,8 +35,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260830-limit-sprinti-canliya-alindi",
     date: "30 Ağustos 2026",
-    title:
-      "Büyük bakım paketi yayında — VIP davetleri, daha güvenli araç raporları ve daha hızlı açılan sayfalar",
+    title: "Büyük bakım paketi yayında — VIP davetleri, daha güvenli araç raporları ve daha hızlı açılan sayfalar",
     items: [
       "SON SÜRÜM CANLIDA: Uzun süredir bekleyen teknik işler küçük parçalar halinde tamamlandı ve site yeniden yayınlandı. Veritabanındaki 373 güncellemenin tamamı canlıyla eşleşiyor; eksik veya yarım kalmış bir adım görünmüyor.",
       "KİŞİYE ÖZEL VIP DAVETLERİ: Admin panelinde VIP davet oluşturma ve iptal etme ekranı hazır. Her bağlantı tek kişilik, varsayılan olarak 30 gün geçerli ve yalnızca bir kez kullanılabiliyor. Davet bağlantısının kendisi sistemde açık biçimde saklanmıyor; yalnız oluşturulduğu anda kopyalanabiliyor.",
@@ -56,8 +54,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260830-komuta-merkezi-teknik-isler-canliya-alindi",
     date: "30 Ağustos 2026",
-    title:
-      "Komuta Merkezi'ndeki teknik işler topluca ele alındı — üye takibi, ortak sorumlu ve referral QR canlıda",
+    title: "Komuta Merkezi'ndeki teknik işler topluca ele alındı — üye takibi, ortak sorumlu ve referral QR canlıda",
     items: [
       "KOMUTA MERKEZİ TOPARLANDI: Açık teknik maddeler tek tek incelendi. Gerçekten tamamlanan dört görev kapatıldı, deneme amaçlı açılmış anlamsız kayıt kaldırıldı. Kod işi olmayan veya son karar bekleyen maddeler ise yapılmış gibi gösterilmedi; açık bırakıldı.",
       "YENİ ÜYE TAKİBİ EKRANI: Admin paneline, topluluk başvurularını tek yerde görmeyi sağlayan yeni bir ekran eklendi. Şu anda 138 başvuru ve 27 ekli dosya; başvuru türü, durum, tarih, kategori ve dosya durumuna göre süzülebiliyor. Üyenin açıklaması, ihtiyacı, davet kodu ve ilk adımlardaki ilerlemesi de aynı ekranda görülebiliyor.",
@@ -75,8 +72,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260829-cadde-panosu-gercege-cekildi",
     date: "29 Ağustos 2026",
-    title:
-      "Cadde workshop panosu gerçeğe çekildi — açık görünen 5 madde aslında bitmişti ya da konusu kalmamıştı",
+    title: "Cadde workshop panosu gerçeğe çekildi — açık görünen 5 madde aslında bitmişti ya da konusu kalmamıştı",
     items: [
       "Panodaki açık madde sayısı yanıltıyordu. Sayıldı: 136 madde, 53'ü açık görünüyor. Ama tek tek bakılınca bunların 53 iş OLMADIĞI çıktı — yaklaşık 11'i bu projede kod işi, 12'si Burak'ın pazarlama içeriği, 10'u tarihi çoktan geçmiş toplantı maddesi, 7'si iş/altyapı konusu (WordPress, gizlilik sözleşmesi), 8'i zaten bilerek park edilmiş.",
       "Beş madde ise açık duruyordu ama işi çoktan bitmişti veya sorusu ortadan kalkmıştı. Beşi de koda ve canlı veritabanına bakılarak DOĞRULANDI, tahminle işaretlenmedi.",
@@ -91,8 +87,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260828-27-agustos-toplantisi-komuta-merkezine",
     date: "28 Ağustos 2026",
-    title:
-      "27 Ağustos toplantısı komuta merkezine işlendi — 12 madde, kararlar dahil",
+    title: "27 Ağustos toplantısı komuta merkezine işlendi — 12 madde, kararlar dahil",
     items: [
       "27 Ağustos toplantısında konuşulan her şey tek tek komuta merkezine yazıldı: 12 madde. 7'si sende, 5'i Burak'ta. Toplantı listesinde 'Toplantı 18' olarak görünüyor.",
       "Bunların 9'u doğrudan toplantının yapılacaklar listesinden geldi. Sende olanlar: Cadde ana sayfasında 'İnsanları Keşfet' ve 'Aktif Kafeler' bloklarının yukarı taşınması, kafeye parolalı/onaylı girişte sayfanın kendini yenileme sorunu, Jukebox'ın ayrı bir modül olarak kurulması, kafenin içinden akışa dönüş butonu ve workshop panosunda açık kalan maddelerin hafta sonu kapatılması. Burak'ta olanlar: ikonların SVG olarak hazırlanması, kafeler için 3 arka plan teması, Jukebox'ın kullanıcı senaryoları ve profiller toplantısının ön hazırlığı.",
@@ -215,8 +210,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260805-bes-oturumun-kalani-tek-listede",
     date: "5 Ağustos 2026",
-    title:
-      "Beş oturumun 'kalan işler' listeleri tek listede toplandı — en büyük madde zaten yapılmış çıktı",
+    title: "Beş oturumun 'kalan işler' listeleri tek listede toplandı — en büyük madde zaten yapılmış çıktı",
     items: [
       "Son iki günün beş ayrı çalışma oturumu, her biri kendi sonunda bir 'kalan işler' listesi bırakmıştı. Listeler birbirini tekrar ediyor ve bir kısmı artık geçersizdi, çünkü oturumlar kısmen paralel çalıştı ve birbirinin işini devraldı. Hepsi tek listeye indirildi ve her madde canlı sisteme sorularak açık mı kapalı mı diye kontrol edildi.",
       "EN ÖNEMLİ BULGU: beş oturumun BEŞİ DE 'Coolify deploy bekliyor' diyordu — deploy aslında yapılmış. Canlı siteden ölçüldü: Cadde sayfasının canlıdaki dosyasında dünkü yeni kart düzeni var, eskisi yok; sayfanın yayın saati 13:12, son kod değişikliği 13:11. Yani günlerin işi canlıda. Bu madde bütün listelerden düşüyor; boşuna deploy beklenmesin.",
@@ -230,8 +224,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260805-workshop-panosu-isaretleme-bekliyor",
     date: "5 Ağustos 2026",
-    title:
-      "Cadde workshop panosunda 28 madde 'yapıldı' işareti bekliyor — işaretleme bu oturumda YAPILAMADI",
+    title: "Cadde workshop panosunda 28 madde 'yapıldı' işareti bekliyor — işaretleme bu oturumda YAPILAMADI",
     items: [
       "Pano canlıda sayıldı: 4 Ağustos'ta bitirilip ana koda alınan işlerin hiçbiri panoda işaretli değil. WS2 bölümünün tamamı boş görünüyor — panoda son işaretleme 4 Ağustos'ta 4 madde (dünya saatleri) ile kalmış. Sebebi basit: hem dün hem bugün canlı veritabanına yazma izni bu ortamda engellendi, o yüzden kutular kod bitmiş olmasına rağmen hiç işaretlenemedi.",
       "İşaretlenmeyi bekleyen 28 madde tek tek eşleştirildi ve tek komutluk bir dosyaya yazıldı: docs/operations/2026-08-05-workshop-ubt-isaretleme.sql. Aynı işi panelden elle de yapabilirsin (/admin/workshop/cadde), dosya yalnızca 28 kutuyu tek seferde işaretlemek için.",
@@ -286,7 +279,8 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260805-cadde-soguk-baslangic-ve-kararlilik",
     date: "5 Ağustos 2026",
-    title: "Cadde boşken 'bozuk' değil 'davet' gibi okunacak şekilde yeniden düzenlendi; testlerdeki hayalet hata da çözüldü",
+    title:
+      "Cadde boşken 'bozuk' değil 'davet' gibi okunacak şekilde yeniden düzenlendi; testlerdeki hayalet hata da çözüldü",
     items: [
       "Sayfa içerik yokken sol kolonda üç ayar kutusu gösteriyordu — filtrelenecek bir şey yokken filtre. Artık içerik yokken ülke/şehir bölümü ve kafe listesi kapalı açılıyor; 'Caddeye Çık' ve '+ Cafe Aç' butonları görünür kalıyor. Kullanıcı bir kez açıp kapatırsa kararı kalıcı kazanıyor.",
       "Yan taraftaki tekrar temizlendi: sayfa boşken sağ kolon üst üste ÜÇ ayrı yokluk okutuyordu ('Çarşı yakında', 'yakında gelecek özellikler', 'bu tanıtım alanı boş'). Tanıtım şeridi içerik yokken hiç çizilmiyor artık — hemen altındaki koyu davet kartı aynı şeyi çalışan bir butonla söylüyor.",
@@ -300,8 +294,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260804-cadde-canli-denetim-soguk-baslangic",
     date: "4 Ağustos 2026",
-    title:
-      "Cadde'nin canlı denetimi yapıldı: akış fiilen boş çıktı — sayfa 'içerik bolluğu' varsayımından çıkarıldı",
+    title: "Cadde'nin canlı denetimi yapıldı: akış fiilen boş çıktı — sayfa 'içerik bolluğu' varsayımından çıkarıldı",
     items: [
       "Canlı veritabanı sayıldı: Cadde'de toplam 24 paylaşım var, bunların 10'u klavye zıbırtısı ve arkasında yalnızca 2 gerçek kişi duruyor; gerçek bir kafe içeriği yok. Yani sayfa 'akış canlı' varsayımıyla tasarlanmıştı ama gerçekte aylarca düşük içerikle yaşayacak. Bu ölçüm işin teşhisini değiştirdi — başlangıçta bir tasarım isteğiydi.",
       "Bu tabloda görünmez kalan gerçek bir kusur ortaya çıktı: akış yüklenirken bir hata olursa (yetki reddi, sunucu hatası, ağ sorunu) ekranda 'Bu akış henüz sessiz.' yazıyordu — yani gerçek arıza ile boş akış birbirinden ayırt edilemiyordu. Artık hata ayrı bir kart olarak görünüyor ve 'Tekrar dene' butonu var.",
@@ -382,8 +375,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260804-cadde-saat-seridi-kaldirildi",
     date: "4 Ağustos 2026",
-    title:
-      "Cadde'deki dünya saatleri şeridi gün içinde üç tur iyileştirildi, sonra senin kararınla tamamen kaldırıldı",
+    title: "Cadde'deki dünya saatleri şeridi gün içinde üç tur iyileştirildi, sonra senin kararınla tamamen kaldırıldı",
     items: [
       "Şerit önce 3 kadrandan 5'e çıktı ve kadranlar büyütülüp sadeleştirildi: asıl okunabilirlik kazancı büyüklükten değil silinen detaydan geldi — ara çizgiler kadranı gri bir halkaya çevirip ibreleri yutuyordu.",
       "Sonra gerçek bir hata bulundu: kadran her zaman tarayıcının saat dilimini çiziyordu ama etiket profildeki şehirden geliyordu. Yani profilinde Antalya yazan ve Almanya'dan giren biri, Berlin saatini 'Antalya' etiketiyle görüyordu — saat sessizce yanlış söylüyordu. Etiket artık çizilen dilimle aynı kaynaktan geliyor; şehir tanınmıyorsa etiket hiç iddia edilmiyor.",
@@ -549,8 +541,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260802-araclar-hub-gorsel-yenileme",
     date: "2 Ağustos 2026",
-    title:
-      "/tools (Araçlar) sayfası görsel olarak yenilendi — 17 araç kartı artık birbirinden ayırt ediliyor",
+    title: "/tools (Araçlar) sayfası görsel olarak yenilendi — 17 araç kartı artık birbirinden ayırt ediliyor",
     items: [
       "Sorun: /tools sayfasındaki 17 araç kartının hepsi birbirinin aynısıydı — tek fark eden şey her kartta tekrar eden aynı yeşil 'ÜCRETSİZ' rozetiydi. Sayfa ayrıca anasayfada zaten kullanılan marka görsel diline (aurora arka plan, gradyanlı başlıklar, glow efektleri) hiç sahip değildi, jenerik/sönük duruyordu.",
       "Üst başlık bölümüne anasayfadaki aurora/grid arka plan efekti ve teal→turuncu gradyanlı başlık eklendi. Her kart artık verdiği sonuç türüne göre (Skor, Sıralama, Persona, Görev Planı, Eşleşme, Karşılaştırma) logonun 6 renginden birini alan ikonlu bir rozet, kart çevresinde aynı renkte ince bir halka ve üstte renkli bir şerit taşıyor — kartlar artık tek bakışta birbirinden ayrılıyor. Kart görselinin üstüne karartma gradyanı ve başlık bindirildi; üzerine gelince kart hafifçe yükseliyor, görsel yakınlaşıyor ve ince bir parlama geçişi oluyor. Her kartın altına kaç soru sorduğu da eklendi ('6 soru · birkaç dakika').",
@@ -561,8 +552,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260802-relocation-slider-radyo-butonlari",
     date: "2 Ağustos 2026",
-    title:
-      "Taşınma araçlarındaki 1-5 kaydırma çubuğu kalktı — artık her seçenek tek tek tıklanan bir kutucuk",
+    title: "Taşınma araçlarındaki 1-5 kaydırma çubuğu kalktı — artık her seçenek tek tek tıklanan bir kutucuk",
     items: [
       "10 taşınma aracının tamamı aynı soru bileşenini (QuestionRenderer) kullanıyor. '1'den 5'e kadar değerlendir' tipi sorular bu bileşende bir kaydırma çubuğuyla (slider) cevaplanıyordu — özellikle mobilde parmakla tam istenen sayıya denk getirmek zordu ve o an hangi değerde olduğun küçük bir rakamdan başka bir şeyle görünmüyordu.",
       "Artık bu sorular 5 satırlık, her biri kendi başına tıklanabilir tek seçimli kutucuklar (radyo buton) olarak geliyor; en alttaki ve en üstteki seçeneğin yanında ne anlama geldiğini açıklayan kısa etiket de var. Bileşen paylaşımlı olduğu için tek yerde yapılan bu değişiklik otomatik olarak 10 aracın hepsini kapsıyor.",
@@ -584,8 +574,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260802-komuta-merkezi-tamamlanan-akordiyon",
     date: "2 Ağustos 2026",
-    title:
-      "Komuta Merkezi'nde tamamlanan görevler artık ana listeyi doldurmuyor, alttaki katlanır bölüme taşındı",
+    title: "Komuta Merkezi'nde tamamlanan görevler artık ana listeyi doldurmuyor, alttaki katlanır bölüme taşındı",
     items: [
       "Aktif iş tablosu 'Tamamlandı' statüsündeki kayıtlarla birlikte kalabalıklaşıyordu — devam eden işi bulmak için tamamlanmış onlarca satırı geçmek gerekiyordu.",
       "Artık tamamlanan kayıtlar ana tablodan çıkıp, sayfanın altındaki Arşivlenmiş/Silinmiş bölümlerinin yanına 'Tamamlanan Görevler' başlıklı katlanır (accordion) bir bölüme taşınıyor. Düzenleme/arşivleme/silme aksiyonları tamamlanan kayıtlarda da aktif kalıyor — yanlışlıkla 'Tamamlandı' yapılan bir kayıt gerekirse geri alınabiliyor.",
@@ -595,8 +584,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260802-cadde-redesign-kapandi",
     date: "2 Ağustos 2026",
-    title:
-      "Cadde revizyon turu kapandı: akış, paylaşım, hedefleme ve görünüm baştan toparlandı",
+    title: "Cadde revizyon turu kapandı: akış, paylaşım, hedefleme ve görünüm baştan toparlandı",
     items: [
       "Cadde için son büyük revizyon paketi tamamlandı. Bu turda akışın davranışı, paylaşım kutusu, yorumlar, tepkiler, paylaşma butonu, emoji seçici, hedefleme, reklam alanları ve genel görünüm tek tek elden geçirildi.",
       "Paylaşım tarafı daha sade oldu: paylaşım kutusu WhatsApp gibi tek ana alana indi, konu/etiket kalabalığı temizlendi, emoji seçici eklendi ve tepki sistemi 5 açık emojiye döndü. Yorumlarda Enter ile gönderme, devamını yükleme ve açık panelde sessiz yenileme var.",
@@ -609,8 +597,7 @@ export const ADMIN_UPDATES_2026_08: AdminUpdateEntry[] = [
   {
     id: "20260802-komuta-merkezi-summary9",
     date: "2 Ağustos 2026",
-    title:
-      "Komuta Merkezi güncellendi: WhatsApp Summary 7-9 aktarıldı, kanıtlı tamamlanan kayıtlar kapatıldı",
+    title: "Komuta Merkezi güncellendi: WhatsApp Summary 7-9 aktarıldı, kanıtlı tamamlanan kayıtlar kapatıldı",
     items: [
       "WhatsApp dökümünde 9 Haziran-2 Ağustos aralığındaki todo, karar ve kalıcı notlar Komuta Merkezi'ne işlendi. İki yeni parti oluştu: 7 Temmuz 2026 için 411 kayıt, 2 Ağustos 2026 için 329 kayıt.",
       "Yeni 740 WA kaydının 604'ü açık takip maddesi olarak geldi; sohbette veya projede açıkça bittiği görülen 136 kayıt doğrudan Tamamlandı statüsüyle eklendi.",

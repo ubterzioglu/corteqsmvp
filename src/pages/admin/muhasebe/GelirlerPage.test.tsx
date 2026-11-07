@@ -1,39 +1,39 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
-import GelirlerPage from '@/pages/admin/muhasebe/GelirlerPage';
+import GelirlerPage from "@/pages/admin/muhasebe/GelirlerPage";
 
-vi.mock('@/hooks/useMuhasebe', () => ({
+vi.mock("@/hooks/useMuhasebe", () => ({
   useIncomes: () => ({
     data: [
       {
-        id: 'inc-1',
-        income_date: '2026-05-01',
-        source: 'Pilot',
-        category: 'pilot_gelir',
-        description: 'Pilot payment',
+        id: "inc-1",
+        income_date: "2026-05-01",
+        source: "Pilot",
+        category: "pilot_gelir",
+        description: "Pilot payment",
         amount: 150,
-        currency: 'USD',
-        status: 'tahsil_edildi',
+        currency: "USD",
+        status: "tahsil_edildi",
         link: null,
         note: null,
-        created_at: '',
-        updated_at: '',
+        created_at: "",
+        updated_at: "",
         created_by: null,
       },
       {
-        id: 'inc-2',
-        income_date: '2026-05-02',
-        source: 'Grant',
-        category: 'hibe_grant',
-        description: 'Grant tranche',
+        id: "inc-2",
+        income_date: "2026-05-02",
+        source: "Grant",
+        category: "hibe_grant",
+        description: "Grant tranche",
         amount: 4000,
-        currency: 'TRY',
-        status: 'bekliyor',
+        currency: "TRY",
+        status: "bekliyor",
         link: null,
         note: null,
-        created_at: '',
-        updated_at: '',
+        created_at: "",
+        updated_at: "",
         created_by: null,
       },
     ],
@@ -44,8 +44,8 @@ vi.mock('@/hooks/useMuhasebe', () => ({
   useDeleteIncome: () => ({ isPending: false, mutateAsync: vi.fn() }),
 }));
 
-describe('GelirlerPage', () => {
-  it('shows separated totals for the visible income currencies', () => {
+describe("GelirlerPage", () => {
+  it("shows separated totals for the visible income currencies", () => {
     render(<GelirlerPage />);
 
     expect(screen.getByText(/Toplamlar:/i)).toBeInTheDocument();

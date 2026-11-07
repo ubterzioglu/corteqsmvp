@@ -54,10 +54,13 @@ const HeroSection = () => {
           >
             <div className="glass-tech flex max-w-[36rem] flex-col justify-center rounded-[2rem] p-4 sm:p-5 lg:max-w-[34rem] lg:px-6 2xl:max-w-[38rem]">
               <div className="mb-3 flex flex-col items-center gap-3 text-center md:flex-row md:items-center md:text-left">
-                <img src={heroLogo} alt="CorteQS Logo" className="mx-auto w-full max-w-[152px] shrink-0 md:mx-0 md:max-w-[176px]" />
+                <img
+                  src={heroLogo}
+                  alt="CorteQS Logo"
+                  className="mx-auto w-full max-w-[152px] shrink-0 md:mx-0 md:max-w-[176px]"
+                />
                 <h1 className="font-display text-2xl font-bold leading-[0.95] tracking-[-0.02em] text-foreground md:text-4xl 2xl:text-[2.75rem]">
-                  Dünyadaki Türkleri Bir Araya Getiren{" "}
-                  <span className="text-gradient-tech">Platform</span>
+                  Dünyadaki Türkleri Bir Araya Getiren <span className="text-gradient-tech">Platform</span>
                 </h1>
               </div>
               <p className="hero-description mb-5 max-w-lg text-center text-[12px] leading-relaxed text-muted-foreground md:text-left md:text-[13px] 2xl:max-w-xl 2xl:text-[14px]">
@@ -88,10 +91,7 @@ const HeroSection = () => {
                         "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 42%, rgba(255,255,255,0) 100%)",
                     }}
                   />
-                  <span
-                    className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25"
-                    aria-hidden
-                  />
+                  <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25" aria-hidden />
                   <span className="relative z-10">Ücretsiz Kayıt Ol</span>
                 </Link>
                 <button
@@ -108,10 +108,7 @@ const HeroSection = () => {
                         "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.04) 42%, rgba(255,255,255,0) 100%)",
                     }}
                   />
-                  <span
-                    className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25"
-                    aria-hidden
-                  />
+                  <span className="pointer-events-none absolute inset-x-6 top-0 h-px bg-white/25" aria-hidden />
                   <Search className="relative z-10 h-4 w-4" aria-hidden="true" />
                   <span className="relative z-10">Diasporada Ara</span>
                 </button>
@@ -126,7 +123,9 @@ const HeroSection = () => {
                 >
                   Biz Kimiz
                 </Link>
-                <span aria-hidden="true" className="text-slate-300">·</span>
+                <span aria-hidden="true" className="text-slate-300">
+                  ·
+                </span>
                 <a
                   href={PUBLIC_WHATSAPP_COMMUNITY}
                   target="_blank"
@@ -135,7 +134,9 @@ const HeroSection = () => {
                 >
                   WhatsApp Grubu
                 </a>
-                <span aria-hidden="true" className="text-slate-300">·</span>
+                <span aria-hidden="true" className="text-slate-300">
+                  ·
+                </span>
                 <Link
                   to="/addcom"
                   className="underline-offset-2 transition-colors hover:text-[#9334E6] hover:underline"

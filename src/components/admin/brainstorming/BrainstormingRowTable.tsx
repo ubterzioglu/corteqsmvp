@@ -65,9 +65,7 @@ export function BrainstormingRowTable({
                     isExpanded && "rotate-180",
                   )}
                 />
-                <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-                  {row.label}
-                </span>
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">{row.label}</span>
                 {row.status ? (
                   <AdminStatusBadge tone={STATUS_TONES[row.status]} className="shrink-0">
                     {STATUS_LABELS[row.status]}
@@ -120,15 +118,11 @@ export function BrainstormingRowTable({
             {isExpanded ? (
               <div className="grid grid-cols-1 gap-3 border-t border-border p-3 sm:grid-cols-2">
                 <div>
-                  <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Teknik
-                  </p>
+                  <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Teknik</p>
                   <p className="whitespace-pre-wrap text-sm text-foreground">{row.technical}</p>
                 </div>
                 <div>
-                  <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-                    Sade
-                  </p>
+                  <p className="mb-1 text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Sade</p>
                   <p className="whitespace-pre-wrap text-sm text-foreground">{row.plain}</p>
                 </div>
               </div>

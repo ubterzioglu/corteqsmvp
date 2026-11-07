@@ -28,10 +28,7 @@ import { getRelocationDict } from "@/lib/relocation-i18n";
 import { useGeoCountries } from "@/hooks/useGeo";
 import { trCompare } from "@/lib/text-normalization";
 import type { MoveCreateInput } from "@/lib/relocation-schemas";
-import type {
-  RelocationServiceCategory,
-  RelocationStepTrigger,
-} from "@/lib/relocation-types";
+import type { RelocationServiceCategory, RelocationStepTrigger } from "@/lib/relocation-types";
 import { RelocationWizard } from "@/components/relocation/RelocationWizard";
 import { buildCountryOptions } from "@/lib/relocation-country-options";
 import { CityComparisonTable } from "@/components/relocation/CityComparisonTable";
@@ -109,9 +106,7 @@ export default function RelocationHomePage() {
   });
 
   const servicesQuery = useQuery({
-    queryKey: moveId
-      ? relocationKeys.serviceRecommendations(moveId, serviceCategory)
-      : ["relocation", "noop-svc"],
+    queryKey: moveId ? relocationKeys.serviceRecommendations(moveId, serviceCategory) : ["relocation", "noop-svc"],
     queryFn: () => getServiceRecommendations(moveId as string, serviceCategory),
     enabled: !!moveId && activeTab === "services",
   });
@@ -140,9 +135,7 @@ export default function RelocationHomePage() {
   // İlk şehir önerisinin ülkesinden acil iletişim (move'un ilk hedefi).
   const firstCountry = citiesQuery.data?.[0]?.country_code;
   const emergencyQuery = useQuery({
-    queryKey: firstCountry
-      ? relocationKeys.emergencyContacts(firstCountry)
-      : ["relocation", "noop-emg"],
+    queryKey: firstCountry ? relocationKeys.emergencyContacts(firstCountry) : ["relocation", "noop-emg"],
     queryFn: () => getEmergencyContacts(firstCountry as string),
     enabled: !!firstCountry && activeTab === "emergency",
   });
@@ -159,10 +152,7 @@ export default function RelocationHomePage() {
   const move = moveQuery.data;
   const targetCountryCodes = useMemo(() => move?.target_country_codes ?? [], [move]);
   const targetCountryNames = useMemo(
-    () =>
-      targetCountryCodes.map(
-        (code) => countryOptions.find((option) => option.code === code)?.label ?? code,
-      ),
+    () => targetCountryCodes.map((code) => countryOptions.find((option) => option.code === code)?.label ?? code),
     [targetCountryCodes, countryOptions],
   );
 
@@ -182,8 +172,7 @@ export default function RelocationHomePage() {
     moveWindowStart: move?.move_window_start ?? null,
     moveWindowEnd: move?.move_window_end ?? null,
     mustHaves,
-    onError: (message) =>
-      toast({ title: "İşlem tamamlanamadı", description: message, variant: "destructive" }),
+    onError: (message) => toast({ title: "İşlem tamamlanamadı", description: message, variant: "destructive" }),
   });
 
   const triggerLabels = useMemo(
@@ -208,27 +197,25 @@ export default function RelocationHomePage() {
           {!forceWizard && (
             <MoveSelector
               moves={movesQuery.data ?? []}
-              countryLabel={(code) =>
-                countryOptions.find((option) => option.code === code)?.label ?? code
-              }
+              countryLabel={(code) => countryOptions.find((option) => option.code === code)?.label ?? code}
               onSelect={(id) => setMoveId(id)}
               onStartNew={() => setForceWizard(true)}
             />
           )}
           <RelocationWizard
-          countryOptions={countryOptions}
-          labels={{
-            targets: dict.wizard.targets,
-            window: dict.wizard.window,
-            budget: dict.wizard.budget,
-            household: dict.wizard.household,
-            adults: dict.wizard.adults,
-            children: dict.wizard.children,
-            mustHaves: dict.wizard.mustHaves,
-            submit: dict.wizard.submit,
-          }}
-          onSubmit={(input) => createMoveMutation.mutate(input)}
-          isSubmitting={createMoveMutation.isPending}
+            countryOptions={countryOptions}
+            labels={{
+              targets: dict.wizard.targets,
+              window: dict.wizard.window,
+              budget: dict.wizard.budget,
+              household: dict.wizard.household,
+              adults: dict.wizard.adults,
+              children: dict.wizard.children,
+              mustHaves: dict.wizard.mustHaves,
+              submit: dict.wizard.submit,
+            }}
+            onSubmit={(input) => createMoveMutation.mutate(input)}
+            isSubmitting={createMoveMutation.isPending}
           />
         </>
       ) : (
@@ -239,12 +226,8 @@ export default function RelocationHomePage() {
             <TabsTrigger value="checklist">{dict.tabs.checklist}</TabsTrigger>
             {/* Maliyet ve belge sekmeleri yalnızca VERİ VARSA çizilir — boş sekme,
                 kullanıcıya "burada bir şey olmalıydı" hissi verir. */}
-            {content.livingCosts.length > 0 && (
-              <TabsTrigger value="costs">{dict.tabs.costs}</TabsTrigger>
-            )}
-            {content.requiredDocuments.length > 0 && (
-              <TabsTrigger value="documents">{dict.tabs.documents}</TabsTrigger>
-            )}
+            {content.livingCosts.length > 0 && <TabsTrigger value="costs">{dict.tabs.costs}</TabsTrigger>}
+            {content.requiredDocuments.length > 0 && <TabsTrigger value="documents">{dict.tabs.documents}</TabsTrigger>}
             <TabsTrigger value="assistant">{dict.tabs.assistant}</TabsTrigger>
             <TabsTrigger value="emergency">{dict.tabs.emergency}</TabsTrigger>
             <TabsTrigger value="saved">{dict.tabs.saved}</TabsTrigger>
@@ -280,9 +263,7 @@ export default function RelocationHomePage() {
                   kategoriye tıklayıp bomboş bir alan görüyor ve sayfayı bozuk
                   sanıyordu — CLAUDE.md'deki "İş İlanları çipi" dersinin aynısı. */}
               {servicesQuery.data && servicesQuery.data.length > 0 ? (
-                servicesQuery.data.map((service) => (
-                  <ServiceRecommendationCard key={service.id} service={service} />
-                ))
+                servicesQuery.data.map((service) => <ServiceRecommendationCard key={service.id} service={service} />)
               ) : servicesQuery.isLoading ? (
                 <p className="text-sm text-muted-foreground">Hizmet sağlayıcılar yükleniyor…</p>
               ) : (
@@ -307,9 +288,7 @@ export default function RelocationHomePage() {
             <LivingCostsPanel
               rows={content.livingCosts}
               householdSize={adults + children}
-              countryLabel={(code) =>
-                countryOptions.find((option) => option.code === code)?.label ?? code
-              }
+              countryLabel={(code) => countryOptions.find((option) => option.code === code)?.label ?? code}
               targetCurrency={move?.currency ?? undefined}
               fxRates={fxRatesQuery.data ?? []}
               isLoading={content.isContentLoading}
@@ -337,10 +316,7 @@ export default function RelocationHomePage() {
           </TabsContent>
 
           <TabsContent value="emergency">
-            <EmergencyContactsPanel
-              contacts={emergencyQuery.data ?? []}
-              emptyLabel={dict.emergency.empty}
-            />
+            <EmergencyContactsPanel contacts={emergencyQuery.data ?? []} emptyLabel={dict.emergency.empty} />
           </TabsContent>
 
           <TabsContent value="saved">

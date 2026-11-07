@@ -64,9 +64,11 @@ export function ProfileDocumentsSection({
           <ProfileDocumentCard
             cardClassName={GOOGLE_SOFT_CARD_YELLOW_SECTION}
             title="CV / Özgeçmiş"
-            description={cvShareEnabled
-              ? "Premium üyeler CV'nizi görüntüleyebilir."
-              : "Private bucket içinde saklanır. Sadece sen ve admin erişebilir."}
+            description={
+              cvShareEnabled
+                ? "Premium üyeler CV'nizi görüntüleyebilir."
+                : "Private bucket içinde saklanır. Sadece sen ve admin erişebilir."
+            }
             icon={FileText}
             document={cvDocument}
             acceptLabel="PDF, DOC, DOCX"

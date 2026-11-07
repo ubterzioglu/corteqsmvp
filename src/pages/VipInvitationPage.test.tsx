@@ -20,11 +20,14 @@ vi.mock("@/components/auth/useAuth", () => ({
   useAuth: () => ({ user: mocks.user, isLoading: false }),
 }));
 
-const renderPage = () => render(
-  <MemoryRouter initialEntries={["/vip/vip_test_token"]}>
-    <Routes><Route path="/vip/:token" element={<VipInvitationPage />} /></Routes>
-  </MemoryRouter>,
-);
+const renderPage = () =>
+  render(
+    <MemoryRouter initialEntries={["/vip/vip_test_token"]}>
+      <Routes>
+        <Route path="/vip/:token" element={<VipInvitationPage />} />
+      </Routes>
+    </MemoryRouter>,
+  );
 
 describe("VipInvitationPage", () => {
   beforeEach(() => {

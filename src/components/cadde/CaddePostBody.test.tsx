@@ -22,9 +22,7 @@ describe("CaddePostBody", () => {
   });
 
   it("links a cafe mention to the cafe page via its display label", () => {
-    renderBody("Selam @Berlin IT Sohbeti nasıl gidiyor", [
-      { type: "cafe", id: "cafe-1", label: "Berlin IT Sohbeti" },
-    ]);
+    renderBody("Selam @Berlin IT Sohbeti nasıl gidiyor", [{ type: "cafe", id: "cafe-1", label: "Berlin IT Sohbeti" }]);
 
     expect(screen.getByRole("link", { name: "@Berlin" })).toHaveAttribute("href", "/cadde/cafe/cafe-1");
   });

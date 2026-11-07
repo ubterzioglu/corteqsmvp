@@ -39,10 +39,7 @@ describe("ana sayfa kapanış kartı", () => {
   it("hero ile AYNI kayıt etiketini kullanır", () => {
     renderCta();
 
-    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute(
-      "href",
-      "/login?mode=signup",
-    );
+    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute("href", "/login?mode=signup");
     expect(screen.queryByRole("link", { name: /^Ağa Katıl/ })).not.toBeInTheDocument();
   });
 
@@ -51,8 +48,6 @@ describe("ana sayfa kapanış kartı", () => {
     renderCta();
 
     expect(screen.getAllByRole("link", { name: /Kampanya|Yarışma/ })).toHaveLength(1);
-    expect(
-      within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO"),
-    ).toBeInTheDocument();
+    expect(within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO")).toBeInTheDocument();
   });
 });

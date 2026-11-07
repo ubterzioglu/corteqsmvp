@@ -25,9 +25,7 @@ describe("extractRpcErrorText", () => {
   });
 
   it("kodu `code`/`details`/`hint` alanında taşıyan hatayı da okur", () => {
-    expect(extractRpcErrorText({ code: "P0001", details: "sf_job_not_found" })).toContain(
-      "sf_job_not_found",
-    );
+    expect(extractRpcErrorText({ code: "P0001", details: "sf_job_not_found" })).toContain("sf_job_not_found");
     expect(extractRpcErrorText({ hint: "cadde_rate_limited" })).toContain("cadde_rate_limited");
   });
 
@@ -56,9 +54,7 @@ describe("iki tüketici de düz nesneyi çözer", () => {
   });
 
   it("service-finder çözümleyicisi düz nesnedeki kodu bulur", () => {
-    expect(sfErrorMessage({ message: "sf_job_not_found", code: "P0001" })).toBe(
-      SF_ERROR_MESSAGES.sf_job_not_found,
-    );
+    expect(sfErrorMessage({ message: "sf_job_not_found", code: "P0001" })).toBe(SF_ERROR_MESSAGES.sf_job_not_found);
   });
 });
 
@@ -70,9 +66,7 @@ describe("kopya geri gelmesin", () => {
       const source = readFileSync(file, "utf8");
 
       expect(source, `${file} tek kaynağı kullanmalı`).toContain("extractRpcErrorText");
-      expect(source, `${file} kendi çıkarıcısını tanımlamamalı`).not.toMatch(
-        /function extract\w*ErrorText\(/,
-      );
+      expect(source, `${file} kendi çıkarıcısını tanımlamamalı`).not.toMatch(/function extract\w*ErrorText\(/);
     }
   });
 });

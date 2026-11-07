@@ -104,17 +104,11 @@ export function computeJobProbBreakdown(
             : answers.seniority === "manager"
               ? 0.95
               : 0.5;
-  const portfolioScore =
-    answers.portfolio_cv === "ready" ? 1.0 : answers.portfolio_cv === "partial" ? 0.5 : 0.3;
-  const interviewScore =
-    answers.interviews === "multiple" ? 1.0 : answers.interviews === "one" ? 0.6 : 0.2;
+  const portfolioScore = answers.portfolio_cv === "ready" ? 1.0 : answers.portfolio_cv === "partial" ? 0.5 : 0.3;
+  const interviewScore = answers.interviews === "multiple" ? 1.0 : answers.interviews === "one" ? 0.6 : 0.2;
   const apps = answers.applications ?? 0;
   const salaryResearchScore =
-    answers.salary_research_done === "thorough"
-      ? 1.0
-      : answers.salary_research_done === "basic"
-        ? 0.5
-        : 0.2;
+    answers.salary_research_done === "thorough" ? 1.0 : answers.salary_research_done === "basic" ? 0.5 : 0.2;
   const linkedinQuality = scale5(answers.linkedin_profile_quality);
   const industryCerts = answers.industry_specific_certifications ?? [];
   const industryCertScore =
@@ -122,11 +116,7 @@ export function computeJobProbBreakdown(
       ? 0.5
       : Math.min(industryCerts.length / 2, 1.0);
   const recruiterScore =
-    answers.local_recruiter_contact === "yes"
-      ? 1.0
-      : answers.local_recruiter_contact === "in_progress"
-        ? 0.5
-        : 0.0;
+    answers.local_recruiter_contact === "yes" ? 1.0 : answers.local_recruiter_contact === "in_progress" ? 0.5 : 0.0;
 
   const credentialBase =
     answers.regulated_profession === "no"
@@ -179,13 +169,8 @@ export function computeJobProbBreakdown(
 }
 
 /** Olasılık skoru (0..100). SQL v_score100 aynası. */
-export function computeJobProbScore(
-  answers: JobProbAnswers,
-  signal: JobMarketSignal | null,
-): number {
-  return toScore100(
-    computeWeightedScore(computeJobProbBreakdown(answers, signal), JOBPROB_WEIGHTS),
-  );
+export function computeJobProbScore(answers: JobProbAnswers, signal: JobMarketSignal | null): number {
+  return toScore100(computeWeightedScore(computeJobProbBreakdown(answers, signal), JOBPROB_WEIGHTS));
 }
 
 /** Skoru bucket'a çevirir. */

@@ -41,9 +41,7 @@ describe("RequireAuth", () => {
     );
 
     expect(
-      await screen.findByText(
-        `Login Page?next=${encodeURIComponent("/directory/catalog/member-abc")}`,
-      ),
+      await screen.findByText(`Login Page?next=${encodeURIComponent("/directory/catalog/member-abc")}`),
     ).toBeInTheDocument();
   });
 
@@ -64,4 +62,3 @@ describe("RequireAuth", () => {
     expect(screen.getByText("Protected Profile")).toBeInTheDocument();
   });
 });
-

@@ -11,9 +11,7 @@ export async function getRelocationReminderPreference(): Promise<RelocationRemin
   return data as unknown as RelocationReminderPreference;
 }
 
-export async function setRelocationReminderOptOut(
-  optedOut: boolean,
-): Promise<RelocationReminderPreference> {
+export async function setRelocationReminderOptOut(optedOut: boolean): Promise<RelocationReminderPreference> {
   const { data, error } = await supabase.rpc("set_relocation_tool_reminder_opt_out", {
     p_opted_out: optedOut,
   });

@@ -123,7 +123,9 @@ const CatalogItemEditorsPanel = ({ itemId }: CatalogItemEditorsPanelProps) => {
               placeholder="İsim veya e-posta ile kullanıcı ara..."
             />
             <CommandList>
-              {searchQuery.trim() ? <CommandEmpty>{isSearching ? "Aranıyor..." : "Kullanıcı bulunamadı."}</CommandEmpty> : null}
+              {searchQuery.trim() ? (
+                <CommandEmpty>{isSearching ? "Aranıyor..." : "Kullanıcı bulunamadı."}</CommandEmpty>
+              ) : null}
               <CommandGroup heading="Arama Sonuçları">
                 {searchResults.map((result) => (
                   <CommandItem
@@ -147,7 +149,9 @@ const CatalogItemEditorsPanel = ({ itemId }: CatalogItemEditorsPanelProps) => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <div className="truncate font-medium text-slate-950">{selectedProfile.fullName}</div>
-                <div className="truncate text-sm text-muted-foreground">{selectedProfile.email ?? selectedProfile.id}</div>
+                <div className="truncate text-sm text-muted-foreground">
+                  {selectedProfile.email ?? selectedProfile.id}
+                </div>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button type="button" onClick={grantEditor} disabled={isSaving}>
@@ -166,7 +170,10 @@ const CatalogItemEditorsPanel = ({ itemId }: CatalogItemEditorsPanelProps) => {
 
         <div className="space-y-2">
           {editors.map((editor) => (
-            <div key={`${editor.userId}-${editor.membershipRole}`} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+            <div
+              key={`${editor.userId}-${editor.membershipRole}`}
+              className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3"
+            >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
                   <div className="truncate text-sm font-medium text-slate-950">{editor.fullName}</div>
@@ -176,7 +183,13 @@ const CatalogItemEditorsPanel = ({ itemId }: CatalogItemEditorsPanelProps) => {
                   <Badge variant={editor.status === "active" ? "secondary" : "outline"}>{editor.status}</Badge>
                   <Badge variant="outline">{editor.membershipRole}</Badge>
                   {editor.membershipRole === "editor" && editor.status === "active" ? (
-                    <Button type="button" size="sm" variant="outline" onClick={() => revokeEditor(editor.userId)} disabled={isSaving}>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => revokeEditor(editor.userId)}
+                      disabled={isSaving}
+                    >
                       Yetkiyi Kaldır
                     </Button>
                   ) : null}

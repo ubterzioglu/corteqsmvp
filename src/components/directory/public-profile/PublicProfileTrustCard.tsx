@@ -30,15 +30,10 @@ const PublicProfileTrustCard = ({ signals }: PublicProfileTrustCardProps) => {
           const Icon = SIGNAL_ICONS[signal.key];
           return (
             <li key={signal.key} className="flex items-start gap-2.5">
-              <Icon
-                className={`mt-0.5 h-4 w-4 shrink-0 ${SIGNAL_ICON_TONES[signal.key]}`}
-                aria-hidden="true"
-              />
+              <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${SIGNAL_ICON_TONES[signal.key]}`} aria-hidden="true" />
               <div className="min-w-0">
                 <p className="text-sm font-medium text-foreground">{signal.label}</p>
-                <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
-                  {signal.description}
-                </p>
+                <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{signal.description}</p>
               </div>
             </li>
           );

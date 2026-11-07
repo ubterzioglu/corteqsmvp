@@ -79,8 +79,10 @@ const CarsiItemForm = ({
           continue;
         }
         const problem =
-          validateCaddeMediaFile(file, current.filter((a) => a.kind === "video")) ??
-          (await validateCaddeVideoDuration(file));
+          validateCaddeMediaFile(
+            file,
+            current.filter((a) => a.kind === "video"),
+          ) ?? (await validateCaddeVideoDuration(file));
         if (problem && !problem.includes("görsel ekleyebilirsin")) {
           onError(problem);
           continue;
@@ -107,18 +109,22 @@ const CarsiItemForm = ({
     <div className="space-y-4">
       {paidMode ? (
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Ödemenizi tamamlayarak ilanınızı yayınlayabilirsiniz. İlanınız ödeme onaylanana kadar
-          taslak olarak kaydedilir.
+          Ödemenizi tamamlayarak ilanınızı yayınlayabilirsiniz. İlanınız ödeme onaylanana kadar taslak olarak
+          kaydedilir.
         </div>
       ) : null}
 
       <div className="space-y-2">
         <Label>Kategori *</Label>
         <Select value={value.categoryKey || undefined} onValueChange={(next) => update({ categoryKey: next })}>
-          <SelectTrigger><SelectValue placeholder="Kategori seç" /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue placeholder="Kategori seç" />
+          </SelectTrigger>
           <SelectContent>
             {categories.map((category) => (
-              <SelectItem key={category.key} value={category.key}>{category.labelTr}</SelectItem>
+              <SelectItem key={category.key} value={category.key}>
+                {category.labelTr}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -126,7 +132,12 @@ const CarsiItemForm = ({
 
       <div className="space-y-2">
         <Label>Başlık *</Label>
-        <Input value={value.title} onChange={(event) => update({ title: event.target.value })} maxLength={100} placeholder="Örn. IKEA çalışma masası" />
+        <Input
+          value={value.title}
+          onChange={(event) => update({ title: event.target.value })}
+          maxLength={100}
+          placeholder="Örn. IKEA çalışma masası"
+        />
       </div>
 
       <div className="space-y-2">
@@ -142,7 +153,8 @@ const CarsiItemForm = ({
 
       <div className="space-y-2">
         <Label>
-          Görsel ve video <span className="font-normal text-slate-500">(en fazla {MAX_CARSI_IMAGES} görsel + 1 video)</span>
+          Görsel ve video{" "}
+          <span className="font-normal text-slate-500">(en fazla {MAX_CARSI_IMAGES} görsel + 1 video)</span>
         </Label>
         <input
           ref={imageInputRef}
@@ -194,16 +206,27 @@ const CarsiItemForm = ({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label>Fiyat <span className="font-normal text-slate-500">(boş = belirtilmedi, 0 = ücretsiz)</span></Label>
-          <Input type="number" min={0} value={value.price} onChange={(event) => update({ price: event.target.value })} />
+          <Label>
+            Fiyat <span className="font-normal text-slate-500">(boş = belirtilmedi, 0 = ücretsiz)</span>
+          </Label>
+          <Input
+            type="number"
+            min={0}
+            value={value.price}
+            onChange={(event) => update({ price: event.target.value })}
+          />
         </div>
         <div className="space-y-2">
           <Label>Para birimi</Label>
           <Select value={value.currency} onValueChange={(next) => update({ currency: next })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {["EUR", "USD", "GBP", "TRY"].map((code) => (
-                <SelectItem key={code} value={code}>{code}</SelectItem>
+                <SelectItem key={code} value={code}>
+                  {code}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -217,11 +240,15 @@ const CarsiItemForm = ({
             value={value.country || "__none__"}
             onValueChange={(next) => update({ country: next === "__none__" ? "" : next, city: "" })}
           >
-            <SelectTrigger><SelectValue placeholder="Global" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Global" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="__none__">Global</SelectItem>
               {countries.map((country) => (
-                <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                <SelectItem key={country.id} value={country.name}>
+                  {country.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -233,11 +260,15 @@ const CarsiItemForm = ({
             onValueChange={(next) => update({ city: next === "__none__" ? "" : next })}
             disabled={!value.country}
           >
-            <SelectTrigger><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue placeholder="Tüm şehirler" />
+            </SelectTrigger>
             <SelectContent>
               <SelectItem value="__none__">Tüm şehirler</SelectItem>
               {cities.map((city) => (
-                <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                <SelectItem key={city.id} value={city.name}>
+                  {city.name}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -247,11 +278,18 @@ const CarsiItemForm = ({
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <Label>İletişim tercihi</Label>
-          <Select value={value.contactMode} onValueChange={(next) => update({ contactMode: next as CarsiContactMode, contactValue: "" })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+          <Select
+            value={value.contactMode}
+            onValueChange={(next) => update({ contactMode: next as CarsiContactMode, contactValue: "" })}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {(Object.keys(CONTACT_MODE_LABELS) as CarsiContactMode[]).map((mode) => (
-                <SelectItem key={mode} value={mode}>{CONTACT_MODE_LABELS[mode]}</SelectItem>
+                <SelectItem key={mode} value={mode}>
+                  {CONTACT_MODE_LABELS[mode]}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

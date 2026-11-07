@@ -43,7 +43,9 @@ const AdminRadarQueuePage = () => {
     }
   }, [status, toast]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const handleApprovePool = async (id: string, note?: string) => {
     await approveCandidate(id, { publishToMarquee: false, reviewNote: note });
@@ -65,7 +67,10 @@ const AdminRadarQueuePage = () => {
 
   const handleMarkDuplicate = (id: string) => {
     const first = candidates.find((c) => c.id !== id);
-    if (!first) { toast({ title: "Referans aday bulunamadı", variant: "destructive" }); return; }
+    if (!first) {
+      toast({ title: "Referans aday bulunamadı", variant: "destructive" });
+      return;
+    }
     void markDuplicate(id, first.id).then(() => {
       toast({ title: "Duplicate olarak işaretlendi" });
       setCandidates((prev) => prev.filter((c) => c.id !== id));
@@ -102,8 +107,8 @@ const AdminRadarQueuePage = () => {
                 Radar Haber Kuyruğu
               </CardTitle>
               <CardDescription>
-                Harici kaynaklardan gelen haberleri inceleyin, onaylayın veya reddedin.
-                Onaylanan haberler news_posts havuzuna ve isteğe bağlı olarak Radar bandına aktarılır.
+                Harici kaynaklardan gelen haberleri inceleyin, onaylayın veya reddedin. Onaylanan haberler news_posts
+                havuzuna ve isteğe bağlı olarak Radar bandına aktarılır.
               </CardDescription>
             </div>
             <div className="flex gap-2">

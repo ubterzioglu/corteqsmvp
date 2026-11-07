@@ -50,8 +50,7 @@ Deno.serve(async (req) => {
 
     // 1) Kimlik: cron secret (ham Bearer ya da x-dispatch-secret header'ı)
     const providedSecret =
-      req.headers.get("x-dispatch-secret") ??
-      (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+      req.headers.get("x-dispatch-secret") ?? (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
     if (!secretsMatch(providedSecret, Deno.env.get("GROUP_LINK_HEALTH_CRON_SECRET"))) {
       return jsonResponse({ error: "Unauthorized" }, 401);
     }
@@ -79,7 +78,9 @@ Deno.serve(async (req) => {
     });
     if (dueError) throw dueError;
 
-    const rows = Array.isArray(dueRows) ? (dueRows as Array<{ id: string; platform: string; invite_link: string }>) : [];
+    const rows = Array.isArray(dueRows)
+      ? (dueRows as Array<{ id: string; platform: string; invite_link: string }>)
+      : [];
     const summary = { checked: 0, ok: 0, invalid: 0, unknown: 0, hidden_now: 0, reopened: 0 };
 
     // 4) Tek tek oku + işle — aralarında gecikme (rate-limit dersi)

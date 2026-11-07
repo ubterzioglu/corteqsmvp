@@ -36,25 +36,24 @@ const HTML_ENTITIES = {
 
 /** `&uuml;` → `ü`, `&#252;` → `ü`. Türkçe/Almanca içerikte varlıklar sık geçer. */
 export function decodeHtmlEntities(input) {
-  return String(input ?? "")
-    .replace(/&[a-zA-Z#0-9]+;/g, (entity) => {
-      if (entity in HTML_ENTITIES) return HTML_ENTITIES[entity];
-      const numeric = /^&#(\d+);$/.exec(entity);
-      if (numeric) {
-        const code = Number.parseInt(numeric[1], 10);
-        if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
-          return String.fromCodePoint(code);
-        }
+  return String(input ?? "").replace(/&[a-zA-Z#0-9]+;/g, (entity) => {
+    if (entity in HTML_ENTITIES) return HTML_ENTITIES[entity];
+    const numeric = /^&#(\d+);$/.exec(entity);
+    if (numeric) {
+      const code = Number.parseInt(numeric[1], 10);
+      if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
+        return String.fromCodePoint(code);
       }
-      const hex = /^&#[xX]([0-9a-fA-F]+);$/.exec(entity);
-      if (hex) {
-        const code = Number.parseInt(hex[1], 16);
-        if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
-          return String.fromCodePoint(code);
-        }
+    }
+    const hex = /^&#[xX]([0-9a-fA-F]+);$/.exec(entity);
+    if (hex) {
+      const code = Number.parseInt(hex[1], 16);
+      if (Number.isFinite(code) && code > 0 && code <= 0x10ffff) {
+        return String.fromCodePoint(code);
       }
-      return entity;
-    });
+    }
+    return entity;
+  });
 }
 
 /**

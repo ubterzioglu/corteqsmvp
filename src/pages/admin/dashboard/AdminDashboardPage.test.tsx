@@ -107,10 +107,7 @@ describe("AdminDashboardPage", () => {
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Özet metrikler şu an yüklenemedi");
     expect(screen.getByRole("link", { name: /Kayıt ara/ })).toHaveAttribute("href", "/admin/data");
-    expect(screen.getByRole("link", { name: /Gider ekle/ })).toHaveAttribute(
-      "href",
-      "/admin/muhasebe/giderler",
-    );
+    expect(screen.getByRole("link", { name: /Gider ekle/ })).toHaveAttribute("href", "/admin/muhasebe/giderler");
   });
 
   it("modül kartları registry gruplarını ve child linkleri gösterir", async () => {
@@ -118,10 +115,7 @@ describe("AdminDashboardPage", () => {
 
     expect(await screen.findByText("Muhasebe")).toBeInTheDocument();
     expect(screen.getByText("Roller ve AFS")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Nakit Akışı/ })).toHaveAttribute(
-      "href",
-      "/admin/muhasebe/nakit-akisi",
-    );
+    expect(screen.getByRole("link", { name: /Nakit Akışı/ })).toHaveAttribute("href", "/admin/muhasebe/nakit-akisi");
   });
 
   it("favoriler ve son kullanılanlar widget'ları boş durumda yönlendirici metin gösterir", async () => {

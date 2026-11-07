@@ -105,9 +105,8 @@ export default function OrgVerificationRequestCard({
             Kurumsal doğrulama (Seviye 2)
           </CardTitle>
           <CardDescription>
-            Bu kuruluşu doğrulatmak için önce kaydı temsil yetkisi almalısın. Sahiplenme talebi
-            yönetici onayından geçer; onaydan sonra tüzük/yetki belgenle doğrulama başvurusu
-            açabilirsin.
+            Bu kuruluşu doğrulatmak için önce kaydı temsil yetkisi almalısın. Sahiplenme talebi yönetici onayından
+            geçer; onaydan sonra tüzük/yetki belgenle doğrulama başvurusu açabilirsin.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -132,8 +131,7 @@ export default function OrgVerificationRequestCard({
           )}
           {claimMutation.isSuccess ? (
             <p className="text-sm text-emerald-700 dark:text-emerald-400">
-              Sahiplenme talebin admin onayına gönderildi. Onaylanınca bu kartta belge
-              yükleyebileceksin.
+              Sahiplenme talebin admin onayına gönderildi. Onaylanınca bu kartta belge yükleyebileceksin.
             </p>
           ) : null}
           {claimMutation.isError ? (
@@ -169,15 +167,14 @@ export default function OrgVerificationRequestCard({
           Kurumsal doğrulama başvurusu
         </CardTitle>
         <CardDescription>
-          Bu kuruluşu temsil ettiğini gösteren belgeyi yükle (tüzük, yetki belgesi veya faaliyet
-          belgesi). Talep yönetici kuyruğuna düşer; onaylayan kişi ve zaman kayda işlenir.
+          Bu kuruluşu temsil ettiğini gösteren belgeyi yükle (tüzük, yetki belgesi veya faaliyet belgesi). Talep
+          yönetici kuyruğuna düşer; onaylayan kişi ve zaman kayda işlenir.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="org-verification-docs">
-            Belgeler (en fazla {ORG_VERIFICATION_MAX_DOCUMENTS} dosya · PDF, JPG, PNG, WebP ·
-            dosya başına en çok 15 MB)
+            Belgeler (en fazla {ORG_VERIFICATION_MAX_DOCUMENTS} dosya · PDF, JPG, PNG, WebP · dosya başına en çok 15 MB)
           </Label>
           <input
             id="org-verification-docs"
@@ -211,9 +208,7 @@ export default function OrgVerificationRequestCard({
           />
         </div>
 
-        {validationError ? (
-          <p className="text-sm text-destructive">{validationError}</p>
-        ) : null}
+        {validationError ? <p className="text-sm text-destructive">{validationError}</p> : null}
         {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
 
         {requestMutation.isSuccess ? (
@@ -223,9 +218,7 @@ export default function OrgVerificationRequestCard({
         ) : null}
 
         {requestError && !isOrgVerificationNotLinkedError(requestError) ? (
-          <p className="text-sm text-destructive">
-            Talep gönderilemedi: {orgVerificationErrorMessage(requestError)}
-          </p>
+          <p className="text-sm text-destructive">Talep gönderilemedi: {orgVerificationErrorMessage(requestError)}</p>
         ) : null}
 
         <Button

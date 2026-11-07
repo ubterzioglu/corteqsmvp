@@ -330,9 +330,7 @@ export function formatDayInZone(instant: Date, zone: string): string {
 function addEventDays(dateStr: string, days: number): string {
   const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (!match) return dateStr;
-  const shifted = new Date(
-    Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]) + days),
-  );
+  const shifted = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]) + days));
   return shifted.toISOString().slice(0, 10);
 }
 

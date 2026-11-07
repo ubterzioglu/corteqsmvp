@@ -23,11 +23,7 @@ export default function May19IdeaPage() {
             Hadi bayram coşkusunu birlikte yaşayalım. 19 kelimelik fikrini gönder.
           </p>
           <div className="flex justify-end">
-            <Button
-              asChild
-              size="sm"
-              className="border border-rose-200 bg-white text-rose-700 hover:bg-rose-50"
-            >
+            <Button asChild size="sm" className="border border-rose-200 bg-white text-rose-700 hover:bg-rose-50">
               <Link to="/19051919">19 Mayıs Sayfasına Dön</Link>
             </Button>
           </div>

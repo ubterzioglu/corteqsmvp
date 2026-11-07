@@ -33,16 +33,18 @@ import type {
 } from "./cadde-types";
 
 const emptyReactions = (): Record<CaddeReactionType, number> =>
-  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
+  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<
+    CaddeReactionType,
+    number
+  >;
 
 function stripEagerComments(post: CaddePost): CaddePost {
   return { ...post, commentCount: post.commentCount, shareCount: post.shareCount, comments: [] };
 }
 
-function applyDemoFilters<T extends { country: string | null; city: string | null; isBridge: boolean; mode: CaddeContentMode }>(
-  items: T[],
-  filters: CaddeFilterState,
-): T[] {
+function applyDemoFilters<
+  T extends { country: string | null; city: string | null; isBridge: boolean; mode: CaddeContentMode },
+>(items: T[], filters: CaddeFilterState): T[] {
   return items.filter((item) => {
     if (item.mode !== filters.mode) return false;
     if (filters.bridge && !item.isBridge) return false;
@@ -56,7 +58,11 @@ export async function listCaddeCountries(): Promise<CaddeCountry[]> {
   if (!isSupabaseConfigured) return DEMO_COUNTRIES;
 
   try {
-    const { data, error } = await db.from("cadde_countries").select("id, code, name, sort_order").eq("is_active", true).order("sort_order", { ascending: true });
+    const { data, error } = await db
+      .from("cadde_countries")
+      .select("id, code, name, sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
     if (error) throw error;
     return (data as CaddeCountryRow[]).map((row) => ({ id: row.id, code: row.code, name: row.name }));
   } catch (error: unknown) {
@@ -67,11 +73,14 @@ export async function listCaddeCountries(): Promise<CaddeCountry[]> {
 }
 
 export async function listCaddeCities(countryNames: string[] = []): Promise<CaddeCity[]> {
-  const sortAlphabetically = (cities: CaddeCity[]): CaddeCity[] => [...cities].sort((left, right) => left.name.localeCompare(right.name, "tr"));
+  const sortAlphabetically = (cities: CaddeCity[]): CaddeCity[] =>
+    [...cities].sort((left, right) => left.name.localeCompare(right.name, "tr"));
 
   if (!isSupabaseConfigured) {
     if (countryNames.length === 0) return sortAlphabetically(DEMO_CITIES);
-    const countryIds = new Set(DEMO_COUNTRIES.filter((country) => countryNames.includes(country.name)).map((country) => country.id));
+    const countryIds = new Set(
+      DEMO_COUNTRIES.filter((country) => countryNames.includes(country.name)).map((country) => country.id),
+    );
     return sortAlphabetically(DEMO_CITIES.filter((city) => countryIds.has(city.countryId)));
   }
 
@@ -81,7 +90,14 @@ export async function listCaddeCities(countryNames: string[] = []): Promise<Cadd
     if (countryIds.length > 0) query = query.in("country_id", countryIds);
     const { data, error } = await query;
     if (error) throw error;
-    return sortAlphabetically((data as CaddeCityRow[]).map((row) => ({ id: row.id, countryId: row.country_id, name: row.name, timezone: row.timezone })));
+    return sortAlphabetically(
+      (data as CaddeCityRow[]).map((row) => ({
+        id: row.id,
+        countryId: row.country_id,
+        name: row.name,
+        timezone: row.timezone,
+      })),
+    );
   } catch (error: unknown) {
     // Filtre sözlüğü. BİLEREK boş döner: şehir filtresi çizilmez, akış çalışır.
     reportCaddeApiError("listCaddeCities", error);
@@ -89,7 +105,12 @@ export async function listCaddeCities(countryNames: string[] = []): Promise<Cadd
   }
 }
 
-export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeFeedPageParam, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeFeedPage> {
+export async function listCaddeFeed(
+  filters: CaddeFilterState,
+  pageParam: CaddeFeedPageParam,
+  currentUserId: string | null,
+  diasporaKey = "tr",
+): Promise<CaddeFeedPage> {
   if (!isSupabaseConfigured || filters.mode === "demo") {
     const page = typeof pageParam === "number" ? pageParam : 1;
     const filtered = applyDemoFilters(DEMO_POSTS, filters);
@@ -101,21 +122,37 @@ export async function listCaddeFeed(filters: CaddeFilterState, pageParam: CaddeF
   try {
     const cursor = pageParam !== null && typeof pageParam === "object" ? pageParam : null;
     const { data, error } = await db.rpc("list_cadde_feed_v1", {
-      p_filters: { countries: filters.countries, cities: filters.cities, bridge: filters.bridge, diaspora: diasporaKey, hashtag: filters.hashtag, scope: filters.scope },
+      p_filters: {
+        countries: filters.countries,
+        cities: filters.cities,
+        bridge: filters.bridge,
+        diaspora: diasporaKey,
+        hashtag: filters.hashtag,
+        scope: filters.scope,
+      },
       p_cursor: cursor,
       p_limit: CADDE_PAGE_SIZE,
     });
     if (error) throw error;
 
-    const payload = (data ?? { items: [], nextCursor: null }) as { items: CaddeFeedRpcItem[]; nextCursor: CaddeFeedCursor | null };
+    const payload = (data ?? { items: [], nextCursor: null }) as {
+      items: CaddeFeedRpcItem[];
+      nextCursor: CaddeFeedCursor | null;
+    };
     const rows = payload.items ?? [];
     const postIds = rows.map((row) => row.id);
     const [reactions, shareCounts, authorNames] = await Promise.all([
       fetchPostReactions(postIds),
       fetchPostShareCounts(postIds),
-      fetchUserNameMap(rows.map((row) => row.author_user_id).filter(Boolean) as string[], currentUserId ? [currentUserId] : []),
+      fetchUserNameMap(
+        rows.map((row) => row.author_user_id).filter(Boolean) as string[],
+        currentUserId ? [currentUserId] : [],
+      ),
     ]);
-    return { items: rows.map((row) => mapRpcPost(row, { reactions, shareCounts, authorNames, currentUserId })), nextPage: payload.nextCursor ?? null };
+    return {
+      items: rows.map((row) => mapRpcPost(row, { reactions, shareCounts, authorNames, currentUserId })),
+      nextPage: payload.nextCursor ?? null,
+    };
   } catch (error: unknown) {
     throw caddeReadError("listCaddeFeed", error);
   }
@@ -136,7 +173,11 @@ async function fetchUserNameMap(authorIds: string[], extraUserIds: string[] = []
   // ⚠️ Parçalı (S07a): `.in(...)` tek başına PostgREST'in 1000 satır tavanını aşabilir
   // ve kesme SESSİZDİR — adı çözülemeyen üye akışta "Bir üye" olarak görünür.
   const rows = await fetchInChunks<{ user_id: string; value_text: string | null }>(allIds, 1, (chunk) =>
-    db.from("user_profile_attributes").select("user_id, value_text, afs_attributes!inner(key)").in("user_id", chunk).eq("afs_attributes.key", "full_name"),
+    db
+      .from("user_profile_attributes")
+      .select("user_id, value_text, afs_attributes!inner(key)")
+      .in("user_id", chunk)
+      .eq("afs_attributes.key", "full_name"),
   );
   return new Map<string, string>(rows.map((row) => [row.user_id, row.value_text ?? FALLBACK_PROFILE_NAME]));
 }
@@ -157,7 +198,9 @@ export function normalizeCaddeHashtagRows(raw: unknown): CaddeHashtag[] {
   return raw.flatMap((entry) => {
     if (entry === null || typeof entry !== "object") return [];
     const value = entry as Record<string, unknown>;
-    return typeof value.tag === "string" && value.tag ? [{ tag: value.tag, displayTag: typeof value.displayTag === "string" ? value.displayTag : value.tag }] : [];
+    return typeof value.tag === "string" && value.tag
+      ? [{ tag: value.tag, displayTag: typeof value.displayTag === "string" ? value.displayTag : value.tag }]
+      : [];
   });
 }
 
@@ -168,7 +211,9 @@ export function normalizeCaddeMentionRows(raw: unknown): CaddePostMention[] {
     if (entry === null || typeof entry !== "object") return [];
     const value = entry as Record<string, unknown>;
     const type = value.type as CaddeMentionTargetType;
-    return allowed.includes(type) && typeof value.id === "string" ? [{ type, id: value.id, label: typeof value.label === "string" ? value.label : null }] : [];
+    return allowed.includes(type) && typeof value.id === "string"
+      ? [{ type, id: value.id, label: typeof value.label === "string" ? value.label : null }]
+      : [];
   });
 }
 
@@ -192,13 +237,34 @@ function mapRpcPost(row: CaddeFeedRpcItem, ctx: RpcPostContext): CaddePost {
   const reactionCounts = emptyReactions();
   for (const reaction of postReactions) reactionCounts[reaction.reaction_type] += 1;
   return {
-    id: row.id, mode: row.content_mode, type: row.post_type, title: row.title, body: row.body,
-    authorName: row.author_name_override ?? (row.author_user_id ? authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME : FALLBACK_PROFILE_NAME),
-    authorRole: row.author_role, authorAvatarUrl: row.author_avatar_url, authorUserId: row.author_user_id,
-    country: row.country_name, city: row.city_name, isBridge: row.is_bridge, pinned: row.pinned, createdAt: row.created_at,
-    needCategory: row.need_category, interests: row.interests ?? [], hashtags: normalizeCaddeHashtagRows(row.hashtags), mentions: normalizeCaddeMentionRows(row.mentions), media: normalizeCaddeMedia(row.media),
-    reactionCounts, totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
-    commentCount: row.comment_count ?? 0, shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0, comments: [],
-    viewerReactions: currentUserId ? postReactions.filter((reaction) => reaction.user_id === currentUserId).map((reaction) => reaction.reaction_type) : [],
+    id: row.id,
+    mode: row.content_mode,
+    type: row.post_type,
+    title: row.title,
+    body: row.body,
+    authorName:
+      row.author_name_override ??
+      (row.author_user_id ? (authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME) : FALLBACK_PROFILE_NAME),
+    authorRole: row.author_role,
+    authorAvatarUrl: row.author_avatar_url,
+    authorUserId: row.author_user_id,
+    country: row.country_name,
+    city: row.city_name,
+    isBridge: row.is_bridge,
+    pinned: row.pinned,
+    createdAt: row.created_at,
+    needCategory: row.need_category,
+    interests: row.interests ?? [],
+    hashtags: normalizeCaddeHashtagRows(row.hashtags),
+    mentions: normalizeCaddeMentionRows(row.mentions),
+    media: normalizeCaddeMedia(row.media),
+    reactionCounts,
+    totalReactionCount: CADDE_REACTION_TYPES.reduce((sum, reactionType) => sum + reactionCounts[reactionType], 0),
+    commentCount: row.comment_count ?? 0,
+    shareCount: shareCounts.get(row.id) ?? row.share_count ?? 0,
+    comments: [],
+    viewerReactions: currentUserId
+      ? postReactions.filter((reaction) => reaction.user_id === currentUserId).map((reaction) => reaction.reaction_type)
+      : [],
   };
 }

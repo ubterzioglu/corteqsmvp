@@ -46,8 +46,7 @@ const sqlCodes = (() => {
   return codes;
 })();
 
-const migrationSql = () =>
-  readFileSync("supabase/migrations/applied/20261001130000_career_applications.sql", "utf8");
+const migrationSql = () => readFileSync("supabase/migrations/applied/20261001130000_career_applications.sql", "utf8");
 
 describe("career RPC hata kodu ↔ Türkçe mesaj sözleşmesi", () => {
   it("SQL'den kod toplayabiliyor (tarama boşa düşmesin)", () => {

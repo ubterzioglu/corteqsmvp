@@ -13,7 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { carsiCategoryHref, deleteCarsiItem, formatCarsiPrice, getCarsiItem, recordCarsiContact, updateCarsiItem } from "@/lib/cadde-carsi-api";
+import {
+  carsiCategoryHref,
+  deleteCarsiItem,
+  formatCarsiPrice,
+  getCarsiItem,
+  recordCarsiContact,
+  updateCarsiItem,
+} from "@/lib/cadde-carsi-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDate = (value: string) =>
@@ -42,7 +49,11 @@ const CaddeCarsiItemPage = () => {
     mutationFn: (status: "published" | "paused") => updateCarsiItem({ itemId, status }),
     onSuccess: invalidate,
     onError: (error) => {
-      toast({ title: "İlan güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İlan güncellenemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -54,7 +65,11 @@ const CaddeCarsiItemPage = () => {
       navigate("/cadde/carsi");
     },
     onError: (error) => {
-      toast({ title: "İlan silinemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İlan silinemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -111,21 +126,41 @@ const CaddeCarsiItemPage = () => {
                   {item.categoryLabel}
                 </CaddeBadge>
               </Link>
-              {item.status !== "published" ? <CaddeBadge tone="durum" intent="neutral">Yayında değil</CaddeBadge> : null}
+              {item.status !== "published" ? (
+                <CaddeBadge tone="durum" intent="neutral">
+                  Yayında değil
+                </CaddeBadge>
+              ) : null}
             </div>
             <CardTitle className="text-2xl">{item.title}</CardTitle>
             <p className="text-xl font-bold text-amber-900">{formatCarsiPrice(item)}</p>
             <div className="flex flex-wrap gap-3 text-sm text-slate-600">
-              <span className="inline-flex items-center gap-1.5"><User2 className="h-4 w-4 text-amber-600" />{item.ownerName}</span>
-              <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-amber-600" />{[item.country, item.city].filter(Boolean).join(" • ") || "Global"}</span>
-              <span className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-amber-600" />{formatDate(item.createdAt)}{item.expiresAt ? ` → ${formatDate(item.expiresAt)}` : ""}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <User2 className="h-4 w-4 text-amber-600" />
+                {item.ownerName}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-amber-600" />
+                {[item.country, item.city].filter(Boolean).join(" • ") || "Global"}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock3 className="h-4 w-4 text-amber-600" />
+                {formatDate(item.createdAt)}
+                {item.expiresAt ? ` → ${formatDate(item.expiresAt)}` : ""}
+              </span>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
             {item.imageUrls.length > 0 ? (
               <div className="grid gap-2 sm:grid-cols-2">
                 {item.imageUrls.map((url) => (
-                  <img key={url} src={url} alt={item.title} className="h-44 w-full rounded-lg border border-slate-200 object-cover" loading="lazy" />
+                  <img
+                    key={url}
+                    src={url}
+                    alt={item.title}
+                    className="h-44 w-full rounded-lg border border-slate-200 object-cover"
+                    loading="lazy"
+                  />
                 ))}
               </div>
             ) : null}
@@ -137,11 +172,31 @@ const CaddeCarsiItemPage = () => {
             {isOwner ? (
               <div className="flex flex-wrap gap-2">
                 {item.status === "published" ? (
-                  <Button variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate("paused")} disabled={statusMutation.isPending}>Pasife Al</Button>
+                  <Button
+                    variant="outline"
+                    className="cadde-secondary-action"
+                    onClick={() => statusMutation.mutate("paused")}
+                    disabled={statusMutation.isPending}
+                  >
+                    Pasife Al
+                  </Button>
                 ) : (
-                  <Button className="cadde-primary-action" onClick={() => statusMutation.mutate("published")} disabled={statusMutation.isPending}>Yayına Al</Button>
+                  <Button
+                    className="cadde-primary-action"
+                    onClick={() => statusMutation.mutate("published")}
+                    disabled={statusMutation.isPending}
+                  >
+                    Yayına Al
+                  </Button>
                 )}
-                <Button variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => deleteMutation.mutate()} disabled={deleteMutation.isPending}>İlanı Sil</Button>
+                <Button
+                  variant="ghost"
+                  className="text-red-600 hover:text-red-700"
+                  onClick={() => deleteMutation.mutate()}
+                  disabled={deleteMutation.isPending}
+                >
+                  İlanı Sil
+                </Button>
               </div>
             ) : (
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">

@@ -377,10 +377,18 @@
   "src/pages/admin/AdminCaddePage.tsx": {
     "complexity": {
       "count": 1
+    },
+    "max-lines": {
+      "count": 1
     }
   },
   "src/pages/admin/AdminCustomerRequestsPage.tsx": {
     "complexity": {
+      "count": 1
+    }
+  },
+  "src/pages/admin/AdminDatabaseTablesPage.tsx": {
+    "max-lines": {
       "count": 1
     }
   },

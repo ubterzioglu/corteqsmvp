@@ -132,7 +132,9 @@ export function LandingDetailView({
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-900/35 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-6 text-white md:p-8">
                   <div className="mb-4 flex items-center gap-4">
-                    <div className="shrink-0"><PlatformLogo platform={landing.platform} size="lg" /></div>
+                    <div className="shrink-0">
+                      <PlatformLogo platform={landing.platform} size="lg" />
+                    </div>
                     <h1 className="text-3xl font-black leading-tight md:text-5xl">{landing.groupName}</h1>
                   </div>
                   <p className="mt-3 max-w-2xl text-sm text-slate-100 md:text-lg">{landing.tagline}</p>
@@ -141,12 +143,12 @@ export function LandingDetailView({
             ) : (
               <section className="rounded-[2rem] border border-border bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_55%,#f8fafc_100%)] p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
                 <div className="mb-4 flex items-center gap-4">
-                  <div className="shrink-0"><PlatformLogo platform={landing.platform} size="lg" /></div>
+                  <div className="shrink-0">
+                    <PlatformLogo platform={landing.platform} size="lg" />
+                  </div>
                   <h1 className="text-3xl font-black text-foreground md:text-5xl">{landing.groupName}</h1>
                 </div>
-                <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-xl">
-                  {landing.tagline}
-                </p>
+                <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-xl">{landing.tagline}</p>
               </section>
             )}
 
@@ -154,7 +156,9 @@ export function LandingDetailView({
 
             <section className="rounded-[1.75rem] border border-border bg-card p-6 shadow-[0_20px_60px_rgba(15,23,42,0.06)] md:p-8">
               <h2 className="text-xl font-bold text-foreground">Grubun çağrı metni</h2>
-              <p className="mt-4 whitespace-pre-line text-foreground/85">{stripCommunityPrefix(landing.callToActionText)}</p>
+              <p className="mt-4 whitespace-pre-line text-foreground/85">
+                {stripCommunityPrefix(landing.callToActionText)}
+              </p>
 
               <div className="mt-6 flex flex-col gap-3">
                 {canEdit ? (
@@ -209,7 +213,11 @@ export function LandingDetailView({
                   )
                 ) : null}
 
-                <Button size="lg" className="w-full gap-2 bg-orange-500 text-white hover:bg-orange-600" onClick={onShare}>
+                <Button
+                  size="lg"
+                  className="w-full gap-2 bg-orange-500 text-white hover:bg-orange-600"
+                  onClick={onShare}
+                >
                   {copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
                   {copied ? "Kopyalandı" : "Sayfayı Paylaş"}
                 </Button>

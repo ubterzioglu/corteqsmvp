@@ -102,10 +102,7 @@ export default function CaddePostMenu({ postId, onShare, onEdit }: CaddePostMenu
               Düzenle
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuItem
-            className="text-red-600 focus:text-red-600"
-            onSelect={() => setConfirmOpen(true)}
-          >
+          <DropdownMenuItem className="text-red-600 focus:text-red-600" onSelect={() => setConfirmOpen(true)}>
             <Trash2 className="mr-2 h-4 w-4" aria-hidden="true" />
             Sil
           </DropdownMenuItem>

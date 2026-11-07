@@ -43,12 +43,7 @@ const code = () =>
 const flat = () => code().replace(/\s+/g, " ");
 
 const fn = (name: string) =>
-  sliceBetween(
-    code(),
-    `create or replace function public.${name}`,
-    `comment on function public.${name}`,
-    name,
-  );
+  sliceBetween(code(), `create or replace function public.${name}`, `comment on function public.${name}`, name);
 
 describe("G22 · salt ekleme + ayarlar", () => {
   it("kolon/tablo DÜŞÜRÜLMEZ, mevcut fonksiyon DEĞİŞMEZ", () => {
@@ -93,12 +88,8 @@ describe("G22 · link-health due — yayma + aralık + tavan ayarlardan", () => 
   it("due + record YALNIZ service_role", () => {
     const sql = flat();
 
-    expect(sql).toContain(
-      "grant execute on function public.group_link_health_due(integer, integer) to service_role;",
-    );
-    expect(sql).toContain(
-      "grant execute on function public.group_link_health_record(uuid, text) to service_role;",
-    );
+    expect(sql).toContain("grant execute on function public.group_link_health_due(integer, integer) to service_role;");
+    expect(sql).toContain("grant execute on function public.group_link_health_record(uuid, text) to service_role;");
     expect(sql).not.toContain("group_link_health_due(integer, integer) to authenticated");
     expect(sql).not.toContain("group_link_health_record(uuid, text) to authenticated");
   });
@@ -107,7 +98,12 @@ describe("G22 · link-health due — yayma + aralık + tavan ayarlardan", () => 
 describe("G22 · kabul #8 — üç değerli sonuç işleme", () => {
   it("unknown sayaca DOKUNMAZ — yalnız link_checked_at tazelenir", () => {
     const record = fn("group_link_health_record");
-    const unknownBranch = sliceBetween(record, "if p_result = 'unknown' then", "elsif p_result = 'ok' then", "unknown dalı");
+    const unknownBranch = sliceBetween(
+      record,
+      "if p_result = 'unknown' then",
+      "elsif p_result = 'ok' then",
+      "unknown dalı",
+    );
 
     expect(unknownBranch).toContain("link_checked_at = now()");
     expect(unknownBranch).not.toContain("link_fail_count");
@@ -127,8 +123,8 @@ describe("G22 · kabul #8 — üç değerli sonuç işleme", () => {
 
     expect(record).toContain("set_group_status_v1(p_landing_id, 'hidden', 'link_dead'");
     expect(record).toContain("set_group_status_v1(p_landing_id, 'published', 'published'");
-    expect(record).toContain('v_prev_claims := current_setting(\'request.jwt.claims\', true)');
-    expect(record).toContain('set_config(\'request.jwt.claims\', \'{"role":"service_role"}\', true)');
+    expect(record).toContain("v_prev_claims := current_setting('request.jwt.claims', true)");
+    expect(record).toContain("set_config('request.jwt.claims', '{\"role\":\"service_role\"}', true)");
     expect(record).toContain("set_config('request.jwt.claims', coalesce(v_prev_claims, ''), true)");
     // Sayaçlar via_rpc bayrağıyla yazılır (guard v3)
     expect(record).toContain("set_config('group_status.via_rpc', 'on', true)");
@@ -172,9 +168,7 @@ describe("G22 · suspension + owner-renewal + claim-expiry", () => {
     expect(renew).toContain("ownership = 'verified' and owner_user_id = v_uid");
     expect(renew).toContain("group_owner_forbidden");
     expect(renew).toContain("now() + make_interval(days => v_interval_days)");
-    expect(flat()).toContain(
-      "grant execute on function public.group_owner_renew_v1() to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.group_owner_renew_v1() to authenticated;");
   });
 
   it("claim-expiry yalnız bekleyen KOD taleplerini düşürür", () => {
@@ -219,7 +213,7 @@ describe("G22 · group-link-health edge (radar/dispatcher deseni)", () => {
   const edge = () => readFileSync(EDGE, "utf8");
 
   it("secret sabit-zamanlı karşılaştırılır; env adı kilitli", () => {
-    expect(edge()).toContain("secretsMatch(providedSecret, Deno.env.get(\"GROUP_LINK_HEALTH_CRON_SECRET\"))");
+    expect(edge()).toContain('secretsMatch(providedSecret, Deno.env.get("GROUP_LINK_HEALTH_CRON_SECRET"))');
     expect(edge()).toContain("diff |= a[i] ^ b[i];");
   });
 
@@ -231,7 +225,7 @@ describe("G22 · group-link-health edge (radar/dispatcher deseni)", () => {
 
   it("kural 8: log/yanıt YALNIZ sayılar — link ve kimlik sızmaz", () => {
     expect(edge()).toContain('console.info("group-link-health", summary);');
-    expect(edge()).not.toContain("console.info(\"group-link-health\", row");
+    expect(edge()).not.toContain('console.info("group-link-health", row');
     // JSON anahtarı olarak invite_link yanıta/log'a giremez (TS tip anotasyonu
     // `"invite_link:"` değil `"invite_link"` JSON biçimiyle ayırt edilir)
     expect(edge()).not.toContain('"invite_link"');
@@ -242,7 +236,7 @@ describe("G22 · group-link-health edge (radar/dispatcher deseni)", () => {
 
   it("üç değerli sonuç readInvitePage'den record'a birebir taşınır", () => {
     expect(edge()).toContain("readInvitePage(row.invite_link, row.platform");
-    expect(edge()).toContain('p_result: read.result,');
+    expect(edge()).toContain("p_result: read.result,");
   });
 
   it("config.toml: verify_jwt=false + gerekçe yorumu (A99-R2 dersi)", () => {

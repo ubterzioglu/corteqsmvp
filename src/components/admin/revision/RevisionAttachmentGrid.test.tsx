@@ -67,10 +67,7 @@ describe("AttachmentCard — belge eki (A09c)", () => {
     expect(screen.queryByRole("img")).not.toBeInTheDocument();
     expect(screen.getByText("sozlesme.pdf")).toBeInTheDocument();
     expect(screen.getByText("1.2 MB")).toBeInTheDocument();
-    expect(screen.getByTitle("sozlesme.pdf")).toHaveAttribute(
-      "href",
-      "https://signed.example/sozlesme.pdf",
-    );
+    expect(screen.getByTitle("sozlesme.pdf")).toHaveAttribute("href", "https://signed.example/sozlesme.pdf");
   });
 
   it("content_type null olsa da uzantıdan belge olduğu sezilir", () => {

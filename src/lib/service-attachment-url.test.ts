@@ -31,17 +31,13 @@ describe("toServiceAttachmentPath", () => {
 
   it("yüzde-kodlu path'i çözer (Türkçe ad, boşluk)", () => {
     expect(
-      toServiceAttachmentPath(
-        "https://x.co/storage/v1/object/public/service-attachments/uid-1/proje%20%C3%B6zeti.pdf",
-      ),
+      toServiceAttachmentPath("https://x.co/storage/v1/object/public/service-attachments/uid-1/proje%20%C3%B6zeti.pdf"),
     ).toBe("uid-1/proje özeti.pdf");
   });
 
   it("eski imzalı URL'in token'ını atar", () => {
     expect(
-      toServiceAttachmentPath(
-        "https://x.co/storage/v1/object/sign/service-attachments/uid-1/a.pdf?token=abc",
-      ),
+      toServiceAttachmentPath("https://x.co/storage/v1/object/sign/service-attachments/uid-1/a.pdf?token=abc"),
     ).toBe("uid-1/a.pdf");
   });
 
@@ -61,23 +57,15 @@ describe("createServiceAttachmentUrl", () => {
     createSignedUrlMock.mockResolvedValue({ data: { signedUrl: "https://x/s?token=1" }, error: null });
 
     expect(await createServiceAttachmentUrl("uid-1/a.pdf")).toBe("https://x/s?token=1");
-    expect(createSignedUrlMock).toHaveBeenCalledWith(
-      "uid-1/a.pdf",
-      SERVICE_ATTACHMENT_SIGNED_TTL_SECONDS,
-    );
+    expect(createSignedUrlMock).toHaveBeenCalledWith("uid-1/a.pdf", SERVICE_ATTACHMENT_SIGNED_TTL_SECONDS);
   });
 
   it("eski public URL kaydını da path'e çevirip imzalar", async () => {
     createSignedUrlMock.mockResolvedValue({ data: { signedUrl: "https://x/s" }, error: null });
 
-    await createServiceAttachmentUrl(
-      "https://x.co/storage/v1/object/public/service-attachments/uid-1/a.pdf",
-    );
+    await createServiceAttachmentUrl("https://x.co/storage/v1/object/public/service-attachments/uid-1/a.pdf");
 
-    expect(createSignedUrlMock).toHaveBeenCalledWith(
-      "uid-1/a.pdf",
-      SERVICE_ATTACHMENT_SIGNED_TTL_SECONDS,
-    );
+    expect(createSignedUrlMock).toHaveBeenCalledWith("uid-1/a.pdf", SERVICE_ATTACHMENT_SIGNED_TTL_SECONDS);
   });
 
   it("yetki/hata durumunda null döner (sessiz ölüm yok)", async () => {

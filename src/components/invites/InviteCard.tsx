@@ -120,8 +120,8 @@ export function InviteCard() {
         ) : null}
 
         <p className="mt-3 text-xs text-slate-500">
-          Davet ettiğin kişi kayıt olduğunda liderlik tablosunda bir sıra yükselirsin.
-          Rozetler davet sayısıyla kazanılır — bir üye yalnız bir kez sayılır.
+          Davet ettiğin kişi kayıt olduğunda liderlik tablosunda bir sıra yükselirsin. Rozetler davet sayısıyla
+          kazanılır — bir üye yalnız bir kez sayılır.
         </p>
       </CardContent>
     </Card>

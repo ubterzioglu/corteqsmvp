@@ -57,8 +57,22 @@ export default function AdminSurveyResponsesPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-bold text-slate-900">Anket Cevapları {title ? `- ${title}` : ""}</h1>
         <div className="flex gap-2">
-          <button type="button" className="rounded border px-3 py-1.5 text-sm" onClick={() => void setStatus("reviewed")} disabled={!selected}>Reviewed</button>
-          <button type="button" className="rounded border px-3 py-1.5 text-sm" onClick={() => void setStatus("archived")} disabled={!selected}>Archived</button>
+          <button
+            type="button"
+            className="rounded border px-3 py-1.5 text-sm"
+            onClick={() => void setStatus("reviewed")}
+            disabled={!selected}
+          >
+            Reviewed
+          </button>
+          <button
+            type="button"
+            className="rounded border px-3 py-1.5 text-sm"
+            onClick={() => void setStatus("archived")}
+            disabled={!selected}
+          >
+            Archived
+          </button>
         </div>
       </div>
 

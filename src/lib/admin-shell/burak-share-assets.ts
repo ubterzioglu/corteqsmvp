@@ -76,10 +76,7 @@ export async function listBurakShareAssets(): Promise<Record<string, BurakShareA
   return map;
 }
 
-export async function upsertBurakShareAsset(
-  slotKey: string,
-  patch: BurakAssetPatch,
-): Promise<void> {
+export async function upsertBurakShareAsset(slotKey: string, patch: BurakAssetPatch): Promise<void> {
   const { data: userData } = await db.auth.getUser();
   const userId = userData?.user?.id ?? null;
 
@@ -94,9 +91,7 @@ export async function upsertBurakShareAsset(
   if ("videoUrl" in patch) values.video_url = patch.videoUrl ?? null;
   if ("note" in patch) values.note = patch.note ?? null;
 
-  const { error } = await db
-    .from("social_share_assets")
-    .upsert(values, { onConflict: "slot_key" });
+  const { error } = await db.from("social_share_assets").upsert(values, { onConflict: "slot_key" });
 
   if (error) throw new Error(messageOf(error, "Medya kaydı kaydedilemedi"));
 }
@@ -187,9 +182,7 @@ export async function listBurakShareFirstExtraImageBySlot(): Promise<
   return map;
 }
 
-export async function listBurakShareExtraImages(
-  slotKey: string,
-): Promise<BurakShareExtraImage[]> {
+export async function listBurakShareExtraImages(slotKey: string): Promise<BurakShareExtraImage[]> {
   const { data, error } = await db
     .from("social_share_asset_images")
     .select("id, slot_key, image_bucket, image_path, sort_order")

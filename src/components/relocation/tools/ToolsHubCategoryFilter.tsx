@@ -10,19 +10,11 @@ interface ToolsHubCategoryFilterProps {
   onSelect: (key: string) => void;
 }
 
-export function ToolsHubCategoryFilter({
-  categories,
-  activeKey,
-  onSelect,
-}: ToolsHubCategoryFilterProps) {
+export function ToolsHubCategoryFilter({ categories, activeKey, onSelect }: ToolsHubCategoryFilterProps) {
   if (categories.length === 0) return null;
 
   return (
-    <div
-      role="group"
-      aria-label={TOOLS_UI_COPY.hubFilterLabel}
-      className="flex flex-wrap justify-center gap-2"
-    >
+    <div role="group" aria-label={TOOLS_UI_COPY.hubFilterLabel} className="flex flex-wrap justify-center gap-2">
       {categories.map((category) => {
         const isActive = category.key === activeKey;
         return (

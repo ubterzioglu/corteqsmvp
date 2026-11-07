@@ -2,11 +2,11 @@
 // Görsel üzerine bindirilecek metinler için XML-güvenli kaçış ve kırpma yardımcıları.
 
 const XML_ESCAPES = {
-  '&': '&amp;',
-  '<': '&lt;',
-  '>': '&gt;',
-  '"': '&quot;',
-  "'": '&apos;',
+  "&": "&amp;",
+  "<": "&lt;",
+  ">": "&gt;",
+  '"': "&quot;",
+  "'": "&apos;",
 };
 
 export function xmlEscape(text) {
@@ -23,7 +23,7 @@ export function shortDescription(description, maxLen = 90) {
   }
 
   const slice = trimmed.slice(0, maxLen - 1);
-  const lastSpace = slice.lastIndexOf(' ');
+  const lastSpace = slice.lastIndexOf(" ");
   const cut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
   return `${cut}…`;
 }
@@ -31,7 +31,7 @@ export function shortDescription(description, maxLen = 90) {
 export function wrapText(text, maxCharsPerLine) {
   const words = text.split(/\s+/);
   const lines = [];
-  let current = '';
+  let current = "";
 
   for (const word of words) {
     const candidate = current ? `${current} ${word}` : word;

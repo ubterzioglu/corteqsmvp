@@ -34,7 +34,12 @@ import type {
   CaddeReactionRow,
   CaddeReactionType,
 } from "./cadde-types";
-import { CADDE_CAFE_LIST_LIMIT, FALLBACK_PROFILE_NAME, resolveCityIdsByNames, resolveCountryIdsByNames } from "./cadde-internal";
+import {
+  CADDE_CAFE_LIST_LIMIT,
+  FALLBACK_PROFILE_NAME,
+  resolveCityIdsByNames,
+  resolveCountryIdsByNames,
+} from "./cadde-internal";
 
 export type CaddeCafeTheme = {
   key: string;
@@ -148,15 +153,21 @@ export async function listCaddeProtectedBrandsForAdmin(): Promise<CaddeProtected
       .select("id, brand_name, match_pattern, is_active, note")
       .order("brand_name", { ascending: true });
     if (error) throw error;
-    return ((data ?? []) as Array<{ id: string; brand_name: string; match_pattern: string; is_active: boolean; note: string | null }>).map(
-      (row) => ({
-        id: row.id,
-        brandName: row.brand_name,
-        matchPattern: row.match_pattern,
-        isActive: row.is_active,
-        note: row.note,
-      }),
-    );
+    return (
+      (data ?? []) as Array<{
+        id: string;
+        brand_name: string;
+        match_pattern: string;
+        is_active: boolean;
+        note: string | null;
+      }>
+    ).map((row) => ({
+      id: row.id,
+      brandName: row.brand_name,
+      matchPattern: row.match_pattern,
+      isActive: row.is_active,
+      note: row.note,
+    }));
   } catch (error: unknown) {
     // Yönetici ekranı: boş liste "marka yok" anlamına gelir ve yönetici yanlış karar
     // verir (ör. korumalı markayı serbest sanır). Fırlatır.
@@ -164,7 +175,11 @@ export async function listCaddeProtectedBrandsForAdmin(): Promise<CaddeProtected
   }
 }
 
-export async function createCaddeProtectedBrand(input: { brandName: string; matchPattern: string; note?: string }): Promise<void> {
+export async function createCaddeProtectedBrand(input: {
+  brandName: string;
+  matchPattern: string;
+  note?: string;
+}): Promise<void> {
   const brandName = input.brandName.trim();
   const matchPattern = input.matchPattern.trim().toLowerCase();
   if (brandName.length < 2) throw new Error("Marka adı en az 2 karakter olmalı.");
@@ -189,7 +204,11 @@ export async function deleteCaddeProtectedBrand(id: string): Promise<void> {
 }
 
 /** Cafe katılımı: giriş politikası security-definer RPC'de uygulanır. */
-export async function joinCaddeCafe(input: { cafeId: string; referralCode?: string; answer?: string }): Promise<CaddeCafeJoinResult> {
+export async function joinCaddeCafe(input: {
+  cafeId: string;
+  referralCode?: string;
+  answer?: string;
+}): Promise<CaddeCafeJoinResult> {
   const parsed = parseWithUserError(caddeCafeJoinInputSchema, input);
   const { data, error } = await db.rpc("join_cadde_cafe_v1", {
     p_cafe_id: parsed.cafeId,
@@ -246,17 +265,21 @@ const CAFE_SELECT_COLUMNS =
   "id, host_user_id, host_name_override, title, summary, country_id, city_id, content_mode, status, is_bridge, is_free, starts_at, ends_at, is_active, created_at, slug, theme_key, entry_mode, entry_question, capacity, external_links, archived_at, logo_url";
 
 function filterDemoCafes(items: CaddeCafe[], filters: CaddeFilterState): CaddeCafe[] {
-  return items.filter((item) =>
-    item.mode === filters.mode &&
-    (!filters.bridge || item.isBridge) &&
-    (!filters.countries.length || (item.country !== null && filters.countries.includes(item.country))) &&
-    (!filters.cities.length || (item.city !== null && filters.cities.includes(item.city))),
+  return items.filter(
+    (item) =>
+      item.mode === filters.mode &&
+      (!filters.bridge || item.isBridge) &&
+      (!filters.countries.length || (item.country !== null && filters.countries.includes(item.country))) &&
+      (!filters.cities.length || (item.city !== null && filters.cities.includes(item.city))),
   );
 }
 
 async function fetchCafeMembers(cafeIds: string[]): Promise<CaddeCafeMemberRow[]> {
   if (cafeIds.length === 0) return [];
-  const { data } = await db.from("cadde_cafe_members").select("id, cafe_id, user_id, status, answer, joined_at").in("cafe_id", cafeIds);
+  const { data } = await db
+    .from("cadde_cafe_members")
+    .select("id, cafe_id, user_id, status, answer, joined_at")
+    .in("cafe_id", cafeIds);
   return (data ?? []) as CaddeCafeMemberRow[];
 }
 
@@ -278,35 +301,67 @@ type CafeMapContext = {
 function mapCafe(row: CaddeCafeRow, ctx: CafeMapContext): CaddeCafe {
   const { countries, cities, members, hosts, currentUserId } = ctx;
   const cafeMembers = members.filter((member) => member.cafe_id === row.id);
-  const viewerMember = currentUserId ? cafeMembers.find((member) => member.user_id === currentUserId) ?? null : null;
+  const viewerMember = currentUserId ? (cafeMembers.find((member) => member.user_id === currentUserId) ?? null) : null;
   return {
-    id: row.id, title: row.title, summary: row.summary,
-    hostName: row.host_name_override ?? (row.host_user_id ? hosts.get(row.host_user_id) ?? FALLBACK_PROFILE_NAME : FALLBACK_PROFILE_NAME),
-    country: row.country_id ? countries.get(row.country_id) ?? null : null,
-    city: row.city_id ? cities.get(row.city_id) ?? null : null,
-    isBridge: row.is_bridge, isFree: row.is_free, startsAt: row.starts_at, endsAt: row.ends_at, isActive: row.is_active,
+    id: row.id,
+    title: row.title,
+    summary: row.summary,
+    hostName:
+      row.host_name_override ??
+      (row.host_user_id ? (hosts.get(row.host_user_id) ?? FALLBACK_PROFILE_NAME) : FALLBACK_PROFILE_NAME),
+    country: row.country_id ? (countries.get(row.country_id) ?? null) : null,
+    city: row.city_id ? (cities.get(row.city_id) ?? null) : null,
+    isBridge: row.is_bridge,
+    isFree: row.is_free,
+    startsAt: row.starts_at,
+    endsAt: row.ends_at,
+    isActive: row.is_active,
     memberCount: cafeMembers.filter((member) => member.status === "approved").length,
-    joinedByViewer: viewerMember?.status === "approved", mode: row.content_mode, slug: row.slug, themeKey: row.theme_key,
-    entryMode: row.entry_mode, entryQuestion: row.entry_question, capacity: row.capacity, archivedAt: row.archived_at,
-    hostUserId: row.host_user_id, viewerMemberStatus: viewerMember?.status ?? null,
+    joinedByViewer: viewerMember?.status === "approved",
+    mode: row.content_mode,
+    slug: row.slug,
+    themeKey: row.theme_key,
+    entryMode: row.entry_mode,
+    entryQuestion: row.entry_question,
+    capacity: row.capacity,
+    archivedAt: row.archived_at,
+    hostUserId: row.host_user_id,
+    viewerMemberStatus: viewerMember?.status ?? null,
     // m135: Kafe logosu
     logoUrl: row.logo_url ?? null,
   };
 }
 
-export async function listCaddeCafes(filters: CaddeFilterState, currentUserId: string | null, diasporaKey = "tr"): Promise<CaddeCafe[]> {
+export async function listCaddeCafes(
+  filters: CaddeFilterState,
+  currentUserId: string | null,
+  diasporaKey = "tr",
+): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || filters.mode === "demo") return filterDemoCafes(DEMO_CAFES, filters);
   try {
     const countryIds = await resolveCountryIdsByNames(filters.countries);
     const cityIds = await resolveCityIdsByNames(filters.cities, countryIds);
-    let query = db.from("cadde_cafes").select(CAFE_SELECT_COLUMNS).eq("content_mode", "real").eq("status", "published").eq("is_active", true).eq("diaspora_key", diasporaKey).order("starts_at", { ascending: true }).limit(CADDE_CAFE_LIST_LIMIT);
+    let query = db
+      .from("cadde_cafes")
+      .select(CAFE_SELECT_COLUMNS)
+      .eq("content_mode", "real")
+      .eq("status", "published")
+      .eq("is_active", true)
+      .eq("diaspora_key", diasporaKey)
+      .order("starts_at", { ascending: true })
+      .limit(CADDE_CAFE_LIST_LIMIT);
     if (filters.bridge) query = query.eq("is_bridge", true);
     if (countryIds.length > 0) query = query.in("country_id", countryIds);
     if (cityIds.length > 0) query = query.in("city_id", cityIds);
     const { data, error } = await query;
     if (error) throw error;
     const rows = (data ?? []) as CaddeCafeRow[];
-    const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id)), fetchCaddeUserNameMap(rows.map((row) => row.host_user_id).filter(Boolean) as string[])]);
+    const [countries, cities, members, hosts] = await Promise.all([
+      fetchCaddeCountryNameMap(),
+      fetchCaddeCityNameMap(),
+      fetchCafeMembers(rows.map((row) => row.id)),
+      fetchCaddeUserNameMap(rows.map((row) => row.host_user_id).filter(Boolean) as string[]),
+    ]);
     return rows.map((row) => mapCafe(row, { countries, cities, members, hosts, currentUserId }));
   } catch (error: unknown) {
     // Hata ≠ "kafe yok". Boş dizi dönmek RLS reddini/ağ hatasını ekranda içerik
@@ -322,7 +377,12 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
     if (error) throw error;
     if (!data) return null;
     const row = data as CaddeCafeRow;
-    const [countries, cities, members, hosts] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers([row.id]), fetchCaddeUserNameMap(row.host_user_id ? [row.host_user_id] : [])]);
+    const [countries, cities, members, hosts] = await Promise.all([
+      fetchCaddeCountryNameMap(),
+      fetchCaddeCityNameMap(),
+      fetchCafeMembers([row.id]),
+      fetchCaddeUserNameMap(row.host_user_id ? [row.host_user_id] : []),
+    ]);
     return mapCafe(row, { countries, cities, members, hosts, currentUserId });
   } catch (error: unknown) {
     // ⚠️ `null` iki farklı şeyi karıştırıyordu: "kafe bulunamadı" (yukarıdaki
@@ -334,10 +394,20 @@ export async function getCaddeCafe(cafeId: string, currentUserId: string | null)
 export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
   if (!isSupabaseConfigured || !userId) return [];
   try {
-    const { data, error } = await db.from("cadde_cafes").select(CAFE_SELECT_COLUMNS).eq("host_user_id", userId).eq("content_mode", "real").order("starts_at", { ascending: false }).limit(20);
+    const { data, error } = await db
+      .from("cadde_cafes")
+      .select(CAFE_SELECT_COLUMNS)
+      .eq("host_user_id", userId)
+      .eq("content_mode", "real")
+      .order("starts_at", { ascending: false })
+      .limit(20);
     if (error) throw error;
     const rows = (data ?? []) as CaddeCafeRow[];
-    const [countries, cities, members] = await Promise.all([fetchCaddeCountryNameMap(), fetchCaddeCityNameMap(), fetchCafeMembers(rows.map((row) => row.id))]);
+    const [countries, cities, members] = await Promise.all([
+      fetchCaddeCountryNameMap(),
+      fetchCaddeCityNameMap(),
+      fetchCafeMembers(rows.map((row) => row.id)),
+    ]);
     return rows.map((row) => mapCafe(row, { countries, cities, members, hosts: new Map(), currentUserId: userId }));
   } catch (error: unknown) {
     throw caddeReadError("listMyCaddeCafes", error);
@@ -345,7 +415,10 @@ export async function listMyCaddeCafes(userId: string): Promise<CaddeCafe[]> {
 }
 
 const emptyReactions = (): Record<CaddeReactionType, number> =>
-  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<CaddeReactionType, number>;
+  Object.fromEntries(CADDE_REACTION_TYPES.map((reactionType) => [reactionType, 0])) as Record<
+    CaddeReactionType,
+    number
+  >;
 
 async function fetchPostShareCounts(postIds: string[]): Promise<Map<string, number>> {
   if (postIds.length === 0) return new Map();
@@ -447,7 +520,7 @@ function mapCafeFeedPost(row: CaddeFeedRpcItem, ctx: CafeFeedPostContext): Cadde
     body: row.body,
     authorName:
       row.author_name_override ??
-      (row.author_user_id ? authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME : FALLBACK_PROFILE_NAME),
+      (row.author_user_id ? (authorNames.get(row.author_user_id) ?? FALLBACK_PROFILE_NAME) : FALLBACK_PROFILE_NAME),
     authorRole: row.author_role,
     authorAvatarUrl: row.author_avatar_url,
     authorUserId: row.author_user_id,
@@ -519,8 +592,8 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
       mapCafeFeedPost(
         {
           ...row,
-          country_name: row.country_id ? countries.get(row.country_id) ?? null : null,
-          city_name: row.city_id ? cities.get(row.city_id) ?? null : null,
+          country_name: row.country_id ? (countries.get(row.country_id) ?? null) : null,
+          city_name: row.city_id ? (cities.get(row.city_id) ?? null) : null,
           interests: interestsByPost.get(row.id) ?? [],
           band: 0,
           score: 0,
@@ -545,9 +618,7 @@ export async function listCaddeCafeFeed(cafeId: string, currentUserId: string | 
  */
 export async function updateCaddeCafeLogo(cafeId: string, logoUrl: string | null): Promise<void> {
   if (logoUrl !== null && !isCaddeCafeLogoUrl(logoUrl)) {
-    throw new Error(
-      "Logo yalnız Cadde'ye yüklediğin görsellerden seçilebilir. Lütfen görseli yükleyerek tekrar dene.",
-    );
+    throw new Error("Logo yalnız Cadde'ye yüklediğin görsellerden seçilebilir. Lütfen görseli yükleyerek tekrar dene.");
   }
 
   const { error } = await db.rpc("update_cadde_cafe_logo_v1", {

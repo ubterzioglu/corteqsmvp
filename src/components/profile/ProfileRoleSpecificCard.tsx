@@ -12,11 +12,7 @@ import {
 } from "@/lib/profile-attribute-keys";
 
 import { ProfileAttributeEditor } from "./ProfileAttributeEditor";
-import {
-  AMBER_BUTTON_PRIMARY,
-  GOOGLE_SOFT_CARD_GREEN_SECTION,
-  GOOGLE_SOFT_CARD_SUBTLE,
-} from "./profile-card-styles";
+import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_GREEN_SECTION, GOOGLE_SOFT_CARD_SUBTLE } from "./profile-card-styles";
 
 export type ProfileRoleSpecificCardProps = {
   attributes: ProfileAttributeState[];
@@ -53,12 +49,7 @@ export const ProfileRoleSpecificCard = ({
               Aktif rolüne bağlı alanları tek kartta güncelle. Referral alanları backend tarafından private tutulur.
             </CardDescription>
           </div>
-          <Button
-            size="sm"
-            className={AMBER_BUTTON_PRIMARY}
-            onClick={onSave}
-            disabled={isSaving || !attributes.length}
-          >
+          <Button size="sm" className={AMBER_BUTTON_PRIMARY} onClick={onSave} disabled={isSaving || !attributes.length}>
             {isSaving ? "Kaydediliyor..." : "Rolüne Özel Alanları Kaydet"}
           </Button>
         </div>

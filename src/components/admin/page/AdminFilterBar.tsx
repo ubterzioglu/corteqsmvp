@@ -24,10 +24,7 @@ export function AdminFilterBar({
   return (
     <div
       role="search"
-      className={cn(
-        "flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-3",
-        className,
-      )}
+      className={cn("flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card p-3", className)}
     >
       {children}
       {onReset ? (

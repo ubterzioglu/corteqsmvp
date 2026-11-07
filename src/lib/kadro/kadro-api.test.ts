@@ -39,7 +39,12 @@ describe("validateKadroCandidateDraft", () => {
   });
 
   it("geçersiz aşama reddeder", () => {
-    const draft = { fullName: "Ahmet Yılmaz", stage: "gecersiz" as unknown as KadroCandidateStage, links: "", note: "" };
+    const draft = {
+      fullName: "Ahmet Yılmaz",
+      stage: "gecersiz" as unknown as KadroCandidateStage,
+      links: "",
+      note: "",
+    };
     expect(validateKadroCandidateDraft(draft)).toBe("Geçersiz aday aşaması.");
   });
 

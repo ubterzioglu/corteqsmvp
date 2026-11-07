@@ -84,9 +84,7 @@ export function ShareStatusBar({
           >
             {shared ? <Check className="h-3.5 w-3.5" /> : <Icon className="h-3.5 w-3.5" />}
             {SHARE_PLATFORM_LABELS[platform]}
-            {shared && badge?.markedAt ? (
-              <span className="opacity-70">· {shortDate(badge.markedAt)}</span>
-            ) : null}
+            {shared && badge?.markedAt ? <span className="opacity-70">· {shortDate(badge.markedAt)}</span> : null}
           </button>
         );
       })}
@@ -104,9 +102,7 @@ export function ShareStatusBar({
           </Button>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-80 space-y-2">
-          <p className="text-xs font-medium text-muted-foreground">
-            Not / link (ör. paylaşılan gönderinin URL'i)
-          </p>
+          <p className="text-xs font-medium text-muted-foreground">Not / link (ör. paylaşılan gönderinin URL'i)</p>
           <Textarea
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
@@ -115,12 +111,7 @@ export function ShareStatusBar({
             data-testid={`share-note-input-${tab}-${itemId}`}
           />
           <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="ghost" size="sm" onClick={() => setOpen(false)}>
               İptal
             </Button>
             <Button

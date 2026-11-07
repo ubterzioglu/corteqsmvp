@@ -12,10 +12,12 @@ export const placeholderLandings: WhatsAppLanding[] = [
     mode: "visual",
     heroImage: waPlaceholderImage,
     tagline: "",
-    callToActionText: "Girişimciler, operatörler ve yatırım odaklı profesyoneller için tanışma ve bilgi paylaşım alanı.",
+    callToActionText:
+      "Girişimciler, operatörler ve yatırım odaklı profesyoneller için tanışma ve bilgi paylaşım alanı.",
     conditions: "",
     whatsappLink: "#",
-    description: "Erken aşama girişimlerden büyüme evresindeki projelere kadar nitelikli bağlantılar kurmak isteyenler için.",
+    description:
+      "Erken aşama girişimlerden büyüme evresindeki projelere kadar nitelikli bağlantılar kurmak isteyenler için.",
     submitterRole: "manager",
     status: "approved",
     createdAt: "2026-01-01T00:00:00.000Z",
@@ -30,7 +32,8 @@ export const placeholderLandings: WhatsAppLanding[] = [
     mode: "visual",
     heroImage: waPlaceholderImage,
     tagline: "",
-    callToActionText: "Melek yatırım, fonlar ve girişim ekosistemi etrafında buluşan Türk profesyoneller için seçili topluluk.",
+    callToActionText:
+      "Melek yatırım, fonlar ve girişim ekosistemi etrafında buluşan Türk profesyoneller için seçili topluluk.",
     conditions: "",
     whatsappLink: "#",
     description: "Yatırım, ortaklık ve bölgesel network geliştirmek isteyenler için tasarlandı.",
@@ -48,7 +51,8 @@ export const placeholderLandings: WhatsAppLanding[] = [
     mode: "visual",
     heroImage: waPlaceholderImage,
     tagline: "",
-    callToActionText: "Kurumsal kariyer, iş geliştirme ve sektör içi bağlantılar için aktif Türk profesyonel topluluğu.",
+    callToActionText:
+      "Kurumsal kariyer, iş geliştirme ve sektör içi bağlantılar için aktif Türk profesyonel topluluğu.",
     conditions: "",
     whatsappLink: "#",
     description: "Deneyim paylaşımı, yönlendirme ve iş birlikleri odaklı bir ağ.",
@@ -84,7 +88,8 @@ export const placeholderLandings: WhatsAppLanding[] = [
     mode: "visual",
     heroImage: waPlaceholderImage,
     tagline: "",
-    callToActionText: "Yeni taşınanlar ve yerleşik üyeler arasında hızlı destek, yönlendirme ve yardımlaşma için kuruldu.",
+    callToActionText:
+      "Yeni taşınanlar ve yerleşik üyeler arasında hızlı destek, yönlendirme ve yardımlaşma için kuruldu.",
     conditions: "",
     whatsappLink: "#",
     description: "Şehirde hayata uyum, sosyal destek ve güvenilir tavsiyeler için canlı topluluk.",

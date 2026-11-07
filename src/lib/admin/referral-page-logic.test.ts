@@ -63,15 +63,13 @@ describe("filterReferralCodes", () => {
 
 describe("buildReferralCodePreview", () => {
   it("seçili kodları birleştirir", () => {
-    expect(
-      buildReferralCodePreview({ sourceCode: "INS", groupCode: "TR", typeCode: "AMB" }),
-    ).toBe("INSTRAMB-XXXXXX");
+    expect(buildReferralCodePreview({ sourceCode: "INS", groupCode: "TR", typeCode: "AMB" })).toBe("INSTRAMB-XXXXXX");
   });
 
   it("seçilmeyen parçayı `??` gösterir (boş bırakmaz)", () => {
-    expect(
-      buildReferralCodePreview({ sourceCode: undefined, groupCode: "TR", typeCode: undefined }),
-    ).toBe("??TR??-XXXXXX");
+    expect(buildReferralCodePreview({ sourceCode: undefined, groupCode: "TR", typeCode: undefined })).toBe(
+      "??TR??-XXXXXX",
+    );
   });
 });
 
@@ -117,15 +115,13 @@ describe("validateReferralCreateForm", () => {
   it("bitiş başlangıçtan ÖNCEYSE reddeder", () => {
     // ⚠️ Bu denetim eski kodda YOKTU: kod oluşturulduğu anda süresi dolmuş
     // sayılabiliyordu ve bunu kimse fark etmiyordu.
-    expect(
-      validateReferralCreateForm({ ...valid, validFrom: "2026-12-31", validUntil: "2026-01-01" }),
-    ).toContain("önce olamaz");
+    expect(validateReferralCreateForm({ ...valid, validFrom: "2026-12-31", validUntil: "2026-01-01" })).toContain(
+      "önce olamaz",
+    );
   });
 
   it("aynı gün başlayıp biten kodu KABUL eder", () => {
     // Tek günlük kampanya meşrudur; sıra denetimi bunu yasaklamamalı.
-    expect(
-      validateReferralCreateForm({ ...valid, validFrom: "2026-05-19", validUntil: "2026-05-19" }),
-    ).toBeNull();
+    expect(validateReferralCreateForm({ ...valid, validFrom: "2026-05-19", validUntil: "2026-05-19" })).toBeNull();
   });
 });

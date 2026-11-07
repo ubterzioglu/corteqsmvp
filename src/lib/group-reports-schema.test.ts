@@ -209,7 +209,9 @@ describe("G14 · yetki matrisi — anon hiçbir kapıyı çağıramaz", () => {
 
       expect(sql).toContain(`revoke all on function public.${signature} from public, anon;`);
       expect(sql).toContain(`grant execute on function public.${signature} to authenticated;`);
-      expect(sql).not.toMatch(new RegExp(`grant execute on function public\\.${signature.replace(/[()]/g, "\\$&")} to [^;]*anon`));
+      expect(sql).not.toMatch(
+        new RegExp(`grant execute on function public\\.${signature.replace(/[()]/g, "\\$&")} to [^;]*anon`),
+      );
     });
   }
 

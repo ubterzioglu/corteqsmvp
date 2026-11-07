@@ -3,10 +3,7 @@
 // saran @/lib/admin reviewApprovalRequestAsAdmin üzerinden verilir.
 
 import { supabase } from "@/integrations/supabase/client";
-import {
-  fetchAdminUserLabels,
-  type AdminUserLabel,
-} from "./admin-user-labels";
+import { fetchAdminUserLabels, type AdminUserLabel } from "./admin-user-labels";
 
 export type AdminApprovalRequest = {
   id: string;

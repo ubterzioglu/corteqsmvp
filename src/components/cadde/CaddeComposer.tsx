@@ -97,7 +97,10 @@ const CaddeComposer = ({
   const showLocation = variant === "feed";
   const [locationOpen, setLocationOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [bodySelection, setBodySelection] = useState<TextSelection>({ start: value.body.length, end: value.body.length });
+  const [bodySelection, setBodySelection] = useState<TextSelection>({
+    start: value.body.length,
+    end: value.body.length,
+  });
   const textareaRef = useRef<MentionTextareaHandle>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -120,9 +123,7 @@ const CaddeComposer = ({
   const update = (patch: Partial<CaddeComposerValue>) => onChange({ ...value, ...patch });
   const updateTarget = (index: number, patch: Partial<(typeof extraTargets)[number]>) => {
     update({
-      targets: extraTargets.map((target, targetIndex) =>
-        targetIndex === index ? { ...target, ...patch } : target,
-      ),
+      targets: extraTargets.map((target, targetIndex) => (targetIndex === index ? { ...target, ...patch } : target)),
     });
   };
 
@@ -229,13 +230,12 @@ const CaddeComposer = ({
           >
             <p className="text-xs font-semibold text-slate-900">Etiketleme nasıl çalışır?</p>
             <p className="text-xs leading-relaxed text-slate-600">
-              <strong>@</strong> yazıp en az iki harf girince öneri listesi açılır; üyeleri,
-              işletmeleri, cafe'leri ve Çarşı ilanlarını etiketleyebilirsin. Seçtiğin ad
-              paylaşımda bağlantıya dönüşür.
+              <strong>@</strong> yazıp en az iki harf girince öneri listesi açılır; üyeleri, işletmeleri, cafe'leri ve
+              Çarşı ilanlarını etiketleyebilirsin. Seçtiğin ad paylaşımda bağlantıya dönüşür.
             </p>
             <p className="text-xs leading-relaxed text-slate-600">
-              <strong>#</strong> ile konu etiketi eklersin (ör. #İstanbul). Türkçe harfler
-              desteklenir; etikete tıklayan o konunun akışını görür.
+              <strong>#</strong> ile konu etiketi eklersin (ör. #İstanbul). Türkçe harfler desteklenir; etikete tıklayan
+              o konunun akışını görür.
             </p>
           </CaddeInfoPopover>
         </p>
@@ -260,8 +260,18 @@ const CaddeComposer = ({
             onChange={(event) => handleFiles(event.target.files)}
           />
 
-          <AttachmentChip icon={ImagePlus} label="Fotoğraf" onClick={() => imageInputRef.current?.click()} disabled={uploading} />
-          <AttachmentChip icon={Video} label="Video" onClick={() => videoInputRef.current?.click()} disabled={uploading} />
+          <AttachmentChip
+            icon={ImagePlus}
+            label="Fotoğraf"
+            onClick={() => imageInputRef.current?.click()}
+            disabled={uploading}
+          />
+          <AttachmentChip
+            icon={Video}
+            label="Video"
+            onClick={() => videoInputRef.current?.click()}
+            disabled={uploading}
+          />
           {showLocation ? (
             <AttachmentChip
               icon={MapPin}
@@ -293,7 +303,11 @@ const CaddeComposer = ({
                   Yükleniyor
                 </>
               ) : isSubmitting ? (
-                editMode ? "Kaydediliyor…" : "Gönderiliyor…"
+                editMode ? (
+                  "Kaydediliyor…"
+                ) : (
+                  "Gönderiliyor…"
+                )
               ) : editMode ? (
                 "Kaydet"
               ) : (
@@ -323,8 +337,8 @@ const CaddeComposer = ({
               >
                 <p className="text-xs font-semibold text-slate-900">Konum seçimi ne işe yarar?</p>
                 <p className="text-xs leading-relaxed text-slate-600">
-                  Paylaşımın, seçtiğin ülkenin (ve şehrin) akışında gösterilir. Boş bırakırsan
-                  profilinde kayıtlı konumun kullanılır.
+                  Paylaşımın, seçtiğin ülkenin (ve şehrin) akışında gösterilir. Boş bırakırsan profilinde kayıtlı
+                  konumun kullanılır.
                 </p>
                 <p className="text-xs leading-relaxed text-slate-600">
                   Global akışa doğrudan paylaşım yapılmaz; paylaşımın oraya etkileşimiyle taşınır.
@@ -340,11 +354,15 @@ const CaddeComposer = ({
                   value={value.country || "__profile__"}
                   onValueChange={(next) => update({ country: next === "__profile__" ? "" : next, city: "" })}
                 >
-                  <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__profile__">Profil konumunu kullan</SelectItem>
                     {countries.map((country) => (
-                      <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                      <SelectItem key={country.id} value={country.name}>
+                        {country.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -356,11 +374,15 @@ const CaddeComposer = ({
                   onValueChange={(next) => update({ city: next === "__all__" ? "" : next })}
                   disabled={!value.country}
                 >
-                  <SelectTrigger className="bg-white"><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+                  <SelectTrigger className="bg-white">
+                    <SelectValue placeholder="Tüm şehirler" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__all__">Tüm şehirler</SelectItem>
                     {primaryCities.map((city) => (
-                      <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                      <SelectItem key={city.id} value={city.name}>
+                        {city.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -392,27 +414,47 @@ const CaddeComposer = ({
             {extraTargets.map((target, index) => {
               const targetCities = citiesForCountry(target.country);
               return (
-                <div key={index} className="grid gap-2 rounded-lg border border-slate-200 bg-white p-2 sm:grid-cols-[1fr_1fr_auto]">
+                <div
+                  key={index}
+                  className="grid gap-2 rounded-lg border border-slate-200 bg-white p-2 sm:grid-cols-[1fr_1fr_auto]"
+                >
                   <div className="space-y-1.5">
                     <Label className="text-xs">Ek hedef ülke {index + 1}</Label>
-                    <Select value={target.country || "__none__"} onValueChange={(next) => updateTarget(index, { country: next === "__none__" ? "" : next, city: "" })}>
-                      <SelectTrigger><SelectValue placeholder="Ülke seç" /></SelectTrigger>
+                    <Select
+                      value={target.country || "__none__"}
+                      onValueChange={(next) =>
+                        updateTarget(index, { country: next === "__none__" ? "" : next, city: "" })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Ülke seç" />
+                      </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="__none__">Ülke seç</SelectItem>
                         {countries.map((country) => (
-                          <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                          <SelectItem key={country.id} value={country.name}>
+                            {country.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs">Ek hedef şehir {index + 1}</Label>
-                    <Select value={target.city || "__all__"} onValueChange={(next) => updateTarget(index, { city: next === "__all__" ? "" : next })} disabled={!target.country}>
-                      <SelectTrigger><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+                    <Select
+                      value={target.city || "__all__"}
+                      onValueChange={(next) => updateTarget(index, { city: next === "__all__" ? "" : next })}
+                      disabled={!target.country}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Tüm şehirler" />
+                      </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="__all__">Tüm şehirler</SelectItem>
                         {targetCities.map((city) => (
-                          <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                          <SelectItem key={city.id} value={city.name}>
+                            {city.name}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -431,11 +473,12 @@ const CaddeComposer = ({
               );
             })}
             {extraTargets.length > 0 ? (
-              <p className="text-xs leading-5 text-slate-500">Birden fazla hedef premium ayarıyla DB tarafında kontrol edilir.</p>
+              <p className="text-xs leading-5 text-slate-500">
+                Birden fazla hedef premium ayarıyla DB tarafında kontrol edilir.
+              </p>
             ) : null}
           </div>
         ) : null}
-
       </CardContent>
     </Card>
   );

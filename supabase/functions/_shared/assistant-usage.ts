@@ -17,14 +17,10 @@ type RecordAssistantUsageInput = {
 };
 
 const tokenCount = (value: unknown): number =>
-  typeof value === "number" && Number.isFinite(value) && value >= 0
-    ? Math.trunc(value)
-    : 0;
+  typeof value === "number" && Number.isFinite(value) && value >= 0 ? Math.trunc(value) : 0;
 
 export function normalizeAssistantUsage(usage: unknown) {
-  const value = usage && typeof usage === "object"
-    ? usage as Record<string, unknown>
-    : {};
+  const value = usage && typeof usage === "object" ? (usage as Record<string, unknown>) : {};
   const inputTokens = tokenCount(value.promptTokenCount ?? value.prompt_tokens);
   const outputTokens = tokenCount(value.candidatesTokenCount ?? value.completion_tokens);
   const reportedTotal = tokenCount(value.totalTokenCount ?? value.total_tokens);
@@ -37,10 +33,7 @@ export function normalizeAssistantUsage(usage: unknown) {
 }
 
 /** Telemetry is best-effort: a write failure must never fail an assistant response. */
-export async function recordAssistantUsage(
-  client: UsageWriter,
-  input: RecordAssistantUsageInput,
-): Promise<void> {
+export async function recordAssistantUsage(client: UsageWriter, input: RecordAssistantUsageInput): Promise<void> {
   try {
     const tokens = normalizeAssistantUsage(input.usage);
     const { error } = await client.from("ai_assistant_usage").insert({

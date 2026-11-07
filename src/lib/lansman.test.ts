@@ -24,33 +24,19 @@ describe("lansman helpers", () => {
 
   it("accepts blank optional urls and rejects malformed ones", () => {
     expect(validateOptionalUrl("")).toBeNull();
-    expect(validateOptionalUrl(" https://example.com/profile ")).toBe(
-      "https://example.com/profile",
-    );
-    expect(() => validateOptionalUrl("instagram.com/user")).toThrow(
-      "Geçerli bir URL girin.",
-    );
+    expect(validateOptionalUrl(" https://example.com/profile ")).toBe("https://example.com/profile");
+    expect(() => validateOptionalUrl("instagram.com/user")).toThrow("Geçerli bir URL girin.");
   });
 
   it("builds clickable social links from stored handles", () => {
-    expect(buildLansmanSocialHref("linkedin", "ada-lovelace")).toBe(
-      "https://www.linkedin.com/in/ada-lovelace",
-    );
-    expect(buildLansmanSocialHref("instagram", "@adalovelace")).toBe(
-      "https://www.instagram.com/adalovelace",
-    );
-    expect(buildLansmanSocialHref("youtube", "AdaChannel")).toBe(
-      "https://www.youtube.com/@AdaChannel",
-    );
-    expect(buildLansmanSocialHref("website", "example.com")).toBe(
-      "https://example.com",
-    );
+    expect(buildLansmanSocialHref("linkedin", "ada-lovelace")).toBe("https://www.linkedin.com/in/ada-lovelace");
+    expect(buildLansmanSocialHref("instagram", "@adalovelace")).toBe("https://www.instagram.com/adalovelace");
+    expect(buildLansmanSocialHref("youtube", "AdaChannel")).toBe("https://www.youtube.com/@AdaChannel");
+    expect(buildLansmanSocialHref("website", "example.com")).toBe("https://example.com");
   });
 
   it("rejects unsupported status updates before hitting the database", async () => {
-    await expect(
-      updateRegistrationStatus("test-id", "pending"),
-    ).rejects.toThrow("Geçersiz durum güncellemesi.");
+    await expect(updateRegistrationStatus("test-id", "pending")).rejects.toThrow("Geçersiz durum güncellemesi.");
   });
 
   it("requires instagram for lansman registrations", async () => {

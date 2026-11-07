@@ -9,9 +9,7 @@ import {
   buildPublicCatalogProfileViewModel,
 } from "@/lib/public-catalog-profile-view-model";
 
-const makePayload = (
-  overrides: Partial<PublicCatalogProfilePagePayload> = {},
-): PublicCatalogProfilePagePayload => ({
+const makePayload = (overrides: Partial<PublicCatalogProfilePagePayload> = {}): PublicCatalogProfilePagePayload => ({
   item: {
     id: "item-1",
     slug: "member-arkin-kara",
@@ -58,16 +56,12 @@ describe("buildPublicCatalogProfileViewModel — kaynak künyesi (B16)", () => {
   });
 
   it("advisor kayıtlarında da taşır", () => {
-    const vm = buildPublicCatalogProfileViewModel(
-      makePayload({ item: { itemType: "advisor" }, provenance }),
-    );
+    const vm = buildPublicCatalogProfileViewModel(makePayload({ item: { itemType: "advisor" }, provenance }));
     expect(vm.provenance?.sourceKey).toBe(provenance.sourceKey);
   });
 
   it("KURUM kayıtlarında künye çizilmez — kart metni kişi içindir", () => {
-    const vm = buildPublicCatalogProfileViewModel(
-      makePayload({ item: { itemType: "organization" }, provenance }),
-    );
+    const vm = buildPublicCatalogProfileViewModel(makePayload({ item: { itemType: "organization" }, provenance }));
     expect(vm.provenance).toBeNull();
   });
 
@@ -123,10 +117,38 @@ describe("buildPublicCatalogProfileViewModel — hero", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({
         attributes: [
-          { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
-          { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: "true", valueJson: null },
-          { key: "moving_soon_opt_in", label: "Yakında Taşınacağım", dataType: "boolean", sortOrder: 3, valueText: null, valueJson: false },
-          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 4, valueText: "Genel Tıp", valueJson: null },
+          {
+            key: "job_seeking_opt_in",
+            label: "İş Arıyorum",
+            dataType: "boolean",
+            sortOrder: 1,
+            valueText: null,
+            valueJson: true,
+          },
+          {
+            key: "volunteer_mentorship_opt_in",
+            label: "Gönüllü Mentörlük",
+            dataType: "boolean",
+            sortOrder: 2,
+            valueText: "true",
+            valueJson: null,
+          },
+          {
+            key: "moving_soon_opt_in",
+            label: "Yakında Taşınacağım",
+            dataType: "boolean",
+            sortOrder: 3,
+            valueText: null,
+            valueJson: false,
+          },
+          {
+            key: "expertise_area",
+            label: "Uzmanlık",
+            dataType: "text",
+            sortOrder: 4,
+            valueText: "Genel Tıp",
+            valueJson: null,
+          },
         ],
       }),
     );
@@ -213,7 +235,14 @@ describe("buildPublicCatalogProfileViewModel — sections", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({
         attributes: [
-          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 10, valueText: "Genel Tıp", valueJson: null },
+          {
+            key: "expertise_area",
+            label: "Uzmanlık",
+            dataType: "text",
+            sortOrder: 10,
+            valueText: "Genel Tıp",
+            valueJson: null,
+          },
         ],
         services: [{ name: "Genel Tıp", description: null }],
         contacts: [{ type: "phone", value: "+49 231 818 687", label: null, isPrimary: true }],
@@ -227,8 +256,22 @@ describe("buildPublicCatalogProfileViewModel — sections", () => {
   it("does not duplicate hero attributes inside the attribute grid", () => {
     const rows = buildAttributeRows([
       { key: "full_name", label: "İsim", dataType: "text", sortOrder: 1, valueText: "Arkin", valueJson: null },
-      { key: "profile_photo_url", label: "Foto", dataType: "url", sortOrder: 2, valueText: "https://x.com/a.jpg", valueJson: null },
-      { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 3, valueText: "Genel Tıp", valueJson: null },
+      {
+        key: "profile_photo_url",
+        label: "Foto",
+        dataType: "url",
+        sortOrder: 2,
+        valueText: "https://x.com/a.jpg",
+        valueJson: null,
+      },
+      {
+        key: "expertise_area",
+        label: "Uzmanlık",
+        dataType: "text",
+        sortOrder: 3,
+        valueText: "Genel Tıp",
+        valueJson: null,
+      },
     ]);
     expect(rows.map((row) => row.key)).toEqual(["expertise_area"]);
   });
@@ -267,9 +310,7 @@ describe("buildPublicCatalogProfileViewModel — quick actions ve claim", () => 
         links: [{ type: "website", url: "https://link.example.com", label: "Site" }],
       }),
     );
-    expect(vm.quickActions.find((action) => action.key === "website")?.href).toBe(
-      "https://link.example.com/",
-    );
+    expect(vm.quickActions.find((action) => action.key === "website")?.href).toBe("https://link.example.com/");
   });
 
   it("whatsapp numarası wa.me derin linkine döner ve external işaretlenir", () => {
@@ -286,14 +327,10 @@ describe("buildPublicCatalogProfileViewModel — quick actions ve claim", () => 
   it("randevu linki aksiyon üretir", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({
-        contacts: [
-          { type: "appointment_url", value: "https://cal.example.com/x", label: null, isPrimary: false },
-        ],
+        contacts: [{ type: "appointment_url", value: "https://cal.example.com/x", label: null, isPrimary: false }],
       }),
     );
-    expect(vm.quickActions.find((action) => action.key === "appointment")?.href).toBe(
-      "https://cal.example.com/x",
-    );
+    expect(vm.quickActions.find((action) => action.key === "appointment")?.href).toBe("https://cal.example.com/x");
   });
 
   it("adres VE şehir yoksa harita aksiyonu ÇIKMAZ", () => {
@@ -337,17 +374,36 @@ describe("buildHeroLinkPills", () => {
   it("merges links, social contacts and social url attributes with dedupe", () => {
     const pills = buildHeroLinkPills(
       makePayload({
-        links: [
-          { type: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/demo", isPrimary: false },
-        ],
+        links: [{ type: "linkedin", label: "LinkedIn", url: "https://www.linkedin.com/in/demo", isPrimary: false }],
         contacts: [
           { type: "instagram", value: "https://www.instagram.com/demo", label: null, isPrimary: false },
           { type: "phone", value: "+49 231", label: null, isPrimary: true },
         ],
         attributes: [
-          { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 1, valueText: "https://www.linkedin.com/in/demo", valueJson: null },
-          { key: "website_url", label: "Website", dataType: "url", sortOrder: 2, valueText: "https://demo.example.com", valueJson: null },
-          { key: "x_url", label: "X", dataType: "url", sortOrder: 3, valueText: "javascript:alert(1)", valueJson: null },
+          {
+            key: "linkedin_url",
+            label: "LinkedIn",
+            dataType: "url",
+            sortOrder: 1,
+            valueText: "https://www.linkedin.com/in/demo",
+            valueJson: null,
+          },
+          {
+            key: "website_url",
+            label: "Website",
+            dataType: "url",
+            sortOrder: 2,
+            valueText: "https://demo.example.com",
+            valueJson: null,
+          },
+          {
+            key: "x_url",
+            label: "X",
+            dataType: "url",
+            sortOrder: 3,
+            valueText: "javascript:alert(1)",
+            valueJson: null,
+          },
         ],
       }),
     );
@@ -358,12 +414,24 @@ describe("buildHeroLinkPills", () => {
   it("keeps social attributes out of the attribute grid and drops link sections when pills exist", () => {
     const vm = buildPublicCatalogProfileViewModel(
       makePayload({
-        links: [
-          { type: "website", label: "Website", url: "https://demo.example.com", isPrimary: false },
-        ],
+        links: [{ type: "website", label: "Website", url: "https://demo.example.com", isPrimary: false }],
         attributes: [
-          { key: "instagram_url", label: "Instagram", dataType: "url", sortOrder: 1, valueText: "https://www.instagram.com/demo", valueJson: null },
-          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 2, valueText: "Genel Tıp", valueJson: null },
+          {
+            key: "instagram_url",
+            label: "Instagram",
+            dataType: "url",
+            sortOrder: 1,
+            valueText: "https://www.instagram.com/demo",
+            valueJson: null,
+          },
+          {
+            key: "expertise_area",
+            label: "Uzmanlık",
+            dataType: "text",
+            sortOrder: 2,
+            valueText: "Genel Tıp",
+            valueJson: null,
+          },
         ],
       }),
     );
@@ -372,9 +440,7 @@ describe("buildHeroLinkPills", () => {
     const gridSection = vm.mainSections.find((section) => section.componentKey === "attributes");
     const rowKeys = (gridSection?.content.rows as Array<{ key: string }>).map((row) => row.key);
     expect(rowKeys).toEqual(["expertise_area"]);
-    expect(
-      [...vm.mainSections, ...vm.sidebarSections].some((section) => section.componentKey === "links"),
-    ).toBe(false);
+    expect([...vm.mainSections, ...vm.sidebarSections].some((section) => section.componentKey === "links")).toBe(false);
   });
 
   it("excludes social contact types from the derived contact list", () => {
@@ -407,7 +473,12 @@ describe("contact/link row helpers", () => {
 
   it("renders whatsapp contacts as external links when the value is a url", () => {
     const rows = buildContactRows([
-      { type: "whatsapp", value: "https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW", label: "Join Link", isPrimary: true },
+      {
+        type: "whatsapp",
+        value: "https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW",
+        label: "Join Link",
+        isPrimary: true,
+      },
       { type: "whatsapp", value: "+49 171 123 45 67", label: null, isPrimary: false },
     ]);
     expect(rows[0].href).toBe("https://chat.whatsapp.com/Jqkc4xh5YYY8zeALR8WSAW");
@@ -455,20 +526,14 @@ describe("quick actions — whatsapp ve randevu", () => {
   it("randevu URL'si varsa CTA oluşturur, unsafe URL'de oluşturmaz", () => {
     const withSafe = buildPublicCatalogProfileViewModel(
       makePayload({
-        contacts: [
-          { type: "appointment_url", value: "https://calendly.com/demo", label: null, isPrimary: false },
-        ],
+        contacts: [{ type: "appointment_url", value: "https://calendly.com/demo", label: null, isPrimary: false }],
       }),
     );
-    expect(withSafe.quickActions.find((action) => action.key === "appointment")?.label).toBe(
-      "Randevu Al",
-    );
+    expect(withSafe.quickActions.find((action) => action.key === "appointment")?.label).toBe("Randevu Al");
 
     const withUnsafe = buildPublicCatalogProfileViewModel(
       makePayload({
-        contacts: [
-          { type: "appointment_url", value: "javascript:alert(1)", label: null, isPrimary: false },
-        ],
+        contacts: [{ type: "appointment_url", value: "javascript:alert(1)", label: null, isPrimary: false }],
       }),
     );
     expect(withUnsafe.quickActions.find((action) => action.key === "appointment")).toBeUndefined();
@@ -561,16 +626,10 @@ describe("presentation entegrasyonu — Experimental_2 pilot", () => {
     const generic = buildPublicCatalogProfileViewModel(
       makePayload({ item: { ...makePayload().item, roleKey: "Healthcare_Doctor" }, sections }),
     );
-    expect(generic.sidebarSections.map((section) => section.componentKey)).toEqual([
-      "languages",
-      "contact_list",
-    ]);
+    expect(generic.sidebarSections.map((section) => section.componentKey)).toEqual(["languages", "contact_list"]);
 
     const pilot = buildPublicCatalogProfileViewModel(makePayload({ item: pilotItem(), sections }));
-    expect(pilot.sidebarSections.map((section) => section.componentKey)).toEqual([
-      "contact_list",
-      "languages",
-    ]);
+    expect(pilot.sidebarSections.map((section) => section.componentKey)).toEqual(["contact_list", "languages"]);
   });
 
   it("main ve sidebar placement pilotta da korunur", () => {
@@ -578,7 +637,14 @@ describe("presentation entegrasyonu — Experimental_2 pilot", () => {
       makePayload({
         item: pilotItem(),
         attributes: [
-          { key: "expertise_area", label: "Uzmanlık", dataType: "text", sortOrder: 10, valueText: "Genel Tıp", valueJson: null },
+          {
+            key: "expertise_area",
+            label: "Uzmanlık",
+            dataType: "text",
+            sortOrder: 10,
+            valueText: "Genel Tıp",
+            valueJson: null,
+          },
         ],
         languages: [{ code: "tr", proficiency: "native_or_fluent" }],
       }),

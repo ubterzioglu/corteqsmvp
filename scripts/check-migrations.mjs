@@ -148,7 +148,7 @@ function fetchDbVersions() {
   const out = execFileSync(
     "psql",
     [conn, "-tAc", "select version from supabase_migrations.schema_migrations order by version;"],
-    { env: { ...process.env, PGPASSWORD: password }, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }
+    { env: { ...process.env, PGPASSWORD: password }, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
   );
   return out
     .split(/\r?\n/)
@@ -165,12 +165,12 @@ async function main() {
   if (strayParents.length) {
     console.error(
       `\n[check-migrations] PARENT DİZİNDE BEKLEYEN MIGRATION (${strayParents.length}) — ` +
-        "canlıya uygulanmamış sayılır:"
+        "canlıya uygulanmamış sayılır:",
     );
     for (const name of strayParents) console.error(`  - ${PARENT_MIGRATION_DIR}/${name}`);
     console.error(
       "  ↳ Migration dosyaları applied/ (veya archive/) altında yaşar. Parent dizindeki bir\n" +
-        "    dosya sürüm karşılaştırmasına GİRMEZ. Önce uygula, sonra applied/ altına taşı."
+        "    dosya sürüm karşılaştırmasına GİRMEZ. Önce uygula, sonra applied/ altına taşı.",
     );
   }
 
@@ -193,7 +193,7 @@ async function main() {
     `[check-migrations] ${fileVersions.length} dosya · ${dbVersions.length} canlı kayıt` +
       (result.duplicateTimestamps.length
         ? ` · ${result.duplicateTimestamps.length} çakışan zaman damgası (bilinen durum)`
-        : "")
+        : ""),
   );
 
   for (const { version, count } of result.duplicateTimestamps) {
@@ -216,7 +216,7 @@ async function main() {
   if (result.missingInDb.length || result.missingLocally.length) {
     console.error(
       "\nNot: tablo/kolon canlıda var olsa BİLE schema_migrations kaydı eksik olabilir " +
-        "(daha önce yaşandı). Uygulamadan önce şemanın gerçek hâline bak."
+        "(daha önce yaşandı). Uygulamadan önce şemanın gerçek hâline bak.",
     );
   }
 

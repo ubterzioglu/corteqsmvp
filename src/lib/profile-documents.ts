@@ -19,8 +19,7 @@ export const parseProfileDocumentRecord = (value: unknown): ProfileDocumentRecor
   const bucket = typeof value.bucket === "string" ? value.bucket.trim() : "";
   const path = typeof value.path === "string" ? value.path.trim() : "";
   const contentType = typeof value.contentType === "string" ? value.contentType : null;
-  const sizeBytes =
-    typeof value.sizeBytes === "number" && Number.isFinite(value.sizeBytes) ? value.sizeBytes : null;
+  const sizeBytes = typeof value.sizeBytes === "number" && Number.isFinite(value.sizeBytes) ? value.sizeBytes : null;
 
   if (!name || !bucket || !path) return null;
 
@@ -66,9 +65,7 @@ export async function removeProfileDocument(document: ProfileDocumentRecord | nu
 }
 
 export async function getProfileDocumentAccessUrl(document: ProfileDocumentRecord): Promise<string> {
-  const { data, error } = await supabase.storage
-    .from(document.bucket)
-    .createSignedUrl(document.path, 300);
+  const { data, error } = await supabase.storage.from(document.bucket).createSignedUrl(document.path, 300);
 
   if (error || !data?.signedUrl) {
     throw error ?? new Error("Dosya için signed URL üretilemedi.");

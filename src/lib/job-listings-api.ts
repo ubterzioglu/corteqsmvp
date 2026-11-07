@@ -47,10 +47,14 @@ export interface ListingQuota {
 const JOB_LISTING_ERROR_MESSAGES: Record<string, string> = {
   career_login_required: "Bu özelliği kullanmak için giriş yapın.",
   career_listing_not_found: "İlan bulunamadı veya yayından kaldırılmış.",
-  career_listing_limit_reached: "İş ilanı görüntüleme hakkınız doldu. Premium'a geçerek sınırsız erişim kazanabilirsiniz.",
+  career_listing_limit_reached:
+    "İş ilanı görüntüleme hakkınız doldu. Premium'a geçerek sınırsız erişim kazanabilirsiniz.",
 };
 
-export function resolveJobListingError(error: unknown, fallback = "İşlem tamamlanamadı. Lütfen tekrar deneyin."): string {
+export function resolveJobListingError(
+  error: unknown,
+  fallback = "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+): string {
   const raw = extractRpcErrorText(error);
   for (const [code, message] of Object.entries(JOB_LISTING_ERROR_MESSAGES)) {
     if (raw.includes(code)) return message;
@@ -64,10 +68,13 @@ export function resolveJobListingError(error: unknown, fallback = "İşlem tamam
  * İş ilani listesi (herkese açık, detay kolonları YOK).
  */
 export async function listJobListings(limit = 20, offset = 0): Promise<JobListingSummary[]> {
-  const { data, error } = await supabase.rpc("list_job_listings_public" as never, {
-    p_limit: limit,
-    p_offset: offset,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "list_job_listings_public" as never,
+    {
+      p_limit: limit,
+      p_offset: offset,
+    } as never,
+  );
 
   if (error) throw new Error(resolveJobListingError(error));
   return (data ?? []) as JobListingSummary[];
@@ -78,9 +85,12 @@ export async function listJobListings(limit = 20, offset = 0): Promise<JobListin
  * Hata kodları: career_login_required, career_listing_not_found, career_listing_limit_reached
  */
 export async function getJobListingDetail(listingId: string): Promise<JobListingDetail> {
-  const { data, error } = await supabase.rpc("get_job_listing_detail_v1" as never, {
-    p_listing_id: listingId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "get_job_listing_detail_v1" as never,
+    {
+      p_listing_id: listingId,
+    } as never,
+  );
 
   if (error) throw new Error(resolveJobListingError(error));
   const rows = (data ?? []) as JobListingDetail[];

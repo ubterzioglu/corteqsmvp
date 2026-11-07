@@ -61,12 +61,7 @@ function ToggleRow({ title, description, checked, disabled, onCheckedChange, lab
         <p className="text-sm font-medium">{title}</p>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-      <Switch
-        aria-label={label}
-        checked={checked}
-        disabled={disabled}
-        onCheckedChange={onCheckedChange}
-      />
+      <Switch aria-label={label} checked={checked} disabled={disabled} onCheckedChange={onCheckedChange} />
     </div>
   );
 }
@@ -124,15 +119,9 @@ const AdminNotificationSettingsPage = () => {
               <MailCheck className="mr-2 h-4 w-4" />
               Bana örnek hoş geldin maili gönder
             </Button>
-            <Button
-              variant="outline"
-              disabled={dispatchBusy || state.pendingCount === 0}
-              onClick={dispatchPending}
-            >
+            <Button variant="outline" disabled={dispatchBusy || state.pendingCount === 0} onClick={dispatchPending}>
               <Send className="mr-2 h-4 w-4" />
-              {state.pendingCount > 0
-                ? `Bekleyen ${state.pendingCount} kaydı şimdi gönder`
-                : "Bekleyen kayıt yok"}
+              {state.pendingCount > 0 ? `Bekleyen ${state.pendingCount} kaydı şimdi gönder` : "Bekleyen kayıt yok"}
             </Button>
           </div>
         ) : null
@@ -145,8 +134,8 @@ const AdminNotificationSettingsPage = () => {
             role="status"
             className="rounded-lg border border-amber-500/40 bg-amber-500/10 p-4 text-sm text-amber-900 dark:text-amber-200"
           >
-            Genel anahtar kapalı olduğu için {mutedTypes.join(" ve ")} bildirimleri kimseye
-            gitmiyor. Tercihin korunuyor; anahtarı bir admin açtığında mailler akmaya başlar.
+            Genel anahtar kapalı olduğu için {mutedTypes.join(" ve ")} bildirimleri kimseye gitmiyor. Tercihin
+            korunuyor; anahtarı bir admin açtığında mailler akmaya başlar.
           </p>
         ) : null}
 
@@ -166,9 +155,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.newMemberEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Yeni üye bildirimleri açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.newMember, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.newMember, checked)}
           />
 
           <ToggleRow
@@ -177,9 +164,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.adminUpdateEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Güncelleme bildirimleri açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.adminUpdate, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.adminUpdate, checked)}
           />
 
           <ToggleRow
@@ -188,9 +173,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.revisionRequestEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Revizyon isteği bildirimleri açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.revisionRequest, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.revisionRequest, checked)}
           />
 
           <ToggleRow
@@ -199,9 +182,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.memberWelcomeEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Hoş geldin maili açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.memberWelcome, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.memberWelcome, checked)}
           />
 
           <ToggleRow
@@ -210,9 +191,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.radarScanDigestEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Radar tarama özeti açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.radarScanDigest, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.radarScanDigest, checked)}
           />
 
           <ToggleRow
@@ -221,9 +200,7 @@ const AdminNotificationSettingsPage = () => {
             checked={state.weeklyCityDigestEnabled}
             disabled={!state.isAdmin || settingsBusy}
             label="Haftalık şehir özeti açık"
-            onCheckedChange={(checked) =>
-              setGlobal(SETTING_KEYS.weeklyCityDigest, checked)
-            }
+            onCheckedChange={(checked) => setGlobal(SETTING_KEYS.weeklyCityDigest, checked)}
           />
         </section>
 
@@ -276,8 +253,7 @@ const AdminNotificationSettingsPage = () => {
           <div>
             <h2 className="text-base font-semibold">Son gönderimler</h2>
             <p className="text-sm text-muted-foreground">
-              En son 20 kayıt. "Atlandı", genel anahtarın kapalı olduğu ya da hiç abone
-              bulunmadığı anlamına gelir.
+              En son 20 kayıt. "Atlandı", genel anahtarın kapalı olduğu ya da hiç abone bulunmadığı anlamına gelir.
             </p>
           </div>
 
@@ -302,17 +278,13 @@ const AdminNotificationSettingsPage = () => {
                 <tbody>
                   {state.recent.map((entry) => (
                     <tr key={entry.id} className="border-t border-border/60 align-top">
-                      <td className="p-3 whitespace-nowrap">
-                        {NOTIFICATION_EVENT_LABELS[entry.eventType]}
-                      </td>
+                      <td className="p-3 whitespace-nowrap">{NOTIFICATION_EVENT_LABELS[entry.eventType]}</td>
                       <td className="p-3">
                         <span className="block max-w-md truncate" title={entry.summary}>
                           {entry.summary}
                         </span>
                         {entry.lastError ? (
-                          <span className="mt-1 block text-xs text-muted-foreground">
-                            {entry.lastError}
-                          </span>
+                          <span className="mt-1 block text-xs text-muted-foreground">{entry.lastError}</span>
                         ) : null}
                       </td>
                       <td className="p-3">

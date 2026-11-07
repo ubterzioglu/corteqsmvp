@@ -2,8 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-const migrationPath =
-  "supabase/migrations/applied/20260922100000_public_content_search.sql";
+const migrationPath = "supabase/migrations/applied/20260922100000_public_content_search.sql";
 
 describe("public content search migration", () => {
   it("indexes only published blog content for public search", () => {

@@ -117,11 +117,7 @@ export function EventCoverUpload({ value, onChange, onError, disabled }: EventCo
             disabled={disabled || isUploading}
             onClick={() => inputRef.current?.click()}
           >
-            {isUploading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <ImagePlus className="mr-2 h-4 w-4" />
-            )}
+            {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ImagePlus className="mr-2 h-4 w-4" />}
             {isUploading ? "Yükleniyor..." : "Görsel yükle"}
           </Button>
           <p className="mt-1 text-xs text-muted-foreground">JPG, PNG, WebP veya AVIF · en fazla 5MB</p>

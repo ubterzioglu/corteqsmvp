@@ -1,12 +1,7 @@
 import { isSupabaseConfigured } from "@/integrations/supabase/client";
 
 import { db, caddeWriteError, reportCaddeApiError } from "./cadde-internal";
-import {
-  caddeCommentCreateSchema,
-  caddeReactionSchema,
-  caddeShareSchema,
-  parseWithUserError,
-} from "./cadde-schemas";
+import { caddeCommentCreateSchema, caddeReactionSchema, caddeShareSchema, parseWithUserError } from "./cadde-schemas";
 import type { CaddeReactionType } from "./cadde-types";
 
 export function normalizeCaddeReportDetails(details?: string): string | null {
@@ -45,7 +40,12 @@ export async function recordCaddeShare(postId: string, channel: "web_share" | "c
 }
 
 /** İçerik şikayeti moderasyon kuyruğuna RPC aracılığıyla eklenir. */
-export async function reportCaddeEntity(entityType: "post" | "comment" | "cafe" | "carsi_item", entityId: string, reason: string, details?: string): Promise<void> {
+export async function reportCaddeEntity(
+  entityType: "post" | "comment" | "cafe" | "carsi_item",
+  entityId: string,
+  reason: string,
+  details?: string,
+): Promise<void> {
   const { error } = await db.rpc("report_cadde_entity_v1", {
     p_entity_type: entityType,
     p_entity_id: entityId,

@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  diffMigrations,
-  expectedVersionsFor,
-  findStrayParentMigrations,
-  versionOf,
-} from "./check-migrations.mjs";
+import { diffMigrations, expectedVersionsFor, findStrayParentMigrations, versionOf } from "./check-migrations.mjs";
 
 describe("versionOf", () => {
   it("dosya adından zaman damgasını ayıklar", () => {
@@ -94,20 +89,8 @@ describe("diffMigrations", () => {
   it("canlıdaki gerçek durumu (352 dosya / 350 benzersiz damga) temiz sayar", () => {
     // 2026-08-04'te ölçülen gerçek şekil: iki damga ikişer dosya taşıyor,
     // canlıda karşılıkları ...0000 ve ...0001 olarak duruyor.
-    const fileVersions = [
-      "20260718120000",
-      "20260718120000",
-      "20260718130000",
-      "20260718130000",
-      "20260804160000",
-    ];
-    const dbVersions = [
-      "20260718120000",
-      "20260718120001",
-      "20260718130000",
-      "20260718130001",
-      "20260804160000",
-    ];
+    const fileVersions = ["20260718120000", "20260718120000", "20260718130000", "20260718130000", "20260804160000"];
+    const dbVersions = ["20260718120000", "20260718120001", "20260718130000", "20260718130001", "20260804160000"];
     expect(diffMigrations({ fileVersions, dbVersions }).ok).toBe(true);
   });
 });
@@ -123,9 +106,9 @@ describe("findStrayParentMigrations", () => {
   });
 
   it("parent dizinde kalan .sql dosyasını yakalar", () => {
-    expect(
-      findStrayParentMigrations(["applied", "archive", "20260805200000_cadde_geo_bridge_backfill.sql"]),
-    ).toEqual(["20260805200000_cadde_geo_bridge_backfill.sql"]);
+    expect(findStrayParentMigrations(["applied", "archive", "20260805200000_cadde_geo_bridge_backfill.sql"])).toEqual([
+      "20260805200000_cadde_geo_bridge_backfill.sql",
+    ]);
   });
 
   it("birden fazla dosyayı ada göre sıralı döndürür", () => {

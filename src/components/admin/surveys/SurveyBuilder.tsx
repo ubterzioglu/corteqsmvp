@@ -118,30 +118,69 @@ export default function SurveyBuilder({ initial, onSaved }: SurveyBuilderProps) 
     <div className="space-y-6">
       <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5">
         <h2 className="text-lg font-bold text-slate-900">Anket Bilgileri</h2>
-        <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Başlık" value={title} onChange={(e) => setTitle(e.target.value)} />
-        <input className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder={computedSlug || "slug"} value={slug} onChange={(e) => setSlug(e.target.value)} />
-        <textarea className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" placeholder="Açıklama" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <input
+          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          placeholder="Başlık"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <input
+          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          placeholder={computedSlug || "slug"}
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+        />
+        <textarea
+          className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+          placeholder="Açıklama"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
         <div className="grid gap-3 md:grid-cols-2">
           <label className="text-sm text-slate-700">
             Başlangıç
-            <input type="datetime-local" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
+            <input
+              type="datetime-local"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              value={startsAt}
+              onChange={(e) => setStartsAt(e.target.value)}
+            />
           </label>
           <label className="text-sm text-slate-700">
             Bitiş
-            <input type="datetime-local" className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
+            <input
+              type="datetime-local"
+              className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+              value={endsAt}
+              onChange={(e) => setEndsAt(e.target.value)}
+            />
           </label>
         </div>
         <div className="flex flex-wrap gap-4">
-          <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={allowAnonymous} onChange={(e) => setAllowAnonymous(e.target.checked)} /> Anonymous cevaplara izin ver</label>
-          <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={allowMultiple} onChange={(e) => setAllowMultiple(e.target.checked)} /> Multiple submissions izin ver</label>
-          <label className="flex items-center gap-2 text-sm text-slate-700"><input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} /> Featured</label>
+          <label className="flex items-center gap-2 text-sm text-slate-700">
+            <input type="checkbox" checked={allowAnonymous} onChange={(e) => setAllowAnonymous(e.target.checked)} />{" "}
+            Anonymous cevaplara izin ver
+          </label>
+          <label className="flex items-center gap-2 text-sm text-slate-700">
+            <input type="checkbox" checked={allowMultiple} onChange={(e) => setAllowMultiple(e.target.checked)} />{" "}
+            Multiple submissions izin ver
+          </label>
+          <label className="flex items-center gap-2 text-sm text-slate-700">
+            <input type="checkbox" checked={isFeatured} onChange={(e) => setIsFeatured(e.target.checked)} /> Featured
+          </label>
         </div>
       </section>
 
       <section className="space-y-3 rounded-2xl border border-slate-200 bg-white p-5">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-slate-900">Sorular</h2>
-          <button type="button" className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold" onClick={addQuestion}>Soru Ekle</button>
+          <button
+            type="button"
+            className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-semibold"
+            onClick={addQuestion}
+          >
+            Soru Ekle
+          </button>
         </div>
 
         {questions.map((question, index) => (
@@ -149,7 +188,9 @@ export default function SurveyBuilder({ initial, onSaved }: SurveyBuilderProps) 
             key={question.localId}
             index={index}
             question={question}
-            onChange={(next) => setQuestions((prev) => prev.map((item) => (item.localId === question.localId ? next : item)))}
+            onChange={(next) =>
+              setQuestions((prev) => prev.map((item) => (item.localId === question.localId ? next : item)))
+            }
             onRemove={() => setQuestions((prev) => prev.filter((item) => item.localId !== question.localId))}
             onMoveUp={() =>
               setQuestions((prev) => {

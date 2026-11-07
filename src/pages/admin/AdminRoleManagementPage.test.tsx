@@ -81,9 +81,43 @@ const mockCatalogRows = [
 
 const mockBundle = {
   role: { id: "role-uuid-1", key: "User_Standard", label: "Standart Kullanıcı" },
-  attributes: [{ key: "bio", label: "Biyografi", description: null, admin_note: null, rule: { is_enabled: true, is_required: false, is_public_default: false, user_can_edit: true, user_can_hide: true, requires_admin_approval_on_change: false, sort_order: 10 } }],
-  features: [{ key: "profile.edit_own", label: "Profil Düzenle", description: null, admin_note: null, is_active_globally: true, is_enabled: true }],
-  sections: [{ key: "about_section", label: "Hakkında", description: null, admin_note: null, section_area: "detail_card", rule: { is_enabled: true, requires_approval: false, sort_order: 5 } }],
+  attributes: [
+    {
+      key: "bio",
+      label: "Biyografi",
+      description: null,
+      admin_note: null,
+      rule: {
+        is_enabled: true,
+        is_required: false,
+        is_public_default: false,
+        user_can_edit: true,
+        user_can_hide: true,
+        requires_admin_approval_on_change: false,
+        sort_order: 10,
+      },
+    },
+  ],
+  features: [
+    {
+      key: "profile.edit_own",
+      label: "Profil Düzenle",
+      description: null,
+      admin_note: null,
+      is_active_globally: true,
+      is_enabled: true,
+    },
+  ],
+  sections: [
+    {
+      key: "about_section",
+      label: "Hakkında",
+      description: null,
+      admin_note: null,
+      section_area: "detail_card",
+      rule: { is_enabled: true, requires_approval: false, sort_order: 5 },
+    },
+  ],
 };
 
 const renderPage = () => {

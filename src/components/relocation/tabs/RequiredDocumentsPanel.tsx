@@ -6,10 +6,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import {
-  completionPercent,
-  groupDocumentsByCategory,
-} from "@/lib/relocation-content-format";
+import { completionPercent, groupDocumentsByCategory } from "@/lib/relocation-content-format";
 import type { RelocationRequiredDocumentRow } from "@/lib/relocation-content-types";
 
 interface RequiredDocumentsPanelProps {
@@ -83,15 +80,11 @@ export function RequiredDocumentsPanel({
                   />
                   <span className="flex-1">
                     <span
-                      className={`block text-sm ${
-                        isDone ? "text-muted-foreground line-through" : "text-foreground"
-                      }`}
+                      className={`block text-sm ${isDone ? "text-muted-foreground line-through" : "text-foreground"}`}
                     >
                       {doc.doc_name}
                     </span>
-                    {doc.note && (
-                      <span className="block text-xs text-muted-foreground">{doc.note}</span>
-                    )}
+                    {doc.note && <span className="block text-xs text-muted-foreground">{doc.note}</span>}
                   </span>
                 </label>
               );

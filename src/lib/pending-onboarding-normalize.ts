@@ -1,7 +1,4 @@
-import type {
-  PendingOnboardingFormValues,
-  PendingOnboardingPayload,
-} from "@/lib/pending-onboarding-schemas";
+import type { PendingOnboardingFormValues, PendingOnboardingPayload } from "@/lib/pending-onboarding-schemas";
 
 export const REFERRAL_SOURCE_OPTIONS = [
   { value: "whatsapp", label: "WhatsApp Grubu" },
@@ -52,9 +49,7 @@ const requireNonEmpty = (label: string, value: string) => {
   }
 };
 
-export const normalizePendingFormPayload = (
-  payload: PendingOnboardingPayload,
-): NormalizedPendingOnboardingPayload => {
+export const normalizePendingFormPayload = (payload: PendingOnboardingPayload): NormalizedPendingOnboardingPayload => {
   const form = {
     ...payload.form,
     category: payload.form.category.trim(),

@@ -72,8 +72,7 @@ export function filterListingRows(
   filter: ListingFilterState,
   groups: readonly RoleGroup[],
 ): PublicCatalogRow[] {
-  const allowedRoleKeys =
-    filter.groupKey === "all" ? null : new Set(roleKeysForGroup(groups, filter.groupKey));
+  const allowedRoleKeys = filter.groupKey === "all" ? null : new Set(roleKeysForGroup(groups, filter.groupKey));
 
   const words = filter.searchText.trim().split(/\s+/).filter(Boolean);
 
@@ -84,9 +83,7 @@ export function filterListingRows(
 
     if (words.length > 0) {
       const haystack = searchableOf(row);
-      const everyWordMatches = words.every((word) =>
-        haystack.some((field) => trIncludes(field, word)),
-      );
+      const everyWordMatches = words.every((word) => haystack.some((field) => trIncludes(field, word)));
       if (!everyWordMatches) return false;
     }
 
@@ -101,10 +98,7 @@ export interface FilterOption {
   count: number;
 }
 
-const toOptions = (
-  values: readonly (string | null)[],
-  labelOf: (value: string) => string,
-): FilterOption[] => {
+const toOptions = (values: readonly (string | null)[], labelOf: (value: string) => string): FilterOption[] => {
   const counts = new Map<string, number>();
   for (const value of values) {
     if (!value) continue;
@@ -127,10 +121,7 @@ export function deriveCountryOptions(rows: readonly PublicCatalogRow[]): FilterO
 }
 
 /** Seçili ülkedeki şehir seçenekleri. `country="all"` ise tüm şehirler. */
-export function deriveCityOptions(
-  rows: readonly PublicCatalogRow[],
-  country: string,
-): FilterOption[] {
+export function deriveCityOptions(rows: readonly PublicCatalogRow[], country: string): FilterOption[] {
   const scoped = country === "all" ? rows : rows.filter((row) => row.countryName === country);
   return toOptions(
     scoped.map((row) => row.city),

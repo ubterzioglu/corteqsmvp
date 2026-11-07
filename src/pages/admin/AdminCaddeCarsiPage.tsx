@@ -41,7 +41,11 @@ const AdminCaddeCarsiPage = () => {
       toast({ title: "İlan güncellendi" });
     },
     onError: (error) => {
-      toast({ title: "İşlem başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İşlem başarısız",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -68,7 +72,9 @@ const AdminCaddeCarsiPage = () => {
             Çarşı İlan Yönetimi
           </CardTitle>
           <CardDescription>
-            {itemsQuery.isLoading ? "Yükleniyor..." : `${items.length} ilan. Gizleme/yayınlama moderasyon RPC'siyle audit'lenir.`}
+            {itemsQuery.isLoading
+              ? "Yükleniyor..."
+              : `${items.length} ilan. Gizleme/yayınlama moderasyon RPC'siyle audit'lenir.`}
           </CardDescription>
           <div className="flex flex-wrap gap-2 pt-2">
             {filterButtons.map((button) => (
@@ -96,27 +102,42 @@ const AdminCaddeCarsiPage = () => {
       {items.map((item) => (
         <Card key={item.id}>
           <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
-          <div className="min-w-0">
-            <div className="flex flex-wrap items-center gap-2">
-              <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">{item.title}</Link>
-              <Badge variant={item.status === "published" ? "default" : "secondary"}>{STATUS_LABELS[item.status]}</Badge>
-              {item.moderation_status === "rejected" ? <Badge variant="destructive">Moderasyon reddi</Badge> : null}
-              <Badge variant="outline">{item.category_key}</Badge>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">
+                  {item.title}
+                </Link>
+                <Badge variant={item.status === "published" ? "default" : "secondary"}>
+                  {STATUS_LABELS[item.status]}
+                </Badge>
+                {item.moderation_status === "rejected" ? <Badge variant="destructive">Moderasyon reddi</Badge> : null}
+                <Badge variant="outline">{item.category_key}</Badge>
+              </div>
+              <p className="mt-1 line-clamp-1 text-xs text-slate-500">{item.description}</p>
+              <p className="text-xs font-medium text-amber-900">
+                {formatCarsiPrice({ priceAmount: item.price_amount, priceCurrency: item.price_currency })}
+              </p>
             </div>
-            <p className="mt-1 line-clamp-1 text-xs text-slate-500">{item.description}</p>
-            <p className="text-xs font-medium text-amber-900">{formatCarsiPrice({ priceAmount: item.price_amount, priceCurrency: item.price_currency })}</p>
-          </div>
-          <div className="flex gap-2">
-            {item.status === "published" && item.moderation_status === "approved" ? (
-              <Button size="sm" variant="outline" onClick={() => moderateMutation.mutate({ itemId: item.id, action: "hide" })} disabled={moderateMutation.isPending}>
-                Gizle
-              </Button>
-            ) : (
-              <Button size="sm" onClick={() => moderateMutation.mutate({ itemId: item.id, action: "publish" })} disabled={moderateMutation.isPending}>
-                Yayınla
-              </Button>
-            )}
-          </div>
+            <div className="flex gap-2">
+              {item.status === "published" && item.moderation_status === "approved" ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => moderateMutation.mutate({ itemId: item.id, action: "hide" })}
+                  disabled={moderateMutation.isPending}
+                >
+                  Gizle
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={() => moderateMutation.mutate({ itemId: item.id, action: "publish" })}
+                  disabled={moderateMutation.isPending}
+                >
+                  Yayınla
+                </Button>
+              )}
+            </div>
           </CardContent>
         </Card>
       ))}

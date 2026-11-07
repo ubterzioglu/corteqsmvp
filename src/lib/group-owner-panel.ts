@@ -18,8 +18,7 @@ export const GROUP_OWNER_ERROR_MESSAGES: Record<string, string> = {
   group_not_found: "Grup bulunamadı.",
   group_owner_forbidden: "Bu panel yalnızca grubun doğrulanmış sahibine açıktır.",
   group_owner_description_too_long: "Kısa açıklama en fazla 160 karakter olabilir.",
-  group_owner_category_locked:
-    "Aile & Çocuk kategorisi şu anda kapalı — yakında doğrulanmış kuruluşlara açılacak.",
+  group_owner_category_locked: "Aile & Çocuk kategorisi şu anda kapalı — yakında doğrulanmış kuruluşlara açılacak.",
   group_owner_invalid_category: "Geçerli bir kategori seçin.",
   group_owner_country_not_found: "Ülke katalogda bulunamadı — listeden seçin.",
   group_owner_city_required: "Global olmayan grup için şehir zorunludur.",
@@ -88,9 +87,12 @@ export type OwnerPanelState =
 
 /** Panelin tek okuma kapısı — sahip değilse `{is_owner:false}` (sızıntı yok). */
 export async function fetchOwnerPanelState(landingDbId: string): Promise<OwnerPanelState> {
-  const { data, error } = await supabase.rpc("group_owner_panel_state" as never, {
-    p_landing_id: landingDbId,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "group_owner_panel_state" as never,
+    {
+      p_landing_id: landingDbId,
+    } as never,
+  );
 
   if (error) throw mapOwnerError(error, "Sahip paneli okunamadı.");
   return data as OwnerPanelState;
@@ -110,32 +112,34 @@ export interface OwnerUpdateParams {
 
 /** Sahip düzenlemesi — `null` geçen alan DEĞİŞMEZ (RPC eski değeri korur). */
 export async function ownerUpdate(params: OwnerUpdateParams): Promise<void> {
-  const { error } = await supabase.rpc("group_owner_update_v1" as never, {
-    p_landing_id: params.landingDbId,
-    p_short_description: params.shortDescription ?? null,
-    p_rules: params.rules ?? null,
-    p_category: params.category ?? null,
-    p_country_code: params.countryCode ?? null,
-    p_city_id: params.cityId ?? null,
-    p_is_global: params.isGlobal ?? null,
-    p_hero_image: params.heroImage ?? null,
-    p_tagline: params.tagline ?? null,
-  } as never);
+  const { error } = await supabase.rpc(
+    "group_owner_update_v1" as never,
+    {
+      p_landing_id: params.landingDbId,
+      p_short_description: params.shortDescription ?? null,
+      p_rules: params.rules ?? null,
+      p_category: params.category ?? null,
+      p_country_code: params.countryCode ?? null,
+      p_city_id: params.cityId ?? null,
+      p_is_global: params.isGlobal ?? null,
+      p_hero_image: params.heroImage ?? null,
+      p_tagline: params.tagline ?? null,
+    } as never,
+  );
 
   if (error) throw mapOwnerError(error, "Değişiklikler kaydedilemedi.");
 }
 
 /** Kuyruk kararı (G16): sahip yalnız kendi grubunun `pending_group_admin` sırasını inceler. */
-export async function reviewGroupPost(
-  postId: string,
-  decision: "approve" | "reject",
-  note?: string,
-): Promise<void> {
-  const { error } = await supabase.rpc("group_post_review" as never, {
-    p_post_id: postId,
-    p_decision: decision,
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+export async function reviewGroupPost(postId: string, decision: "approve" | "reject", note?: string): Promise<void> {
+  const { error } = await supabase.rpc(
+    "group_post_review" as never,
+    {
+      p_post_id: postId,
+      p_decision: decision,
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
 
   if (error) throw mapOwnerError(error, "Gönderi incelenemedi.");
 }
@@ -146,12 +150,15 @@ export async function reviewGroupPost(
  * G12 owner aktörüne bu geçişi zaten açıyor — yeni kapı YOK.
  */
 export async function requestGroupRemoval(landingDbId: string): Promise<void> {
-  const { error } = await supabase.rpc("set_group_status_v1" as never, {
-    p_landing_id: landingDbId,
-    p_to_status: "hidden",
-    p_reason: "owner_request",
-    p_note: "Sahip paneli: gruptan kaldırma isteği",
-  } as never);
+  const { error } = await supabase.rpc(
+    "set_group_status_v1" as never,
+    {
+      p_landing_id: landingDbId,
+      p_to_status: "hidden",
+      p_reason: "owner_request",
+      p_note: "Sahip paneli: gruptan kaldırma isteği",
+    } as never,
+  );
 
   if (error) throw mapOwnerError(error, "Grup listeden kaldırılamadı.");
 }

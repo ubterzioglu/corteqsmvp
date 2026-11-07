@@ -69,8 +69,8 @@ describe("newestCaddeCreatedAt (m16 taban fix)", () => {
     expect(newestCaddeCreatedAt(undefined)).toBeNull();
     expect(newestCaddeCreatedAt([])).toBeNull();
     expect(newestCaddeCreatedAt([{ items: [{ createdAt: null }] }])).toBeNull();
-    expect(
-      newestCaddeCreatedAt([{ items: [{ createdAt: null }, { createdAt: "2026-08-01T00:00:00+00:00" }] }]),
-    ).toBe("2026-08-01T00:00:00+00:00");
+    expect(newestCaddeCreatedAt([{ items: [{ createdAt: null }, { createdAt: "2026-08-01T00:00:00+00:00" }] }])).toBe(
+      "2026-08-01T00:00:00+00:00",
+    );
   });
 });

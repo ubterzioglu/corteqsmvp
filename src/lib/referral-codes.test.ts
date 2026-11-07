@@ -61,7 +61,9 @@ describe("referral code helpers", () => {
 
     const insertFn = vi
       .fn<
-        (payload: ReferralCodeInsert) => Promise<{ data: ReferralCodeRow | null; error: { code?: string; message: string } | null }>
+        (
+          payload: ReferralCodeInsert,
+        ) => Promise<{ data: ReferralCodeRow | null; error: { code?: string; message: string } | null }>
       >()
       .mockResolvedValueOnce({
         data: null,

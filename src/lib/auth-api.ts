@@ -36,11 +36,7 @@ export async function fetchAuthProfile(userId: string): Promise<Profile> {
       .select("value_text, afs_attributes!inner(key)")
       .eq("user_id", userId)
       .in("afs_attributes.key", [...AUTH_PROFILE_ATTRIBUTE_KEYS]),
-    supabase
-      .from("user_role_assignments")
-      .select("roles!inner(key)")
-      .eq("user_id", userId)
-      .maybeSingle(),
+    supabase.from("user_role_assignments").select("roles!inner(key)").eq("user_id", userId).maybeSingle(),
   ]);
 
   const attrs = attrsResult.data ?? [];

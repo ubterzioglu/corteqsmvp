@@ -105,9 +105,7 @@ describe("RouterAppErrorBoundary (genel sınır)", () => {
       </MemoryRouter>,
     );
     expect(screen.getByText("Bir hata oluştu")).toBeInTheDocument();
-    expect(reportClientError).toHaveBeenCalledWith(
-      expect.objectContaining({ context: "AppErrorBoundary" }),
-    );
+    expect(reportClientError).toHaveBeenCalledWith(expect.objectContaining({ context: "AppErrorBoundary" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Dışarıdan git" }));
 

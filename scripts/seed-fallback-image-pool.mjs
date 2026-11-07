@@ -132,7 +132,10 @@ async function run() {
         existingBasenamesByCategory.set(category, existingBasenames);
         console.log(`Yüklendi: ${category}/${filename} → ${storagePath}`);
       } catch (error) {
-        failures.push({ filename: `${category}/${filename}`, message: error instanceof Error ? error.message : String(error) });
+        failures.push({
+          filename: `${category}/${filename}`,
+          message: error instanceof Error ? error.message : String(error),
+        });
         console.error(`HATA: ${category}/${filename} → ${error instanceof Error ? error.message : error}`);
       }
     }

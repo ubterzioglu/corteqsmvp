@@ -43,9 +43,8 @@ export function AdminGruplarPageReportsTab({
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground">
-        Onay tek bir ihlal kaydeder ve grubun tüm açık şikayetlerini kapatır (uyarı merdiveni işler).
-        Asılsız olanları önce tek tek reddet. Son açık şikayet reddedilince şikayet nedeniyle gizlenen
-        grup yayına döner.
+        Onay tek bir ihlal kaydeder ve grubun tüm açık şikayetlerini kapatır (uyarı merdiveni işler). Asılsız olanları
+        önce tek tek reddet. Son açık şikayet reddedilince şikayet nedeniyle gizlenen grup yayına döner.
       </p>
       {reports.map((item, index) => (
         <Card

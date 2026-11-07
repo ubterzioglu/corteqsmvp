@@ -20,11 +20,7 @@
  */
 import { lazy, type ComponentType, type LazyExoticComponent } from "react";
 
-import {
-  isRecoveryReloadInProgress,
-  looksLikeChunkLoadError,
-  recoverFromWhiteScreen,
-} from "@/lib/recoveryReload";
+import { isRecoveryReloadInProgress, looksLikeChunkLoadError, recoverFromWhiteScreen } from "@/lib/recoveryReload";
 
 export type LazyModule<T> = { default: T };
 export type LazyFactory<T> = () => Promise<LazyModule<T>>;
@@ -59,8 +55,6 @@ export function withReloadGuard<T>(factory: LazyFactory<T>): LazyFactory<T> {
 
 // React.lazy'nin kendi imzası ComponentType<any> ister; props tipi çağırana aittir.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function lazyWithReload<T extends ComponentType<any>>(
-  factory: LazyFactory<T>,
-): LazyExoticComponent<T> {
+export function lazyWithReload<T extends ComponentType<any>>(factory: LazyFactory<T>): LazyExoticComponent<T> {
   return lazy(withReloadGuard(factory));
 }

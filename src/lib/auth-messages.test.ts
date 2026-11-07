@@ -49,7 +49,9 @@ describe("describeSignUpResult", () => {
   });
 
   it("session yoksa doğrulama e-postası yolda", () => {
-    expect(describeSignUpResult({ user: { identities: [{ id: "x" }] }, session: null }).outcome).toBe("confirmation_sent");
+    expect(describeSignUpResult({ user: { identities: [{ id: "x" }] }, session: null }).outcome).toBe(
+      "confirmation_sent",
+    );
     expect(describeSignUpResult(undefined).message).toBe(SIGNUP_CONFIRMATION_SENT_MESSAGE);
   });
 });

@@ -62,9 +62,7 @@ const CaseDetailPanel = ({
                   <p className="text-xs font-medium">{adminEmail}</p>
                 </div>
               ) : null}
-              {!claimantEmail && !adminEmail ? (
-                <p className="text-xs text-muted-foreground">Bilgi yok</p>
-              ) : null}
+              {!claimantEmail && !adminEmail ? <p className="text-xs text-muted-foreground">Bilgi yok</p> : null}
             </div>
           ) : null}
 
@@ -101,9 +99,21 @@ const CaseDetailPanel = ({
                 <div key={rule.attributeKey} className="flex items-center justify-between rounded border px-2 py-1">
                   <span className="text-[11px]">{rule.attributeLabel}</span>
                   <div className="flex gap-1">
-                    {rule.is_enabled && <Badge variant="outline" className="text-[9px] py-0">A</Badge>}
-                    {rule.is_required && <Badge variant="secondary" className="text-[9px] py-0">Z</Badge>}
-                    {rule.is_public_default && <Badge variant="outline" className="text-[9px] py-0">P</Badge>}
+                    {rule.is_enabled && (
+                      <Badge variant="outline" className="text-[9px] py-0">
+                        A
+                      </Badge>
+                    )}
+                    {rule.is_required && (
+                      <Badge variant="secondary" className="text-[9px] py-0">
+                        Z
+                      </Badge>
+                    )}
+                    {rule.is_public_default && (
+                      <Badge variant="outline" className="text-[9px] py-0">
+                        P
+                      </Badge>
+                    )}
                   </div>
                 </div>
               ))}

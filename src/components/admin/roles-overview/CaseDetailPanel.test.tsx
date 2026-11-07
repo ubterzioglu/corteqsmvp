@@ -4,14 +4,16 @@ import type { RoleEntityAssignment } from "./types";
 
 const assignment: RoleEntityAssignment = {
   attributeRules: [
-    { attributeKey: "full_name", attributeLabel: "Görünen İsim", is_enabled: true, is_required: true, is_public_default: true },
+    {
+      attributeKey: "full_name",
+      attributeLabel: "Görünen İsim",
+      is_enabled: true,
+      is_required: true,
+      is_public_default: true,
+    },
   ],
-  featureFlags: [
-    { featureKey: "profile.view_own", featureLabel: "Profilimi Görüntüle", is_enabled: true },
-  ],
-  sectionRules: [
-    { sectionKey: "contact_card", sectionLabel: "İletişim Kartı", is_enabled: false },
-  ],
+  featureFlags: [{ featureKey: "profile.view_own", featureLabel: "Profilimi Görüntüle", is_enabled: true }],
+  sectionRules: [{ sectionKey: "contact_card", sectionLabel: "İletişim Kartı", is_enabled: false }],
 };
 
 test("renders item and role info headers", () => {
@@ -23,7 +25,7 @@ test("renders item and role info headers", () => {
       adminEmail={null}
       assignment={assignment}
       isLoading={false}
-    />
+    />,
   );
   expect(screen.getByText("CorteQS Şirketi")).toBeInTheDocument();
   expect(screen.getByText("İşletme")).toBeInTheDocument();
@@ -39,7 +41,7 @@ test("renders assignment tables", () => {
       adminEmail="admin@corteqs.net"
       assignment={assignment}
       isLoading={false}
-    />
+    />,
   );
   expect(screen.getByText("Görünen İsim")).toBeInTheDocument();
   expect(screen.getByText("Profilimi Görüntüle")).toBeInTheDocument();
@@ -56,7 +58,7 @@ test("external mode hides claim/admin and role, keeps item and AFS", () => {
       adminEmail="admin@corteqs.net"
       assignment={assignment}
       isLoading={false}
-    />
+    />,
   );
   expect(screen.getByText("Profile dışarıdan bakıldığında")).toBeInTheDocument();
   // Claim sahibi / admin e-postaları dışarıdan görünümde gizlenir.
@@ -77,7 +79,7 @@ test("login mode is the default and shows claim email", () => {
       adminEmail={null}
       assignment={assignment}
       isLoading={false}
-    />
+    />,
   );
   expect(screen.getByText("Profil login olduğunda")).toBeInTheDocument();
   expect(screen.getByText("ali@example.com")).toBeInTheDocument();
@@ -92,7 +94,7 @@ test("shows placeholder when no selection", () => {
       adminEmail={null}
       assignment={null}
       isLoading={false}
-    />
+    />,
   );
   expect(screen.getByText(/Yukarıdan/i)).toBeInTheDocument();
 });

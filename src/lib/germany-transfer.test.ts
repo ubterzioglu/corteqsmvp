@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  TRANSFER_PROVIDERS,
-  quoteTransfer,
-  rankTransfers,
-} from "@/lib/germany-transfer";
+import { TRANSFER_PROVIDERS, quoteTransfer, rankTransfers } from "@/lib/germany-transfer";
 
 // Kaynak: ref101 para-transferi. Hesap mantığı aynası.
 

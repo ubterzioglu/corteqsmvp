@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import { buildNewsPostSummary, importNewsPostToMarquee, listImportableNewsPosts, type NewsPostRow } from "@/lib/marquee";
+import {
+  buildNewsPostSummary,
+  importNewsPostToMarquee,
+  listImportableNewsPosts,
+  type NewsPostRow,
+} from "@/lib/marquee";
 
 type QueryResult<T> = Promise<{ data: T; error: null }>;
 

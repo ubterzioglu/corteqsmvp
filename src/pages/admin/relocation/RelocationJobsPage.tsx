@@ -30,9 +30,7 @@ export default function RelocationJobsPage() {
       </div>
 
       {jobsQuery.isLoading && <p className="text-sm text-muted-foreground">Yükleniyor…</p>}
-      {jobsQuery.isError && (
-        <p className="text-sm text-destructive">İşler yüklenemedi.</p>
-      )}
+      {jobsQuery.isError && <p className="text-sm text-destructive">İşler yüklenemedi.</p>}
 
       <div className="space-y-2">
         {(jobsQuery.data ?? []).map((job) => (
@@ -56,15 +54,11 @@ export default function RelocationJobsPage() {
                 <span>Maliyet: ${Number(job.cost_total_usd).toFixed(4)}</span>
                 <span>Deneme: {job.attempts}</span>
               </div>
-              {job.last_error_message && (
-                <p className="mt-1 text-destructive">Hata: {job.last_error_message}</p>
-              )}
+              {job.last_error_message && <p className="mt-1 text-destructive">Hata: {job.last_error_message}</p>}
             </CardContent>
           </Card>
         ))}
-        {jobsQuery.data?.length === 0 && (
-          <p className="text-sm text-muted-foreground">Henüz iş yok.</p>
-        )}
+        {jobsQuery.data?.length === 0 && <p className="text-sm text-muted-foreground">Henüz iş yok.</p>}
       </div>
     </div>
   );

@@ -73,10 +73,7 @@ type DirectoryRowSeed = {
   role_label: string;
 };
 
-const rpcRow = (
-  { item_id, role_key, role_label }: DirectoryRowSeed,
-  total_count = 1,
-) => ({
+const rpcRow = ({ item_id, role_key, role_label }: DirectoryRowSeed, total_count = 1) => ({
   item_id,
   item_type: "member",
   slug: item_id,
@@ -242,10 +239,7 @@ describe("catalog-directory", () => {
 
       await listUnifiedDirectoryRows({ ...defaultFilters, offset: -10 });
 
-      expect(rpcMock).toHaveBeenCalledWith(
-        "search_directory_catalog",
-        expect.objectContaining({ p_offset: 0 }),
-      );
+      expect(rpcMock).toHaveBeenCalledWith("search_directory_catalog", expect.objectContaining({ p_offset: 0 }));
     });
 
     it("toplam sayıyı RPC'nin total_count'undan alır, satır sayısından DEĞİL", async () => {
@@ -322,9 +316,7 @@ describe("catalog-directory", () => {
       // ⚠️ Denetim YORUMLARI dışarıda bırakır: bu kararın GEREKÇESİ migration'ın
       // başlığında yazılıdır ve orada "catalog_item_contacts" kelimesi geçer.
       // Ham metinde arayan bir test, kararı belgeleyen yorumu kusur sayardı.
-      const sqlOnly = migration
-        .replace(/--[^\n]*/g, "")
-        .replace(/\/\*[\s\S]*?\*\//g, "");
+      const sqlOnly = migration.replace(/--[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
 
       expect(sqlOnly).not.toMatch(/d\.search_text/);
       expect(sqlOnly).not.toMatch(/catalog_item_contacts/);
@@ -345,16 +337,13 @@ describe("catalog-directory", () => {
     it("Türkçe katlama SQL tarafında da uygulanır", () => {
       expect(migration).toContain("catalog_search_normalize");
     });
-
   });
 
   it("B07 null featured filtresini kapalı sayar; demo placeholder'lar görünür kalır", () => {
-    const placeholderMigration = readMigrationSource(
-      [
-        "supabase/migrations/applied/20260921120000_directory_exclude_placeholders.sql",
-        "supabase/migrations/20260921120000_directory_exclude_placeholders.sql",
-      ],
-    );
+    const placeholderMigration = readMigrationSource([
+      "supabase/migrations/applied/20260921120000_directory_exclude_placeholders.sql",
+      "supabase/migrations/20260921120000_directory_exclude_placeholders.sql",
+    ]);
 
     expect(placeholderMigration).toContain("coalesce(p_featured_only, false)");
     expect(placeholderMigration).toMatch(/ci\.is_placeholder\s*=\s*false/);

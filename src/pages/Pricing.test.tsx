@@ -8,10 +8,7 @@ import { resolve } from "path";
 
 describe("Pricing — CV/ilan görüntüleme satırları", () => {
   it("her kullanıcı tipinde CV ve ilan satırları tanımlı olmalı", () => {
-    const content = readFileSync(
-      resolve(process.cwd(), "src/pages/Pricing.tsx"),
-      "utf-8"
-    );
+    const content = readFileSync(resolve(process.cwd(), "src/pages/Pricing.tsx"), "utf-8");
 
     // Her 3 tipte de "CV görüntüleme" olmalı (6 kez: 3 freemium + 3 premium)
     const cvMatches = content.match(/CV görüntüleme/g);

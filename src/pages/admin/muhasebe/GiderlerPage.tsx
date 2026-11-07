@@ -1,34 +1,15 @@
 // src/pages/admin/muhasebe/GiderlerPage.tsx
 // Gider kayıtları listesi — arama, filtre, CRUD
 
-import { useMemo, useState } from 'react';
-import { trIncludes } from '@/lib/text-normalization';
-import { Plus, Pencil, Trash2, ExternalLink, CreditCard, Search } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { trIncludes } from "@/lib/text-normalization";
+import { Plus, Pencil, Trash2, ExternalLink, CreditCard, Search } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,24 +19,14 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
-import { ExpenseFormDialog } from '@/components/admin/muhasebe/ExpenseFormDialog';
-import { StatusBadge } from '@/components/admin/muhasebe/StatusBadge';
+import { ExpenseFormDialog } from "@/components/admin/muhasebe/ExpenseFormDialog";
+import { StatusBadge } from "@/components/admin/muhasebe/StatusBadge";
 
-import {
-  useExpenses,
-  useCreateExpense,
-  useUpdateExpense,
-  useDeleteExpense,
-} from '@/hooks/useMuhasebe';
-import { aggregateCurrencyTotals } from '@/lib/muhasebe-aggregations';
-import {
-  formatCurrency,
-  formatCurrencySummary,
-  formatDateTR,
-  safeMuhasebeHref,
-} from '@/lib/muhasebe-format';
+import { useExpenses, useCreateExpense, useUpdateExpense, useDeleteExpense } from "@/hooks/useMuhasebe";
+import { aggregateCurrencyTotals } from "@/lib/muhasebe-aggregations";
+import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe-format";
 import {
   EXPENSE_CATEGORY_LABELS,
   EXPENSE_STATUS_LABELS,
@@ -64,11 +35,11 @@ import {
   type ExpenseRow,
   type ExpenseStatus,
   type PersonType,
-} from '@/types/muhasebe';
+} from "@/types/muhasebe";
 
-type PersonFilter = 'all' | PersonType;
-type StatusFilter = 'all' | ExpenseStatus;
-type CategoryFilter = 'all' | ExpenseCategory;
+type PersonFilter = "all" | PersonType;
+type StatusFilter = "all" | ExpenseStatus;
+type CategoryFilter = "all" | ExpenseCategory;
 
 export default function GiderlerPage() {
   const { data: expenses = [], isLoading } = useExpenses();
@@ -76,10 +47,10 @@ export default function GiderlerPage() {
   const updateMut = useUpdateExpense();
   const deleteMut = useDeleteExpense();
 
-  const [search, setSearch] = useState('');
-  const [personFilter, setPersonFilter] = useState<PersonFilter>('all');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [search, setSearch] = useState("");
+  const [personFilter, setPersonFilter] = useState<PersonFilter>("all");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<ExpenseRow | null>(null);
@@ -87,15 +58,11 @@ export default function GiderlerPage() {
 
   const filtered = useMemo(() => {
     return expenses.filter((e) => {
-      if (personFilter !== 'all' && e.person !== personFilter) return false;
-      if (statusFilter !== 'all' && e.status !== statusFilter) return false;
-      if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
+      if (personFilter !== "all" && e.person !== personFilter) return false;
+      if (statusFilter !== "all" && e.status !== statusFilter) return false;
+      if (categoryFilter !== "all" && e.category !== categoryFilter) return false;
       if (!search.trim()) return true;
-      return (
-        trIncludes(e.description, search) ||
-        trIncludes(e.note, search) ||
-        trIncludes(e.invoice_url, search)
-      );
+      return trIncludes(e.description, search) || trIncludes(e.note, search) || trIncludes(e.invoice_url, search);
     });
   }, [expenses, search, personFilter, statusFilter, categoryFilter]);
 
@@ -116,9 +83,7 @@ export default function GiderlerPage() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Giderler</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Şirket kurulana kadar geçici muhasebe kaydı
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Şirket kurulana kadar geçici muhasebe kaydı</p>
         </div>
         <Button onClick={handleNew}>
           <Plus className="mr-2 h-4 w-4" />
@@ -137,18 +102,10 @@ export default function GiderlerPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Ara..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+              <Input placeholder="Ara..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
 
-            <Select
-              value={personFilter}
-              onValueChange={(v) => setPersonFilter(v as PersonFilter)}
-            >
+            <Select value={personFilter} onValueChange={(v) => setPersonFilter(v as PersonFilter)}>
               <SelectTrigger>
                 <SelectValue placeholder="Kişi" />
               </SelectTrigger>
@@ -162,29 +119,21 @@ export default function GiderlerPage() {
               </SelectContent>
             </Select>
 
-            <Select
-              value={categoryFilter}
-              onValueChange={(v) => setCategoryFilter(v as CategoryFilter)}
-            >
+            <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as CategoryFilter)}>
               <SelectTrigger>
                 <SelectValue placeholder="Kategori" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                {(Object.keys(EXPENSE_CATEGORY_LABELS) as ExpenseCategory[]).map(
-                  (c) => (
-                    <SelectItem key={c} value={c}>
-                      {EXPENSE_CATEGORY_LABELS[c]}
-                    </SelectItem>
-                  ),
-                )}
+                {(Object.keys(EXPENSE_CATEGORY_LABELS) as ExpenseCategory[]).map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {EXPENSE_CATEGORY_LABELS[c]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
-            <Select
-              value={statusFilter}
-              onValueChange={(v) => setStatusFilter(v as StatusFilter)}
-            >
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as StatusFilter)}>
               <SelectTrigger>
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
@@ -233,13 +182,9 @@ export default function GiderlerPage() {
                 ) : (
                   filtered.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell className="whitespace-nowrap">
-                        {formatDateTR(row.expense_date)}
-                      </TableCell>
+                      <TableCell className="whitespace-nowrap">{formatDateTR(row.expense_date)}</TableCell>
                       <TableCell>{PERSON_LABELS[row.person]}</TableCell>
-                      <TableCell className="text-sm">
-                        {EXPENSE_CATEGORY_LABELS[row.category]}
-                      </TableCell>
+                      <TableCell className="text-sm">{EXPENSE_CATEGORY_LABELS[row.category]}</TableCell>
                       <TableCell className="max-w-xs">
                         <span className="line-clamp-2">{row.description}</span>
                         {row.is_virtual_card && (
@@ -272,12 +217,7 @@ export default function GiderlerPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(row)}
-                            aria-label="Düzenle"
-                          >
+                          <Button variant="ghost" size="icon" onClick={() => handleEdit(row)} aria-label="Düzenle">
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
@@ -316,16 +256,12 @@ export default function GiderlerPage() {
         }}
       />
 
-      <AlertDialog
-        open={Boolean(deleteTarget)}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-      >
+      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Gider kaydını sil?</AlertDialogTitle>
             <AlertDialogDescription>
-              "{deleteTarget?.description}" kaydı kalıcı olarak silinecek. Bu işlem
-              geri alınamaz.
+              "{deleteTarget?.description}" kaydı kalıcı olarak silinecek. Bu işlem geri alınamaz.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

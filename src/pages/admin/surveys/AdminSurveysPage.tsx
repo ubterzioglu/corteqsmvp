@@ -45,7 +45,10 @@ export default function AdminSurveysPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-900">Anketler</h1>
-        <Link to="/admin/surveys/new" className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+        <Link
+          to="/admin/surveys/new"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+        >
           Yeni Anket
         </Link>
       </div>
@@ -71,18 +74,50 @@ export default function AdminSurveysPage() {
               <tr key={survey.id} className="border-t border-slate-100 align-top">
                 <td className="px-4 py-3 font-semibold text-slate-900">{survey.title}</td>
                 <td className="px-4 py-3 text-slate-700">{survey.slug}</td>
-                <td className="px-4 py-3"><SurveyStatusBadge status={survey.status} /></td>
+                <td className="px-4 py-3">
+                  <SurveyStatusBadge status={survey.status} />
+                </td>
                 <td className="px-4 py-3 text-slate-700">{survey.survey_responses?.length ?? 0}</td>
-                <td className="px-4 py-3 text-slate-700">{survey.published_at ? new Date(survey.published_at).toLocaleString() : "-"}</td>
+                <td className="px-4 py-3 text-slate-700">
+                  {survey.published_at ? new Date(survey.published_at).toLocaleString() : "-"}
+                </td>
                 <td className="px-4 py-3 text-slate-700">{new Date(survey.created_at).toLocaleString()}</td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-2">
-                    <Link className="rounded border px-2 py-1 text-xs" to={`/admin/surveys/${survey.id}/edit`}>Düzenle</Link>
-                    <Link className="rounded border px-2 py-1 text-xs" to={`/admin/surveys/${survey.id}/responses`}>Cevapları Gör</Link>
-                    <button type="button" className="rounded border px-2 py-1 text-xs" onClick={() => runAction(() => publishSurvey(survey.id))}>Yayınla</button>
-                    <button type="button" className="rounded border px-2 py-1 text-xs" onClick={() => runAction(() => closeSurvey(survey.id))}>Kapat</button>
-                    <button type="button" className="rounded border px-2 py-1 text-xs" onClick={() => runAction(() => archiveSurvey(survey.id))}>Arşivle</button>
-                    <button type="button" className="rounded border border-red-300 px-2 py-1 text-xs text-red-700" onClick={() => runAction(() => deleteSurvey(survey.id))}>Sil</button>
+                    <Link className="rounded border px-2 py-1 text-xs" to={`/admin/surveys/${survey.id}/edit`}>
+                      Düzenle
+                    </Link>
+                    <Link className="rounded border px-2 py-1 text-xs" to={`/admin/surveys/${survey.id}/responses`}>
+                      Cevapları Gör
+                    </Link>
+                    <button
+                      type="button"
+                      className="rounded border px-2 py-1 text-xs"
+                      onClick={() => runAction(() => publishSurvey(survey.id))}
+                    >
+                      Yayınla
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded border px-2 py-1 text-xs"
+                      onClick={() => runAction(() => closeSurvey(survey.id))}
+                    >
+                      Kapat
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded border px-2 py-1 text-xs"
+                      onClick={() => runAction(() => archiveSurvey(survey.id))}
+                    >
+                      Arşivle
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded border border-red-300 px-2 py-1 text-xs text-red-700"
+                      onClick={() => runAction(() => deleteSurvey(survey.id))}
+                    >
+                      Sil
+                    </button>
                   </div>
                 </td>
               </tr>

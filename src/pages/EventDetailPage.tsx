@@ -35,8 +35,7 @@ export default function EventDetailPage() {
 
   // Paylaşım adresi `window.location.href` DEĞİL: o, adrese yapışmış sorgu
   // parametrelerini (utm_*, ?ref=...) de paylaşıma taşır.
-  const eventUrl =
-    event && typeof window !== "undefined" ? buildEventShareUrl(event.id, window.location.origin) : "";
+  const eventUrl = event && typeof window !== "undefined" ? buildEventShareUrl(event.id, window.location.origin) : "";
 
   const viewerTimezone = resolveViewerTimezone();
   const schedule = event
@@ -76,20 +75,27 @@ export default function EventDetailPage() {
             description: event.description,
             startDate: startInstant ? startInstant.toISOString() : event.event_date,
             endDate: endInstant ? endInstant.toISOString() : undefined,
-            eventAttendanceMode: event.type === "online" ? "https://schema.org/OnlineEventAttendanceMode" : "https://schema.org/OfflineEventAttendanceMode",
-            location: event.location ? {
-              "@type": "Place",
-              name: event.location,
-              address: {
-                "@type": "PostalAddress",
-                addressLocality: event.city,
-                addressCountry: event.country,
-              },
-            } : undefined,
-            organizer: event.organizer_name ? {
-              "@type": "Organization",
-              name: event.organizer_name,
-            } : undefined,
+            eventAttendanceMode:
+              event.type === "online"
+                ? "https://schema.org/OnlineEventAttendanceMode"
+                : "https://schema.org/OfflineEventAttendanceMode",
+            location: event.location
+              ? {
+                  "@type": "Place",
+                  name: event.location,
+                  address: {
+                    "@type": "PostalAddress",
+                    addressLocality: event.city,
+                    addressCountry: event.country,
+                  },
+                }
+              : undefined,
+            organizer: event.organizer_name
+              ? {
+                  "@type": "Organization",
+                  name: event.organizer_name,
+                }
+              : undefined,
           },
         }
       : { canonicalPath: `/events/${id}`, robots: "noindex, follow" },
@@ -111,7 +117,9 @@ export default function EventDetailPage() {
       <main className="min-h-screen bg-background px-4 py-10">
         <div className="mx-auto max-w-3xl pt-24 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Etkinlik bulunamadı</h1>
-          <Link to="/events" className="text-primary hover:underline">← Etkinliklere dön</Link>
+          <Link to="/events" className="text-primary hover:underline">
+            ← Etkinliklere dön
+          </Link>
         </div>
       </main>
     );
@@ -120,7 +128,10 @@ export default function EventDetailPage() {
   return (
     <main className="min-h-screen bg-[linear-gradient(180deg,#fffdf9_0%,#f8fafc_100%)] px-4 py-10">
       <div className="mx-auto max-w-3xl">
-        <Link to="/events" className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <Link
+          to="/events"
+          className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
           <ArrowLeft className="h-4 w-4" /> Etkinliklere dön
         </Link>
 
@@ -135,7 +146,9 @@ export default function EventDetailPage() {
             <div className="mb-4 flex flex-wrap items-center gap-2">
               <Badge variant={typeBadgeVariant(event.type)}>{eventTypeLabel(event.type)}</Badge>
               {event.featured && (
-                <Badge variant="outline" className="border-amber-400 text-amber-600">Öne Çıkan</Badge>
+                <Badge variant="outline" className="border-amber-400 text-amber-600">
+                  Öne Çıkan
+                </Badge>
               )}
               <Badge variant="outline">{event.category}</Badge>
             </div>
@@ -159,13 +172,10 @@ export default function EventDetailPage() {
                   <Clock className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
                   <div>
                     <span className="font-medium">{schedule.sourceRange}</span>
-                    {schedule.sourceLabel && (
-                      <span className="text-slate-500"> · {schedule.sourceLabel} saatiyle</span>
-                    )}
+                    {schedule.sourceLabel && <span className="text-slate-500"> · {schedule.sourceLabel} saatiyle</span>}
                     {schedule.viewerRange && (
                       <p className="mt-0.5 text-xs text-slate-500">
-                        Senin saatinle{" "}
-                        <span className="font-medium text-slate-700">{schedule.viewerRange}</span>
+                        Senin saatinle <span className="font-medium text-slate-700">{schedule.viewerRange}</span>
                         {schedule.viewerLabel ? ` (${schedule.viewerLabel})` : ""}
                         {schedule.viewerDayLabel ? ` — senin takviminde ${schedule.viewerDayLabel}` : ""}
                       </p>
@@ -232,12 +242,17 @@ export default function EventDetailPage() {
             {event.tags && event.tags.length > 0 && (
               <div className="mb-6 flex flex-wrap gap-2">
                 {event.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary">{tag}</Badge>
+                  <Badge key={tag} variant="secondary">
+                    {tag}
+                  </Badge>
                 ))}
               </div>
             )}
 
-            <div className={`border-t pt-4 ${highlightShare ? "mt-6 scroll-mt-24" : ""}`} id={highlightShare ? "share-section" : undefined}>
+            <div
+              className={`border-t pt-4 ${highlightShare ? "mt-6 scroll-mt-24" : ""}`}
+              id={highlightShare ? "share-section" : undefined}
+            >
               <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700">
                 <Share2 className="h-4 w-4" /> Paylaş
               </h3>
@@ -255,9 +270,7 @@ export default function EventDetailPage() {
                   herkes "Etkinlik bulunamadı" görür. Aynı kural
                   MyEventsPanel'de de uygulanır. */}
               {event.status === "published" ? (
-                <EventShareButtons
-                  share={{ title: event.title, description: event.description, url: eventUrl }}
-                />
+                <EventShareButtons share={{ title: event.title, description: event.description, url: eventUrl }} />
               ) : (
                 <p className="text-sm text-slate-500">
                   Etkinlik henüz yayında değil — bağlantıyı yalnız sen görebilirsin.

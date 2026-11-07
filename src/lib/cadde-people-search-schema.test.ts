@@ -91,6 +91,8 @@ describe("M38 · search_cadde_people_v1 güvenlik korumaları", () => {
 describe("M38 · yetki kontrolü", () => {
   it("anon'a grant YOK (yalnız authenticated + service_role)", () => {
     expect(flat()).toContain("revoke all on function public.search_cadde_people_v1(text, integer) from public, anon");
-    expect(flat()).toContain("grant execute on function public.search_cadde_people_v1(text, integer) to authenticated, service_role");
+    expect(flat()).toContain(
+      "grant execute on function public.search_cadde_people_v1(text, integer) to authenticated, service_role",
+    );
   });
 });

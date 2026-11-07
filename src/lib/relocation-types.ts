@@ -5,32 +5,15 @@ import type { RelocationScoreKey } from "@/lib/relocation-ranking";
 
 export type RelocationMoveStatus = "draft" | "active" | "archived";
 
-export type RelocationServiceCategory =
-  | "housing"
-  | "airline"
-  | "gsm_operator"
-  | "doctor"
-  | "community_hub";
+export type RelocationServiceCategory = "housing" | "airline" | "gsm_operator" | "doctor" | "community_hub";
 
 export type RelocationStepTrigger = "before_departure" | "after_arrival" | "ongoing";
 
 export type RelocationInteractionType =
-  | "impression"
-  | "click"
-  | "save"
-  | "dismiss"
-  | "compare"
-  | "click_out"
-  | "checklist_complete"
-  | "move_success";
+  "impression" | "click" | "save" | "dismiss" | "compare" | "click_out" | "checklist_complete" | "move_success";
 
 export type RelocationAuthorityLevel =
-  | "official"
-  | "official_city"
-  | "regulator"
-  | "licensed_commercial"
-  | "verified_community"
-  | "user_generated";
+  "official" | "official_city" | "regulator" | "licensed_commercial" | "verified_community" | "user_generated";
 
 export interface RelocationHousehold {
   adults: number;

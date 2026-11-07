@@ -198,7 +198,9 @@ const MessagesInbox = () => {
   );
 
   const unreadCount = inboxWithDisplay.filter((message) => !message.read_at).length;
-  const active = inboxWithDisplay.find((message) => message.id === activeId) ?? sentWithDisplay.find((message) => message.id === activeId);
+  const active =
+    inboxWithDisplay.find((message) => message.id === activeId) ??
+    sentWithDisplay.find((message) => message.id === activeId);
 
   if (!user) {
     return (
@@ -210,9 +212,7 @@ const MessagesInbox = () => {
 
   const renderList = (items: MessageWithDisplay[], emptyLabel: string, kind: "inbox" | "sent") => (
     <div className="divide-y divide-border max-h-[480px] overflow-y-auto">
-      {items.length === 0 && (
-        <p className="text-sm text-muted-foreground font-body py-10 text-center">{emptyLabel}</p>
-      )}
+      {items.length === 0 && <p className="text-sm text-muted-foreground font-body py-10 text-center">{emptyLabel}</p>}
       {items.map((message) => {
         const isActive = activeId === message.id;
         const unread = kind === "inbox" && !message.read_at;
@@ -294,7 +294,9 @@ const MessagesInbox = () => {
                   <span className="text-xs text-muted-foreground">{fmtAgo(active.created_at)}</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  {active.sender_id === user.id ? `Kime: ${active.counterpartName}` : `Kimden: ${active.counterpartName}`}
+                  {active.sender_id === user.id
+                    ? `Kime: ${active.counterpartName}`
+                    : `Kimden: ${active.counterpartName}`}
                 </p>
               </div>
               <p className="text-sm text-foreground whitespace-pre-wrap font-body flex-1">{active.content}</p>
@@ -307,7 +309,12 @@ const MessagesInbox = () => {
                     rows={3}
                   />
                   <div className="flex justify-end">
-                    <Button size="sm" onClick={() => void reply(active)} disabled={!replyText.trim() || sending} className="gap-1.5">
+                    <Button
+                      size="sm"
+                      onClick={() => void reply(active)}
+                      disabled={!replyText.trim() || sending}
+                      className="gap-1.5"
+                    >
                       <Send className="h-3.5 w-3.5" /> {sending ? "..." : "Cevap Gönder"}
                     </Button>
                   </div>

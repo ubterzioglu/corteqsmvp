@@ -32,9 +32,7 @@ describe("extractFaqPage", () => {
 
   it("FAQPage yoksa AÇIKÇA düşer (sessizce boş dosya üretmez)", () => {
     expect(() => extractFaqPage("<html></html>")).toThrow("FAQPage");
-    expect(() =>
-      extractFaqPage(`<script type="application/ld+json">{"@type":"WebSite"}</script>`),
-    ).toThrow("FAQPage");
+    expect(() => extractFaqPage(`<script type="application/ld+json">{"@type":"WebSite"}</script>`)).toThrow("FAQPage");
   });
 });
 
@@ -42,10 +40,9 @@ describe("public/ai/faq.json ↔ index.html senkronu", () => {
   it("faq.json, index.html'deki FAQPage'den üretilmiş olanla BİREBİR aynıdır", () => {
     const beklenen = buildFaqJson(extractFaqPage(html));
 
-    expect(
-      faqFile,
-      "faq.json bayat/elle düzenlenmiş — `node scripts/generate-ai-faq.mjs` ile yeniden üret",
-    ).toBe(beklenen);
+    expect(faqFile, "faq.json bayat/elle düzenlenmiş — `node scripts/generate-ai-faq.mjs` ile yeniden üret").toBe(
+      beklenen,
+    );
   });
 
   it("soru sayısı ve soru metinleri index.html ile eşittir", () => {
@@ -57,7 +54,9 @@ describe("public/ai/faq.json ↔ index.html senkronu", () => {
   });
 
   it("Türkçe karakterler bozulmadan korunur (ASCII'ye düşmez)", () => {
-    const metin = JSON.parse(faqFile).mainEntity.map((q) => q.name + q.acceptedAnswer.text).join(" ");
+    const metin = JSON.parse(faqFile)
+      .mainEntity.map((q) => q.name + q.acceptedAnswer.text)
+      .join(" ");
 
     expect(metin).toMatch(/[çğıöşüÇĞİÖŞÜ]/);
     expect(faqFile).not.toMatch(/\\u[0-9a-f]{4}/i); // kaçış dizisi yok, ham karakter

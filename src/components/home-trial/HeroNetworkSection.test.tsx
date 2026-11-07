@@ -25,10 +25,7 @@ describe("ana sayfa hero", () => {
     renderHero();
     // Etiket 2026-09-20'de "Ağa Katıl" → "Ücretsiz kayıt ol!" oldu (kullanıcı
     // kararı): "ağa katıl" ücretsizliği söylemiyordu.
-    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute(
-      "href",
-      "/login?mode=signup",
-    );
+    expect(screen.getByRole("link", { name: /Ücretsiz kayıt ol!/ })).toHaveAttribute("href", "/login?mode=signup");
     expect(screen.queryByRole("link", { name: /Ağa Katıl/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Araçlar!/ })).toHaveAttribute("href", "/tools");
     expect(screen.getByRole("button", { name: /Ağı keşfet/ })).toBeInTheDocument();
@@ -67,9 +64,7 @@ describe("ana sayfa hero", () => {
   it("Kampanya & Yarışmalar düğmesi DEMO rozeti taşır", () => {
     renderHero();
 
-    expect(
-      within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO"),
-    ).toBeInTheDocument();
+    expect(within(screen.getByRole("link", { name: /Kampanya & Yarışmalar/ })).getByText("DEMO")).toBeInTheDocument();
   });
 
   // Kullanıcı kararı 2026-09-20: mobilde düğmeler alt alta çok yer kaplıyordu.
@@ -77,8 +72,7 @@ describe("ana sayfa hero", () => {
   // SINIFLA yapılır (jsdom CSS uygulamaz), bu yüzden iddia sınıf üzerinedir —
   // DOM sırası masaüstündeki 5 + 4 sözleşmesi için değişmeden kalmalı.
   describe("mobil aç/kapa", () => {
-    const isHiddenOnMobile = (element: HTMLElement) =>
-      element.className.includes("hidden sm:inline-flex");
+    const isHiddenOnMobile = (element: HTMLElement) => element.className.includes("hidden sm:inline-flex");
 
     it("mobilde yalnız ilk üç düğmeyi açık bırakır", () => {
       renderHero();

@@ -10,7 +10,9 @@
 // Yeni drift bulundukça buraya kural eklenir.
 
 function majorMinor(semver) {
-  const m = String(semver).replace(/^[^0-9]*/, "").match(/^(\d+)\.(\d+)/);
+  const m = String(semver)
+    .replace(/^[^0-9]*/, "")
+    .match(/^(\d+)\.(\d+)/);
   return m ? { major: Number(m[1]), minor: Number(m[2]) } : null;
 }
 
@@ -37,10 +39,7 @@ function ruleRouterVersion(ctx) {
         rule: "router-version-drift",
         severity: "high",
         message: `package.json react-router-dom ${pinned} (major ${pinMm.major}) ama ${doc} "${m[0]}" (major ${docMajor}) diyor.`,
-        evidence: [
-          { path: "package.json" },
-          { path: doc, line: lineOf(src, m[0]) },
-        ],
+        evidence: [{ path: "package.json" }, { path: doc, line: lineOf(src, m[0]) }],
       });
     }
   }
@@ -66,7 +65,7 @@ function ruleSupabaseJsDrift(ctx) {
     const mm = majorMinor(version);
     if (!mm) continue;
     // minor farkı > 30 ise (ör. 2.45 vs 2.101) uyumsuzluk riski yüksek.
-    const minorGap = Math.abs((mm.major * 1000 + mm.minor) - (fMm.major * 1000 + fMm.minor));
+    const minorGap = Math.abs(mm.major * 1000 + mm.minor - (fMm.major * 1000 + fMm.minor));
     if (minorGap >= 30) {
       findings.push({
         rule: "supabase-js-version-drift",
@@ -98,10 +97,7 @@ function ruleAdminUsersDropped(ctx) {
         severity: "high",
         message:
           "README.md `public.admin_users` tablosunu anlatıyor ama CLAUDE.md bu tablonun DROP edildiğini (user_role_assignments + is_admin() RPC) söylüyor.",
-        evidence: [
-          { path: "README.md", line: lineOf(readme, "public.admin_users") },
-          { path: "CLAUDE.md" },
-        ],
+        evidence: [{ path: "README.md", line: lineOf(readme, "public.admin_users") }, { path: "CLAUDE.md" }],
       },
     ];
   }
@@ -112,9 +108,7 @@ function ruleAdminUsersDropped(ctx) {
 function ruleDeprecatedEdgeStillReferenced(ctx) {
   if (!ctx.catalog) return [];
   const findings = [];
-  const deprecated = ctx.catalog.tools.filter(
-    (t) => t.family === "edge_function" && t.status === "deprecated",
-  );
+  const deprecated = ctx.catalog.tools.filter((t) => t.family === "edge_function" && t.status === "deprecated");
   const readme = ctx.read("README.md");
   for (const tool of deprecated) {
     const name = tool.tool_name;
@@ -123,10 +117,7 @@ function ruleDeprecatedEdgeStillReferenced(ctx) {
         rule: "deprecated-edge-referenced",
         severity: "high",
         message: `Edge function "${name}" deprecated (410) ama README.md hâlâ "supabase functions deploy ${name}" diyor.`,
-        evidence: [
-          { path: "README.md", line: lineOf(readme, `deploy ${name}`) },
-          { path: tool.entrypoint },
-        ],
+        evidence: [{ path: "README.md", line: lineOf(readme, `deploy ${name}`) }, { path: tool.entrypoint }],
       });
     }
   }

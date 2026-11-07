@@ -34,9 +34,7 @@ describe("buildCountryOptions", () => {
   });
 
   it("tekrarlanan ve boş kodları temizler", () => {
-    expect(buildCountryOptions(["DE", " DE ", "", "  "], COUNTRIES)).toEqual([
-      { code: "DE", label: "Almanya" },
-    ]);
+    expect(buildCountryOptions(["DE", " DE ", "", "  "], COUNTRIES)).toEqual([{ code: "DE", label: "Almanya" }]);
   });
 
   it("ülke kataloğu henüz yüklenmediyse kodları kaybetmez", () => {

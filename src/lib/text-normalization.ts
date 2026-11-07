@@ -15,11 +15,7 @@ export const trLower = (input: string): string => input.toLocaleLowerCase("tr-TR
 
 /** Türkçe duyarlı, aksan-toleranslı arama anahtarı üretir (ü→u, ç→c, ı→i, İ→i …). */
 export const trFold = (input: string): string =>
-  input
-    .toLocaleLowerCase("tr-TR")
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/ı/g, "i");
+  input.toLocaleLowerCase("tr-TR").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/ı/g, "i");
 
 /** Arama/filtre eşleşmesi: hem "İstanbul" hem "istanbul" hem "ISTANBUL" birbirini bulur. */
 export const trIncludes = (haystack: string | null | undefined, needle: string): boolean => {

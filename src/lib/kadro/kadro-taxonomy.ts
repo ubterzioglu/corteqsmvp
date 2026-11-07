@@ -1,6 +1,11 @@
 import type {
-  KadroAxisId, KadroCandidateStage, KadroDeptId, KadroPriority,
-  KadroStatus, KadroWaveId, KadroWorkType,
+  KadroAxisId,
+  KadroCandidateStage,
+  KadroDeptId,
+  KadroPriority,
+  KadroStatus,
+  KadroWaveId,
+  KadroWorkType,
 } from "./kadro-types";
 
 export type KadroDept = {
@@ -51,17 +56,48 @@ export const KADRO_DEPTS: KadroDept[] = [
 
 export type KadroAxis = { id: KadroAxisId; name: string; desc: string };
 export const KADRO_AXES: KadroAxis[] = [
-  { id: "urun", name: "Ürün hattı", desc: "İsmi olan, sahibi olan, takvimi olan yayın ürünleri. Her birinin tek sorumlusu vardır." },
-  { id: "islev", name: "İşlev hattı", desc: "Kanal bazlı beceri rolleri: Instagram, LinkedIn, YouTube, SEO, CRM, analitik. Ürünlerden bağımsız çalışır ama onlara hizmet eder." },
-  { id: "cografya", name: "Coğrafya hattı", desc: "Şehir, bölge ve ülke bazlı lansman rolleri. Her coğrafyanın kendi küratörü ve kendi takvimi vardır." },
-  { id: "merkez", name: "Merkez", desc: "Bölümler arası koordinasyon, strateji ve liderlik rolleri. Doğrudan kurucu ortaklara rapor eder." },
+  {
+    id: "urun",
+    name: "Ürün hattı",
+    desc: "İsmi olan, sahibi olan, takvimi olan yayın ürünleri. Her birinin tek sorumlusu vardır.",
+  },
+  {
+    id: "islev",
+    name: "İşlev hattı",
+    desc: "Kanal bazlı beceri rolleri: Instagram, LinkedIn, YouTube, SEO, CRM, analitik. Ürünlerden bağımsız çalışır ama onlara hizmet eder.",
+  },
+  {
+    id: "cografya",
+    name: "Coğrafya hattı",
+    desc: "Şehir, bölge ve ülke bazlı lansman rolleri. Her coğrafyanın kendi küratörü ve kendi takvimi vardır.",
+  },
+  {
+    id: "merkez",
+    name: "Merkez",
+    desc: "Bölümler arası koordinasyon, strateji ve liderlik rolleri. Doğrudan kurucu ortaklara rapor eder.",
+  },
 ];
 
 export type KadroWave = { id: KadroWaveId; name: string; range: string; desc: string };
 export const KADRO_WAVES: KadroWave[] = [
-  { id: 1, name: "Dalga 1 — Şimdi", range: "0–3 ay", desc: "MVP yayında, Instagram yayın kanalı düzenli dönüyor, ilk şehirler aktif." },
-  { id: 2, name: "Dalga 2 — Yakın", range: "3–6 ay", desc: "İlk gelir sinyali doğrulandı, ikinci şehir açılıyor, performans kanalları devrede." },
-  { id: 3, name: "Dalga 3 — Sonra", range: "6–12 ay", desc: "Ölçeklenme dönemi: yeni coğrafyalar, B2B hattı, platform güvenliği ve otomasyon." },
+  {
+    id: 1,
+    name: "Dalga 1 — Şimdi",
+    range: "0–3 ay",
+    desc: "MVP yayında, Instagram yayın kanalı düzenli dönüyor, ilk şehirler aktif.",
+  },
+  {
+    id: 2,
+    name: "Dalga 2 — Yakın",
+    range: "3–6 ay",
+    desc: "İlk gelir sinyali doğrulandı, ikinci şehir açılıyor, performans kanalları devrede.",
+  },
+  {
+    id: 3,
+    name: "Dalga 3 — Sonra",
+    range: "6–12 ay",
+    desc: "Ölçeklenme dönemi: yeni coğrafyalar, B2B hattı, platform güvenliği ve otomasyon.",
+  },
 ];
 
 export const KADRO_WORK_TYPES: Record<KadroWorkType, string> = {

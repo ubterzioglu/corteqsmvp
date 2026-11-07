@@ -15,10 +15,22 @@ import type {
   CaddeAdminSponsoredInput,
 } from "@/lib/cadde-types";
 
-export type PostFormState = Omit<CaddeAdminPostInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-export type CafeFormState = Omit<CaddeAdminCafeInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-export type BillboardFormState = Omit<CaddeAdminBillboardInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
-export type SponsoredFormState = Omit<CaddeAdminSponsoredInput, "country_id" | "city_id"> & { countryName: string; cityName: string };
+export type PostFormState = Omit<CaddeAdminPostInput, "country_id" | "city_id"> & {
+  countryName: string;
+  cityName: string;
+};
+export type CafeFormState = Omit<CaddeAdminCafeInput, "country_id" | "city_id"> & {
+  countryName: string;
+  cityName: string;
+};
+export type BillboardFormState = Omit<CaddeAdminBillboardInput, "country_id" | "city_id"> & {
+  countryName: string;
+  cityName: string;
+};
+export type SponsoredFormState = Omit<CaddeAdminSponsoredInput, "country_id" | "city_id"> & {
+  countryName: string;
+  cityName: string;
+};
 
 export const postDefaults = (): PostFormState => ({
   content_mode: "demo",
@@ -80,7 +92,6 @@ export const sponsoredDefaults = (): SponsoredFormState => ({
   cityName: "",
   sort_order: 0,
 });
-
 
 /**
  * Bos metni `null`a cevirir (form alani -> DB kolonu).

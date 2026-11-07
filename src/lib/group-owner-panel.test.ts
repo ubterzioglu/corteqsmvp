@@ -51,11 +51,8 @@ describe("G21 · hata haritası üç kapıya karşı çift yönlü", () => {
     // group_post_review (G16) — panelin kuyruk kararları
     for (const code of raiseCodes(G16)) {
       // create yolu kodları panelde çağrılmaz (G16 formunun kapıları)
-      if (
-        code === "group_post_body_required" ||
-        code === "group_post_too_long" ||
-        code === "group_not_published"
-      ) continue;
+      if (code === "group_post_body_required" || code === "group_post_too_long" || code === "group_not_published")
+        continue;
       expect(code in GROUP_OWNER_ERROR_MESSAGES, `eksik: ${code}`).toBe(true);
     }
   });

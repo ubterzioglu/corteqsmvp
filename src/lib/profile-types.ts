@@ -30,12 +30,7 @@ export type RoleMeta = {
   description: string;
   sortOrder: number;
   defaultAttributeKey:
-    | "interests"
-    | "expertise_area"
-    | "business_category"
-    | "organization_type"
-    | "main_platform"
-    | "ambassador_city";
+    "interests" | "expertise_area" | "business_category" | "organization_type" | "main_platform" | "ambassador_city";
   displayNameLabel: string;
   defaultPreviewBehavior: "compact" | "rich";
 };

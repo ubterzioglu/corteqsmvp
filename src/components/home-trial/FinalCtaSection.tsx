@@ -30,8 +30,7 @@ const FinalCtaSection = () => {
           className="pointer-events-none absolute inset-0"
           aria-hidden="true"
           style={{
-            background:
-              "radial-gradient(50% 80% at 50% 0%, hsl(var(--glow-orange) / 0.12), transparent 70%)",
+            background: "radial-gradient(50% 80% at 50% 0%, hsl(var(--glow-orange) / 0.12), transparent 70%)",
           }}
         />
         <div className="relative z-10">

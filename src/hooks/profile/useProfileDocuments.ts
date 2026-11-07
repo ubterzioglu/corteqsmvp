@@ -120,7 +120,12 @@ export const useProfileDocuments = ({
       return;
     }
 
-    await handleUploadDocument(PRESENTATION_DOCUMENT_ATTRIBUTE_KEY, PROFILE_PRESENTATION_BUCKET, file, presentationDocument);
+    await handleUploadDocument(
+      PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
+      PROFILE_PRESENTATION_BUCKET,
+      file,
+      presentationDocument,
+    );
   };
 
   const handleLicenseFileChange = async (event: ChangeEvent<HTMLInputElement>) => {

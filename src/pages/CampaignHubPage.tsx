@@ -61,8 +61,8 @@ const CampaignHubPage = () => {
                 Aktif <span className="text-accent">kampanyalar</span> ve yarışmalar
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Kurucu 1000 erken üyelik programından içerik yarışmalarına; CorteQS topluluğunda
-                erken görünürlük kazanmanın yollarını keşfedin.
+                Kurucu 1000 erken üyelik programından içerik yarışmalarına; CorteQS topluluğunda erken görünürlük
+                kazanmanın yollarını keşfedin.
               </p>
             </div>
 

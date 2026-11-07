@@ -31,20 +31,17 @@ export const PAGE_SEO = {
   },
   founders: {
     title: "Kurucular | CorteQS",
-    description:
-      "CorteQS kurucu ekibini, diaspora vizyonunu ve platformun güven temelli büyüme yaklaşımını keşfedin.",
+    description: "CorteQS kurucu ekibini, diaspora vizyonunu ve platformun güven temelli büyüme yaklaşımını keşfedin.",
     canonicalPath: "/founders",
   },
   pricing: {
     title: "Fiyatlandırma | CorteQS",
-    description:
-      "CorteQS danışman, kuruluş ve işletme paketlerini karşılaştırın; size uygun üyelik planını seçin.",
+    description: "CorteQS danışman, kuruluş ve işletme paketlerini karşılaştırın; size uygun üyelik planını seçin.",
     canonicalPath: "/pricing",
   },
   founding1000: {
     title: "Kurucu 1000 | CorteQS",
-    description:
-      "CorteQS Kurucu 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
+    description: "CorteQS Kurucu 1000 programına katılın; erken dönem topluluk ve görünürlük avantajlarını keşfedin.",
     canonicalPath: "/founding-1000",
   },
   campaign: {
@@ -86,8 +83,7 @@ export const PAGE_SEO = {
   },
   kvkk: {
     title: "KVKK ve Aydınlatma Metni | CorteQS",
-    description:
-      "CorteQS KVKK, GDPR ve ilgili veri koruma çerçevelerine ilişkin aydınlatma metnini inceleyin.",
+    description: "CorteQS KVKK, GDPR ve ilgili veri koruma çerçevelerine ilişkin aydınlatma metnini inceleyin.",
     canonicalPath: "/legal/kvkk",
   },
   terms: {

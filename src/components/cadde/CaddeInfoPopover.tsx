@@ -53,8 +53,7 @@ const CaddeInfoPopover = ({
             }}
             className={cn(
               "rounded-full p-0.5 transition focus-visible:outline-none focus-visible:ring-2",
-              triggerClassName ??
-                "text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:ring-slate-400",
+              triggerClassName ?? "text-slate-500 hover:bg-slate-100 hover:text-slate-800 focus-visible:ring-slate-400",
             )}
           >
             <Info className="h-3.5 w-3.5" aria-hidden />

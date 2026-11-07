@@ -19,16 +19,12 @@ export async function getProfileBasic(userId: string): Promise<ProfileBasic | nu
       .select("value_text, afs_attributes!inner(key)")
       .eq("user_id", userId)
       .in("afs_attributes.key", ["full_name", "avatar_url"]),
-    supabase
-      .from("user_role_assignments")
-      .select("roles!inner(key)")
-      .eq("user_id", userId)
-      .maybeSingle(),
+    supabase.from("user_role_assignments").select("roles!inner(key)").eq("user_id", userId).maybeSingle(),
   ]);
 
   const attrs = attrsResult.data ?? [];
   const getValue = (key: string) =>
-    (attrs.find((attribute) => attribute.afs_attributes?.key === key)?.value_text ?? null);
+    attrs.find((attribute) => attribute.afs_attributes?.key === key)?.value_text ?? null;
 
   return {
     user_id: userId,
@@ -49,10 +45,7 @@ export async function getAttributeValue(userId: string, key: string): Promise<st
   return data?.value_text ?? null;
 }
 
-export async function getAttributesBatch(
-  userId: string,
-  keys: string[],
-): Promise<Record<string, string | null>> {
+export async function getAttributesBatch(userId: string, keys: string[]): Promise<Record<string, string | null>> {
   const { data } = await supabase
     .from("user_profile_attributes")
     .select("value_text, afs_attributes!inner(key)")
@@ -86,10 +79,7 @@ export async function getProfilesBasicBatch(userIds: string[]): Promise<ProfileB
         .in("afs_attributes.key", ATTRIBUTE_KEYS),
     ),
     fetchInChunks(userIds, 1, (chunk) =>
-      supabase
-        .from("user_role_assignments")
-        .select("user_id, roles!inner(key)")
-        .in("user_id", chunk),
+      supabase.from("user_role_assignments").select("user_id, roles!inner(key)").in("user_id", chunk),
     ),
   ]);
 

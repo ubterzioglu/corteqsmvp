@@ -58,8 +58,12 @@ describe("ContributorResourcesPage", () => {
     fireEvent.change(screen.getByLabelText("Kaynak adı"), { target: { value: "Berlin Türk Kitabevi" } });
     fireEvent.change(screen.getByLabelText("Ülke"), { target: { value: "Almanya" } });
     fireEvent.change(screen.getByLabelText("Şehir"), { target: { value: "Berlin" } });
-    fireEvent.change(screen.getByLabelText("Birincil kaynak adresi"), { target: { value: "https://example.org/berlin" } });
-    fireEvent.change(screen.getByLabelText("Neden faydalı?"), { target: { value: "Şehirde Türkçe kitap bulunan güvenilir bir yer." } });
+    fireEvent.change(screen.getByLabelText("Birincil kaynak adresi"), {
+      target: { value: "https://example.org/berlin" },
+    });
+    fireEvent.change(screen.getByLabelText("Neden faydalı?"), {
+      target: { value: "Şehirde Türkçe kitap bulunan güvenilir bir yer." },
+    });
     fireEvent.click(screen.getByRole("button", { name: "İncelemeye gönder" }));
 
     await waitFor(() => expect(mocks.submit).toHaveBeenCalledTimes(1));

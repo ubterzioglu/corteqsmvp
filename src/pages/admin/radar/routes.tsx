@@ -12,11 +12,7 @@ const AdminRadarRunsPage = lazyWithReload(() => import("../AdminRadarRunsPage"))
 const AdminRadarGuidePage = lazyWithReload(() => import("../AdminRadarGuidePage"));
 
 function PageFallback() {
-  return (
-    <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
-      Yükleniyor...
-    </div>
-  );
+  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
 }
 
 export const radarRoutes = (

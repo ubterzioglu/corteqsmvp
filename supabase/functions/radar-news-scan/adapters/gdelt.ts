@@ -94,7 +94,12 @@ export const gdeltAdapter: RadarNewsAdapter = {
     // config.allowedLanguages verilmemişse filtre uygulanmaz (geri uyumlu).
     const allowedLanguagesRaw = (cfg["allowedLanguages"] ?? "").trim();
     const allowedLanguages = allowedLanguagesRaw
-      ? new Set(allowedLanguagesRaw.split(",").map((l) => l.trim().toLowerCase()).filter(Boolean))
+      ? new Set(
+          allowedLanguagesRaw
+            .split(",")
+            .map((l) => l.trim().toLowerCase())
+            .filter(Boolean),
+        )
       : null;
 
     for (const article of articles.slice(0, source.max_items_per_scan)) {

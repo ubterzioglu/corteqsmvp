@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  buildRevisionCompletedEmail,
-  formatRevisionNumber,
-} from "./revision-request-completed.ts";
+import { buildRevisionCompletedEmail, formatRevisionNumber } from "./revision-request-completed.ts";
 
 const PAYLOAD = {
   request_id: "11111111-2222-3333-4444-555555555555",
@@ -41,9 +38,7 @@ describe("buildRevisionCompletedEmail", () => {
   it("numarayı konuya taşır ve tüm alanları gövdeye yazar", () => {
     const email = buildRevisionCompletedEmail(PAYLOAD);
 
-    expect(email.subject).toBe(
-      "CorteQS revizyon tamamlandı: #REV-042 Üsküdar sayfasındaki başlık düzeltilsin",
-    );
+    expect(email.subject).toBe("CorteQS revizyon tamamlandı: #REV-042 Üsküdar sayfasındaki başlık düzeltilsin");
     expect(email.html).toContain("#REV-042");
     expect(email.html).toContain("Rehber");
     expect(email.html).toContain("ubterzioglu@gmail.com");
@@ -66,9 +61,7 @@ describe("buildRevisionCompletedEmail", () => {
   it("numara yoksa başlık numarasız kurulur, tablo satırı hiç çizilmez", () => {
     const email = buildRevisionCompletedEmail({ ...PAYLOAD, revision_number: null });
 
-    expect(email.subject).toBe(
-      "CorteQS revizyon tamamlandı: Üsküdar sayfasındaki başlık düzeltilsin",
-    );
+    expect(email.subject).toBe("CorteQS revizyon tamamlandı: Üsküdar sayfasındaki başlık düzeltilsin");
     expect(email.html).not.toContain("#REV-");
     expect(email.html).not.toContain("Revizyon No");
     expect(email.text).not.toContain("Revizyon No");

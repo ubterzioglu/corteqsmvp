@@ -125,16 +125,10 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         ) : comments.length === 0 ? (
-          <AdminEmptyState
-            title="Henüz yorum yok"
-            description="İlk yorumu ekleyerek tartışmayı başlatın."
-          />
+          <AdminEmptyState title="Henüz yorum yok" description="İlk yorumu ekleyerek tartışmayı başlatın." />
         ) : (
           comments.map((comment) => (
-            <div
-              key={comment.id}
-              className="rounded-lg border border-border bg-muted/30 p-3"
-            >
+            <div key={comment.id} className="rounded-lg border border-border bg-muted/30 p-3">
               <div className="mb-1 flex items-center justify-between gap-2 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground">{authorLabel(comment, emails)}</span>
                 <span className="flex items-center gap-2">
@@ -204,11 +198,7 @@ export function RevisionCommentThread({ requestId }: RevisionCommentThreadProps)
             <Paperclip className="mr-1.5 h-3.5 w-3.5" />
             Dosya Ekle
           </Button>
-          <Button
-            size="sm"
-            onClick={handleSend}
-            disabled={addMutation.isPending || !draft.trim()}
-          >
+          <Button size="sm" onClick={handleSend} disabled={addMutation.isPending || !draft.trim()}>
             {addMutation.isPending ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (

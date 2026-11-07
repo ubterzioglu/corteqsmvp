@@ -34,7 +34,7 @@ const envFilePath = path.resolve(projectRoot, envArg ? envArg.slice("--env-file=
 const outDir = path.resolve(projectRoot, outArg ? outArg.slice("--out=".length) : "docs/exports/blog-md");
 const singleFilePath = path.resolve(
   projectRoot,
-  singleArg ? singleArg.slice("--single=".length) : "docs/exports/blog-md/all-articles.md"
+  singleArg ? singleArg.slice("--single=".length) : "docs/exports/blog-md/all-articles.md",
 );
 
 function parseEnvFile(content) {
@@ -46,10 +46,7 @@ function parseEnvFile(content) {
     if (separatorIndex <= 0) continue;
     const key = line.slice(0, separatorIndex).trim();
     let value = line.slice(separatorIndex + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     result[key] = value;
@@ -68,14 +65,9 @@ async function loadEnv() {
 
 async function createSupabaseClient() {
   const env = await loadEnv();
-  const supabaseUrl =
-    process.env.SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL;
-  const serviceRoleKey =
-    process.env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
-  const anonKey =
-    process.env.VITE_SUPABASE_ANON_KEY ||
-    env.VITE_SUPABASE_ANON_KEY ||
-    env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const supabaseUrl = process.env.SUPABASE_URL || env.SUPABASE_URL || env.VITE_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY;
+  const anonKey = process.env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_ANON_KEY || env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
   if (!supabaseUrl) {
     throw new Error("SUPABASE_URL (veya VITE_SUPABASE_URL) gerekli.");
@@ -87,7 +79,7 @@ async function createSupabaseClient() {
     throw new Error(
       publishedOnly
         ? "SUPABASE_SERVICE_ROLE_KEY veya VITE_SUPABASE_ANON_KEY gerekli."
-        : "Tüm makaleler için SUPABASE_SERVICE_ROLE_KEY gerekli. (Sadece yayındakiler için --published-only kullanın.)"
+        : "Tüm makaleler için SUPABASE_SERVICE_ROLE_KEY gerekli. (Sadece yayındakiler için --published-only kullanın.)",
     );
   }
 
@@ -202,8 +194,7 @@ async function main() {
     `# Blog Makaleleri — Export (${posts.length} adet)`,
     "",
     ...index.map(
-      (entry) =>
-        `- [${entry.title}](${entry.fileName}) — ${entry.country}${entry.published ? "" : " _(taslak)_"}`
+      (entry) => `- [${entry.title}](${entry.fileName}) — ${entry.country}${entry.published ? "" : " _(taslak)_"}`,
     ),
     "",
   ];

@@ -26,7 +26,12 @@ export function ServiceFinderBudgetMeter({
         <span>
           {formatUsd(costTotalUsd)} / {formatUsd(hardCapUsd)}
         </span>
-        <span className={cn(overHard && "font-semibold text-red-600", !overHard && overSoft && "font-medium text-orange-600")}>
+        <span
+          className={cn(
+            overHard && "font-semibold text-red-600",
+            !overHard && overSoft && "font-medium text-orange-600",
+          )}
+        >
           %{percent}
         </span>
       </div>

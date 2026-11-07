@@ -9,10 +9,7 @@ import { ChevronDown, ExternalLink as ExternalLinkIcon, Star } from "lucide-reac
 
 import { cn } from "@/lib/utils";
 import { adminMenuNumberById } from "@/lib/admin-shell/admin-menu-numbering";
-import {
-  isNavItemActive,
-  isNavItemOrChildActive,
-} from "@/lib/admin-shell/admin-navigation-utils";
+import { isNavItemActive, isNavItemOrChildActive } from "@/lib/admin-shell/admin-navigation-utils";
 import type { AdminNavItem } from "@/lib/admin-shell/admin-shell-types";
 
 import { accentActiveItemClasses, accentIconClasses } from "./admin-accent";
@@ -198,9 +195,7 @@ const AdminSidebarItem = ({ item, collapsed = false, depth = 0, onNavigate, favo
         aria-pressed={favorite}
         className={cn(
           "absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-0.5 transition-opacity hover:text-amber-500 focus-visible:opacity-100",
-          favorite
-            ? "text-amber-500 opacity-100"
-            : "text-muted-foreground opacity-0 group-hover/fav:opacity-100",
+          favorite ? "text-amber-500 opacity-100" : "text-muted-foreground opacity-0 group-hover/fav:opacity-100",
         )}
       >
         <Star aria-hidden="true" className={cn("h-3.5 w-3.5", favorite && "fill-amber-400 text-amber-400")} />

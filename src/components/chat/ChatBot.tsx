@@ -88,11 +88,7 @@ const ChatBot = ({
           ...current,
           loading: false,
           error: null,
-          messages: [
-            ...current.messages,
-            createMessage("user", trimmedInput),
-            createMessage("bot", GUEST_MESSAGE),
-          ],
+          messages: [...current.messages, createMessage("user", trimmedInput), createMessage("bot", GUEST_MESSAGE)],
         }));
         return;
       }
@@ -173,13 +169,9 @@ const ChatBot = ({
       ) : null}
       <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5">
         <Sparkles className="h-4 w-4 text-primary" />
-        <span className="text-xs font-semibold uppercase tracking-wider text-primary">
-          Bilgi Asistanı
-        </span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary">Bilgi Asistanı</span>
       </div>
-      <h2 className="mb-3 text-2xl font-bold leading-tight text-foreground md:text-4xl">
-        Sorularını Sor
-      </h2>
+      <h2 className="mb-3 text-2xl font-bold leading-tight text-foreground md:text-4xl">Sorularını Sor</h2>
       <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
         CorteQS üyeliği, diaspora fırsatları, şehirler, rehberler ve platformdaki akışlar hakkında hızlıca bilgi al.
       </p>
@@ -189,11 +181,7 @@ const ChatBot = ({
   return (
     <section
       id={sectionId ?? undefined}
-      className={
-        compact
-          ? "relative"
-          : `relative overflow-hidden ${useGradientShell ? "py-16 lg:py-24" : ""}`
-      }
+      className={compact ? "relative" : `relative overflow-hidden ${useGradientShell ? "py-16 lg:py-24" : ""}`}
       style={
         useGradientShell
           ? {

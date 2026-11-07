@@ -79,8 +79,7 @@ export function computeCareerScores(answers: CareerAnswers): Record<CareerPath, 
 
   const env = answers.work_environment;
   const envIs = (e: string) => (env === e ? 1 : 0);
-  const portfolio =
-    answers.portfolio_signal === "strong" ? 1.0 : answers.portfolio_signal === "partial" ? 0.5 : 0.0;
+  const portfolio = answers.portfolio_signal === "strong" ? 1.0 : answers.portfolio_signal === "partial" ? 0.5 : 0.0;
 
   return {
     international_professional: round4(
@@ -99,16 +98,9 @@ export function computeCareerScores(answers: CareerAnswers): Record<CareerPath, 
       hands * 0.35 + favBuilding * 0.15 + study * 0.15 + envIs("field_work") * 0.15 + certOpenness * 0.2,
     ),
     startup_entrepreneur: round4(
-      risk * 0.25 +
-        entre * 0.3 +
-        salaryPref * 0.1 +
-        clientFacing * 0.1 +
-        envIs("startup") * 0.15 +
-        flexible * 0.1,
+      risk * 0.25 + entre * 0.3 + salaryPref * 0.1 + clientFacing * 0.1 + envIs("startup") * 0.15 + flexible * 0.1,
     ),
-    remote_global: round4(
-      tech * 0.25 + portfolio * 0.25 + entre * 0.15 + flexible * 0.2 + envIs("freelance") * 0.15,
-    ),
+    remote_global: round4(tech * 0.25 + portfolio * 0.25 + entre * 0.15 + flexible * 0.2 + envIs("freelance") * 0.15),
     public_ngo_community: round4(
       people * 0.25 +
         favPeople * 0.15 +

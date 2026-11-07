@@ -55,7 +55,12 @@ describe("yatırımcı rotası", () => {
   });
 
   it("PublicLayout DIŞINDA tanımlıdır (sitenin üst/alt bilgisi çizilmez)", () => {
-    const publicBlock = sliceBetween(app, "<Route element={<PublicLayout />}>", "{LEGACY_REDIRECTS.map", "PublicLayout");
+    const publicBlock = sliceBetween(
+      app,
+      "<Route element={<PublicLayout />}>",
+      "{LEGACY_REDIRECTS.map",
+      "PublicLayout",
+    );
     expect(publicBlock).not.toContain("InvestorPage");
     // Redirect'lerle adminRoutes arası: üst düzey, layout sarmalayıcısı olmayan bölge.
     const topLevel = sliceBetween(app, "{LEGACY_REDIRECTS.map", "{adminRoutes}", "layout dışı");
@@ -85,7 +90,7 @@ describe("yatırımcı rotası", () => {
     // Ham env değeri JS dizgesine DOĞRUDAN gömülmez — önce izinli karakterlere süzülür.
     expect(entry).toContain('INVESTOR_PASS_HASH: "${investor_hash}"');
     expect(entry).not.toContain('INVESTOR_PASS_HASH: "${INVESTOR_PASS_HASH');
-    expect(entry).toContain("*[!0-9a-f:pbkd]*) investor_hash=\"\"");
+    expect(entry).toContain('*[!0-9a-f:pbkd]*) investor_hash=""');
     expect(read("server.mjs")).toContain("INVESTOR_PASS_HASH: process.env.INVESTOR_PASS_HASH");
   });
 });

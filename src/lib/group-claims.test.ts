@@ -20,11 +20,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  CLAIM_SCREENSHOT_BUCKET,
-  CLAIM_VERIFY_RESULT_MESSAGES,
-  GROUP_CLAIM_ERROR_MESSAGES,
-} from "@/lib/group-claims";
+import { CLAIM_SCREENSHOT_BUCKET, CLAIM_VERIFY_RESULT_MESSAGES, GROUP_CLAIM_ERROR_MESSAGES } from "@/lib/group-claims";
 import { sliceBetween } from "@/test/source-slice";
 
 const G13 = "20261002040000_group_claims.sql";

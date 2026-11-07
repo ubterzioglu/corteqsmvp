@@ -35,32 +35,22 @@ async function safeCount(label: string, query: CountQuery): Promise<number | nul
 export async function fetchAdminDashboardSummary(): Promise<AdminDashboardSummary> {
   const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-  const [catalogItems, roles, pendingApprovals, featureOverrides, auditLogsLast24h] =
-    await Promise.all([
-      safeCount(
-        "catalogItems",
-        supabase.from("catalog_items").select("id", { count: "exact", head: true }),
-      ),
-      safeCount("roles", supabase.from("roles").select("key", { count: "exact", head: true })),
-      safeCount(
-        "pendingApprovals",
-        supabase
-          .from("approval_requests")
-          .select("id", { count: "exact", head: true })
-          .eq("status", "pending"),
-      ),
-      safeCount(
-        "featureOverrides",
-        supabase.from("user_feature_overrides").select("user_id", { count: "exact", head: true }),
-      ),
-      safeCount(
-        "auditLogsLast24h",
-        supabase
-          .from("admin_audit_logs")
-          .select("id", { count: "exact", head: true })
-          .gte("created_at", last24h),
-      ),
-    ]);
+  const [catalogItems, roles, pendingApprovals, featureOverrides, auditLogsLast24h] = await Promise.all([
+    safeCount("catalogItems", supabase.from("catalog_items").select("id", { count: "exact", head: true })),
+    safeCount("roles", supabase.from("roles").select("key", { count: "exact", head: true })),
+    safeCount(
+      "pendingApprovals",
+      supabase.from("approval_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    ),
+    safeCount(
+      "featureOverrides",
+      supabase.from("user_feature_overrides").select("user_id", { count: "exact", head: true }),
+    ),
+    safeCount(
+      "auditLogsLast24h",
+      supabase.from("admin_audit_logs").select("id", { count: "exact", head: true }).gte("created_at", last24h),
+    ),
+  ]);
 
   return { catalogItems, roles, pendingApprovals, featureOverrides, auditLogsLast24h };
 }

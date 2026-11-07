@@ -1,27 +1,14 @@
 // src/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel.tsx
 // Bütçe sekmesi — konsolide nakit akışı, parametreler ve runway özeti.
 
-import { useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
-import { formatCurrency } from '@/lib/muhasebe-format';
+import { useState } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
+import { formatCurrency } from "@/lib/muhasebe-format";
 import {
   averageMonthlyBurn,
   consolidatedMonthlyNet,
@@ -30,9 +17,9 @@ import {
   deptPlanUSD,
   revNet,
   runwayMonthsIndex,
-} from '@/lib/muhasebe-butce-aggregations';
-import { BUTCE_MONTHS, DEPTS, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
-import { TrendingUp, TrendingDown, Wallet, Clock } from 'lucide-react';
+} from "@/lib/muhasebe-butce-aggregations";
+import { BUTCE_MONTHS, DEPTS, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
+import { TrendingUp, TrendingDown, Wallet, Clock } from "lucide-react";
 
 export interface ConsolidatedCashflowPanelProps {
   state: ButceYearState;
@@ -46,29 +33,30 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
   // React kontrollü input'u sıfırlar ve art arda basılan rakamlar birikmez.
   // Yerel metin state'i bu birikimi doğru tutar; kaynak doğruluk hâlâ
   // parent'a iletilen `state` nesnesidir.
-  const [openingText, setOpeningText] = useState<string>(String(state.opening || ''));
-  const [fxEurText, setFxEurText] = useState<string>(String(state.fx.EUR || ''));
-  const [fxTryText, setFxTryText] = useState<string>(String(state.fx.TRY || ''));
+  const [openingText, setOpeningText] = useState<string>(String(state.opening || ""));
+  const [fxEurText, setFxEurText] = useState<string>(String(state.fx.EUR || ""));
+  const [fxTryText, setFxTryText] = useState<string>(String(state.fx.TRY || ""));
 
   const basis = state.basis;
-  const dep = (id: (typeof DEPTS)[number]['id'], m: number) =>
-    basis === 'actual' ? deptActualUSD(state, id, m) : deptPlanUSD(state, id, m);
+  const dep = (id: (typeof DEPTS)[number]["id"], m: number) =>
+    basis === "actual" ? deptActualUSD(state, id, m) : deptPlanUSD(state, id, m);
 
   const net = consolidatedMonthlyNet(state);
   const cum = cumulativeCash(state);
   const firstNeg = runwayMonthsIndex(cum);
   const runwayText =
     firstNeg < 0
-      ? '12+ ay (yıl içinde eksiye düşmüyor)'
+      ? "12+ ay (yıl içinde eksiye düşmüyor)"
       : firstNeg === 0
-        ? 'Oca itibarıyla negatif'
+        ? "Oca itibarıyla negatif"
         : `${firstNeg} ay (${BUTCE_MONTHS[firstNeg]} ayında eksiye düşer)`;
   const avgBurn = averageMonthlyBurn(net);
 
   const totalNetRev = Array.from({ length: 12 }, (_, m) => revNet(state, m)).reduce((s, v) => s + v, 0);
-  const totalExp = Array.from({ length: 12 }, (_, m) =>
-    DEPTS.reduce((s, d) => s + dep(d.id, m), 0),
-  ).reduce((s, v) => s + v, 0);
+  const totalExp = Array.from({ length: 12 }, (_, m) => DEPTS.reduce((s, d) => s + dep(d.id, m), 0)).reduce(
+    (s, v) => s + v,
+    0,
+  );
   const yearNet = totalNetRev - totalExp;
   const endCash = cum[11];
 
@@ -132,7 +120,7 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
         </div>
         <div className="flex flex-col gap-1">
           <span className="text-xs font-mono uppercase text-muted-foreground">Gider bazı</span>
-          <Select value={basis} onValueChange={(v) => onChange({ ...state, basis: v as 'plan' | 'actual' })}>
+          <Select value={basis} onValueChange={(v) => onChange({ ...state, basis: v as "plan" | "actual" })}>
             <SelectTrigger className="h-8 w-40" aria-label="Gider bazı">
               <SelectValue />
             </SelectTrigger>
@@ -190,7 +178,7 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
                 <div key={m} className="flex flex-1 flex-col items-center justify-end gap-1 h-full">
                   <span className="text-[10px] text-muted-foreground">{Math.round(Math.abs(v) / 1000)}k</span>
                   <div
-                    className={v < 0 ? 'w-full rounded-b bg-rose-500' : 'w-full rounded-t bg-emerald-500'}
+                    className={v < 0 ? "w-full rounded-b bg-rose-500" : "w-full rounded-t bg-emerald-500"}
                     style={{ height: `${height}px` }}
                   />
                   <span className="text-[10px] text-muted-foreground">{BUTCE_MONTHS[m]}</span>
@@ -201,17 +189,21 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
           <div className="flex flex-wrap gap-6 mt-4 text-sm font-mono">
             <div>
               <span className="block text-[10px] uppercase text-muted-foreground">Runway</span>
-              <span className={firstNeg >= 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}>
+              <span
+                className={
+                  firstNeg >= 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
+                }
+              >
                 {runwayText}
               </span>
             </div>
             <div>
               <span className="block text-[10px] uppercase text-muted-foreground">Ortalama aylık burn</span>
-              <span>{avgBurn ? formatCurrency(avgBurn, 'USD', { showCode: true }) : '—'}</span>
+              <span>{avgBurn ? formatCurrency(avgBurn, "USD", { showCode: true }) : "—"}</span>
             </div>
             <div>
               <span className="block text-[10px] uppercase text-muted-foreground">Açılış bakiyesi</span>
-              <span>{formatCurrency(state.opening, 'USD', { showCode: true })}</span>
+              <span>{formatCurrency(state.opening, "USD", { showCode: true })}</span>
             </div>
           </div>
         </CardContent>
@@ -223,7 +215,9 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
             <TableRow>
               <TableHead>Kalem</TableHead>
               {BUTCE_MONTHS.map((m) => (
-                <TableHead key={m} className="text-right">{m}</TableHead>
+                <TableHead key={m} className="text-right">
+                  {m}
+                </TableHead>
               ))}
               <TableHead className="text-right">Yıl toplamı</TableHead>
             </TableRow>
@@ -241,9 +235,11 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
                 <TableRow key={r.id}>
                   <TableCell>{r.name} (brüt)</TableCell>
                   {vals.map((v, m) => (
-                    <TableCell key={m} className="text-right font-mono">{Math.round(v).toLocaleString('en-US')}</TableCell>
+                    <TableCell key={m} className="text-right font-mono">
+                      {Math.round(v).toLocaleString("en-US")}
+                    </TableCell>
                   ))}
-                  <TableCell className="text-right font-mono">{Math.round(total).toLocaleString('en-US')}</TableCell>
+                  <TableCell className="text-right font-mono">{Math.round(total).toLocaleString("en-US")}</TableCell>
                 </TableRow>
               );
             })}
@@ -251,14 +247,14 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
               <TableCell>Net gelir</TableCell>
               {Array.from({ length: 12 }, (_, m) => (
                 <TableCell key={m} className="text-right font-mono">
-                  {Math.round(revNet(state, m)).toLocaleString('en-US')}
+                  {Math.round(revNet(state, m)).toLocaleString("en-US")}
                 </TableCell>
               ))}
-              <TableCell className="text-right font-mono">{Math.round(totalNetRev).toLocaleString('en-US')}</TableCell>
+              <TableCell className="text-right font-mono">{Math.round(totalNetRev).toLocaleString("en-US")}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell className="font-mono text-xs uppercase text-muted-foreground" colSpan={14}>
-                GİDERLER · {basis === 'actual' ? 'gerçekleşen' : 'bütçe'}
+                GİDERLER · {basis === "actual" ? "gerçekleşen" : "bütçe"}
               </TableCell>
             </TableRow>
             {DEPTS.map((d) => {
@@ -269,11 +265,11 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
                   <TableCell>{d.name}</TableCell>
                   {vals.map((v, m) => (
                     <TableCell key={m} className="text-right font-mono text-rose-600 dark:text-rose-400">
-                      {Math.round(v).toLocaleString('en-US')}
+                      {Math.round(v).toLocaleString("en-US")}
                     </TableCell>
                   ))}
                   <TableCell className="text-right font-mono text-rose-600 dark:text-rose-400">
-                    {Math.round(total).toLocaleString('en-US')}
+                    {Math.round(total).toLocaleString("en-US")}
                   </TableCell>
                 </TableRow>
               );
@@ -283,19 +279,20 @@ export function ConsolidatedCashflowPanel({ state, onChange }: ConsolidatedCashf
               {net.map((v, m) => (
                 <TableCell
                   key={m}
-                  className={`text-right font-mono ${v < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}
+                  className={`text-right font-mono ${v < 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"}`}
                 >
-                  {Math.round(v).toLocaleString('en-US')}
+                  {Math.round(v).toLocaleString("en-US")}
                 </TableCell>
               ))}
-              <TableCell className="text-right font-mono">{Math.round(yearNet).toLocaleString('en-US')}</TableCell>
+              <TableCell className="text-right font-mono">{Math.round(yearNet).toLocaleString("en-US")}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
       </div>
 
       <p className="text-xs text-muted-foreground">
-        Runway: kümülatif nakdin eksiye döndüğü ilk aya kadar kalan süre. Gider bazı &quot;Bütçe&quot; iken plan senaryosunu, &quot;Gerçekleşen&quot; iken fiili durumu okursunuz.
+        Runway: kümülatif nakdin eksiye döndüğü ilk aya kadar kalan süre. Gider bazı &quot;Bütçe&quot; iken plan
+        senaryosunu, &quot;Gerçekleşen&quot; iken fiili durumu okursunuz.
       </p>
     </div>
   );

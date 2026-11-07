@@ -4,14 +4,7 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,11 +14,7 @@ import { useGeoCitiesForCountries, useGeoCountries } from "@/hooks/useGeo";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import { trCompare, trFold, trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
-import type {
-  RelocationToolQuestionRow,
-  ToolQuestionOption,
-  ToolAnswerValue,
-} from "@/lib/relocation-tools-types";
+import type { RelocationToolQuestionRow, ToolQuestionOption, ToolAnswerValue } from "@/lib/relocation-tools-types";
 
 interface QuestionRendererProps {
   question: RelocationToolQuestionRow;
@@ -106,9 +95,7 @@ function ProfessionCombobox({
         <Command>
           <CommandInput placeholder="Meslek ara..." />
           <CommandList>
-            <CommandEmpty>
-              Bu meslek için veri yoksa sonuç çıkmayabilir. Listedeki en yakın rolü seç.
-            </CommandEmpty>
+            <CommandEmpty>Bu meslek için veri yoksa sonuç çıkmayabilir. Listedeki en yakın rolü seç.</CommandEmpty>
             <CommandGroup>
               {options.map((opt) => (
                 <CommandItem
@@ -119,12 +106,7 @@ function ProfessionCombobox({
                     setOpen(false);
                   }}
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selected === opt.value ? "opacity-100" : "opacity-0",
-                    )}
-                  />
+                  <Check className={cn("mr-2 h-4 w-4", selected === opt.value ? "opacity-100" : "opacity-0")} />
                   <span>{opt.label}</span>
                 </CommandItem>
               ))}
@@ -151,10 +133,7 @@ function CountryMultiCombobox({
   const selectedCodes = parseCsvList(value);
   const selectedSet = useMemo(() => new Set(selectedCodes), [selectedCodes]);
 
-  const countryByCode = useMemo(
-    () => new Map(countries.map((country) => [country.code, country])),
-    [countries],
-  );
+  const countryByCode = useMemo(() => new Map(countries.map((country) => [country.code, country])), [countries]);
 
   const commit = (next: string[]) => onChange(next.join(","));
   const toggle = (code: string) => {
@@ -180,9 +159,7 @@ function CountryMultiCombobox({
             className="h-auto min-h-11 w-full justify-between gap-3 whitespace-normal px-3 py-2 text-left font-normal"
           >
             <span className={cn(!selectedCodes.length && "text-muted-foreground")}>
-              {selectedCodes.length
-                ? `${selectedCodes.length} ülke seçildi`
-                : "Ülke seç veya ara"}
+              {selectedCodes.length ? `${selectedCodes.length} ülke seçildi` : "Ülke seç veya ara"}
             </span>
             <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -211,12 +188,7 @@ function CountryMultiCombobox({
                         setOpen(false);
                       }}
                     >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          selected ? "opacity-100" : "opacity-0",
-                        )}
-                      />
+                      <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100" : "opacity-0")} />
                       <span>{country.name}</span>
                       <span className="ml-auto text-xs text-muted-foreground">{country.code}</span>
                     </CommandItem>
@@ -304,13 +276,10 @@ function CityDrilldownCombobox({
   // Kapsam devredeyken tetik "hangi ülkeler" sorusunu cevaplamalı, yoksa kullanıcı
   // listeyi neyin daralttığını göremez ve ülkeyi gereksiz yere ikinci kez seçer.
   const countryTriggerLabel =
-    selectedCountryName
-    || (scopeCountryCodes.length ? `Seçtiğin ülkeler (${scopeCountryCodes.length})` : "");
+    selectedCountryName || (scopeCountryCodes.length ? `Seçtiğin ülkeler (${scopeCountryCodes.length})` : "");
 
   const visibleCountries = useMemo(() => {
-    const matched = countries.filter((country) =>
-      trIncludes(`${country.name} ${country.code}`, countryQuery),
-    );
+    const matched = countries.filter((country) => trIncludes(`${country.name} ${country.code}`, countryQuery));
     if (scopeCountryCodes.length === 0) return matched;
     // Kapsam ülkeleri BAŞA alınır, kapsam dışındakiler GİZLENMEZ: ülke bir kapı değil,
     // daraltmadır (aynı ilke serbest metin çıkışında da geçerli). Kullanıcı 4. soruda
@@ -327,19 +296,14 @@ function CityDrilldownCombobox({
     return Array.from(new Set(names)).sort(trCompare);
   }, [citiesQuery.data]);
 
-  const matchedCities = useMemo(
-    () => cityNames.filter((name) => trIncludes(name, cityQuery)),
-    [cityNames, cityQuery],
-  );
+  const matchedCities = useMemo(() => cityNames.filter((name) => trIncludes(name, cityQuery)), [cityNames, cityQuery]);
   const visibleCities = matchedCities.slice(0, MAX_RENDERED_CITIES);
   const hiddenCityCount = matchedCities.length - visibleCities.length;
 
   const typedCity = cityQuery.trim();
   // Katalogda karşılığı olmayan (ya da ülke henüz seçilmemiş) şehir için serbest metin çıkışı.
   const canAddTypedCity =
-    typedCity.length > 0
-    && !containsFolded(matchedCities, typedCity)
-    && !containsFolded(selectedCities, typedCity);
+    typedCity.length > 0 && !containsFolded(matchedCities, typedCity) && !containsFolded(selectedCities, typedCity);
 
   const commitCities = (next: string[]) => onChange(next.join(", "));
 
@@ -388,11 +352,7 @@ function CityDrilldownCombobox({
           </PopoverTrigger>
           <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
             <Command shouldFilter={false}>
-              <CommandInput
-                placeholder="Ülke ara..."
-                value={countryQuery}
-                onValueChange={setCountryQuery}
-              />
+              <CommandInput placeholder="Ülke ara..." value={countryQuery} onValueChange={setCountryQuery} />
               <CommandList>
                 <CommandEmpty>Ülke bulunamadı.</CommandEmpty>
                 <CommandGroup>
@@ -407,10 +367,7 @@ function CityDrilldownCombobox({
                       }}
                     >
                       <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          countryCode === country.code ? "opacity-100" : "opacity-0",
-                        )}
+                        className={cn("mr-2 h-4 w-4", countryCode === country.code ? "opacity-100" : "opacity-0")}
                       />
                       <span>{country.name}</span>
                       <span className="ml-auto text-xs text-muted-foreground">{country.code}</span>
@@ -445,20 +402,14 @@ function CityDrilldownCombobox({
               className="h-auto min-h-11 w-full justify-between gap-3 whitespace-normal px-3 py-2 text-left font-normal"
             >
               <span className={cn("truncate", !selectedCities.length && "text-muted-foreground")}>
-                {selectedCities.length
-                  ? `${selectedCities.length} şehir seçildi`
-                  : "Şehir seç veya yaz"}
+                {selectedCities.length ? `${selectedCities.length} şehir seçildi` : "Şehir seç veya yaz"}
               </span>
               <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
             <Command shouldFilter={false}>
-              <CommandInput
-                placeholder="Şehir ara veya yaz..."
-                value={cityQuery}
-                onValueChange={setCityQuery}
-              />
+              <CommandInput placeholder="Şehir ara veya yaz..." value={cityQuery} onValueChange={setCityQuery} />
               <CommandList>
                 <CommandEmpty>
                   {activeCountryCodes.length
@@ -467,10 +418,7 @@ function CityDrilldownCombobox({
                 </CommandEmpty>
                 <CommandGroup>
                   {canAddTypedCity && (
-                    <CommandItem
-                      value={`manual-${typedCity}`}
-                      onSelect={() => addCity(typedCity)}
-                    >
+                    <CommandItem value={`manual-${typedCity}`} onSelect={() => addCity(typedCity)}>
                       <Check className="mr-2 h-4 w-4 opacity-0" />
                       <span>{`"${typedCity}" şehrini elle ekle`}</span>
                     </CommandItem>
@@ -483,9 +431,7 @@ function CityDrilldownCombobox({
                         value={name}
                         onSelect={() => (selected ? removeCity(name) : addCity(name))}
                       >
-                        <Check
-                          className={cn("mr-2 h-4 w-4", selected ? "opacity-100" : "opacity-0")}
-                        />
+                        <Check className={cn("mr-2 h-4 w-4", selected ? "opacity-100" : "opacity-0")} />
                         <span>{name}</span>
                       </CommandItem>
                     );
@@ -542,12 +488,7 @@ function CityDrilldownCombobox({
   );
 }
 
-export function QuestionRenderer({
-  question,
-  value,
-  onChange,
-  scopeCountryCodes = [],
-}: QuestionRendererProps) {
+export function QuestionRenderer({ question, value, onChange, scopeCountryCodes = [] }: QuestionRendererProps) {
   const { answer_type, options, id } = question;
 
   switch (answer_type) {
@@ -558,11 +499,7 @@ export function QuestionRenderer({
       return (
         <div>
           <p className="mb-2 text-xs text-muted-foreground">{TOOLS_UI_COPY.selectHint}</p>
-          <RadioGroup
-            value={typeof value === "string" ? value : ""}
-            onValueChange={onChange}
-            className="space-y-2"
-          >
+          <RadioGroup value={typeof value === "string" ? value : ""} onValueChange={onChange} className="space-y-2">
             {options.map((opt) => (
               <label
                 key={opt.value}
@@ -609,11 +546,7 @@ export function QuestionRenderer({
       // onValueChange tetiklemez; bu yüzden varsayılanı QuestionStepper geçerli cevap sayar.
       const current = typeof value === "number" ? value : SCALE_DEFAULT_VALUE;
       return (
-        <RadioGroup
-          value={String(current)}
-          onValueChange={(v) => onChange(Number(v))}
-          className="space-y-2"
-        >
+        <RadioGroup value={String(current)} onValueChange={(v) => onChange(Number(v))} className="space-y-2">
           {[1, 2, 3, 4, 5].map((n) => (
             <label
               key={n}
@@ -646,15 +579,8 @@ export function QuestionRenderer({
 
     case "consent":
       return (
-        <label
-          htmlFor={id}
-          className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3"
-        >
-          <Checkbox
-            id={id}
-            checked={value === true}
-            onCheckedChange={(c) => onChange(c === true)}
-          />
+        <label htmlFor={id} className="flex cursor-pointer items-center gap-3 rounded-lg border border-border p-3">
+          <Checkbox id={id} checked={value === true} onCheckedChange={(c) => onChange(c === true)} />
           <span className="text-sm">{question.help_tr ?? question.prompt_tr}</span>
         </label>
       );
@@ -684,12 +610,7 @@ export function QuestionRenderer({
     default: {
       if (question.question_key === "target_cities" || answer_type === "city") {
         return (
-          <CityDrilldownCombobox
-            id={id}
-            value={value}
-            onChange={onChange}
-            scopeCountryCodes={scopeCountryCodes}
-          />
+          <CityDrilldownCombobox id={id} value={value} onChange={onChange} scopeCountryCodes={scopeCountryCodes} />
         );
       }
       return (

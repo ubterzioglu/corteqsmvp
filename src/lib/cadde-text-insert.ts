@@ -21,7 +21,11 @@ const snapStart = (value: string, index: number) =>
 const snapEnd = (value: string, index: number) =>
   index < value.length && isLowSurrogate(value.charCodeAt(index)) ? index + 1 : index;
 
-export function insertTextAtSelection(value: string, insert: string, selection: TextSelection): { value: string; caret: number } {
+export function insertTextAtSelection(
+  value: string,
+  insert: string,
+  selection: TextSelection,
+): { value: string; caret: number } {
   const rawStart = clampIndex(Math.min(selection.start, selection.end), value.length);
   const rawEnd = clampIndex(Math.max(selection.start, selection.end), value.length);
 

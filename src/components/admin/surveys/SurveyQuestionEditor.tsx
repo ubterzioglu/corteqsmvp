@@ -36,9 +36,19 @@ export default function SurveyQuestionEditor({
       <div className="flex items-center justify-between">
         <h4 className="text-sm font-semibold text-slate-800">Soru #{index + 1}</h4>
         <div className="flex gap-2">
-          <button type="button" className="rounded border px-2 py-1 text-xs" onClick={onMoveUp}>Yukarı</button>
-          <button type="button" className="rounded border px-2 py-1 text-xs" onClick={onMoveDown}>Aşağı</button>
-          <button type="button" className="rounded border border-red-300 px-2 py-1 text-xs text-red-700" onClick={onRemove}>Sil</button>
+          <button type="button" className="rounded border px-2 py-1 text-xs" onClick={onMoveUp}>
+            Yukarı
+          </button>
+          <button type="button" className="rounded border px-2 py-1 text-xs" onClick={onMoveDown}>
+            Aşağı
+          </button>
+          <button
+            type="button"
+            className="rounded border border-red-300 px-2 py-1 text-xs text-red-700"
+            onClick={onRemove}
+          >
+            Sil
+          </button>
         </div>
       </div>
 
@@ -69,7 +79,9 @@ export default function SurveyQuestionEditor({
         onChange={(e) => onChange({ ...question, type: e.target.value as SurveyQuestionType })}
       >
         {QUESTION_TYPES.map((type) => (
-          <option key={type} value={type}>{type}</option>
+          <option key={type} value={type}>
+            {type}
+          </option>
         ))}
       </select>
 

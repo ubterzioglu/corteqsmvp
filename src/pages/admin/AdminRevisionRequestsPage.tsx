@@ -185,10 +185,7 @@ const AdminRevisionRequestsPage = () => {
             aria-expanded={isExpanded}
           >
             <ChevronDown
-              className={cn(
-                "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                isExpanded && "rotate-180",
-              )}
+              className={cn("h-4 w-4 shrink-0 text-muted-foreground transition-transform", isExpanded && "rotate-180")}
             />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-1.5">
@@ -243,9 +240,7 @@ const AdminRevisionRequestsPage = () => {
         {isExpanded ? (
           <div className="border-t border-border p-3">
             {request.detail ? (
-              <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">
-                {request.detail}
-              </p>
+              <p className="whitespace-pre-wrap rounded-lg bg-muted/40 p-3 text-sm text-foreground">{request.detail}</p>
             ) : null}
             <div className="mt-2 mb-3">
               <RevisionAttachmentGrid parent={{ requestId: request.id }} />
@@ -317,10 +312,7 @@ const AdminRevisionRequestsPage = () => {
       {requestsQuery.isLoading ? (
         <AdminLoadingState label="Revizyon istekleri yükleniyor" rows={4} />
       ) : requestsQuery.isError ? (
-        <AdminErrorState
-          description="Revizyon istekleri yüklenemedi."
-          onRetry={() => requestsQuery.refetch()}
-        />
+        <AdminErrorState description="Revizyon istekleri yüklenemedi." onRetry={() => requestsQuery.refetch()} />
       ) : requests.length === 0 ? (
         <AdminEmptyState
           icon={MessageSquarePlus}
@@ -345,9 +337,7 @@ const AdminRevisionRequestsPage = () => {
         />
       ) : (
         <div className="space-y-4">
-          {openRequests.length > 0 ? (
-            <div className="space-y-2">{openRequests.map(renderRequestRow)}</div>
-          ) : null}
+          {openRequests.length > 0 ? <div className="space-y-2">{openRequests.map(renderRequestRow)}</div> : null}
 
           {completedRequests.length === 0 ? null : (
             <Accordion type="single" collapsible className="rounded-xl border border-border bg-card px-3">

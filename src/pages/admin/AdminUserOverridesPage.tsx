@@ -86,9 +86,7 @@ const AdminUserOverridesPage = () => {
   const scopedFeatures = useMemo(() => {
     if (!selectedUser) return [];
     // scope_role='*' olan yetkiler tüm roller için görünür (admin override ile açılabilir)
-    return features.filter(
-      (feature) => feature.scope_role === selectedUser.profile_type || feature.scope_role === "*"
-    );
+    return features.filter((feature) => feature.scope_role === selectedUser.profile_type || feature.scope_role === "*");
   }, [features, selectedUser]);
 
   const filteredOverrides = useMemo(() => {
@@ -97,7 +95,9 @@ const AdminUserOverridesPage = () => {
       if (!normalizedSearch) return true;
       const user = users.find((item) => item.user_id === override.user_id);
       const label = user?.full_name ?? user?.email ?? override.user_id;
-      return label.toLocaleLowerCase("tr-TR").includes(normalizedSearch) || override.feature_key.includes(normalizedSearch);
+      return (
+        label.toLocaleLowerCase("tr-TR").includes(normalizedSearch) || override.feature_key.includes(normalizedSearch)
+      );
     });
   }, [overrides, searchText, users]);
 
@@ -194,7 +194,10 @@ const AdminUserOverridesPage = () => {
               </SelectContent>
             </Select>
 
-            <Select value={isEnabled ? "enabled" : "disabled"} onValueChange={(value) => setIsEnabled(value === "enabled")}>
+            <Select
+              value={isEnabled ? "enabled" : "disabled"}
+              onValueChange={(value) => setIsEnabled(value === "enabled")}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Override türü" />
               </SelectTrigger>
@@ -206,13 +209,21 @@ const AdminUserOverridesPage = () => {
 
             <Input value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Override nedeni" />
 
-            <Button className="w-full" disabled={!selectedUserId || !selectedFeatureKey || submitting} onClick={() => void handleSaveOverride()}>
+            <Button
+              className="w-full"
+              disabled={!selectedUserId || !selectedFeatureKey || submitting}
+              onClick={() => void handleSaveOverride()}
+            >
               {submitting ? "Kaydediliyor..." : "Override Kaydet"}
             </Button>
           </div>
 
           <div className="space-y-3">
-            <Input value={searchText} onChange={(event) => setSearchText(event.target.value)} placeholder="Override ara" />
+            <Input
+              value={searchText}
+              onChange={(event) => setSearchText(event.target.value)}
+              placeholder="Override ara"
+            />
             <div className="space-y-3">
               {filteredOverrides.map((override) => {
                 const user = users.find((item) => item.user_id === override.user_id);

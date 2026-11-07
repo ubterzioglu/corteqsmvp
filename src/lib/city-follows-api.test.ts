@@ -21,11 +21,13 @@ function makeChain(table: string) {
   const call: Call = { table, ops: [] };
   calls.push(call);
   const chain: Record<string, unknown> = {};
-  const passthru = (op: string) => (...args: unknown[]) => {
-    call.ops.push(op);
-    if (op === "insert") call.row = args[0] as Record<string, unknown>;
-    return chain;
-  };
+  const passthru =
+    (op: string) =>
+    (...args: unknown[]) => {
+      call.ops.push(op);
+      if (op === "insert") call.row = args[0] as Record<string, unknown>;
+      return chain;
+    };
   for (const op of ["select", "order", "limit", "eq", "insert", "delete", "maybeSingle", "range", "or"]) {
     chain[op] = passthru(op);
   }
@@ -41,12 +43,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import {
-  CITY_FOLLOWS_MAX_PER_USER,
-  addCityFollow,
-  filterCityOptions,
-  removeCityFollow,
-} from "@/lib/city-follows-api";
+import { CITY_FOLLOWS_MAX_PER_USER, addCityFollow, filterCityOptions, removeCityFollow } from "@/lib/city-follows-api";
 
 const UID = "11111111-2222-3333-4444-555555555555";
 

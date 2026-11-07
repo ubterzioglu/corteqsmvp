@@ -91,9 +91,7 @@ describe("G24 · admin_set_group_setting — dar yazma yüzeyi", () => {
   });
 
   it("grant yalnız authenticated (anon çağırabilir ama is_admin kapısı düşürür)", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.admin_set_group_setting(text, jsonb) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.admin_set_group_setting(text, jsonb) to authenticated;");
   });
 });
 
@@ -117,7 +115,9 @@ describe("G24 · group_moderator_summary — üst şerit", () => {
     const definers = readdirSync(applied)
       .filter((name) => name.endsWith(".sql"))
       .sort()
-      .filter((name) => readFileSync(applied + name, "utf8").includes("create or replace function public.group_moderator_summary"));
+      .filter((name) =>
+        readFileSync(applied + name, "utf8").includes("create or replace function public.group_moderator_summary"),
+      );
     const latest = definers.at(-1) ?? "";
 
     expect(latest).toBe("20261005200000_group_reports.sql");

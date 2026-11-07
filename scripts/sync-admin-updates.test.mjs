@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  buildDedupeKey,
-  buildOutboxRows,
-  isValidEntry,
-  toOutboxRow,
-} from "./admin-update-outbox.mjs";
+import { buildDedupeKey, buildOutboxRows, isValidEntry, toOutboxRow } from "./admin-update-outbox.mjs";
 
 const ENTRY = {
   id: "20260729-bildirim-ayarlari",

@@ -180,11 +180,12 @@ export const useProfileAttributeForm = ({
         .filter(Boolean);
     } else {
       const textValue = String(rawValue ?? "").trim();
-      valueToSend = SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey) || attribute.attributeKey === LINKEDIN_ATTRIBUTE_KEY
-        ? normalizeSocialMediaValue(attribute.attributeKey, textValue)
-        : attribute.attributeKey === WEBSITE_ATTRIBUTE_KEY && textValue
-          ? ensureHttpsUrl(textValue)
-        : textValue;
+      valueToSend =
+        SOCIAL_ATTRIBUTE_KEYS.has(attribute.attributeKey) || attribute.attributeKey === LINKEDIN_ATTRIBUTE_KEY
+          ? normalizeSocialMediaValue(attribute.attributeKey, textValue)
+          : attribute.attributeKey === WEBSITE_ATTRIBUTE_KEY && textValue
+            ? ensureHttpsUrl(textValue)
+            : textValue;
     }
 
     return { valueToSend, visibility };
@@ -207,7 +208,9 @@ export const useProfileAttributeForm = ({
 
     setSavingAttributeKey(attribute.attributeKey);
     try {
-      const result = (await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility)) as { status?: string } | null;
+      const result = (await updateProfileAttribute(attribute.attributeKey, valueToSend, visibility)) as {
+        status?: string;
+      } | null;
       await refreshProfile();
       toast({
         title: result?.status === "pending" ? "Onay Bekliyor" : "Alan Güncellendi",
@@ -373,9 +376,10 @@ export const useProfileAttributeForm = ({
         });
       } else {
         toast({
-          title: savedCount > 0
-            ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
-            : "Rolüne özel alanlar kaydedilemedi",
+          title:
+            savedCount > 0
+              ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
+              : "Rolüne özel alanlar kaydedilemedi",
           description: failures.join(" · "),
           variant: "destructive",
         });
@@ -427,9 +431,10 @@ export const useProfileAttributeForm = ({
         toast({ title: "Öğrenim bilgileri kaydedildi", description: "Değerler ve görünürlük ayarları güncellendi." });
       } else {
         toast({
-          title: savedCount > 0
-            ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
-            : "Öğrenim bilgileri kaydedilemedi",
+          title:
+            savedCount > 0
+              ? `${savedCount} alan kaydedildi, ${failures.length} alan kaydedilemedi`
+              : "Öğrenim bilgileri kaydedilemedi",
           description: failures.join(" · "),
           variant: "destructive",
         });
@@ -510,8 +515,7 @@ export const useProfileAttributeForm = ({
 
       if (attribute.attributeKey === LINKEDIN_ATTRIBUTE_KEY) {
         await patchIndividualProfileDetails((current) => {
-          const frontCard =
-            current?.front_card && typeof current.front_card === "object" ? current.front_card : {};
+          const frontCard = current?.front_card && typeof current.front_card === "object" ? current.front_card : {};
           const profileSettings =
             current?.profile_settings && typeof current.profile_settings === "object" ? current.profile_settings : {};
 

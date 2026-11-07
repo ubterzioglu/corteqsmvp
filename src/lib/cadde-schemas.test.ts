@@ -49,7 +49,9 @@ describe("caddePostCreateSchema", () => {
 
   it("rejects unknown post types and overlong bodies", () => {
     expect(caddePostCreateSchema.safeParse({ type: "poll", body: "x", isBridge: false }).success).toBe(false);
-    expect(caddePostCreateSchema.safeParse({ type: "text", body: "x".repeat(4001), isBridge: false }).success).toBe(false);
+    expect(caddePostCreateSchema.safeParse({ type: "text", body: "x".repeat(4001), isBridge: false }).success).toBe(
+      false,
+    );
   });
 
   it("accepts primary plus one extra target and rejects a second extra target", () => {
@@ -78,7 +80,11 @@ describe("caddePostCreateSchema", () => {
 });
 
 describe("caddeMediaSchema", () => {
-  const image = (n: number) => ({ kind: "image" as const, url: `https://cdn.example.com/${n}.jpg`, path: `uid/post/${n}.jpg` });
+  const image = (n: number) => ({
+    kind: "image" as const,
+    url: `https://cdn.example.com/${n}.jpg`,
+    path: `uid/post/${n}.jpg`,
+  });
   const video = { kind: "video" as const, url: "https://cdn.example.com/v.mp4", path: "uid/post/v.mp4" };
 
   it("accepts 4 images plus 1 video", () => {
@@ -135,7 +141,14 @@ describe("caddeShareSchema", () => {
 describe("caddeFilterSchema", () => {
   it("validates filter state shape (Faz 3: çoklu ülke/şehir)", () => {
     expect(caddeFilterSchema.safeParse({ mode: "real", countries: [], cities: [], bridge: false }).success).toBe(true);
-    expect(caddeFilterSchema.safeParse({ mode: "real", countries: ["Almanya", "Hollanda"], cities: ["Berlin"], bridge: true }).success).toBe(true);
+    expect(
+      caddeFilterSchema.safeParse({
+        mode: "real",
+        countries: ["Almanya", "Hollanda"],
+        cities: ["Berlin"],
+        bridge: true,
+      }).success,
+    ).toBe(true);
     expect(caddeFilterSchema.safeParse({ mode: "live", countries: [], cities: [], bridge: false }).success).toBe(false);
     expect(caddeFilterSchema.safeParse({ mode: "real", country: "", city: "", bridge: false }).success).toBe(false);
   });
@@ -143,11 +156,16 @@ describe("caddeFilterSchema", () => {
 
 describe("parseWithUserError", () => {
   it("returns parsed data on success", () => {
-    expect(parseWithUserError(caddeCommentCreateSchema, { postId: "p1", body: "ok" })).toEqual({ postId: "p1", body: "ok" });
+    expect(parseWithUserError(caddeCommentCreateSchema, { postId: "p1", body: "ok" })).toEqual({
+      postId: "p1",
+      body: "ok",
+    });
   });
 
   it("throws a plain Error carrying the first issue message", () => {
-    expect(() => parseWithUserError(caddeCommentCreateSchema, { postId: "p1", body: "" })).toThrowError("Yorum boş olamaz.");
+    expect(() => parseWithUserError(caddeCommentCreateSchema, { postId: "p1", body: "" })).toThrowError(
+      "Yorum boş olamaz.",
+    );
   });
 });
 
@@ -166,18 +184,31 @@ describe("caddeCafeCreateSchema (Faz 4)", () => {
 
   it("referral modunda en az 4 karakter davet kodu ister", () => {
     expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral" }).success).toBe(false);
-    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "ABC" }).success).toBe(false);
-    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "BERLIN26" }).success).toBe(true);
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "ABC" }).success).toBe(
+      false,
+    );
+    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "referral", referralCode: "BERLIN26" }).success).toBe(
+      true,
+    );
   });
 
   it("approval modunda giris sorusu ister", () => {
     expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "approval" }).success).toBe(false);
-    expect(caddeCafeCreateSchema.safeParse({ ...base, entryMode: "approval", entryQuestion: "Neden katilmak istiyorsun?" }).success).toBe(true);
+    expect(
+      caddeCafeCreateSchema.safeParse({ ...base, entryMode: "approval", entryQuestion: "Neden katilmak istiyorsun?" })
+        .success,
+    ).toBe(true);
   });
 
   it("bitis baslangictan once olamaz", () => {
-    expect(caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T11:00:00Z" }).success).toBe(false);
-    expect(caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T14:00:00Z" }).success).toBe(true);
+    expect(
+      caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T11:00:00Z" })
+        .success,
+    ).toBe(false);
+    expect(
+      caddeCafeCreateSchema.safeParse({ ...base, startsAt: "2026-06-11T12:00:00Z", endsAt: "2026-06-11T14:00:00Z" })
+        .success,
+    ).toBe(true);
   });
 
   it("dis linkler http(s) URL olmali, en fazla 3", () => {
@@ -218,7 +249,9 @@ describe("carsiItemCreateSchema (Faz 5)", () => {
 
   it("gorseller http(s) URL olmali, en fazla 6", () => {
     expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: ["ftp://x"] }).success).toBe(false);
-    expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: Array(7).fill("https://example.com/a.jpg") }).success).toBe(false);
+    expect(
+      carsiItemCreateSchema.safeParse({ ...base, imageUrls: Array(7).fill("https://example.com/a.jpg") }).success,
+    ).toBe(false);
     expect(carsiItemCreateSchema.safeParse({ ...base, imageUrls: ["https://example.com/a.jpg"] }).success).toBe(true);
   });
 });
@@ -251,15 +284,35 @@ describe("caddePromotionCreateSchema (Faz 6)", () => {
 
   it("en az 1, en fazla 6 placement", () => {
     expect(caddePromotionCreateSchema.safeParse({ ...base, placements: [] }).success).toBe(false);
-    expect(caddePromotionCreateSchema.safeParse({ ...base, placements: Array(7).fill({ key: "cadde-right-rail" }) }).success).toBe(false);
+    expect(
+      caddePromotionCreateSchema.safeParse({ ...base, placements: Array(7).fill({ key: "cadde-right-rail" }) }).success,
+    ).toBe(false);
   });
 
   it("city_highlight yalniz kendi placement'inda yayinlanir", () => {
-    expect(caddePromotionCreateSchema.safeParse({ ...base, campaignType: "city_highlight", placements: [{ key: "cadde-right-rail" }] }).success).toBe(false);
-    expect(caddePromotionCreateSchema.safeParse({ ...base, campaignType: "city_highlight", placements: [{ key: "city-ambassador-highlight" }] }).success).toBe(true);
+    expect(
+      caddePromotionCreateSchema.safeParse({
+        ...base,
+        campaignType: "city_highlight",
+        placements: [{ key: "cadde-right-rail" }],
+      }).success,
+    ).toBe(false);
+    expect(
+      caddePromotionCreateSchema.safeParse({
+        ...base,
+        campaignType: "city_highlight",
+        placements: [{ key: "city-ambassador-highlight" }],
+      }).success,
+    ).toBe(true);
   });
 
   it("bitis baslangictan sonra olmali", () => {
-    expect(caddePromotionCreateSchema.safeParse({ ...base, startsAt: "2026-07-01T00:00:00Z", endsAt: "2026-06-01T00:00:00Z" }).success).toBe(false);
+    expect(
+      caddePromotionCreateSchema.safeParse({
+        ...base,
+        startsAt: "2026-07-01T00:00:00Z",
+        endsAt: "2026-06-01T00:00:00Z",
+      }).success,
+    ).toBe(false);
   });
 });

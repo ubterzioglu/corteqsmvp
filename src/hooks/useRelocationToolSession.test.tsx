@@ -4,12 +4,7 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
-import {
-  completeSession,
-  recordEvent,
-  saveAnswer,
-  startSession,
-} from "@/lib/relocation-tools-api";
+import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation-tools-api";
 
 vi.mock("@/lib/relocation-tools-api", () => ({
   completeSession: vi.fn(),
@@ -52,10 +47,7 @@ describe("useRelocationToolSession", () => {
   });
 
   it("ilk cevapta tek session açar, finalde aynı session'ı kullanır", async () => {
-    const { result } = renderHook(
-      () => useRelocationToolSession({ toolKey: "test-tool" }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useRelocationToolSession({ toolKey: "test-tool" }), { wrapper });
 
     act(() => {
       result.current.saveProgress({ mode: "detailed", questionKey: "q1", answer: "a" });
@@ -73,10 +65,7 @@ describe("useRelocationToolSession", () => {
   });
 
   it("resume edilen session için yeni session açmaz", async () => {
-    const { result } = renderHook(
-      () => useRelocationToolSession({ toolKey: "test-tool" }),
-      { wrapper },
-    );
+    const { result } = renderHook(() => useRelocationToolSession({ toolKey: "test-tool" }), { wrapper });
 
     act(() => {
       result.current.attachSession("existing-session");

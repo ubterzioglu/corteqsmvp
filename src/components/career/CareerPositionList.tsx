@@ -26,10 +26,7 @@ export function CareerPositionList({ onApply }: CareerPositionListProps) {
   const [filter, setFilter] = useState<FilterValue>(ALL);
   const [openItems, setOpenItems] = useState<string[]>([]);
 
-  const areaLabels = useMemo(
-    () => new Map(CAREER_AREAS.map((area) => [area.id, area.label] as const)),
-    [],
-  );
+  const areaLabels = useMemo(() => new Map(CAREER_AREAS.map((area) => [area.id, area.label] as const)), []);
 
   const visible = useMemo(
     () => (filter === ALL ? CAREER_JOBS : CAREER_JOBS.filter((job) => job.area === filter)),
@@ -94,19 +91,9 @@ export function CareerPositionList({ onApply }: CareerPositionListProps) {
         ))}
       </div>
 
-      <Accordion
-        type="multiple"
-        value={openItems}
-        onValueChange={setOpenItems}
-        className="mt-6 space-y-3"
-      >
+      <Accordion type="multiple" value={openItems} onValueChange={setOpenItems} className="mt-6 space-y-3">
         {visible.map((job) => (
-          <CareerPositionCard
-            key={job.id}
-            job={job}
-            areaLabel={areaLabels.get(job.area) ?? ""}
-            onApply={onApply}
-          />
+          <CareerPositionCard key={job.id} job={job} areaLabel={areaLabels.get(job.area) ?? ""} onApply={onApply} />
         ))}
       </Accordion>
     </section>

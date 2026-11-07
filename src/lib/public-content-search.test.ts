@@ -35,13 +35,15 @@ describe("searchPublicContent", () => {
     });
 
     await expect(searchPublicContent("  Almanya  ", 99)).resolves.toEqual(
-      expect.arrayContaining([{
-        type: "blog",
-        id: "blog-1",
-        title: "Almanya'da bütçe",
-        description: "Kira ve gündelik giderler",
-        href: "/blog/almanya-butce",
-      }]),
+      expect.arrayContaining([
+        {
+          type: "blog",
+          id: "blog-1",
+          title: "Almanya'da bütçe",
+          description: "Kira ve gündelik giderler",
+          href: "/blog/almanya-butce",
+        },
+      ]),
     );
     expect(rpcMock).toHaveBeenCalledWith("search_public_content", {
       p_search_text: "Almanya",

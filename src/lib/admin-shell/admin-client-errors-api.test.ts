@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  filterClientErrorReports,
-  type ClientErrorReportRow,
-} from "@/lib/admin-shell/admin-client-errors-api";
+import { filterClientErrorReports, type ClientErrorReportRow } from "@/lib/admin-shell/admin-client-errors-api";
 
 function row(overrides: Partial<ClientErrorReportRow> = {}): ClientErrorReportRow {
   return {
@@ -27,7 +24,14 @@ function row(overrides: Partial<ClientErrorReportRow> = {}): ClientErrorReportRo
 describe("filterClientErrorReports", () => {
   const reports = [
     row({ id: "a" }),
-    row({ id: "b", source: "render", context: "AppErrorBoundary", message: "Cannot read properties of undefined", error_code: null, route: "/cadde/cafe/x" }),
+    row({
+      id: "b",
+      source: "render",
+      context: "AppErrorBoundary",
+      message: "Cannot read properties of undefined",
+      error_code: null,
+      route: "/cadde/cafe/x",
+    }),
     row({ id: "c", source: "cadde_read", context: "listCaddeFeed", message: "permission denied", error_code: "42501" }),
   ];
 
@@ -48,9 +52,7 @@ describe("filterClientErrorReports", () => {
   });
 
   it("kaynak ve arama birleşir", () => {
-    expect(
-      filterClientErrorReports(reports, { source: "cadde_write", search: "permission" }),
-    ).toHaveLength(0);
+    expect(filterClientErrorReports(reports, { source: "cadde_write", search: "permission" })).toHaveLength(0);
     expect(
       filterClientErrorReports(reports, { source: "cadde_read", search: "permission" }).map((entry) => entry.id),
     ).toEqual(["c"]);

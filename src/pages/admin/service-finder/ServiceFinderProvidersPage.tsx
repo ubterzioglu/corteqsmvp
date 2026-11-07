@@ -7,10 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  useServiceFinderProviders,
-  useUpsertServiceFinderProvider,
-} from "@/hooks/useServiceFinder";
+import { useServiceFinderProviders, useUpsertServiceFinderProvider } from "@/hooks/useServiceFinder";
 import type { ServiceFinderProviderConfigRow } from "@/lib/service-finder-schemas";
 
 function ProviderCard({ provider }: { provider: ServiceFinderProviderConfigRow }) {
@@ -18,9 +15,7 @@ function ProviderCard({ provider }: { provider: ServiceFinderProviderConfigRow }
   const [enabled, setEnabled] = useState(provider.is_enabled);
   const [model, setModel] = useState(provider.default_model ?? "");
   const [monthlyCap, setMonthlyCap] = useState(provider.monthly_cap_usd?.toString() ?? "");
-  const [requestDefaults, setRequestDefaults] = useState(
-    JSON.stringify(provider.request_defaults ?? {}, null, 2),
-  );
+  const [requestDefaults, setRequestDefaults] = useState(JSON.stringify(provider.request_defaults ?? {}, null, 2));
   const [jsonError, setJsonError] = useState<string | null>(null);
 
   const save = () => {
@@ -49,8 +44,8 @@ function ProviderCard({ provider }: { provider: ServiceFinderProviderConfigRow }
         <div>
           <CardTitle className="text-base">{provider.display_name}</CardTitle>
           <p className="text-xs text-muted-foreground">
-            {provider.provider_key} · {provider.provider_kind} · Anahtar env:{" "}
-            <code>{provider.secret_ref}</code> (maskelenmiş, tarayıcıya gelmez)
+            {provider.provider_key} · {provider.provider_kind} · Anahtar env: <code>{provider.secret_ref}</code>{" "}
+            (maskelenmiş, tarayıcıya gelmez)
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -107,8 +102,8 @@ export default function ServiceFinderProvidersPage() {
       <div>
         <h1 className="text-2xl font-bold">Sağlayıcılar</h1>
         <p className="text-sm text-muted-foreground">
-          Arama / ekstraksiyon / sınıflandırma sağlayıcı ayarları. API anahtarları Coolify
-          ortam değişkenlerinde tutulur; burada yalnızca referans adı görünür.
+          Arama / ekstraksiyon / sınıflandırma sağlayıcı ayarları. API anahtarları Coolify ortam değişkenlerinde
+          tutulur; burada yalnızca referans adı görünür.
         </p>
       </div>
       {isLoading && <p className="text-sm text-muted-foreground">Yükleniyor...</p>}

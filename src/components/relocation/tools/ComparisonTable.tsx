@@ -2,14 +2,7 @@
 // recommendations öğelerini ülke bazlı maaş tablosu olarak gösterir.
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { bucketLabel } from "@/lib/relocation-tools-copy";
 
 interface ComparisonRow {

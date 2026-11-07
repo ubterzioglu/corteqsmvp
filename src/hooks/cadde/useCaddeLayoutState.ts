@@ -3,13 +3,7 @@ import { useMemo, useState } from "react";
 import type { CaddeCafeTheme } from "@/lib/cadde-cafe-api";
 import type { CaddeWidenTarget } from "@/lib/cadde-feed-widen";
 import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
-import type {
-  CaddeBillboardCard,
-  CaddeCafe,
-  CaddeCity,
-  CaddeFilterState,
-  CaddeInterest,
-} from "@/lib/cadde-types";
+import type { CaddeBillboardCard, CaddeCafe, CaddeCity, CaddeFilterState, CaddeInterest } from "@/lib/cadde-types";
 
 type UseCaddeLayoutStateInput = {
   filters: CaddeFilterState;
@@ -67,8 +61,7 @@ export function useCaddeLayoutState({
 
   const hasGeoSelection = filters.countries.length > 0 || filters.cities.length > 0;
   const cafeLocationLabel = filters.cities[0] ?? filters.countries[0] ?? null;
-  const hasNarrowingFilter =
-    hasGeoSelection || filters.bridge || Boolean(filters.hashtag) || filters.scope !== "all";
+  const hasNarrowingFilter = hasGeoSelection || filters.bridge || Boolean(filters.hashtag) || filters.scope !== "all";
   const sparseContentHint = canWiden
     ? `Daraltılmış akışın boş; ${widenTarget!.label} akışına tek dokunuşla geçebilirsin.`
     : hasNarrowingFilter
@@ -77,11 +70,7 @@ export function useCaddeLayoutState({
 
   const caddeDataResolved = !isFeedLoading && !isCafesLoading;
   const isColdStart =
-    caddeDataResolved &&
-    !isFeedError &&
-    feedItemCount === 0 &&
-    cafes.length === 0 &&
-    !hasNarrowingFilter;
+    caddeDataResolved && !isFeedError && feedItemCount === 0 && cafes.length === 0 && !hasNarrowingFilter;
   const cafesOpen = cafesOpenOverride ?? (caddeDataResolved && !isColdStart);
   const geoFilterOpen = geoFilterOpenOverride ?? (caddeDataResolved && !isColdStart);
   const asideRhythm = isColdStart ? "space-y-3" : "space-y-5";
@@ -93,9 +82,7 @@ export function useCaddeLayoutState({
     (card) => card.id !== spotlightBillboard?.id,
   );
   const promotionCtaTarget = isAuthenticated ? "/profile#cadde-tanitim" : "/login?mode=signup";
-  const promotionCtaLabel = isAuthenticated
-    ? "Profilinden İlk Tanıtımını Yap"
-    : "Profil Aç ve Tanıtıma Başla";
+  const promotionCtaLabel = isAuthenticated ? "Profilinden İlk Tanıtımını Yap" : "Profil Aç ve Tanıtıma Başla";
 
   const clockTarget = useMemo(
     () => resolveCaddeClockTarget(filters.cities, registeredCity, allCities),

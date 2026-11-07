@@ -4,11 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { RadarSourceForm } from "@/components/admin/radar/RadarSourceForm";
-import {
-  listRadarSources,
-  updateRadarSource,
-  type RadarNewsSource,
-} from "@/lib/radarNewsPipeline";
+import { listRadarSources, updateRadarSource, type RadarNewsSource } from "@/lib/radarNewsPipeline";
 
 const AdminRadarSourcesPage = () => {
   const { toast } = useToast();
@@ -26,7 +22,9 @@ const AdminRadarSourcesPage = () => {
     }
   }, [toast]);
 
-  useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   const handleSave = async (id: string, patch: Partial<RadarNewsSource>) => {
     const updated = await updateRadarSource(id, patch);
@@ -42,8 +40,8 @@ const AdminRadarSourcesPage = () => {
             <div>
               <CardTitle>Haber Kaynakları</CardTitle>
               <CardDescription>
-                RSS, Atom ve GDELT kaynaklarını yönetin. Bir kaynak yalnızca kullanım şartları
-                onaylandıktan sonra aktif edilebilir.
+                RSS, Atom ve GDELT kaynaklarını yönetin. Bir kaynak yalnızca kullanım şartları onaylandıktan sonra aktif
+                edilebilir.
               </CardDescription>
             </div>
             <div className="flex gap-2">
@@ -56,9 +54,9 @@ const AdminRadarSourcesPage = () => {
         </CardHeader>
         <CardContent>
           <div className="rounded-md bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800 dark:bg-amber-950/30 dark:border-amber-800 dark:text-amber-300">
-            <strong>Kaynak açma kuralı:</strong> Her yeni RSS kaynağı için kullanım şartları,
-            syndication izni ve ticari kullanım kısıtları manuel olarak kontrol edilmeli ve
-            "Şart Notları" alanına kaydedilmelidir. GDELT açık veri olduğu için doğrudan aktiftir.
+            <strong>Kaynak açma kuralı:</strong> Her yeni RSS kaynağı için kullanım şartları, syndication izni ve ticari
+            kullanım kısıtları manuel olarak kontrol edilmeli ve "Şart Notları" alanına kaydedilmelidir. GDELT açık veri
+            olduğu için doğrudan aktiftir.
           </div>
         </CardContent>
       </Card>
@@ -70,9 +68,7 @@ const AdminRadarSourcesPage = () => {
         </div>
       ) : sources.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center text-muted-foreground">
-            Kayıtlı kaynak yok.
-          </CardContent>
+          <CardContent className="py-12 text-center text-muted-foreground">Kayıtlı kaynak yok.</CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">

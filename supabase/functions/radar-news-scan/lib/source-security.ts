@@ -1,9 +1,4 @@
-const BLOCKED_PATTERNS = [
-  /^file:/i,
-  /^ftp:/i,
-  /^data:/i,
-  /^javascript:/i,
-];
+const BLOCKED_PATTERNS = [/^file:/i, /^ftp:/i, /^data:/i, /^javascript:/i];
 
 const PRIVATE_IP_PATTERNS = [
   /^localhost$/i,

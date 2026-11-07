@@ -119,10 +119,7 @@ describe("groupWorkshopItems", () => {
   });
 
   it("bölümsüz maddeleri tek boş grupta toplar", () => {
-    const groups = groupWorkshopItems([
-      item({ itemNo: 1, section: "" }),
-      item({ itemNo: 2, section: "   " }),
-    ]);
+    const groups = groupWorkshopItems([item({ itemNo: 1, section: "" }), item({ itemNo: 2, section: "   " })]);
 
     expect(groups).toHaveLength(1);
     expect(groups[0].section).toBe("");
@@ -178,9 +175,7 @@ describe("filterWorkshopItems", () => {
 
     expect(filterWorkshopItems(mixed, { session: "WS2" }).map((entry) => entry.itemNo)).toEqual([49, 50]);
     expect(filterWorkshopItems(mixed, { session: "all" })).toHaveLength(4);
-    expect(
-      filterWorkshopItems(mixed, { session: "WS2", status: "open" }).map((entry) => entry.itemNo),
-    ).toEqual([49]);
+    expect(filterWorkshopItems(mixed, { session: "WS2", status: "open" }).map((entry) => entry.itemNo)).toEqual([49]);
   });
 });
 
@@ -259,9 +254,9 @@ describe("validateWorkshopItemDraft", () => {
   });
 
   it("çok uzun bölüm adını reddeder", () => {
-    expect(
-      validateWorkshopItemDraft({ sessionKey: "WS1", section: "a".repeat(121), title: "Madde" }),
-    ).toBe("Bölüm adı en fazla 120 karakter olabilir.");
+    expect(validateWorkshopItemDraft({ sessionKey: "WS1", section: "a".repeat(121), title: "Madde" })).toBe(
+      "Bölüm adı en fazla 120 karakter olabilir.",
+    );
   });
 });
 

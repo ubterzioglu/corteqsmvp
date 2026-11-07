@@ -176,9 +176,7 @@ export function groupWorkshopItems(items: WorkshopItem[]): WorkshopSection[] {
 
 /** Mevcut oturumları sayısal sırayla döner: WS1, WS2, … WS10 (WS10 > WS9). */
 export function collectWorkshopSessions(items: WorkshopItem[]): string[] {
-  const keys = new Set(
-    items.map((item) => item.sessionKey.trim()).filter((key) => key.length > 0),
-  );
+  const keys = new Set(items.map((item) => item.sessionKey.trim()).filter((key) => key.length > 0));
 
   return Array.from(keys).sort((a, b) => {
     const left = Number.parseInt(a.replace(/^WS/i, ""), 10);
@@ -260,9 +258,7 @@ export function filterWorkshopItems(
 
 /** Mevcut bölüm adlarını Türkçe sıralı, tekilleştirilmiş döner (form önerisi). */
 export function collectWorkshopSections(items: WorkshopItem[]): string[] {
-  const labels = new Set(
-    items.map((item) => item.section.trim()).filter((section) => section.length > 0),
-  );
+  const labels = new Set(items.map((item) => item.section.trim()).filter((section) => section.length > 0));
   return Array.from(labels).sort(trCompare);
 }
 
@@ -328,10 +324,7 @@ async function nextItemNo(workshopKey: string): Promise<number> {
 }
 
 /** Workshop'a yeni madde ekler (listenin sonuna). */
-export async function createWorkshopItem(
-  workshopKey: string,
-  draft: WorkshopItemDraft,
-): Promise<WorkshopItem> {
+export async function createWorkshopItem(workshopKey: string, draft: WorkshopItemDraft): Promise<WorkshopItem> {
   const validationError = validateWorkshopItemDraft(draft);
   if (validationError) {
     throw new Error(validationError);
@@ -358,10 +351,7 @@ export async function createWorkshopItem(
 }
 
 /** Madde metnini / bölümünü güncelle. */
-export async function updateWorkshopItem(
-  id: string,
-  draft: WorkshopItemDraft,
-): Promise<WorkshopItem> {
+export async function updateWorkshopItem(id: string, draft: WorkshopItemDraft): Promise<WorkshopItem> {
   const validationError = validateWorkshopItemDraft(draft);
   if (validationError) {
     throw new Error(validationError);
@@ -385,21 +375,13 @@ export async function updateWorkshopItem(
 }
 
 /** Bir sahibin onay kutusunu set eder; zaman damgası da birlikte yazılır. */
-export async function setWorkshopItemApproval(
-  id: string,
-  owner: WorkshopOwner,
-  done: boolean,
-): Promise<WorkshopItem> {
+export async function setWorkshopItemApproval(id: string, owner: WorkshopOwner, done: boolean): Promise<WorkshopItem> {
   const payload =
     owner === "ubt"
       ? { ubt_done: done, ubt_done_at: done ? new Date().toISOString() : null }
       : { burak_done: done, burak_done_at: done ? new Date().toISOString() : null };
 
-  const { data, error } = await table()
-    .update(payload)
-    .eq("id", id)
-    .select(ITEM_SELECT)
-    .single();
+  const { data, error } = await table().update(payload).eq("id", id).select(ITEM_SELECT).single();
 
   if (error || !data) {
     throw new Error(sanitizeError(error, "Onay güncellenemedi."));
@@ -410,12 +392,9 @@ export async function setWorkshopItemApproval(
 
 /** Maddeyi soft-delete eder (item_no serbest bırakılmaz, numaralar sabit kalır). */
 export async function deleteWorkshopItem(id: string): Promise<void> {
-  const { error } = await table()
-    .update({ deleted_at: new Date().toISOString() })
-    .eq("id", id);
+  const { error } = await table().update({ deleted_at: new Date().toISOString() }).eq("id", id);
 
   if (error) {
     throw new Error(sanitizeError(error, "Madde silinemedi."));
   }
 }
-

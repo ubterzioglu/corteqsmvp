@@ -78,10 +78,7 @@ describe("İşletmeler", () => {
 describe("Uzmanlar", () => {
   it("yalnız Consultant_* ve Healthcare_* rolleri içerir", () => {
     for (const key of roleKeysOf(CONSULTANT_ROLE_GROUPS)) {
-      expect(
-        key.startsWith("Consultant_") || key.startsWith("Healthcare_"),
-        `${key} beklenmeyen önek`,
-      ).toBe(true);
+      expect(key.startsWith("Consultant_") || key.startsWith("Healthcare_"), `${key} beklenmeyen önek`).toBe(true);
     }
   });
 
@@ -97,9 +94,7 @@ describe("Uzmanlar", () => {
 
   it("11 Consultant_* rolünün tamamını kapsar", () => {
     // Ölçüldü 2026-09-20: 11 aktif Consultant_* rolü.
-    const consultantKeys = roleKeysOf(CONSULTANT_ROLE_GROUPS).filter((key) =>
-      key.startsWith("Consultant_"),
-    );
+    const consultantKeys = roleKeysOf(CONSULTANT_ROLE_GROUPS).filter((key) => key.startsWith("Consultant_"));
     expect(consultantKeys).toHaveLength(11);
   });
 
@@ -131,9 +126,7 @@ describe("yardımcılar", () => {
   });
 
   it("roleKeysForGroup tek grubun anahtarlarını döner", () => {
-    expect(roleKeysForGroup(BUSINESS_ROLE_GROUPS, "cocuk-aile")).toEqual([
-      "Business_ChildrenFamily",
-    ]);
+    expect(roleKeysForGroup(BUSINESS_ROLE_GROUPS, "cocuk-aile")).toEqual(["Business_ChildrenFamily"]);
   });
 });
 

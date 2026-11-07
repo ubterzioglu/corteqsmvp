@@ -49,9 +49,7 @@ export function useAdminFavorites(userId: string | undefined): AdminFavoritesSta
     (id: string) => {
       if (!userId) return;
       setFavoriteIds((previous) => {
-        const next = previous.includes(id)
-          ? previous.filter((existing) => existing !== id)
-          : [...previous, id];
+        const next = previous.includes(id) ? previous.filter((existing) => existing !== id) : [...previous, id];
         saveAdminFavoritePageIds(userId, next).catch((error: unknown) => {
           console.error("Favori sayfalar kaydedilemedi:", error);
         });
@@ -65,9 +63,7 @@ export function useAdminFavorites(userId: string | undefined): AdminFavoritesSta
 
   const favoriteEntries = useMemo(() => {
     const entriesById = new Map(flattenAdminNav().map((entry) => [entry.item.id, entry]));
-    return favoriteIds
-      .map((id) => entriesById.get(id))
-      .filter((entry): entry is AdminNavEntry => Boolean(entry));
+    return favoriteIds.map((id) => entriesById.get(id)).filter((entry): entry is AdminNavEntry => Boolean(entry));
   }, [favoriteIds]);
 
   return { favoriteIds, favoriteEntries, isFavorite, toggleFavorite };

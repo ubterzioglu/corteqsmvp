@@ -9,7 +9,9 @@ const STATUS_CLASS: Record<string, string> = {
 
 export default function SurveyStatusBadge({ status }: { status: SurveyStatus }) {
   return (
-    <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLASS[status] ?? STATUS_CLASS.draft}`}>
+    <span
+      className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_CLASS[status] ?? STATUS_CLASS.draft}`}
+    >
       {status}
     </span>
   );

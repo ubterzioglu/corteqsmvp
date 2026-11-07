@@ -2,22 +2,13 @@
 // Arka plan (cache'lenmiş SVG→PNG) + logo + başlık/açıklama/CTA/domain metin
 // katmanını Sharp ile birleştirip nihai 1200x1200 PNG üretir.
 
-import { access, mkdir } from 'node:fs/promises';
-import path from 'node:path';
-import sharp from 'sharp';
+import { access, mkdir } from "node:fs/promises";
+import path from "node:path";
+import sharp from "sharp";
 
-import {
-  CANVAS_SIZE,
-  COLORS,
-  CTA_LABEL,
-  DOMAIN_LABEL,
-  FONT_FAMILY,
-  GRID,
-  LOGO_CROP,
-  LOGO_PATH,
-} from './config.mjs';
-import { getMotifSvg } from './background-motifs.mjs';
-import { shortDescription, wrapText, xmlEscape } from './text-utils.mjs';
+import { CANVAS_SIZE, COLORS, CTA_LABEL, DOMAIN_LABEL, FONT_FAMILY, GRID, LOGO_CROP, LOGO_PATH } from "./config.mjs";
+import { getMotifSvg } from "./background-motifs.mjs";
+import { shortDescription, wrapText, xmlEscape } from "./text-utils.mjs";
 
 async function fileExists(filePath) {
   try {
@@ -51,7 +42,7 @@ export async function ensureBackground({ tool, variantIndex, force, backgroundsD
 }
 
 function overlaySvg(tool, _variantIndex) {
-  const categoryLabel = 'CorteQS Test Aracı';
+  const categoryLabel = "CorteQS Test Aracı";
   const title = xmlEscape(tool.name);
   const desc = xmlEscape(shortDescription(tool.description));
   const titleLines = wrapText(title, 26);
@@ -64,7 +55,7 @@ function overlaySvg(tool, _variantIndex) {
       (line, i) =>
         `<text x="${CANVAS_SIZE / 2}" y="${titleStartY + i * titleLineHeight}" text-anchor="middle" font-family="${FONT_FAMILY}" font-size="46" font-weight="700" fill="${COLORS.white}">${line}</text>`,
     )
-    .join('');
+    .join("");
 
   const descStartY = titleStartY + titleLines.length * titleLineHeight + 40;
   const descLineHeight = 34;
@@ -73,7 +64,7 @@ function overlaySvg(tool, _variantIndex) {
       (line, i) =>
         `<text x="${CANVAS_SIZE / 2}" y="${descStartY + i * descLineHeight}" text-anchor="middle" font-family="${FONT_FAMILY}" font-size="26" font-weight="400" fill="${COLORS.textMuted}">${line}</text>`,
     )
-    .join('');
+    .join("");
 
   const categoryY = GRID.headerTop + 70;
   const categorySvg = `
@@ -104,8 +95,8 @@ async function buildLogoOverlay() {
 }
 
 export async function composePost({ tool, variantIndex, force, outputRoot }) {
-  const backgroundsDir = path.join(outputRoot, 'backgrounds');
-  const postsDir = path.join(outputRoot, 'posts', tool.id);
+  const backgroundsDir = path.join(outputRoot, "backgrounds");
+  const postsDir = path.join(outputRoot, "posts", tool.id);
 
   try {
     const backgroundPath = await ensureBackground({ tool, variantIndex, force, backgroundsDir });
@@ -120,12 +111,12 @@ export async function composePost({ tool, variantIndex, force, outputRoot }) {
       .png()
       .toFile(outputPath);
 
-    return { outputPath, backgroundPath, status: 'success' };
+    return { outputPath, backgroundPath, status: "success" };
   } catch (error) {
     return {
       outputPath: null,
       backgroundPath: null,
-      status: 'failed',
+      status: "failed",
       error: error instanceof Error ? error.message : String(error),
     };
   }

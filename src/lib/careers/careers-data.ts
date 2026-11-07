@@ -30,11 +30,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "ops",
     tr: "Operasyon Direktörü",
     en: "COO (Chief Operating Officer)",
-    badges: [
-      "Kurucu ortak adayı",
-      "Yatırımcı-Ortak Modeli'ne açık",
-    ],
-    intro: "CorteQS'in operasyon motorunu kuracak, departmanları bir makine gibi birlikte çalıştıracak COO'yu arıyoruz. 19 ülkede pre-launch, 29 Ekim'de tam açılış ve ardından şehir şehir büyüme var; bu ritmi tasarlayıp sürdürecek kişi sensin.",
+    badges: ["Kurucu ortak adayı", "Yatırımcı-Ortak Modeli'ne açık"],
+    intro:
+      "CorteQS'in operasyon motorunu kuracak, departmanları bir makine gibi birlikte çalıştıracak COO'yu arıyoruz. 19 ülkede pre-launch, 29 Ekim'de tam açılış ve ardından şehir şehir büyüme var; bu ritmi tasarlayıp sürdürecek kişi sensin.",
     tasks: [
       "Tüm departmanların makro ve mikro operasyonel süreçlerini kurar, ölçer ve sürekli iyileştirirsin",
       "Ülke contributor ağı ve Şehir Elçileri katmanının operasyonunu (açılış, seçim, ritim, kalite) yönetirsin",
@@ -50,17 +48,17 @@ export const CAREER_JOBS: CareerJob[] = [
     ],
     plus: "Uber, Airbnb, Getir gibi şehir bazlı açılış yapan bir şirkette deneyim; diaspora topluluklarını tanımak.",
     report: "Kuruculara raporlar. Giriş seviyesi COO'dur; kurucu ortaklık yoludur.",
-    model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting, hedef bazlı hızlandırma) veya Yatırımcı-Ortak Modeli.",
+    model:
+      "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting, hedef bazlı hızlandırma) veya Yatırımcı-Ortak Modeli.",
   },
   {
     id: "network",
     area: "ops",
     tr: "Global Ağ Yöneticisi",
     en: "Global Network Manager (Country Contributors)",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "Her ülkede CorteQS'in yerel sesi olacak contributor katmanını kuracak ve Şehir Elçileri ile birlikte tek bir büyüme ağına dönüştürecek birini arıyoruz. Dağınık bir gönüllü listesi değil; görevleri, ritmi ve yükselme yolu belli, yaşayan bir ağ kuracaksın.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "Her ülkede CorteQS'in yerel sesi olacak contributor katmanını kuracak ve Şehir Elçileri ile birlikte tek bir büyüme ağına dönüştürecek birini arıyoruz. Dağınık bir gönüllü listesi değil; görevleri, ritmi ve yükselme yolu belli, yaşayan bir ağ kuracaksın.",
     tasks: [
       "19 ülkelik pre-launch sürecinde her ülkede contributor ağını kurar ve büyütürsün",
       "Contributor seçimi, görev tanımları, motivasyon ve ödül modelini tasarlarsın",
@@ -74,7 +72,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Diaspora dinamiklerini yaşamış ya da yakından tanıyan",
     ],
     plus: "Google Local Guides, Couchsurfing, Meetup veya öğrenci ağı gibi programlarda organizatörlük.",
-    report: "COO'ya raporlar (başlangıçta kuruculara). Global Network Manager → Head of Global Network → Director of Expansion.",
+    report:
+      "COO'ya raporlar (başlangıçta kuruculara). Global Network Manager → Head of Global Network → Director of Expansion.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -82,11 +81,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "biz",
     tr: "İş Ortaklıkları ve Ayrıcalıklar Lideri",
     en: "Head of Partnerships & Perks",
-    badges: [
-      "Kurucu ortak adayı",
-      "Yatırımcı-Ortak Modeli'ne açık",
-    ],
-    intro: "Diaspora çapındaki tüm Türk işletmeleriyle affiliate ve indirim katmanını kuracak, CorteQS'in ticari tarafını sahiplenecek birini arıyoruz. Berlin'deki bir restorandan Dubai'deki bir klinik zincirine kadar işletmeleri, kullanıcılara değer veren kampanyalarla platforma bağlayacaksın.",
+    badges: ["Kurucu ortak adayı", "Yatırımcı-Ortak Modeli'ne açık"],
+    intro:
+      "Diaspora çapındaki tüm Türk işletmeleriyle affiliate ve indirim katmanını kuracak, CorteQS'in ticari tarafını sahiplenecek birini arıyoruz. Berlin'deki bir restorandan Dubai'deki bir klinik zincirine kadar işletmeleri, kullanıcılara değer veren kampanyalarla platforma bağlayacaksın.",
     tasks: [
       "Diaspora işletmeleri ve profesyonellerle affiliate, indirim ve sadakat kuponu anlaşmaları kurarsın",
       "Kupon ve indirim katmanının ticari modelini, kurallarını ve fiyatlamasını belirlersin",
@@ -101,7 +98,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Birden fazla ülkede işletmelerle çalışabilecek ilişki gücü ve dil yetkinliği",
     ],
     plus: "Havayolu, banka veya kart sadakat programı deneyimi; diaspora işletme ağlarını tanımak.",
-    report: "Kuruculara raporlar. Head of Partnerships & Perks → BU Director (birim kendi gelir-gider tablosunu oluşturduğunda) → CCO.",
+    report:
+      "Kuruculara raporlar. Head of Partnerships & Perks → BU Director (birim kendi gelir-gider tablosunu oluşturduğunda) → CCO.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting + birim geliri primi) veya Yatırımcı-Ortak Modeli.",
   },
   {
@@ -109,12 +107,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "biz",
     tr: "İş Geliştirme Sorumlusu",
     en: "Business Development Responsible",
-    badges: [
-      "Birden fazla kişi",
-      "Ülke veya şehir kümesi bazlı",
-      "Komisyon ağırlıklı",
-    ],
-    intro: "Yaşadığın bölgedeki Türk işletmelerini ve profesyonellerini CorteQS'e kazandıracak, onlarla kampanya ve indirim anlaşmaları kapatacak iş geliştirme sorumluları arıyoruz. Her kişi bir ülke veya şehir kümesinden (örneğin DACH, Benelüks, Körfez, Kuzey Amerika) sorumlu olacak.",
+    badges: ["Birden fazla kişi", "Ülke veya şehir kümesi bazlı", "Komisyon ağırlıklı"],
+    intro:
+      "Yaşadığın bölgedeki Türk işletmelerini ve profesyonellerini CorteQS'e kazandıracak, onlarla kampanya ve indirim anlaşmaları kapatacak iş geliştirme sorumluları arıyoruz. Her kişi bir ülke veya şehir kümesinden (örneğin DACH, Benelüks, Körfez, Kuzey Amerika) sorumlu olacak.",
     tasks: [
       "Bölgendeki işletme ve profesyonellere ulaşır, CorteQS'i ve Kurucu 1000 programını anlatırsın",
       "Affiliate, indirim ve kampanya anlaşmalarını kapatır, sonrasını takip edersin",
@@ -127,19 +122,19 @@ export const CAREER_JOBS: CareerJob[] = [
       "Hedef odaklı, kendi takvimini yönetebilen, sonuçla ölçülmekten keyif alan",
     ],
     plus: "Birden fazla dil; restoran, sağlık, emlak veya hukuk sektörlerinde çevre.",
-    report: "Head of Partnerships & Perks'e raporlar. BD Responsible → BD Manager (3–5 kişilik ekip yönetmeye başladığında) → Senior BD Manager → Regional BD Lead → Head of BD.",
-    model: "Kapattığın anlaşmalardan komisyon + küçük sabit destek; yüksek performans gösterenler için vesting'li ortaklık payı.",
+    report:
+      "Head of Partnerships & Perks'e raporlar. BD Responsible → BD Manager (3–5 kişilik ekip yönetmeye başladığında) → Senior BD Manager → Regional BD Lead → Head of BD.",
+    model:
+      "Kapattığın anlaşmalardan komisyon + küçük sabit destek; yüksek performans gösterenler için vesting'li ortaklık payı.",
   },
   {
     id: "sponsorship",
     area: "biz",
     tr: "Sponsorluk Yöneticisi",
     en: "Sponsorship Manager",
-    badges: [
-      "Vesting'li ortaklık payı",
-      "Başarı primi",
-    ],
-    intro: "Diasporanın yarışmalarına, oyunlarına ve milli gün kampanyalarına ulusal ve global sponsorlar bağlayacak birini arıyoruz. Ülke ülke sponsor haritasını çıkaracak, platformdaki işletme ve kuruluşları da sponsorluk ekosistemine dahil edeceksin.",
+    badges: ["Vesting'li ortaklık payı", "Başarı primi"],
+    intro:
+      "Diasporanın yarışmalarına, oyunlarına ve milli gün kampanyalarına ulusal ve global sponsorlar bağlayacak birini arıyoruz. Ülke ülke sponsor haritasını çıkaracak, platformdaki işletme ve kuruluşları da sponsorluk ekosistemine dahil edeceksin.",
     tasks: [
       "Ülke bazlı potansiyel sponsor haritası ve satış hattı kurarsın",
       "Platformdaki işletme, profesyonel ve kuruluşlardan kademeli sponsorluk programları tasarlarsın",
@@ -153,7 +148,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Sponsor yatırımının geri dönüşünü ölçüp anlatabilen analitik bir bakış",
     ],
     plus: "Havayolu, banka, telekom veya Türk ihracat markalarıyla mevcut ilişkiler.",
-    report: "Head of Partnerships & Perks'e raporlar (hedef: CCO). Sponsorship Manager → Head of Sponsorships → Director of Strategic Partnerships.",
+    report:
+      "Head of Partnerships & Perks'e raporlar (hedef: CCO). Sponsorship Manager → Head of Sponsorships → Director of Strategic Partnerships.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting) ve sponsorluk başarı primi.",
   },
   {
@@ -161,11 +157,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "Pazarlama Lideri",
     en: "Head of Marketing",
-    badges: [
-      "Kurucu ortak adayı",
-      "Yatırımcı-Ortak Modeli'ne açık",
-    ],
-    intro: "CorteQS'i dünyanın her yerindeki Türkler için ilk akla gelen adres yapacak pazarlama liderini arıyoruz. İçerik, kanallar, içerik üreticileri ve kampanyalardan oluşan güçlü bir ekibi tek bir marka hikâyesi etrafında toplayacaksın.",
+    badges: ["Kurucu ortak adayı", "Yatırımcı-Ortak Modeli'ne açık"],
+    intro:
+      "CorteQS'i dünyanın her yerindeki Türkler için ilk akla gelen adres yapacak pazarlama liderini arıyoruz. İçerik, kanallar, içerik üreticileri ve kampanyalardan oluşan güçlü bir ekibi tek bir marka hikâyesi etrafında toplayacaksın.",
     tasks: [
       "Çok ülkeli bir diaspora markası olarak CorteQS'in konumlandırmasını ve marka dilini kurarsın",
       "İçerik, kanal, creator ve kampanya ekiplerini tek bir stratejide birleştirir ve yönetirsin",
@@ -180,18 +174,17 @@ export const CAREER_JOBS: CareerJob[] = [
     ],
     plus: "Diaspora pazarlarını tanımak; platform ya da pazar yeri pazarlaması deneyimi.",
     report: "Kuruculara raporlar. Head of Marketing → VP Marketing → CMO.",
-    model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting, hedef bazlı hızlandırma) veya Yatırımcı-Ortak Modeli.",
+    model:
+      "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting, hedef bazlı hızlandırma) veya Yatırımcı-Ortak Modeli.",
   },
   {
     id: "content",
     area: "mkt",
     tr: "İçerik Sorumlusu",
     en: "Content Responsible",
-    badges: [
-      "Vesting'li ortaklık payı",
-      "Kıdemli adaylar Head of Content seviyesinden girebilir",
-    ],
-    intro: "CorteQS'in Instagram'ını bir \"CorteQS TV kanalı\" gibi yayına sokacak, tüm sosyal kanalları besleyen içerik motorunu çalıştıracak birini arıyoruz. Instagram'ı avucunun içi gibi bilen, hem strateji kuran hem de gerektiğinde üretime inen biri olmalısın.",
+    badges: ["Vesting'li ortaklık payı", "Kıdemli adaylar Head of Content seviyesinden girebilir"],
+    intro:
+      "CorteQS'in Instagram'ını bir \"CorteQS TV kanalı\" gibi yayına sokacak, tüm sosyal kanalları besleyen içerik motorunu çalıştıracak birini arıyoruz. Instagram'ı avucunun içi gibi bilen, hem strateji kuran hem de gerektiğinde üretime inen biri olmalısın.",
     tasks: [
       "Instagram'ın bütününü sahiplenirsin: grid tasarımı, yayın takvimi, formatlar, büyüme",
       "Sponsorlu, manuel, otomasyon ve collab içeriklerini bir arada yürütürsün",
@@ -205,8 +198,9 @@ export const CAREER_JOBS: CareerJob[] = [
       "AI içerik araçları ve otomasyon sistemleriyle günlük çalışan biri",
       "Creator ve marka ilişkilerini yürütebilecek iletişim gücü",
     ],
-    plus: "Bir medya markasında \"kanal\" mantığıyla yayın akışı kurmuş olmak; diaspora yaşamı.",
-    report: "Head of Marketing'e raporlar (başlangıçta kuruculara). Content Responsible → Content Manager → Head of Content → Director of Content & Media → CMO.",
+    plus: 'Bir medya markasında "kanal" mantığıyla yayın akışı kurmuş olmak; diaspora yaşamı.',
+    report:
+      "Head of Marketing'e raporlar (başlangıçta kuruculara). Content Responsible → Content Manager → Head of Content → Director of Content & Media → CMO.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -214,17 +208,16 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "Story Editörü",
     en: "Story Editor",
-    badges: [
-      "Performans ve prim",
-    ],
-    intro: "Dünyanın dört bir yanındaki diaspora hikâyelerini Instagram story ve reels'te, her gün merakla takip edilen editöryel bir yayın kuşağına dönüştürecek bir editör arıyoruz. Diasporada kimin ne ürettiğini herkesten önce gören, doğru içerik üreticisini doğru hikâyeyle buluşturan ve her story'yi platforma açılan bir kapıya çeviren biri.",
+    badges: ["Performans ve prim"],
+    intro:
+      "Dünyanın dört bir yanındaki diaspora hikâyelerini Instagram story ve reels'te, her gün merakla takip edilen editöryel bir yayın kuşağına dönüştürecek bir editör arıyoruz. Diasporada kimin ne ürettiğini herkesten önce gören, doğru içerik üreticisini doğru hikâyeyle buluşturan ve her story'yi platforma açılan bir kapıya çeviren biri.",
     tasks: [
       "Diaspora ekosistemini sürekli tararsın: kim, hangi ülkeden, ne tür reels paylaşıyor ve nasıl bir etkileşim alıyor. Bunu düzenli bir izleme listesine ve içgörü raporuna dönüştürürsün.",
       "Her içerik üreticisi için doğru işbirliği modelini belirlersin: paylaşım, ortak yayın, seri, hesap devri (takeover) ya da kampanya.",
       "CorteQS story'lerinde yer almak isteyen kişi, işletme ve kuruluşlar için yaratıcı başvuru kampanyaları ve dönüşüm odaklı akışlar tasarlarsın.",
       "Tüm içerikleri ülke, şehir, tema ve format bazında kategorize ederek yeniden kullanılabilir bir içerik arşivi kurarsın.",
       "Platform ekipleriyle (Cadde, Çarşı, Etkinlikler, Kampanyalar) koordineli işbirlikleri oluşturur, story'lerden platforma uzanan trafik akışını kurarsın.",
-      "Günlük story ve reels kuşağını planlar; kapakları, CTA'ları ve seri formatlarını (örneğin \"Bir Şehir, Bir Hikâye\") tasarlarsın.",
+      'Günlük story ve reels kuşağını planlar; kapakları, CTA\'ları ve seri formatlarını (örneğin "Bir Şehir, Bir Hikâye") tasarlarsın.',
       "29 Ekim geri sayımı gibi kampanya dönemlerinde yayın akışını yönetir; izlenme, tıklama, yanıt ve dönüşüm verileriyle formatları sürekli iyileştirirsin.",
     ],
     profile: [
@@ -235,7 +228,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Günlük yayın ritmini aksatmadan sürdürebilecek disiplin",
     ],
     plus: "Bir medya markası ya da içerik üreticisi için yayın kuşağı yönetmiş olmak; diaspora yaşamını yakından tanımak.",
-    report: "İçerik Sorumlusu'na raporlar. Story Editor → Senior Story Editor → Managing Editor → Head of Social Programming.",
+    report:
+      "İçerik Sorumlusu'na raporlar. Story Editor → Senior Story Editor → Managing Editor → Head of Social Programming.",
     model: "Küçük sabit destek ve performans primi; ilerleyen dönemde opsiyon havuzundan pay.",
   },
   {
@@ -243,10 +237,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "Kampanya ve Yarışmalar Sorumlusu",
     en: "Campaigns & Competitions Responsible",
-    badges: [
-      "Performans ve etkinlik primi",
-    ],
-    intro: "Diasporayı şehirler ve ülkeler arasında yarıştıracak, milli günlerde tüm dünyada aynı anda \"köpürecek\" kampanyaları kuracak birini arıyoruz. İlk büyük sınavın: 29 Ekim 2026 tam açılışı.",
+    badges: ["Performans ve etkinlik primi"],
+    intro:
+      'Diasporayı şehirler ve ülkeler arasında yarıştıracak, milli günlerde tüm dünyada aynı anda "köpürecek" kampanyaları kuracak birini arıyoruz. İlk büyük sınavın: 29 Ekim 2026 tam açılışı.',
     tasks: [
       "Blogger ve vlogger yarışmalarını (başvuru, jüri, ödül, duyuru) uçtan uca yürütürsün",
       "Şehirler ve ülkeler arası oyunlar, challenge'lar ve Diaspora Olimpiyatları gibi formatları tasarlarsın",
@@ -260,7 +253,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Yaratıcı fikirleri takvime, bütçeye ve sonuca bağlayabilen biri",
     ],
     plus: "Diaspora dernekleri veya öğrenci kulüpleriyle etkinlik deneyimi; oyun ve e-spor formatlarına ilgi.",
-    report: "Head of Marketing'e raporlar (başlangıçta kuruculara). Campaigns & Competitions Responsible → Manager → Head of Events & Campaigns → Director of Community Experiences.",
+    report:
+      "Head of Marketing'e raporlar (başlangıçta kuruculara). Campaigns & Competitions Responsible → Manager → Head of Events & Campaigns → Director of Community Experiences.",
     model: "Küçük sabit destek + kampanya ve sponsor primi; ilerleyen dönemde opsiyon havuzundan pay.",
   },
   {
@@ -268,10 +262,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "İçerik Üretici ve Influencer İşbirlikleri Sorumlusu",
     en: "Creator & Influencer Partnerships Responsible",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "Diasporanın en etkili içerik üreticilerini CorteQS'in yol arkadaşlarına dönüştürecek birini arıyoruz. Influencer'lar için özel bir karşılama deneyimi, kendi topluluklarını yönetebilecekleri bir panel ve CorteQS ile birlikte büyüyebilecekleri işbirlikleri kuracaksın.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "Diasporanın en etkili içerik üreticilerini CorteQS'in yol arkadaşlarına dönüştürecek birini arıyoruz. Influencer'lar için özel bir karşılama deneyimi, kendi topluluklarını yönetebilecekleri bir panel ve CorteQS ile birlikte büyüyebilecekleri işbirlikleri kuracaksın.",
     tasks: [
       "Ülke ülke diaspora influencer'larını tespit eder, onlara özel bir karşılama (onboarding) akışı yürütürsün",
       "Influencer'lara özel kontrol ve topluluk yönetimi panelinin ihtiyaçlarını teknik ekiple birlikte tanımlar, paneli işletirsin",
@@ -285,7 +278,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Güven veren, uzun soluklu ilişki kurabilen iletişim tarzı",
     ],
     plus: "Diaspora içerik üreticileriyle mevcut bağlar; bir creator ajansında çalışmış olmak.",
-    report: "Head of Marketing'e raporlar (başlangıçta kuruculara). Responsible → Manager → Head of Creator Partnerships → Director of Creator Economy.",
+    report:
+      "Head of Marketing'e raporlar (başlangıçta kuruculara). Responsible → Manager → Head of Creator Partnerships → Director of Creator Economy.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -293,10 +287,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "Topluluk Kanalları Sorumlusu",
     en: "Community Channels Responsible",
-    badges: [
-      "Performans ve prim",
-    ],
-    intro: "X, Reddit, Telegram ve Discord'da CorteQS'in sesi olacak birini arıyoruz. Bu kanallar birer yayın panosu değil, sohbet meydanı; gündemi yakalayan, soruya hızla cevap veren ve tartışmayı topluluğa dönüştüren birine ihtiyacımız var.",
+    badges: ["Performans ve prim"],
+    intro:
+      "X, Reddit, Telegram ve Discord'da CorteQS'in sesi olacak birini arıyoruz. Bu kanallar birer yayın panosu değil, sohbet meydanı; gündemi yakalayan, soruya hızla cevap veren ve tartışmayı topluluğa dönüştüren birine ihtiyacımız var.",
     tasks: [
       "X hesabımızı diaspora gündeminin nabzını tutan, hızlı ve esprili bir sese dönüştürürsün",
       "r/diasporaturks topluluğunu büyütür, moderasyonunu ve AMA gibi etkinliklerini yürütürsün",
@@ -318,10 +311,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "mkt",
     tr: "Video Kanal Sorumlusu",
     en: "Video Channel Responsible",
-    badges: [
-      "Performans primi veya proje bazlı",
-    ],
-    intro: "CorteQS'in YouTube kanalını gerçek bir \"CorteQS TV\"ye dönüştürecek video sorumlusunu arıyoruz. Diaspora belgeselleri, şehir rehberleri ve ilham veren röportajlarla uzun formatı kuracak; aynı içeriklerden kısa videolar üretip TikTok ve Shorts'ta yayacaksın.",
+    badges: ["Performans primi veya proje bazlı"],
+    intro:
+      "CorteQS'in YouTube kanalını gerçek bir \"CorteQS TV\"ye dönüştürecek video sorumlusunu arıyoruz. Diaspora belgeselleri, şehir rehberleri ve ilham veren röportajlarla uzun formatı kuracak; aynı içeriklerden kısa videolar üretip TikTok ve Shorts'ta yayacaksın.",
     tasks: [
       "YouTube kanalının yayın takvimini ve seri formatlarını (belgesel, röportaj, şehir rehberi) kurarsın",
       "Uzun içeriklerden Shorts ve TikTok için kısa kesimler üretirsin",
@@ -343,10 +335,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "prd",
     tr: "Çarşı Sorumlusu",
     en: "Marketplace Responsible",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "Diasporanın ikinci el eşyadan oda kiralamaya, özel dersten hizmet ilanlarına uzanan pazar yeri Çarşı'yı açacak ve büyütecek birini arıyoruz. Yurt dışına yeni taşınan birinin ilk mobilyasını, ilk odasını bulduğu yer burası olacak.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "Diasporanın ikinci el eşyadan oda kiralamaya, özel dersten hizmet ilanlarına uzanan pazar yeri Çarşı'yı açacak ve büyütecek birini arıyoruz. Yurt dışına yeni taşınan birinin ilk mobilyasını, ilk odasını bulduğu yer burası olacak.",
     tasks: [
       "Çarşı'nın açılışını planlar ve yürütürsün; kategori yapısını ve ilan kurallarını belirlersin",
       "İlk satıcıları ve ilanları kazanarak arzı, şehir bazlı kampanyalarla talebi büyütürsün",
@@ -360,7 +351,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Veriyle karar veren, operasyon ile ürünü birlikte düşünebilen bir yaklaşım",
     ],
     plus: "İlan veya ikinci el platformlarında çalışmış olmak; yurt dışına taşınma sürecini yaşamış olmak.",
-    report: "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Marketplace Manager → Head of Çarşı → GM Çarşı.",
+    report:
+      "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Marketplace Manager → Head of Çarşı → GM Çarşı.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -368,10 +360,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "prd",
     tr: "Oyunlaştırma Ürün Sorumlusu",
     en: "Gamification Product Responsible",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "CorteQS'teki her etkileşimi anlamlı bir oyuna dönüştürecek birini arıyoruz. CQ Puan ekonomisinden şehirler arası turnuvalara kadar, insanları platforma her gün geri getiren mekanikleri sen tasarlayacaksın.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "CorteQS'teki her etkileşimi anlamlı bir oyuna dönüştürecek birini arıyoruz. CQ Puan ekonomisinden şehirler arası turnuvalara kadar, insanları platforma her gün geri getiren mekanikleri sen tasarlayacaksın.",
     tasks: [
       "CQ Puan ekonomisini (sadakat, etkileşim ve davet puanları) uçtan uca tasarlar ve dengelersin",
       "Yolcu → Gezgin → Kaşif → Elçi → Efsane seviye sistemini ve ödül mekaniğini geliştirirsin",
@@ -386,7 +377,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Puan ekonomisini hem eğlenceli hem sürdürülebilir kurgulayabilen analitik bir bakış",
     ],
     plus: "Mobil oyun, sadakat programı ya da topluluk oyunları deneyimi.",
-    report: "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Manager → Head of Gamification → Head of Gaming.",
+    report:
+      "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Manager → Head of Gamification → Head of Gaming.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -394,10 +386,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "prd",
     tr: "Sosyal Uygulama Ürün Sorumlusu",
     en: "Social App Product Responsible",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "CorteQS'in sosyal uygulamasını, diasporanın her gün açtığı bir alışkanlığa dönüştürecek ürün sorumlusunu arıyoruz. Kullanıcıyı dinleyecek, mühendislikle omuz omuza çalışacak ve uygulamanın yol haritasını sahipleneceksin.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "CorteQS'in sosyal uygulamasını, diasporanın her gün açtığı bir alışkanlığa dönüştürecek ürün sorumlusunu arıyoruz. Kullanıcıyı dinleyecek, mühendislikle omuz omuza çalışacak ve uygulamanın yol haritasını sahipleneceksin.",
     tasks: [
       "Sosyal uygulamanın ürün vizyonunu ve yol haritasını belirlersin",
       "Kullanıcı araştırmaları yapar, ihtiyaçları önceliklendirilmiş özelliklere çevirirsin",
@@ -411,7 +402,8 @@ export const CAREER_JOBS: CareerJob[] = [
       "Tasarım ve mühendislikle aynı dili konuşabilen iletişim gücü",
     ],
     plus: "Sosyal akış, mesajlaşma veya topluluk uygulaması deneyimi.",
-    report: "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Product Manager → Senior PM → Head of Product → CPO.",
+    report:
+      "Başlangıçta Umut Barış Terzioğlu'na raporlar (hedef: Head of Product). Responsible → Product Manager → Senior PM → Head of Product → CPO.",
     model: "Kurucu Ekip Modeli (ertelenmiş ücret + 4 yıl vesting).",
   },
   {
@@ -419,10 +411,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "tech",
     tr: "Kurucu Mühendis (Kıdemli)",
     en: "Founding Engineer (Senior)",
-    badges: [
-      "Vesting'li ortaklık payı",
-    ],
-    intro: "Kurucu ortağımız ve CTO'muz Umut Barış Terzioğlu'nun yanında CorteQS'in teknik çekirdeğini kuracak kıdemli mühendisler arıyoruz. Global ölçeğe hazır bir platformu, açılış temposunda ayağa kaldıracaksın.",
+    badges: ["Vesting'li ortaklık payı"],
+    intro:
+      "Kurucu ortağımız ve CTO'muz Umut Barış Terzioğlu'nun yanında CorteQS'in teknik çekirdeğini kuracak kıdemli mühendisler arıyoruz. Global ölçeğe hazır bir platformu, açılış temposunda ayağa kaldıracaksın.",
     tasks: [
       "React + TypeScript ön yüz ve Supabase (Postgres, RLS, Edge Functions) arka yüz üzerinde kritik modülleri geliştirirsin",
       "Stripe ödeme, AI arama, relocation chat ve AI Twin gibi entegrasyonları üretim kalitesine taşırsın",
@@ -444,10 +435,9 @@ export const CAREER_JOBS: CareerJob[] = [
     area: "tech",
     tr: "Yazılım Mühendisi",
     en: "Junior Engineer",
-    badges: [
-      "Birden fazla kişi",
-    ],
-    intro: "Kariyerinin başında, yapay zekâ çağının geliştirme pratiklerini gerçek bir üründe öğrenmek isteyen mühendisler arıyoruz. Kıdemli ekip arkadaşlarının yanında, milyonlarca kullanıcıya ulaşacak bir platformda ilk günden üretime katkı vereceksin.",
+    badges: ["Birden fazla kişi"],
+    intro:
+      "Kariyerinin başında, yapay zekâ çağının geliştirme pratiklerini gerçek bir üründe öğrenmek isteyen mühendisler arıyoruz. Kıdemli ekip arkadaşlarının yanında, milyonlarca kullanıcıya ulaşacak bir platformda ilk günden üretime katkı vereceksin.",
     tasks: [
       "Kurucu mühendislerle birlikte yeni özellikler geliştirirsin (React, TypeScript, Supabase)",
       "Hata ayıklama, test ve kod inceleme süreçlerine katılırsın",
@@ -469,7 +459,8 @@ export const CAREER_INTERNSHIP: CareerInternship = {
   id: "intern",
   tr: "Geleceğin Liderleri Stajyer Programı",
   en: "Future Leaders Internship Program",
-  intro: "Yarının girişimcilerini ve liderlerini bugünden aramıza katmak istiyoruz. Geleceğin Liderleri programı, dünyanın her yerindeki üniversite öğrencileri ve yeni mezunlar için; özellikle yurt dışında okuyan Türk öğrencilere kapımız sonuna kadar açık. Burada fotokopi çekmeyeceksin: gerçek bir projenin, gerçek bir sorumluluğun sahibi olacaksın.",
+  intro:
+    "Yarının girişimcilerini ve liderlerini bugünden aramıza katmak istiyoruz. Geleceğin Liderleri programı, dünyanın her yerindeki üniversite öğrencileri ve yeni mezunlar için; özellikle yurt dışında okuyan Türk öğrencilere kapımız sonuna kadar açık. Burada fotokopi çekmeyeceksin: gerçek bir projenin, gerçek bir sorumluluğun sahibi olacaksın.",
   tasks: [
     "Pazarlama, içerik, iş ortaklıkları, ürün, teknoloji veya operasyon birimlerinden birine yerleşirsin",
     "Sana bir mentor eşlik eder; dönem boyunca kendi projeni sahiplenirsin",

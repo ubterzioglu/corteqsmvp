@@ -42,17 +42,12 @@ const ItemGrid = ({ items }: { items: readonly ProgramItem[] }) => (
       // Bilinmeyen anahtarda ikon çizilmemesi sessiz kusur olur; Globe'a düşer.
       const Icon = ICONS[item.iconKey] ?? Globe;
       return (
-        <div
-          key={item.title}
-          className="rounded-2xl border border-border bg-card p-5 shadow-card"
-        >
+        <div key={item.title} className="rounded-2xl border border-border bg-card p-5 shadow-card">
           <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
             <Icon className="h-5 w-5" aria-hidden="true" />
           </span>
           <h3 className="font-bold text-foreground">{item.title}</h3>
-          <p className="mt-1.5 font-body text-sm leading-relaxed text-muted-foreground">
-            {item.description}
-          </p>
+          <p className="mt-1.5 font-body text-sm leading-relaxed text-muted-foreground">{item.description}</p>
         </div>
       );
     })}
@@ -63,13 +58,10 @@ const AmbassadorProgramSection = () => {
   return (
     <section className="mt-16 border-t border-border pt-12">
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-extrabold text-foreground">
-          Şehrinde Elçi Olmak İster misin?
-        </h2>
+        <h2 className="text-3xl font-extrabold text-foreground">Şehrinde Elçi Olmak İster misin?</h2>
         <p className="mt-3 font-body text-base leading-relaxed text-muted-foreground">
-          Güçlü bir yerel ağın varsa, insanları bir araya getirmeyi seviyorsan ve şehrinde
-          kalıcı bir etki bırakmak istiyorsan — bu rol sana uygun. Gönüllülük değil, gelir
-          paylaşımlı bir ortaklık.
+          Güçlü bir yerel ağın varsa, insanları bir araya getirmeyi seviyorsan ve şehrinde kalıcı bir etki bırakmak
+          istiyorsan — bu rol sana uygun. Gönüllülük değil, gelir paylaşımlı bir ortaklık.
         </p>
       </div>
 

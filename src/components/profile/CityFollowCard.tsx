@@ -62,8 +62,7 @@ export function CityFollowCard() {
       setActionError(null);
       invalidateMine();
     },
-    onError: (error: unknown) =>
-      setActionError(error instanceof Error ? error.message : "Şehir takibi eklenemedi."),
+    onError: (error: unknown) => setActionError(error instanceof Error ? error.message : "Şehir takibi eklenemedi."),
   });
   const removeMutation = useMutation({
     mutationFn: (cityId: string) => removeCityFollow(cityId),
@@ -71,8 +70,7 @@ export function CityFollowCard() {
       setActionError(null);
       invalidateMine();
     },
-    onError: (error: unknown) =>
-      setActionError(error instanceof Error ? error.message : "Şehir takibi kaldırılamadı."),
+    onError: (error: unknown) => setActionError(error instanceof Error ? error.message : "Şehir takibi kaldırılamadı."),
   });
 
   return (
@@ -83,10 +81,9 @@ export function CityFollowCard() {
           Haftalık şehir özeti
         </CardTitle>
         <CardDescription>
-          Takip ettiğin şehirlerde yeni etkinlik veya tavsiye talebi olduğunda haftada en fazla
-          bir özet mail alırsın. Takip ettiğin şehir yoksa özet de gelmez — aç/kapa budur.
-          (Platform geneli gönderim şu an doğrulama aşamasında KAPALI; açıldığında yalnız
-          takip ettiğin şehirler için gönderilir.)
+          Takip ettiğin şehirlerde yeni etkinlik veya tavsiye talebi olduğunda haftada en fazla bir özet mail alırsın.
+          Takip ettiğin şehir yoksa özet de gelmez — aç/kapa budur. (Platform geneli gönderim şu an doğrulama aşamasında
+          KAPALI; açıldığında yalnız takip ettiğin şehirler için gönderilir.)
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -129,8 +126,7 @@ export function CityFollowCard() {
           )}
           {atMax ? (
             <p className="text-xs text-amber-700">
-              Takip tavanına ulaştın ({CITY_FOLLOWS_MAX_PER_USER} şehir). Yeni şehir eklemek için
-              bir takibi kaldır.
+              Takip tavanına ulaştın ({CITY_FOLLOWS_MAX_PER_USER} şehir). Yeni şehir eklemek için bir takibi kaldır.
             </p>
           ) : null}
         </div>

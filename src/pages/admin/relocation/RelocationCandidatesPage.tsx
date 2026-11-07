@@ -4,11 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import {
-  listCandidates,
-  publishCandidate,
-  reviewCandidate,
-} from "@/lib/relocation-admin-api";
+import { listCandidates, publishCandidate, reviewCandidate } from "@/lib/relocation-admin-api";
 
 const REVIEW_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   pending: "secondary",
@@ -26,12 +22,10 @@ export default function RelocationCandidatesPage() {
     queryFn: () => listCandidates(),
   });
 
-  const invalidate = () =>
-    queryClient.invalidateQueries({ queryKey: ["relocation", "admin", "candidates"] });
+  const invalidate = () => queryClient.invalidateQueries({ queryKey: ["relocation", "admin", "candidates"] });
 
   const reviewMutation = useMutation({
-    mutationFn: (v: { id: string; action: "approved" | "rejected" }) =>
-      reviewCandidate(v.id, v.action),
+    mutationFn: (v: { id: string; action: "approved" | "rejected" }) => reviewCandidate(v.id, v.action),
     onSuccess: invalidate,
     onError: (e: unknown) =>
       toast({

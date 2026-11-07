@@ -26,14 +26,7 @@ const OPTIONS: CountryOption[] = [
 ];
 
 function renderWizard(onSubmit = vi.fn()) {
-  render(
-    <RelocationWizard
-      countryOptions={OPTIONS}
-      labels={LABELS}
-      onSubmit={onSubmit}
-      isSubmitting={false}
-    />,
-  );
+  render(<RelocationWizard countryOptions={OPTIONS} labels={LABELS} onSubmit={onSubmit} isSubmitting={false} />);
   return onSubmit;
 }
 

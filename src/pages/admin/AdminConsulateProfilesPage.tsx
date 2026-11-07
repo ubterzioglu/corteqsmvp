@@ -5,13 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
@@ -159,29 +153,32 @@ export default function AdminConsulateProfilesPage() {
     [profiles, selectedId],
   );
 
-  const loadProfiles = useCallback(async (nextSelectedId: string | null) => {
-    setIsLoading(true);
-    try {
-      const nextProfiles = await listIndependentProfilesAsAdmin();
-      setProfiles(nextProfiles);
+  const loadProfiles = useCallback(
+    async (nextSelectedId: string | null) => {
+      setIsLoading(true);
+      try {
+        const nextProfiles = await listIndependentProfilesAsAdmin();
+        setProfiles(nextProfiles);
 
-      if (nextSelectedId) {
-        const nextSelectedProfile = nextProfiles.find((profile) => profile.id === nextSelectedId) ?? null;
-        setSelectedId(nextSelectedProfile?.id ?? null);
-        setForm(nextSelectedProfile ? profileToFormState(nextSelectedProfile) : EMPTY_FORM);
-      } else {
-        setForm(EMPTY_FORM);
+        if (nextSelectedId) {
+          const nextSelectedProfile = nextProfiles.find((profile) => profile.id === nextSelectedId) ?? null;
+          setSelectedId(nextSelectedProfile?.id ?? null);
+          setForm(nextSelectedProfile ? profileToFormState(nextSelectedProfile) : EMPTY_FORM);
+        } else {
+          setForm(EMPTY_FORM);
+        }
+      } catch (error) {
+        toast({
+          title: "Diplomatik profiller yüklenemedi",
+          description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      toast({
-        title: "Diplomatik profiller yüklenemedi",
-        description: error instanceof Error ? error.message : "Beklenmeyen bir hata oluştu.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [toast]);
+    },
+    [toast],
+  );
 
   useEffect(() => {
     void loadProfiles(null);
@@ -273,7 +270,9 @@ export default function AdminConsulateProfilesPage() {
                 </div>
                 <div className="shrink-0 text-right">
                   <p className="text-[11px] text-muted-foreground">#{profile.sortOrder}</p>
-                  <p className={`text-[11px] font-medium ${profile.isPublished ? "text-emerald-700" : "text-amber-700"}`}>
+                  <p
+                    className={`text-[11px] font-medium ${profile.isPublished ? "text-emerald-700" : "text-amber-700"}`}
+                  >
                     {profile.isPublished ? "Yayında" : "Draft"}
                   </p>
                 </div>
@@ -287,7 +286,8 @@ export default function AdminConsulateProfilesPage() {
         <CardHeader>
           <CardTitle>{selectedProfile ? "Diplomatik Profili Düzenle" : "Yeni Diplomatik Profil"}</CardTitle>
           <CardDescription>
-            JSON alanları doğrudan DB yapısıyla uyumludur. `services`, `announcements` ve `cta` alanlarına array JSON gir.
+            JSON alanları doğrudan DB yapısıyla uyumludur. `services`, `announcements` ve `cta` alanlarına array JSON
+            gir.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -313,16 +313,32 @@ export default function AdminConsulateProfilesPage() {
               </Select>
             </Field>
             <Field label="Slug">
-              <Input value={form.slug} onChange={(event) => updateForm("slug", event.target.value)} placeholder="tc-berlin-buyukelcilik" />
+              <Input
+                value={form.slug}
+                onChange={(event) => updateForm("slug", event.target.value)}
+                placeholder="tc-berlin-buyukelcilik"
+              />
             </Field>
             <Field label="Profil Etiketi">
-              <Input value={form.typeLabel} onChange={(event) => updateForm("typeLabel", event.target.value)} placeholder="Konsolosluk / Büyükelçilik" />
+              <Input
+                value={form.typeLabel}
+                onChange={(event) => updateForm("typeLabel", event.target.value)}
+                placeholder="Konsolosluk / Büyükelçilik"
+              />
             </Field>
             <Field label="Başlık">
-              <Input value={form.title} onChange={(event) => updateForm("title", event.target.value)} placeholder="T.C. Londra Başkonsolosluğu" />
+              <Input
+                value={form.title}
+                onChange={(event) => updateForm("title", event.target.value)}
+                placeholder="T.C. Londra Başkonsolosluğu"
+              />
             </Field>
             <Field label="Alt Başlık">
-              <Input value={form.subtitle} onChange={(event) => updateForm("subtitle", event.target.value)} placeholder="Kısa özet" />
+              <Input
+                value={form.subtitle}
+                onChange={(event) => updateForm("subtitle", event.target.value)}
+                placeholder="Kısa özet"
+              />
             </Field>
             <Field label="Ülke">
               <SearchableCountrySelect
@@ -342,28 +358,60 @@ export default function AdminConsulateProfilesPage() {
               />
             </Field>
             <Field label="Website">
-              <Input value={form.websiteUrl} onChange={(event) => updateForm("websiteUrl", event.target.value)} placeholder="https://..." />
+              <Input
+                value={form.websiteUrl}
+                onChange={(event) => updateForm("websiteUrl", event.target.value)}
+                placeholder="https://..."
+              />
             </Field>
             <Field label="Logo / Emoji">
-              <Input value={form.logoUrl} onChange={(event) => updateForm("logoUrl", event.target.value)} placeholder="🏛️ veya görsel URL" />
+              <Input
+                value={form.logoUrl}
+                onChange={(event) => updateForm("logoUrl", event.target.value)}
+                placeholder="🏛️ veya görsel URL"
+              />
             </Field>
             <Field label="Hero Görsel URL">
-              <Input value={form.heroImageUrl} onChange={(event) => updateForm("heroImageUrl", event.target.value)} placeholder="https://..." />
+              <Input
+                value={form.heroImageUrl}
+                onChange={(event) => updateForm("heroImageUrl", event.target.value)}
+                placeholder="https://..."
+              />
             </Field>
             <Field label="Telefon">
-              <Input value={form.contactPhone} onChange={(event) => updateForm("contactPhone", event.target.value)} placeholder="+44 ..." />
+              <Input
+                value={form.contactPhone}
+                onChange={(event) => updateForm("contactPhone", event.target.value)}
+                placeholder="+44 ..."
+              />
             </Field>
             <Field label="E-posta">
-              <Input value={form.contactEmail} onChange={(event) => updateForm("contactEmail", event.target.value)} placeholder="info@example.com" />
+              <Input
+                value={form.contactEmail}
+                onChange={(event) => updateForm("contactEmail", event.target.value)}
+                placeholder="info@example.com"
+              />
             </Field>
             <Field label="Çalışma Saatleri">
-              <Input value={form.workingHours} onChange={(event) => updateForm("workingHours", event.target.value)} placeholder="Hafta içi 09:00 - 17:00" />
+              <Input
+                value={form.workingHours}
+                onChange={(event) => updateForm("workingHours", event.target.value)}
+                placeholder="Hafta içi 09:00 - 17:00"
+              />
             </Field>
             <Field label="Adres">
-              <Textarea value={form.addressText} onChange={(event) => updateForm("addressText", event.target.value)} className="min-h-[88px]" />
+              <Textarea
+                value={form.addressText}
+                onChange={(event) => updateForm("addressText", event.target.value)}
+                className="min-h-[88px]"
+              />
             </Field>
             <Field label="Map Query">
-              <Textarea value={form.mapQuery} onChange={(event) => updateForm("mapQuery", event.target.value)} className="min-h-[88px]" />
+              <Textarea
+                value={form.mapQuery}
+                onChange={(event) => updateForm("mapQuery", event.target.value)}
+                className="min-h-[88px]"
+              />
             </Field>
           </div>
 
@@ -378,13 +426,25 @@ export default function AdminConsulateProfilesPage() {
 
           <div className="grid gap-4 lg:grid-cols-3">
             <Field label="Hizmetler JSON">
-              <Textarea value={form.servicesText} onChange={(event) => updateForm("servicesText", event.target.value)} className="min-h-[220px] font-mono text-xs" />
+              <Textarea
+                value={form.servicesText}
+                onChange={(event) => updateForm("servicesText", event.target.value)}
+                className="min-h-[220px] font-mono text-xs"
+              />
             </Field>
             <Field label="Duyurular JSON">
-              <Textarea value={form.announcementsText} onChange={(event) => updateForm("announcementsText", event.target.value)} className="min-h-[220px] font-mono text-xs" />
+              <Textarea
+                value={form.announcementsText}
+                onChange={(event) => updateForm("announcementsText", event.target.value)}
+                className="min-h-[220px] font-mono text-xs"
+              />
             </Field>
             <Field label="CTA JSON">
-              <Textarea value={form.ctasText} onChange={(event) => updateForm("ctasText", event.target.value)} className="min-h-[220px] font-mono text-xs" />
+              <Textarea
+                value={form.ctasText}
+                onChange={(event) => updateForm("ctasText", event.target.value)}
+                className="min-h-[220px] font-mono text-xs"
+              />
             </Field>
           </div>
 

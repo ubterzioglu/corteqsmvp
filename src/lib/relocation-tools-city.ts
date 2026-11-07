@@ -64,10 +64,7 @@ function pref01(value: number | undefined): number {
 const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
 /** Bir şehrin 6 boyut kırılımını hesaplar. SQL scored.breakdown aynası. */
-export function computeCityBreakdown(
-  features: CityFeatures,
-  prefs: CityPreferences,
-): Record<CityDimension, number> {
+export function computeCityBreakdown(features: CityFeatures, prefs: CityPreferences): Record<CityDimension, number> {
   const community = pref01(prefs.community_need);
   const safety = pref01(prefs.safety_family);
   const airport = pref01(prefs.airport_access);
@@ -77,28 +74,18 @@ export function computeCityBreakdown(
   const greenPref = pref01(prefs.green_space_preference);
   const expatPref = prefs.expat_community_size;
   const healthUrgency = pref01(prefs.healthcare_access_urgency);
-  const expatMultiplier =
-    expatPref === "large" ? 1.05 : expatPref === "no_preference" ? 0.95 : 1.0;
+  const expatMultiplier = expatPref === "large" ? 1.05 : expatPref === "no_preference" ? 0.95 : 1.0;
 
   return {
     budget_housing_fit: round4(
-      clamp01OrNeutral(1 - (features.cost_index ?? 0.5)) * 0.6 +
-        clamp01OrNeutral(features.housing_availability) * 0.4,
+      clamp01OrNeutral(1 - (features.cost_index ?? 0.5)) * 0.6 + clamp01OrNeutral(features.housing_availability) * 0.4,
     ),
-    job_hub_fit: round4(
-      clamp01OrNeutral(1 - (features.bureaucracy_complexity ?? 0.5)) * (0.5 + 0.5 * industry),
-    ),
-    lifestyle_fit: round4(
-      clamp01OrNeutral(features.gsm_coverage) * (1 - 0.2 * greenPref) + 0.2 * greenPref,
-    ),
-    community_fit: round4(
-      clamp01OrNeutral(features.community_density) * (0.4 + 0.6 * community) * expatMultiplier,
-    ),
+    job_hub_fit: round4(clamp01OrNeutral(1 - (features.bureaucracy_complexity ?? 0.5)) * (0.5 + 0.5 * industry)),
+    lifestyle_fit: round4(clamp01OrNeutral(features.gsm_coverage) * (1 - 0.2 * greenPref) + 0.2 * greenPref),
+    community_fit: round4(clamp01OrNeutral(features.community_density) * (0.4 + 0.6 * community) * expatMultiplier),
     safety_healthcare_fit: round4(
       clamp01OrNeutral(features.safety_index) * (0.4 + 0.6 * safety) * 0.5 +
-        clamp01OrNeutral(features.healthcare_access) *
-          (0.4 + 0.6 * Math.max(health, healthUrgency)) *
-          0.5,
+        clamp01OrNeutral(features.healthcare_access) * (0.4 + 0.6 * Math.max(health, healthUrgency)) * 0.5,
     ),
     mobility_flight_fit: round4(
       clamp01OrNeutral(features.flight_access) * (0.4 + 0.6 * airport) * 0.8 +

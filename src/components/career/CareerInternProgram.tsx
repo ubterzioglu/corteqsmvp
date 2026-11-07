@@ -9,10 +9,7 @@ type CareerInternProgramProps = {
 
 export function CareerInternProgram({ onApply }: CareerInternProgramProps) {
   return (
-    <section
-      id={`ilan-${CAREER_INTERNSHIP.id}`}
-      className="border-y border-border/60 bg-primary/5 scroll-mt-24"
-    >
+    <section id={`ilan-${CAREER_INTERNSHIP.id}`} className="border-y border-border/60 bg-primary/5 scroll-mt-24">
       <div className="mx-auto max-w-5xl px-4 py-16">
         <div className="flex items-center gap-3">
           <GraduationCap className="h-6 w-6 text-primary" aria-hidden="true" />

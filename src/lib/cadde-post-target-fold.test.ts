@@ -75,7 +75,8 @@ describe("cadde paylaşım hedefi — fold eşleşmesi", () => {
 
   it("grant/revoke satırları imzayla birlikte korunur", () => {
     const sql = readSql(FOLD_MIGRATION);
-    const signature = "public.create_cadde_post_v2(text,text,text,text,text,boolean,text,text[],uuid,text,jsonb,jsonb,jsonb)";
+    const signature =
+      "public.create_cadde_post_v2(text,text,text,text,text,boolean,text,text[],uuid,text,jsonb,jsonb,jsonb)";
 
     expect(sql).toContain(`revoke all on function ${signature} from public, anon;`);
     expect(sql).toContain(`grant execute on function ${signature} to authenticated;`);

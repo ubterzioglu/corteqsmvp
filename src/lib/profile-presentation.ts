@@ -105,9 +105,7 @@ const GENERIC_PRESENTATION: ProfilePresentationConfig = {
 const PRESENTATION_CONFIGS: ProfilePresentationConfig[] = [EXPERIMENTAL_2_PRESENTATION];
 
 const PRESENTATION_BY_ROLE_KEY: ReadonlyMap<string, ProfilePresentationConfig> = new Map(
-  PRESENTATION_CONFIGS.flatMap((config) =>
-    config.supportedRoleKeys.map((roleKey) => [roleKey, config] as const),
-  ),
+  PRESENTATION_CONFIGS.flatMap((config) => config.supportedRoleKeys.map((roleKey) => [roleKey, config] as const)),
 );
 
 /**
@@ -117,13 +115,9 @@ const PRESENTATION_BY_ROLE_KEY: ReadonlyMap<string, ProfilePresentationConfig> =
  * (assigned to the two founder accounts) — their profiles are kept visually
  * separate from the member-facing premium design on request.
  */
-const INDIVIDUAL_PRESENTATION_EXCLUDED_ROLE_KEYS: ReadonlySet<string> = new Set([
-  "Admin_SuperAdmin",
-]);
+const INDIVIDUAL_PRESENTATION_EXCLUDED_ROLE_KEYS: ReadonlySet<string> = new Set(["Admin_SuperAdmin"]);
 
-export function resolveProfilePresentation(
-  roleKey: string | null | undefined,
-): ProfilePresentationConfig {
+export function resolveProfilePresentation(roleKey: string | null | undefined): ProfilePresentationConfig {
   if (!roleKey) return GENERIC_PRESENTATION;
 
   const pilotMatch = PRESENTATION_BY_ROLE_KEY.get(roleKey);

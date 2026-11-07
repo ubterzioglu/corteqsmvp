@@ -41,16 +41,13 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
   // DEKORATİF bir teaser'dır, kullanıcının aradığı içerik değil. `listCarsiItems` artık
   // fırlattığı için hata React Query'de görünür ve kaydedilir; ama akışın yanına
   // "yüklenemedi" kartı koymak asıl içeriğin dikkatini dağıtırdı. Şerit sessizce boş kalır.
-  const items = itemsQuery.isError ? [] : itemsQuery.data ?? [];
+  const items = itemsQuery.isError ? [] : (itemsQuery.data ?? []);
 
   if (!carsiVisible) {
     // m40: linksiz teaser. m51+m53: marka adı her yerde "CorteQS Çarşı" — isim hakkı
     // alınana kadar sade "Çarşı" kullanılmıyor; hover metni de madde metninden birebir.
     return (
-      <div
-        className="cadde-carsi-teaser rounded-lg border p-4"
-        data-testid="carsi-teaser"
-      >
+      <div className="cadde-carsi-teaser rounded-lg border p-4" data-testid="carsi-teaser">
         <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-amber-900">
           <ShoppingBag className="h-4 w-4" />
           CorteQS Çarşı Yakında Açılıyor
@@ -60,14 +57,11 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
             contentTestId="carsi-teaser-info-content"
             triggerClassName="text-amber-700 hover:bg-amber-100 hover:text-amber-900 focus-visible:ring-amber-500"
           >
-            <p className="text-xs leading-relaxed text-amber-900">
-              CorteQS'in ikinci el pazarı yakında!
-            </p>
+            <p className="text-xs leading-relaxed text-amber-900">CorteQS'in ikinci el pazarı yakında!</p>
           </CaddeInfoPopover>
         </p>
         <p className="mt-1.5 text-xs leading-relaxed text-amber-800/90">
-          Diaspora'nın ikinci el pazarı çok yakında burada — eşyanı sat, aradığını
-          şehrindeki üyelerden bul.
+          Diaspora'nın ikinci el pazarı çok yakında burada — eşyanı sat, aradığını şehrindeki üyelerden bul.
         </p>
       </div>
     );
@@ -80,7 +74,10 @@ const CarsiGlobalTicker = ({ filters }: CarsiGlobalTickerProps) => {
           <ShoppingBag className="h-4 w-4" />
           CorteQS Çarşı
         </p>
-        <Link to="/cadde/carsi" className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 hover:underline">
+        <Link
+          to="/cadde/carsi"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-amber-800 hover:underline"
+        >
           Tümü
           <ArrowRight className="h-3 w-3" />
         </Link>

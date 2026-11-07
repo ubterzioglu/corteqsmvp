@@ -26,10 +26,7 @@ describe("useAdminRecentPages", () => {
     act(() => result.current.recordVisit({ path: "/admin/approvals", label: "Approval Queue" }));
     act(() => result.current.recordVisit({ path: "/admin/data", label: "Kayıt Veritabanı" }));
 
-    expect(result.current.recentPages.map((page) => page.path)).toEqual([
-      "/admin/data",
-      "/admin/approvals",
-    ]);
+    expect(result.current.recentPages.map((page) => page.path)).toEqual(["/admin/data", "/admin/approvals"]);
   });
 
   it(`maksimum ${MAX_RECENT_PAGES} kayıt tutar`, () => {

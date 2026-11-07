@@ -2,14 +2,7 @@ import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export type RoleOption = {
@@ -57,9 +50,7 @@ const RoleSearchSelect = ({
           disabled={disabled}
           className={cn("w-full justify-between font-normal", className)}
         >
-          <span className="truncate">
-            {selectedRole ? selectedRole.label : placeholder}
-          </span>
+          <span className="truncate">{selectedRole ? selectedRole.label : placeholder}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -81,17 +72,10 @@ const RoleSearchSelect = ({
                     setOpen(false);
                   }}
                 >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4 shrink-0",
-                      value === role.value ? "opacity-100" : "opacity-0",
-                    )}
-                  />
+                  <Check className={cn("mr-2 h-4 w-4 shrink-0", value === role.value ? "opacity-100" : "opacity-0")} />
                   <span className="flex-1 truncate">{role.label}</span>
                   {role.hint ? (
-                    <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">
-                      {role.hint}
-                    </span>
+                    <span className="ml-2 shrink-0 text-[10px] text-muted-foreground">{role.hint}</span>
                   ) : null}
                 </CommandItem>
               ))}

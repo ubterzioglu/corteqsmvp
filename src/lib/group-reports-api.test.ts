@@ -46,7 +46,11 @@ describe("G14 · sebepler politika §4 ile birebir", () => {
     expect(items).toHaveLength(7);
     const redlines = GROUP_REPORT_REASONS.filter((reason) => reason.redline !== null);
     expect(redlines.map((reason) => ({ n: reason.redline, text: reason.label }))).toEqual(items);
-    expect(GROUP_REPORT_REASONS.at(-1)).toMatchObject({ key: "diger", redline: null, label: "Diğer (açıklama zorunlu)" });
+    expect(GROUP_REPORT_REASONS.at(-1)).toMatchObject({
+      key: "diger",
+      redline: null,
+      label: "Diğer (açıklama zorunlu)",
+    });
   });
 });
 

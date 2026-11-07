@@ -153,8 +153,9 @@ describe("useSeo dinamik çağrılarda deps sözleşmesi", () => {
     const importedButNotCalled = files
       .filter((file) => {
         const source = stripComments(readFileSync(file, "utf8"));
-        return /import\s*\{[^}]*\buseSeo\b[^}]*\}\s*from\s*["']@\/lib\/seo["']/.test(source)
-          && !/\buseSeo\s*\(/.test(source);
+        return (
+          /import\s*\{[^}]*\buseSeo\b[^}]*\}\s*from\s*["']@\/lib\/seo["']/.test(source) && !/\buseSeo\s*\(/.test(source)
+        );
       })
       .map((file) => file.replace(process.cwd(), "").replace(/\\/g, "/"));
 
@@ -166,9 +167,6 @@ describe("useSeo dinamik çağrılarda deps sözleşmesi", () => {
       ({ file, line }) => `${file.replace(process.cwd(), "").replace(/\\/g, "/")}:${line}`,
     );
 
-    expect(
-      offenders,
-      "opts veri bağımlıysa ikinci argüman olarak deps geç (ör. [item?.id])",
-    ).toEqual([]);
+    expect(offenders, "opts veri bağımlıysa ikinci argüman olarak deps geç (ör. [item?.id])").toEqual([]);
   });
 });

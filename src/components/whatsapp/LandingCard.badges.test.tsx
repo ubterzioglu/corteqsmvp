@@ -42,7 +42,11 @@ const renderCard = (props: Partial<WhatsAppLanding> = {}) =>
 
 describe("LandingApprovalBadges · politika §6 rozet dili", () => {
   it("unclaimed → yalnız 'Üye önerisi' (eski rozetler yok)", () => {
-    render(<TooltipProvider><LandingApprovalBadges landing={landing({ ownership: "unclaimed" })} /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <LandingApprovalBadges landing={landing({ ownership: "unclaimed" })} />
+      </TooltipProvider>,
+    );
 
     expect(screen.getByText("Üye önerisi")).toBeInTheDocument();
     expect(screen.queryByText("Sahibi doğruladı")).not.toBeInTheDocument();
@@ -51,20 +55,32 @@ describe("LandingApprovalBadges · politika §6 rozet dili", () => {
   });
 
   it("verified → 'Sahibi doğruladı'", () => {
-    render(<TooltipProvider><LandingApprovalBadges landing={landing({ ownership: "verified" })} /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <LandingApprovalBadges landing={landing({ ownership: "verified" })} />
+      </TooltipProvider>,
+    );
 
     expect(screen.getByText("Sahibi doğruladı")).toBeInTheDocument();
     expect(screen.queryByText("Üye önerisi")).not.toBeInTheDocument();
   });
 
   it("claim_pending → 'Üye önerisi' (henüz kanıtlanmadı)", () => {
-    render(<TooltipProvider><LandingApprovalBadges landing={landing({ ownership: "claim_pending" })} /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <LandingApprovalBadges landing={landing({ ownership: "claim_pending" })} />
+      </TooltipProvider>,
+    );
 
     expect(screen.getByText("Üye önerisi")).toBeInTheDocument();
   });
 
   it("isNew → 'Yeni' etiketi sahiplik rozetine EKLENİR", () => {
-    render(<TooltipProvider><LandingApprovalBadges landing={landing({ ownership: "verified", isNew: true })} /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <LandingApprovalBadges landing={landing({ ownership: "verified", isNew: true })} />
+      </TooltipProvider>,
+    );
 
     expect(screen.getByText("Sahibi doğruladı")).toBeInTheDocument();
     expect(screen.getByText("Yeni")).toBeInTheDocument();
@@ -73,9 +89,7 @@ describe("LandingApprovalBadges · politika §6 rozet dili", () => {
   it("hasApprovedBadge → 'Onaylı Grup' rozeti (skor eşiği istemcide DEĞİL, sunucu bayrağı)", () => {
     render(
       <TooltipProvider>
-        <LandingApprovalBadges
-          landing={landing({ ownership: "verified", hasApprovedBadge: true, groupScore: 85 })}
-        />
+        <LandingApprovalBadges landing={landing({ ownership: "verified", hasApprovedBadge: true, groupScore: 85 })} />
       </TooltipProvider>,
     );
 
@@ -84,7 +98,11 @@ describe("LandingApprovalBadges · politika §6 rozet dili", () => {
 
   it("bayrak yoksa 'Onaylı Grup'/'Yeni' render edilmez (skor yüksek olsa bile)", () => {
     // Skor 90 ama rozet bayrağı false → istemci eşik UYGULAMAZ (histerezis sunucuda).
-    render(<TooltipProvider><LandingApprovalBadges landing={landing({ groupScore: 90 })} /></TooltipProvider>);
+    render(
+      <TooltipProvider>
+        <LandingApprovalBadges landing={landing({ groupScore: 90 })} />
+      </TooltipProvider>,
+    );
 
     expect(screen.queryByText("Onaylı Grup")).not.toBeInTheDocument();
     expect(screen.queryByText("Yeni")).not.toBeInTheDocument();

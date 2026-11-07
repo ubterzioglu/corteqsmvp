@@ -91,7 +91,9 @@ export async function listAdminMemberCatalogProfiles(params: {
     p_query: params.query.trim() || null,
     p_provider: params.provider || null,
     p_from: params.fromDate ? `${params.fromDate}T00:00:00.000Z` : null,
-    p_to: params.toDate ? new Date(new Date(`${params.toDate}T00:00:00.000Z`).getTime() + 86400000).toISOString() : null,
+    p_to: params.toDate
+      ? new Date(new Date(`${params.toDate}T00:00:00.000Z`).getTime() + 86400000).toISOString()
+      : null,
     p_sort: params.sort || "created_desc",
   });
   if (error) throw error;
@@ -102,15 +104,17 @@ export async function listAdminMemberCatalogProfiles(params: {
     const userId = typeof row.user_id === "string" ? row.user_id : null;
     if (!itemId || !userId) return [];
 
-    return [{
-      itemId,
-      userId,
-      email: typeof row.email === "string" ? row.email : null,
-      fullName: typeof row.full_name === "string" ? row.full_name : null,
-      profileType: typeof row.profile_type === "string" ? row.profile_type : null,
-      authProvider: typeof row.auth_provider === "string" ? row.auth_provider : null,
-      createdAt: typeof row.created_at === "string" ? row.created_at : null,
-    }];
+    return [
+      {
+        itemId,
+        userId,
+        email: typeof row.email === "string" ? row.email : null,
+        fullName: typeof row.full_name === "string" ? row.full_name : null,
+        profileType: typeof row.profile_type === "string" ? row.profile_type : null,
+        authProvider: typeof row.auth_provider === "string" ? row.auth_provider : null,
+        createdAt: typeof row.created_at === "string" ? row.created_at : null,
+      },
+    ];
   });
 }
 
@@ -141,16 +145,18 @@ export async function getMyEditableCatalogItems(): Promise<EditableCatalogItemSu
 
     const roleKey = typeof row.platform_role_key === "string" ? row.platform_role_key : null;
 
-    return [{
-      itemId,
-      slug,
-      title,
-      itemType,
-      roleKey,
-      accessLevel: accessLevel as EditableCatalogItemSummary["accessLevel"],
-      isPrimaryOwner: Boolean(row.is_primary_owner),
-      createdAt: typeof row.created_at === "string" ? row.created_at : null,
-      legacyProfileType: normalizeLegacyProfileType(roleKey),
-    }];
+    return [
+      {
+        itemId,
+        slug,
+        title,
+        itemType,
+        roleKey,
+        accessLevel: accessLevel as EditableCatalogItemSummary["accessLevel"],
+        isPrimaryOwner: Boolean(row.is_primary_owner),
+        createdAt: typeof row.created_at === "string" ? row.created_at : null,
+        legacyProfileType: normalizeLegacyProfileType(roleKey),
+      },
+    ];
   });
 }

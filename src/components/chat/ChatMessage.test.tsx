@@ -57,9 +57,7 @@ describe("ChatMessage bağlantı işleme (N06)", () => {
   });
 
   it("Kaynaklar bloğu: satırların hepsi tıklanabilir, başlık kalın", () => {
-    renderMessage(
-      "Yanıt metni.\n\n**Kaynaklar**\n- [Vize Rehberi](/blog/vize)\n- [Üyeler](/admin/data)",
-    );
+    renderMessage("Yanıt metni.\n\n**Kaynaklar**\n- [Vize Rehberi](/blog/vize)\n- [Üyeler](/admin/data)");
 
     expect(screen.getByText("Kaynaklar").tagName).toBe("STRONG");
     expect(screen.getByRole("link", { name: "Vize Rehberi" })).toHaveAttribute("href", "/blog/vize");

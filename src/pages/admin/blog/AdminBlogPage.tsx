@@ -208,9 +208,7 @@ const AdminBlogPage = () => {
       <Card>
         <CardHeader>
           <CardTitle>{editingId ? "Yazıyı Düzenle" : "Yeni Yazı"}</CardTitle>
-          <CardDescription>
-            İçerik markdown formatındadır; tablolar ve başlıklar desteklenir.
-          </CardDescription>
+          <CardDescription>İçerik markdown formatındadır; tablolar ve başlıklar desteklenir.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
@@ -310,7 +308,11 @@ const AdminBlogPage = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Switch id="blog-published" checked={form.published} onCheckedChange={(checked) => updateForm("published", checked)} />
+            <Switch
+              id="blog-published"
+              checked={form.published}
+              onCheckedChange={(checked) => updateForm("published", checked)}
+            />
             <Label htmlFor="blog-published">Yayında</Label>
           </div>
 
@@ -363,9 +365,7 @@ const AdminBlogPage = () => {
                         <span
                           className={
                             "rounded-full px-2 py-0.5 text-xs font-semibold " +
-                            (item.published
-                              ? "bg-emerald-100 text-emerald-700"
-                              : "bg-slate-100 text-slate-600")
+                            (item.published ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600")
                           }
                         >
                           {item.published ? "Yayında" : "Taslak"}

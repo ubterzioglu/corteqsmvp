@@ -87,9 +87,27 @@ const feedRpcPayload = {
 };
 
 const commentRows = [
-  { id: "comment-1", post_id: "post-1", user_id: "commenter-1", body: "Ben gelirim.", created_at: "2026-06-23T10:01:00Z" },
-  { id: "comment-2", post_id: "post-1", user_id: "commenter-2", body: "Saat kaçta?", created_at: "2026-06-23T10:02:00Z" },
-  { id: "comment-3", post_id: "post-1", user_id: "commenter-3", body: "Ben de katılırım.", created_at: "2026-06-23T10:03:00Z" },
+  {
+    id: "comment-1",
+    post_id: "post-1",
+    user_id: "commenter-1",
+    body: "Ben gelirim.",
+    created_at: "2026-06-23T10:01:00Z",
+  },
+  {
+    id: "comment-2",
+    post_id: "post-1",
+    user_id: "commenter-2",
+    body: "Saat kaçta?",
+    created_at: "2026-06-23T10:02:00Z",
+  },
+  {
+    id: "comment-3",
+    post_id: "post-1",
+    user_id: "commenter-3",
+    body: "Ben de katılırım.",
+    created_at: "2026-06-23T10:03:00Z",
+  },
 ];
 
 const nameRows = [

@@ -53,8 +53,7 @@ describe("G13 · salt ekleme güvencesi", () => {
 });
 
 describe("G13 · group_claims tablosu", () => {
-  const table = () =>
-    sliceBetween(code(), "create table if not exists public.group_claims", ");", "claims tablosu");
+  const table = () => sliceBetween(code(), "create table if not exists public.group_claims", ");", "claims tablosu");
 
   it("tasarım §4 alanları: kod · son geçerlilik · deneme · yöntem · durum", () => {
     for (const column of [
@@ -291,12 +290,7 @@ describe("G13 · ekran görüntüsü yolu", () => {
   });
 
   it("silme yalnız admin (kanıt korunur)", () => {
-    const del = sliceBetween(
-      code(),
-      'create policy "group claim screenshots admin delete"',
-      ";",
-      "delete politika",
-    );
+    const del = sliceBetween(code(), 'create policy "group claim screenshots admin delete"', ";", "delete politika");
 
     expect(del).toContain("public.is_admin(auth.uid())");
   });
@@ -412,7 +406,12 @@ describe("K10a · varsayılan rol yükseltilir", () => {
   });
 
   it("yükseltmede updated_at tazelenir (tabloda bunu yapan trigger YOK)", () => {
-    const branch = sliceBetween(k10aApplyVerified(), "c_default_role_key then", "elsif v_has_role then", "yükseltme dalı");
+    const branch = sliceBetween(
+      k10aApplyVerified(),
+      "c_default_role_key then",
+      "elsif v_has_role then",
+      "yükseltme dalı",
+    );
     expect(branch).toContain("updated_at = now()");
   });
 

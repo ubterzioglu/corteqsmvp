@@ -38,16 +38,18 @@ export async function listModerationQueue(status: "open" | "resolved" = "open"):
       .order("created_at", { ascending: status === "open" })
       .limit(100);
     if (error) throw error;
-    return ((data ?? []) as Array<{
-      id: string;
-      entity_type: CaddeModerationEntityType;
-      entity_id: string;
-      reason: string;
-      status: "open" | "resolved";
-      report_count: number;
-      created_at: string;
-      resolution_note: string | null;
-    }>).map((row) => ({
+    return (
+      (data ?? []) as Array<{
+        id: string;
+        entity_type: CaddeModerationEntityType;
+        entity_id: string;
+        reason: string;
+        status: "open" | "resolved";
+        report_count: number;
+        created_at: string;
+        resolution_note: string | null;
+      }>
+    ).map((row) => ({
       id: row.id,
       entityType: row.entity_type,
       entityId: row.entity_id,

@@ -124,10 +124,7 @@ describe("updateCaddePost · istemci ön doğrulaması (SQL aynası)", () => {
     await expect(
       updateCaddePost({
         postId: POST_ID,
-        targets: [
-          { country: "Almanya" },
-          { country: "Fransa" },
-        ],
+        targets: [{ country: "Almanya" }, { country: "Fransa" }],
       }),
     ).rejects.toThrow(/ek hedef eklenemez/);
     expect(rpcSpy).not.toHaveBeenCalled();
@@ -151,9 +148,7 @@ describe("updateCaddePost · hata yolu", () => {
   it("bilinmeyen kod genel mesaja düşer", async () => {
     rpcSpy.mockResolvedValue({ data: null, error: { message: "some_new_code" } });
 
-    await expect(updateCaddePost({ postId: POST_ID, body: "x" })).rejects.toThrow(
-      /İşlem tamamlanamadı|tekrar dene/i,
-    );
+    await expect(updateCaddePost({ postId: POST_ID, body: "x" })).rejects.toThrow(/İşlem tamamlanamadı|tekrar dene/i);
   });
 
   it("tanılama raporu BİREBİR 'updateCaddePost' bağlamıyla yazılır (client_error_reports)", async () => {

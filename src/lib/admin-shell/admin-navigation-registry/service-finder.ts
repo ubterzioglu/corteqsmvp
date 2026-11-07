@@ -2,14 +2,7 @@
 // URL path'leri App.tsx route ağacıyla birebir aynıdır ve değiştirilemez
 // (masterplan §4.3). Grup sırası ../admin-navigation-registry.ts'te belirlenir.
 
-import {
-  BookOpen,
-  ClipboardList,
-  ListChecks,
-  SlidersHorizontal,
-  Sparkles,
-  TrendingUp,
-} from "lucide-react";
+import { BookOpen, ClipboardList, ListChecks, SlidersHorizontal, Sparkles, TrendingUp } from "lucide-react";
 
 import type { AdminNavGroup } from "../admin-shell-types";
 

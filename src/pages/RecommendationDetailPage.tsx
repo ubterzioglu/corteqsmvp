@@ -12,11 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ProLockedInboxCard from "@/components/recommendations/ProLockedInboxCard";
 import { useSeo } from "@/lib/seo";
 import { useAuth } from "@/components/auth/useAuth";
-import {
-  useAnswerRecommendation,
-  useMatchedProfessionals,
-  useRecommendationDetail,
-} from "@/hooks/use-recommendations";
+import { useAnswerRecommendation, useMatchedProfessionals, useRecommendationDetail } from "@/hooks/use-recommendations";
 import { RECOMMENDATION_BODY_MAX } from "@/lib/recommendations-rules";
 
 export default function RecommendationDetailPage() {
@@ -60,9 +56,7 @@ export default function RecommendationDetailPage() {
   if (detailQuery.isLoading) {
     return (
       <div className="min-h-screen bg-background py-10">
-        <div className="container mx-auto max-w-3xl px-4 text-sm text-muted-foreground">
-          Yükleniyor…
-        </div>
+        <div className="container mx-auto max-w-3xl px-4 text-sm text-muted-foreground">Yükleniyor…</div>
       </div>
     );
   }
@@ -92,7 +86,10 @@ export default function RecommendationDetailPage() {
   return (
     <div className="min-h-screen bg-background py-10">
       <div className="container mx-auto max-w-3xl space-y-6 px-4">
-        <Link to="/tavsiye" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground">
+        <Link
+          to="/tavsiye"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
+        >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
           Tavsiyelere dön
         </Link>
@@ -114,8 +111,7 @@ export default function RecommendationDetailPage() {
           <section className="space-y-2">
             <h2 className="text-sm font-medium">Eşleşen profesyoneller</h2>
             <p className="text-xs text-muted-foreground">
-              Kategori + şehir/ülkeye göre sıralanır (en alakalı önce). İletişim bilgisi burada
-              gösterilmez.
+              Kategori + şehir/ülkeye göre sıralanır (en alakalı önce). İletişim bilgisi burada gösterilmez.
             </p>
             <ul className="space-y-2">
               {matches.map((pro) => (
@@ -178,9 +174,7 @@ export default function RecommendationDetailPage() {
           ) : user.id === request.user_id ? (
             // 🔴 Sahip kendi talebini YANITLAYAMAZ (SQL: recommendation_self_answer —
             // inceleme W3). Form hiç çizilmez; UI ile SQL kuralı aynı.
-            <p className="text-sm text-muted-foreground">
-              Bu senin talebin — kendi talebine yanıt yazamazsın.
-            </p>
+            <p className="text-sm text-muted-foreground">Bu senin talebin — kendi talebine yanıt yazamazsın.</p>
           ) : myAnswered ? (
             // F11: yanıtını vermiş kullanıcıya davetkâr boş form GÖSTERİLMEZ —
             // SQL zaten recommendation_already_answered ile reddeder.
@@ -197,12 +191,7 @@ export default function RecommendationDetailPage() {
                 placeholder="Bir tavsiye ver…"
               />
               {answerError ? <p className="text-sm text-destructive">{answerError}</p> : null}
-              <Button
-                type="button"
-                className="rounded-full"
-                disabled={answerMutation.isPending}
-                onClick={submitAnswer}
-              >
+              <Button type="button" className="rounded-full" disabled={answerMutation.isPending} onClick={submitAnswer}>
                 <MessageSquareHeart className="mr-1.5 h-4 w-4" aria-hidden="true" />
                 {answerMutation.isPending ? "Gönderiliyor…" : "Yanıtla"}
               </Button>

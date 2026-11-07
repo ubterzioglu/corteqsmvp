@@ -14,9 +14,7 @@ type AdminMobileSidebarProps = {
   onLogout: () => Promise<void>;
 };
 
-const inactiveItems = adminNavGroups.flatMap((group) =>
-  group.items.filter((item) => item.isInactive),
-);
+const inactiveItems = adminNavGroups.flatMap((group) => group.items.filter((item) => item.isInactive));
 
 const AdminMobileSidebar = ({ open, onOpenChange, onLogout }: AdminMobileSidebarProps) => {
   const close = () => onOpenChange(false);

@@ -63,9 +63,7 @@ export function ZgenCompatibilityAccordion({ youGen }: ZgenCompatibilityAccordio
                   </div>
                 </div>
 
-                {content?.joke && (
-                  <p className="mt-4 text-xs italic text-muted-foreground">"{content.joke}"</p>
-                )}
+                {content?.joke && <p className="mt-4 text-xs italic text-muted-foreground">"{content.joke}"</p>}
               </AccordionContent>
             </AccordionItem>
           );

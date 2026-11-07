@@ -221,9 +221,7 @@ describe("setNotificationSetting", () => {
   it("hata durumunda fırlatır", async () => {
     rpcMock.mockResolvedValue({ data: null, error: { message: "forbidden" } });
 
-    await expect(
-      setNotificationSetting(NOTIFICATION_SETTING_KEYS.adminUpdate, false),
-    ).rejects.toThrow("forbidden");
+    await expect(setNotificationSetting(NOTIFICATION_SETTING_KEYS.adminUpdate, false)).rejects.toThrow("forbidden");
   });
 });
 

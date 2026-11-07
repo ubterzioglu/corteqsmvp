@@ -130,9 +130,7 @@ const AdminClientErrorsPage = () => {
               </div>
               {report.details || report.hint || report.component_stack ? (
                 <details className="mt-3">
-                  <summary className="cursor-pointer text-xs font-medium text-muted-foreground">
-                    Ayrıntı
-                  </summary>
+                  <summary className="cursor-pointer text-xs font-medium text-muted-foreground">Ayrıntı</summary>
                   <div className="mt-2 grid gap-2">
                     {report.details ? (
                       <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">{report.details}</pre>

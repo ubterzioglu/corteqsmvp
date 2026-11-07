@@ -52,7 +52,7 @@ export async function fetchMyCityFollows(): Promise<CityFollowRow[]> {
     .limit(50);
   if (error) throw error;
 
-  return (((data ?? []) as unknown) as FollowEmbedRow[]).map((row) => ({
+  return ((data ?? []) as unknown as FollowEmbedRow[]).map((row) => ({
     city_id: row.city_id,
     created_at: row.created_at,
     city_name: row.city?.name ?? null,
@@ -91,7 +91,7 @@ export async function listCityOptionsForCountry(countryNameOrCode: string): Prom
       .range(offset, offset + GEO_PAGE_SIZE - 1);
     if (error) throw error;
 
-    const page = (((data ?? []) as unknown) as GeoCityOption[]);
+    const page = (data ?? []) as unknown as GeoCityOption[];
     options.push(...page);
     if (page.length < GEO_PAGE_SIZE) break;
   }
@@ -100,7 +100,10 @@ export async function listCityOptionsForCountry(countryNameOrCode: string): Prom
 
 /** İstemci tarafı Türkçe-duyarlı filtre (sunucuda satır başına tarama YASAK). */
 export function filterCityOptions(options: GeoCityOption[], query: string): GeoCityOption[] {
-  const names = filterByQuery(options.map((option) => option.name), query);
+  const names = filterByQuery(
+    options.map((option) => option.name),
+    query,
+  );
   const allowed = new Set(names);
   return options.filter((option) => allowed.has(option.name));
 }

@@ -64,18 +64,14 @@ describe("admin-navigation-registry", () => {
 
   it("redirect-only route'lar görünür navigasyonda yer almaz", () => {
     const navPaths = new Set(collectInternalNavPaths(adminNavGroups));
-    const redirectPatterns = adminRouteMeta
-      .filter((meta) => meta.kind === "redirect")
-      .map((meta) => meta.pattern);
+    const redirectPatterns = adminRouteMeta.filter((meta) => meta.kind === "redirect").map((meta) => meta.pattern);
     for (const pattern of redirectPatterns) {
       expect(navPaths.has(pattern)).toBe(false);
     }
   });
 
   it("inactive item'lar işaretlidir ve aktif item'lara karışmaz", () => {
-    const inactiveIds = allEntries
-      .filter((entry) => entry.item.isInactive)
-      .map((entry) => entry.item.id);
+    const inactiveIds = allEntries.filter((entry) => entry.item.isInactive).map((entry) => entry.item.id);
     expect(inactiveIds).toContain("may19-kelime");
     expect(inactiveIds).toContain("may19-ani");
     expect(inactiveIds).toContain("roles-draft");
@@ -162,11 +158,7 @@ describe("breadcrumbs", () => {
 
   it("route meta sayfası: Anketler > Anket Düzenle", () => {
     const crumbs = buildAdminBreadcrumbs("/admin/surveys/42/edit");
-    expect(crumbs.map((crumb) => crumb.label)).toEqual([
-      "İçerik ve Kampanyalar",
-      "Anketler",
-      "Anket Düzenle",
-    ]);
+    expect(crumbs.map((crumb) => crumb.label)).toEqual(["İçerik ve Kampanyalar", "Anketler", "Anket Düzenle"]);
   });
 
   it("dinamik doc child'ı parent zinciriyle çözülür", () => {
@@ -198,12 +190,7 @@ describe("command palette search", () => {
   it("grup adıyla bulur: 'muhasebe' tüm muhasebe ekranlarını döndürür", () => {
     const ids = searchAdminNav("muhasebe").map((entry) => entry.item.id);
     expect(ids).toEqual(
-      expect.arrayContaining([
-        "muhasebe-dashboard",
-        "muhasebe-giderler",
-        "muhasebe-gelirler",
-        "muhasebe-nakit-akisi",
-      ]),
+      expect.arrayContaining(["muhasebe-dashboard", "muhasebe-giderler", "muhasebe-gelirler", "muhasebe-nakit-akisi"]),
     );
   });
 

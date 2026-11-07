@@ -87,7 +87,9 @@ describe("doküman içerik dışlaması", () => {
   });
 
   it("frontmatter'ı `durum: yerini-aldı` olan doküman dışlanır", () => {
-    expect(isExcludedByContent("---\ndurum: yerini-aldı\nyerini_alan: docs/kalanlar/KALANLAR.md\n---\n# Eski plan\n")).toBe(true);
+    expect(
+      isExcludedByContent("---\ndurum: yerini-aldı\nyerini_alan: docs/kalanlar/KALANLAR.md\n---\n# Eski plan\n"),
+    ).toBe(true);
     expect(isExcludedByContent("---\r\ndurum: yerini-aldi\r\n---\r\n# Eski plan\r\n")).toBe(true);
   });
 

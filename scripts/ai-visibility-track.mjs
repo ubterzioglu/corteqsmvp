@@ -132,10 +132,8 @@ function generateReport(records) {
     const found = platformRecords.filter((r) => r.found === "yes").length;
     const partial = platformRecords.filter((r) => r.found === "partial").length;
     const notFound = platformRecords.filter((r) => r.found === "no").length;
-    const visibilityScore = ((found + partial * 0.5) / total * 100).toFixed(0);
-    const avgSentiment = (
-      platformRecords.reduce((sum, r) => sum + (r.sentiment ?? 50), 0) / total
-    ).toFixed(0);
+    const visibilityScore = (((found + partial * 0.5) / total) * 100).toFixed(0);
+    const avgSentiment = (platformRecords.reduce((sum, r) => sum + (r.sentiment ?? 50), 0) / total).toFixed(0);
 
     lines.push(
       `| ${platform} | ${total} | ${found} | ${partial} | ${notFound} | %${visibilityScore} | ${avgSentiment}/100 |`,
@@ -151,10 +149,8 @@ function generateReport(records) {
   const totalRecords = records.length;
   const totalFound = records.filter((r) => r.found === "yes").length;
   const totalPartial = records.filter((r) => r.found === "partial").length;
-  const overallVisibility = ((totalFound + totalPartial * 0.5) / totalRecords * 100).toFixed(0);
-  const overallSentiment = (
-    records.reduce((sum, r) => sum + (r.sentiment ?? 50), 0) / totalRecords
-  ).toFixed(0);
+  const overallVisibility = (((totalFound + totalPartial * 0.5) / totalRecords) * 100).toFixed(0);
+  const overallSentiment = (records.reduce((sum, r) => sum + (r.sentiment ?? 50), 0) / totalRecords).toFixed(0);
 
   lines.push(`| Visibility Score | %60+ | %${overallVisibility} |`);
   lines.push(`| Citation Rate | %40+ | %${((totalFound / totalRecords) * 100).toFixed(0)} |`);
@@ -184,8 +180,7 @@ function printPrompts() {
   console.log("# AI Visibility Prompt Seti\n");
   console.log(`Toplam: ${PROMPTS.length} prompt\n`);
   for (let i = 0; i < PROMPTS.length; i++) {
-    const group =
-      i < 10 ? "Platform keşfi" : i < 20 ? "İhtiyaç bazlı" : "Şehir/ülke bazlı";
+    const group = i < 10 ? "Platform keşfi" : i < 20 ? "İhtiyaç bazlı" : "Şehir/ülke bazlı";
     console.log(`[${i}] (${group}) ${PROMPTS[i]}`);
   }
 }

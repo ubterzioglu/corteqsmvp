@@ -18,9 +18,7 @@ const submitSpy = vi.fn();
 const uploadSpy = vi.fn();
 
 vi.mock("@/lib/careers/careers-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/careers/careers-api")>(
-    "@/lib/careers/careers-api",
-  );
+  const actual = await vi.importActual<typeof import("@/lib/careers/careers-api")>("@/lib/careers/careers-api");
   return {
     ...actual,
     newCareerApplicationId: () => "11111111-2222-3333-4444-555555555555",
@@ -40,7 +38,9 @@ vi.mock("@/lib/careers/careers-api", async () => {
 });
 
 const toastSpy = { success: vi.fn(), error: vi.fn() };
-vi.mock("sonner", () => ({ toast: { success: (m: string) => toastSpy.success(m), error: (m: string) => toastSpy.error(m) } }));
+vi.mock("sonner", () => ({
+  toast: { success: (m: string) => toastSpy.success(m), error: (m: string) => toastSpy.error(m) },
+}));
 
 import CareerApplicationForm from "@/components/career/CareerApplicationForm";
 import { LEGACY_CAREER_POSITIONS } from "@/lib/careers/careers-legacy";

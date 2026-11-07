@@ -96,9 +96,7 @@ describe("M11 · redeem — kendini davet ve çift sayım kapalı", () => {
     expect(redeem).toContain("raise exception 'invite_code_not_found'");
     expect(redeem).toContain("on conflict (invited_user_id) do nothing");
     expect(redeem).toContain("get diagnostics v_rows = row_count");
-    expect(redeem.indexOf("if v_owner = v_uid then")).toBeLessThan(
-      redeem.indexOf("invite_self_not_allowed"),
-    );
+    expect(redeem.indexOf("if v_owner = v_uid then")).toBeLessThan(redeem.indexOf("invite_self_not_allowed"));
   });
 });
 

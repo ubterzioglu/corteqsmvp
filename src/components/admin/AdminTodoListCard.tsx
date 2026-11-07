@@ -46,9 +46,7 @@ export function AdminTodoListCard() {
   };
 
   // Açıklar üstte, tamamlananlar altta — liste kendi kendini temizler.
-  const sorted = [...ADMIN_TODOS].sort(
-    (a, b) => Number(doneIds.has(a.id)) - Number(doneIds.has(b.id)),
-  );
+  const sorted = [...ADMIN_TODOS].sort((a, b) => Number(doneIds.has(a.id)) - Number(doneIds.has(b.id)));
   const openCount = ADMIN_TODOS.filter((todo) => !doneIds.has(todo.id)).length;
 
   return (
@@ -62,10 +60,7 @@ export function AdminTodoListCard() {
         {sorted.map((todo) => {
           const done = doneIds.has(todo.id);
           return (
-            <div
-              key={todo.id}
-              className={`rounded-lg border p-4 ${done ? "opacity-60" : ""}`}
-            >
+            <div key={todo.id} className={`rounded-lg border p-4 ${done ? "opacity-60" : ""}`}>
               <div className="flex items-start gap-3">
                 <Checkbox
                   className="mt-1"

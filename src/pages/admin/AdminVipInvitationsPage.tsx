@@ -20,7 +20,8 @@ import {
 const invitationState = (invitation: VipInvitationListItem) => {
   if (invitation.revokedAt) return { label: "İptal edildi", variant: "destructive" as const };
   if (invitation.redeemedAt) return { label: "Kullanıldı", variant: "secondary" as const };
-  if (new Date(invitation.expiresAt).getTime() <= Date.now()) return { label: "Süresi doldu", variant: "outline" as const };
+  if (new Date(invitation.expiresAt).getTime() <= Date.now())
+    return { label: "Süresi doldu", variant: "outline" as const };
   return { label: "Geçerli", variant: "default" as const };
 };
 
@@ -119,28 +120,56 @@ const AdminVipInvitationsPage = () => {
     >
       <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
         <Card>
-          <CardHeader><CardTitle className="text-lg">Yeni davet</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-lg">Yeni davet</CardTitle>
+          </CardHeader>
           <CardContent>
             <form className="space-y-4" onSubmit={handleCreate}>
               <div className="space-y-2">
                 <Label htmlFor="vip-name">Alıcı adı</Label>
-                <Input id="vip-name" value={form.recipientName} onChange={(event) => setForm((current) => ({ ...current, recipientName: event.target.value }))} />
+                <Input
+                  id="vip-name"
+                  value={form.recipientName}
+                  onChange={(event) => setForm((current) => ({ ...current, recipientName: event.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vip-email">Alıcı e-postası</Label>
-                <Input id="vip-email" type="email" value={form.recipientEmail} onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))} />
+                <Input
+                  id="vip-email"
+                  type="email"
+                  value={form.recipientEmail}
+                  onChange={(event) => setForm((current) => ({ ...current, recipientEmail: event.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vip-title">Başlık</Label>
-                <Input id="vip-title" required value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} />
+                <Input
+                  id="vip-title"
+                  required
+                  value={form.title}
+                  onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vip-message">Kişisel mesaj</Label>
-                <Textarea id="vip-message" rows={4} value={form.message} onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))} />
+                <Textarea
+                  id="vip-message"
+                  rows={4}
+                  value={form.message}
+                  onChange={(event) => setForm((current) => ({ ...current, message: event.target.value }))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="vip-days">Geçerlilik (gün)</Label>
-                <Input id="vip-days" type="number" min={1} max={365} value={form.validDays} onChange={(event) => setForm((current) => ({ ...current, validDays: event.target.value }))} />
+                <Input
+                  id="vip-days"
+                  type="number"
+                  min={1}
+                  max={365}
+                  value={form.validDays}
+                  onChange={(event) => setForm((current) => ({ ...current, validDays: event.target.value }))}
+                />
               </div>
               <Button className="w-full gap-2" disabled={saving} type="submit">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
@@ -162,32 +191,45 @@ const AdminVipInvitationsPage = () => {
         </Card>
 
         <Card>
-          <CardHeader><CardTitle className="text-lg">Davet geçmişi</CardTitle></CardHeader>
+          <CardHeader>
+            <CardTitle className="text-lg">Davet geçmişi</CardTitle>
+          </CardHeader>
           <CardContent className="space-y-3">
             {loading ? (
               <p className="text-sm text-muted-foreground">Yükleniyor…</p>
             ) : items.length === 0 ? (
               <p className="text-sm text-muted-foreground">Henüz VIP daveti yok.</p>
-            ) : items.map((item) => {
-              const state = invitationState(item);
-              return (
-                <div key={item.id} className="flex flex-col gap-3 rounded-lg border p-4 md:flex-row md:items-center">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="font-semibold">{item.recipientName ?? item.title}</p>
-                      <Badge variant={state.variant}>{state.label}</Badge>
+            ) : (
+              items.map((item) => {
+                const state = invitationState(item);
+                return (
+                  <div key={item.id} className="flex flex-col gap-3 rounded-lg border p-4 md:flex-row md:items-center">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-semibold">{item.recipientName ?? item.title}</p>
+                        <Badge variant={state.variant}>{state.label}</Badge>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {item.recipientEmail ?? "E-posta belirtilmedi"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        Son tarih: {new Date(item.expiresAt).toLocaleString("tr-TR")}
+                      </p>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground">{item.recipientEmail ?? "E-posta belirtilmedi"}</p>
-                    <p className="text-xs text-muted-foreground">Son tarih: {new Date(item.expiresAt).toLocaleString("tr-TR")}</p>
+                    {!item.revokedAt && !item.redeemedAt && new Date(item.expiresAt).getTime() > Date.now() && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2 text-destructive"
+                        onClick={() => handleRevoke(item)}
+                      >
+                        <ShieldX className="h-4 w-4" /> İptal et
+                      </Button>
+                    )}
                   </div>
-                  {!item.revokedAt && !item.redeemedAt && new Date(item.expiresAt).getTime() > Date.now() && (
-                    <Button variant="outline" size="sm" className="gap-2 text-destructive" onClick={() => handleRevoke(item)}>
-                      <ShieldX className="h-4 w-4" /> İptal et
-                    </Button>
-                  )}
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </CardContent>
         </Card>
       </div>

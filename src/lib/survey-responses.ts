@@ -66,10 +66,7 @@ export async function getSurveyResponses(surveyId: string) {
 }
 
 export async function updateResponseStatus(id: string, status: "reviewed" | "archived") {
-  const { error } = await supabase
-    .from("survey_responses")
-    .update({ status })
-    .eq("id", id);
+  const { error } = await supabase.from("survey_responses").update({ status }).eq("id", id);
 
   if (error) throw error;
 }

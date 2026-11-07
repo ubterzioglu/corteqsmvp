@@ -12,10 +12,7 @@ interface DemoBadgeProps {
  */
 const DemoBadge = ({ variant = "card", label }: DemoBadgeProps) => {
   const text =
-    label ||
-    (variant === "page"
-      ? "DEMO – Bu sayfa örnek içeriktir. Gerçek profiller yakında."
-      : "DEMO – Örnek Kart");
+    label || (variant === "page" ? "DEMO – Bu sayfa örnek içeriktir. Gerçek profiller yakında." : "DEMO – Örnek Kart");
 
   return (
     <div

@@ -65,9 +65,7 @@ describe("SiteHeader", () => {
       </MemoryRouter>,
     );
 
-    expect(
-      screen.queryByText("Dünyadaki Türkleri Bir Araya Getiren Platform"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Dünyadaki Türkleri Bir Araya Getiren Platform")).not.toBeInTheDocument();
     // Marka kimliği ve girişli nav'ı gizlemedik — yalnız pazarlama sloganı kalktı.
     expect(screen.getByText("CorteQS")).toBeInTheDocument();
     expect(screen.getByText("Global Türk Diaspora Network")).toBeInTheDocument();

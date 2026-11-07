@@ -55,8 +55,7 @@ describe("G15 · salt ekleme güvencesi", () => {
 });
 
 describe("G15 · group_strikes (tasarım §4: sebep · karar veren · tarih)", () => {
-  const table = () =>
-    sliceBetween(code(), "create table if not exists public.group_strikes", ");", "strikes tablosu");
+  const table = () => sliceBetween(code(), "create table if not exists public.group_strikes", ");", "strikes tablosu");
 
   it("kayıt alanları tam", () => {
     for (const column of [
@@ -91,19 +90,17 @@ describe("G15 · group_strikes (tasarım §4: sebep · karar veren · tarih)", (
 
 describe("G15 · ekleme yasağı", () => {
   it("G15: ban sebepleri tasarım §7 + politika §4 ile sınırlı (orijinal)", () => {
-    const table = sliceBetween(
-      code(),
-      "create table if not exists public.group_submission_bans",
-      ");",
-      "bans tablosu",
-    );
+    const table = sliceBetween(code(), "create table if not exists public.group_submission_bans", ");", "bans tablosu");
 
     expect(table).toContain("'strike_3', 'redline_2', 'redline_4', 'redline_6'");
     expect(table).toContain("unique (user_id, landing_id, reason)");
   });
 
   it("G15b: ban sebebi strike_3 → strike_2 (ALTER CONSTRAINT)", () => {
-    const sqlB = migrationBSql().split("\n").filter((line) => !line.trimStart().startsWith("--")).join("\n");
+    const sqlB = migrationBSql()
+      .split("\n")
+      .filter((line) => !line.trimStart().startsWith("--"))
+      .join("\n");
 
     expect(sqlB).toContain("drop constraint if exists group_submission_bans_reason_check");
     expect(sqlB).toContain("'strike_2', 'redline_2', 'redline_4', 'redline_6'");
@@ -123,9 +120,7 @@ describe("G15 · ekleme yasağı", () => {
   });
 
   it("yardımcı fonksiyon authenticated'a açık (G18 formu okuyacak)", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.group_submission_banned(uuid) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.group_submission_banned(uuid) to authenticated;");
   });
 });
 
@@ -160,7 +155,10 @@ describe("G15/G15b · eşikler group_settings'ten (kodda sabit YOK)", () => {
 
   it("G15b: RPC varsayılanları sıkılaştırılmış (1=askı, 2=kaldırma)", () => {
     const rpcB = sliceBetween(
-      migrationBSql().split("\n").filter((line) => !line.trimStart().startsWith("--")).join("\n"),
+      migrationBSql()
+        .split("\n")
+        .filter((line) => !line.trimStart().startsWith("--"))
+        .join("\n"),
       "create or replace function public.admin_record_group_strike",
       "comment on function public.admin_record_group_strike",
       "strike RPC G15b",

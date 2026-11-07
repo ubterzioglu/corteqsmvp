@@ -9,23 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  usePublishServiceFinderCandidate,
-  useReviewServiceFinderCandidate,
-} from "@/hooks/useServiceFinder";
+import { usePublishServiceFinderCandidate, useReviewServiceFinderCandidate } from "@/hooks/useServiceFinder";
 import { formatConfidence, formatUsd } from "@/lib/service-finder-format";
-import type {
-  CandidatePatch,
-  ServiceFinderCandidateRow,
-} from "@/lib/service-finder-schemas";
+import type { CandidatePatch, ServiceFinderCandidateRow } from "@/lib/service-finder-schemas";
 import { ServiceFinderReviewStatusBadge } from "./ServiceFinderBadges";
 
 interface ServiceFinderCandidateDrawerProps {
@@ -91,8 +79,8 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
             <ServiceFinderReviewStatusBadge status={candidate.review_status} />
           </SheetTitle>
           <SheetDescription>
-            Güven: {formatConfidence(candidate.confidence_score)} · Maliyet:{" "}
-            {formatUsd(candidate.cost_total_usd)} · Model: {candidate.classifier_model ?? "—"}
+            Güven: {formatConfidence(candidate.confidence_score)} · Maliyet: {formatUsd(candidate.cost_total_usd)} ·
+            Model: {candidate.classifier_model ?? "—"}
           </SheetDescription>
         </SheetHeader>
 
@@ -100,9 +88,7 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
           {/* Kanıtlar */}
           <div>
             <h4 className="mb-2 text-sm font-semibold">Kanıt alıntıları</h4>
-            {candidate.evidence.length === 0 && (
-              <p className="text-sm text-muted-foreground">Kanıt alıntısı yok.</p>
-            )}
+            {candidate.evidence.length === 0 && <p className="text-sm text-muted-foreground">Kanıt alıntısı yok.</p>}
             <ul className="space-y-2">
               {candidate.evidence.map((entry, index) => (
                 <li key={index} className="rounded-md border bg-muted/40 p-2 text-sm italic">
@@ -132,23 +118,48 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
           <div className="grid gap-3">
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-name">İsim</Label>
-              <Input id="sf-cand-name" value={name} onChange={(event) => setName(event.target.value)} disabled={isPublished} />
+              <Input
+                id="sf-cand-name"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                disabled={isPublished}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-city">Şehir</Label>
-              <Input id="sf-cand-city" value={city} onChange={(event) => setCity(event.target.value)} disabled={isPublished} />
+              <Input
+                id="sf-cand-city"
+                value={city}
+                onChange={(event) => setCity(event.target.value)}
+                disabled={isPublished}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-services">Hizmetler (virgülle)</Label>
-              <Input id="sf-cand-services" value={services} onChange={(event) => setServices(event.target.value)} disabled={isPublished} />
+              <Input
+                id="sf-cand-services"
+                value={services}
+                onChange={(event) => setServices(event.target.value)}
+                disabled={isPublished}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-langs">Diller (virgülle)</Label>
-              <Input id="sf-cand-langs" value={languages} onChange={(event) => setLanguages(event.target.value)} disabled={isPublished} />
+              <Input
+                id="sf-cand-langs"
+                value={languages}
+                onChange={(event) => setLanguages(event.target.value)}
+                disabled={isPublished}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-web">Web sitesi</Label>
-              <Input id="sf-cand-web" value={website} onChange={(event) => setWebsite(event.target.value)} disabled={isPublished} />
+              <Input
+                id="sf-cand-web"
+                value={website}
+                onChange={(event) => setWebsite(event.target.value)}
+                disabled={isPublished}
+              />
             </div>
             <div className="grid gap-1.5">
               <Label>İletişim</Label>
@@ -158,14 +169,18 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
                     <span className="font-medium text-foreground">{contact.type}:</span> {contact.value}
                   </li>
                 ))}
-                {candidate.contacts.length === 0 && (
-                  <li className="text-muted-foreground">İletişim bilgisi yok.</li>
-                )}
+                {candidate.contacts.length === 0 && <li className="text-muted-foreground">İletişim bilgisi yok.</li>}
               </ul>
             </div>
             <div className="grid gap-1.5">
               <Label htmlFor="sf-cand-notes">İnceleme notu</Label>
-              <Textarea id="sf-cand-notes" value={notes} onChange={(event) => setNotes(event.target.value)} disabled={isPublished} rows={2} />
+              <Textarea
+                id="sf-cand-notes"
+                value={notes}
+                onChange={(event) => setNotes(event.target.value)}
+                disabled={isPublished}
+                rows={2}
+              />
             </div>
           </div>
         </div>
@@ -177,9 +192,7 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
               variant="outline"
               size="sm"
               disabled={busy}
-              onClick={() =>
-                review.mutate({ candidateId: candidate.id, action: "approved", patch: buildPatch() })
-              }
+              onClick={() => review.mutate({ candidateId: candidate.id, action: "approved", patch: buildPatch() })}
             >
               Onayla
             </Button>
@@ -187,9 +200,7 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
               variant="outline"
               size="sm"
               disabled={busy}
-              onClick={() =>
-                review.mutate({ candidateId: candidate.id, action: "needs_edit", patch: buildPatch() })
-              }
+              onClick={() => review.mutate({ candidateId: candidate.id, action: "needs_edit", patch: buildPatch() })}
             >
               Düzenleme Gerekli
             </Button>
@@ -197,7 +208,9 @@ export function ServiceFinderCandidateDrawer({ candidate, onClose }: ServiceFind
               variant="destructive"
               size="sm"
               disabled={busy}
-              onClick={() => review.mutate({ candidateId: candidate.id, action: "rejected", patch: { review_notes: notes || null } })}
+              onClick={() =>
+                review.mutate({ candidateId: candidate.id, action: "rejected", patch: { review_notes: notes || null } })
+              }
             >
               Reddet
             </Button>

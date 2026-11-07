@@ -71,7 +71,12 @@ const summary = (overrides: Record<string, unknown> = {}) => ({
   fast_lane_suggest_threshold: 100,
   fast_lane_enabled: false,
   task_runs: [
-    { jobname: "group_link_health", schedule: "23 * * * *", last_status: "succeeded", last_end_time: new Date().toISOString() },
+    {
+      jobname: "group_link_health",
+      schedule: "23 * * * *",
+      last_status: "succeeded",
+      last_end_time: new Date().toISOString(),
+    },
   ],
   ...overrides,
 });
@@ -126,8 +131,20 @@ const reportItem = {
   first_report_at: new Date().toISOString(),
   reason_counts: { hate_violence_adult: 1, diger: 1 },
   reports: [
-    { id: "r-1", reason: "hate_violence_adult", note: null, reporter_id: "66666666-6666-6666-6666-666666666666", created_at: new Date().toISOString() },
-    { id: "r-2", reason: "diger", note: "Surekli reklam", reporter_id: "77777777-7777-7777-7777-777777777777", created_at: new Date().toISOString() },
+    {
+      id: "r-1",
+      reason: "hate_violence_adult",
+      note: null,
+      reporter_id: "66666666-6666-6666-6666-666666666666",
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: "r-2",
+      reason: "diger",
+      note: "Surekli reklam",
+      reporter_id: "77777777-7777-7777-7777-777777777777",
+      created_at: new Date().toISOString(),
+    },
   ],
 };
 
@@ -302,7 +319,9 @@ describe("G24 · kararlar", () => {
     await user.click(await screen.findByRole("button", { name: /Ekran görüntüsünü aç/ }));
 
     await waitFor(() => expect(screenshotSpy).toHaveBeenCalledWith(claimRow.screenshot_path));
-    await waitFor(() => expect(openSpy).toHaveBeenCalledWith("https://signed.example/kanit", "_blank", "noopener,noreferrer"));
+    await waitFor(() =>
+      expect(openSpy).toHaveBeenCalledWith("https://signed.example/kanit", "_blank", "noopener,noreferrer"),
+    );
     expect(await screen.findByText(/ÇEKİŞMELİ/)).toBeInTheDocument();
     openSpy.mockRestore();
   });

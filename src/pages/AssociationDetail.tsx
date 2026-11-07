@@ -1,6 +1,27 @@
 import { useFollow } from "@/hooks/useFollow";
 import { useParams, Link } from "react-router-dom";
-import { Users, MapPin, Calendar as CalendarIcon, Globe as GlobeIcon, ArrowLeft, ExternalLink, MessageSquare, Share2, UserPlus, UserCheck, Heart, CreditCard, Ticket, Music, Radio, Landmark, Clock, FileText, Stethoscope, Navigation } from "lucide-react";
+import {
+  Users,
+  MapPin,
+  Calendar as CalendarIcon,
+  Globe as GlobeIcon,
+  ArrowLeft,
+  ExternalLink,
+  MessageSquare,
+  Share2,
+  UserPlus,
+  UserCheck,
+  Heart,
+  CreditCard,
+  Ticket,
+  Music,
+  Radio,
+  Landmark,
+  Clock,
+  FileText,
+  Stethoscope,
+  Navigation,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
@@ -49,7 +70,9 @@ const AssociationDetail = () => {
       <div className="min-h-screen bg-background">
         <div className="pt-24 container mx-auto px-4 text-center py-20">
           <h1 className="text-2xl font-bold text-foreground mb-4">Kuruluş bulunamadı</h1>
-          <Link to="/associations" className="text-primary hover:underline">← Kuruluşlara dön</Link>
+          <Link to="/associations" className="text-primary hover:underline">
+            ← Kuruluşlara dön
+          </Link>
         </div>
       </div>
     );
@@ -60,10 +83,41 @@ const AssociationDetail = () => {
   };
 
   const sampleAnnouncements = [
-    { id: 1, category: "eğitim" as const, title: "Türkçe Dil Kursu Kayıtları Açıldı", content: "Yetişkinler için A1-B2 seviye Türkçe kurslarımıza kayıt olabilirsiniz. Kurslar Mart ayında başlıyor.", link: assoc.website, date: "03 Mar 2026", author: assoc.name },
-    { id: 2, category: "gönüllü" as const, title: "Gönüllü Arayışı — Bahar Festivali", content: "23 Nisan etkinliğimizde gönüllü olarak yer almak ister misiniz? Organizasyon, sahne ve ikram ekiplerine ihtiyacımız var.", date: "01 Mar 2026", author: assoc.name },
-    { id: 3, category: "kampanya" as const, title: "Burs Fonu Kampanyası", content: "Diaspora gençlerine yönelik burs fonumuza destek olun. Hedefimiz 50 öğrenciye eğitim bursu sağlamak.", image: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=400&h=200&fit=crop", date: "25 Şub 2026", author: assoc.name },
-    { id: 4, category: "indirim" as const, title: "Üyelere Özel Etkinlik İndirimi", content: "Dernek üyelerine tüm etkinliklerde %20 indirim. Üyelik kartınızı göstermeniz yeterli.", date: "20 Şub 2026", author: assoc.name },
+    {
+      id: 1,
+      category: "eğitim" as const,
+      title: "Türkçe Dil Kursu Kayıtları Açıldı",
+      content: "Yetişkinler için A1-B2 seviye Türkçe kurslarımıza kayıt olabilirsiniz. Kurslar Mart ayında başlıyor.",
+      link: assoc.website,
+      date: "03 Mar 2026",
+      author: assoc.name,
+    },
+    {
+      id: 2,
+      category: "gönüllü" as const,
+      title: "Gönüllü Arayışı — Bahar Festivali",
+      content:
+        "23 Nisan etkinliğimizde gönüllü olarak yer almak ister misiniz? Organizasyon, sahne ve ikram ekiplerine ihtiyacımız var.",
+      date: "01 Mar 2026",
+      author: assoc.name,
+    },
+    {
+      id: 3,
+      category: "kampanya" as const,
+      title: "Burs Fonu Kampanyası",
+      content: "Diaspora gençlerine yönelik burs fonumuza destek olun. Hedefimiz 50 öğrenciye eğitim bursu sağlamak.",
+      image: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=400&h=200&fit=crop",
+      date: "25 Şub 2026",
+      author: assoc.name,
+    },
+    {
+      id: 4,
+      category: "indirim" as const,
+      title: "Üyelere Özel Etkinlik İndirimi",
+      content: "Dernek üyelerine tüm etkinliklerde %20 indirim. Üyelik kartınızı göstermeniz yeterli.",
+      date: "20 Şub 2026",
+      author: assoc.name,
+    },
   ];
 
   const isDiplomatic = ["Büyükelçilik", "Konsolosluk"].includes(assoc.type);
@@ -91,7 +145,10 @@ const AssociationDetail = () => {
       </div>
       <main className="pt-8 pb-16">
         <div className="container mx-auto px-4">
-          <Link to="/associations" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
+          <Link
+            to="/associations"
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+          >
             <ArrowLeft className="h-4 w-4" /> Kuruluşlara dön
           </Link>
 
@@ -145,7 +202,10 @@ const AssociationDetail = () => {
                 {isHospital ? (
                   <>
                     <Link to={`/hospital-appointment/${assoc.id}`}>
-                      <Button variant="default" className="gap-2 w-full bg-turquoise hover:bg-turquoise/90 text-primary-foreground">
+                      <Button
+                        variant="default"
+                        className="gap-2 w-full bg-turquoise hover:bg-turquoise/90 text-primary-foreground"
+                      >
                         <Stethoscope className="h-4 w-4" /> Randevu Al
                       </Button>
                     </Link>
@@ -199,9 +259,13 @@ const AssociationDetail = () => {
                       <TooltipTrigger asChild>
                         <Button variant="default" className="gap-2 w-full" disabled>
                           {assoc.type === "Radyo" ? (
-                            <><Music className="h-4 w-4" /> Dinle</>
+                            <>
+                              <Music className="h-4 w-4" /> Dinle
+                            </>
                           ) : (
-                            <><Users className="h-4 w-4" /> Üye Ol</>
+                            <>
+                              <Users className="h-4 w-4" /> Üye Ol
+                            </>
                           )}
                         </Button>
                       </TooltipTrigger>
@@ -243,7 +307,7 @@ const AssociationDetail = () => {
                 {/* B11.3 — Bağla kovası: MapShareButtons ile gerçek paylaşım */}
                 <MapShareButtons name={assoc.name} city={assoc.city} country={assoc.country} className="w-full" />
                 <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(assoc.name + ', ' + assoc.city + ', ' + assoc.country)}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(assoc.name + ", " + assoc.city + ", " + assoc.country)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -252,7 +316,7 @@ const AssociationDetail = () => {
                   </Button>
                 </a>
                 <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(assoc.name + ', ' + assoc.city + ', ' + assoc.country)}`}
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(assoc.name + ", " + assoc.city + ", " + assoc.country)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -294,7 +358,10 @@ const AssociationDetail = () => {
                       { name: "Diş Hekimliği", icon: "🦷" },
                       { name: "Genel Cerrahi", icon: "🏥" },
                     ].map((dept, i) => (
-                      <div key={i} className="flex items-center gap-3 p-4 rounded-xl bg-card/60 border border-turquoise/10 hover:bg-card transition-colors">
+                      <div
+                        key={i}
+                        className="flex items-center gap-3 p-4 rounded-xl bg-card/60 border border-turquoise/10 hover:bg-card transition-colors"
+                      >
                         <span className="text-2xl">{dept.icon}</span>
                         <p className="font-semibold text-foreground text-sm">{dept.name}</p>
                       </div>
@@ -313,7 +380,6 @@ const AssociationDetail = () => {
                 </div>
               )}
 
-
               {isDiplomatic && (
                 <div className="bg-card rounded-2xl border border-border p-6 shadow-card">
                   <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
@@ -321,7 +387,10 @@ const AssociationDetail = () => {
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {consulateServices.map((s, i) => (
-                      <div key={i} className="flex items-start gap-3 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors">
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 p-4 rounded-xl bg-muted/50 hover:bg-muted transition-colors"
+                      >
                         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                           <s.icon className="h-5 w-5 text-primary" />
                         </div>
@@ -359,7 +428,9 @@ const AssociationDetail = () => {
                         </div>
                         <div className="flex-1 min-w-0">
                           <h3 className="font-semibold text-foreground">{e.title}</h3>
-                          <Badge variant="outline" className="text-xs mt-1">{e.type}</Badge>
+                          <Badge variant="outline" className="text-xs mt-1">
+                            {e.type}
+                          </Badge>
                         </div>
                         {/* B11.4 — Yakında kovası: Etkinlik katılım sistemi yok */}
                         <Tooltip>
@@ -379,10 +450,16 @@ const AssociationDetail = () => {
               {/* Inline announcements - max 2 (non-diplomatic) */}
               {!isDiplomatic && sampleAnnouncements.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {sampleAnnouncements.slice(0, 2).map(a => (
+                  {sampleAnnouncements.slice(0, 2).map((a) => (
                     <div key={a.id} className="border border-border rounded-xl p-5 bg-card shadow-card">
                       <Badge variant="outline" className="text-xs mb-2">
-                        {a.category === "indirim" ? "🏷️ İndirim" : a.category === "eğitim" ? "🎓 Eğitim" : a.category === "gönüllü" ? "❤️ Gönüllü" : "📢 Kampanya"}
+                        {a.category === "indirim"
+                          ? "🏷️ İndirim"
+                          : a.category === "eğitim"
+                            ? "🎓 Eğitim"
+                            : a.category === "gönüllü"
+                              ? "❤️ Gönüllü"
+                              : "📢 Kampanya"}
                       </Badge>
                       <h3 className="font-bold text-foreground mb-1">{a.title}</h3>
                       <p className="text-sm text-muted-foreground font-body line-clamp-2">{a.content}</p>
@@ -425,9 +502,13 @@ const AssociationDetail = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-foreground">Burs ve Bağış Yemeği</h3>
-                        <span className="text-[10px] bg-gold/10 text-gold rounded-full px-2 py-0.5 font-semibold">Hayırseverlik</span>
+                        <span className="text-[10px] bg-gold/10 text-gold rounded-full px-2 py-0.5 font-semibold">
+                          Hayırseverlik
+                        </span>
                       </div>
-                      <p className="text-sm text-muted-foreground font-body">{assoc.city} · 18:30 · Gala etkinliği — Gelirler burs fonuna aktarılır</p>
+                      <p className="text-sm text-muted-foreground font-body">
+                        {assoc.city} · 18:30 · Gala etkinliği — Gelirler burs fonuna aktarılır
+                      </p>
                     </div>
                     <div className="flex gap-2 shrink-0">
                       {/* B11.4 — Yakında kovası: Bilet sistemi yok */}
@@ -442,7 +523,12 @@ const AssociationDetail = () => {
                       {/* B11.4 — Yakında kovası: Bağış sistemi yok */}
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <Button variant="outline" size="sm" className="gap-1 border-gold/30 text-gold hover:bg-gold/10" disabled>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-1 border-gold/30 text-gold hover:bg-gold/10"
+                            disabled
+                          >
                             <Heart className="h-3 w-3" /> Bağış Yap
                           </Button>
                         </TooltipTrigger>
@@ -498,7 +584,8 @@ const AssociationDetail = () => {
               <div className="bg-card rounded-2xl border border-border p-6 shadow-card">
                 <h2 className="text-xl font-bold text-foreground mb-4">Üyeler</h2>
                 <p className="text-muted-foreground font-body">
-                  {assoc.members.toLocaleString()} aktif üye ile {assoc.country}'daki en büyük Türk topluluklarından biri.
+                  {assoc.members.toLocaleString()} aktif üye ile {assoc.country}'daki en büyük Türk topluluklarından
+                  biri.
                 </p>
                 {/* B11.4 — Yakında kovası: Üyelik sistemi yok */}
                 <Tooltip>
@@ -526,7 +613,6 @@ const AssociationDetail = () => {
                   <ExternalLink className="h-4 w-4 text-muted-foreground ml-auto" />
                 </a>
               </div>
-
             </TabsContent>
           </Tabs>
         </div>

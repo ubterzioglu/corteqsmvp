@@ -47,12 +47,7 @@ describe("QuestionStepper", () => {
 
   it("single şık seçilince ~250ms sonra otomatik ilerler (son soru değilse)", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper
-        questions={[q("q1", "single", 1), q("q2", "scale", 2)]}
-        onComplete={onComplete}
-      />,
-    );
+    render(<QuestionStepper questions={[q("q1", "single", 1), q("q2", "scale", 2)]} onComplete={onComplete} />);
 
     // 1. soru görünür.
     expect(screen.getByText("Soru q1")).toBeInTheDocument();
@@ -75,12 +70,7 @@ describe("QuestionStepper", () => {
 
   it("SON single soruda otomatik ilerlemez / submit etmez", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper
-        questions={[q("only", "single", 1)]}
-        onComplete={onComplete}
-      />,
-    );
+    render(<QuestionStepper questions={[q("only", "single", 1)]} onComplete={onComplete} />);
 
     fireEvent.click(screen.getByText("Seçenek A"));
     act(() => {
@@ -93,12 +83,7 @@ describe("QuestionStepper", () => {
   });
 
   it("scale gibi single olmayan sorularda otomatik ilerlemez", () => {
-    render(
-      <QuestionStepper
-        questions={[q("q1", "scale", 1), q("q2", "scale", 2)]}
-        onComplete={vi.fn()}
-      />,
-    );
+    render(<QuestionStepper questions={[q("q1", "scale", 1), q("q2", "scale", 2)]} onComplete={vi.fn()} />);
 
     // Slider'ı oynatmak yerine: scale tipinde auto-advance hiç tetiklenmez.
     // Sadece zamanı ilerletip 1. soruda kaldığımızı doğrularız.
@@ -169,9 +154,7 @@ describe("QuestionStepper", () => {
 
   it("scale sorusunda dokunulmadan İleri ilerler ve görünen varsayılan (3) kaydedilir", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
-    );
+    render(<QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />);
 
     // Ortadaki şık ön-seçili görünür...
     expect(screen.getAllByRole("radio")[2]).toHaveAttribute("aria-checked", "true");
@@ -184,9 +167,7 @@ describe("QuestionStepper", () => {
 
   it("ön-seçili 3'e tıklayıp İleri denince ilerler (önce 4 sonra 3 seçmek gerekmez)", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
-    );
+    render(<QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />);
 
     // Radix, zaten seçili şıkka tıklandığında onValueChange tetiklemez; buna rağmen
     // görünen değer cevap sayıldığı için kullanıcı takılmamalı.
@@ -198,9 +179,7 @@ describe("QuestionStepper", () => {
 
   it("scale sorusunda başka bir şık seçilirse varsayılan yerine o değer kaydedilir", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />,
-    );
+    render(<QuestionStepper questions={[q("only", "scale", 1)]} onComplete={onComplete} />);
 
     fireEvent.click(screen.getByText("5 — Yüksek"));
     fireEvent.click(screen.getByText("Sonucu Gör"));
@@ -210,12 +189,7 @@ describe("QuestionStepper", () => {
 
   it("son soruda cevapsız Bitir onComplete'i çağırmaz", () => {
     const onComplete = vi.fn();
-    render(
-      <QuestionStepper
-        questions={[q("only", "single", 1, { is_required: false })]}
-        onComplete={onComplete}
-      />,
-    );
+    render(<QuestionStepper questions={[q("only", "single", 1, { is_required: false })]} onComplete={onComplete} />);
 
     fireEvent.click(screen.getByText("Sonucu Gör"));
     expect(onComplete).not.toHaveBeenCalled();
@@ -224,10 +198,7 @@ describe("QuestionStepper", () => {
 
   it("soru içerik kabı sabit min-yükseklik taşır (CLS guard)", () => {
     const { container } = render(
-      <QuestionStepper
-        questions={[q("q1", "single", 1), q("q2", "scale", 2)]}
-        onComplete={vi.fn()}
-      />,
+      <QuestionStepper questions={[q("q1", "single", 1), q("q2", "scale", 2)]} onComplete={vi.fn()} />,
     );
 
     const hasMinHeight = Array.from(container.querySelectorAll("div")).some(
@@ -251,13 +222,7 @@ describe("QuestionStepper", () => {
 
   it("her gerçek cevap değişikliğini incremental kayıt callback'ine yollar", () => {
     const onAnswerChange = vi.fn();
-    render(
-      <QuestionStepper
-        questions={[q("q1", "single", 1)]}
-        onAnswerChange={onAnswerChange}
-        onComplete={vi.fn()}
-      />,
-    );
+    render(<QuestionStepper questions={[q("q1", "single", 1)]} onAnswerChange={onAnswerChange} onComplete={vi.fn()} />);
 
     fireEvent.click(screen.getByText("Seçenek B"));
 

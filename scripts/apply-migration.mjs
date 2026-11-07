@@ -23,9 +23,7 @@ const DB = {
 export function parseMigrationFileName(fileName) {
   const match = /^(\d{14})_([a-z0-9][a-z0-9_]*)\.sql$/.exec(fileName);
   if (!match) {
-    throw new Error(
-      "Migration dosya adı `YYYYMMDDHHMMSS_ascii_snake_case.sql` biçiminde olmalı.",
-    );
+    throw new Error("Migration dosya adı `YYYYMMDDHHMMSS_ascii_snake_case.sql` biçiminde olmalı.");
   }
   return { version: match[1], name: match[2] };
 }
@@ -114,16 +112,12 @@ function runPsql(sql, password) {
     `user=${DB.user}`,
     "sslmode=require",
   ].join(" ");
-  const result = spawnSync(
-    "psql",
-    [connection, "-X", "--set=ON_ERROR_STOP=1", "--file=-"],
-    {
-      env: { ...process.env, PGPASSWORD: password },
-      input: sql,
-      encoding: "utf8",
-      stdio: ["pipe", "pipe", "pipe"],
-    },
-  );
+  const result = spawnSync("psql", [connection, "-X", "--set=ON_ERROR_STOP=1", "--file=-"], {
+    env: { ...process.env, PGPASSWORD: password },
+    input: sql,
+    encoding: "utf8",
+    stdio: ["pipe", "pipe", "pipe"],
+  });
 
   if (result.error) throw new Error(`psql başlatılamadı: ${result.error.message}`);
   if (result.status !== 0) {
@@ -134,9 +128,7 @@ function runPsql(sql, password) {
 }
 
 function usage() {
-  console.log(
-    "Kullanım: npm run migrate:apply -- supabase/migrations/YYYYMMDDHHMMSS_name.sql [--dry-run]",
-  );
+  console.log("Kullanım: npm run migrate:apply -- supabase/migrations/YYYYMMDDHHMMSS_name.sql [--dry-run]");
 }
 
 async function main() {

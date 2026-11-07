@@ -44,7 +44,7 @@ describe("önceki dönem ilanları", () => {
     // kullanıcıya göründüğü davranış testi `CareerApplicationForm.test.tsx`'te.
     const form = formSource();
 
-    expect(form).toContain("<optgroup label=\"Önceki dönem ilanları\">");
+    expect(form).toContain('<optgroup label="Önceki dönem ilanları">');
     expect(form).toContain("{LEGACY_CAREER_POSITIONS.map(");
   });
 

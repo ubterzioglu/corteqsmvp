@@ -12,8 +12,7 @@ const moduleCards = [
   {
     id: "module-1",
     title: "Dünya Üzerinde Yerini İşaretle",
-    description:
-      "Global diaspora haritasında yerini aç, şehrini görünür yap ve topluluğa katıl.",
+    description: "Global diaspora haritasında yerini aç, şehrini görünür yap ve topluluğa katıl.",
     href: "https://globe.corteqs.net",
     external: true,
     Icon: Globe,
@@ -24,8 +23,7 @@ const moduleCards = [
   {
     id: "module-2",
     title: "19 Kelimelik Fikrini Gönder",
-    description:
-      "Diasporayı güçlendirecek kısa fikrini paylaş; ekip hızlıca değerlendirip akışa alır.",
+    description: "Diasporayı güçlendirecek kısa fikrini paylaş; ekip hızlıca değerlendirip akışa alır.",
     href: "/190519idea",
     external: false,
     Icon: Lightbulb,
@@ -36,8 +34,7 @@ const moduleCards = [
   {
     id: "module-3",
     title: "19 Mayıs Anını Paylaş",
-    description:
-      "19 Mayıs’a dair anını veya kısa notunu ilet; seçilen içerikler global yayına hazırlanır.",
+    description: "19 Mayıs’a dair anını veya kısa notunu ilet; seçilen içerikler global yayına hazırlanır.",
     href: "/190519memory",
     external: false,
     Icon: Camera,
@@ -97,13 +94,7 @@ export default function May19CampaignPage() {
 
             if (item.external) {
               return (
-                <a
-                  key={item.id}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
+                <a key={item.id} href={item.href} target="_blank" rel="noopener noreferrer" className="block">
                   {body}
                 </a>
               );

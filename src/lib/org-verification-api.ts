@@ -88,8 +88,7 @@ export const ORG_VERIFICATION_ERROR_MESSAGES: Record<string, string> = {
     "Bu kaydı doğrulamak için önce temsil yetkisi almalısın: kaydı sahiplen (Düzenleme Yetkisi Talep Et), onaydan sonra doğrulama başvurusu açabilirsin.",
   org_verification_document_required: "En az bir belge yüklemelisin.",
   org_verification_too_many_documents: "En fazla 5 belge yükleyebilirsin.",
-  org_verification_path_forbidden:
-    "Belgeler kendi klasörüne yüklenmeli. Dosyaları yeniden yükleyip tekrar dene.",
+  org_verification_path_forbidden: "Belgeler kendi klasörüne yüklenmeli. Dosyaları yeniden yükleyip tekrar dene.",
   org_verification_pending_exists: "Bu kayıt için bekleyen bir doğrulama talebi zaten var.",
 };
 
@@ -158,12 +157,10 @@ export async function uploadOrgVerificationDocuments(
     if (validationError) throw new Error(validationError);
 
     const key = orgVerificationStorageKey(userId, itemId, file.name);
-    const { error } = await supabase.storage
-      .from(ORG_VERIFICATION_BUCKET)
-      .upload(key, file, {
-        contentType: orgVerificationContentType(file.name),
-        upsert: false,
-      });
+    const { error } = await supabase.storage.from(ORG_VERIFICATION_BUCKET).upload(key, file, {
+      contentType: orgVerificationContentType(file.name),
+      upsert: false,
+    });
     if (error) throw error;
     paths.push(key);
   }
@@ -176,18 +173,17 @@ export async function uploadOrgVerificationDocuments(
  * 🔴 RPC hatası düz nesne; tip daraltması (instanceof) YASAK — `orgVerificationErrorMessage`
  * haritayı `extractRpcErrorText` üzerinden okur.
  */
-export async function requestOrgVerification(
-  itemId: string,
-  files: File[],
-  note?: string | null,
-): Promise<string> {
+export async function requestOrgVerification(itemId: string, files: File[], note?: string | null): Promise<string> {
   const { paths } = await uploadOrgVerificationDocuments(itemId, files);
 
-  const { data, error } = await supabase.rpc("request_org_verification_v1" as never, {
-    p_item_id: itemId,
-    p_doc_paths: paths,
-    p_note: note?.trim() ? note.trim().slice(0, 500) : null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "request_org_verification_v1" as never,
+    {
+      p_item_id: itemId,
+      p_doc_paths: paths,
+      p_note: note?.trim() ? note.trim().slice(0, 500) : null,
+    } as never,
+  );
 
   if (error) throw new Error(orgVerificationErrorMessage(error));
   return String(data);
@@ -198,13 +194,8 @@ export async function requestOrgVerification(
  * 🔴 Kova PRIVATE — herkese açık URL üreten yardımcı YASAK (belge sızar). Yalnız
  * `createSignedUrl`, kısa TTL (varsayılan 5 dk, group-moderation deseni).
  */
-export async function openOrgVerificationDocument(
-  path: string,
-  expiresInSeconds = 300,
-): Promise<string> {
-  const { data, error } = await supabase.storage
-    .from(ORG_VERIFICATION_BUCKET)
-    .createSignedUrl(path, expiresInSeconds);
+export async function openOrgVerificationDocument(path: string, expiresInSeconds = 300): Promise<string> {
+  const { data, error } = await supabase.storage.from(ORG_VERIFICATION_BUCKET).createSignedUrl(path, expiresInSeconds);
 
   if (error || !data?.signedUrl) {
     throw error ?? new Error("Belge için imzalı bağlantı üretilemedi.");

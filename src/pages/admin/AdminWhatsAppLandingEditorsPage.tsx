@@ -66,7 +66,9 @@ export default function AdminWhatsAppLandingEditorsPage() {
   const availableUsers = useMemo(() => {
     if (!selectedLandingId) return users;
     const assignedUserIds = new Set(
-      assignments.filter((assignment) => assignment.landingId === selectedLandingId).map((assignment) => assignment.userId),
+      assignments
+        .filter((assignment) => assignment.landingId === selectedLandingId)
+        .map((assignment) => assignment.userId),
     );
     return users.filter((user) => !assignedUserIds.has(user.user_id));
   }, [assignments, selectedLandingId, users]);
@@ -145,7 +147,8 @@ export default function AdminWhatsAppLandingEditorsPage() {
         <CardHeader>
           <CardTitle>Yeni Editör Ata</CardTitle>
           <CardDescription>
-            Bu atama ilgili kullanıcı için landing bazlı edit yetkisi açar ve gerekli feature override kaydını otomatik hazırlar.
+            Bu atama ilgili kullanıcı için landing bazlı edit yetkisi açar ve gerekli feature override kaydını otomatik
+            hazırlar.
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 md:grid-cols-[1.3fr_1fr_auto]">
@@ -175,7 +178,11 @@ export default function AdminWhatsAppLandingEditorsPage() {
             </SelectContent>
           </Select>
 
-          <Button className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700" disabled={!selectedLandingId || !selectedUserId || submitting} onClick={() => void handleAssign()}>
+          <Button
+            className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+            disabled={!selectedLandingId || !selectedUserId || submitting}
+            onClick={() => void handleAssign()}
+          >
             <UserPlus className="h-4 w-4" />
             {submitting ? "Kaydediliyor..." : "Editör Ata"}
           </Button>
@@ -195,7 +202,10 @@ export default function AdminWhatsAppLandingEditorsPage() {
           ) : (
             <div className="space-y-3">
               {assignments.map((assignment) => (
-                <div key={assignment.id} className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 md:flex-row md:items-center md:justify-between">
+                <div
+                  key={assignment.id}
+                  className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-4 md:flex-row md:items-center md:justify-between"
+                >
                   <div className="min-w-0 space-y-1">
                     <p className="font-semibold text-foreground">{assignment.landingGroupName}</p>
                     <p className="text-sm text-muted-foreground">

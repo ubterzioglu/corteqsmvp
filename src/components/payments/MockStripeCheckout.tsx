@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -78,10 +72,7 @@ export function MockStripeCheckout({
     }
   }, [open]);
 
-  const formattedAmount = useMemo(
-    () => `${currency}${amount.toFixed(2)}`,
-    [currency, amount],
-  );
+  const formattedAmount = useMemo(() => `${currency}${amount.toFixed(2)}`, [currency, amount]);
 
   const handlePay = async () => {
     setStep("processing");
@@ -119,10 +110,9 @@ export function MockStripeCheckout({
           <div className="mb-4 flex items-start gap-2 rounded-lg border border-dashed border-amber-500/40 bg-amber-500/5 p-3">
             <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
             <p className="text-xs text-muted-foreground">
-              <strong className="text-foreground">Demo / Test ödemesi.</strong> Bu ekran
-              göstermeliktir; gerçek para tahsil edilmez. Test kartı{" "}
-              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">4242…</code>{" "}
-              ön-doludur.
+              <strong className="text-foreground">Demo / Test ödemesi.</strong> Bu ekran göstermeliktir; gerçek para
+              tahsil edilmez. Test kartı{" "}
+              <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">4242…</code> ön-doludur.
             </p>
           </div>
 
@@ -130,11 +120,7 @@ export function MockStripeCheckout({
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label className="text-xs">Kart Üzerindeki İsim</Label>
-                <Input
-                  placeholder="Ad Soyad"
-                  value={cardName}
-                  onChange={(e) => setCardName(e.target.value)}
-                />
+                <Input placeholder="Ad Soyad" value={cardName} onChange={(e) => setCardName(e.target.value)} />
               </div>
 
               <div className="space-y-1.5">
@@ -173,10 +159,7 @@ export function MockStripeCheckout({
                 </div>
               </div>
 
-              <Button
-                onClick={handlePay}
-                className="h-11 w-full bg-[#635bff] text-white hover:bg-[#5249e0]"
-              >
+              <Button onClick={handlePay} className="h-11 w-full bg-[#635bff] text-white hover:bg-[#5249e0]">
                 <Lock className="mr-1.5 h-4 w-4" />
                 {formattedAmount} Öde
               </Button>
@@ -214,9 +197,7 @@ export function MockStripeCheckout({
                 <CheckCircle2 className="h-9 w-9 text-success" />
               </div>
               <h3 className="text-lg font-bold text-foreground">Ödeme Başarılı</h3>
-              <p className="text-sm text-muted-foreground">
-                {formattedAmount} tutarındaki demo ödemeniz onaylandı.
-              </p>
+              <p className="text-sm text-muted-foreground">{formattedAmount} tutarındaki demo ödemeniz onaylandı.</p>
             </div>
           )}
         </div>

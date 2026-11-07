@@ -49,7 +49,7 @@ function buildCorsHeaders(req: Request): Record<string, string> {
   const headers: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 
   if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -170,7 +170,9 @@ Deno.serve(async (request) => {
       .update({ notification_sent_at: new Date().toISOString() })
       .eq("id", submissionId)
       .is("notification_sent_at", null)
-      .select("id, form_type, category, fullname, country, city, business, field, email, phone, referral_code, referral_detail, referral_source, description, contest_interest, linkedin, instagram, tiktok, facebook, twitter, website, created_at")
+      .select(
+        "id, form_type, category, fullname, country, city, business, field, email, phone, referral_code, referral_detail, referral_source, description, contest_interest, linkedin, instagram, tiktok, facebook, twitter, website, created_at",
+      )
       .single();
 
     if (submissionError || !submissionRow) {

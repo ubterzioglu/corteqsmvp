@@ -8,9 +8,7 @@ const isLanguageEntry = (entry: unknown): entry is LanguageEntry =>
   typeof entry === "object" && entry !== null && typeof (entry as LanguageEntry).code === "string";
 
 const LanguagesSection = ({ section }: PublicSectionRendererProps) => {
-  const languages = Array.isArray(section.content.languages)
-    ? section.content.languages.filter(isLanguageEntry)
-    : [];
+  const languages = Array.isArray(section.content.languages) ? section.content.languages.filter(isLanguageEntry) : [];
   if (languages.length === 0) return null;
 
   return (

@@ -77,7 +77,10 @@ const AdminApprovalsPage = () => {
       filters={
         <AdminFilterBar>
           <div className="w-full max-w-sm">
-            <Select value={filterType} onValueChange={(value) => setFilterType(value as (typeof FILTER_OPTIONS)[number]["value"])}>
+            <Select
+              value={filterType}
+              onValueChange={(value) => setFilterType(value as (typeof FILTER_OPTIONS)[number]["value"])}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Talep türü filtrele" />
               </SelectTrigger>
@@ -106,8 +109,7 @@ const AdminApprovalsPage = () => {
       {!isLoading && !error ? (
         <div className="space-y-3">
           {filteredRequests.map((request) => {
-            const isProcessing =
-              reviewMutation.isPending && reviewMutation.variables?.requestId === request.id;
+            const isProcessing = reviewMutation.isPending && reviewMutation.variables?.requestId === request.id;
             return (
               <div key={request.id} className="rounded-xl border p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
@@ -116,7 +118,9 @@ const AdminApprovalsPage = () => {
                   <div className="min-w-0 flex-1 basis-64">
                     <p className="font-medium">{request.request_type}</p>
                     <p className="text-xs text-muted-foreground">{resolveAdminUserLabel(users, request.user_id)}</p>
-                    <p className="text-xs text-muted-foreground">{new Date(request.created_at).toLocaleString("tr-TR")}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(request.created_at).toLocaleString("tr-TR")}
+                    </p>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Hedef rol: {request.target_role_key ?? "-"} • Feature: {request.target_feature_key ?? "-"}
                     </p>

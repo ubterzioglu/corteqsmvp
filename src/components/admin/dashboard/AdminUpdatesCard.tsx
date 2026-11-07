@@ -15,12 +15,7 @@
 import { Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ADMIN_UPDATES } from "@/lib/admin-shell/admin-updates";
 
 const VISIBLE_UPDATE_COUNT = 8;

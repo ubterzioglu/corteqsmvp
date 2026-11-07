@@ -55,9 +55,7 @@ function buildArtifact() {
 describe("N03 · docs/agent/admin-menu.json", () => {
   it("artefakt canlı registry ile AYNI — bayatsa bu test kırılır", async () => {
     const artifact = buildArtifact();
-    await expect(`${JSON.stringify(artifact, null, 2)}\n`).toMatchFileSnapshot(
-      "../../../docs/agent/admin-menu.json",
-    );
+    await expect(`${JSON.stringify(artifact, null, 2)}\n`).toMatchFileSnapshot("../../../docs/agent/admin-menu.json");
   });
 
   it("artefakt bot için gereken alanları taşır", () => {

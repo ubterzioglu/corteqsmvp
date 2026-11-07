@@ -275,8 +275,7 @@ describe("index.html kabuğu", () => {
 // yazar (1200x630, jpeg, ana sayfa alt metni). Sayfa kendi görselini verdiğinde bu
 // değerler yanlış kalıyordu: sosyal önizlemede kırpma + yanlış alt metin.
 describe("og:image yan etiketleri", () => {
-  const side = (selector: string) =>
-    document.head.querySelector(selector)?.getAttribute("content") ?? null;
+  const side = (selector: string) => document.head.querySelector(selector)?.getAttribute("content") ?? null;
 
   function seedShellDefaults() {
     document.head.innerHTML = `

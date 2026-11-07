@@ -7,9 +7,7 @@ import type { CatalogEntityProfileAttribute } from "@/lib/catalog-entity-api";
 
 export type CatalogAttributeDraftValue = string | boolean;
 
-export const readDraftValue = (
-  attribute: CatalogEntityProfileAttribute,
-): CatalogAttributeDraftValue => {
+export const readDraftValue = (attribute: CatalogEntityProfileAttribute): CatalogAttributeDraftValue => {
   if (attribute.data_type === "boolean") {
     return attribute.value_json === true;
   }

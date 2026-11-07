@@ -31,7 +31,8 @@ export const KADRO_ROUTINES: KadroRoutine[] = [
     freq: "Günlük",
     name: "Platform sağlık kontrolü",
     owner: "op-platform",
-    detail: "Supabase dashboard ve Vercel analytics üzerinden sistem performansı izleme, kullanıcı raporlarına ilk yanıt.",
+    detail:
+      "Supabase dashboard ve Vercel analytics üzerinden sistem performansı izleme, kullanıcı raporlarına ilk yanıt.",
   },
   {
     freq: "Haftalık",
@@ -67,7 +68,8 @@ export const KADRO_ROUTINES: KadroRoutine[] = [
     freq: "Haftalık",
     name: "Sprint review",
     owner: "tk-fullstack",
-    detail: "Ürün & teknoloji ekibinin haftalık sprint gözden geçirmesi. Teslim edilen işler, bloklar ve sonraki sprint planı.",
+    detail:
+      "Ürün & teknoloji ekibinin haftalık sprint gözden geçirmesi. Teslim edilen işler, bloklar ve sonraki sprint planı.",
   },
   {
     freq: "Haftalık",
@@ -79,13 +81,15 @@ export const KADRO_ROUTINES: KadroRoutine[] = [
     freq: "Aylık",
     name: "Şehir lansman review",
     owner: "pz-sehir",
-    detail: "Aktif şehirlerin lansman performansının aylık değerlendirmesi. Abone büyüme, içerik kalitesi ve küratör performansı.",
+    detail:
+      "Aktif şehirlerin lansman performansının aylık değerlendirmesi. Abone büyüme, içerik kalitesi ve küratör performansı.",
   },
   {
     freq: "Aylık",
     name: "İçerik performansı analizi",
     owner: "pz-analitik",
-    detail: "Tüm içerik tiplerinin aylık performans karşılaştırması. Hangi formatın hangi kitlede çalıştığının analizi.",
+    detail:
+      "Tüm içerik tiplerinin aylık performans karşılaştırması. Hangi formatın hangi kitlede çalıştığının analizi.",
   },
   {
     freq: "Aylık",
@@ -103,14 +107,13 @@ export const KADRO_ROUTINES: KadroRoutine[] = [
     freq: "Yıllık",
     name: "Yıllık strateji review",
     owner: "ld-ceo",
-    detail: "CorteQS'in yıllık stratejik hedeflerinin gözden geçirmesi. Geçen yılın sonuçları, yeni yılın öncelikleri ve kaynak planlaması.",
+    detail:
+      "CorteQS'in yıllık stratejik hedeflerinin gözden geçirmesi. Geçen yılın sonuçları, yeni yılın öncelikleri ve kaynak planlaması.",
   },
 ];
 
-export function groupRoutinesByFreq(
-  routines: KadroRoutine[],
-): Array<{ freq: string; items: KadroRoutine[] }> {
-  return KADRO_ROUTINE_FREQS
-    .map((freq) => ({ freq, items: routines.filter((r) => r.freq === freq) }))
-    .filter((group) => group.items.length > 0);
+export function groupRoutinesByFreq(routines: KadroRoutine[]): Array<{ freq: string; items: KadroRoutine[] }> {
+  return KADRO_ROUTINE_FREQS.map((freq) => ({ freq, items: routines.filter((r) => r.freq === freq) })).filter(
+    (group) => group.items.length > 0,
+  );
 }

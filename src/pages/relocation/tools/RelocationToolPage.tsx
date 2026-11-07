@@ -14,11 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
 import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
-import {
-  getSessionForResume,
-  getToolBySlug,
-  requestDiasporaIntro,
-} from "@/lib/relocation-tools-api";
+import { getSessionForResume, getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
 import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
@@ -37,7 +33,13 @@ interface SpaceDecor {
 const SPACE_DECORATIONS: SpaceDecor[] = [
   {
     emoji: "✨",
-    style: { top: "1rem", left: "6%", "--globe-size": "30px", "--globe-opacity": "0.55", "--globe-duration": "18s" } as CSSProperties,
+    style: {
+      top: "1rem",
+      left: "6%",
+      "--globe-size": "30px",
+      "--globe-opacity": "0.55",
+      "--globe-duration": "18s",
+    } as CSSProperties,
   },
   {
     emoji: "🪐",
@@ -74,10 +76,7 @@ export default function RelocationToolPage() {
   // Standalone Almanya aracı mı? Öyleyse session motorunu atla, kendi bileşenini lazy yükle.
   // Hook sırası bozulmasın diye TÜM hook'lar koşulsuz çağrılır; standalone return en sonda.
   const standalone = getStandaloneTool(toolSlug);
-  const StandaloneComponent = useMemo(
-    () => (standalone ? lazyWithReload(standalone.load) : null),
-    [standalone],
-  );
+  const StandaloneComponent = useMemo(() => (standalone ? lazyWithReload(standalone.load) : null), [standalone]);
 
   const toolQuery = useQuery({
     queryKey: relocationToolsKeys.tool(toolSlug),
@@ -106,8 +105,7 @@ export default function RelocationToolPage() {
 
   const session = useRelocationToolSession({
     toolKey: tool?.key ?? "",
-    onError: (message) =>
-      toast({ title: "Sonuç hesaplanamadı", description: message, variant: "destructive" }),
+    onError: (message) => toast({ title: "Sonuç hesaplanamadı", description: message, variant: "destructive" }),
   });
   const attachSession = session.attachSession;
 
@@ -125,11 +123,7 @@ export default function RelocationToolPage() {
   const resultId = session.result?.result_id ?? null;
   useEffect(() => {
     if (session.sessionId && !resultId && toolSlug && !routeSessionId) {
-      window.history.replaceState(
-        window.history.state,
-        "",
-        `/tools/${toolSlug}/session/${session.sessionId}`,
-      );
+      window.history.replaceState(window.history.state, "", `/tools/${toolSlug}/session/${session.sessionId}`);
     }
   }, [resultId, routeSessionId, session.sessionId, toolSlug]);
 
@@ -167,22 +161,15 @@ export default function RelocationToolPage() {
 
   if (toolQuery.isLoading || (!!routeSessionId && resumeQuery.isLoading)) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
-        {TOOLS_UI_COPY.loading}
-      </div>
+      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">{TOOLS_UI_COPY.loading}</div>
     );
   }
   if (!tool) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">
-        {TOOLS_UI_COPY.notFound}
-      </div>
+      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">{TOOLS_UI_COPY.notFound}</div>
     );
   }
-  if (
-    routeSessionId
-    && (!resumeQuery.data || resumeQuery.data.tool_key !== tool.key)
-  ) {
+  if (routeSessionId && (!resumeQuery.data || resumeQuery.data.tool_key !== tool.key)) {
     return (
       <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">
         Devam edilecek araç oturumu bulunamadı.
@@ -220,9 +207,7 @@ export default function RelocationToolPage() {
               className="mx-auto mb-5 aspect-[16/9] w-full max-w-md rounded-2xl object-cover shadow-lg ring-1 ring-white/15"
             />
           )}
-          <h1 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">
-            {tool.title_tr}
-          </h1>
+          <h1 className="font-display text-2xl font-bold tracking-tight text-white md:text-3xl">{tool.title_tr}</h1>
           <p className="mx-auto mt-2 max-w-md text-sm text-white/70">{tool.summary_tr}</p>
         </div>
       </div>
@@ -255,11 +240,13 @@ export default function RelocationToolPage() {
           initialAnswers={resumeQuery.data?.answers}
           isSubmitting={session.isRunning}
           onAnswerStart={() => setStarted(true)}
-          onAnswerChange={(questionKey, answer) => session.saveProgress({
-            mode: TOOL_SESSION_MODE,
-            questionKey,
-            answer,
-          })}
+          onAnswerChange={(questionKey, answer) =>
+            session.saveProgress({
+              mode: TOOL_SESSION_MODE,
+              questionKey,
+              answer,
+            })
+          }
           onComplete={(answers) => session.run({ mode: TOOL_SESSION_MODE, answers })}
         />
       )}

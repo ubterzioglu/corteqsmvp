@@ -32,8 +32,7 @@ const CategoryListingBanner = ({ categoryLabel }: CategoryListingBannerProps) =>
         </div>
 
         <p className="text-base md:text-lg font-semibold text-foreground leading-snug">
-          {categoryLabel} kategorisinde{" "}
-          <span className="text-gold">Founding Partner</span> olmak ister misiniz?
+          {categoryLabel} kategorisinde <span className="text-gold">Founding Partner</span> olmak ister misiniz?
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-sm md:text-base">

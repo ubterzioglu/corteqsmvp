@@ -36,25 +36,16 @@ export function MatchList({ title, matches, onRequestIntro }: MatchListProps) {
           <div key={m.key ?? idx} className="rounded-lg border border-border p-3">
             <div className="flex items-center justify-between gap-2">
               <span className="font-semibold text-foreground">{m.title ?? "Diaspora üyesi"}</span>
-              {typeof m.score === "number" && (
-                <Badge variant="secondary">{Math.round(m.score)}/100</Badge>
-              )}
+              {typeof m.score === "number" && <Badge variant="secondary">{Math.round(m.score)}/100</Badge>}
             </div>
             <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
               {m.location && <span>📍 {m.location}</span>}
               {m.profession && <span>💼 {m.profession}</span>}
-              {Array.isArray(m.languages) && m.languages.length > 0 && (
-                <span>🗣 {m.languages.join(", ")}</span>
-              )}
+              {Array.isArray(m.languages) && m.languages.length > 0 && <span>🗣 {m.languages.join(", ")}</span>}
             </div>
             {m.intro && <p className="mt-2 text-sm text-foreground">{m.intro}</p>}
             {onRequestIntro && typeof m.key === "string" && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="mt-2"
-                onClick={() => onRequestIntro(m.key as string)}
-              >
+              <Button size="sm" variant="outline" className="mt-2" onClick={() => onRequestIntro(m.key as string)}>
                 Tanışma İsteği Gönder
               </Button>
             )}

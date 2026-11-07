@@ -6,13 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { calculateSalary } from "@/lib/germany-salary/calculator";
 import {
   SALARY_STATES,
@@ -83,7 +77,9 @@ export function MaasHesaplamaPanel() {
             <div className="space-y-2">
               <Label>Dönem</Label>
               <Select value={input.period} onValueChange={(v) => set("period", v as SalaryPeriod)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="monthly">Aylık</SelectItem>
                   <SelectItem value="yearly">Yıllık</SelectItem>
@@ -93,7 +89,9 @@ export function MaasHesaplamaPanel() {
             <div className="space-y-2">
               <Label>Tür</Label>
               <Select value={input.type} onValueChange={(v) => set("type", v as SalaryDirection)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="gross">Brüt → Net</SelectItem>
                   <SelectItem value="net">Net → Brüt</SelectItem>
@@ -106,10 +104,14 @@ export function MaasHesaplamaPanel() {
             <div className="space-y-2">
               <Label>Vergi Sınıfı</Label>
               <Select value={input.taxClass} onValueChange={(v) => set("taxClass", v as SteuerklasseValue)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   {TAX_CLASSES.map((tc) => (
-                    <SelectItem key={tc.value} value={tc.value}>{tc.label}</SelectItem>
+                    <SelectItem key={tc.value} value={tc.value}>
+                      {tc.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -117,10 +119,14 @@ export function MaasHesaplamaPanel() {
             <div className="space-y-2">
               <Label>Eyalet</Label>
               <Select value={input.state} onValueChange={(v) => set("state", v)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   {SALARY_STATES.map((s) => (
-                    <SelectItem key={s.code} value={s.code}>{s.name}</SelectItem>
+                    <SelectItem key={s.code} value={s.code}>
+                      {s.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -130,7 +136,9 @@ export function MaasHesaplamaPanel() {
           <div className="space-y-2">
             <Label>Sağlık Sigortası</Label>
             <Select value={input.insuranceType} onValueChange={(v) => set("insuranceType", v as "gkv" | "pkv")}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 <SelectItem value="gkv">Kamu (GKV)</SelectItem>
                 <SelectItem value="pkv">Özel (PKV)</SelectItem>
@@ -155,11 +163,21 @@ export function MaasHesaplamaPanel() {
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="pkv">PKV Primi (€/ay)</Label>
-                <Input id="pkv" type="number" value={input.pkvPremium} onChange={(e) => set("pkvPremium", Number(e.target.value))} />
+                <Input
+                  id="pkv"
+                  type="number"
+                  value={input.pkvPremium}
+                  onChange={(e) => set("pkvPremium", Number(e.target.value))}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="ppv">PPV Primi (€/ay)</Label>
-                <Input id="ppv" type="number" value={input.ppvPremium} onChange={(e) => set("ppvPremium", Number(e.target.value))} />
+                <Input
+                  id="ppv"
+                  type="number"
+                  value={input.ppvPremium}
+                  onChange={(e) => set("ppvPremium", Number(e.target.value))}
+                />
               </div>
             </div>
           )}

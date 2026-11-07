@@ -90,9 +90,7 @@ describe("G02 · grup ekleme giriş ister (arayüz yakası)", () => {
   });
 
   it("grup ekleme sarmalayıcısı gerçekten o kapıya bağlıdır", () => {
-    expect(read(PAGE)).toContain(
-      'const ensureSignedInForGroupSubmit = () => ensureSignedIn("submit_group");',
-    );
+    expect(read(PAGE)).toContain('const ensureSignedInForGroupSubmit = () => ensureSignedIn("submit_group");');
   });
 
   it("gönderim hatası kullanıcıya gösterilir, yutulmaz", () => {

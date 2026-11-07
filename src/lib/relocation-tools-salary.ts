@@ -14,11 +14,7 @@ import {
 } from "@/lib/relocation-tools-ranking";
 
 export type SalaryDimension =
-  | "salary_level"
-  | "cost_adjusted_income"
-  | "demand_fit"
-  | "tax_social_fit"
-  | "credential_transferability";
+  "salary_level" | "cost_adjusted_income" | "demand_fit" | "tax_social_fit" | "credential_transferability";
 
 /** SQL relocation_tools.weights aynası (toplam 1.0). */
 export const SALARY_WEIGHTS: DimensionWeights = {
@@ -92,14 +88,8 @@ export function computeSalaryBreakdown(
 
   return {
     salary_level: round4(clamp01OrNeutral(row.salary_median / gmax)),
-    cost_adjusted_income: round4(
-      clamp01OrNeutral((row.salary_median * row.net_ratio) / gmax / (0.4 + cost)),
-    ),
-    demand_fit: round4(
-      clamp01OrNeutral(
-        (row.demand_index ?? 0.5) * 0.8 + negotiation * 0.1 + interviewReady * 0.1,
-      ),
-    ),
+    cost_adjusted_income: round4(clamp01OrNeutral((row.salary_median * row.net_ratio) / gmax / (0.4 + cost))),
+    demand_fit: round4(clamp01OrNeutral((row.demand_index ?? 0.5) * 0.8 + negotiation * 0.1 + interviewReady * 0.1)),
     tax_social_fit: round4(clamp01OrNeutral(row.net_ratio * 0.75 + benefits * 0.25)),
     credential_transferability: round4(credentialScore(regulated) * visaSponsorMultiplier),
   };
@@ -112,12 +102,7 @@ export function computeSalaryPowerIndex(
   regulated: string | undefined,
   extra: SalaryExtraSignals = {},
 ): number {
-  return toScore100(
-    computeWeightedScore(
-      computeSalaryBreakdown(row, globalMax, regulated, extra),
-      SALARY_WEIGHTS,
-    ),
-  );
+  return toScore100(computeWeightedScore(computeSalaryBreakdown(row, globalMax, regulated, extra), SALARY_WEIGHTS));
 }
 
 /** Power index → bucket (SQL rl_tool_resolve_bucket aynası). */

@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import CommandCenterManager from '@/components/dashboard/commandcenter/CommandCenterManager'
+import CommandCenterManager from "@/components/dashboard/commandcenter/CommandCenterManager";
 
 export default function MeetingNotesManager() {
   return (
@@ -10,5 +10,5 @@ export default function MeetingNotesManager() {
       compatibilityMessage="Bu içerik artık /commandcenter üzerinden yönetiliyor. Bu sayfa geçiş sürecinde yalnız toplantı maddelerini yeni kaynaktan gösterir."
       lockedItemType="meeting_note"
     />
-  )
+  );
 }

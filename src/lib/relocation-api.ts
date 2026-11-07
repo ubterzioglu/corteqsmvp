@@ -11,11 +11,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { toJson } from "@/lib/supabase-json";
-import type {
-  InteractionInput,
-  MoveCreateInput,
-  WizardAnswerInput,
-} from "@/lib/relocation-schemas";
+import type { InteractionInput, MoveCreateInput, WizardAnswerInput } from "@/lib/relocation-schemas";
 import type {
   RelocationEmergencyContactRow,
   RelocationLocationRecommendation,
@@ -33,7 +29,6 @@ import {
   normalizeStepRow,
 } from "@/lib/relocation-normalize";
 
-
 // ---------------------------------------------------------------------------
 // Taşınma dosyaları (mutasyon = RPC)
 // ---------------------------------------------------------------------------
@@ -44,10 +39,7 @@ export async function createMove(input: MoveCreateInput): Promise<{ move_id: str
   return data as { move_id: string };
 }
 
-export async function updateMove(
-  moveId: string,
-  patch: Partial<MoveCreateInput>,
-): Promise<void> {
+export async function updateMove(moveId: string, patch: Partial<MoveCreateInput>): Promise<void> {
   const { error } = await supabase.rpc("relocation_update_move", {
     p_move_id: moveId,
     p_patch: patch,
@@ -55,10 +47,7 @@ export async function updateMove(
   if (error) throw error;
 }
 
-export async function saveWizardAnswers(
-  moveId: string,
-  answer: WizardAnswerInput,
-): Promise<void> {
+export async function saveWizardAnswers(moveId: string, answer: WizardAnswerInput): Promise<void> {
   const { error } = await supabase.rpc("relocation_save_wizard", {
     p_move_id: moveId,
     p_payload: toJson(answer),
@@ -86,21 +75,14 @@ export async function listMoves(): Promise<RelocationMoveRow[]> {
 }
 
 export async function getMove(moveId: string): Promise<RelocationMoveRow> {
-  const { data, error } = await supabase
-    .from("relocation_moves")
-    .select("*")
-    .eq("id", moveId)
-    .single();
+  const { data, error } = await supabase.from("relocation_moves").select("*").eq("id", moveId).single();
   if (error) throw error;
   return normalizeMoveRow(data);
 }
 
 /** Aktif taşınma lokasyonlarında bulunan benzersiz hedef ülke kodları. */
 export async function listActiveRelocationCountryCodes(): Promise<string[]> {
-  const { data, error } = await supabase
-    .from("relocation_locations")
-    .select("country_code")
-    .eq("is_active", true);
+  const { data, error } = await supabase.from("relocation_locations").select("country_code").eq("is_active", true);
   if (error) throw error;
 
   return Array.from(
@@ -116,9 +98,7 @@ export async function listActiveRelocationCountryCodes(): Promise<string[]> {
 // Öneriler (RPC — kural skoru + açıklamalar DB'de hesaplanır)
 // ---------------------------------------------------------------------------
 
-export async function getCityRecommendations(
-  moveId: string,
-): Promise<RelocationLocationRecommendation[]> {
+export async function getCityRecommendations(moveId: string): Promise<RelocationLocationRecommendation[]> {
   const { data, error } = await supabase.rpc("relocation_rank_locations_v1", { p_move_id: moveId });
   if (error) throw error;
   // Canlı RPC `explanations` döndürmüyordu (2026-09-25 öncesi) → şehir kartı çöküyordu.
@@ -176,5 +156,3 @@ export async function recordInteraction(input: InteractionInput): Promise<void> 
   const { error } = await supabase.rpc("relocation_record_interaction", { p_payload: toJson(input) });
   if (error) throw error;
 }
-
-

@@ -95,9 +95,7 @@ describe("G19 · sahiplik rozeti mantığı", () => {
 
   it("unclaimed / claim_pending / bilinmeyen → Üye önerisi (varsayılan güvenli taraf)", () => {
     for (const ownership of ["unclaimed", "claim_pending", undefined] as const) {
-      expect(getOwnershipStatusMeta(landing({ ownership }))).toEqual(
-        expect.objectContaining({ label: "Üye önerisi" }),
-      );
+      expect(getOwnershipStatusMeta(landing({ ownership }))).toEqual(expect.objectContaining({ label: "Üye önerisi" }));
     }
   });
 
@@ -120,9 +118,7 @@ describe("G19 · politika §5: filtreler ve kartlar aynı listeyi kullanır", ()
 
   it("değerler ve etiketler birebir aynı küme/sırada", () => {
     expect(categoryOptions.map((o) => o.value)).toEqual(Object.keys(categoryMeta));
-    expect(categoryOptions.map((o) => o.label)).toEqual(
-      Object.values(categoryMeta).map((meta) => meta.label),
-    );
+    expect(categoryOptions.map((o) => o.label)).toEqual(Object.values(categoryMeta).map((meta) => meta.label));
   });
 
   it("CommunityFilters ve LandingCard AYNI kaynaktan besleniyor", () => {

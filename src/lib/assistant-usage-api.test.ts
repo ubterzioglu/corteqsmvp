@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  getGeminiQuotaAlert,
-  summarizeAssistantUsage,
-  type AssistantUsageRow,
-} from "@/lib/assistant-usage-api";
+import { getGeminiQuotaAlert, summarizeAssistantUsage, type AssistantUsageRow } from "@/lib/assistant-usage-api";
 
 function usage(overrides: Partial<AssistantUsageRow> = {}): AssistantUsageRow {
   return {

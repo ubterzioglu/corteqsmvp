@@ -536,7 +536,8 @@ export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
     id: "20261003-sade-gunun-ozeti",
     date: "3 Ekim 2026",
-    title: "3 Ekim, sade dille: Tavsiye İste, davet sistemi, etkinlik kuralları, kurumsal doğrulama ve yeni yönetici panoları",
+    title:
+      "3 Ekim, sade dille: Tavsiye İste, davet sistemi, etkinlik kuralları, kurumsal doğrulama ve yeni yönetici panoları",
     items: [
       "KISACA: Bugün üyelerin kullanacağı beş yeni özellik geldi (Tavsiye İste, davet ve liderlik tablosu, etkinliklerde yeni kurallar, Cadde’de paylaşım düzenleme, profilde başlangıç kartları), kurumsal doğrulamanın başvuru ve inceleme tarafı yapıldı ve yönetici paneline iki yeni bölüm eklendi. Kayıtların çoğunda “yayın bekliyor” yazıyor; veritabanı tarafı canlıda, ekranlar bir sonraki yayında görünür olacak şekilde yazılmıştı.",
       "TAVSİYE İSTE (/tavsiye): Üyeler “Dortmund’da güvenilir terzi” gibi bir tavsiye talebi açar, topluluk ve eşleşen uzmanlar yanıtlar. Talep listesini giriş yapmayan ziyaretçi de okuyabilir; talep açmak ve yanıtlamak giriş ister. Uzmanlar kategori, şehir ve ülkeye göre sıralanır; kısmi eşleşenler elenmez, daha alt sırada kalır. Uzmanların iletişim bilgisi bu listede gösterilmez.",
@@ -653,7 +654,8 @@ export const ADMIN_UPDATES_2026_10: AdminUpdateEntry[] = [
   {
     id: "20261003-profil-baslangic-kartlari",
     date: "3 Ekim 2026",
-    title: "Profilin ilk ekranına üç yeni kart geldi — hızlı işlemler, başlangıç adımları ve “yakında” vitrini (deploy kuyruğunda)",
+    title:
+      "Profilin ilk ekranına üç yeni kart geldi — hızlı işlemler, başlangıç adımları ve “yakında” vitrini (deploy kuyruğunda)",
     items: [
       "HIZLI İŞLEMLER: Profilin ilk ekranında (tüm rollerde) kısayol kartı: “Etkinlik oluştur” ve “Grup ekle”. Listeye “Davet et” ve “Tavsiye iste” kendi modülleri geldiğinde eklenecek — çalışan rotası olmayan düğme konmuyor.",
       "BAŞLANGIÇ ADIMLARI: Dört satırlık ilerleme kartı — profilini tamamla (zorunlu alan sayın gerçek kayıtlardan), ilk hizmet/ürününü ekle (Çarşı ilanların), ilk etkinliğini oluştur, 3 arkadaşını davet et. Tamamlanma GERÇEK veriden okunuyor; davet satırı sistem gelene kadar “yakında” diye PASİF duruyor — sahte tik yok.",

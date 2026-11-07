@@ -108,8 +108,8 @@ const CaddeReachCard = () => {
           <p className="text-[11px] leading-relaxed text-slate-700">
             {gateOpen ? (
               <>
-                Paylaşımın şu an{" "}
-                <span className="font-semibold text-slate-900">{effectiveTotal} üyenin tamamına</span> ulaşabilir.
+                Paylaşımın şu an <span className="font-semibold text-slate-900">{effectiveTotal} üyenin tamamına</span>{" "}
+                ulaşabilir.
               </>
             ) : (
               <>

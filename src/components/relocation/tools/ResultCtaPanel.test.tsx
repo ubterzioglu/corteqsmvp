@@ -52,10 +52,7 @@ describe("ResultCtaPanel", () => {
       "href",
       "/tools/sehir-eslestirme",
     );
-    expect(screen.getByText("Bu Ülkedeki Üyeleri Gör").closest("a")).toHaveAttribute(
-      "href",
-      "/directory",
-    );
+    expect(screen.getByText("Bu Ülkedeki Üyeleri Gör").closest("a")).toHaveAttribute("href", "/directory");
     expect(screen.getByText("İlk 90 Gün Planlayıcı").closest("a")).toHaveAttribute(
       "href",
       "/tools/ilk-90-gun-planlayici",

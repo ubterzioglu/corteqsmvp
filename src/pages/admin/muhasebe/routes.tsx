@@ -13,24 +13,20 @@
 //     {muhasebeRoutes}                     {/* <-- buraya ekle */}
 //   </Route>
 
-import { Route } from 'react-router-dom';
-import { Suspense } from 'react';
-import { lazyWithReload } from '@/lib/lazy-with-reload';
+import { Route } from "react-router-dom";
+import { Suspense } from "react";
+import { lazyWithReload } from "@/lib/lazy-with-reload";
 
 // Code-splitting: muhasebe sayfaları ihtiyaç anında yüklensin
-const MuhasebeLayout    = lazyWithReload(() => import('./MuhasebeLayout'));
-const MuhasebeDashboard = lazyWithReload(() => import('./MuhasebeDashboard'));
-const GiderlerPage      = lazyWithReload(() => import('./GiderlerPage'));
-const GelirlerPage      = lazyWithReload(() => import('./GelirlerPage'));
-const NakitAkisiPage    = lazyWithReload(() => import('./NakitAkisiPage'));
-const ButcePage         = lazyWithReload(() => import('./butce/ButcePage'));
+const MuhasebeLayout = lazyWithReload(() => import("./MuhasebeLayout"));
+const MuhasebeDashboard = lazyWithReload(() => import("./MuhasebeDashboard"));
+const GiderlerPage = lazyWithReload(() => import("./GiderlerPage"));
+const GelirlerPage = lazyWithReload(() => import("./GelirlerPage"));
+const NakitAkisiPage = lazyWithReload(() => import("./NakitAkisiPage"));
+const ButcePage = lazyWithReload(() => import("./butce/ButcePage"));
 
 function PageFallback() {
-  return (
-    <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
-      Yükleniyor...
-    </div>
-  );
+  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
 }
 
 // Re-usable route subtree. Parent route (AdminLayout) must also guard via auth.

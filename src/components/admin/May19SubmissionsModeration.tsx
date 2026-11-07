@@ -53,19 +53,20 @@ export default function May19SubmissionsModeration({ kind }: May19SubmissionsMod
   const [notesById, setNotesById] = useState<Record<string, string>>({});
   const meta = kindMeta[kind];
 
-  const load = useCallback(async (status: May19SubmissionStatus) => {
-    setLoading(true);
+  const load = useCallback(
+    async (status: May19SubmissionStatus) => {
+      setLoading(true);
 
-    try {
-      const nextRows = await listMay19CampaignEntries(kind, status);
-      setRows(nextRows);
-      setNotesById(
-        Object.fromEntries(nextRows.map((row) => [row.id, row.review_notes ?? ""])),
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [kind]);
+      try {
+        const nextRows = await listMay19CampaignEntries(kind, status);
+        setRows(nextRows);
+        setNotesById(Object.fromEntries(nextRows.map((row) => [row.id, row.review_notes ?? ""])));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [kind],
+  );
 
   useEffect(() => {
     void load(tab);
@@ -240,7 +241,9 @@ export default function May19SubmissionsModeration({ kind }: May19SubmissionsMod
                     <div className="grid gap-2 rounded-xl bg-slate-50 p-3 text-sm text-slate-700 md:grid-cols-2">
                       {row.message ? (
                         <p className="md:col-span-2">
-                          <span className="font-semibold text-slate-800">{kind === "idea" ? "Güçlendirme Notu" : "Ek Mesaj"}:</span>{" "}
+                          <span className="font-semibold text-slate-800">
+                            {kind === "idea" ? "Güçlendirme Notu" : "Ek Mesaj"}:
+                          </span>{" "}
                           {row.message}
                         </p>
                       ) : null}
@@ -274,9 +277,7 @@ export default function May19SubmissionsModeration({ kind }: May19SubmissionsMod
                     <Textarea
                       rows={2}
                       value={notesById[row.id] ?? ""}
-                      onChange={(event) =>
-                        setNotesById((current) => ({ ...current, [row.id]: event.target.value }))
-                      }
+                      onChange={(event) => setNotesById((current) => ({ ...current, [row.id]: event.target.value }))}
                       placeholder="İç ekip notu, gerekçe veya yayın kararı..."
                     />
                   </div>

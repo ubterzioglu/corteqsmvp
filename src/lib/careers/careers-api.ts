@@ -120,8 +120,11 @@ export type CareerApplicationPaths = {
  * yol ayracı, `..` dizisi ve görünmez karakterleri temizler. Kovanın INSERT
  * politikası da aynı deseni ayrıca denetler (ikinci savunma).
  */
-export const careerStorageKey = (applicationId: string, kind: "cv" | "cover-letter" | "presentation", fileName: string) =>
-  `${applicationId}/${kind}-${safeStorageFileName(fileName)}`;
+export const careerStorageKey = (
+  applicationId: string,
+  kind: "cv" | "cover-letter" | "presentation",
+  fileName: string,
+) => `${applicationId}/${kind}-${safeStorageFileName(fileName)}`;
 
 export async function uploadCareerFiles(
   applicationId: string,
@@ -188,5 +191,3 @@ export async function submitCareerApplication(
   if (error) throw error;
   return String(data ?? applicationId);
 }
-
-

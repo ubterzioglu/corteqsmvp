@@ -31,17 +31,10 @@ type AdminCommandPaletteProps = {
 
 /** cmdk filtrelemesi için aranabilir değer: label + alias + grup + kısa ad. */
 function searchValue(item: AdminNavItem, groupLabel: string): string {
-  return [item.label, item.shortLabel ?? "", groupLabel, ...(item.aliases ?? [])]
-    .filter(Boolean)
-    .join(" ");
+  return [item.label, item.shortLabel ?? "", groupLabel, ...(item.aliases ?? [])].filter(Boolean).join(" ");
 }
 
-const AdminCommandPalette = ({
-  open,
-  onOpenChange,
-  recentPages,
-  favoriteEntries,
-}: AdminCommandPaletteProps) => {
+const AdminCommandPalette = ({ open, onOpenChange, recentPages, favoriteEntries }: AdminCommandPaletteProps) => {
   const navigate = useNavigate();
 
   const close = () => onOpenChange(false);
@@ -85,9 +78,7 @@ const AdminCommandPalette = ({
         {/* Sidebar ile aynı gerekçe: ayırıcı olmadan ad "2Kayıt Veritabanı" olur. */}
         <span className="sr-only">. </span>
         <span>{item.label}</span>
-        {item.description && (
-          <span className="ml-2 truncate text-xs text-muted-foreground">{item.description}</span>
-        )}
+        {item.description && <span className="ml-2 truncate text-xs text-muted-foreground">{item.description}</span>}
       </CommandItem>
     );
   };

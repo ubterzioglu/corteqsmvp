@@ -74,7 +74,11 @@ export async function listCaddeInterestCatalog(): Promise<CaddeInterest[]> {
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
     if (error) throw error;
-    return (data as CaddeInterestRow[]).map((row) => ({ key: row.key, labelTr: row.label_tr, sortOrder: row.sort_order }));
+    return (data as CaddeInterestRow[]).map((row) => ({
+      key: row.key,
+      labelTr: row.label_tr,
+      sortOrder: row.sort_order,
+    }));
   } catch (error: unknown) {
     // Seçilebilir ilgi alanı SÖZLÜĞÜ (kullanıcının kendi seçimi değil). BİLEREK boş döner: form seçenek göstermez ama mevcut seçimleri SİLMEZ.
     reportCaddeApiError("listCaddeInterestCatalog", error);
@@ -107,7 +111,9 @@ export async function saveMyCaddeInterests(userId: string, interestKeys: string[
     if (error) throw caddeWriteError("saveMyCaddeInterests", error);
   }
   if (toAdd.length > 0) {
-    const { error } = await db.from("user_cadde_interests").insert(toAdd.map((key) => ({ user_id: userId, interest_key: key })));
+    const { error } = await db
+      .from("user_cadde_interests")
+      .insert(toAdd.map((key) => ({ user_id: userId, interest_key: key })));
     if (error) throw caddeWriteError("saveMyCaddeInterests", error);
   }
 }

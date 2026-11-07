@@ -27,19 +27,13 @@ export function ServiceRecommendationCard({ service }: ServiceRecommendationCard
       <CardContent className="flex items-start justify-between gap-3 pt-4">
         <div className="min-w-0 space-y-1">
           <div className="flex items-center gap-2">
-            <span className="truncate text-sm font-semibold text-foreground">
-              {service.provider_name}
-            </span>
+            <span className="truncate text-sm font-semibold text-foreground">{service.provider_name}</span>
             <Badge variant="outline" className="shrink-0 text-xs">
               {Math.round(trustScore * 100)}% güven
             </Badge>
           </div>
-          {service.plan_name && (
-            <p className="text-xs text-muted-foreground">{service.plan_name}</p>
-          )}
-          {languages.length > 0 && (
-            <p className="text-xs text-muted-foreground">{languages.join(", ")}</p>
-          )}
+          {service.plan_name && <p className="text-xs text-muted-foreground">{service.plan_name}</p>}
+          {languages.length > 0 && <p className="text-xs text-muted-foreground">{languages.join(", ")}</p>}
         </div>
         <div className="flex shrink-0 flex-col items-end gap-1">
           {price && <span className="text-sm font-medium text-foreground">{price}</span>}

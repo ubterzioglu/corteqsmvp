@@ -1,34 +1,15 @@
 // src/pages/admin/muhasebe/GelirlerPage.tsx
 // Gelir kayıtları listesi — arama, filtre, CRUD
 
-import { useMemo, useState } from 'react';
-import { trIncludes } from '@/lib/text-normalization';
-import { Plus, Pencil, Trash2, ExternalLink, Search } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { trIncludes } from "@/lib/text-normalization";
+import { Plus, Pencil, Trash2, ExternalLink, Search } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,34 +19,24 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
-import { IncomeFormDialog } from '@/components/admin/muhasebe/IncomeFormDialog';
-import { StatusBadge } from '@/components/admin/muhasebe/StatusBadge';
+import { IncomeFormDialog } from "@/components/admin/muhasebe/IncomeFormDialog";
+import { StatusBadge } from "@/components/admin/muhasebe/StatusBadge";
 
-import {
-  useIncomes,
-  useCreateIncome,
-  useUpdateIncome,
-  useDeleteIncome,
-} from '@/hooks/useMuhasebe';
-import { aggregateCurrencyTotals } from '@/lib/muhasebe-aggregations';
-import {
-  formatCurrency,
-  formatCurrencySummary,
-  formatDateTR,
-  safeMuhasebeHref,
-} from '@/lib/muhasebe-format';
+import { useIncomes, useCreateIncome, useUpdateIncome, useDeleteIncome } from "@/hooks/useMuhasebe";
+import { aggregateCurrencyTotals } from "@/lib/muhasebe-aggregations";
+import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe-format";
 import {
   INCOME_CATEGORY_LABELS,
   INCOME_STATUS_LABELS,
   type IncomeCategory,
   type IncomeRow,
   type IncomeStatus,
-} from '@/types/muhasebe';
+} from "@/types/muhasebe";
 
-type StatusFilter = 'all' | IncomeStatus;
-type CategoryFilter = 'all' | IncomeCategory;
+type StatusFilter = "all" | IncomeStatus;
+type CategoryFilter = "all" | IncomeCategory;
 
 export default function GelirlerPage() {
   const { data: incomes = [], isLoading } = useIncomes();
@@ -73,9 +44,9 @@ export default function GelirlerPage() {
   const updateMut = useUpdateIncome();
   const deleteMut = useDeleteIncome();
 
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
-  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<IncomeRow | null>(null);
@@ -83,8 +54,8 @@ export default function GelirlerPage() {
 
   const filtered = useMemo(() => {
     return incomes.filter((e) => {
-      if (statusFilter !== 'all' && e.status !== statusFilter) return false;
-      if (categoryFilter !== 'all' && e.category !== categoryFilter) return false;
+      if (statusFilter !== "all" && e.status !== statusFilter) return false;
+      if (categoryFilter !== "all" && e.category !== categoryFilter) return false;
       if (!search.trim()) return true;
       return (
         trIncludes(e.description, search) ||
@@ -112,9 +83,7 @@ export default function GelirlerPage() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Gelirler</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Şirket kurulana kadar geçici muhasebe kaydı
-          </p>
+          <p className="text-sm text-muted-foreground mt-1">Şirket kurulana kadar geçici muhasebe kaydı</p>
         </div>
         <Button onClick={handleNew}>
           <Plus className="mr-2 h-4 w-4" />
@@ -133,37 +102,24 @@ export default function GelirlerPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Ara..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
-              />
+              <Input placeholder="Ara..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
             </div>
 
-            <Select
-              value={categoryFilter}
-              onValueChange={(v) => setCategoryFilter(v as CategoryFilter)}
-            >
+            <Select value={categoryFilter} onValueChange={(v) => setCategoryFilter(v as CategoryFilter)}>
               <SelectTrigger>
                 <SelectValue placeholder="Kategori" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tüm Kategoriler</SelectItem>
-                {(Object.keys(INCOME_CATEGORY_LABELS) as IncomeCategory[]).map(
-                  (c) => (
-                    <SelectItem key={c} value={c}>
-                      {INCOME_CATEGORY_LABELS[c]}
-                    </SelectItem>
-                  ),
-                )}
+                {(Object.keys(INCOME_CATEGORY_LABELS) as IncomeCategory[]).map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {INCOME_CATEGORY_LABELS[c]}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
-            <Select
-              value={statusFilter}
-              onValueChange={(v) => setStatusFilter(v as StatusFilter)}
-            >
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as StatusFilter)}>
               <SelectTrigger>
                 <SelectValue placeholder="Durum" />
               </SelectTrigger>
@@ -212,13 +168,9 @@ export default function GelirlerPage() {
                 ) : (
                   filtered.map((row) => (
                     <TableRow key={row.id}>
-                      <TableCell className="whitespace-nowrap">
-                        {formatDateTR(row.income_date)}
-                      </TableCell>
+                      <TableCell className="whitespace-nowrap">{formatDateTR(row.income_date)}</TableCell>
                       <TableCell className="font-medium">{row.source}</TableCell>
-                      <TableCell className="text-sm">
-                        {INCOME_CATEGORY_LABELS[row.category]}
-                      </TableCell>
+                      <TableCell className="text-sm">{INCOME_CATEGORY_LABELS[row.category]}</TableCell>
                       <TableCell className="max-w-xs">
                         <span className="line-clamp-2">{row.description}</span>
                       </TableCell>
@@ -245,12 +197,7 @@ export default function GelirlerPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => handleEdit(row)}
-                            aria-label="Düzenle"
-                          >
+                          <Button variant="ghost" size="icon" onClick={() => handleEdit(row)} aria-label="Düzenle">
                             <Pencil className="h-4 w-4" />
                           </Button>
                           <Button
@@ -289,16 +236,12 @@ export default function GelirlerPage() {
         }}
       />
 
-      <AlertDialog
-        open={Boolean(deleteTarget)}
-        onOpenChange={(open) => !open && setDeleteTarget(null)}
-      >
+      <AlertDialog open={Boolean(deleteTarget)} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Gelir kaydını sil?</AlertDialogTitle>
             <AlertDialogDescription>
-              "{deleteTarget?.description}" kaydı kalıcı olarak silinecek. Bu işlem
-              geri alınamaz.
+              "{deleteTarget?.description}" kaydı kalıcı olarak silinecek. Bu işlem geri alınamaz.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

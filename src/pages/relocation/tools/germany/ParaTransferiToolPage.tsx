@@ -79,10 +79,7 @@ export default function ParaTransferiToolPage() {
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
                 {p.features.map((f) => (
-                  <span
-                    key={f}
-                    className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground"
-                  >
+                  <span key={f} className="rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
                     {f}
                   </span>
                 ))}
@@ -94,8 +91,8 @@ export default function ParaTransferiToolPage() {
 
       {best && (
         <p className="mt-4 text-xs text-muted-foreground">
-          ⚠️ Kur ve ücretler örnek/bilgilendirme amaçlıdır; transferden önce sağlayıcının güncel kur ve
-          ücretini kontrol et. Nakit teslim, limit ve kampanyalar yönteme göre değişir.
+          ⚠️ Kur ve ücretler örnek/bilgilendirme amaçlıdır; transferden önce sağlayıcının güncel kur ve ücretini kontrol
+          et. Nakit teslim, limit ve kampanyalar yönteme göre değişir.
           <Button variant="ghost" className="ml-2" onClick={() => setAmount(1000)}>
             Sıfırla
           </Button>

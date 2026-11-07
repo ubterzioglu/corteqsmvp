@@ -23,10 +23,7 @@ describe("AccordionCard", () => {
     expect(screen.queryByText("birinci içerik")).not.toBeInTheDocument();
     expect(screen.queryByText("ikinci içerik")).not.toBeInTheDocument();
     // Başlıklar görünür kalır; kapalı olan yalnız içeriktir.
-    expect(screen.getByRole("button", { name: /Birinci Bölüm/ })).toHaveAttribute(
-      "aria-expanded",
-      "false",
-    );
+    expect(screen.getByRole("button", { name: /Birinci Bölüm/ })).toHaveAttribute("aria-expanded", "false");
   });
 
   it("defaultOpenId verilirse yalnız o bölüm açılır", () => {

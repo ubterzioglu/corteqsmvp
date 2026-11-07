@@ -34,8 +34,7 @@ function fakeSupabase(options: {
         updates.push(payload);
         const updChain = {
           eq: () => updChain,
-          then: (resolve: (v: unknown) => unknown) =>
-            resolve({ error: options.updateError ?? null }),
+          then: (resolve: (v: unknown) => unknown) => resolve({ error: options.updateError ?? null }),
         };
         return updChain;
       },

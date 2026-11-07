@@ -67,10 +67,7 @@ const DiasporaNetworkLayer = ({ density = "full", className }: DiasporaNetworkLa
   const nodes = density === "reduced" ? NODES.slice(0, REDUCED_NODE_COUNT) : NODES;
   const links =
     density === "reduced"
-      ? LINKS.filter(([a, b]) => a < REDUCED_NODE_COUNT && b < REDUCED_NODE_COUNT).slice(
-          0,
-          REDUCED_LINK_COUNT,
-        )
+      ? LINKS.filter(([a, b]) => a < REDUCED_NODE_COUNT && b < REDUCED_NODE_COUNT).slice(0, REDUCED_LINK_COUNT)
       : LINKS;
 
   return (

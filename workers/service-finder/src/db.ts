@@ -1,13 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 import type { WorkerEnv } from "./env.js";
-import type {
-  CandidateResult,
-  JobSourceRow,
-  ProfessionTemplate,
-  ProviderConfig,
-  ServiceFinderJob,
-} from "./schemas.js";
+import type { CandidateResult, JobSourceRow, ProfessionTemplate, ProviderConfig, ServiceFinderJob } from "./schemas.js";
 
 /**
  * Worker DB katmanı. Durum geçişleri worker_* RPC'leri üzerinden (atomik),
@@ -153,11 +147,7 @@ export async function loadProviderConfigs(db: Db): Promise<ProviderConfig[]> {
 
 export async function loadTemplate(db: Db, templateId: string | null): Promise<ProfessionTemplate | null> {
   if (!templateId) return null;
-  const result = await db
-    .from("service_finder_profession_templates")
-    .select("*")
-    .eq("id", templateId)
-    .maybeSingle();
+  const result = await db.from("service_finder_profession_templates").select("*").eq("id", templateId).maybeSingle();
   if (result.error) throw new Error(`loadTemplate: ${result.error.message}`);
   return (result.data as ProfessionTemplate | null) ?? null;
 }
@@ -224,7 +214,9 @@ export async function loadSourcesByStatus(
 ): Promise<JobSourceRow[]> {
   const result = await db
     .from("service_finder_job_sources")
-    .select("id, job_id, source_url, normalized_url, source_domain, source_title, source_snippet, fetch_status, extracted_text")
+    .select(
+      "id, job_id, source_url, normalized_url, source_domain, source_title, source_snippet, fetch_status, extracted_text",
+    )
     .eq("job_id", jobId)
     .eq("fetch_status", fetchStatus)
     .order("created_at", { ascending: true })
@@ -233,11 +225,7 @@ export async function loadSourcesByStatus(
   return (result.data ?? []) as JobSourceRow[];
 }
 
-export async function updateSource(
-  db: Db,
-  sourceId: string,
-  patch: Record<string, unknown>,
-): Promise<void> {
+export async function updateSource(db: Db, sourceId: string, patch: Record<string, unknown>): Promise<void> {
   const result = await db.from("service_finder_job_sources").update(patch).eq("id", sourceId);
   if (result.error) throw new Error(`updateSource: ${result.error.message}`);
 }

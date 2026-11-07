@@ -47,9 +47,7 @@ export function formatCostAmount(amount: number | null, currency: string): strin
  * İkisi de yoksa "—" döner — burada UYDURMA yapılmaz; referans uygulama veri
  * bulunmayan ülkede sessizce Almanya rakamını gösteriyordu, o kusuru taşımıyoruz.
  */
-export function formatCostRange(
-  row: Pick<RelocationLivingCostRow, "amount_min" | "amount_max" | "currency">,
-): string {
+export function formatCostRange(row: Pick<RelocationLivingCostRow, "amount_min" | "amount_max" | "currency">): string {
   const { amount_min: min, amount_max: max, currency } = row;
   if (min === null && max === null) return "—";
   if (min !== null && max === null) return formatCostAmount(min, currency);
@@ -178,9 +176,7 @@ export function sumMonthlyCosts(
  * Kategori adları Türkçe serbest metindir — sıralama `trCompare` ile yapılır,
  * `localeCompare` varsayılanı Türkçe'de yanlış sonuç verir (CLAUDE.md md.1).
  */
-export function groupDocumentsByCategory(
-  rows: RelocationRequiredDocumentRow[],
-): RelocationDocumentGroup[] {
+export function groupDocumentsByCategory(rows: RelocationRequiredDocumentRow[]): RelocationDocumentGroup[] {
   const byCategory = new Map<string, RelocationRequiredDocumentRow[]>();
   for (const row of rows) {
     const list = byCategory.get(row.category);
@@ -241,6 +237,9 @@ export function convertCostAmount(
 
 /** Kurların ait olduğu en eski an — "bu karşılık ne kadar taze" sorusunun cevabı. */
 export function oldestRateAt(rates: RelocationFxRateRow[]): string | null {
-  const times = rates.map((r) => r.rate_at).filter(Boolean).sort();
+  const times = rates
+    .map((r) => r.rate_at)
+    .filter(Boolean)
+    .sort();
   return times[0] ?? null;
 }

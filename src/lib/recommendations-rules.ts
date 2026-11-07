@@ -28,8 +28,7 @@ export const RECOMMENDATION_MATCH_DEFAULT_LIMIT = 25;
 export const RECOMMENDATION_RPC_ERROR_MESSAGES: Record<string, string> = {
   // M17 — create_recommendation_request_v1 + answer_recommendation_v1
   recommendation_auth_required: "Bu işlem için giriş yapmalısın.",
-  recommendation_banned:
-    "Hesabın bu işlem için kısıtlanmış. Destek ekibiyle iletişime geçebilirsin.",
+  recommendation_banned: "Hesabın bu işlem için kısıtlanmış. Destek ekibiyle iletişime geçebilirsin.",
   recommendation_invalid_diaspora: "Geçersiz diaspora anahtarı.",
   recommendation_invalid_title: `Başlık zorunlu ve en fazla ${RECOMMENDATION_TITLE_MAX} karakter olmalı.`,
   recommendation_invalid_body: `Açıklama zorunlu ve en fazla ${RECOMMENDATION_BODY_MAX} karakter olmalı.`,
@@ -54,10 +53,7 @@ const RECOMMENDATION_GENERIC_ERROR = "İşlem tamamlanamadı. Lütfen tekrar den
  * ⚠️ Supabase RPC hataları **düz nesnedir, `Error` örneği DEĞİLDİR** — tip
  * daraltması (instanceof) bu haritayı ölü bırakır, kullanıcı `[object Object]` görür.
  */
-export function resolveRecommendationRpcErrorMessage(
-  error: unknown,
-  fallback = RECOMMENDATION_GENERIC_ERROR,
-): string {
+export function resolveRecommendationRpcErrorMessage(error: unknown, fallback = RECOMMENDATION_GENERIC_ERROR): string {
   const candidates: string[] = [];
   if (error && typeof error === "object") {
     const record = error as Record<string, unknown>;

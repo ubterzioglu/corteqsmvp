@@ -27,9 +27,7 @@ type UnknownRecord = Record<string, unknown>;
 const SCORE_KEYS = Object.keys(RELOCATION_RANK_WEIGHTS) as RelocationScoreKey[];
 
 function asRecord(value: unknown): UnknownRecord {
-  return value !== null && typeof value === "object" && !Array.isArray(value)
-    ? (value as UnknownRecord)
-    : {};
+  return value !== null && typeof value === "object" && !Array.isArray(value) ? (value as UnknownRecord) : {};
 }
 
 /** Dizi değilse `[]`; dizideki boş/metin olmayan öğeler elenir. */
@@ -58,9 +56,7 @@ export function normalizeScoreBreakdown(value: unknown): Record<RelocationScoreK
   );
 }
 
-export function normalizeLocationRecommendation(
-  value: unknown,
-): RelocationLocationRecommendation {
+export function normalizeLocationRecommendation(value: unknown): RelocationLocationRecommendation {
   const raw = asRecord(value);
   const quality = asRecord(raw.source_quality);
   const ruleScore = toFiniteNumber(raw.rule_score, 0);
@@ -116,8 +112,7 @@ function normalizeHousehold(value: unknown): RelocationHousehold {
     ...(raw as Partial<RelocationHousehold>),
     adults: toFiniteNumber(raw.adults, 1),
     pets: raw.pets === undefined ? undefined : toStringArray(raw.pets),
-    accessibility_needs:
-      raw.accessibility_needs === undefined ? undefined : toStringArray(raw.accessibility_needs),
+    accessibility_needs: raw.accessibility_needs === undefined ? undefined : toStringArray(raw.accessibility_needs),
   };
 }
 

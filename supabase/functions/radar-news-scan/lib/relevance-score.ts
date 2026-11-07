@@ -12,30 +12,55 @@ export type ScoringKeyword = {
 };
 
 const STRONG_DIASPORA_KEYWORDS = [
-  "türk diasporası", "turkish diaspora", "türkische diaspora",
-  "yurt dışında türkler", "diaspora turca",
+  "türk diasporası",
+  "turkish diaspora",
+  "türkische diaspora",
+  "yurt dışında türkler",
+  "diaspora turca",
 ];
 
 const GERMANY_COMMUNITY_KEYWORDS = [
-  "almanya türkler", "türken in deutschland", "turkish community germany",
-  "türk toplumu almanya", "türkische community", "türkische gemeinde",
+  "almanya türkler",
+  "türken in deutschland",
+  "turkish community germany",
+  "türk toplumu almanya",
+  "türkische community",
+  "türkische gemeinde",
 ];
 
 const LEGAL_IMMIGRATION_KEYWORDS = [
-  "oturum izni", "aufenthaltsrecht", "aufenthaltstitel", "residence permit",
-  "einbürgerung", "vatandaşlık almanya", "doppelte staatsbürgerschaft",
-  "çifte vatandaşlık", "german citizenship", "citizenship reform",
+  "oturum izni",
+  "aufenthaltsrecht",
+  "aufenthaltstitel",
+  "residence permit",
+  "einbürgerung",
+  "vatandaşlık almanya",
+  "doppelte staatsbürgerschaft",
+  "çifte vatandaşlık",
+  "german citizenship",
+  "citizenship reform",
 ];
 
 const BUSINESS_KEYWORDS = [
-  "türk girişimci", "türkische unternehmer", "turkish entrepreneur",
-  "türk işletme", "fachkräfteeinwanderung",
+  "türk girişimci",
+  "türkische unternehmer",
+  "turkish entrepreneur",
+  "türk işletme",
+  "fachkräfteeinwanderung",
 ];
 
 const NEGATIVE_KEYWORDS = [
-  "spor haberleri", "maç sonucu", "gol attı", "şampiyon",
-  "erotik", "pornografi", "casino", "bahis sitesi",
-  "tıkla kazan", "çekiliş katıl", "ücretsiz iphone",
+  "spor haberleri",
+  "maç sonucu",
+  "gol attı",
+  "şampiyon",
+  "erotik",
+  "pornografi",
+  "casino",
+  "bahis sitesi",
+  "tıkla kazan",
+  "çekiliş katıl",
+  "ücretsiz iphone",
 ];
 
 const CLICKBAIT_PATTERNS = [
@@ -114,10 +139,7 @@ export function scoreRelevance(
   }
 
   // Negatif: içerik kalitesiz. DB negatifleri + hardcode liste birlikte uygulanır.
-  const negativeNeedles = [
-    ...negativeKeywords.map((k) => k.keyword.toLowerCase()),
-    ...NEGATIVE_KEYWORDS,
-  ];
+  const negativeNeedles = [...negativeKeywords.map((k) => k.keyword.toLowerCase()), ...NEGATIVE_KEYWORDS];
   for (const kw of negativeNeedles) {
     if (kw && combinedLower.includes(kw)) {
       reasons.push({ rule: "negative_keyword", value: kw, score: -40 });

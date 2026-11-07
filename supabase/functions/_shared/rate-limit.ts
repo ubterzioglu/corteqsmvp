@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 function getClientKey(req: Request, userId?: string): string {
   // SG9: user.id varsa onu kullan (sahtecilik önleme)
   if (userId) return `user:${userId}`;
-  
+
   // Fallback: IP adresi (sahtecilik mümkün ama auth yoksa tek seçenek)
   const forwardedFor = req.headers.get("x-forwarded-for");
   if (forwardedFor) return forwardedFor.split(",")[0]?.trim() || "unknown";
@@ -15,7 +15,11 @@ function getClientKey(req: Request, userId?: string): string {
  * @param userId - Varsa user.id kullan (önerilir), yoksa IP'ye düşer
  */
 export async function enforceRateLimit(
-  supabase: ReturnType<typeof createClient>, req: Request, scope: string, maxRequests: number, windowSeconds: number,
+  supabase: ReturnType<typeof createClient>,
+  req: Request,
+  scope: string,
+  maxRequests: number,
+  windowSeconds: number,
   userId?: string,
 ) {
   await enforceRateLimitForKey(supabase, scope, getClientKey(req, userId), maxRequests, windowSeconds);
@@ -27,12 +31,16 @@ export async function enforceRateLimit(
  * kopyaları yazma, yarış durumuna açıktır.
  */
 export async function enforceRateLimitForKey(
-  supabase: ReturnType<typeof createClient>, scope: string, clientKey: string, maxRequests: number, windowSeconds: number,
+  supabase: ReturnType<typeof createClient>,
+  scope: string,
+  clientKey: string,
+  maxRequests: number,
+  windowSeconds: number,
 ) {
   const windowMs = windowSeconds * 1000;
   const windowStartMs = Math.floor(Date.now() / windowMs) * windowMs;
   const windowStartedAt = new Date(windowStartMs).toISOString();
-  
+
   // SG9: Atomik INSERT ON CONFLICT DO UPDATE
   // Yarış durumu: iki eşzamanlı istek aynı pencerede → ikisi de insert dener,
   // biri çakışır ve update olur. Select+update ayrı ayrı olsaydı kaybolurdu.
@@ -42,7 +50,7 @@ export async function enforceRateLimitForKey(
     p_window_started_at: windowStartedAt,
     p_max_requests: maxRequests,
   });
-  
+
   if (error) {
     if (error.message.includes("RATE_LIMITED") || error.code === "P0001") {
       throw new Error("RATE_LIMITED");

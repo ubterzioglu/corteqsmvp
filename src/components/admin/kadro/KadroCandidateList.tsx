@@ -16,13 +16,7 @@ interface KadroCandidateListProps {
   onDelete: (candidateId: string) => void;
 }
 
-export function KadroCandidateList({
-  candidates,
-  isLoading,
-  onCreate,
-  onUpdate,
-  onDelete,
-}: KadroCandidateListProps) {
+export function KadroCandidateList({ candidates, isLoading, onCreate, onUpdate, onDelete }: KadroCandidateListProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<KadroCandidateDraft>({
@@ -72,9 +66,7 @@ export function KadroCandidateList({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300">
-          Adaylar ({candidates.length})
-        </h3>
+        <h3 className="text-sm font-medium text-slate-700 dark:text-slate-300">Adaylar ({candidates.length})</h3>
         {!isAdding && (
           <Button size="sm" onClick={() => setIsAdding(true)}>
             <Plus className="w-4 h-4 mr-1" />
@@ -192,9 +184,7 @@ export function KadroCandidateList({
                           {candidate.fullName}
                         </div>
                         {candidate.links && (
-                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            {candidate.links}
-                          </div>
+                          <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">{candidate.links}</div>
                         )}
                       </div>
                       <div className="flex gap-1">
@@ -217,9 +207,7 @@ export function KadroCandidateList({
                       </span>
                     </div>
                     {candidate.note && (
-                      <div className="text-sm text-slate-600 dark:text-slate-400 mt-2">
-                        {candidate.note}
-                      </div>
+                      <div className="text-sm text-slate-600 dark:text-slate-400 mt-2">{candidate.note}</div>
                     )}
                   </div>
                 )}

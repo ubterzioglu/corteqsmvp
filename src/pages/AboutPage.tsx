@@ -81,8 +81,7 @@ const audienceSections = [
     accent: "text-[#2878f2]",
     accentSoft: "bg-[#2878f2]",
     border: "border-[#d9e7ff]",
-    shell:
-      "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(245,249,255,0.97),rgba(238,246,255,0.95))]",
+    shell: "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(245,249,255,0.97),rgba(238,246,255,0.95))]",
     glow: "shadow-[0_22px_54px_rgba(40,120,242,0.08)]",
     icon: BriefcaseBusiness,
     points: [
@@ -103,8 +102,7 @@ const audienceSections = [
     accent: "text-[#22a76b]",
     accentSoft: "bg-[#22a76b]",
     border: "border-[#dcefe4]",
-    shell:
-      "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(244,252,248,0.97),rgba(237,249,243,0.95))]",
+    shell: "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(244,252,248,0.97),rgba(237,249,243,0.95))]",
     glow: "shadow-[0_22px_54px_rgba(34,167,107,0.08)]",
     icon: Building2,
     points: [
@@ -125,8 +123,7 @@ const audienceSections = [
     accent: "text-[#7c3aed]",
     accentSoft: "bg-[#7c3aed]",
     border: "border-[#e7dcff]",
-    shell:
-      "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(250,246,255,0.97),rgba(244,238,255,0.95))]",
+    shell: "bg-[linear-gradient(135deg,rgba(255,255,255,0.99),rgba(250,246,255,0.97),rgba(244,238,255,0.95))]",
     glow: "shadow-[0_22px_54px_rgba(124,58,237,0.08)]",
     icon: Users,
     points: [
@@ -190,8 +187,10 @@ const AboutPage = () => {
                   <span className="block text-primary">Birleşiyor.</span>
                 </h1>
                 <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground md:text-xl">
-                  CorteQS ile hedef net: <span className="font-semibold text-foreground">bağlantı kur, görünür ol, fırsat yarat.</span>
-                  Dünyanın dört bir yanındaki Türkleri daha organize, daha görünür ve daha güçlü bir topluluk yapısında buluşturuyoruz.
+                  CorteQS ile hedef net:{" "}
+                  <span className="font-semibold text-foreground">bağlantı kur, görünür ol, fırsat yarat.</span>
+                  Dünyanın dört bir yanındaki Türkleri daha organize, daha görünür ve daha güçlü bir topluluk yapısında
+                  buluşturuyoruz.
                 </p>
 
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -263,7 +262,8 @@ const AboutPage = () => {
                 </h2>
               </div>
               <p className="max-w-xl text-sm leading-7 text-muted-foreground">
-                Bu yapı sadece bir rehber değil. İlişki, güven, fırsat ve bilgi akışını aynı platformda birleştiren büyüme zemini.
+                Bu yapı sadece bir rehber değil. İlişki, güven, fırsat ve bilgi akışını aynı platformda birleştiren
+                büyüme zemini.
               </p>
             </div>
 
@@ -300,8 +300,8 @@ const AboutPage = () => {
                     hizmet eder
                   </h2>
                   <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500 md:text-[1.15rem]">
-                    CorteQS, farklı ihtiyaçlara sahip tüm birey, kurum ve toplulukları tek bir
-                    platformda buluşturarak daha güçlü bir diaspora ekosistemi oluşturur.
+                    CorteQS, farklı ihtiyaçlara sahip tüm birey, kurum ve toplulukları tek bir platformda buluşturarak
+                    daha güçlü bir diaspora ekosistemi oluşturur.
                   </p>
                 </div>
 
@@ -310,8 +310,7 @@ const AboutPage = () => {
                     className="absolute inset-[16%] rounded-full blur-3xl"
                     aria-hidden="true"
                     style={{
-                      background:
-                        "radial-gradient(circle, rgba(82,142,255,0.14) 0%, rgba(255,255,255,0) 72%)",
+                      background: "radial-gradient(circle, rgba(82,142,255,0.14) 0%, rgba(255,255,255,0) 72%)",
                     }}
                   />
                   <div className="relative aspect-[1.22/0.82] w-full">
@@ -388,13 +387,17 @@ const AboutPage = () => {
                           <div className="absolute right-4 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-white/75 text-slate-300 shadow-sm">
                             <MapPin className="h-4 w-4" />
                           </div>
-                          <div className={`mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-[0_18px_34px_rgba(15,23,42,0.10)] ${section.accent}`}>
+                          <div
+                            className={`mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-[0_18px_34px_rgba(15,23,42,0.10)] ${section.accent}`}
+                          >
                             <SectionIcon className="h-7 w-7" />
                           </div>
                           <div className="flex min-h-[8.5rem] items-end justify-center">
                             <div className="relative w-full max-w-[16rem]">
                               <div className="absolute inset-x-0 bottom-0 h-10 rounded-[1rem] bg-[linear-gradient(180deg,rgba(194,212,255,0.10),rgba(177,198,255,0.18))]" />
-                              <div className={`absolute left-[6%] top-[18%] h-20 w-20 rounded-[1.6rem] bg-white shadow-[0_20px_34px_rgba(15,23,42,0.10)] ${section.accent}`} />
+                              <div
+                                className={`absolute left-[6%] top-[18%] h-20 w-20 rounded-[1.6rem] bg-white shadow-[0_20px_34px_rgba(15,23,42,0.10)] ${section.accent}`}
+                              />
                               <div className="absolute right-[8%] top-[8%] flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-300 shadow-sm">
                                 <Users className="h-4 w-4" />
                               </div>
@@ -413,7 +416,9 @@ const AboutPage = () => {
                           <div className="mt-6 grid gap-4">
                             {section.points.map((point) => (
                               <div key={point} className="flex items-start gap-3">
-                                <span className={`mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${section.accentSoft}`}>
+                                <span
+                                  className={`mt-1 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${section.accentSoft}`}
+                                >
                                   <BadgeCheck className="h-3.5 w-3.5 text-white" />
                                 </span>
                                 <p className="text-[1.02rem] leading-7 text-slate-700">{point}</p>
@@ -431,7 +436,9 @@ const AboutPage = () => {
                                 key={feature.label}
                                 className="rounded-[1.2rem] border border-slate-100 bg-[linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,255,0.9))] px-3 py-4 text-center shadow-[0_8px_18px_rgba(15,23,42,0.04)]"
                               >
-                                <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_10px_24px_rgba(15,23,42,0.06)] ${section.accent}`}>
+                                <div
+                                  className={`mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_10px_24px_rgba(15,23,42,0.06)] ${section.accent}`}
+                                >
                                   <FeatureIcon className="h-7 w-7" strokeWidth={1.8} />
                                 </div>
                                 <p className="mt-3 whitespace-pre-line text-sm font-semibold leading-5 text-[#142a56]">
@@ -455,9 +462,7 @@ const AboutPage = () => {
                     </div>
                     <div>
                       <p className="text-2xl font-black tracking-tight text-[#142a56]">Aynı amaç, tek ağ.</p>
-                      <p className="text-lg font-semibold text-[#1d3569]">
-                        Daha güçlü bir diaspora, birlikte mümkün.
-                      </p>
+                      <p className="text-lg font-semibold text-[#1d3569]">Daha güçlü bir diaspora, birlikte mümkün.</p>
                     </div>
                   </div>
 
@@ -466,7 +471,10 @@ const AboutPage = () => {
                       const BadgeIcon = badge.icon;
 
                       return (
-                        <div key={badge.label} className="flex items-center gap-3 rounded-2xl px-2 py-1.5 text-slate-600">
+                        <div
+                          key={badge.label}
+                          className="flex items-center gap-3 rounded-2xl px-2 py-1.5 text-slate-600"
+                        >
                           <BadgeIcon className="h-5 w-5 text-slate-400" />
                           <span className="text-sm font-semibold text-slate-600">{badge.label}</span>
                         </div>
@@ -484,7 +492,8 @@ const AboutPage = () => {
               Global Türk gücünü birlikte organize edelim
             </h2>
             <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-muted-foreground md:text-lg">
-              Eğer sen de görünür olmak, doğru insanlara ulaşmak, topluluk içinde fırsat üretmek ve bu yapının bir parçası olmak istiyorsan şimdi katıl.
+              Eğer sen de görünür olmak, doğru insanlara ulaşmak, topluluk içinde fırsat üretmek ve bu yapının bir
+              parçası olmak istiyorsan şimdi katıl.
             </p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -497,10 +506,10 @@ const AboutPage = () => {
                 <MessageCircle className="h-4 w-4" />
                 WhatsApp Topluluğuna Katıl
               </a>
-                <a
-                  href="/login?mode=signup"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <a
+                href="/login?mode=signup"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex min-w-[240px] items-center justify-center gap-2 rounded-2xl border border-[#d55d1f] bg-[linear-gradient(135deg,#f97316_0%,#f26522_48%,#ef5b1c_100%)] px-6 py-3.5 text-sm font-bold text-white shadow-[0_16px_34px_rgba(242,101,34,0.22)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(242,101,34,0.28)]"
               >
                 Kategorine Kayıt ve Takip İçin
@@ -516,7 +525,6 @@ const AboutPage = () => {
           </section>
         </div>
       </main>
-
     </div>
   );
 };

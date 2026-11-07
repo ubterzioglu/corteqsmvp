@@ -38,10 +38,7 @@ import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocatio
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionCompletedEmail } from "../_shared/emails/revision-request-completed.ts";
 import { buildCareerApplicationEmail } from "../_shared/emails/career-application.ts";
-import {
-  buildGroupNotificationEmail,
-  type GroupNotificationEventType,
-} from "../_shared/emails/group-notifications.ts";
+import { buildGroupNotificationEmail, type GroupNotificationEventType } from "../_shared/emails/group-notifications.ts";
 import { buildRevisionRequestEmail } from "../_shared/emails/revision-request.ts";
 import { buildRecommendationMatchEmail } from "../_shared/emails/recommendation-match.ts";
 import { buildEventPublishedEmail, type EventPublishedDetails } from "../_shared/emails/event-published.ts";
@@ -124,7 +121,7 @@ function buildCorsHeaders(req: Request): Record<string, string> {
   const headers: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-dispatch-secret",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 
   if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -283,10 +280,7 @@ const DENIED: Caller = { authorized: false, adminEmail: null };
  * Örnek mail gönderimi adminEmail gerektirir — secret'la gelen makine çağrılarının
  * "kendi adresi" olmadığı için o yol preview isteğinde kullanılamaz.
  */
-async function resolveCaller(
-  request: Request,
-  admin: ReturnType<typeof createClient>,
-): Promise<Caller> {
+async function resolveCaller(request: Request, admin: ReturnType<typeof createClient>): Promise<Caller> {
   if (secretsMatch(request.headers.get("x-dispatch-secret"), Deno.env.get("NOTIFY_DISPATCH_SECRET"))) {
     return { authorized: true, adminEmail: null };
   }
@@ -549,12 +543,13 @@ Deno.serve(async (request) => {
           // member_welcome/relocation/grup bildirimlerinde bu payload'da adres yok
           // demektir (beklenmez — G23 enqueue'su adresi olmayan kullanıcıya satır
           // yazmaz); diğer tiplerde kimse abone olmamış demektir.
-          const directRecipient = row.event_type === "member_welcome"
-            || row.event_type === "relocation_tool_report"
-            || row.event_type === "relocation_tool_abandonment"
-            || row.event_type === "recommendation_match"
-            || row.event_type === "weekly_city_digest"
-            || row.event_type.startsWith("group_");
+          const directRecipient =
+            row.event_type === "member_welcome" ||
+            row.event_type === "relocation_tool_report" ||
+            row.event_type === "relocation_tool_abandonment" ||
+            row.event_type === "recommendation_match" ||
+            row.event_type === "weekly_city_digest" ||
+            row.event_type.startsWith("group_");
           const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin
             .from("notification_email_outbox")
@@ -623,7 +618,12 @@ Deno.serve(async (request) => {
           if (recipients.length === 0) {
             await admin
               .from("notification_email_outbox")
-              .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
+              .update({
+                status: "skipped",
+                last_error: "no_subscribers",
+                recipient_count: 0,
+                sent_at: new Date().toISOString(),
+              })
               .in("id", digestIds);
             skipped += adminUpdateRows.length;
           } else {
@@ -693,12 +693,20 @@ Deno.serve(async (request) => {
           if (recipients.length === 0) {
             await admin
               .from("notification_email_outbox")
-              .update({ status: "skipped", last_error: "no_subscribers", recipient_count: 0, sent_at: new Date().toISOString() })
+              .update({
+                status: "skipped",
+                last_error: "no_subscribers",
+                recipient_count: 0,
+                sent_at: new Date().toISOString(),
+              })
               .in("id", radarIds);
             skipped += radarDigestRows.length;
           } else {
             const { subject, html, text } = buildRadarScanDigestEmail(
-              radarDigestRows.map((row) => row.payload as unknown as import("../_shared/emails/radar-scan-digest.ts").RadarScanDigestPayload)
+              radarDigestRows.map(
+                (row) =>
+                  row.payload as unknown as import("../_shared/emails/radar-scan-digest.ts").RadarScanDigestPayload,
+              ),
             );
 
             for (const recipient of recipients) {

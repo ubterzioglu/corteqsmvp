@@ -45,19 +45,14 @@ const AdminShell = () => {
   useEffect(() => {
     if (access.status !== "authorized") return;
     const breadcrumbs = buildAdminBreadcrumbs(location.pathname);
-    const label =
-      breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].label : location.pathname;
+    const label = breadcrumbs.length > 0 ? breadcrumbs[breadcrumbs.length - 1].label : location.pathname;
     recordVisit({ path: location.pathname, label });
   }, [access.status, location.pathname, recordVisit]);
 
   return (
     <AdminAccessGate access={access}>
       <div className="min-h-screen bg-background">
-        <AdminSidebar
-          collapsed={sidebar.collapsed}
-          onToggleCollapsed={sidebar.toggleCollapsed}
-          favorites={favorites}
-        />
+        <AdminSidebar collapsed={sidebar.collapsed} onToggleCollapsed={sidebar.toggleCollapsed} favorites={favorites} />
         <div className={cn("flex min-h-screen flex-col transition-[padding]", sidebar.contentPaddingClassName)}>
           <AdminTopbar
             userEmail={access.session?.user.email}
@@ -74,11 +69,7 @@ const AdminShell = () => {
             )}
           </main>
         </div>
-        <AdminMobileSidebar
-          open={sidebar.mobileOpen}
-          onOpenChange={sidebar.setMobileOpen}
-          onLogout={access.logout}
-        />
+        <AdminMobileSidebar open={sidebar.mobileOpen} onOpenChange={sidebar.setMobileOpen} onLogout={access.logout} />
         <AdminCommandPalette
           open={palette.open}
           onOpenChange={palette.setOpen}

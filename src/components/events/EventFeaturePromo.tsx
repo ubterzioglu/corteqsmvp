@@ -22,11 +22,14 @@ import {
 } from "@/lib/feature-interest-api";
 import { getErrorMessage } from "@/lib/whatsapp-landing-form";
 
-const PROMO_META: Record<FeatureInterestKey, {
-  label: string;
-  description: string;
-  icon: typeof Sparkles;
-} | null> = {
+const PROMO_META: Record<
+  FeatureInterestKey,
+  {
+    label: string;
+    description: string;
+    icon: typeof Sparkles;
+  } | null
+> = {
   "event.featured": {
     label: "Öne çıkar",
     description: "Etkinliğin dizinde ve akışta öne çıksın. Ücretli yüzey yakında — ilgi kaydı planlamayı belirleyecek.",
@@ -72,8 +75,7 @@ export function EventFeaturePromo() {
     <section aria-label="Ücretli özellikler (yakında)" data-testid="event-feature-promo">
       <h4 className="text-sm font-bold text-slate-700">Yakında · ücretli özellikler</h4>
       <p className="mt-1 text-xs text-slate-500">
-        Bu yüzeyler kilitli; ödeme altyapısı ayrı bir planda. İlgin, hangisinin önce
-        yapılacağına karar veriyor.
+        Bu yüzeyler kilitli; ödeme altyapısı ayrı bir planda. İlgin, hangisinin önce yapılacağına karar veriyor.
       </p>
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {FEATURE_INTEREST_KEYS.map((key) => {
@@ -87,13 +89,19 @@ export function EventFeaturePromo() {
               <CardContent className="flex items-start gap-3 p-4">
                 <span className="relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-200 text-slate-500">
                   <Icon className="h-4.5 w-4.5" aria-hidden="true" />
-                  <Lock className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-slate-500 p-0.5 text-white" aria-hidden="true" />
+                  <Lock
+                    className="absolute -bottom-1 -right-1 h-3.5 w-3.5 rounded-full bg-slate-500 p-0.5 text-white"
+                    aria-hidden="true"
+                  />
                 </span>
                 <div className="min-w-0 text-left">
                   <p className="text-sm font-semibold text-slate-800">{meta.label}</p>
                   <p className="mt-0.5 text-xs leading-relaxed text-slate-500">{meta.description}</p>
                   {isRegistered ? (
-                    <p className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-700" data-testid={`feature-promo-${key}-done`}>
+                    <p
+                      className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-emerald-700"
+                      data-testid={`feature-promo-${key}-done`}
+                    >
                       <Check className="h-3.5 w-3.5" aria-hidden="true" />
                       İlgin kaydedildi
                     </p>

@@ -14,13 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   REVISION_PRIORITY_OPTIONS,
@@ -115,9 +109,7 @@ export function RevisionRequestForm({
               <Label htmlFor="revision-status">Durum</Label>
               <Select
                 value={form.status}
-                onValueChange={(value) =>
-                  setForm((prev) => ({ ...prev, status: value as RevisionStatus }))
-                }
+                onValueChange={(value) => setForm((prev) => ({ ...prev, status: value as RevisionStatus }))}
               >
                 <SelectTrigger id="revision-status">
                   <SelectValue />
@@ -136,9 +128,7 @@ export function RevisionRequestForm({
               <Label htmlFor="revision-priority">Öncelik</Label>
               <Select
                 value={String(form.priority)}
-                onValueChange={(value) =>
-                  setForm((prev) => ({ ...prev, priority: Number(value) }))
-                }
+                onValueChange={(value) => setForm((prev) => ({ ...prev, priority: Number(value) }))}
               >
                 <SelectTrigger id="revision-priority">
                   <SelectValue />

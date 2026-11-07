@@ -78,11 +78,20 @@ vi.mock("@/lib/whatsapp-landings", () => ({
   submitLanding: vi.fn(),
   createJoinRequest: vi.fn(),
   normalizeLandingCategory: (value?: string | null) =>
-    value === "girisim" ? "yatirim" : value === "alumni" || value === "hobi" || value === "is" ||
-      value === "doktor" || value === "yatirim" || value === "akademik" || value === "dayanisma" ||
-      value === "hr" || value === "kisisel-gelisim" || value === "diger"
-      ? value
-      : "diger",
+    value === "girisim"
+      ? "yatirim"
+      : value === "alumni" ||
+          value === "hobi" ||
+          value === "is" ||
+          value === "doktor" ||
+          value === "yatirim" ||
+          value === "akademik" ||
+          value === "dayanisma" ||
+          value === "hr" ||
+          value === "kisisel-gelisim" ||
+          value === "diger"
+        ? value
+        : "diger",
 }));
 
 const listFixture = [

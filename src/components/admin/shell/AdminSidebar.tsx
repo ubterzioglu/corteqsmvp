@@ -21,9 +21,7 @@ type AdminSidebarProps = {
   favorites: AdminFavoritesState;
 };
 
-const inactiveItems = adminNavGroups.flatMap((group) =>
-  group.items.filter((item) => item.isInactive),
-);
+const inactiveItems = adminNavGroups.flatMap((group) => group.items.filter((item) => item.isInactive));
 
 const AdminSidebar = ({ collapsed, onToggleCollapsed, favorites }: AdminSidebarProps) => {
   const [inactiveOpen, setInactiveOpen] = useState(false);
@@ -36,7 +34,9 @@ const AdminSidebar = ({ collapsed, onToggleCollapsed, favorites }: AdminSidebarP
         collapsed ? "w-[72px]" : "w-[248px] xl:w-[280px]",
       )}
     >
-      <div className={cn("flex items-center gap-3 border-b border-border px-4 py-4", collapsed && "justify-center px-2")}>
+      <div
+        className={cn("flex items-center gap-3 border-b border-border px-4 py-4", collapsed && "justify-center px-2")}
+      >
         <a
           href="https://corteqs.net"
           target="_blank"

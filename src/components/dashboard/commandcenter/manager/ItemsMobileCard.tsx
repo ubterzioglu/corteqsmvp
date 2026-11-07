@@ -2,37 +2,34 @@
 // Masaüstü tablosunun yerine geçer ve okuma/düzenleme durumlarını aynı kartta
 // çizer. Mobilde düzenleme paneli açıkken arşiv düğmesi bilinçli olarak kapalıdır.
 
-import { Dispatch, SetStateAction } from 'react'
-import { Archive, Pencil, Save, Trash2, X } from 'lucide-react'
+import { Dispatch, SetStateAction } from "react";
+import { Archive, Pencil, Save, Trash2, X } from "lucide-react";
 import {
   COMMAND_CENTER_PRIORITY_OPTIONS,
   getCommandCenterAssigneeLabel,
   getCommandCenterDateGroupInfo,
   getCommandCenterStatusLabel,
   getCommandCenterTopCategoryLabel,
-} from '@/lib/dashboard/command-center-items'
-import type {
-  CommandCenterFormState,
-  CommandCenterItem,
-} from '@/lib/dashboard/command-center-items'
-import { MEETING_CATEGORIES, MEETING_SOURCES } from '@/lib/dashboard/meeting-notes-data'
-import { TODO_ASSIGNEES, TODO_CATEGORIES, TODO_STATUSES } from '@/lib/dashboard/todo-items'
-import { MobileInfoPair, UrgentIndicator } from './cells'
-import { formatCreatedAt, getItemDetail } from './formatters'
-import { BTN_CLS, CHECKBOX_CLS, INPUT_CLS } from './styles'
+} from "@/lib/dashboard/command-center-items";
+import type { CommandCenterFormState, CommandCenterItem } from "@/lib/dashboard/command-center-items";
+import { MEETING_CATEGORIES, MEETING_SOURCES } from "@/lib/dashboard/meeting-notes-data";
+import { TODO_ASSIGNEES, TODO_CATEGORIES, TODO_STATUSES } from "@/lib/dashboard/todo-items";
+import { MobileInfoPair, UrgentIndicator } from "./cells";
+import { formatCreatedAt, getItemDetail } from "./formatters";
+import { BTN_CLS, CHECKBOX_CLS, INPUT_CLS } from "./styles";
 
 interface ItemsMobileCardProps {
-  item: CommandCenterItem
-  rowIsEditing: boolean
-  rowState: CommandCenterFormState
-  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>
-  editingId: string | null
-  isSubmitting: boolean
-  onStartEdit: (item: CommandCenterItem) => void
-  onCancelEdit: () => void
-  onUpdate: (itemId: string) => void
-  onArchive: (itemId: string) => void
-  onDelete: (itemId: string) => void
+  item: CommandCenterItem;
+  rowIsEditing: boolean;
+  rowState: CommandCenterFormState;
+  setEditingState: Dispatch<SetStateAction<CommandCenterFormState>>;
+  editingId: string | null;
+  isSubmitting: boolean;
+  onStartEdit: (item: CommandCenterItem) => void;
+  onCancelEdit: () => void;
+  onUpdate: (itemId: string) => void;
+  onArchive: (itemId: string) => void;
+  onDelete: (itemId: string) => void;
 }
 
 export default function ItemsMobileCard({
@@ -48,7 +45,7 @@ export default function ItemsMobileCard({
   onArchive,
   onDelete,
 }: ItemsMobileCardProps) {
-  const dateGroupInfo = getCommandCenterDateGroupInfo(item)
+  const dateGroupInfo = getCommandCenterDateGroupInfo(item);
 
   return (
     <div className="space-y-3 rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white p-4 shadow-[0_10px_20px_rgba(60,64,67,0.04)]">
@@ -59,7 +56,7 @@ export default function ItemsMobileCard({
             onChange={(event) =>
               setEditingState((current) => ({
                 ...current,
-                priority: Number(event.target.value) as CommandCenterFormState['priority'],
+                priority: Number(event.target.value) as CommandCenterFormState["priority"],
               }))
             }
             className={INPUT_CLS}
@@ -93,7 +90,7 @@ export default function ItemsMobileCard({
             className={INPUT_CLS}
             rows={4}
           />
-          {rowState.itemType === 'meeting_note' ? (
+          {rowState.itemType === "meeting_note" ? (
             <>
               <select
                 value={rowState.legacySourceCategory}
@@ -119,7 +116,7 @@ export default function ItemsMobileCard({
                   setEditingState((current) => ({
                     ...current,
                     legacySourceDateLabel: event.target.value,
-                    categoryLabel: '',
+                    categoryLabel: "",
                   }))
                 }
                 className={INPUT_CLS}
@@ -150,7 +147,7 @@ export default function ItemsMobileCard({
               onChange={(event) =>
                 setEditingState((current) => ({
                   ...current,
-                  assignee: event.target.value as CommandCenterFormState['assignee'],
+                  assignee: event.target.value as CommandCenterFormState["assignee"],
                 }))
               }
               className={INPUT_CLS}
@@ -166,7 +163,7 @@ export default function ItemsMobileCard({
               onChange={(event) =>
                 setEditingState((current) => ({
                   ...current,
-                  status: event.target.value as CommandCenterFormState['status'],
+                  status: event.target.value as CommandCenterFormState["status"],
                 }))
               }
               className={INPUT_CLS}
@@ -188,7 +185,7 @@ export default function ItemsMobileCard({
               }
               className={INPUT_CLS}
             />
-            {rowState.itemType === 'meeting_note' && (
+            {rowState.itemType === "meeting_note" && (
               <select
                 value={rowState.legacySourceCode}
                 onChange={(event) =>
@@ -302,5 +299,5 @@ export default function ItemsMobileCard({
         </button>
       </div>
     </div>
-  )
+  );
 }

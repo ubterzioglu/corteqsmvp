@@ -15,29 +15,21 @@ export interface CitizenshipQuestion {
 
 // 27.09.2026: burada cast YOK ve gerekmiyor — `germany_citizenship_questions`
 // tipli. Eski "types.ts bu tabloyu içermiyor" notu bayattı, kaldırıldı.
- 
+
 const db = supabase;
 
 const TABLE = "germany_citizenship_questions";
 
 /** Genel (eyalet bağımsız) soru havuzu. */
 export async function listGeneralQuestions(): Promise<CitizenshipQuestion[]> {
-  const { data, error } = await db
-    .from(TABLE)
-    .select("*")
-    .eq("eyalet", "Genel")
-    .order("id", { ascending: true });
+  const { data, error } = await db.from(TABLE).select("*").eq("eyalet", "Genel").order("id", { ascending: true });
   if (error) throw error;
   return (data ?? []) as CitizenshipQuestion[];
 }
 
 /** Bir eyalete özel sorular. */
 export async function listStateQuestions(eyalet: string): Promise<CitizenshipQuestion[]> {
-  const { data, error } = await db
-    .from(TABLE)
-    .select("*")
-    .eq("eyalet", eyalet)
-    .order("id", { ascending: true });
+  const { data, error } = await db.from(TABLE).select("*").eq("eyalet", eyalet).order("id", { ascending: true });
   if (error) throw error;
   return (data ?? []) as CitizenshipQuestion[];
 }
@@ -49,4 +41,3 @@ export async function listStates(): Promise<string[]> {
   const set = new Set<string>((data ?? []).map((r: { eyalet: string }) => r.eyalet));
   return [...set].sort((a, b) => a.localeCompare(b, "de"));
 }
-

@@ -12,11 +12,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 
-import {
-  buildOtpTemplatePayload,
-  createPhoneOtpHookHandler,
-  type ClaimResult,
-} from "../_shared/phone-otp-hook.ts";
+import { buildOtpTemplatePayload, createPhoneOtpHookHandler, type ClaimResult } from "../_shared/phone-otp-hook.ts";
 import { resolveGraphVersion, sendGraphMessage } from "../_shared/whatsapp-graph.ts";
 
 const supabaseUrl = Deno.env.get("SUPABASE_URL");
@@ -81,7 +77,8 @@ Deno.serve(async (request) => {
     return await handler(request);
   } catch (error: unknown) {
     // OTP, telefon, token ve sağlayıcı yanıtı ASLA loglanmaz.
-    const code = error instanceof Error && /^[a-z0-9_]{1,40}$/i.test(error.message) ? error.message : "unexpected_error";
+    const code =
+      error instanceof Error && /^[a-z0-9_]{1,40}$/i.test(error.message) ? error.message : "unexpected_error";
     console.error("send-phone-otp-hook:", code);
     return new Response(JSON.stringify({ error: { http_code: 500, message: "phone_otp_unavailable" } }), {
       status: 500,

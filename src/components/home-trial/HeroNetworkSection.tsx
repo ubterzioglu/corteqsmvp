@@ -109,8 +109,7 @@ const HeroNetworkSection = () => {
         className="pointer-events-none absolute inset-0"
         aria-hidden="true"
         style={{
-          background:
-            "linear-gradient(0deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 42%)",
+          background: "linear-gradient(0deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 42%)",
         }}
       />
 
@@ -133,8 +132,8 @@ const HeroNetworkSection = () => {
 
           {/* Vodafone tarzı sol dikey vurgu çizgili açıklama. */}
           <p className="mt-6 max-w-xl border-l-2 border-glow-teal pl-5 text-sm leading-relaxed text-slate-700 sm:text-base">
-            Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri
-            tek bir güven ağında buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
+            Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri tek bir güven ağında
+            buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
           </p>
         </div>
 

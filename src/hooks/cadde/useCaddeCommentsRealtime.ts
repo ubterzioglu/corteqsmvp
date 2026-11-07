@@ -6,7 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
  * m90: Cadde yorumları için realtime dinleme — yeni yorum geldiğinde "Yeni yorumlar var" bildirimi göster.
  * Kullanıcı butona tıkladığında yorum listesi yenilenir.
  */
-export function useCaddeCommentsRealtime(postId: string | null, enabled: boolean): {
+export function useCaddeCommentsRealtime(
+  postId: string | null,
+  enabled: boolean,
+): {
   hasNewComments: boolean;
   reset: () => void;
 } {

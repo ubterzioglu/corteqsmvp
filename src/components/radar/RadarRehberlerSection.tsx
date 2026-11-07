@@ -3,12 +3,7 @@ import { Link } from "react-router-dom";
 import { MapPin } from "lucide-react";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-  blogCategoryLabels,
-  groupBlogPostsByCountry,
-  listPublishedBlogPosts,
-  type BlogPostRow,
-} from "@/lib/blog";
+import { blogCategoryLabels, groupBlogPostsByCountry, listPublishedBlogPosts, type BlogPostRow } from "@/lib/blog";
 import {
   ALL_GUIDE_COUNTRIES,
   collectGuideCountries,

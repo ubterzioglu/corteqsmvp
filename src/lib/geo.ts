@@ -56,9 +56,9 @@ const fallbackCountryByName = new Map(geoCountrySeeds.map((country) => [country.
 const fallbackCountryByCode = new Map(geoCountrySeeds.map((country) => [country.code, country]));
 
 function getFallbackCountryCode(countryNameOrCode: string) {
-  return fallbackCountryByName.get(countryNameOrCode)?.code
-    ?? fallbackCountryByCode.get(countryNameOrCode)?.code
-    ?? null;
+  return (
+    fallbackCountryByName.get(countryNameOrCode)?.code ?? fallbackCountryByCode.get(countryNameOrCode)?.code ?? null
+  );
 }
 
 function dedupeAndSortCities(cities: string[]) {
@@ -70,23 +70,15 @@ async function resolveCountryRows(countryNamesOrCodes: string[]) {
   if (normalized.length === 0) return [] as GeoCountryRow[];
 
   const [byNameResult, byCodeResult] = await Promise.all([
-    supabase
-      .from("geo_countries")
-      .select("id, code, name, sort_order")
-      .eq("is_active", true)
-      .in("name", normalized),
-    supabase
-      .from("geo_countries")
-      .select("id, code, name, sort_order")
-      .eq("is_active", true)
-      .in("code", normalized),
+    supabase.from("geo_countries").select("id, code, name, sort_order").eq("is_active", true).in("name", normalized),
+    supabase.from("geo_countries").select("id, code, name, sort_order").eq("is_active", true).in("code", normalized),
   ]);
 
   if (byNameResult.error) throw byNameResult.error;
   if (byCodeResult.error) throw byCodeResult.error;
 
   const merged = new Map<string, GeoCountryRow>();
-  for (const row of ([...(byNameResult.data ?? []), ...(byCodeResult.data ?? [])] as GeoCountryRow[])) {
+  for (const row of [...(byNameResult.data ?? []), ...(byCodeResult.data ?? [])] as GeoCountryRow[]) {
     merged.set(row.id, row);
   }
 
@@ -167,7 +159,7 @@ export async function listGeoCitiesForCountries(countryNamesOrCodes: string[]): 
   if (!isSupabaseConfigured) {
     const results: GeoCity[] = [];
     for (const value of normalized) {
-      results.push(...await listGeoCities(value));
+      results.push(...(await listGeoCities(value)));
     }
     return results;
   }
@@ -193,7 +185,7 @@ export async function listGeoCitiesForCountries(countryNamesOrCodes: string[]): 
   } catch {
     const results: GeoCity[] = [];
     for (const value of normalized) {
-      results.push(...await listGeoCities(value));
+      results.push(...(await listGeoCities(value)));
     }
     return results;
   }

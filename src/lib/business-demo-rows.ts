@@ -27,12 +27,7 @@ import type { PublicCatalogRow } from "@/lib/public-catalog-api";
  * Gerçek bir ortaklık kurulursa bu kayıtlar demo listesinden değil, gerçek
  * katalogdan (`catalog_items`) gelmelidir.
  */
-const EXCLUDED_REAL_BRAND_IDS = new Set([
-  "hsbc-turkey",
-  "thy-global",
-  "vodafone-de",
-  "turkish-market-chain",
-]);
+const EXCLUDED_REAL_BRAND_IDS = new Set(["hsbc-turkey", "thy-global", "vodafone-de", "turkish-market-chain"]);
 
 /**
  * mock `sector` → canlı `Business_*` rol anahtarı.

@@ -44,10 +44,14 @@ const CatalogItemEditorPage = () => {
 
         setProfile(nextProfile);
         setDraftValues(
-          Object.fromEntries(nextProfile.attributes.map((attribute) => [attribute.attribute_key, readDraftValue(attribute)])),
+          Object.fromEntries(
+            nextProfile.attributes.map((attribute) => [attribute.attribute_key, readDraftValue(attribute)]),
+          ),
         );
         setDraftVisibility(
-          Object.fromEntries(nextProfile.attributes.map((attribute) => [attribute.attribute_key, attribute.visibility])),
+          Object.fromEntries(
+            nextProfile.attributes.map((attribute) => [attribute.attribute_key, attribute.visibility]),
+          ),
         );
       } catch (error) {
         if (!isMounted) return;
@@ -102,9 +106,7 @@ const CatalogItemEditorPage = () => {
     <div className="mx-auto w-full max-w-4xl px-4 py-10">
       <div className="mb-4 flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">
-            {profile?.title ?? "Katalog Profili"}
-          </h1>
+          <h1 className="text-2xl font-semibold text-foreground">{profile?.title ?? "Katalog Profili"}</h1>
           <p className="text-sm text-muted-foreground">
             Yetkili oldugun katalog profilinin attribute degerlerini buradan duzenleyebilirsin.
           </p>

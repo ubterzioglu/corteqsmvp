@@ -38,11 +38,7 @@ const NotFound = () => {
 
       <div className="relative z-10 mx-auto max-w-2xl px-4 text-center">
         <div className="relative mb-3 inline-block">
-          <img
-            src={maskot}
-            alt="CorteQS"
-            className="mx-auto mb-1 h-56 w-auto"
-          />
+          <img src={maskot} alt="CorteQS" className="mx-auto mb-1 h-56 w-auto" />
           <span className="bg-gradient-to-br from-primary to-accent bg-clip-text text-[72px] font-extrabold leading-none text-transparent md:text-[104px]">
             404
           </span>
@@ -52,8 +48,7 @@ const NotFound = () => {
         </div>
 
         <h1 className="mb-2 text-xl font-bold text-foreground md:text-2xl">
-          Bu sayfa <span className="text-accent">kayıp</span> — ama sen
-          değilsin!
+          Bu sayfa <span className="text-accent">kayıp</span> — ama sen değilsin!
         </h1>
 
         <p className="mx-auto mb-5 max-w-xl text-base leading-relaxed text-muted-foreground md:text-lg">

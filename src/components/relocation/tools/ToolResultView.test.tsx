@@ -6,10 +6,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
 import { BUCKET_DESCRIPTIONS, TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import {
-  READINESS_DIMENSION_ACTIONS,
-  READINESS_DIMENSION_DESCRIPTIONS,
-} from "@/lib/relocation-tools-readiness";
+import { READINESS_DIMENSION_ACTIONS, READINESS_DIMENSION_DESCRIPTIONS } from "@/lib/relocation-tools-readiness";
 import type { RelocationToolResultPayload } from "@/lib/relocation-tools-types";
 
 // Canlı bir sonuç kaydından alındı (relocation_tool_results, 2026-08-07).
@@ -133,9 +130,7 @@ describe("ToolResultView — hedef ülkede veri yok uyarısı", () => {
     const root = container.firstElementChild as HTMLElement;
     const children = Array.from(root.children);
     const stripIndex = children.findIndex((el) => el.getAttribute("role") === "status");
-    const listIndex = children.findIndex((el) =>
-      el.textContent?.includes(TOOLS_UI_COPY.rankedListTitle),
-    );
+    const listIndex = children.findIndex((el) => el.textContent?.includes(TOOLS_UI_COPY.rankedListTitle));
 
     expect(stripIndex).toBeGreaterThanOrEqual(0);
     expect(listIndex).toBeGreaterThan(stripIndex);
@@ -167,9 +162,7 @@ describe("ToolResultView — sonuç açıklamaları", () => {
   it("weakest3'te DB'nin şablon detail'i yerine somut aksiyon metnini gösterir", () => {
     renderView({ primary_result: { score: 56.75, weakest3: WEAKEST3 } });
 
-    expect(
-      screen.getByText(READINESS_DIMENSION_ACTIONS.financial_readiness),
-    ).toBeInTheDocument();
+    expect(screen.getByText(READINESS_DIMENSION_ACTIONS.financial_readiness)).toBeInTheDocument();
     expect(screen.queryByText(/Bu alanı bu hafta güçlendir/)).toBeNull();
   });
 
@@ -186,9 +179,7 @@ describe("ToolResultView — sonuç açıklamaları", () => {
   it("puan dağılımında boyut açıklaması ve ağırlık yüzdesi gösterir", () => {
     renderView();
 
-    expect(
-      screen.getByText(READINESS_DIMENSION_DESCRIPTIONS.financial_readiness),
-    ).toBeInTheDocument();
+    expect(screen.getByText(READINESS_DIMENSION_DESCRIPTIONS.financial_readiness)).toBeInTheDocument();
     // financial_readiness ağırlığı 0.25 → "skorun %25'i"
     expect(screen.getByText("skorun %25'i")).toBeInTheDocument();
   });

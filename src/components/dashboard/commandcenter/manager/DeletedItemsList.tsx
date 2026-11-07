@@ -7,10 +7,10 @@ import {
   getCommandCenterItemLabel,
   getCommandCenterStatusLabel,
   getCommandCenterTopCategoryLabel,
-} from '@/lib/dashboard/command-center-items'
-import type { CommandCenterItem } from '@/lib/dashboard/command-center-items'
-import { AssigneeAvatar, CategoryBadge, MobileInfoPair, StatusBadge } from './cells'
-import { formatCreatedAt, formatDeletedAt, getItemDetail } from './formatters'
+} from "@/lib/dashboard/command-center-items";
+import type { CommandCenterItem } from "@/lib/dashboard/command-center-items";
+import { AssigneeAvatar, CategoryBadge, MobileInfoPair, StatusBadge } from "./cells";
+import { formatCreatedAt, formatDeletedAt, getItemDetail } from "./formatters";
 
 export default function DeletedItemsList({ items }: { items: CommandCenterItem[] }) {
   if (items.length === 0) {
@@ -18,7 +18,7 @@ export default function DeletedItemsList({ items }: { items: CommandCenterItem[]
       <div className="rounded-2xl border border-dashed border-red-200 bg-white/80 p-6 text-center text-sm text-gray-500">
         Silinmiş kayıt yok.
       </div>
-    )
+    );
   }
 
   return (
@@ -37,17 +37,15 @@ export default function DeletedItemsList({ items }: { items: CommandCenterItem[]
           </colgroup>
           <thead className="border-b border-red-100 bg-red-50/70">
             <tr>
-              {['Prio', 'Tip', 'Kategori', 'Başlık & Detay', 'Kim', 'Durum', 'Eklenme', 'Silinme'].map(
-                (column) => (
-                  <th
-                    key={column}
-                    scope="col"
-                    className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500 first:pl-4 last:pr-4"
-                  >
-                    {column}
-                  </th>
-                )
-              )}
+              {["Prio", "Tip", "Kategori", "Başlık & Detay", "Kim", "Durum", "Eklenme", "Silinme"].map((column) => (
+                <th
+                  key={column}
+                  scope="col"
+                  className="px-2.5 py-3 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500 first:pl-4 last:pr-4"
+                >
+                  {column}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-red-50">
@@ -73,9 +71,7 @@ export default function DeletedItemsList({ items }: { items: CommandCenterItem[]
                 <td className="px-2.5 py-3 text-gray-600">
                   <div className="flex items-center gap-2">
                     <AssigneeAvatar assignee={item.assignee} />
-                    <span className="text-[12px] text-gray-700">
-                      {getCommandCenterAssigneeLabel(item.assignee)}
-                    </span>
+                    <span className="text-[12px] text-gray-700">{getCommandCenterAssigneeLabel(item.assignee)}</span>
                   </div>
                 </td>
                 <td className="px-2.5 py-3">
@@ -127,5 +123,5 @@ export default function DeletedItemsList({ items }: { items: CommandCenterItem[]
         ))}
       </div>
     </div>
-  )
+  );
 }

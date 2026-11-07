@@ -20,10 +20,7 @@ import {
   pickRowForHousehold,
   sumMonthlyCosts,
 } from "@/lib/relocation-content-format";
-import type {
-  RelocationLivingCostRow,
-  RelocationRequiredDocumentRow,
-} from "@/lib/relocation-content-types";
+import type { RelocationLivingCostRow, RelocationRequiredDocumentRow } from "@/lib/relocation-content-types";
 
 const costRow = (patch: Partial<RelocationLivingCostRow>): RelocationLivingCostRow => ({
   id: patch.id ?? crypto.randomUUID(),
@@ -89,18 +86,12 @@ describe("formatCostRange", () => {
 
 describe("pickRowForHousehold", () => {
   it("tam eşleşen hane satırını seçer", () => {
-    const rows = [
-      costRow({ household_size: 1, amount_min: 800 }),
-      costRow({ household_size: 4, amount_min: 1600 }),
-    ];
+    const rows = [costRow({ household_size: 1, amount_min: 800 }), costRow({ household_size: 4, amount_min: 1600 })];
     expect(pickRowForHousehold(rows, 4)?.amount_min).toBe(1600);
   });
 
   it("tam eşleşme yoksa haneyi AŞMAYAN en büyük satırı seçer", () => {
-    const rows = [
-      costRow({ household_size: 1, amount_min: 800 }),
-      costRow({ household_size: 2, amount_min: 1100 }),
-    ];
+    const rows = [costRow({ household_size: 1, amount_min: 800 }), costRow({ household_size: 2, amount_min: 1100 })];
     expect(pickRowForHousehold(rows, 4)?.household_size).toBe(2);
   });
 
@@ -128,11 +119,7 @@ describe("groupCostsByItem", () => {
       costRow({ item_key: "rent" }),
       costRow({ item_key: "transport" }),
     ];
-    expect(groupCostsByItem(rows).map((g) => g.item_key)).toEqual([
-      "rent",
-      "transport",
-      "childcare",
-    ]);
+    expect(groupCostsByItem(rows).map((g) => g.item_key)).toEqual(["rent", "transport", "childcare"]);
   });
 
   it("verisi olmayan kalemi listelemez", () => {
@@ -270,11 +257,7 @@ describe("groupDocumentsByCategory", () => {
   });
 
   it("kategorileri Türkçe sıralama kuralıyla dizer", () => {
-    const rows = [
-      docRow({ category: "Ikamet" }),
-      docRow({ category: "Eğitim" }),
-      docRow({ category: "Çalışma" }),
-    ];
+    const rows = [docRow({ category: "Ikamet" }), docRow({ category: "Eğitim" }), docRow({ category: "Çalışma" })];
     const order = groupDocumentsByCategory(rows).map((g) => g.category);
     // Türkçe alfabede Ç, E'den önce gelir; ham localeCompare bunu kaçırır.
     expect(order[0]).toBe("Çalışma");

@@ -30,11 +30,7 @@ const POSTS = [
 
 describe("collectGuideCountries", () => {
   it("ülkeleri tekilleştirir ve Türkçe sıralar", () => {
-    expect(collectGuideCountries(POSTS).map((option) => option.label)).toEqual([
-      "Almanya",
-      "Hollanda",
-      "İsviçre",
-    ]);
+    expect(collectGuideCountries(POSTS).map((option) => option.label)).toEqual(["Almanya", "Hollanda", "İsviçre"]);
   });
 
   it("ülkesi olmayan yazıyı 'Diğer' altında toplar", () => {
@@ -62,15 +58,11 @@ describe("filterGuidePosts", () => {
   });
 
   it("ülkeye göre süzer", () => {
-    expect(filterGuidePosts(POSTS, { country: "hollanda" }).map((entry) => entry.title)).toEqual([
-      "Hollanda rehberi",
-    ]);
+    expect(filterGuidePosts(POSTS, { country: "hollanda" }).map((entry) => entry.title)).toEqual(["Hollanda rehberi"]);
   });
 
   it("kategoriye göre süzer", () => {
-    expect(filterGuidePosts(POSTS, { category: "is-bulma" }).map((entry) => entry.title)).toEqual([
-      "İsviçre rehberi",
-    ]);
+    expect(filterGuidePosts(POSTS, { category: "is-bulma" }).map((entry) => entry.title)).toEqual(["İsviçre rehberi"]);
   });
 
   it("kategori ve ülke birlikte uygulanır", () => {

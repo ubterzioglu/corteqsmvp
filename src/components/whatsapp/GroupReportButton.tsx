@@ -7,11 +7,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useGroupReportState, useSubmitGroupReport } from "@/hooks/useGroupReports";
-import {
-  GROUP_REPORT_NOTE_MAX,
-  GROUP_REPORT_REASONS,
-  type GroupReportReason,
-} from "@/lib/group-reports-api";
+import { GROUP_REPORT_NOTE_MAX, GROUP_REPORT_REASONS, type GroupReportReason } from "@/lib/group-reports-api";
 import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
 
 interface GroupReportButtonProps {
@@ -105,9 +101,8 @@ export function GroupReportButton({ landing, isSignedIn, onRequestSignIn }: Grou
       <div className="space-y-2">
         <p className="font-semibold text-foreground">Şikayet için telefon doğrulaması gerekir.</p>
         <p className="text-muted-foreground">
-          Sahte hesaplarla grupların haksız yere gizlenmesini önlemek için yalnız telefonu doğrulanmış
-          üyeler şikayet edebilir. Telefon doğrulaması henüz tüm üyelere açılmadı; açıldığında profil
-          sayfandan yapabileceksin.
+          Sahte hesaplarla grupların haksız yere gizlenmesini önlemek için yalnız telefonu doğrulanmış üyeler şikayet
+          edebilir. Telefon doğrulaması henüz tüm üyelere açılmadı; açıldığında profil sayfandan yapabileceksin.
         </p>
         <Link to="/profile" className="font-semibold text-emerald-700 underline-offset-2 hover:underline">
           Profiline git
@@ -172,9 +167,7 @@ export function GroupReportButton({ landing, isSignedIn, onRequestSignIn }: Grou
         ))}
       </RadioGroup>
       <div>
-        <Label htmlFor="group-report-note">
-          Açıklama {needsNote ? "(zorunlu)" : "(isteğe bağlı)"}
-        </Label>
+        <Label htmlFor="group-report-note">Açıklama {needsNote ? "(zorunlu)" : "(isteğe bağlı)"}</Label>
         <Textarea
           id="group-report-note"
           rows={3}

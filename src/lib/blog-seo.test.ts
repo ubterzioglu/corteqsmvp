@@ -67,9 +67,7 @@ describe("buildBlogPostingJsonLd", () => {
     expect(ld.datePublished).toBe("2026-06-12T10:00:00Z");
     expect(ld.dateModified).toBe("2026-06-20T10:00:00Z");
     expect(ld.url).toBe(`${ORIGIN}/blog/a`);
-    expect(buildBlogPostingJsonLd({ ...post, published_at: null }, "x").datePublished).toBe(
-      "2026-06-01T10:00:00Z",
-    );
+    expect(buildBlogPostingJsonLd({ ...post, published_at: null }, "x").datePublished).toBe("2026-06-01T10:00:00Z");
   });
 
   it("yazar KİŞİ uydurmaz: Organization", () => {
@@ -109,16 +107,19 @@ describe("pickRelatedPosts", () => {
   });
 
   it("ilgisiz yazı (ne ülke ne kategori) önerilmez — uydurma ilgi yok", () => {
-    const sonuc = pickRelatedPosts([summary({ slug: "alakasiz", category: "oturum-izni", country: "hollanda" })], current);
+    const sonuc = pickRelatedPosts(
+      [summary({ slug: "alakasiz", category: "oturum-izni", country: "hollanda" })],
+      current,
+    );
 
     expect(sonuc).toEqual([]);
   });
 
   it("boş ülke boş ülkeyle EŞLEŞMEZ (ortak 'ülkesiz' bir ilgi değildir)", () => {
-    const sonuc = pickRelatedPosts(
-      [summary({ slug: "b", category: "oturum-izni", country: "" })],
-      { ...current, country: "" },
-    );
+    const sonuc = pickRelatedPosts([summary({ slug: "b", category: "oturum-izni", country: "" })], {
+      ...current,
+      country: "",
+    });
 
     expect(sonuc).toEqual([]);
   });
@@ -137,7 +138,10 @@ describe("pickRelatedPosts", () => {
   });
 
   it("girdi dizisini DEĞİŞTİRMEZ (immutability)", () => {
-    const posts = [summary({ slug: "z", country: "almanya", sort_order: 9 }), summary({ slug: "y", country: "almanya", sort_order: 1 })];
+    const posts = [
+      summary({ slug: "z", country: "almanya", sort_order: 9 }),
+      summary({ slug: "y", country: "almanya", sort_order: 1 }),
+    ];
     const kopya = [...posts];
 
     pickRelatedPosts(posts, current);

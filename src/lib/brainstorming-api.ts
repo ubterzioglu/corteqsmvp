@@ -145,7 +145,8 @@ async function currentUserId(): Promise<string | null> {
 
 /** Tüm bölümleri, her birinin satırlarıyla birlikte sıralı getirir. */
 export async function fetchSections(): Promise<BrainstormingSection[]> {
-  const { data: sectionData, error: sectionError } = await supabase.from("brainstorming_sections")
+  const { data: sectionData, error: sectionError } = await supabase
+    .from("brainstorming_sections")
     .select(SECTION_SELECT)
     .order("order_index", { ascending: true });
 
@@ -153,7 +154,8 @@ export async function fetchSections(): Promise<BrainstormingSection[]> {
     throw new Error(sanitizeError(sectionError, "Bölümler yüklenemedi."));
   }
 
-  const { data: rowData, error: rowError } = await supabase.from("brainstorming_rows")
+  const { data: rowData, error: rowError } = await supabase
+    .from("brainstorming_rows")
     .select(ROW_SELECT)
     .order("order_index", { ascending: true });
 
@@ -183,7 +185,8 @@ export async function createSection(
   const uid = await currentUserId();
   const sectionKey = `${slugify(parsed.title)}-${Date.now().toString(36)}`;
 
-  const { data, error } = await supabase.from("brainstorming_sections")
+  const { data, error } = await supabase
+    .from("brainstorming_sections")
     .insert({
       section_key: sectionKey,
       group_label: parsed.groupLabel || null,
@@ -204,14 +207,12 @@ export async function createSection(
 }
 
 /** Var olan bir bölümü günceller (rows dokunulmaz). */
-export async function updateSection(
-  id: string,
-  input: BrainstormingSectionForm,
-): Promise<BrainstormingSection> {
+export async function updateSection(id: string, input: BrainstormingSectionForm): Promise<BrainstormingSection> {
   const parsed = brainstormingSectionFormSchema.parse(input);
   const uid = await currentUserId();
 
-  const { data, error } = await supabase.from("brainstorming_sections")
+  const { data, error } = await supabase
+    .from("brainstorming_sections")
     .update({
       group_label: parsed.groupLabel || null,
       title: parsed.title,
@@ -231,10 +232,7 @@ export async function updateSection(
 
 /** Bölümü siler (satırları cascade ile birlikte gider). */
 export async function deleteSection(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("brainstorming_sections")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("brainstorming_sections").delete().eq("id", id);
 
   if (error) {
     throw new Error(sanitizeError(error, "Bölüm silinemedi."));
@@ -244,9 +242,7 @@ export async function deleteSection(id: string): Promise<void> {
 /** Bölümlerin order_index'ini verilen sıraya göre yeniden yazar. */
 export async function reorderSections(orderedIds: string[]): Promise<void> {
   await Promise.all(
-    orderedIds.map((id, index) =>
-      supabase.from("brainstorming_sections").update({ order_index: index }).eq("id", id),
-    ),
+    orderedIds.map((id, index) => supabase.from("brainstorming_sections").update({ order_index: index }).eq("id", id)),
   );
 }
 
@@ -258,7 +254,8 @@ export async function createRow(
 ): Promise<BrainstormingRow> {
   const parsed = brainstormingRowFormSchema.parse(input);
 
-  const { data, error } = await supabase.from("brainstorming_rows")
+  const { data, error } = await supabase
+    .from("brainstorming_rows")
     .insert({
       section_id: sectionId,
       label: parsed.label,
@@ -278,13 +275,11 @@ export async function createRow(
 }
 
 /** Var olan bir satırı günceller. */
-export async function updateRow(
-  id: string,
-  input: BrainstormingRowForm,
-): Promise<BrainstormingRow> {
+export async function updateRow(id: string, input: BrainstormingRowForm): Promise<BrainstormingRow> {
   const parsed = brainstormingRowFormSchema.parse(input);
 
-  const { data, error } = await supabase.from("brainstorming_rows")
+  const { data, error } = await supabase
+    .from("brainstorming_rows")
     .update({
       label: parsed.label,
       technical: parsed.technical,
@@ -304,10 +299,7 @@ export async function updateRow(
 
 /** Satırı siler. */
 export async function deleteRow(id: string): Promise<void> {
-  const { error } = await supabase
-    .from("brainstorming_rows")
-    .delete()
-    .eq("id", id);
+  const { error } = await supabase.from("brainstorming_rows").delete().eq("id", id);
 
   if (error) {
     throw new Error(sanitizeError(error, "Satır silinemedi."));
@@ -317,15 +309,14 @@ export async function deleteRow(id: string): Promise<void> {
 /** Bir bölümün satırlarının order_index'ini yeniden yazar. */
 export async function reorderRows(orderedIds: string[]): Promise<void> {
   await Promise.all(
-    orderedIds.map((id, index) =>
-      supabase.from("brainstorming_rows").update({ order_index: index }).eq("id", id),
-    ),
+    orderedIds.map((id, index) => supabase.from("brainstorming_rows").update({ order_index: index }).eq("id", id)),
   );
 }
 
 /** Bir bölümün yorumlarını eskiden yeniye getirir. */
 export async function fetchComments(sectionKey: string): Promise<BrainstormingComment[]> {
-  const { data, error } = await supabase.from("statusreport_comments")
+  const { data, error } = await supabase
+    .from("statusreport_comments")
     .select(COMMENT_SELECT)
     .eq("section_key", sectionKey)
     .order("created_at", { ascending: true });
@@ -344,10 +335,13 @@ export async function addComment(sectionKey: string, body: string): Promise<Brai
     throw new Error("Yorum boş bırakılamaz.");
   }
 
-  const { data, error } = await supabase.rpc("add_brainstorming_comment_v1" as never, {
-    p_section_key: sectionKey,
-    p_body: trimmed,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "add_brainstorming_comment_v1" as never,
+    {
+      p_section_key: sectionKey,
+      p_body: trimmed,
+    } as never,
+  );
 
   if (error || !data) {
     throw new Error(sanitizeError(error, "Yorum eklenemedi."));
@@ -368,9 +362,12 @@ export async function fetchUserEmails(ids: (string | null)[]): Promise<Record<st
 
   const entries = await Promise.all(
     uniqueIds.map(async (id) => {
-      const { data, error } = await supabase.rpc("admin_get_user_email" as never, {
-        p_user_id: id,
-      } as never);
+      const { data, error } = await supabase.rpc(
+        "admin_get_user_email" as never,
+        {
+          p_user_id: id,
+        } as never,
+      );
       if (error || !data) {
         return [id, ""] as const;
       }
@@ -386,4 +383,3 @@ export async function fetchUserEmails(ids: (string | null)[]): Promise<Record<st
   }
   return result;
 }
-

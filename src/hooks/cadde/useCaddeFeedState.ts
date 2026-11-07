@@ -2,11 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import { countCaddePostsSince, listCaddeFeed } from "@/lib/cadde-api";
-import {
-  caddeNewPostPollInterval,
-  newestCaddeCreatedAt,
-  nextCaddeZeroStreak,
-} from "@/lib/cadde-feed-polling";
+import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
 import { injectSponsoredPlacement, interleavePromotions } from "@/lib/cadde-format";
 import { widenCaddeFilters } from "@/lib/cadde-feed-widen";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
@@ -88,11 +84,7 @@ export function useCaddeFeedState({
     staleTime: 30_000,
     refetchOnWindowFocus: false,
     enabled:
-      widenTarget !== null &&
-      filters.mode === "real" &&
-      !isFeedLoading &&
-      !isFeedError &&
-      feedItems.length === 0,
+      widenTarget !== null && filters.mode === "real" && !isFeedLoading && !isFeedError && feedItems.length === 0,
   });
 
   const widenedPage = widenedFeedQuery.data?.pages[0];

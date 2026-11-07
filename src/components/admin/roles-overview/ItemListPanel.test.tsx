@@ -4,8 +4,24 @@ import ItemListPanel from "./ItemListPanel";
 import type { ItemListEntry } from "./types";
 
 const items: ItemListEntry[] = [
-  { id: "a1", kind: "catalog_item", title: "CorteQS Şirketi", platformRoleKey: "isletme", status: "published", claimantEmail: "ali@example.com", adminEmail: null },
-  { id: "b2", kind: "profile", title: "Ayşe Yılmaz", platformRoleKey: "bireysel", status: "active", claimantEmail: null, adminEmail: "admin@corteqs.net" },
+  {
+    id: "a1",
+    kind: "catalog_item",
+    title: "CorteQS Şirketi",
+    platformRoleKey: "isletme",
+    status: "published",
+    claimantEmail: "ali@example.com",
+    adminEmail: null,
+  },
+  {
+    id: "b2",
+    kind: "profile",
+    title: "Ayşe Yılmaz",
+    platformRoleKey: "bireysel",
+    status: "active",
+    claimantEmail: null,
+    adminEmail: "admin@corteqs.net",
+  },
 ];
 
 test("renders item list", () => {

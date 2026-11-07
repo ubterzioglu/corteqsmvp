@@ -6,46 +6,42 @@
 //   node scripts/social-generate/index.mjs --all
 //   node scripts/social-generate/index.mjs --all --force-backgrounds
 
-import path from 'node:path';
+import path from "node:path";
 
-import { OUTPUT_ROOT } from './config.mjs';
-import { composePost } from './compose.mjs';
-import { shortDescription } from './text-utils.mjs';
-import { writeManifestAndReport } from './manifest.mjs';
-import { loadBurakShareTools } from './load-tools.mjs';
+import { OUTPUT_ROOT } from "./config.mjs";
+import { composePost } from "./compose.mjs";
+import { shortDescription } from "./text-utils.mjs";
+import { writeManifestAndReport } from "./manifest.mjs";
+import { loadBurakShareTools } from "./load-tools.mjs";
 
 function parseArgs(argv) {
   const args = { tool: null, variant: null, all: false, forceBackgrounds: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
-    if (arg === '--tool') args.tool = argv[++i];
-    else if (arg === '--variant') {
+    if (arg === "--tool") args.tool = argv[++i];
+    else if (arg === "--variant") {
       const raw = argv[++i];
       const value = Number(raw);
       if (!Number.isInteger(value) || value < 1 || value > 3) {
         throw new Error(`--variant değeri 1-3 arasında bir tam sayı olmalı, alınan: ${raw}`);
       }
       args.variant = value;
-    } else if (arg === '--all') args.all = true;
-    else if (arg === '--force-backgrounds') args.forceBackgrounds = true;
+    } else if (arg === "--all") args.all = true;
+    else if (arg === "--force-backgrounds") args.forceBackgrounds = true;
   }
   return args;
 }
 
 function selectTargets(tools, args) {
   const targets = [];
-  const selectedTools = args.all
-    ? tools
-    : tools.filter((t) => t.id === args.tool);
+  const selectedTools = args.all ? tools : tools.filter((t) => t.id === args.tool);
 
   if (!args.all && selectedTools.length === 0) {
     throw new Error(`--tool ${args.tool} bulunamadı`);
   }
 
   for (const tool of selectedTools) {
-    const variantIndexes = args.variant
-      ? [args.variant - 1]
-      : tool.variants.map((_, i) => i);
+    const variantIndexes = args.variant ? [args.variant - 1] : tool.variants.map((_, i) => i);
 
     for (const variantIndex of variantIndexes) {
       if (variantIndex < 0 || variantIndex >= tool.variants.length) {
@@ -60,7 +56,7 @@ function selectTargets(tools, args) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (!args.all && !args.tool) {
-    console.error('Kullanım: --tool <id> [--variant <1-3>] | --all [--force-backgrounds]');
+    console.error("Kullanım: --tool <id> [--variant <1-3>] | --all [--force-backgrounds]");
     process.exitCode = 1;
     return;
   }
@@ -81,7 +77,7 @@ async function main() {
       outputRoot: path.join(repoRoot, OUTPUT_ROOT),
     });
 
-    if (result.status === 'success') successCount++;
+    if (result.status === "success") successCount++;
 
     entries.push({
       toolId: tool.id,
@@ -93,22 +89,19 @@ async function main() {
       backgroundPath: result.backgroundPath,
       outputPath: result.outputPath,
       generatedAt: new Date().toISOString(),
-      backgroundMethod: 'deterministic-svg',
+      backgroundMethod: "deterministic-svg",
       status: result.status,
       ...(result.error ? { error: result.error } : {}),
     });
 
     console.log(
-      `${result.status === 'success' ? '✓' : '✗'} ${tool.id} varyant ${variantIndex + 1}${
-        result.error ? ` — ${result.error}` : ''
+      `${result.status === "success" ? "✓" : "✗"} ${tool.id} varyant ${variantIndex + 1}${
+        result.error ? ` — ${result.error}` : ""
       }`,
     );
   }
 
-  const { manifestPath, reportPath } = await writeManifestAndReport(
-    entries,
-    path.join(repoRoot, OUTPUT_ROOT),
-  );
+  const { manifestPath, reportPath } = await writeManifestAndReport(entries, path.join(repoRoot, OUTPUT_ROOT));
 
   console.log(`\n${successCount} / ${entries.length} görsel üretildi.`);
   console.log(`Manifest: ${manifestPath}`);
@@ -116,6 +109,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Üretim başarısız:', error instanceof Error ? error.message : error);
+  console.error("Üretim başarısız:", error instanceof Error ? error.message : error);
   process.exitCode = 1;
 });

@@ -89,14 +89,7 @@ describe("normalizeScoreBreakdown", () => {
   it("altı anahtarı her zaman üretir, sayı olmayanı 0'a çeker", () => {
     const breakdown = normalizeScoreBreakdown({ budget_fit: "abc", gsm_coverage: 0.3 });
     expect(Object.keys(breakdown).sort()).toEqual(
-      [
-        "budget_fit",
-        "bureaucracy_ease",
-        "community_fit",
-        "flight_access",
-        "gsm_coverage",
-        "healthcare_access",
-      ].sort(),
+      ["budget_fit", "bureaucracy_ease", "community_fit", "flight_access", "gsm_coverage", "healthcare_access"].sort(),
     );
     expect(breakdown.budget_fit).toBe(0);
     expect(breakdown.gsm_coverage).toBe(0.3);

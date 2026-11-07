@@ -1,37 +1,27 @@
 import { describe, expect, it } from "vitest";
 
 import { normalizeCaddeReportDetails } from "@/lib/cadde-engagement-api";
-import {
-  normalizeCaddeHashtagRows,
-  normalizeCaddeMentionRows,
-} from "@/lib/cadde-feed-location-api";
-import {
-  mapCaddeBillboardRow,
-  mapCaddeSponsoredRow,
-} from "@/lib/cadde-promotion-api";
-import {
-  mapCaddePersonRow,
-  normalizeCaddeInterestKeys,
-} from "@/lib/cadde-search-interests-api";
+import { normalizeCaddeHashtagRows, normalizeCaddeMentionRows } from "@/lib/cadde-feed-location-api";
+import { mapCaddeBillboardRow, mapCaddeSponsoredRow } from "@/lib/cadde-promotion-api";
+import { mapCaddePersonRow, normalizeCaddeInterestKeys } from "@/lib/cadde-search-interests-api";
 import type { CaddeBillboardRow, CaddeSponsoredRow } from "@/lib/cadde-types";
 
 describe("Cadde feed/location pure adapters", () => {
   it("malformed hashtag ve mention değerlerini güvenli biçimde eler", () => {
-    expect(normalizeCaddeHashtagRows([
-      { tag: "berlin", displayTag: "Berlin" },
-      { tag: "istanbul" },
-      { tag: "" },
-      null,
-    ])).toEqual([
+    expect(
+      normalizeCaddeHashtagRows([{ tag: "berlin", displayTag: "Berlin" }, { tag: "istanbul" }, { tag: "" }, null]),
+    ).toEqual([
       { tag: "berlin", displayTag: "Berlin" },
       { tag: "istanbul", displayTag: "istanbul" },
     ]);
 
-    expect(normalizeCaddeMentionRows([
-      { type: "user", id: "user-1", label: "Ayşe" },
-      { type: "unknown", id: "bad" },
-      { type: "cafe", id: 42 },
-    ])).toEqual([{ type: "user", id: "user-1", label: "Ayşe" }]);
+    expect(
+      normalizeCaddeMentionRows([
+        { type: "user", id: "user-1", label: "Ayşe" },
+        { type: "unknown", id: "bad" },
+        { type: "cafe", id: 42 },
+      ]),
+    ).toEqual([{ type: "user", id: "user-1", label: "Ayşe" }]);
   });
 });
 
@@ -89,13 +79,15 @@ describe("Cadde promotion pure adapters", () => {
 
 describe("Cadde search/interests pure adapters", () => {
   it("kişi sonucunu daraltır ve boolean alanını katı yorumlar", () => {
-    expect(mapCaddePersonRow({
-      user_id: "user-1",
-      full_name: "Ayşe Kaya",
-      city: "Berlin",
-      country: null,
-      has_profile: 1,
-    })).toEqual({
+    expect(
+      mapCaddePersonRow({
+        user_id: "user-1",
+        full_name: "Ayşe Kaya",
+        city: "Berlin",
+        country: null,
+        has_profile: 1,
+      }),
+    ).toEqual({
       userId: "user-1",
       fullName: "Ayşe Kaya",
       city: "Berlin",
@@ -105,10 +97,7 @@ describe("Cadde search/interests pure adapters", () => {
   });
 
   it("ilgi anahtarlarını kırpar, boşları eler ve tekrarları kaldırır", () => {
-    expect(normalizeCaddeInterestKeys([" teknoloji ", "", "teknoloji", "girişim"])).toEqual([
-      "teknoloji",
-      "girişim",
-    ]);
+    expect(normalizeCaddeInterestKeys([" teknoloji ", "", "teknoloji", "girişim"])).toEqual(["teknoloji", "girişim"]);
   });
 });
 

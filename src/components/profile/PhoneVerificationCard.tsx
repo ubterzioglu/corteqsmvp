@@ -122,21 +122,15 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
           <Shield className="h-4 w-4 text-primary" />
           <CardTitle className="text-sm">Telefon Doğrulama</CardTitle>
         </div>
-        <CardDescription className="text-xs">
-          Telefonunu doğrula, hesabının güvenliğini artır.
-        </CardDescription>
+        <CardDescription className="text-xs">Telefonunu doğrula, hesabının güvenliğini artır.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {status?.isVerified ? (
           <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 dark:bg-green-950/20">
             <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-green-900 dark:text-green-100">
-                Telefon doğrulandı
-              </p>
-              <p className="text-xs text-green-700 dark:text-green-300">
-                {status.phone}
-              </p>
+              <p className="text-sm font-medium text-green-900 dark:text-green-100">Telefon doğrulandı</p>
+              <p className="text-xs text-green-700 dark:text-green-300">{status.phone}</p>
             </div>
             <Badge variant="secondary" className="text-xs">
               Doğrulandı
@@ -169,11 +163,7 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
               />
             </div>
             <div className="flex gap-2">
-              <Button
-                onClick={handleVerifyCode}
-                disabled={isVerifying || codeInput.length < 4}
-                className="flex-1"
-              >
+              <Button onClick={handleVerifyCode} disabled={isVerifying || codeInput.length < 4} className="flex-1">
                 {isVerifying ? "Doğrulanıyor..." : "Doğrula"}
               </Button>
               <Button variant="outline" onClick={handleCancel} disabled={isVerifying}>
@@ -195,9 +185,7 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
             <div className="flex items-start gap-2 rounded-lg bg-amber-50 p-3 dark:bg-amber-950/20">
               <Phone className="mt-0.5 h-4 w-4 text-amber-600 dark:text-amber-400" />
               <div className="flex-1">
-                <p className="text-xs text-amber-900 dark:text-amber-100">
-                  Telefonun henüz doğrulanmamış.
-                </p>
+                <p className="text-xs text-amber-900 dark:text-amber-100">Telefonun henüz doğrulanmamış.</p>
                 <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
                   Doğrulamak için telefon numaranı gir, sana WhatsApp ile kod göndereceğiz.
                 </p>
@@ -216,15 +204,9 @@ export function PhoneVerificationCard({ className }: PhoneVerificationCardProps)
                 value={phoneInput}
                 onChange={(e) => setPhoneInput(e.target.value)}
               />
-              <p className="text-xs text-muted-foreground">
-                Ülke koduyla başla (örn. +90)
-              </p>
+              <p className="text-xs text-muted-foreground">Ülke koduyla başla (örn. +90)</p>
             </div>
-            <Button
-              onClick={handleSendCode}
-              disabled={isSending || !phoneInput.trim()}
-              className="w-full"
-            >
+            <Button onClick={handleSendCode} disabled={isSending || !phoneInput.trim()} className="w-full">
               {isSending ? "Gönderiliyor..." : "Doğrulama Kodu Gönder"}
             </Button>
           </div>

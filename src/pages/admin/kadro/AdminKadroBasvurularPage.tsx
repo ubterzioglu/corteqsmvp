@@ -58,10 +58,7 @@ function AdminKadroBasvurularPage() {
     };
   }, []);
 
-  const positions = useMemo(
-    () => [...new Set(rows.map((row) => row.position))].sort(),
-    [rows],
-  );
+  const positions = useMemo(() => [...new Set(rows.map((row) => row.position))].sort(), [rows]);
 
   const filtered = useMemo(
     () =>
@@ -116,8 +113,8 @@ function AdminKadroBasvurularPage() {
       <div className="mb-6">
         <h1 className="mb-2 text-2xl font-bold">Kariyer Başvuruları</h1>
         <p className="text-sm text-muted-foreground">
-          `/kariyer` formundan gelen başvurular. Dosyalar {CAREER_SIGNED_URL_TTL_SECONDS / 60} dakikalık
-          imzalı bağlantıyla açılır; kova herkese kapalıdır.
+          `/kariyer` formundan gelen başvurular. Dosyalar {CAREER_SIGNED_URL_TTL_SECONDS / 60} dakikalık imzalı
+          bağlantıyla açılır; kova herkese kapalıdır.
         </p>
       </div>
 
@@ -176,8 +173,7 @@ function AdminKadroBasvurularPage() {
                     <CardTitle className="text-base">{row.full_name}</CardTitle>
                     <p className="mt-1 text-sm text-muted-foreground">
                       {positionLabel(row.position)} · {row.country}
-                      {row.city ? ` / ${row.city}` : ""} ·{" "}
-                      {new Date(row.created_at).toLocaleDateString("tr-TR")}
+                      {row.city ? ` / ${row.city}` : ""} · {new Date(row.created_at).toLocaleDateString("tr-TR")}
                     </p>
                   </div>
                   <select
@@ -212,7 +208,12 @@ function AdminKadroBasvurularPage() {
                   {row.linkedin && (
                     <p className="truncate">
                       <span className="text-muted-foreground">LinkedIn: </span>
-                      <a href={row.linkedin} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                      <a
+                        href={row.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline"
+                      >
                         {row.linkedin}
                       </a>
                     </p>
@@ -255,9 +256,7 @@ function AdminKadroBasvurularPage() {
                     rows={2}
                     className="mt-2"
                     value={noteDrafts[row.id] ?? row.notes ?? ""}
-                    onChange={(event) =>
-                      setNoteDrafts((current) => ({ ...current, [row.id]: event.target.value }))
-                    }
+                    onChange={(event) => setNoteDrafts((current) => ({ ...current, [row.id]: event.target.value }))}
                   />
                   <Button size="sm" variant="secondary" className="mt-2" onClick={() => saveNote(row)}>
                     Notu kaydet

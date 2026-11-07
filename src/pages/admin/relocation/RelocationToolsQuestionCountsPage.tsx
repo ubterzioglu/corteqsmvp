@@ -10,19 +10,9 @@ import { ListChecks, Search } from "lucide-react";
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { trIncludes } from "@/lib/text-normalization";
-import {
-  listToolQuestionCounts,
-  type ToolCountKind,
-} from "@/lib/relocation-tools-admin-api";
+import { listToolQuestionCounts, type ToolCountKind } from "@/lib/relocation-tools-admin-api";
 
 const KIND_LABEL: Record<ToolCountKind, string> = {
   question_bank: "Soru Bankası",
@@ -48,9 +38,7 @@ const RelocationToolsQuestionCountsPage = () => {
   const filtered = useMemo(() => {
     const rows = data ?? [];
     if (!query.trim()) return rows;
-    return rows.filter(
-      (row) => trIncludes(row.title_tr, query) || trIncludes(row.category, query),
-    );
+    return rows.filter((row) => trIncludes(row.title_tr, query) || trIncludes(row.category, query));
   }, [data, query]);
 
   return (
@@ -70,12 +58,8 @@ const RelocationToolsQuestionCountsPage = () => {
         />
       </div>
 
-      {isLoading && (
-        <p className="text-sm text-muted-foreground">Yükleniyor…</p>
-      )}
-      {isError && (
-        <p className="text-sm text-destructive">Araç listesi yüklenemedi.</p>
-      )}
+      {isLoading && <p className="text-sm text-muted-foreground">Yükleniyor…</p>}
+      {isError && <p className="text-sm text-destructive">Araç listesi yüklenemedi.</p>}
 
       {!isLoading && !isError && (
         <Table>
@@ -98,9 +82,7 @@ const RelocationToolsQuestionCountsPage = () => {
                 </TableCell>
                 <TableCell className="text-right font-semibold">{row.total_count}</TableCell>
                 <TableCell>
-                  <Badge variant={row.is_active ? "default" : "secondary"}>
-                    {row.is_active ? "Aktif" : "Pasif"}
-                  </Badge>
+                  <Badge variant={row.is_active ? "default" : "secondary"}>{row.is_active ? "Aktif" : "Pasif"}</Badge>
                 </TableCell>
               </TableRow>
             ))}

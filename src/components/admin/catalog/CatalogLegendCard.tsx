@@ -18,7 +18,8 @@ const CatalogLegendCard = () => {
               <div className="space-y-1">
                 <CardTitle>Kısaltma Rehberi</CardTitle>
                 <CardDescription>
-                  Tablodaki kısa kodlar alan kazanmak için kullanılır. Aşağıdan her kodun sistemde tam olarak neyi anlattığını açabilirsiniz.
+                  Tablodaki kısa kodlar alan kazanmak için kullanılır. Aşağıdan her kodun sistemde tam olarak neyi
+                  anlattığını açabilirsiniz.
                 </CardDescription>
               </div>
               <ChevronRight className="h-5 w-5 shrink-0 text-slate-400 transition-transform duration-200 [[data-state=open]>&]:rotate-90" />

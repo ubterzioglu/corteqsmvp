@@ -41,7 +41,10 @@ export function ReportDeliveryCard({ result }: Props) {
         {location ? (
           <>
             <p className="text-muted-foreground">
-              Rapor konumu: <span className="font-medium text-foreground">{location.city}, {location.country}</span>
+              Rapor konumu:{" "}
+              <span className="font-medium text-foreground">
+                {location.city}, {location.country}
+              </span>
             </p>
             <Button
               type="button"
@@ -61,11 +64,18 @@ export function ReportDeliveryCard({ result }: Props) {
           </>
         ) : (
           <p className="text-muted-foreground">
-            Rapor göndermek için profilinde ülke ve şehir bilgisi bulunmalı. Konumu tamamladıktan
-            sonra bu aracı yeniden çöz. <Link className="font-medium text-primary underline" to="/profile">Profili aç</Link>
+            Rapor göndermek için profilinde ülke ve şehir bilgisi bulunmalı. Konumu tamamladıktan sonra bu aracı yeniden
+            çöz.{" "}
+            <Link className="font-medium text-primary underline" to="/profile">
+              Profili aç
+            </Link>
           </p>
         )}
-        {error && <p role="alert" className="text-destructive">{error}</p>}
+        {error && (
+          <p role="alert" className="text-destructive">
+            {error}
+          </p>
+        )}
       </CardContent>
     </Card>
   );

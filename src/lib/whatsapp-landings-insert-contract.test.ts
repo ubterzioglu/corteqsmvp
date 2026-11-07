@@ -47,7 +47,7 @@ function readPayloadKeys(): string[] {
   const start = source.indexOf("  const payload = {");
   expect(start, "submitLanding içinde payload bloğu bulunamadı").toBeGreaterThan(-1);
 
-  const end = source.indexOf("\n  } satisfies TablesInsert<\"whatsapp_landings\">;", start);
+  const end = source.indexOf('\n  } satisfies TablesInsert<"whatsapp_landings">;', start);
   expect(end, "payload bloğu `satisfies TablesInsert<...>` ile kapanmıyor").toBeGreaterThan(-1);
 
   const block = source.slice(start, end);

@@ -21,12 +21,7 @@ export function GeneratedImagePreview({ toolId, variantNo }: GeneratedImagePrevi
 
   return (
     <div className="mt-2 flex items-center gap-3 rounded-lg border border-dashed bg-muted/20 p-2">
-      <img
-        src={src}
-        alt=""
-        className="h-16 w-16 rounded object-cover"
-        onError={() => setMissing(true)}
-      />
+      <img src={src} alt="" className="h-16 w-16 rounded object-cover" onError={() => setMissing(true)} />
       <div className="flex flex-1 items-center justify-between gap-2">
         <span className="text-xs text-muted-foreground">Otomatik üretilmiş önizleme</span>
         <a href={src} download>

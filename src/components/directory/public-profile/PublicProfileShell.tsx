@@ -111,9 +111,7 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
         type="button"
         className="min-h-[44px] rounded-full sm:min-h-9"
         disabled={claimMutation.isPending || claimMutation.isSuccess}
-        onClick={() =>
-          claimMutation.mutate({ itemId: viewModel.claim.itemId, slug: viewModel.claim.slug })
-        }
+        onClick={() => claimMutation.mutate({ itemId: viewModel.claim.itemId, slug: viewModel.claim.slug })}
       >
         <PenLine className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
         {claimMutation.isSuccess
@@ -137,8 +135,7 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
     </div>
   );
 
-  const hasAnySection =
-    viewModel.mainSections.length > 0 || viewModel.sidebarSections.length > 0;
+  const hasAnySection = viewModel.mainSections.length > 0 || viewModel.sidebarSections.length > 0;
   const trustCard = <PublicProfileTrustCard signals={viewModel.trustSignals} />;
   const showMobileActionBar = viewModel.presentation.showMobileActionBar && !isEditing;
 
@@ -160,7 +157,8 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
 
         {claimMutation.isError ? (
           <p className="mt-4 rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-            Talep gönderilemedi: {claimMutation.error instanceof Error ? claimMutation.error.message : "Beklenmeyen bir hata oluştu"}
+            Talep gönderilemedi:{" "}
+            {claimMutation.error instanceof Error ? claimMutation.error.message : "Beklenmeyen bir hata oluştu"}
           </p>
         ) : null}
         {claimMutation.isSuccess ? (
@@ -193,10 +191,7 @@ const PublicProfileShell = ({ profile }: PublicProfileShellProps) => {
 
         <div className="mt-5">
           {isOwner && isEditing ? (
-            <PublicProfileInlineEditor
-              itemId={viewModel.claim.itemId}
-              slug={viewModel.claim.slug}
-            />
+            <PublicProfileInlineEditor itemId={viewModel.claim.itemId} slug={viewModel.claim.slug} />
           ) : hasAnySection ? (
             <PublicProfileSectionList
               mainSections={viewModel.mainSections}

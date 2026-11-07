@@ -11,14 +11,7 @@ import { z } from "zod";
 export const CAREER_MODELS = ["kurucu-ekip", "yatirimci-ortak", "staj", "gorusmede"] as const;
 export type CareerModel = (typeof CAREER_MODELS)[number];
 
-export const CAREER_APPLICATION_STATUSES = [
-  "yeni",
-  "inceleniyor",
-  "gorusme",
-  "teklif",
-  "olumsuz",
-  "arsiv",
-] as const;
+export const CAREER_APPLICATION_STATUSES = ["yeni", "inceleniyor", "gorusme", "teklif", "olumsuz", "arsiv"] as const;
 export type CareerApplicationStatus = (typeof CAREER_APPLICATION_STATUSES)[number];
 
 /** Kullanıcıya görünen durum etiketleri (yönetici ekranı KR08'de kullanır). */

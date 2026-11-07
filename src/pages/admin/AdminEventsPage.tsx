@@ -5,21 +5,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdminEmptyState, AdminErrorState, AdminLoadingState, AdminPageShell } from "@/components/admin/page";
 import {
-  AdminEmptyState,
-  AdminErrorState,
-  AdminLoadingState,
-  AdminPageShell,
-} from "@/components/admin/page";
-import { useAdminEvents, useDeleteEvent, usePublishEvent, useToggleFeaturedEvent, useUnpublishEvent } from "@/hooks/use-events";
+  useAdminEvents,
+  useDeleteEvent,
+  usePublishEvent,
+  useToggleFeaturedEvent,
+  useUnpublishEvent,
+} from "@/hooks/use-events";
 import { useToast } from "@/hooks/use-toast";
 import type { EventRow } from "@/lib/events-api";
-import {
-  EVENT_TYPE_OPTIONS,
-  eventStatusLabel,
-  eventStatusTone,
-  eventTypeLabel,
-} from "@/lib/events-vocabulary";
+import { EVENT_TYPE_OPTIONS, eventStatusLabel, eventStatusTone, eventTypeLabel } from "@/lib/events-vocabulary";
 import { formatEventDate } from "@/lib/events-timezone";
 
 const AdminEventsPage = () => {
@@ -95,7 +91,9 @@ const AdminEventsPage = () => {
       </div>
       <div className="rounded-lg border bg-white p-3">
         <p className="text-xs text-emerald-600">Yayında</p>
-        <p className="text-xl font-bold text-emerald-700">{events?.filter((e) => e.status === "published").length ?? 0}</p>
+        <p className="text-xl font-bold text-emerald-700">
+          {events?.filter((e) => e.status === "published").length ?? 0}
+        </p>
       </div>
       <div className="rounded-lg border bg-white p-3">
         <p className="text-xs text-amber-600">Onay Bekleyen</p>
@@ -112,10 +110,17 @@ const AdminEventsPage = () => {
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Etkinlik ara..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        <Input
+          placeholder="Etkinlik ara..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="pl-9"
+        />
       </div>
       <Select value={statusFilter} onValueChange={setStatusFilter}>
-        <SelectTrigger className="w-full sm:w-[180px]"><SelectValue placeholder="Durum" /></SelectTrigger>
+        <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectValue placeholder="Durum" />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Tüm Durumlar</SelectItem>
           <SelectItem value="published">Yayında</SelectItem>
@@ -125,11 +130,15 @@ const AdminEventsPage = () => {
         </SelectContent>
       </Select>
       <Select value={typeFilter} onValueChange={setTypeFilter}>
-        <SelectTrigger className="w-full sm:w-[160px]"><SelectValue placeholder="Tür" /></SelectTrigger>
+        <SelectTrigger className="w-full sm:w-[160px]">
+          <SelectValue placeholder="Tür" />
+        </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">Tüm Türler</SelectItem>
           {EVENT_TYPE_OPTIONS.map((option) => (
-            <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
           ))}
         </SelectContent>
       </Select>
@@ -151,7 +160,9 @@ const AdminEventsPage = () => {
       {!isLoading && !error && filteredEvents.length === 0 ? (
         <AdminEmptyState
           title="Etkinlik bulunamadı"
-          description={events && events.length > 0 ? "Filtreleri değiştirmeyi deneyin." : "Henüz hiçbir etkinlik oluşturulmadı."}
+          description={
+            events && events.length > 0 ? "Filtreleri değiştirmeyi deneyin." : "Henüz hiçbir etkinlik oluşturulmadı."
+          }
         />
       ) : null}
 
@@ -184,31 +195,67 @@ const AdminEventsPage = () => {
                     <td className="px-4 py-3">
                       <Badge variant="outline">{eventTypeLabel(event.type)}</Badge>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{formatEventDate(event.event_date, { day: "numeric", month: "short", year: "numeric" })}</td>
                     <td className="px-4 py-3 text-slate-600">
-                      {event.city ? `${event.city}${event.country ? `, ${event.country}` : ""}` : event.type === "online" ? "Online" : "—"}
+                      {formatEventDate(event.event_date, { day: "numeric", month: "short", year: "numeric" })}
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">
+                      {event.city
+                        ? `${event.city}${event.country ? `, ${event.country}` : ""}`
+                        : event.type === "online"
+                          ? "Online"
+                          : "—"}
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${eventStatusTone(event.status)}`}>
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${eventStatusTone(event.status)}`}
+                      >
                         {eventStatusLabel(event.status)}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-1">
                         {event.status === "pending" && (
-                          <Button variant="ghost" size="icon" className="h-8 w-8" title="Onayla ve Yayınla" onClick={() => handlePublish(event.id)}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            title="Onayla ve Yayınla"
+                            onClick={() => handlePublish(event.id)}
+                          >
                             <Eye className="h-4 w-4 text-emerald-600" />
                           </Button>
                         )}
                         {event.status === "published" && (
-                          <Button variant="ghost" size="icon" className="h-8 w-8" title="Yayından Kaldır" onClick={() => handleUnpublish(event.id)}>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                            title="Yayından Kaldır"
+                            onClick={() => handleUnpublish(event.id)}
+                          >
                             <EyeOff className="h-4 w-4 text-amber-600" />
                           </Button>
                         )}
-                        <Button variant="ghost" size="icon" className="h-8 w-8" title={event.featured ? "Öne Çıkarmayı Kaldır" : "Öne Çıkar"} onClick={() => handleToggleFeatured(event.id, event.featured)}>
-                          {event.featured ? <StarOff className="h-4 w-4 text-amber-500" /> : <Star className="h-4 w-4 text-slate-400" />}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          title={event.featured ? "Öne Çıkarmayı Kaldır" : "Öne Çıkar"}
+                          onClick={() => handleToggleFeatured(event.id, event.featured)}
+                        >
+                          {event.featured ? (
+                            <StarOff className="h-4 w-4 text-amber-500" />
+                          ) : (
+                            <Star className="h-4 w-4 text-slate-400" />
+                          )}
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Sil" onClick={() => handleDelete(event)}>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          title="Sil"
+                          onClick={() => handleDelete(event)}
+                        >
                           <Trash2 className="h-4 w-4 text-red-500" />
                         </Button>
                       </div>

@@ -83,9 +83,7 @@ describe("QuickActionsCard · kablolama (kaynak sözleşmesi)", () => {
 
     // overview: quickActions hero'dan ÖNCE
     const overview = sliceBetween(menu, 'id: "overview"', 'id: "fields"', "overview bölümü");
-    expect(overview.indexOf("{sections.quickActionsCard}")).toBeLessThan(
-      overview.indexOf("{sections.legacyHeroCard}"),
-    );
+    expect(overview.indexOf("{sections.quickActionsCard}")).toBeLessThan(overview.indexOf("{sections.legacyHeroCard}"));
     // premium: hero sonrası, sekmelerden bağımsız
     expect(premium).toContain("{sections.quickActionsCard ?? null}");
     // ProfilePage iki düzene de geçiyor (tüm roller)

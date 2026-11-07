@@ -47,13 +47,7 @@ const EXAMPLE_QUERIES: readonly string[] = [
  * Yukarıdaki ölçüm kuralı buraya da aynen geçerlidir. Eski liste (yazılımcı,
  * avukat, girişimci, akademisyen) canlıda 5 çipten 4'ü SIFIR döndürüyordu.
  */
-const QUICK_CHIPS: readonly string[] = [
-  "Doktor",
-  "Danışman",
-  "Şehir Elçisi",
-  "Topluluk",
-  "Dernek",
-];
+const QUICK_CHIPS: readonly string[] = ["Doktor", "Danışman", "Şehir Elçisi", "Topluluk", "Dernek"];
 
 const PLACEHOLDER_INTERVAL_MS = 2600;
 
@@ -112,16 +106,10 @@ const DiasporaSearchSection = () => {
   };
 
   return (
-    <section
-      id="landingtrial-atlas"
-      className="relative mx-auto max-w-5xl px-6 py-20 sm:py-28"
-    >
+    <section id="landingtrial-atlas" className="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-2xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
-          <span
-            className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal"
-            aria-hidden="true"
-          />
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal" aria-hidden="true" />
           Diasporada ara
         </span>
 
@@ -131,8 +119,7 @@ const DiasporaSearchSection = () => {
           <span className="text-gradient-logo">tek aramada</span> bul
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Şehir, meslek ya da isim — 80+ kategoride dünyaya yayılmış diaspora
-          ağında ara, bağlan, keşfet.
+          Şehir, meslek ya da isim — 80+ kategoride dünyaya yayılmış diaspora ağında ara, bağlan, keşfet.
         </p>
       </div>
 
@@ -169,9 +156,7 @@ const DiasporaSearchSection = () => {
 
       {/* Tıklanabilir hızlı örnekler. */}
       <div className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-2">
-        <span className="text-xs font-medium text-muted-foreground">
-          Popüler:
-        </span>
+        <span className="text-xs font-medium text-muted-foreground">Popüler:</span>
         {QUICK_CHIPS.map((chip) => (
           <button
             key={chip}
@@ -189,8 +174,7 @@ const DiasporaSearchSection = () => {
       {!isAuthLoading && !user ? (
         <p className="mx-auto mt-5 flex max-w-2xl items-center justify-center gap-1.5 text-xs text-muted-foreground">
           <Info className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          Arama herkese açık — iletişime geçmek ve kendi kaydını açmak için
-          ücretsiz giriş yeterli.
+          Arama herkese açık — iletişime geçmek ve kendi kaydını açmak için ücretsiz giriş yeterli.
         </p>
       ) : null}
 
@@ -201,9 +185,7 @@ const DiasporaSearchSection = () => {
             <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
               {totalCount.toLocaleString("tr-TR")}+
             </div>
-            <div className="mt-1 text-sm text-muted-foreground">
-              dizinde görünen kayıt
-            </div>
+            <div className="mt-1 text-sm text-muted-foreground">dizinde görünen kayıt</div>
           </li>
         ) : null}
         {countryCount && countryCount > 0 ? (
@@ -215,18 +197,12 @@ const DiasporaSearchSection = () => {
           </li>
         ) : null}
         <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
-            80+
-          </div>
+          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">80+</div>
           <div className="mt-1 text-sm text-muted-foreground">kategori</div>
         </li>
         <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
-            7/24
-          </div>
-          <div className="mt-1 text-sm text-muted-foreground">
-            yaşayan ağ
-          </div>
+          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">7/24</div>
+          <div className="mt-1 text-sm text-muted-foreground">yaşayan ağ</div>
         </li>
       </ul>
     </section>

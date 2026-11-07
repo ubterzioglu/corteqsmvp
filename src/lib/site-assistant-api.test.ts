@@ -1,11 +1,6 @@
 import { describe, expect, it, vi, beforeEach } from "vitest";
 
-import {
-  MAX_CHAT_TURNS,
-  MAX_MESSAGE_CHARS,
-  askSiteAssistant,
-  trimChatHistory,
-} from "./site-assistant-api";
+import { MAX_CHAT_TURNS, MAX_MESSAGE_CHARS, askSiteAssistant, trimChatHistory } from "./site-assistant-api";
 
 const invoke = vi.fn();
 
@@ -77,25 +72,19 @@ describe("askSiteAssistant", () => {
     // daraltmak mesaji kaybettirir (cadde-rules.ts'te ayni tuzak aylarca yasandi).
     invoke.mockResolvedValue({ data: null, error: { message: "Giris yapmaniz gerekiyor." } });
 
-    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow(
-      "Giris yapmaniz gerekiyor.",
-    );
+    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow("Giris yapmaniz gerekiyor.");
   });
 
   it("govdedeki error alanini firlatir", async () => {
     invoke.mockResolvedValue({ data: { error: "Cok fazla istek" }, error: null });
 
-    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow(
-      "Cok fazla istek",
-    );
+    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow("Cok fazla istek");
   });
 
   it("yanit bos gelirse hata firlatir", async () => {
     invoke.mockResolvedValue({ data: { answer: "" }, error: null });
 
-    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow(
-      "Asistan yanıt döndürmedi.",
-    );
+    await expect(askSiteAssistant([{ role: "user", content: "s" }])).rejects.toThrow("Asistan yanıt döndürmedi.");
   });
 
   it("dogru edge function adini cagirir ve gecmisi kirpar", async () => {
@@ -153,9 +142,7 @@ describe("askSiteAssistant", () => {
       path: `/${"x".repeat(400)}`,
       title: "t".repeat(300),
     });
-    const page = (
-      invoke.mock.calls[1][1].body as { page: { path: string; title: string } }
-    ).page;
+    const page = (invoke.mock.calls[1][1].body as { page: { path: string; title: string } }).page;
     expect(page.path).toHaveLength(300);
     expect(page.title).toHaveLength(200);
   });

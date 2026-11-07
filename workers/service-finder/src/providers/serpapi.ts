@@ -1,10 +1,6 @@
 import { estimateSerpApiSearchCost } from "../costs.js";
 import { extractDomain } from "../dedupe.js";
-import {
-  AuthOrConfigError,
-  ProviderRateLimitError,
-  ProviderTemporaryError,
-} from "../errors.js";
+import { AuthOrConfigError, ProviderRateLimitError, ProviderTemporaryError } from "../errors.js";
 import type { SearchInput, SearchOutput, SearchProvider } from "./types.js";
 
 const SERPAPI_BASE_URL = "https://serpapi.com/search.json";

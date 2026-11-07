@@ -19,8 +19,7 @@ const adminLinkCards: AdminLinkCard[] = [
   {
     id: "site-trafik-durumu",
     title: "Site Trafik Durumu",
-    description:
-      "Microsoft Clarity panosu — ziyaretçi oturumları, ısı haritaları ve davranış kayıtları.",
+    description: "Microsoft Clarity panosu — ziyaretçi oturumları, ısı haritaları ve davranış kayıtları.",
     href: "https://clarity.microsoft.com/projects/view/wdkgdje6rb/",
     icon: BarChart3,
   },

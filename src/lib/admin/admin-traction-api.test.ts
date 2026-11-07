@@ -33,9 +33,7 @@ beforeEach(() => {
       maybeSingle: () => maybeSingleMock(view),
     }),
   }));
-  maybeSingleMock.mockImplementation((view: string) =>
-    Promise.resolve({ data: viewData[view] ?? null, error: null }),
-  );
+  maybeSingleMock.mockImplementation((view: string) => Promise.resolve({ data: viewData[view] ?? null, error: null }));
 });
 
 const setContent = (overrides: Partial<ContentCreatedMetric> = {}) => {
@@ -102,9 +100,7 @@ describe("M15 · fetchTractionMetrics — 5 view okunur", () => {
   });
 
   it("PostgREST hatası fırlatılır (react-query yakalar — sessiz yutulmaz)", async () => {
-    maybeSingleMock.mockImplementation(() =>
-      Promise.resolve({ data: null, error: { message: "permission denied" } }),
-    );
+    maybeSingleMock.mockImplementation(() => Promise.resolve({ data: null, error: { message: "permission denied" } }));
     await expect(fetchTractionMetrics()).rejects.toBeTruthy();
   });
 });

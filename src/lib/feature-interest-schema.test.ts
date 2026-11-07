@@ -105,9 +105,7 @@ describe("M10 · beyaz liste İKİ YÖNLÜ birebir (migration ↔ istemci)", () 
     for (const code of ["feature_interest_unknown_key", "feature_interest_auth_required"]) {
       expect(code in FEATURE_INTEREST_ERROR_MESSAGES, `haritada eksik: ${code}`).toBe(true);
     }
-    const phantom = Object.keys(FEATURE_INTEREST_ERROR_MESSAGES).filter(
-      (key) => !migrationSql().includes(`'${key}'`),
-    );
+    const phantom = Object.keys(FEATURE_INTEREST_ERROR_MESSAGES).filter((key) => !migrationSql().includes(`'${key}'`));
     expect(phantom).toEqual([]);
   });
 });
@@ -127,9 +125,7 @@ describe("M10 · RPC davranışı", () => {
   });
 
   it("grant yalnız authenticated (anon kayıt açamaz)", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.register_feature_interest(text) to authenticated;",
-    );
+    expect(flat()).toContain("grant execute on function public.register_feature_interest(text) to authenticated;");
   });
 });
 

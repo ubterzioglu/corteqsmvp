@@ -209,8 +209,7 @@ export default function SiteHeader() {
               <span className="font-semibold text-slate-900">CorteQS açık beta yayında!</span>{" "}
               {/* Uzun açıklama mobilde gizli — bandın yüksekliğini düşük tutar */}
               <span className="hidden sm:inline">
-                Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı
-                sağlayabilirsiniz.
+                Platformu deneyebilir, görüş ve önerilerinizle gelişim sürecimize katkı sağlayabilirsiniz.
               </span>
             </span>
           </p>
@@ -239,9 +238,7 @@ export default function SiteHeader() {
         <div className="container mx-auto hidden flex-wrap items-center justify-end gap-x-4 gap-y-1 md:flex lg:px-6">
           {desktopItems.map((item, index) => (
             <Fragment key={item.key}>
-              {index > 0 ? (
-                <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" />
-              ) : null}
+              {index > 0 ? <span aria-hidden="true" className="h-4 w-px bg-slate-300/80" /> : null}
               {renderDesktopItem(item)}
             </Fragment>
           ))}
@@ -268,22 +265,15 @@ export default function SiteHeader() {
           {/* `flex flex-col` + `gap-0`: sheetVariants taban sınıfı `p-6 gap-4`
               verir; çekmecede bağlantılar kenardan kenara uzanmalı ve uzun
               listede YALNIZ liste kaymalı (başlık sabit kalmalı). */}
-          <SheetContent
-            side="right"
-            className="flex w-[17.5rem] flex-col gap-0 p-0 sm:max-w-none"
-          >
+          <SheetContent side="right" className="flex w-[17.5rem] flex-col gap-0 p-0 sm:max-w-none">
             <SheetHeader className="shrink-0 border-b border-slate-200 px-5 py-4 text-left">
-              <SheetTitle className="text-sm font-bold uppercase tracking-[0.2em] text-slate-900">
-                Menü
-              </SheetTitle>
+              <SheetTitle className="text-sm font-bold uppercase tracking-[0.2em] text-slate-900">Menü</SheetTitle>
             </SheetHeader>
             <nav
               aria-label="Mobil gezinme"
               className="flex min-h-0 flex-1 flex-col divide-y divide-slate-200/80 overflow-y-auto"
             >
-              {mobileItems.map((item, index) =>
-                renderMobileItem(item, index < accountItems.length),
-              )}
+              {mobileItems.map((item, index) => renderMobileItem(item, index < accountItems.length))}
             </nav>
             {/* Marka imzası — header'ın alt şeridiyle aynı jest. */}
             <div
@@ -300,49 +290,46 @@ export default function SiteHeader() {
       {/* Marka satırı: logonun altı kolundan gelen çok yumuşak köşe yıkamaları.
           Ortası beyaza yakın kalır ki logo ve "CorteQS" yazısı zemine karışmasın. */}
       <div className="site-header__brand-wrap relative bg-[radial-gradient(60%_140%_at_0%_50%,hsl(var(--glow-teal)/0.13),transparent_62%),radial-gradient(60%_140%_at_100%_50%,hsl(var(--brand-pink)/0.11),transparent_62%)]">
-      <div className="site-header__brand container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
-        <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
-          <Link
-            to="/"
-            className="inline-flex w-full shrink-0 items-center justify-center gap-2.5 text-center transition-transform duration-200 hover:-translate-y-0.5 md:w-fit md:justify-start md:gap-3 md:text-left"
-          >
-            <div className="site-header__logo flex h-[46px] w-[46px] items-center justify-center rounded-full bg-white shadow-[0_14px_30px_rgba(15,23,42,0.16)] ring-1 ring-slate-100 sm:h-[58px] sm:w-[58px]">
-              <img
-                src={logo}
-                alt="CorteQS"
-                className="h-[40px] w-[40px] rounded-full object-contain sm:h-[50px] sm:w-[50px]"
-              />
-            </div>
-            <div className="flex items-center gap-2 text-left sm:gap-3">
-              <div className="text-[1.2rem] font-black tracking-[0.22em] text-slate-900 sm:text-[1.55rem]">
-                CorteQS
+        <div className="site-header__brand container mx-auto px-4 py-2.5 lg:px-6 lg:py-3">
+          <div className="flex flex-col items-center gap-3 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-4">
+            <Link
+              to="/"
+              className="inline-flex w-full shrink-0 items-center justify-center gap-2.5 text-center transition-transform duration-200 hover:-translate-y-0.5 md:w-fit md:justify-start md:gap-3 md:text-left"
+            >
+              <div className="site-header__logo flex h-[46px] w-[46px] items-center justify-center rounded-full bg-white shadow-[0_14px_30px_rgba(15,23,42,0.16)] ring-1 ring-slate-100 sm:h-[58px] sm:w-[58px]">
+                <img
+                  src={logo}
+                  alt="CorteQS"
+                  className="h-[40px] w-[40px] rounded-full object-contain sm:h-[50px] sm:w-[50px]"
+                />
               </div>
-              {/* Ayraç + alt başlık mobilde gizli — kompakt sticky header */}
-              <span
-                aria-hidden="true"
-                className="hidden h-8 w-px bg-slate-300/85 sm:block"
-              />
-              <div className="hidden max-w-[16rem] items-center gap-2 text-[1rem] font-semibold tracking-[0.02em] text-slate-800 sm:flex sm:max-w-none sm:text-[1.05rem]">
-                <span>Global Türk Diaspora Network</span>
+              <div className="flex items-center gap-2 text-left sm:gap-3">
+                <div className="text-[1.2rem] font-black tracking-[0.22em] text-slate-900 sm:text-[1.55rem]">
+                  CorteQS
+                </div>
+                {/* Ayraç + alt başlık mobilde gizli — kompakt sticky header */}
+                <span aria-hidden="true" className="hidden h-8 w-px bg-slate-300/85 sm:block" />
+                <div className="hidden max-w-[16rem] items-center gap-2 text-[1rem] font-semibold tracking-[0.02em] text-slate-800 sm:flex sm:max-w-none sm:text-[1.05rem]">
+                  <span>Global Türk Diaspora Network</span>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
 
-          {/* Pazarlama sloganı yalnız giriş yapmamış ziyaretçiye gösterilir.
+            {/* Pazarlama sloganı yalnız giriş yapmamış ziyaretçiye gösterilir.
               Koşul <p> yerine DIŞ sarmalayıcıya konur: aksi halde girişli üyede
               boş bir md:flex-1 kolonu ve ebeveynin boşluğu kalırdı. */}
-          {!user && (
-            <div className="min-w-0 w-full md:flex-1">
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
-                {/* Uzun slogan mobilde gizli — yalnızca sm+ ekranlarda */}
-                <p className="hidden text-sm font-semibold tracking-[0.03em] text-slate-800 sm:block sm:text-base">
-                  Dünyadaki Türkleri Bir Araya Getiren Platform
-                </p>
+            {!user && (
+              <div className="min-w-0 w-full md:flex-1">
+                <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center md:justify-end md:text-right">
+                  {/* Uzun slogan mobilde gizli — yalnızca sm+ ekranlarda */}
+                  <p className="hidden text-sm font-semibold tracking-[0.03em] text-slate-800 sm:block sm:text-base">
+                    Dünyadaki Türkleri Bir Araya Getiren Platform
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
       </div>
       {/* Header'ın alt kenarı: düz slate çizgi yerine logonun altı rengi.
           Tek ve dar bir marka imzası — FinalCtaSection kartının üst şeridiyle aynı

@@ -75,7 +75,9 @@ export function PageHero({
   children,
 }: PageHeroProps) {
   return (
-    <section className={`relative overflow-hidden rounded-[1.75rem] shadow-[0_24px_80px_rgba(15,23,42,0.08)] ${shellClassName}`}>
+    <section
+      className={`relative overflow-hidden rounded-[1.75rem] shadow-[0_24px_80px_rgba(15,23,42,0.08)] ${shellClassName}`}
+    >
       <div className={`absolute inset-0 ${tintClassName}`} aria-hidden="true" />
       <div className="relative">
         <img src={image.src} alt={image.alt} className={`w-full object-cover ${heightClassName}`} />

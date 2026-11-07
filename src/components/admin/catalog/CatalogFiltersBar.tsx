@@ -38,7 +38,12 @@ const CatalogFiltersBar = ({
     </label>
 
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
-      <Select value={filters.kind || "__all__"} onValueChange={(value) => onFilterChange("kind", value === "__all__" ? "" : (value as AdminCatalogFilters["kind"]))}>
+      <Select
+        value={filters.kind || "__all__"}
+        onValueChange={(value) =>
+          onFilterChange("kind", value === "__all__" ? "" : (value as AdminCatalogFilters["kind"]))
+        }
+      >
         <SelectTrigger aria-label="Tür filtresi">
           <SelectValue placeholder="Tüm türler" />
         </SelectTrigger>
@@ -50,7 +55,10 @@ const CatalogFiltersBar = ({
         </SelectContent>
       </Select>
 
-      <Select value={filters.itemType || "__all__"} onValueChange={(value) => onFilterChange("itemType", value === "__all__" ? "" : value)}>
+      <Select
+        value={filters.itemType || "__all__"}
+        onValueChange={(value) => onFilterChange("itemType", value === "__all__" ? "" : value)}
+      >
         <SelectTrigger aria-label="Item type filtresi">
           <SelectValue placeholder="Tüm tipler" />
         </SelectTrigger>
@@ -81,7 +89,10 @@ const CatalogFiltersBar = ({
         </SelectContent>
       </Select>
 
-      <Select value={filters.status || "__all__"} onValueChange={(value) => onFilterChange("status", value === "__all__" ? "" : value)}>
+      <Select
+        value={filters.status || "__all__"}
+        onValueChange={(value) => onFilterChange("status", value === "__all__" ? "" : value)}
+      >
         <SelectTrigger aria-label="Durum filtresi">
           <SelectValue placeholder="Tüm durumlar" />
         </SelectTrigger>
@@ -112,7 +123,10 @@ const CatalogFiltersBar = ({
         </SelectContent>
       </Select>
 
-      <Select value={filters.city || "__all__"} onValueChange={(value) => onFilterChange("city", value === "__all__" ? "" : value)}>
+      <Select
+        value={filters.city || "__all__"}
+        onValueChange={(value) => onFilterChange("city", value === "__all__" ? "" : value)}
+      >
         <SelectTrigger aria-label="Şehir filtresi">
           <SelectValue placeholder="Tüm şehirler" />
         </SelectTrigger>
@@ -126,7 +140,10 @@ const CatalogFiltersBar = ({
         </SelectContent>
       </Select>
 
-      <Select value={filters.countryCode || "__all__"} onValueChange={(value) => onFilterChange("countryCode", value === "__all__" ? "" : value)}>
+      <Select
+        value={filters.countryCode || "__all__"}
+        onValueChange={(value) => onFilterChange("countryCode", value === "__all__" ? "" : value)}
+      >
         <SelectTrigger aria-label="Ülke filtresi">
           <SelectValue placeholder="Tüm ülkeler" />
         </SelectTrigger>

@@ -4,9 +4,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ShieldCheck } from "lucide-react";
 
 export interface ConsentState {
-  privacy: boolean;        // Privacy Policy + KVKK + GDPR + CCPA + APP + PIPEDA
-  terms: boolean;          // Terms of Service
-  marketing: boolean;      // Optional marketing
+  privacy: boolean; // Privacy Policy + KVKK + GDPR + CCPA + APP + PIPEDA
+  terms: boolean; // Terms of Service
+  marketing: boolean; // Optional marketing
   dataProcessing: boolean; // Specific consent to processing of personal data
 }
 
@@ -45,13 +45,7 @@ interface Props {
  * Two checkboxes are mandatory (privacy + terms + dataProcessing),
  * marketing is optional (opt-in, default false).
  */
-const ConsentCheckboxes = ({
-  value,
-  onChange,
-  compact = false,
-  hideMarketing = false,
-  className = "",
-}: Props) => {
+const ConsentCheckboxes = ({ value, onChange, compact = false, hideMarketing = false, className = "" }: Props) => {
   const [internal, setInternal] = useState<ConsentState>(value || emptyConsent);
 
   useEffect(() => {
@@ -70,9 +64,7 @@ const ConsentCheckboxes = ({
         <label className="flex items-start gap-2 cursor-pointer text-xs leading-relaxed">
           <Checkbox
             checked={internal.privacy && internal.terms && internal.dataProcessing}
-            onCheckedChange={(v) =>
-              update({ privacy: !!v, terms: !!v, dataProcessing: !!v })
-            }
+            onCheckedChange={(v) => update({ privacy: !!v, terms: !!v, dataProcessing: !!v })}
             className="mt-0.5"
           />
           <span className="text-foreground">
@@ -88,8 +80,8 @@ const ConsentCheckboxes = ({
             <Link to="/legal/kvkk" target="_blank" className="underline hover:text-primary">
               KVKK / GDPR Aydınlatma Metni
             </Link>
-            'ni okudum, anladım ve kişisel verilerimin işlenmesine{" "}
-            <span className="font-semibold">açık rıza</span> veriyorum. *
+            'ni okudum, anladım ve kişisel verilerimin işlenmesine <span className="font-semibold">açık rıza</span>{" "}
+            veriyorum. *
           </span>
         </label>
       </div>
@@ -105,11 +97,7 @@ const ConsentCheckboxes = ({
 
       {/* 1. Privacy Policy / KVKK / GDPR */}
       <label className="flex items-start gap-2 cursor-pointer text-xs leading-relaxed">
-        <Checkbox
-          checked={internal.privacy}
-          onCheckedChange={(v) => update({ privacy: !!v })}
-          className="mt-0.5"
-        />
+        <Checkbox checked={internal.privacy} onCheckedChange={(v) => update({ privacy: !!v })} className="mt-0.5" />
         <span className="text-foreground">
           <Link to="/legal/privacy" target="_blank" className="underline hover:text-primary font-medium">
             Gizlilik Politikası
@@ -121,18 +109,15 @@ const ConsentCheckboxes = ({
           'ni okudum, anladım. *
           <br />
           <span className="text-[10px] text-muted-foreground">
-            (TR: 6698 sayılı Kanun · EU: GDPR 2016/679 · UK: DPA 2018 · US: CCPA/CPRA · CA: PIPEDA · AU: Privacy Act 1988 · CH: nFADP · BR: LGPD)
+            (TR: 6698 sayılı Kanun · EU: GDPR 2016/679 · UK: DPA 2018 · US: CCPA/CPRA · CA: PIPEDA · AU: Privacy Act
+            1988 · CH: nFADP · BR: LGPD)
           </span>
         </span>
       </label>
 
       {/* 2. Terms of Service */}
       <label className="flex items-start gap-2 cursor-pointer text-xs leading-relaxed">
-        <Checkbox
-          checked={internal.terms}
-          onCheckedChange={(v) => update({ terms: !!v })}
-          className="mt-0.5"
-        />
+        <Checkbox checked={internal.terms} onCheckedChange={(v) => update({ terms: !!v })} className="mt-0.5" />
         <span className="text-foreground">
           <Link to="/legal/terms" target="_blank" className="underline hover:text-primary font-medium">
             Kullanım Şartları
@@ -149,9 +134,8 @@ const ConsentCheckboxes = ({
           className="mt-0.5"
         />
         <span className="text-foreground">
-          Kişisel verilerimin (ad, e-posta, telefon, konum, yüklenen belgeler vb.) CorteQS
-          tarafından platform hizmetlerinin sunulması, eşleştirme, iletişim ve yasal yükümlülüklerin
-          yerine getirilmesi amacıyla işlenmesine{" "}
+          Kişisel verilerimin (ad, e-posta, telefon, konum, yüklenen belgeler vb.) CorteQS tarafından platform
+          hizmetlerinin sunulması, eşleştirme, iletişim ve yasal yükümlülüklerin yerine getirilmesi amacıyla işlenmesine{" "}
           <span className="font-semibold">açık rıza</span> veriyorum. *
           <br />
           <span className="text-[10px] text-muted-foreground">
@@ -173,18 +157,21 @@ const ConsentCheckboxes = ({
             className="mt-0.5"
           />
           <span className="text-muted-foreground">
-            (Opsiyonel) CorteQS'ten kampanya, etkinlik ve ürün güncellemeleri içeren ticari
-            elektronik iletiler (e-posta / SMS / WhatsApp) almayı kabul ediyorum. Her zaman
-            ücretsiz olarak iletiyi durdurabilirim.
+            (Opsiyonel) CorteQS'ten kampanya, etkinlik ve ürün güncellemeleri içeren ticari elektronik iletiler (e-posta
+            / SMS / WhatsApp) almayı kabul ediyorum. Her zaman ücretsiz olarak iletiyi durdurabilirim.
           </span>
         </label>
       )}
 
       <p className="text-[10px] text-muted-foreground border-t border-border pt-2">
         * işaretli alanlar zorunludur. Onayınızı dilediğiniz zaman{" "}
-        <Link to="/profile" className="underline">profil</Link>'inizden geri çekebilirsiniz.
-        İletişim:{" "}
-        <a href="mailto:info@corteqs.net" className="underline">info@corteqs.net</a>
+        <Link to="/profile" className="underline">
+          profil
+        </Link>
+        'inizden geri çekebilirsiniz. İletişim:{" "}
+        <a href="mailto:info@corteqs.net" className="underline">
+          info@corteqs.net
+        </a>
       </p>
     </div>
   );

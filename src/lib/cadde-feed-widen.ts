@@ -106,11 +106,7 @@ export function widenCaddeFilters(
  * dizi boş kalır, filtre SESSİZCE hiç uygulanmaz ve kullanıcı "Almanya akışı" yazısına
  * tıklayıp GLOBAL akış görür. Çözülemezse ad UYDURULMAZ — global'e düşülür.
  */
-function resolveCountryName(
-  filters: CaddeFilterState,
-  cities: CaddeCity[],
-  countries: CaddeCountry[],
-): string | null {
+function resolveCountryName(filters: CaddeFilterState, cities: CaddeCity[], countries: CaddeCountry[]): string | null {
   // Kullanıcı ülkeyi zaten seçmişse o ad korunur (katalogdan geldiği garanti).
   if (filters.countries.length > 0) return filters.countries[0];
 

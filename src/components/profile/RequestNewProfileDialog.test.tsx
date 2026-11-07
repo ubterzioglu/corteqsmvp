@@ -57,15 +57,11 @@ describe("RequestNewProfileDialog", () => {
       ),
     );
     await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
-    expect(toastMock).toHaveBeenCalledWith(
-      expect.objectContaining({ title: "Talep gönderildi" }),
-    );
+    expect(toastMock).toHaveBeenCalledWith(expect.objectContaining({ title: "Talep gönderildi" }));
   });
 
   it("shows an error toast when the RPC rejects", async () => {
-    requestNewCatalogItemMock.mockRejectedValue(
-      new Error("a pending new profile request already exists"),
-    );
+    requestNewCatalogItemMock.mockRejectedValue(new Error("a pending new profile request already exists"));
     render(<RequestNewProfileDialog open onOpenChange={() => {}} onSuccess={() => {}} />);
 
     await waitFor(() => expect(rpcMock).toHaveBeenCalledWith("get_flat_roles"));

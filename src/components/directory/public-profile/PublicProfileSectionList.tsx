@@ -47,9 +47,7 @@ const PublicProfileSectionList = ({
 
   return (
     <div className="grid gap-4 lg:grid-cols-12">
-      <div className="space-y-4 lg:col-span-8">
-        {mainSections.map((section) => renderSection(section, accent))}
-      </div>
+      <div className="space-y-4 lg:col-span-8">{mainSections.map((section) => renderSection(section, accent))}</div>
       {hasSidebar ? (
         <aside className="space-y-4 lg:col-span-4 lg:sticky lg:top-24 lg:self-start">
           {sidebarTop}

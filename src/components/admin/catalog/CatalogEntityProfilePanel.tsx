@@ -44,7 +44,9 @@ const parseAttributeValue = (attribute: CatalogEntityProfileAttribute, rawValue:
 const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) => {
   const [profile, setProfile] = useState<CatalogEntityProfile | null>(null);
   const [drafts, setDrafts] = useState<Record<string, string>>({});
-  const [visibilityDrafts, setVisibilityDrafts] = useState<Record<string, CatalogEntityProfileAttribute["visibility"]>>({});
+  const [visibilityDrafts, setVisibilityDrafts] = useState<Record<string, CatalogEntityProfileAttribute["visibility"]>>(
+    {},
+  );
   const [pendingKey, setPendingKey] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +59,9 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
       const nextProfile = await getCatalogItemProfile(itemId);
       setProfile(nextProfile);
       setDrafts(
-        Object.fromEntries(nextProfile.attributes.map((attribute) => [attribute.attribute_key, serializeAttributeValue(attribute)])),
+        Object.fromEntries(
+          nextProfile.attributes.map((attribute) => [attribute.attribute_key, serializeAttributeValue(attribute)]),
+        ),
       );
       setVisibilityDrafts(
         Object.fromEntries(nextProfile.attributes.map((attribute) => [attribute.attribute_key, attribute.visibility])),
@@ -98,9 +102,7 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Catalog Profili</CardTitle>
-          <CardDescription>
-            Attribute değerlerini ve görünürlük bilgisini bu panelden yönetebilirsin.
-          </CardDescription>
+          <CardDescription>Attribute değerlerini ve görünürlük bilgisini bu panelden yönetebilirsin.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-3 text-sm md:grid-cols-2">
           <MetadataRow label="Item Type" value={profile?.item_type ?? "-"} />
@@ -134,11 +136,21 @@ const CatalogEntityProfilePanel = ({ itemId }: CatalogEntityProfilePanelProps) =
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="font-medium text-slate-950 text-sm">{attribute.label}</span>
-                          <Badge variant="outline" className="text-xs py-0">{fieldKey}</Badge>
-                          <Badge variant="outline" className="text-xs py-0">{attribute.data_type}</Badge>
-                          {attribute.is_required ? <Badge variant="secondary" className="text-xs py-0">Required</Badge> : null}
+                          <Badge variant="outline" className="text-xs py-0">
+                            {fieldKey}
+                          </Badge>
+                          <Badge variant="outline" className="text-xs py-0">
+                            {attribute.data_type}
+                          </Badge>
+                          {attribute.is_required ? (
+                            <Badge variant="secondary" className="text-xs py-0">
+                              Required
+                            </Badge>
+                          ) : null}
                           <span className="text-xs text-muted-foreground">{attribute.approval_status}</span>
-                          <span className="text-xs text-muted-foreground">· {attribute.is_public_default ? "public" : "private"}</span>
+                          <span className="text-xs text-muted-foreground">
+                            · {attribute.is_public_default ? "public" : "private"}
+                          </span>
                         </div>
                       </div>
 

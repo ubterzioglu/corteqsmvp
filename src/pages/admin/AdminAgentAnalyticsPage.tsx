@@ -10,25 +10,10 @@ import { Activity, AlertTriangle, BarChart3, Gauge, ShieldCheck } from "lucide-r
 import { PanelHelpCard } from "@/components/admin/PanelHelpCard";
 import { AdminPageShell } from "@/components/admin/page";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toolCatalog } from "@/lib/agent/tools-catalog.generated";
-import {
-  fetchAssistantUsage,
-  getGeminiQuotaAlert,
-  summarizeAssistantUsage,
-} from "@/lib/assistant-usage-api";
-import {
-  confidenceBand,
-  contractCompleteness,
-  scoreFeatures,
-  type RouteFeatures,
-} from "@/lib/agent/tool-router";
+import { fetchAssistantUsage, getGeminiQuotaAlert, summarizeAssistantUsage } from "@/lib/assistant-usage-api";
+import { confidenceBand, contractCompleteness, scoreFeatures, type RouteFeatures } from "@/lib/agent/tool-router";
 
 type CatalogTool = {
   tool_key: string;
@@ -68,14 +53,8 @@ const AdminAgentAnalyticsPage = () => {
     queryFn: () => fetchAssistantUsage(30),
     staleTime: 60_000,
   });
-  const usageSummary = useMemo(
-    () => summarizeAssistantUsage(usageQuery.data ?? []),
-    [usageQuery.data],
-  );
-  const quotaAlert = useMemo(
-    () => getGeminiQuotaAlert(usageQuery.data ?? []),
-    [usageQuery.data],
-  );
+  const usageSummary = useMemo(() => summarizeAssistantUsage(usageQuery.data ?? []), [usageQuery.data]);
+  const quotaAlert = useMemo(() => getGeminiQuotaAlert(usageQuery.data ?? []), [usageQuery.data]);
   const scored = useMemo(() => {
     return tools
       .filter((t) => t.family === "edge_function" || t.family === "worker")
@@ -176,9 +155,7 @@ const AdminAgentAnalyticsPage = () => {
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" />
           <div>
             <p className="font-semibold">Gemini kota uyarısı</p>
-            <p className="mt-1 text-sm">
-              Son 24 saatte {quotaAlert.eventCount} adet 429 yanıtı kaydedildi.
-            </p>
+            <p className="mt-1 text-sm">Son 24 saatte {quotaAlert.eventCount} adet 429 yanıtı kaydedildi.</p>
           </div>
         </div>
       )}
@@ -189,7 +166,8 @@ const AdminAgentAnalyticsPage = () => {
             <Gauge className="h-4 w-4 text-violet-500" /> Yönlendirme Skoru (tool selection)
           </CardTitle>
           <CardDescription>
-            S = 100 × (0.30·niyet + 0.20·sözleşme + 0.15·gizlilik + 0.10·tazelik + 0.10·gecikme + 0.10·belirlilik + 0.05·erişilebilirlik)
+            S = 100 × (0.30·niyet + 0.20·sözleşme + 0.15·gizlilik + 0.10·tazelik + 0.10·gecikme + 0.10·belirlilik +
+            0.05·erişilebilirlik)
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">

@@ -76,10 +76,9 @@ async function main() {
   const { url, key } = readEnv();
   const headers = { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
 
-  const sourceRes = await fetch(
-    `${url}/rest/v1/relocation_source_registry?select=id&source_key=eq.${SOURCE_KEY}`,
-    { headers },
-  );
+  const sourceRes = await fetch(`${url}/rest/v1/relocation_source_registry?select=id&source_key=eq.${SOURCE_KEY}`, {
+    headers,
+  });
   const sources = await sourceRes.json();
   if (!Array.isArray(sources) || sources.length === 0) {
     throw new Error(`Kaynak kaydi bulunamadi: ${SOURCE_KEY} (migration uygulandi mi?)`);
@@ -91,18 +90,13 @@ async function main() {
   const payload = await providerRes.json();
 
   const rows = buildRateRows(payload, sourceId);
-  const missing = CURRENCIES.filter(
-    (c) => c !== BASE && !rows.some((r) => r.quote_currency === c),
-  );
+  const missing = CURRENCIES.filter((c) => c !== BASE && !rows.some((r) => r.quote_currency === c));
 
-  const writeRes = await fetch(
-    `${url}/rest/v1/relocation_fx_rates?on_conflict=base_currency,quote_currency`,
-    {
-      method: "POST",
-      headers: { ...headers, Prefer: "resolution=merge-duplicates,return=minimal" },
-      body: JSON.stringify(rows),
-    },
-  );
+  const writeRes = await fetch(`${url}/rest/v1/relocation_fx_rates?on_conflict=base_currency,quote_currency`, {
+    method: "POST",
+    headers: { ...headers, Prefer: "resolution=merge-duplicates,return=minimal" },
+    body: JSON.stringify(rows),
+  });
   if (!writeRes.ok) throw new Error(`Yazma HTTP ${writeRes.status}: ${await writeRes.text()}`);
 
   console.log(`[fx-refresh] ${rows.length} kur yazildi · baz ${BASE} · kur ani ${rows[0]?.rate_at}`);

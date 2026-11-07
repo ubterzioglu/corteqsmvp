@@ -1,9 +1,9 @@
 // src/lib/muhasebe-api.ts
 // Supabase CRUD + aggregation çağrıları
 
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 
-import { fetchAllRows } from './supabase-chunked';
+import { fetchAllRows } from "./supabase-chunked";
 import type {
   ExpenseRow,
   ExpenseInput,
@@ -13,7 +13,7 @@ import type {
   PersonSummary,
   CategorySummary,
   CashflowMonth,
-} from '@/types/muhasebe';
+} from "@/types/muhasebe";
 
 // ---------------------------------------------------------------------
 // EXPENSES
@@ -28,41 +28,29 @@ import type {
 export async function fetchExpenses(): Promise<ExpenseRow[]> {
   const rows = await fetchAllRows<ExpenseRow>((from, to) =>
     supabase
-      .from('expenses')
-      .select('*')
-      .order('expense_date', { ascending: false })
-      .order('created_at', { ascending: false })
+      .from("expenses")
+      .select("*")
+      .order("expense_date", { ascending: false })
+      .order("created_at", { ascending: false })
       .range(from, to),
   );
   return rows;
 }
 
 export async function createExpense(input: ExpenseInput): Promise<ExpenseRow> {
-  const { data, error } = await supabase
-    .from('expenses')
-    .insert(input)
-    .select('*')
-    .single();
+  const { data, error } = await supabase.from("expenses").insert(input).select("*").single();
   if (error) throw error;
   return data as ExpenseRow;
 }
 
-export async function updateExpense(
-  id: string,
-  input: Partial<ExpenseInput>,
-): Promise<ExpenseRow> {
-  const { data, error } = await supabase
-    .from('expenses')
-    .update(input)
-    .eq('id', id)
-    .select('*')
-    .single();
+export async function updateExpense(id: string, input: Partial<ExpenseInput>): Promise<ExpenseRow> {
+  const { data, error } = await supabase.from("expenses").update(input).eq("id", id).select("*").single();
   if (error) throw error;
   return data as ExpenseRow;
 }
 
 export async function deleteExpense(id: string): Promise<void> {
-  const { error } = await supabase.from('expenses').delete().eq('id', id);
+  const { error } = await supabase.from("expenses").delete().eq("id", id);
   if (error) throw error;
 }
 
@@ -74,41 +62,29 @@ export async function deleteExpense(id: string): Promise<void> {
 export async function fetchIncomes(): Promise<IncomeRow[]> {
   const rows = await fetchAllRows<IncomeRow>((from, to) =>
     supabase
-      .from('incomes')
-      .select('*')
-      .order('income_date', { ascending: false })
-      .order('created_at', { ascending: false })
+      .from("incomes")
+      .select("*")
+      .order("income_date", { ascending: false })
+      .order("created_at", { ascending: false })
       .range(from, to),
   );
   return rows;
 }
 
 export async function createIncome(input: IncomeInput): Promise<IncomeRow> {
-  const { data, error } = await supabase
-    .from('incomes')
-    .insert(input)
-    .select('*')
-    .single();
+  const { data, error } = await supabase.from("incomes").insert(input).select("*").single();
   if (error) throw error;
   return data as IncomeRow;
 }
 
-export async function updateIncome(
-  id: string,
-  input: Partial<IncomeInput>,
-): Promise<IncomeRow> {
-  const { data, error } = await supabase
-    .from('incomes')
-    .update(input)
-    .eq('id', id)
-    .select('*')
-    .single();
+export async function updateIncome(id: string, input: Partial<IncomeInput>): Promise<IncomeRow> {
+  const { data, error } = await supabase.from("incomes").update(input).eq("id", id).select("*").single();
   if (error) throw error;
   return data as IncomeRow;
 }
 
 export async function deleteIncome(id: string): Promise<void> {
-  const { error } = await supabase.from('incomes').delete().eq('id', id);
+  const { error } = await supabase.from("incomes").delete().eq("id", id);
   if (error) throw error;
 }
 
@@ -117,36 +93,29 @@ export async function deleteIncome(id: string): Promise<void> {
 // ---------------------------------------------------------------------
 
 export async function fetchKpiSummary(): Promise<KpiSummary> {
-  const { data, error } = await supabase
-    .from('v_muhasebe_kpi')
-    .select('*')
-    .single();
+  const { data, error } = await supabase.from("v_muhasebe_kpi").select("*").single();
   if (error) throw error;
   return data as KpiSummary;
 }
 
 export async function fetchPersonSummary(): Promise<PersonSummary[]> {
-  const { data, error } = await supabase.from('v_muhasebe_by_person').select('*');
+  const { data, error } = await supabase.from("v_muhasebe_by_person").select("*");
   if (error) throw error;
   return (data ?? []) as PersonSummary[];
 }
 
 export async function fetchCategorySummary(): Promise<CategorySummary[]> {
-  const { data, error } = await supabase
-    .from('v_muhasebe_by_category')
-    .select('*');
+  const { data, error } = await supabase.from("v_muhasebe_by_category").select("*");
   if (error) throw error;
   return (data ?? []) as CategorySummary[];
 }
 
-export async function fetchCashflowMonthly(
-  yearNum?: number,
-): Promise<CashflowMonth[]> {
-  let q = supabase.from('v_muhasebe_cashflow_monthly').select('*');
+export async function fetchCashflowMonthly(yearNum?: number): Promise<CashflowMonth[]> {
+  let q = supabase.from("v_muhasebe_cashflow_monthly").select("*");
   if (yearNum !== undefined) {
-    q = q.eq('year_num', yearNum);
+    q = q.eq("year_num", yearNum);
   }
-  const { data, error } = await q.order('month_num');
+  const { data, error } = await q.order("month_num");
   if (error) throw error;
   return (data ?? []) as CashflowMonth[];
 }

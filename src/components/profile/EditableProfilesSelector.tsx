@@ -4,10 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditableCatalogItemSummary } from "@/lib/member-catalog";
-import {
-  isPremiumPresentation,
-  resolveProfilePresentation,
-} from "@/lib/profile-presentation";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
 import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
 
 type EditableProfilesSelectorProps = {
@@ -37,17 +34,15 @@ const EditableProfilesSelector = ({ items, onSelect }: EditableProfilesSelectorP
           Düzenlemek istediğin profili seç
         </h1>
         <p className="text-sm text-muted-foreground">
-          Hesabına bağlı birden fazla profil var. Kişisel profiline veya yönettiğin katalog
-          profillerinden birine devam edebilirsin.
+          Hesabına bağlı birden fazla profil var. Kişisel profiline veya yönettiğin katalog profillerinden birine devam
+          edebilirsin.
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         {items.map((item) => {
           const Icon = iconByItemType[item.itemType] ?? UserCircle2;
-          const isPilotProfile = isPremiumPresentation(
-            resolveProfilePresentation(item.roleKey),
-          );
+          const isPilotProfile = isPremiumPresentation(resolveProfilePresentation(item.roleKey));
           return (
             <Card
               key={item.itemId}
@@ -62,9 +57,7 @@ const EditableProfilesSelector = ({ items, onSelect }: EditableProfilesSelectorP
                     <CardTitle className="break-words text-lg">{item.title}</CardTitle>
                     <CardDescription className="flex flex-wrap items-center gap-1.5">
                       <span>
-                        {item.roleKey
-                          ? roleMetaByLegacyKey[getUiProfileType(item.roleKey)].adminLabel
-                          : item.itemType}
+                        {item.roleKey ? roleMetaByLegacyKey[getUiProfileType(item.roleKey)].adminLabel : item.itemType}
                       </span>
                       <span aria-hidden="true">•</span>
                       <span>{ACCESS_LEVEL_LABELS[item.accessLevel] ?? item.accessLevel}</span>

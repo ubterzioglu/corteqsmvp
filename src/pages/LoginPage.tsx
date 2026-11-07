@@ -202,198 +202,192 @@ const LoginPage = () => {
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-muted/40 px-4 py-8 sm:px-6">
       <div className="grid w-full max-w-4xl overflow-hidden rounded-3xl border border-border/60 bg-card shadow-2xl lg:grid-cols-2">
-      {/* ——— SOL PANEL: koyu + renkli marka/branding ——— */}
-      <aside className="relative flex min-h-[18vh] flex-col justify-between overflow-hidden bg-[hsl(220_28%_10%)] px-7 py-8 text-white lg:px-9 lg:py-10">
-        {/* Ana sayfa hero videosu — kapsayan arka plan */}
-        <video
-          src="/herovideo.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
-        />
-        {/* Okunabilirlik için hafif karartma örtüsü (video belli olsun) */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 z-0"
-          style={{
-            background:
-              "linear-gradient(180deg, hsl(220 30% 6% / 0.35) 0%, hsl(220 30% 6% / 0.15) 45%, hsl(220 30% 6% / 0.72) 100%)",
-          }}
-        />
-        {/* m97: Marka logosu — diğer sayfalarla tutarlı */}
-        <div className="relative z-10 flex items-center gap-3">
-          <img
-            src="/newlogo.png"
-            alt="CorteQS"
-            className="h-10 w-10 rounded-lg object-contain"
+        {/* ——— SOL PANEL: koyu + renkli marka/branding ——— */}
+        <aside className="relative flex min-h-[18vh] flex-col justify-between overflow-hidden bg-[hsl(220_28%_10%)] px-7 py-8 text-white lg:px-9 lg:py-10">
+          {/* Ana sayfa hero videosu — kapsayan arka plan */}
+          <video
+            src="/herovideo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover"
           />
-          <span className="font-display text-xl font-semibold tracking-wide">CorteQS</span>
-        </div>
-      </aside>
+          {/* Okunabilirlik için hafif karartma örtüsü (video belli olsun) */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-0"
+            style={{
+              background:
+                "linear-gradient(180deg, hsl(220 30% 6% / 0.35) 0%, hsl(220 30% 6% / 0.15) 45%, hsl(220 30% 6% / 0.72) 100%)",
+            }}
+          />
+          {/* m97: Marka logosu — diğer sayfalarla tutarlı */}
+          <div className="relative z-10 flex items-center gap-3">
+            <img src="/newlogo.png" alt="CorteQS" className="h-10 w-10 rounded-lg object-contain" />
+            <span className="font-display text-xl font-semibold tracking-wide">CorteQS</span>
+          </div>
+        </aside>
 
-      {/* ——— SAĞ PANEL: açık form ——— */}
-      <main className="flex items-center justify-center bg-card px-6 py-8 sm:px-9 lg:py-10">
-        <div className="w-full max-w-sm">
-          <CardHeader className="px-0">
-            <div className="flex items-center justify-between gap-2">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
-                Üye erişimi
-              </p>
-              <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">
-                🎉 ÜCRETSİZ
-              </Badge>
-            </div>
-            <CardTitle className="font-display text-3xl">
-              Diasporanın profesyonel{" "}
-              <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
-                ağına giriş yap
-              </span>
-            </CardTitle>
-            <CardDescription>
-              CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla
-              giriş yap, profilini yönet ve bağlantını sürdür.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4 px-0">
-          <Tabs value={mode} onValueChange={(value) => updateMode(normalizeMode(value))}>
-            <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-orange-100/70 p-1.5">
-              <TabsTrigger
-                value="login"
-                className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
-              >
-                Giriş Yap
-              </TabsTrigger>
-              <TabsTrigger
-                value="signup"
-                className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
-              >
-                Kayıt Ol
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="login" className="space-y-4">
-              <Button type="button" className="w-full" onClick={handleGoogleSignIn} disabled={isBusy}>
-                {oauthSubmitting ? "Yönlendiriliyor..." : "Google ile giriş yap"}
-              </Button>
-
-              <div className="relative">
-                <Separator />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
-                  veya
-                </span>
+        {/* ——— SAĞ PANEL: açık form ——— */}
+        <main className="flex items-center justify-center bg-card px-6 py-8 sm:px-9 lg:py-10">
+          <div className="w-full max-w-sm">
+            <CardHeader className="px-0">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground">
+                  Üye erişimi
+                </p>
+                <Badge className="shrink-0 bg-emerald-500 text-white shadow-md hover:bg-emerald-500">🎉 ÜCRETSİZ</Badge>
               </div>
+              <CardTitle className="font-display text-3xl">
+                Diasporanın profesyonel{" "}
+                <span className="bg-gradient-to-r from-[hsl(var(--glow-teal))] to-[hsl(var(--glow-orange))] bg-clip-text text-transparent">
+                  ağına giriş yap
+                </span>
+              </CardTitle>
+              <CardDescription>
+                CorteQS, dünyaya yayılmış Türk diasporasını tek bir ağda buluşturur. Hesabınla giriş yap, profilini
+                yönet ve bağlantını sürdür.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 px-0">
+              <Tabs value={mode} onValueChange={(value) => updateMode(normalizeMode(value))}>
+                <TabsList className="grid h-auto w-full grid-cols-2 rounded-2xl bg-orange-100/70 p-1.5">
+                  <TabsTrigger
+                    value="login"
+                    className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
+                  >
+                    Giriş Yap
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="signup"
+                    className="rounded-xl px-4 py-2.5 text-base font-semibold text-slate-600 data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-[0_10px_24px_rgba(249,115,22,0.35)]"
+                  >
+                    Kayıt Ol
+                  </TabsTrigger>
+                </TabsList>
 
-              <form className="space-y-4" onSubmit={handlePasswordSignIn}>
-                <div className="space-y-2">
-                  <Label htmlFor="login-email">E-posta</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    value={loginEmail}
-                    onChange={(event) => setLoginEmail(event.target.value)}
-                    placeholder="ornek@corteqs.net"
-                    disabled={isBusy}
-                    required
-                  />
-                </div>
+                <TabsContent value="login" className="space-y-4">
+                  <Button type="button" className="w-full" onClick={handleGoogleSignIn} disabled={isBusy}>
+                    {oauthSubmitting ? "Yönlendiriliyor..." : "Google ile giriş yap"}
+                  </Button>
 
-                <div className="space-y-2">
-                  <Label htmlFor="login-password">Şifre</Label>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    autoComplete="current-password"
-                    value={loginPassword}
-                    onChange={(event) => setLoginPassword(event.target.value)}
-                    placeholder="Şifrenizi girin"
-                    disabled={isBusy}
-                    required
-                  />
-                  <div className="text-right">
-                    <Link
-                      to="/forgot-password"
-                      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-                    >
-                      Şifremi unuttum
-                    </Link>
+                  <div className="relative">
+                    <Separator />
+                    <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+                      veya
+                    </span>
                   </div>
-                </div>
 
-                <Button type="submit" variant="outline" className="w-full" disabled={isBusy}>
-                  {passwordSubmitting ? "Giriş yapılıyor..." : "E-posta ve şifre ile giriş yap"}
+                  <form className="space-y-4" onSubmit={handlePasswordSignIn}>
+                    <div className="space-y-2">
+                      <Label htmlFor="login-email">E-posta</Label>
+                      <Input
+                        id="login-email"
+                        type="email"
+                        autoComplete="email"
+                        value={loginEmail}
+                        onChange={(event) => setLoginEmail(event.target.value)}
+                        placeholder="ornek@corteqs.net"
+                        disabled={isBusy}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="login-password">Şifre</Label>
+                      <Input
+                        id="login-password"
+                        type="password"
+                        autoComplete="current-password"
+                        value={loginPassword}
+                        onChange={(event) => setLoginPassword(event.target.value)}
+                        placeholder="Şifrenizi girin"
+                        disabled={isBusy}
+                        required
+                      />
+                      <div className="text-right">
+                        <Link
+                          to="/forgot-password"
+                          className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+                        >
+                          Şifremi unuttum
+                        </Link>
+                      </div>
+                    </div>
+
+                    <Button type="submit" variant="outline" className="w-full" disabled={isBusy}>
+                      {passwordSubmitting ? "Giriş yapılıyor..." : "E-posta ve şifre ile giriş yap"}
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signup" className="space-y-4">
+                  <Button type="button" className="w-full" onClick={handleGoogleSignIn} disabled={isBusy}>
+                    {oauthSubmitting ? "Yönlendiriliyor..." : "Google ile devam et"}
+                  </Button>
+
+                  <div className="relative">
+                    <Separator />
+                    <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+                      veya
+                    </span>
+                  </div>
+
+                  <form className="space-y-4" onSubmit={handlePasswordSignUp}>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email">E-posta</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        autoComplete="email"
+                        value={signupEmail}
+                        onChange={(event) => setSignupEmail(event.target.value)}
+                        placeholder="ornek@corteqs.net"
+                        disabled={isBusy}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password">Şifre</Label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        autoComplete="new-password"
+                        value={signupPassword}
+                        onChange={(event) => setSignupPassword(event.target.value)}
+                        placeholder="Şifre oluşturun"
+                        disabled={isBusy}
+                        required
+                      />
+                    </div>
+
+                    <Button type="submit" variant="outline" className="w-full" disabled={isBusy}>
+                      {signupSubmitting ? "Kayıt oluşturuluyor..." : "E-posta ve şifre ile kayıt ol"}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
+
+              {signupSuccessMessage ? <p className="text-sm text-emerald-700">{signupSuccessMessage}</p> : null}
+              {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+              {unconfirmedEmail ? (
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => void handleResendConfirmation()}
+                  disabled={resendSubmitting || isBusy}
+                >
+                  {resendSubmitting ? "Gönderiliyor..." : "Doğrulama e-postasını yeniden gönder"}
                 </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup" className="space-y-4">
-              <Button type="button" className="w-full" onClick={handleGoogleSignIn} disabled={isBusy}>
-                {oauthSubmitting ? "Yönlendiriliyor..." : "Google ile devam et"}
-              </Button>
-
-              <div className="relative">
-                <Separator />
-                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
-                  veya
-                </span>
-              </div>
-
-              <form className="space-y-4" onSubmit={handlePasswordSignUp}>
-                <div className="space-y-2">
-                  <Label htmlFor="signup-email">E-posta</Label>
-                  <Input
-                    id="signup-email"
-                    type="email"
-                    autoComplete="email"
-                    value={signupEmail}
-                    onChange={(event) => setSignupEmail(event.target.value)}
-                    placeholder="ornek@corteqs.net"
-                    disabled={isBusy}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-password">Şifre</Label>
-                  <Input
-                    id="signup-password"
-                    type="password"
-                    autoComplete="new-password"
-                    value={signupPassword}
-                    onChange={(event) => setSignupPassword(event.target.value)}
-                    placeholder="Şifre oluşturun"
-                    disabled={isBusy}
-                    required
-                  />
-                </div>
-
-                <Button type="submit" variant="outline" className="w-full" disabled={isBusy}>
-                  {signupSubmitting ? "Kayıt oluşturuluyor..." : "E-posta ve şifre ile kayıt ol"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
-
-          {signupSuccessMessage ? <p className="text-sm text-emerald-700">{signupSuccessMessage}</p> : null}
-          {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-          {unconfirmedEmail ? (
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full"
-              onClick={() => void handleResendConfirmation()}
-              disabled={resendSubmitting || isBusy}
-            >
-              {resendSubmitting ? "Gönderiliyor..." : "Doğrulama e-postasını yeniden gönder"}
-            </Button>
-          ) : null}
-          </CardContent>
-        </div>
-      </main>
+              ) : null}
+            </CardContent>
+          </div>
+        </main>
       </div>
     </div>
   );

@@ -16,12 +16,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
-import {
-  ModelProviderError,
-  callModel,
-  resolveProviderName,
-  type ModelMessage,
-} from "./providers.ts";
+import { ModelProviderError, callModel, resolveProviderName, type ModelMessage } from "./providers.ts";
 import {
   SITE_ASSISTANT_SYSTEM_PROMPT,
   buildAdminModeNote,
@@ -245,11 +240,7 @@ Deno.serve(async (req) => {
 
     // `hasContext` GERÇEKTEN hesaplanır — `/api/chat`'in her zaman `true` dönen
     // kusuru burada tekrarlanmaz.
-    return jsonResponse(
-      { answer, hasContext: hits.length > 0, sources: collectSources(hits) },
-      200,
-      corsHeaders,
-    );
+    return jsonResponse({ answer, hasContext: hits.length > 0, sources: collectSources(hits) }, 200, corsHeaders);
   } catch (error) {
     if (error instanceof ModelProviderError) {
       if (error.status === 429 && usageClient && usageUserId) {
@@ -262,10 +253,7 @@ Deno.serve(async (req) => {
           httpStatus: 429,
         });
       }
-      const message =
-        error.status === 429
-          ? "Şu anda çok yoğunuz, biraz sonra tekrar deneyin."
-          : error.message;
+      const message = error.status === 429 ? "Şu anda çok yoğunuz, biraz sonra tekrar deneyin." : error.message;
       return jsonResponse({ error: message }, error.status, corsHeaders);
     }
     if (error instanceof z.ZodError) {
@@ -275,11 +263,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "İstek gövdesi çok büyük." }, 413, corsHeaders);
     }
     if (error instanceof Error && error.message === "RATE_LIMITED") {
-      return jsonResponse(
-        { error: "Çok fazla istek gönderdiniz, lütfen biraz bekleyin." },
-        429,
-        corsHeaders,
-      );
+      return jsonResponse({ error: "Çok fazla istek gönderdiniz, lütfen biraz bekleyin." }, 429, corsHeaders);
     }
     console.error("site-assistant error", error);
     return jsonResponse({ error: "Beklenmeyen bir hata oluştu." }, 500, corsHeaders);

@@ -10,10 +10,7 @@ import {
   type AdminOverridesBundle,
 } from "@/lib/admin-shell/admin-overrides-api";
 import { adminQueryKeys } from "@/lib/admin-shell/admin-query-keys";
-import {
-  clearUserFeatureOverrideAsAdmin,
-  setUserFeatureOverrideDetailedAsAdmin,
-} from "@/lib/admin";
+import { clearUserFeatureOverrideAsAdmin, setUserFeatureOverrideDetailedAsAdmin } from "@/lib/admin";
 
 export type SaveOverrideInput = {
   userId: string;
@@ -60,8 +57,7 @@ export function useAdminUserOverrides() {
               overrides: [
                 nextOverride,
                 ...current.overrides.filter(
-                  (override) =>
-                    !(override.user_id === userId && override.feature_key === featureKey),
+                  (override) => !(override.user_id === userId && override.feature_key === featureKey),
                 ),
               ],
             }
@@ -72,16 +68,14 @@ export function useAdminUserOverrides() {
   });
 
   const clearMutation = useMutation({
-    mutationFn: ({ userId, featureKey }: ClearOverrideInput) =>
-      clearUserFeatureOverrideAsAdmin(userId, featureKey),
+    mutationFn: ({ userId, featureKey }: ClearOverrideInput) => clearUserFeatureOverrideAsAdmin(userId, featureKey),
     onSuccess: (_data, { userId, featureKey }) => {
       queryClient.setQueryData<AdminOverridesBundle>(adminQueryKeys.overrides(), (current) =>
         current
           ? {
               ...current,
               overrides: current.overrides.filter(
-                (override) =>
-                  !(override.user_id === userId && override.feature_key === featureKey),
+                (override) => !(override.user_id === userId && override.feature_key === featureKey),
               ),
             }
           : current,

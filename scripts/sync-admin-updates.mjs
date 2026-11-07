@@ -61,9 +61,7 @@ async function main() {
 
   // Env eksikse sessizce atla — yerel/CI ortamlarında zorunlu değil (eski davranış korunur).
   if (!supabaseUrl || !serviceRoleKey) {
-    console.warn(
-      "[sync-admin-updates] SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY tanımlı değil, senkronizasyon atlandı.",
-    );
+    console.warn("[sync-admin-updates] SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY tanımlı değil, senkronizasyon atlandı.");
     return;
   }
 

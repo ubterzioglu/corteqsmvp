@@ -116,9 +116,7 @@ export type PublicProfileProvenanceViewModel = {
  */
 const PERSON_ITEM_TYPES = new Set(["advisor", "member"]);
 
-function buildProvenance(
-  payload: PublicCatalogProfilePagePayload,
-): PublicProfileProvenanceViewModel | null {
+function buildProvenance(payload: PublicCatalogProfilePagePayload): PublicProfileProvenanceViewModel | null {
   const provenance = payload.provenance;
   // Derleme anahtarı yoksa künye çizilmez — boş bir "kaynak" kartı olmayan bir
   // doğrulama izlenimi verir.
@@ -180,14 +178,7 @@ const SOCIAL_LINK_ATTRIBUTES: Record<string, string> = {
 };
 
 /** Contact types that read as social links (rendered as hero pills, not sidebar rows). */
-const SOCIAL_CONTACT_TYPES = new Set([
-  "linkedin",
-  "instagram",
-  "facebook",
-  "youtube",
-  "tiktok",
-  "telegram",
-]);
+const SOCIAL_CONTACT_TYPES = new Set(["linkedin", "instagram", "facebook", "youtube", "tiktok", "telegram"]);
 
 /** Attribute keys already rendered by the hero — never repeated in the grid. */
 const HERO_DUPLICATE_ATTRIBUTE_KEYS = new Set([
@@ -427,8 +418,7 @@ const QUICK_ACTION_SPECS: QuickActionSpec[] = [
     label: "Web Sitesi",
     external: true,
     resolveHref: (payload) =>
-      firstContactHref(payload.contacts, "website", toSafeExternalUrl) ??
-      firstSafeLinkHref(payload.links),
+      firstContactHref(payload.contacts, "website", toSafeExternalUrl) ?? firstSafeLinkHref(payload.links),
   },
   {
     key: "email",
@@ -585,9 +575,7 @@ function buildDerivedSections(
   }
 
   // Social contact types render as hero link pills, not sidebar rows.
-  const contactRows = buildContactRows(
-    payload.contacts.filter((contact) => !SOCIAL_CONTACT_TYPES.has(contact.type)),
-  );
+  const contactRows = buildContactRows(payload.contacts.filter((contact) => !SOCIAL_CONTACT_TYPES.has(contact.type)));
   if (contactRows.length > 0 && !dbComponentKeys.has("contact_list")) {
     derived.push({
       key: "derived.contact_list",
@@ -639,9 +627,7 @@ function sortSectionsWithPreference(
     return index === -1 ? preferredOrder.length : index;
   };
 
-  return [...sections].sort(
-    (a, b) => preferenceIndex(a) - preferenceIndex(b) || baseComparator(a, b),
-  );
+  return [...sections].sort((a, b) => preferenceIndex(a) - preferenceIndex(b) || baseComparator(a, b));
 }
 
 export function buildPublicCatalogProfileViewModel(
@@ -719,8 +705,7 @@ export function buildPublicCatalogProfileViewModel(
       slug: item.slug,
       canClaim: payload.claim.canClaim && item.verificationStatus !== "claimed",
       isManaged: item.verificationStatus === "claimed",
-      isOrganization:
-        item.itemType === "organization" || (item.roleKey?.startsWith("Organization") ?? false),
+      isOrganization: item.itemType === "organization" || (item.roleKey?.startsWith("Organization") ?? false),
       isVerified: item.verificationStatus === "verified",
     },
     provenance: buildProvenance(payload),

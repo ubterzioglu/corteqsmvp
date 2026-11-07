@@ -28,9 +28,7 @@ function AdminKadroRutinlerPage() {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-          Rutinler
-        </h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">Rutinler</h1>
         <p className="text-slate-600 dark:text-slate-400">
           Pazarlama ekibinin günlük, haftalık, aylık ve yıllık rutinleri
         </p>
@@ -50,16 +48,9 @@ function AdminKadroRutinlerPage() {
             <CardContent>
               <div className="space-y-3">
                 {group.items.map((routine, index) => (
-                  <div
-                    key={index}
-                    className="border border-slate-200 dark:border-slate-700 rounded-lg p-4"
-                  >
-                    <div className="font-medium text-sm text-slate-900 dark:text-slate-100 mb-1">
-                      {routine.name}
-                    </div>
-                    <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">
-                      {routine.detail}
-                    </div>
+                  <div key={index} className="border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+                    <div className="font-medium text-sm text-slate-900 dark:text-slate-100 mb-1">{routine.name}</div>
+                    <div className="text-sm text-slate-600 dark:text-slate-400 mb-2">{routine.detail}</div>
                     <div className="text-xs text-slate-500 dark:text-slate-500">
                       Sorumlu: <span className="font-medium">{getOwnerName(routine.owner)}</span>
                     </div>

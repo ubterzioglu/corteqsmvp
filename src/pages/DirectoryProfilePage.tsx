@@ -19,9 +19,7 @@ const DirectoryProfilePage = () => {
   // catalog-directory.ts routes member items as /directory/profile/<slug>
   // (e.g. "member-b82291bc...") instead of a UUID. Detect this and forward
   // straight to the catalog page.
-  const isSlugParam = userId
-    ? /^[a-z]+-[a-z0-9]+/i.test(userId) && !UUID_PATTERN.test(userId)
-    : false;
+  const isSlugParam = userId ? /^[a-z]+-[a-z0-9]+/i.test(userId) && !UUID_PATTERN.test(userId) : false;
 
   useEffect(() => {
     if (!userId || isSlugParam) return;

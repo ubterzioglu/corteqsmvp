@@ -14,15 +14,7 @@ const RUN = process.env.LIVE_SCAN === "1";
 const BASE = process.env.LIVE_SCAN_BASE_URL ?? "https://corteqs.net";
 
 /** Revizyon c7e32bfc: "RADAR — Experimental kalmış" (kodda karşılığı bulunamadı). */
-const LEAK_PATTERNS = [
-  "Experimental",
-  "experimental",
-  "Lorem ipsum",
-  "TODO",
-  "undefined",
-  "NaN",
-  "[object Object]",
-];
+const LEAK_PATTERNS = ["Experimental", "experimental", "Lorem ipsum", "TODO", "undefined", "NaN", "[object Object]"];
 
 /** Kamuya açık, oturum istemeyen sayfalar. */
 const PUBLIC_ROUTES = ["/", "/radar", "/cadde", "/directory", "/tools", "/anket", "/lansman"];
@@ -41,16 +33,18 @@ test.describe("canlı revizyon taraması", () => {
       await page.goto(`${BASE}${route}`, { waitUntil: "networkidle", timeout: 60_000 });
       await page.waitForTimeout(1500);
 
-      const bodyText = (await page.locator("body").innerText().catch(() => "")) ?? "";
+      const bodyText =
+        (await page
+          .locator("body")
+          .innerText()
+          .catch(() => "")) ?? "";
       const hits = LEAK_PATTERNS.filter((pattern) => bodyText.includes(pattern));
 
       const slug = route === "/" ? "anasayfa" : route.replace(/\//g, "-").replace(/^-/, "");
       await page.screenshot({ path: `test-results/canli-${slug}.png`, fullPage: true });
 
       // Bulguları rapora yaz — test DÜŞMEZ, çünkü bu bir tanı taraması, bir kapı değil.
-      console.log(
-        JSON.stringify({ route, leaks: hits, consoleErrors: consoleErrors.slice(0, 5) }, null, 1),
-      );
+      console.log(JSON.stringify({ route, leaks: hits, consoleErrors: consoleErrors.slice(0, 5) }, null, 1));
 
       expect(bodyText.length).toBeGreaterThan(0);
     });

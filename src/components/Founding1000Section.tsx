@@ -106,7 +106,10 @@ const Founding1000Section = () => {
       className="relative overflow-hidden bg-gradient-to-br from-background via-card to-secondary/40 text-foreground"
     >
       {/* Decorative background */}
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--accent)/0.08),hsl(var(--primary)/0.07),hsl(var(--background)))]" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--accent)/0.08),hsl(var(--primary)/0.07),hsl(var(--background)))]"
+        aria-hidden
+      />
 
       {/* Üst boşluk kısaldı: başlık artık hero'da, bölüm hero'nun hemen altına oturur. */}
       <div className="container mx-auto px-4 pb-20 pt-12 lg:pb-28 lg:pt-16 relative z-10">
@@ -120,10 +123,10 @@ const Founding1000Section = () => {
             </h2>
 
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              CorteQS, dünyanın farklı şehirlerine yayılmış Türk işletmelerini, danışmanları, klinikleri,
-              doktorları, avukatları, emlak danışmanlarını, relocation uzmanlarını, marketleri, restoranları,
-              dernekleri, vakıfları, okulları, medya kuruluşlarını, içerik üreticilerini ve profesyonelleri
-              şehir şehir görünür kılmak için kuruluyor.
+              CorteQS, dünyanın farklı şehirlerine yayılmış Türk işletmelerini, danışmanları, klinikleri, doktorları,
+              avukatları, emlak danışmanlarını, relocation uzmanlarını, marketleri, restoranları, dernekleri, vakıfları,
+              okulları, medya kuruluşlarını, içerik üreticilerini ve profesyonelleri şehir şehir görünür kılmak için
+              kuruluyor.
             </p>
           </div>
 
@@ -139,7 +142,10 @@ const Founding1000Section = () => {
               />
               <div className="grid grid-cols-2 gap-2 border-t border-border pt-4 md:grid-cols-4">
                 {stats.map((s) => (
-                  <div key={s.label} className="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-center">
+                  <div
+                    key={s.label}
+                    className="rounded-lg border border-border/70 bg-background/80 px-3 py-2 text-center"
+                  >
                     <s.icon className="mx-auto mb-1 h-4 w-4 text-primary" />
                     <div className="text-lg font-extrabold text-foreground">{s.value}</div>
                     <div className="text-[11px] text-muted-foreground">{s.label}</div>
@@ -154,8 +160,8 @@ const Founding1000Section = () => {
         <div className="max-w-4xl mx-auto mb-6 rounded-xl bg-accent/10 border border-accent/25 px-6 py-4 flex items-center gap-3 shadow-sm">
           <span className="text-2xl">⏳</span>
           <p className="text-foreground text-sm md:text-base font-medium">
-            <span className="font-bold text-accent">Kontenjan sınırlı:</span> Her kıtadan yalnızca
-            ilk 200 katılımcı Kurucu Onaylı Üye avantajından yararlanabilecek.
+            <span className="font-bold text-accent">Kontenjan sınırlı:</span> Her kıtadan yalnızca ilk 200 katılımcı
+            Kurucu Onaylı Üye avantajından yararlanabilecek.
           </p>
         </div>
 
@@ -176,17 +182,14 @@ const Founding1000Section = () => {
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h3 className={sectionTitleClass}>Kimler Katılabilir?</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              CorteQS Kurucu 1000 programı, global Türk diasporasına hizmet veren veya diaspora içinde
-              görünür olmak isteyen işletme, danışman, kurum, topluluk ve profesyoneller için tasarlandı.
+              CorteQS Kurucu 1000 programı, global Türk diasporasına hizmet veren veya diaspora içinde görünür olmak
+              isteyen işletme, danışman, kurum, topluluk ve profesyoneller için tasarlandı.
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {eligibleCategories.map((cat) => (
-              <div
-                key={cat.title}
-                className={softCardClass}
-              >
+              <div key={cat.title} className={softCardClass}>
                 <div className={`${iconBoxClass} mb-4`}>
                   <cat.icon className="w-6 h-6 text-primary" />
                 </div>
@@ -200,9 +203,7 @@ const Founding1000Section = () => {
         {/* BENEFITS */}
         <div className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-12">
-            <h3 className={sectionTitleClass}>
-              Kurucu Onaylı Üye Avantajları
-            </h3>
+            <h3 className={sectionTitleClass}>Kurucu Onaylı Üye Avantajları</h3>
             <p className="text-muted-foreground text-lg">
               Erken katılan, erken konumlanır. İşte size özel ayrıcalıklar:
             </p>
@@ -244,9 +245,7 @@ const Founding1000Section = () => {
                   Kurucu 1000 Özel Yıllık Üyelik
                 </p>
                 <div className="flex items-baseline justify-center gap-2">
-                  <span className="text-6xl md:text-7xl font-extrabold text-accent">
-                    €99
-                  </span>
+                  <span className="text-6xl md:text-7xl font-extrabold text-accent">€99</span>
                   <span className="text-muted-foreground text-lg">/ yıl</span>
                 </div>
               </div>
@@ -268,23 +267,20 @@ const Founding1000Section = () => {
 
               <div className="rounded-xl bg-primary/10 border border-primary/20 p-4 mb-6">
                 <p className="text-foreground text-sm leading-relaxed">
-                  <span className="font-bold text-primary">+ €399 değerinde "Global Görünürlük Paketi"</span>{" "}
-                  Dahil<span className="text-primary">*</span> — kategori vitrini ve ana sayfa carousel
-                  görünürlüğü <span className="font-semibold">6 ay boyunca dahil</span>.
+                  <span className="font-bold text-primary">+ €399 değerinde "Global Görünürlük Paketi"</span> Dahil
+                  <span className="text-primary">*</span> — kategori vitrini ve ana sayfa carousel görünürlüğü{" "}
+                  <span className="font-semibold">6 ay boyunca dahil</span>.
                 </p>
                 <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
-                  <span className="text-primary">*</span> CorteQS'in tüm sosyal medya kanallarında
-                  aramıza katılan İşletmeler / Profesyoneller olarak lanse edilirler.
+                  <span className="text-primary">*</span> CorteQS'in tüm sosyal medya kanallarında aramıza katılan
+                  İşletmeler / Profesyoneller olarak lanse edilirler.
                 </p>
               </div>
 
               <p className="text-xs text-muted-foreground mb-6 leading-relaxed text-center">
-                <span className="font-semibold text-foreground">Önemli:</span> 6 aylık görünürlük periyodu,
-                CorteQS'in <span className="font-semibold text-foreground">full açılış</span>{" "}
-                tarihinden itibaren başlar.
+                <span className="font-semibold text-foreground">Önemli:</span> 6 aylık görünürlük periyodu, CorteQS'in{" "}
+                <span className="font-semibold text-foreground">full açılış</span> tarihinden itibaren başlar.
               </p>
-
-
             </div>
           </div>
         </div>
@@ -292,14 +288,12 @@ const Founding1000Section = () => {
         {/* WHY NOW */}
         <div className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <h3 className={sectionTitleClass}>
-              Neden Şimdi Katılmalısınız?
-            </h3>
+            <h3 className={sectionTitleClass}>Neden Şimdi Katılmalısınız?</h3>
             <p className="text-muted-foreground text-lg leading-relaxed">
-              Çünkü CorteQS henüz erken aşamada. Bugün katılanlar, platform büyüdüğünde sadece kullanıcı
-              değil; ülkelerinde, şehirlerinde ve kategorilerinde{" "}
-              <span className="text-primary font-semibold">ilk görünen, ilk tanınan ve ilk konumlanan</span>{" "}
-              kişi ve kurumlar olacak.
+              Çünkü CorteQS henüz erken aşamada. Bugün katılanlar, platform büyüdüğünde sadece kullanıcı değil;
+              ülkelerinde, şehirlerinde ve kategorilerinde{" "}
+              <span className="text-primary font-semibold">ilk görünen, ilk tanınan ve ilk konumlanan</span> kişi ve
+              kurumlar olacak.
             </p>
           </div>
 
@@ -319,9 +313,7 @@ const Founding1000Section = () => {
         {/* CONTINENTS */}
         <div className="mb-20">
           <div className="text-center max-w-3xl mx-auto mb-10">
-            <h3 className={sectionTitleClass}>
-              5 Kıta, 1000 Kurucu Katılımcı
-            </h3>
+            <h3 className={sectionTitleClass}>5 Kıta, 1000 Kurucu Katılımcı</h3>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-5xl mx-auto">
@@ -346,19 +338,13 @@ const Founding1000Section = () => {
         <div className="max-w-3xl mx-auto text-center rounded-2xl bg-gradient-to-br from-accent/12 via-card to-primary/12 border border-accent/25 p-10 shadow-lg shadow-accent/10 md:p-14">
           <Building2 className="w-12 h-12 text-accent mx-auto mb-6" />
           <h3 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4 leading-tight">
-            Ülkenizde, şehrinizde ve kategorinizde{" "}
-            <span className="text-accent">ilk görünenlerden</span>{" "}
-            biri olun.
+            Ülkenizde, şehrinizde ve kategorinizde <span className="text-accent">ilk görünenlerden</span> biri olun.
           </h3>
           <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-            CorteQS Kurucu 1000'e katılın ve global Türk diasporasının dijital haritasında erken
-            pozisyon alın.
+            CorteQS Kurucu 1000'e katılın ve global Türk diasporasının dijital haritasında erken pozisyon alın.
           </p>
-
         </div>
-
       </div>
-
     </section>
   );
 };

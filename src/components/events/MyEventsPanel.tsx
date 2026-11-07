@@ -144,9 +144,7 @@ export function MyEventsPanel() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h3 className="text-lg font-bold text-foreground">Etkinliklerim</h3>
-          <p className="text-sm text-muted-foreground">
-            Oluşturduğun etkinlikler ve yayın durumları.
-          </p>
+          <p className="text-sm text-muted-foreground">Oluşturduğun etkinlikler ve yayın durumları.</p>
         </div>
         <Button asChild variant="outline" className="shrink-0 gap-1.5">
           <Link to="/events">
@@ -164,10 +162,14 @@ export function MyEventsPanel() {
           className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs leading-relaxed text-slate-600"
           data-testid="my-events-rule-note"
         >
-          Kural: ilk etkinliğin yönetici onayından geçer, sonrakiler otomatik yayınlanır.
-          Aynı anda en fazla <strong>{EVENTS_ACTIVE_LIMIT}</strong> aktif etkinliğiniz olabilir
-          (şu an {events.filter((event) => event.status === "published" && event.event_date >= new Date().toISOString().slice(0, 10)).length} aktif).
-          Geçmiş etkinlikler limite sayılmaz.
+          Kural: ilk etkinliğin yönetici onayından geçer, sonrakiler otomatik yayınlanır. Aynı anda en fazla{" "}
+          <strong>{EVENTS_ACTIVE_LIMIT}</strong> aktif etkinliğiniz olabilir (şu an{" "}
+          {
+            events.filter(
+              (event) => event.status === "published" && event.event_date >= new Date().toISOString().slice(0, 10),
+            ).length
+          }{" "}
+          aktif). Geçmiş etkinlikler limite sayılmaz.
         </p>
       )}
 
@@ -176,8 +178,8 @@ export function MyEventsPanel() {
           <Calendar className="mx-auto mb-3 h-10 w-10 text-slate-400" />
           <h4 className="text-base font-semibold text-slate-700">Henüz etkinlik oluşturmadın</h4>
           <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
-            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. İlk etkinliğin yönetici
-            onayından geçer; sonrakiler otomatik yayınlanır. Durumu buradan takip edersin.
+            Etkinlikler sayfasından bir etkinlik ekleyebilirsin. İlk etkinliğin yönetici onayından geçer; sonrakiler
+            otomatik yayınlanır. Durumu buradan takip edersin.
           </p>
           <Button asChild className="mt-4 gap-1.5">
             <Link to="/events">

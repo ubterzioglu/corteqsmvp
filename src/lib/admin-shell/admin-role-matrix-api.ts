@@ -6,11 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { RoleOption } from "@/components/admin/RoleSearchSelect";
 
 export async function fetchAdminRoleOptions(): Promise<RoleOption[]> {
-  const { data, error } = await supabase
-    .from("roles")
-    .select("key, label")
-    .eq("is_active", true)
-    .order("sort_order");
+  const { data, error } = await supabase.from("roles").select("key, label").eq("is_active", true).order("sort_order");
 
   if (error) throw error;
 

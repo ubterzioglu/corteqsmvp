@@ -5,13 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { CheckCircle, Timer, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import {
   type CitizenshipQuestion,
@@ -180,22 +174,20 @@ export default function VatandaslikTestiToolPage() {
               <CardTitle className="text-base">Eyalet Soruları</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Seçtiğin eyalete özel 10 soruyla hızlı tekrar.
-              </p>
+              <p className="text-sm text-muted-foreground">Seçtiğin eyalete özel 10 soruyla hızlı tekrar.</p>
               <Select value={selectedState} onValueChange={setSelectedState}>
-                <SelectTrigger><SelectValue placeholder="Eyalet seç" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Eyalet seç" />
+                </SelectTrigger>
                 <SelectContent>
                   {states.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Button
-                className="w-full"
-                disabled={loading || !selectedState}
-                onClick={() => startMode("state")}
-              >
+              <Button className="w-full" disabled={loading || !selectedState} onClick={() => startMode("state")}>
                 Eyalet Sorularına Başla
               </Button>
             </CardContent>
@@ -207,14 +199,18 @@ export default function VatandaslikTestiToolPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                {REAL_EXAM_TOTAL} soru (30 genel + 3 eyalet), 60 dakikalık geri sayım, baraj{" "}
-                {REAL_EXAM_PASS_THRESHOLD}/{REAL_EXAM_TOTAL}. Eyalet seçersen 3 soru o eyaletten gelir.
+                {REAL_EXAM_TOTAL} soru (30 genel + 3 eyalet), 60 dakikalık geri sayım, baraj {REAL_EXAM_PASS_THRESHOLD}/
+                {REAL_EXAM_TOTAL}. Eyalet seçersen 3 soru o eyaletten gelir.
               </p>
               <Select value={selectedState} onValueChange={setSelectedState}>
-                <SelectTrigger><SelectValue placeholder="Eyalet seç (opsiyonel)" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Eyalet seç (opsiyonel)" />
+                </SelectTrigger>
                 <SelectContent>
                   {states.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -234,9 +230,7 @@ export default function VatandaslikTestiToolPage() {
       <div className="container mx-auto max-w-2xl px-4 py-6">
         <Card className={cn("border-2", score.passed ? "border-green-500" : "border-red-500")}>
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl">
-              {score.passed ? "🎉 Geçtin!" : "Tekrar dene"}
-            </CardTitle>
+            <CardTitle className="text-2xl">{score.passed ? "🎉 Geçtin!" : "Tekrar dene"}</CardTitle>
           </CardHeader>
           <CardContent className="text-center">
             <p className="text-4xl font-extrabold text-foreground">

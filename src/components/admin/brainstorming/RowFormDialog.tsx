@@ -14,13 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
   BRAINSTORMING_STATUSES,
@@ -60,13 +54,7 @@ export type RowFormDialogProps = {
   isSubmitting?: boolean;
 };
 
-export function RowFormDialog({
-  open,
-  onOpenChange,
-  row,
-  onSubmit,
-  isSubmitting = false,
-}: RowFormDialogProps) {
+export function RowFormDialog({ open, onOpenChange, row, onSubmit, isSubmitting = false }: RowFormDialogProps) {
   const [form, setForm] = useState<RowFormState>(EMPTY_FORM);
 
   useEffect(() => {
@@ -154,9 +142,7 @@ export function RowFormDialog({
           </Button>
           <Button
             onClick={() => onSubmit(form)}
-            disabled={
-              isSubmitting || !form.label.trim() || !form.technical.trim() || !form.plain.trim()
-            }
+            disabled={isSubmitting || !form.label.trim() || !form.technical.trim() || !form.plain.trim()}
           >
             {row ? "Kaydet" : "Oluştur"}
           </Button>

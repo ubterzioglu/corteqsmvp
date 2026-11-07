@@ -2,30 +2,24 @@
 // Orijinal prototipteki deptPlanUSD/revNet/allocUSD/runway mantığının
 // state mutasyonu içermeyen TS karşılığı.
 
-import { DEPTS } from '@/lib/muhasebe-butce-schemas';
-import type { ButceCurrency, ButceYearState, DeptId } from '@/lib/muhasebe-butce-schemas';
+import { DEPTS } from "@/lib/muhasebe-butce-schemas";
+import type { ButceCurrency, ButceYearState, DeptId } from "@/lib/muhasebe-butce-schemas";
 
 function num(v: number): number {
   return Number.isFinite(v) ? v : 0;
 }
 
 export function fxRate(state: ButceYearState, cur: ButceCurrency): number {
-  if (cur === 'USD') return 1;
+  if (cur === "USD") return 1;
   return num(state.fx[cur]);
 }
 
 export function deptPlanUSD(state: ButceYearState, id: DeptId, month: number): number {
-  return state.expenses[id].reduce(
-    (sum, item) => sum + num(item.plan[month]) * fxRate(state, item.cur),
-    0,
-  );
+  return state.expenses[id].reduce((sum, item) => sum + num(item.plan[month]) * fxRate(state, item.cur), 0);
 }
 
 export function deptActualUSD(state: ButceYearState, id: DeptId, month: number): number {
-  return state.expenses[id].reduce(
-    (sum, item) => sum + num(item.actual[month]) * fxRate(state, item.cur),
-    0,
-  );
+  return state.expenses[id].reduce((sum, item) => sum + num(item.actual[month]) * fxRate(state, item.cur), 0);
 }
 
 export function revGross(state: ButceYearState, month: number): number {
@@ -33,10 +27,7 @@ export function revGross(state: ButceYearState, month: number): number {
 }
 
 export function revComm(state: ButceYearState, month: number): number {
-  return state.revenue.reduce(
-    (sum, r) => sum + (num(r.qty[month]) * num(r.price) * num(r.comm)) / 100,
-    0,
-  );
+  return state.revenue.reduce((sum, r) => sum + (num(r.qty[month]) * num(r.price) * num(r.comm)) / 100, 0);
 }
 
 export function revNet(state: ButceYearState, month: number): number {
@@ -45,9 +36,7 @@ export function revNet(state: ButceYearState, month: number): number {
 
 export function allocUSD(state: ButceYearState, id: DeptId, month: number): number {
   const alloc = state.alloc[id];
-  return alloc.mode === 'pct'
-    ? (revNet(state, month) * num(alloc.pct)) / 100
-    : num(alloc.fixed[month]);
+  return alloc.mode === "pct" ? (revNet(state, month) * num(alloc.pct)) / 100 : num(alloc.fixed[month]);
 }
 
 export function departmentTotals(
@@ -67,16 +56,13 @@ export function departmentTotals(
 
 export function consolidatedMonthlyNet(state: ButceYearState): number[] {
   return Array.from({ length: 12 }, (_, m) => {
-    const totalDeptSpend = DEPTS.reduce(
-      (sum, d) => sum + deptActualExpenseByBasis(state, d.id, m),
-      0,
-    );
+    const totalDeptSpend = DEPTS.reduce((sum, d) => sum + deptActualExpenseByBasis(state, d.id, m), 0);
     return revNet(state, m) - totalDeptSpend;
   });
 }
 
 function deptActualExpenseByBasis(state: ButceYearState, id: DeptId, month: number): number {
-  return state.basis === 'actual' ? deptActualUSD(state, id, month) : deptPlanUSD(state, id, month);
+  return state.basis === "actual" ? deptActualUSD(state, id, month) : deptPlanUSD(state, id, month);
 }
 
 export function cumulativeCash(state: ButceYearState): number[] {

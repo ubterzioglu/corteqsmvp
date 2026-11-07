@@ -36,10 +36,7 @@ describe("useAdminUpdates", () => {
 
   it("kısmen görülen listede yalnızca yeni kayıtlar okunmamış sayılır", () => {
     const [newest, ...rest] = ADMIN_UPDATES;
-    window.localStorage.setItem(
-      ADMIN_STORAGE_KEYS.updatesSeen,
-      JSON.stringify(rest.map((update) => update.id)),
-    );
+    window.localStorage.setItem(ADMIN_STORAGE_KEYS.updatesSeen, JSON.stringify(rest.map((update) => update.id)));
 
     const { result } = renderHook(() => useAdminUpdates());
 
@@ -64,10 +61,7 @@ describe("useAdminUpdates", () => {
     const { result: nonArray } = renderHook(() => useAdminUpdates());
     expect(nonArray.current.unreadCount).toBe(ADMIN_UPDATES.length);
 
-    window.localStorage.setItem(
-      ADMIN_STORAGE_KEYS.updatesSeen,
-      JSON.stringify([42, null, ADMIN_UPDATES[0].id]),
-    );
+    window.localStorage.setItem(ADMIN_STORAGE_KEYS.updatesSeen, JSON.stringify([42, null, ADMIN_UPDATES[0].id]));
     const { result: mixed } = renderHook(() => useAdminUpdates());
     expect(mixed.current.unreadCount).toBe(ADMIN_UPDATES.length - 1);
   });

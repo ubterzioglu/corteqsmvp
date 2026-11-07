@@ -1,12 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Shield } from "lucide-react";
-import {
-  AdminErrorState,
-  AdminFilterBar,
-  AdminLoadingState,
-  AdminPageShell,
-} from "@/components/admin/page";
+import { AdminErrorState, AdminFilterBar, AdminLoadingState, AdminPageShell } from "@/components/admin/page";
 import { useAdminRoleMatrix } from "@/hooks/admin/useAdminRoleMatrix";
 import type { RoleManagementBundle } from "@/lib/admin";
 import RoleSearchSelect from "@/components/admin/RoleSearchSelect";
@@ -17,9 +12,7 @@ import { filterCatalogRows, type EntityKind } from "@/lib/role-catalog";
 const AdminRoleManagementPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [selectedRoleKey, setSelectedRoleKey] = useState<string>(
-    searchParams.get("role") ?? "",
-  );
+  const [selectedRoleKey, setSelectedRoleKey] = useState<string>(searchParams.get("role") ?? "");
   const [search, setSearch] = useState("");
   const [kindFilter, setKindFilter] = useState<EntityKind | "all">("all");
 
@@ -35,11 +28,14 @@ const AdminRoleManagementPage = () => {
   // Eski davranış: seçili rol URL query param'ında korunur (masterplan §14.5).
   useEffect(() => {
     if (!selectedRoleKey) return;
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set("role", selectedRoleKey);
-      return next;
-    }, { replace: true });
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.set("role", selectedRoleKey);
+        return next;
+      },
+      { replace: true },
+    );
   }, [selectedRoleKey, setSearchParams]);
 
   const handleBundleChange = (patch: Partial<RoleManagementBundle>) => {
@@ -51,11 +47,14 @@ const AdminRoleManagementPage = () => {
     setSearch("");
     setKindFilter("all");
     setBundle(null);
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.delete("role");
-      return next;
-    }, { replace: true });
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        next.delete("role");
+        return next;
+      },
+      { replace: true },
+    );
   };
 
   const loadingRoles = rolesQuery.isLoading;
@@ -127,12 +126,8 @@ const AdminRoleManagementPage = () => {
       </div>
 
       <div className="space-y-4">
-        {selectedRoleKey && loadingBundle && (
-          <p className="text-xs text-muted-foreground">Rol verisi yükleniyor...</p>
-        )}
-        {bundleError && (
-          <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>
-        )}
+        {selectedRoleKey && loadingBundle && <p className="text-xs text-muted-foreground">Rol verisi yükleniyor...</p>}
+        {bundleError && <p className="text-sm text-destructive">Rol yüklenemedi: {bundleError}</p>}
 
         {dataError ? (
           <AdminErrorState
@@ -148,7 +143,7 @@ const AdminRoleManagementPage = () => {
         ) : (
           <UnifiedRulesTable
             rows={visibleRows}
-            bundle={(!loadingBundle && bundle) ? bundle : null}
+            bundle={!loadingBundle && bundle ? bundle : null}
             onBundleChange={handleBundleChange}
           />
         )}

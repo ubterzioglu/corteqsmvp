@@ -109,9 +109,7 @@ describe("catalog embedding queue", () => {
       runCatalogEmbeddingQueue({
         client: {},
         apiKey: "test-key",
-        fetchPending: vi
-          .fn()
-          .mockResolvedValue([{ item_id: "item-1", search_text: "Berlin" }]),
+        fetchPending: vi.fn().mockResolvedValue([{ item_id: "item-1", search_text: "Berlin" }]),
         embed: vi.fn().mockRejectedValue(new Error("Gemini 429")),
         persist,
       }),

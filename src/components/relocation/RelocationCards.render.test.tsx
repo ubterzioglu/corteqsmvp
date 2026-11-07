@@ -6,11 +6,7 @@ import { CityComparisonTable } from "./CityComparisonTable";
 import { EmergencyContactsPanel } from "./EmergencyContactsPanel";
 import { ServiceRecommendationCard } from "./ServiceRecommendationCard";
 import { normalizeLocationRecommendation } from "@/lib/relocation-normalize";
-import type {
-  RelocationLocationRecommendation,
-  RelocationServiceRow,
-  RelocationStepRow,
-} from "@/lib/relocation-types";
+import type { RelocationLocationRecommendation, RelocationServiceRow, RelocationStepRow } from "@/lib/relocation-types";
 
 /**
  * `relocation_rank_locations_v1`'in canlı çıktısıyla AYNI anahtarlar — `explanations` yok.

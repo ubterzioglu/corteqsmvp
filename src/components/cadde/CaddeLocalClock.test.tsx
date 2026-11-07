@@ -16,9 +16,7 @@ describe("CaddeLocalClock", () => {
   });
 
   it("gündüz güneş, gece ay ikonu gösterir", () => {
-    const { unmount } = render(
-      <CaddeLocalClock target={BERLIN} now={new Date("2026-08-05T10:00:00Z")} />,
-    );
+    const { unmount } = render(<CaddeLocalClock target={BERLIN} now={new Date("2026-08-05T10:00:00Z")} />);
     // lucide ikonları class üzerinden ayırt ediliyor; renk gün/gece ayrımının taşıyıcısı.
     expect(screen.getByTestId("cadde-local-clock").querySelector(".text-amber-500")).not.toBeNull();
     unmount();

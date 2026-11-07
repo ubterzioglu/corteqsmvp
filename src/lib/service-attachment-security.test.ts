@@ -104,10 +104,7 @@ describe("safeStorageFileName", () => {
 // tavanı ayrı ayrı değiştirildiğinde kullanıcı 50 MB yükleyip sunucudan anlamsız
 // hata alıyordu. Aynı tuzağa düşülmesin.
 describe("bucket migration'ı istemci denetimiyle hizada (G03-h)", () => {
-  const sql = readFileSync(
-    "supabase/migrations/applied/20260928120000_service_attachments_hardening.sql",
-    "utf8",
-  );
+  const sql = readFileSync("supabase/migrations/applied/20260928120000_service_attachments_hardening.sql", "utf8");
 
   it("boyut tavanı istemcideki 15 MB ile AYNI", () => {
     expect(sql).toContain("file_size_limit = 15728640");
@@ -189,8 +186,7 @@ describe("form ile doğrulama sözleşmesi aynı hizada", () => {
 // sonra `applied/` altında durur (repo kuralı). Test iki yolu da kabul eder;
 // ikisi de yoksa kırmızı olur (migration hiç yazılmamış demektir).
 describe("private bucket geçişi (B3/Y6) SQL-kod sözleşmesi", () => {
-  const appliedPath =
-    "supabase/migrations/applied/20260928210000_service_attachments_private.sql";
+  const appliedPath = "supabase/migrations/applied/20260928210000_service_attachments_private.sql";
   const operationsPath = "docs/operations/2026-09-28-service-attachments-private.sql";
   const sqlPath = existsSync(appliedPath) ? appliedPath : operationsPath;
   const sql = existsSync(sqlPath) ? readFileSync(sqlPath, "utf8") : "";

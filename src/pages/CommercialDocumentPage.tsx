@@ -10,8 +10,7 @@ const documentLoaders = import.meta.glob<string>("../content/commercial/*.html",
   import: "default",
 });
 
-const getDocumentLoader = (slug: string) =>
-  documentLoaders[`../content/commercial/${slug}.html`];
+const getDocumentLoader = (slug: string) => documentLoaders[`../content/commercial/${slug}.html`];
 
 const CommercialDocumentPage = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -93,8 +92,7 @@ const CommercialDocumentPage = () => {
       {loadFailed ? (
         <div className="container mx-auto max-w-6xl px-4 py-12">
           <p className="text-base text-muted-foreground">
-            {document_.title} dokümanı yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar
-            deneyin.
+            {document_.title} dokümanı yüklenemedi. Lütfen sayfayı yenileyin veya daha sonra tekrar deneyin.
           </p>
         </div>
       ) : html ? (

@@ -62,9 +62,7 @@ describe("M19 · hata haritası iki migration'a karşı çift yönlü", () => {
 
   it("haritada migration'larda OLMAYAN hayalet kod yok (ters yön)", () => {
     const sql = allSql();
-    const phantom = Object.keys(RECOMMENDATION_RPC_ERROR_MESSAGES).filter(
-      (code) => !sql.includes(`'${code}'`),
-    );
+    const phantom = Object.keys(RECOMMENDATION_RPC_ERROR_MESSAGES).filter((code) => !sql.includes(`'${code}'`));
     expect(phantom).toEqual([]);
   });
 
@@ -109,12 +107,8 @@ describe("M19 · sabit aynaları (migration metniyle birebir)", () => {
   });
 
   it("uzunluk mesajları sabiti kullanıyor (elle yazılmış ikinci sayı yok)", () => {
-    expect(RECOMMENDATION_RPC_ERROR_MESSAGES.recommendation_invalid_title).toContain(
-      `${RECOMMENDATION_TITLE_MAX}`,
-    );
-    expect(RECOMMENDATION_RPC_ERROR_MESSAGES.recommendation_invalid_body).toContain(
-      `${RECOMMENDATION_BODY_MAX}`,
-    );
+    expect(RECOMMENDATION_RPC_ERROR_MESSAGES.recommendation_invalid_title).toContain(`${RECOMMENDATION_TITLE_MAX}`);
+    expect(RECOMMENDATION_RPC_ERROR_MESSAGES.recommendation_invalid_body).toContain(`${RECOMMENDATION_BODY_MAX}`);
   });
 });
 

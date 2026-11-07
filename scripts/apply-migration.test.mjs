@@ -41,9 +41,8 @@ describe("parseMigrationFileName", () => {
 });
 
 describe("findForbiddenSql", () => {
-  it.each(["BEGIN;", " commit ;", "START TRANSACTION;", "ROLLBACK;"])(
-    "transaction komutunu yakalar: %s",
-    (sql) => expect(findForbiddenSql(`select 1;\n${sql}\nselect 2;`)).toMatch(/transaction/i),
+  it.each(["BEGIN;", " commit ;", "START TRANSACTION;", "ROLLBACK;"])("transaction komutunu yakalar: %s", (sql) =>
+    expect(findForbiddenSql(`select 1;\n${sql}\nselect 2;`)).toMatch(/transaction/i),
   );
 
   it("psql meta komutunu reddeder", () => {
@@ -61,10 +60,7 @@ describe("validatePendingMigrationPath", () => {
 
   it("yalnız supabase/migrations parent dizinindeki yeni dosyayı kabul eder", () => {
     expect(
-      validatePendingMigrationPath(
-        path.join(root, "supabase/migrations/20260831120000_vip_invitations.sql"),
-        root,
-      ),
+      validatePendingMigrationPath(path.join(root, "supabase/migrations/20260831120000_vip_invitations.sql"), root),
     ).toMatchObject({ version: "20260831120000", name: "vip_invitations" });
   });
 

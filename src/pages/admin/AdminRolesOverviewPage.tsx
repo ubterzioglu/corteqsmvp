@@ -12,7 +12,12 @@ import ItemListPanel from "@/components/admin/roles-overview/ItemListPanel";
 import RoleListPanel from "@/components/admin/roles-overview/RoleListPanel";
 import EntityCatalogPanel from "@/components/admin/roles-overview/EntityCatalogPanel";
 import CaseDetailPanel from "@/components/admin/roles-overview/CaseDetailPanel";
-import type { EntityCatalogItem, ItemListEntry, RoleEntityAssignment, RoleListItem } from "@/components/admin/roles-overview/types";
+import type {
+  EntityCatalogItem,
+  ItemListEntry,
+  RoleEntityAssignment,
+  RoleListItem,
+} from "@/components/admin/roles-overview/types";
 
 const AdminRolesOverviewPage = () => {
   const { toast } = useToast();
@@ -45,7 +50,20 @@ const AdminRolesOverviewPage = () => {
       try {
         const [topBundle, itemsRes] = await Promise.all([
           fetchRolesOverviewTopBundle(),
-          listAdminUnifiedRecords({ page: 1, pageSize: 100, filters: { kind: "", query: "", itemType: "", platformRoleKey: "", status: "", verificationStatus: "", city: "", countryCode: "" } }),
+          listAdminUnifiedRecords({
+            page: 1,
+            pageSize: 100,
+            filters: {
+              kind: "",
+              query: "",
+              itemType: "",
+              platformRoleKey: "",
+              status: "",
+              verificationStatus: "",
+              city: "",
+              countryCode: "",
+            },
+          }),
         ]);
 
         if (!isMounted) return;
@@ -93,12 +111,18 @@ const AdminRolesOverviewPage = () => {
         setTotalItemCount(itemsRes.totalCount);
       } catch (err) {
         if (!isMounted) return;
-        toast({ title: "Veri yüklenemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+        toast({
+          title: "Veri yüklenemedi",
+          description: err instanceof Error ? err.message : "Beklenmeyen hata",
+          variant: "destructive",
+        });
       } finally {
         if (isMounted) setLoadingTop(false);
       }
     })();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [toast]);
 
   useEffect(() => {
@@ -118,9 +142,7 @@ const AdminRolesOverviewPage = () => {
 
         if (!isMounted) return;
 
-        const featureLabelMap = new Map(
-          entityItems.filter((e) => e.kind === "feature").map((e) => [e.key, e.label]),
-        );
+        const featureLabelMap = new Map(entityItems.filter((e) => e.kind === "feature").map((e) => [e.key, e.label]));
 
         setAssignment({
           attributeRules: detail.attributeRules.map((r) => ({
@@ -143,12 +165,18 @@ const AdminRolesOverviewPage = () => {
         });
       } catch (err) {
         if (!isMounted) return;
-        toast({ title: "Case verisi yüklenemedi", description: err instanceof Error ? err.message : "Beklenmeyen hata", variant: "destructive" });
+        toast({
+          title: "Case verisi yüklenemedi",
+          description: err instanceof Error ? err.message : "Beklenmeyen hata",
+          variant: "destructive",
+        });
       } finally {
         if (isMounted) setLoadingCase(false);
       }
     })();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [selectedRoleKey, roles, entityItems, toast]);
 
   // "Admin" = the item's owner/manager (the person who manages that profile).
@@ -173,10 +201,15 @@ const AdminRolesOverviewPage = () => {
         if (isMounted) setSelectedAdminEmail(null);
       }
     })();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [selectedItemId]);
 
-  const selectedItem = useMemo(() => listItems.find((i) => i.id === selectedItemId) ?? null, [listItems, selectedItemId]);
+  const selectedItem = useMemo(
+    () => listItems.find((i) => i.id === selectedItemId) ?? null,
+    [listItems, selectedItemId],
+  );
   const selectedRole = useMemo(() => roles.find((r) => r.key === selectedRoleKey) ?? null, [roles, selectedRoleKey]);
 
   return (
@@ -200,10 +233,7 @@ const AdminRolesOverviewPage = () => {
           onSelectRole={setSelectedRoleKey}
           isLoading={loadingTop}
         />
-        <EntityCatalogPanel
-          items={entityItems}
-          isLoading={loadingTop}
-        />
+        <EntityCatalogPanel items={entityItems} isLoading={loadingTop} />
       </div>
 
       <div className="space-y-3">

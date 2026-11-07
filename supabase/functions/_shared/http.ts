@@ -8,11 +8,7 @@
  * ⚠️ `Content-Type`, CORS başlıkları yayıldıktan SONRA yazılır: çağıranın başlık nesnesi
  * (`corsHeaders`) yanlışlıkla başka bir Content-Type taşısa bile yanıt JSON kalır.
  */
-export function jsonResponse(
-  body: unknown,
-  status: number,
-  corsHeaders: Record<string, string>,
-): Response {
+export function jsonResponse(body: unknown, status: number, corsHeaders: Record<string, string>): Response {
   return new Response(JSON.stringify(body), {
     status,
     headers: { ...corsHeaders, "Content-Type": "application/json; charset=utf-8" },

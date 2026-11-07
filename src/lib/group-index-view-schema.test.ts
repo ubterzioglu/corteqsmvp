@@ -43,7 +43,12 @@ const code = () =>
 const flat = () => code().replace(/\s+/g, " ");
 
 const view = () =>
-  sliceBetween(code(), "create view public.whatsapp_landings_public", "grant select on public.whatsapp_landings_public", "view v2");
+  sliceBetween(
+    code(),
+    "create view public.whatsapp_landings_public",
+    "grant select on public.whatsapp_landings_public",
+    "view v2",
+  );
 
 const isNewFn = () =>
   sliceBetween(
@@ -162,9 +167,7 @@ describe("G19 · is_new — eşik group_settings'ten (G09 doktrini)", () => {
   });
 
   it("view select grant'ı korunur", () => {
-    expect(flat()).toContain(
-      "grant select on public.whatsapp_landings_public to anon, authenticated;",
-    );
+    expect(flat()).toContain("grant select on public.whatsapp_landings_public to anon, authenticated;");
   });
 });
 
@@ -176,18 +179,23 @@ describe("G19 · istemci view'ı gerçekten okuyor", () => {
 
     expect(src).toContain("hasApprovedBadge: row.has_approved_badge ?? false");
     expect(src).toContain("isNew: row.is_new ?? false");
-    expect(src).toContain("ownership: (row.ownership as WhatsAppLanding[\"ownership\"]) ?? undefined");
+    expect(src).toContain('ownership: (row.ownership as WhatsAppLanding["ownership"]) ?? undefined');
     expect(src).toContain("listingStatus: row.listing_status ?? undefined");
     expect(src).toContain("publishedAt: row.published_at ?? undefined");
   });
 
   it("dizin sıralaması skora bağlı (politika §7) — skorsuzlar SONA", () => {
-    const list = sliceBetween(landings(), "export async function listLandings", "export async function submitLanding", "listLandings");
+    const list = sliceBetween(
+      landings(),
+      "export async function listLandings",
+      "export async function submitLanding",
+      "listLandings",
+    );
 
     expect(list).toContain('.order("group_score", { ascending: false, nullsFirst: false })');
     expect(list).toContain('.order("created_at", { ascending: false })');
     // Skor sırası created_at'ten ÖNCE uygulanır (birincil anahtar)
-    expect(list.indexOf(".order(\"group_score\"")).toBeLessThan(list.indexOf(".order(\"created_at\""));
+    expect(list.indexOf('.order("group_score"')).toBeLessThan(list.indexOf('.order("created_at"'));
   });
 
   it("public kaynak sözleşmesi bozulmadı (G03b: view, tablo değil)", () => {
@@ -198,7 +206,12 @@ describe("G19 · istemci view'ı gerçekten okuyor", () => {
     // tabloyu kullanmaya DEVAM eder (submitLanding/updateLanding — canlı eski
     // paket paralelliği, G10c'ye dek); o yüzden dosya-geneli `from("whatsapp_landings")`
     // taraması YAPILMAZ — getLanding/listLandings kilidi public-source testinde.
-    const readPaths = sliceBetween(src, "export async function getLanding", "export async function getEditableLandingForCurrentUser", "okuma yolları");
+    const readPaths = sliceBetween(
+      src,
+      "export async function getLanding",
+      "export async function getEditableLandingForCurrentUser",
+      "okuma yolları",
+    );
     expect(readPaths).toContain("PUBLIC_LANDINGS_SOURCE");
   });
 });

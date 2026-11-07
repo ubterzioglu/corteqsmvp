@@ -63,16 +63,13 @@ describe("group-notifications · tasarım §9 metinleri birebir", () => {
 
   it("Sahiplik doğrulandı — kod silme hatırlatması", () => {
     const email = buildGroupNotificationEmail("group_ownership_verified", payload());
-    expect(email.text).toContain(rows["Sahiplik doğrulandı"]
-      .replace("{Grup}", "Berlin Yazılımcıları"));
+    expect(email.text).toContain(rows["Sahiplik doğrulandı"].replace("{Grup}", "Berlin Yazılımcıları"));
   });
 
   it("Yeni gönderi onay bekliyor — {n} ve 48 saat", () => {
     const template = rows["Yeni gönderi onay bekliyor"];
     const email = buildGroupNotificationEmail("group_post_pending", payload({ n: 3 }));
-    expect(email.text).toContain(template
-      .replace("{Grup}", "Berlin Yazılımcıları")
-      .replace("{n}", "3"));
+    expect(email.text).toContain(template.replace("{Grup}", "Berlin Yazılımcıları").replace("{n}", "3"));
     expect(email.text).toContain("48 saat içinde bakmazsan ekibimiz devralır.");
   });
 
@@ -97,26 +94,34 @@ describe("group-notifications · tasarım §9 metinleri birebir", () => {
   it("Uyarı — {sebep}", () => {
     const template = rows["Uyarı"];
     const email = buildGroupNotificationEmail("group_strike_warning", payload({ reason: "1. ihlal — uyarı" }));
-    expect(email.text).toContain(template
-      .replace("{Grup}", "Berlin Yazılımcıları")
-      .replace("{sebep}", "1. ihlal — uyarı"));
+    expect(email.text).toContain(
+      template.replace("{Grup}", "Berlin Yazılımcıları").replace("{sebep}", "1. ihlal — uyarı"),
+    );
   });
 });
 
 describe("group-notifications · kural 8 + biçim", () => {
   it("davet linki maile HİÇBİR olayda girmez; {link} site sayfasıdır", () => {
     const events = [
-      "group_submission_received", "group_published", "group_rejected",
-      "group_ownership_verified", "group_post_pending", "group_link_dead",
-      "group_score_badge", "group_strike_warning",
+      "group_submission_received",
+      "group_published",
+      "group_rejected",
+      "group_ownership_verified",
+      "group_post_pending",
+      "group_link_dead",
+      "group_score_badge",
+      "group_strike_warning",
     ] as const;
 
     for (const event of events) {
-      const email = buildGroupNotificationEmail(event, payload({
-        // Kötü niyetli/yanlış payload bile sızmamalı: şablon bu alanları OKUMAZ
-        whatsapp_link: "https://chat.whatsapp.com/SIZMA",
-        invite_code: "SIZMA",
-      }));
+      const email = buildGroupNotificationEmail(
+        event,
+        payload({
+          // Kötü niyetli/yanlış payload bile sızmamalı: şablon bu alanları OKUMAZ
+          whatsapp_link: "https://chat.whatsapp.com/SIZMA",
+          invite_code: "SIZMA",
+        }),
+      );
       expect(email.html, event).not.toContain("chat.whatsapp.com");
       expect(email.text, event).not.toContain("chat.whatsapp.com");
       expect(email.html, event).not.toContain("SIZMA");
@@ -125,9 +130,12 @@ describe("group-notifications · kural 8 + biçim", () => {
   });
 
   it("html kaçışlıdır (grup adı XSS taşımaz)", () => {
-    const email = buildGroupNotificationEmail("group_published", payload({
-      group_name: '<script>alert(1)</script>',
-    }));
+    const email = buildGroupNotificationEmail(
+      "group_published",
+      payload({
+        group_name: "<script>alert(1)</script>",
+      }),
+    );
     expect(email.html).not.toContain("<script>");
     expect(email.html).toContain("&lt;script&gt;");
   });

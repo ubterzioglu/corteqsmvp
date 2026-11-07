@@ -44,14 +44,19 @@ export function CommunityFilters({
       </div>
 
       <div className="mt-3 flex flex-wrap gap-2">
-        <Select value={category || "__all__"} onValueChange={(v) => onCategoryChange(v === "__all__" ? "" : (v as LandingCategory))}>
+        <Select
+          value={category || "__all__"}
+          onValueChange={(v) => onCategoryChange(v === "__all__" ? "" : (v as LandingCategory))}
+        >
           <SelectTrigger className="w-[210px]" aria-label="Kategori filtresi">
             <SelectValue placeholder="Kategori" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__">Tüm Kategoriler</SelectItem>
             {categoryOptions.map((opt) => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              <SelectItem key={opt.value} value={opt.value}>
+                {opt.label}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -63,14 +68,19 @@ export function CommunityFilters({
           <SelectContent>
             <SelectItem value="__all__">Tüm Şehirler</SelectItem>
             {cities.map((option) => (
-              <SelectItem key={option} value={option}>{option}</SelectItem>
+              <SelectItem key={option} value={option}>
+                {option}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
         {/* G19 · politika §6: rozet dili sahipliğe geçti — "Admin onaylı"
             filtresi "Sahibi doğruladı" oldu (ownership='verified'). */}
-        <Select value={approval || "__all__"} onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : "verified")}>
+        <Select
+          value={approval || "__all__"}
+          onValueChange={(v) => onApprovalChange(v === "__all__" ? "" : "verified")}
+        >
           <SelectTrigger className="w-[180px]" aria-label="Onay filtresi">
             <SelectValue placeholder="Sahiplik Durumu" />
           </SelectTrigger>

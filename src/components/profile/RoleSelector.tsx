@@ -4,20 +4,9 @@ import { Check, ChevronRight, ChevronLeft, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  useRoleStructureByAnaRol,
-  ANA_ROL_OPTIONS,
-  type RoleStructureEntry,
-} from "@/hooks/useRoleStructure";
+import { useRoleStructureByAnaRol, ANA_ROL_OPTIONS, type RoleStructureEntry } from "@/hooks/useRoleStructure";
 
 type RoleSelectorStep = 1 | 2 | 3;
 
@@ -74,9 +63,7 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
   };
 
   const handleUzmanlikToggle = (slug: string) => {
-    setSelectedUzmanliklar((prev) =>
-      prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]
-    );
+    setSelectedUzmanliklar((prev) => (prev.includes(slug) ? prev.filter((s) => s !== slug) : [...prev, slug]));
   };
 
   const handleComplete = () => {
@@ -136,14 +123,12 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
               disabled={disabled}
               className={cn(
                 "h-auto flex-col items-start gap-1 p-4 text-left",
-                selectedAnaRol === option.key && "border-primary bg-primary/5"
+                selectedAnaRol === option.key && "border-primary bg-primary/5",
               )}
               onClick={() => handleAnaRolSelect(option.key)}
             >
               <span className="font-semibold">{option.label}</span>
-              {option.description && (
-                <span className="text-xs text-muted-foreground">{option.description}</span>
-              )}
+              {option.description && <span className="text-xs text-muted-foreground">{option.description}</span>}
             </Button>
           ))}
         </div>
@@ -177,10 +162,7 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
                         onSelect={() => handleAltRolSelect(role.alt_rol)}
                       >
                         <Check
-                          className={cn(
-                            "mr-2 h-4 w-4",
-                            selectedAltRol === role.alt_rol ? "opacity-100" : "opacity-0"
-                          )}
+                          className={cn("mr-2 h-4 w-4", selectedAltRol === role.alt_rol ? "opacity-100" : "opacity-0")}
                         />
                         {role.alt_rol}
                       </CommandItem>
@@ -212,9 +194,7 @@ export function RoleSelector({ value, onChange, disabled }: RoleSelectorProps) {
                   onClick={() => handleUzmanlikToggle(u.slug)}
                 >
                   {u.label}
-                  {selectedUzmanliklar.includes(u.slug) && (
-                    <Check className="ml-1 h-3 w-3" />
-                  )}
+                  {selectedUzmanliklar.includes(u.slug) && <Check className="ml-1 h-3 w-3" />}
                 </Badge>
               ))}
             </div>

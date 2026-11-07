@@ -63,9 +63,45 @@ type Candidate = {
 };
 
 const STOPWORDS = new Set([
-  "ve", "ile", "bir", "bu", "su", "de", "da", "mi", "mi", "mu", "mu", "ben", "sen", "biz",
-  "icin", "ama", "veya", "ya", "ki", "den", "dan", "cok", "az", "the", "a",
-  "an", "and", "or", "of", "to", "in", "on", "at", "is", "are", "with", "for", "my", "i",
+  "ve",
+  "ile",
+  "bir",
+  "bu",
+  "su",
+  "de",
+  "da",
+  "mi",
+  "mi",
+  "mu",
+  "mu",
+  "ben",
+  "sen",
+  "biz",
+  "icin",
+  "ama",
+  "veya",
+  "ya",
+  "ki",
+  "den",
+  "dan",
+  "cok",
+  "az",
+  "the",
+  "a",
+  "an",
+  "and",
+  "or",
+  "of",
+  "to",
+  "in",
+  "on",
+  "at",
+  "is",
+  "are",
+  "with",
+  "for",
+  "my",
+  "i",
 ]);
 
 function buildCorsHeaders(req: Request): Record<string, string> {
@@ -74,7 +110,7 @@ function buildCorsHeaders(req: Request): Record<string, string> {
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 
   if (origin && ALLOWED_ORIGINS.has(origin)) {
@@ -118,9 +154,11 @@ function keywordScore(query: string, candidate: Candidate): number {
 }
 
 function extractFunctionArgs(payload: unknown, functionName: string) {
-  const functionCall =
-    (payload as { candidates?: Array<{ content?: { parts?: Array<{ functionCall?: { name?: string; args?: unknown } }> } }> })
-      ?.candidates?.[0]?.content?.parts?.find((part) => part.functionCall?.name === functionName)?.functionCall;
+  const functionCall = (
+    payload as {
+      candidates?: Array<{ content?: { parts?: Array<{ functionCall?: { name?: string; args?: unknown } }> } }>;
+    }
+  )?.candidates?.[0]?.content?.parts?.find((part) => part.functionCall?.name === functionName)?.functionCall;
 
   if (!functionCall) {
     return null;
@@ -163,22 +201,23 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "Missing authorization" }, 401, corsHeaders);
     }
     const token = authHeader.slice(7);
-    const authClient = createClient(supabaseUrl, supabaseUrl.includes("localhost") ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0" : serviceKey);
-    const { data: { user }, error: authError } = await authClient.auth.getUser(token);
+    const authClient = createClient(
+      supabaseUrl,
+      supabaseUrl.includes("localhost")
+        ? "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+        : serviceKey,
+    );
+    const {
+      data: { user },
+      error: authError,
+    } = await authClient.auth.getUser(token);
     if (authError || !user) {
       return jsonResponse({ error: "Invalid token" }, 401, corsHeaders);
     }
 
     const supabase = createClient(supabaseUrl, serviceKey);
     // SG9: kimliği doğrulanmış kullanıcıda sınır user.id'ye göre (IP sahte başlıkla değişebilir).
-    await enforceRateLimit(
-      supabase,
-      req,
-      "find-matches",
-      RATE_LIMIT_MAX,
-      RATE_LIMIT_WINDOW_SECONDS,
-      user.id,
-    );
+    await enforceRateLimit(supabase, req, "find-matches", RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_SECONDS, user.id);
 
     const payload = RequestSchema.parse(await readJsonWithLimit(req, MAX_BODY_BYTES));
 
@@ -209,13 +248,7 @@ Deno.serve(async (req) => {
     const { data: candidates, error } = await query;
     if (error) throw error;
 
-    const queryText = [
-      payload.offers_needs,
-      payload.field,
-      payload.city,
-      payload.country,
-      payload.category,
-    ]
+    const queryText = [payload.offers_needs, payload.field, payload.city, payload.country, payload.category]
       .filter(Boolean)
       .join(" ");
 
@@ -245,9 +278,11 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         systemInstruction: {
-          parts: [{
-            text: "Sen bir diaspora aginda arz/talep eslestirme asistanisin. Kisisel veri aciklama. En uygun 5 adayi sec ve Turkce kisa gerekce yaz.",
-          }],
+          parts: [
+            {
+              text: "Sen bir diaspora aginda arz/talep eslestirme asistanisin. Kisisel veri aciklama. En uygun 5 adayi sec ve Turkce kisa gerekce yaz.",
+            },
+          ],
         },
         contents: [
           {

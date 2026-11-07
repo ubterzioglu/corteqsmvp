@@ -3,21 +3,12 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  useServiceFinderTemplates,
-  useUpsertServiceFinderTemplate,
-} from "@/hooks/useServiceFinder";
+import { useServiceFinderTemplates, useUpsertServiceFinderTemplate } from "@/hooks/useServiceFinder";
 import type { ServiceFinderTemplateRow } from "@/lib/service-finder-schemas";
 
 interface TemplateFormState {
@@ -127,15 +118,27 @@ function TemplateEditorDialog({
             </div>
             <div className="grid gap-1.5">
               <Label>Etiket</Label>
-              <Input value={form.label} onChange={(event) => update({ label: event.target.value })} placeholder="Doktor" />
+              <Input
+                value={form.label}
+                onChange={(event) => update({ label: event.target.value })}
+                placeholder="Doktor"
+              />
             </div>
             <div className="grid gap-1.5">
               <Label>Rol anahtarı</Label>
-              <Input value={form.role_key} onChange={(event) => update({ role_key: event.target.value })} placeholder="Healthcare_Doctor" />
+              <Input
+                value={form.role_key}
+                onChange={(event) => update({ role_key: event.target.value })}
+                placeholder="Healthcare_Doctor"
+              />
             </div>
             <div className="grid gap-1.5">
               <Label>Kayıt tipi</Label>
-              <Input value={form.item_type} onChange={(event) => update({ item_type: event.target.value })} placeholder="advisor" />
+              <Input
+                value={form.item_type}
+                onChange={(event) => update({ item_type: event.target.value })}
+                placeholder="advisor"
+              />
             </div>
             <div className="grid gap-1.5 sm:col-span-2">
               <Label>Kategori slug</Label>
@@ -152,10 +155,15 @@ function TemplateEditorDialog({
           </div>
           <div className="grid gap-1.5">
             <Label>Hariç terimler (virgülle)</Label>
-            <Input value={form.must_exclude_terms} onChange={(event) => update({ must_exclude_terms: event.target.value })} />
+            <Input
+              value={form.must_exclude_terms}
+              onChange={(event) => update({ must_exclude_terms: event.target.value })}
+            />
           </div>
           <div className="grid gap-1.5">
-            <Label>Sorgu şablonları (JSON dizi — {"{{city}}"}, {"{{profession}}"}, {"{{language_term}}"})</Label>
+            <Label>
+              Sorgu şablonları (JSON dizi — {"{{city}}"}, {"{{profession}}"}, {"{{language_term}}"})
+            </Label>
             <Textarea
               value={form.query_templates}
               onChange={(event) => update({ query_templates: event.target.value })}
@@ -185,9 +193,7 @@ export default function ServiceFinderTemplatesPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">Meslek Şablonları</h1>
-          <p className="text-sm text-muted-foreground">
-            Sorgu üretimi için rol + dil terimi + sorgu kalıbı tanımları.
-          </p>
+          <p className="text-sm text-muted-foreground">Sorgu üretimi için rol + dil terimi + sorgu kalıbı tanımları.</p>
         </div>
         <TemplateEditorDialog template={null} trigger={<Button size="sm">Yeni Şablon</Button>} />
       </div>

@@ -20,11 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateEvent } from "@/hooks/use-events";
-import {
-  forgetEventFormDraft,
-  readEventFormDraft,
-  rememberEventFormDraft,
-} from "@/lib/event-form-draft";
+import { forgetEventFormDraft, readEventFormDraft, rememberEventFormDraft } from "@/lib/event-form-draft";
 import {
   DEFAULT_EVENT_TYPE,
   EVENT_CATEGORY_OPTIONS,
@@ -144,7 +140,8 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
     if ((startTime || endTime) && !isKnownEventTimezone(timezone)) {
       toast({
         title: "Saat dilimi seçin",
-        description: "Saat girdiniz — bu saat hangi ülkenin saati? Farklı ülkelerdeki üyeler kendi saatlerini buna göre görüyor.",
+        description:
+          "Saat girdiniz — bu saat hangi ülkenin saati? Farklı ülkelerdeki üyeler kendi saatlerini buna göre görüyor.",
         variant: "destructive",
       });
       return;
@@ -303,7 +300,9 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
 
             <div className="space-y-5">
               <div className="space-y-3">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Etkinlik Bilgileri</h3>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                  Etkinlik Bilgileri
+                </h3>
 
                 <div>
                   <Label htmlFor="event-title">Etkinlik Başlığı *</Label>
@@ -574,9 +573,16 @@ export function CreateEventFormSection({ open, onOpenChange }: CreateEventFormSe
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mt-2">
                       {tags.map((tag) => (
-                        <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs text-secondary-foreground">
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs text-secondary-foreground"
+                        >
                           {tag}
-                          <button type="button" onClick={() => handleRemoveTag(tag)} className="rounded-full hover:bg-accent">
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveTag(tag)}
+                            className="rounded-full hover:bg-accent"
+                          >
                             <X className="h-3 w-3" />
                           </button>
                         </span>

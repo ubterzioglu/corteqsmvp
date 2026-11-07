@@ -20,10 +20,7 @@ import { normalizeLandingCategory, type LandingCategory, type WhatsAppLanding } 
 export const messagingHeroImage = "/addwaimage.png";
 export const waPlaceholderImage = "/waplaceholder.png";
 
-export const categoryMeta: Record<
-  LandingCategory,
-  { icon: typeof Users; label: string; chipClass: string }
-> = {
+export const categoryMeta: Record<LandingCategory, { icon: typeof Users; label: string; chipClass: string }> = {
   alumni: {
     icon: GraduationCap,
     label: "Alumni",
@@ -130,9 +127,7 @@ export function getLandingHeroImage(landing: WhatsAppLanding) {
  * eder (aynı dosyadaki `approvalFlagsFor` mantığı orada).
  */
 export function getOwnershipStatusMeta(landing: WhatsAppLanding) {
-  return landing.ownership === "verified"
-    ? ownershipBadgeMeta.verified
-    : ownershipBadgeMeta.suggestion;
+  return landing.ownership === "verified" ? ownershipBadgeMeta.verified : ownershipBadgeMeta.suggestion;
 }
 
 export function buildLandingCardSummary(landing: WhatsAppLanding) {
@@ -177,23 +172,58 @@ export function getPlatformCtaMeta(platform: string | undefined, url: string): P
   const effective = platform?.trim() || detectPlatformFromUrl(url);
   switch (effective) {
     case "WhatsApp":
-      return { label: "WhatsApp Grubuna Katıl", bgClass: "bg-[#25D366]", hoverClass: "hover:bg-[#1fb855]", icon: MessageCircle };
+      return {
+        label: "WhatsApp Grubuna Katıl",
+        bgClass: "bg-[#25D366]",
+        hoverClass: "hover:bg-[#1fb855]",
+        icon: MessageCircle,
+      };
     case "Telegram":
-      return { label: "Telegram Kanalına Katıl", bgClass: "bg-[#229ED9]", hoverClass: "hover:bg-[#1b8ac0]", icon: Send };
+      return {
+        label: "Telegram Kanalına Katıl",
+        bgClass: "bg-[#229ED9]",
+        hoverClass: "hover:bg-[#1b8ac0]",
+        icon: Send,
+      };
     case "Discord":
-      return { label: "Discord Sunucusuna Katıl", bgClass: "bg-[#5865F2]", hoverClass: "hover:bg-[#4752C4]", icon: MessageCircle };
+      return {
+        label: "Discord Sunucusuna Katıl",
+        bgClass: "bg-[#5865F2]",
+        hoverClass: "hover:bg-[#4752C4]",
+        icon: MessageCircle,
+      };
     case "Facebook":
-      return { label: "Facebook Grubuna Katıl", bgClass: "bg-[#1877F2]", hoverClass: "hover:bg-[#1565CC]", icon: Users };
+      return {
+        label: "Facebook Grubuna Katıl",
+        bgClass: "bg-[#1877F2]",
+        hoverClass: "hover:bg-[#1565CC]",
+        icon: Users,
+      };
     case "Instagram":
       return { label: "Instagram'da Takip Et", bgClass: "bg-[#E1306C]", hoverClass: "hover:bg-[#c9265d]", icon: Heart };
     case "LinkedIn":
-      return { label: "LinkedIn Grubuna Katıl", bgClass: "bg-[#0A66C2]", hoverClass: "hover:bg-[#084f9e]", icon: Briefcase };
+      return {
+        label: "LinkedIn Grubuna Katıl",
+        bgClass: "bg-[#0A66C2]",
+        hoverClass: "hover:bg-[#084f9e]",
+        icon: Briefcase,
+      };
     case "X":
       return { label: "X'te Takip Et", bgClass: "bg-slate-900", hoverClass: "hover:bg-slate-800", icon: ExternalLink };
     case "TikTok":
-      return { label: "TikTok'ta Takip Et", bgClass: "bg-slate-900", hoverClass: "hover:bg-slate-800", icon: ExternalLink };
+      return {
+        label: "TikTok'ta Takip Et",
+        bgClass: "bg-slate-900",
+        hoverClass: "hover:bg-slate-800",
+        icon: ExternalLink,
+      };
     case "YouTube":
-      return { label: "YouTube'a Abone Ol", bgClass: "bg-[#FF0000]", hoverClass: "hover:bg-[#cc0000]", icon: ExternalLink };
+      return {
+        label: "YouTube'a Abone Ol",
+        bgClass: "bg-[#FF0000]",
+        hoverClass: "hover:bg-[#cc0000]",
+        icon: ExternalLink,
+      };
     case "Reddit":
       return { label: "Reddit'te Katıl", bgClass: "bg-[#FF5700]", hoverClass: "hover:bg-[#e04d00]", icon: Users };
     default:

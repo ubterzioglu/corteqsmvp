@@ -61,9 +61,7 @@ export function resolveCaddeClockTarget(
   profileCity: string | null | undefined,
   cities: readonly CityLike[],
 ): CaddeClockTarget | null {
-  const candidates = [...selectedCities, profileCity ?? ""]
-    .map((value) => value.trim())
-    .filter(Boolean);
+  const candidates = [...selectedCities, profileCity ?? ""].map((value) => value.trim()).filter(Boolean);
 
   for (const candidate of candidates) {
     const key = trFold(candidate);

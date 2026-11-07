@@ -78,9 +78,7 @@ export default function VizeSecimToolPage() {
         <Card>
           <CardHeader>
             <CardTitle className="text-base leading-snug">{question.text}</CardTitle>
-            {question.hint && (
-              <p className="text-sm text-muted-foreground">{question.hint}</p>
-            )}
+            {question.hint && <p className="text-sm text-muted-foreground">{question.hint}</p>}
           </CardHeader>
           <CardContent className="space-y-2">
             {question.options.map((opt) => (
@@ -150,8 +148,8 @@ export default function VizeSecimToolPage() {
             )}
 
             <p className="text-xs text-muted-foreground">
-              ⚠️ Sonuç bilgilendirme amaçlıdır; kesin karar için bir göçmenlik danışmanına başvur.
-              Kaynak: 2024/2025 Almanya göçmenlik mevzuatı (AufenthG, Fachkräfteeinwanderungsgesetz).
+              ⚠️ Sonuç bilgilendirme amaçlıdır; kesin karar için bir göçmenlik danışmanına başvur. Kaynak: 2024/2025
+              Almanya göçmenlik mevzuatı (AufenthG, Fachkräfteeinwanderungsgesetz).
             </p>
 
             <div className="flex flex-col gap-2">

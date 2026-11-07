@@ -81,7 +81,7 @@ export async function fetchAllRows<TRow>(
   }
 
   throw new Error(
-    `fetchAllRows: ${maxPages} sayfa sonrası bitmedi (${out.length}+ satır). `
-      + "Sessizce eksik veri dönmemek için durduruldu — sorguyu daralt ya da maxPages'i bilinçli yükselt.",
+    `fetchAllRows: ${maxPages} sayfa sonrası bitmedi (${out.length}+ satır). ` +
+      "Sessizce eksik veri dönmemek için durduruldu — sorguyu daralt ya da maxPages'i bilinçli yükselt.",
   );
 }

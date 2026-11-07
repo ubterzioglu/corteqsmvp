@@ -40,8 +40,7 @@ export function searchStaticTools(query: string, limit = 6): PublicContentSearch
   const boundedLimit = Math.min(Math.max(Math.trunc(limit), 0), STANDALONE_TOOLS.length);
   if (foldedQuery.length < 2 || boundedLimit === 0) return [];
 
-  return STANDALONE_TOOLS
-    .filter((tool) => foldSearchText(`${tool.title} ${tool.summary}`).includes(foldedQuery))
+  return STANDALONE_TOOLS.filter((tool) => foldSearchText(`${tool.title} ${tool.summary}`).includes(foldedQuery))
     .slice(0, boundedLimit)
     .map((tool) => ({
       type: "tool",
@@ -52,10 +51,7 @@ export function searchStaticTools(query: string, limit = 6): PublicContentSearch
     }));
 }
 
-export async function searchPublicContent(
-  query: string,
-  limit = 12,
-): Promise<PublicContentSearchResult[]> {
+export async function searchPublicContent(query: string, limit = 12): Promise<PublicContentSearchResult[]> {
   const normalizedQuery = query.trim();
   if (normalizedQuery.length < 2) return [];
 
@@ -78,13 +74,15 @@ export async function searchPublicContent(
       ) {
         return [];
       }
-      return [{
-        type: "blog" as const,
-        id: row.external_id,
-        title: row.title,
-        description: typeof row.description === "string" ? row.description : null,
-        href: row.href,
-      }];
+      return [
+        {
+          type: "blog" as const,
+          id: row.external_id,
+          title: row.title,
+          description: typeof row.description === "string" ? row.description : null,
+          href: row.href,
+        },
+      ];
     }
     // A16: Etkinlik sonuçları
     if (row.content_type === "event") {
@@ -96,13 +94,15 @@ export async function searchPublicContent(
       ) {
         return [];
       }
-      return [{
-        type: "event" as const,
-        id: row.external_id,
-        title: row.title,
-        description: typeof row.description === "string" ? row.description : null,
-        href: row.href,
-      }];
+      return [
+        {
+          type: "event" as const,
+          id: row.external_id,
+          title: row.title,
+          description: typeof row.description === "string" ? row.description : null,
+          href: row.href,
+        },
+      ];
     }
     // B7b: Cadde gönderisi sonuçları
     if (row.content_type === "cadde") {
@@ -114,13 +114,15 @@ export async function searchPublicContent(
       ) {
         return [];
       }
-      return [{
-        type: "cadde" as const,
-        id: row.external_id,
-        title: row.title,
-        description: typeof row.description === "string" ? row.description : null,
-        href: row.href,
-      }];
+      return [
+        {
+          type: "cadde" as const,
+          id: row.external_id,
+          title: row.title,
+          description: typeof row.description === "string" ? row.description : null,
+          href: row.href,
+        },
+      ];
     }
     return [];
   });

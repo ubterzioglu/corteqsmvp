@@ -19,28 +19,19 @@ export default function RelocationToolResultPage() {
 
   if (resultQuery.isLoading) {
     return (
-      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">
-        {TOOLS_UI_COPY.loading}
-      </div>
+      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-muted-foreground">{TOOLS_UI_COPY.loading}</div>
     );
   }
 
   const result = resultQuery.data;
   if (!result) {
-    return (
-      <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">
-        Sonuç bulunamadı.
-      </div>
-    );
+    return <div className="container mx-auto max-w-3xl px-4 py-6 text-sm text-destructive">Sonuç bulunamadı.</div>;
   }
 
   return (
     <div className="container mx-auto max-w-3xl px-4 py-6">
       {/* B22: kayıtlı sonuçtan da "Tekrar Çöz" ile araca dönülebilir. */}
-      <ToolResultView
-        result={result}
-        onRetake={toolSlug ? () => navigate(`/tools/${toolSlug}`) : undefined}
-      />
+      <ToolResultView result={result} onRetake={toolSlug ? () => navigate(`/tools/${toolSlug}`) : undefined} />
     </div>
   );
 }

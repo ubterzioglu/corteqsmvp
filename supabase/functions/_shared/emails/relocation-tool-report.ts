@@ -38,9 +38,8 @@ export function buildRelocationToolReportEmail(
   const score = scoreText(payload?.total_score);
   const bucket = asText(payload?.score_bucket);
   const base = asText(siteUrl, DEFAULT_SITE_URL).replace(/\/+$/, "") || DEFAULT_SITE_URL;
-  const path = toolSlug && resultId
-    ? `/tools/${encodeURIComponent(toolSlug)}/result/${encodeURIComponent(resultId)}`
-    : "/tools";
+  const path =
+    toolSlug && resultId ? `/tools/${encodeURIComponent(toolSlug)}/result/${encodeURIComponent(resultId)}` : "/tools";
   const link = `${base}${path}`;
 
   const html = `
@@ -68,4 +67,3 @@ export function buildRelocationToolReportEmail(
 
   return { subject: `CorteQS araç raporu: ${toolTitle}`, html, text };
 }
-

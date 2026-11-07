@@ -103,8 +103,22 @@ const CAFE_ROW = {
 };
 
 const CAFE_MEMBER_ROWS = [
-  { id: "m-1", cafe_id: "cafe-1", user_id: "cadde-user-1", status: "approved", answer: null, joined_at: "2026-09-13T09:05:00Z" },
-  { id: "m-2", cafe_id: "cafe-1", user_id: "author-1", status: "approved", answer: null, joined_at: "2026-09-13T09:10:00Z" },
+  {
+    id: "m-1",
+    cafe_id: "cafe-1",
+    user_id: "cadde-user-1",
+    status: "approved",
+    answer: null,
+    joined_at: "2026-09-13T09:05:00Z",
+  },
+  {
+    id: "m-2",
+    cafe_id: "cafe-1",
+    user_id: "author-1",
+    status: "approved",
+    answer: null,
+    joined_at: "2026-09-13T09:10:00Z",
+  },
 ];
 
 const feedItem = (overrides: Record<string, unknown> = {}) => ({
@@ -238,9 +252,7 @@ const mockCaddeNetworkWithBadges = async (page: Page) => {
     feedItem({ id: "post-3", title: "Üçüncü gönderi", pinned: false }),
     feedItem({ id: "post-4", title: "Dördüncü gönderi", pinned: false }),
   ]);
-  await page.route(/\/rest\/v1\/cadde_sponsored_placements/, (route) =>
-    route.fulfill(json(SPONSORED_ROW)),
-  );
+  await page.route(/\/rest\/v1\/cadde_sponsored_placements/, (route) => route.fulfill(json(SPONSORED_ROW)));
 };
 
 const loginToCadde = async (page: Page, next = "/cadde") => {

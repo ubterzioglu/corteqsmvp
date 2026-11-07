@@ -24,8 +24,7 @@ const ProfilePublicPreviewCard = ({ slug, isLoading }: ProfilePublicPreviewCardP
     </CardHeader>
     <CardContent className="space-y-3">
       <p className="text-xs leading-relaxed text-muted-foreground">
-        Profilinin ziyaretçilere nasıl göründüğünü kontrol et. Görünür alanların public profilde
-        anında yansır.
+        Profilinin ziyaretçilere nasıl göründüğünü kontrol et. Görünür alanların public profilde anında yansır.
       </p>
       {isLoading ? (
         <p className="text-xs text-muted-foreground">Public profil bağlantısı hazırlanıyor...</p>
@@ -38,8 +37,7 @@ const ProfilePublicPreviewCard = ({ slug, isLoading }: ProfilePublicPreviewCardP
         </Button>
       ) : (
         <p className="rounded-xl border border-dashed border-border bg-muted/40 px-3 py-2.5 text-xs text-muted-foreground">
-          Public profilin henüz hazır değil. Katalog kaydın oluşturulduğunda bu alandan
-          önizleyebileceksin.
+          Public profilin henüz hazır değil. Katalog kaydın oluşturulduğunda bu alandan önizleyebileceksin.
         </p>
       )}
     </CardContent>

@@ -1,10 +1,10 @@
-'use client'
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Plus } from 'lucide-react'
-import AccordionCard from '@/components/dashboard/AccordionCard'
-import KonuCard from './KonuCard'
-import { getSupabaseBrowserClient } from '@/lib/dashboard/supabase'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Plus } from "lucide-react";
+import AccordionCard from "@/components/dashboard/AccordionCard";
+import KonuCard from "./KonuCard";
+import { getSupabaseBrowserClient } from "@/lib/dashboard/supabase";
 import {
   MVP_LEVELS,
   MVP_AUTHORS,
@@ -15,43 +15,43 @@ import {
   type MvpFormState,
   type MvpItem,
   type MvpItemRow,
-} from '@/lib/dashboard/mvp-items'
-import { createMvpItem, deleteMvpItem, listMvpItems, updateMvpItem } from '@/lib/dashboard/mvp-items-api'
+} from "@/lib/dashboard/mvp-items";
+import { createMvpItem, deleteMvpItem, listMvpItems, updateMvpItem } from "@/lib/dashboard/mvp-items-api";
 
 export default function MvpManager() {
-  const [items, setItems] = useState<MvpItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [formState, setFormState] = useState<MvpFormState>(createEmptyMvpFormState)
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editingState, setEditingState] = useState<MvpFormState>(createEmptyMvpFormState)
+  const [items, setItems] = useState<MvpItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formState, setFormState] = useState<MvpFormState>(createEmptyMvpFormState);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingState, setEditingState] = useState<MvpFormState>(createEmptyMvpFormState);
 
-  const supabase = getSupabaseBrowserClient()
+  const supabase = getSupabaseBrowserClient();
 
-  const konuGroups = useMemo(() => groupItemsByKonu(items), [items])
+  const konuGroups = useMemo(() => groupItemsByKonu(items), [items]);
 
   const loadItems = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
     try {
-      setItems(await listMvpItems())
+      setItems(await listMvpItems());
     } catch (loadError) {
-      setError(loadError instanceof Error ? loadError.message : 'MVP listesi yüklenemedi.')
+      setError(loadError instanceof Error ? loadError.message : "MVP listesi yüklenemedi.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    void loadItems()
-  }, [loadItems])
+    void loadItems();
+  }, [loadItems]);
 
   async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!supabase) return
-    setIsSubmitting(true)
-    setError(null)
+    event.preventDefault();
+    if (!supabase) return;
+    setIsSubmitting(true);
+    setError(null);
     try {
       const created = await createMvpItem({
         konu: formState.konu,
@@ -59,36 +59,36 @@ export default function MvpManager() {
         ayrinti: formState.ayrinti.trim() || null,
         mvp_level: formState.mvpLevel,
         added_by: formState.addedBy,
-      })
-      if (!created) throw new Error('Madde eklenemedi.')
-      setItems((prev) => [created, ...prev])
-      setFormState(createEmptyMvpFormState())
+      });
+      if (!created) throw new Error("Madde eklenemedi.");
+      setItems((prev) => [created, ...prev]);
+      setFormState(createEmptyMvpFormState());
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : 'Madde eklenemedi.')
+      setError(createError instanceof Error ? createError.message : "Madde eklenemedi.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
   function startEdit(item: MvpItem) {
-    setEditingId(item.id)
+    setEditingId(item.id);
     setEditingState({
       konu: item.konu,
-      sub: item.sub ?? '',
-      ayrinti: item.ayrinti ?? '',
+      sub: item.sub ?? "",
+      ayrinti: item.ayrinti ?? "",
       mvpLevel: item.mvpLevel,
       addedBy: item.addedBy,
-    })
-    setError(null)
+    });
+    setError(null);
   }
 
   function cancelEdit() {
-    setEditingId(null)
-    setEditingState(createEmptyMvpFormState())
+    setEditingId(null);
+    setEditingState(createEmptyMvpFormState());
   }
 
-  async function handleInlineUpdate(itemId: string, field: 'mvp_level' | 'added_by', value: string) {
-    if (!supabase) return
+  async function handleInlineUpdate(itemId: string, field: "mvp_level" | "added_by", value: string) {
+    if (!supabase) return;
     try {
       // Q3 (tsc TS2345): `value` bir native <select>'in `e.target.value`'sinden
       // geliyor — DOM API'si onu her zaman `string` verir. Ama `mvp_level`/
@@ -96,22 +96,22 @@ export default function MvpManager() {
       // Çağıran taraf <option>'ları zaten bu union'lardan üretiyor (KonuCard.tsx),
       // yani tekil `as` cast burada güvenli — hesaplanan anahtarlı nesne
       // ({ [field]: value }) index imzasına düşüp tipi tamamen kaybediyordu.
-      const patch: Partial<Pick<MvpItemRow, 'mvp_level' | 'added_by'>> =
-        field === 'mvp_level'
-          ? { mvp_level: value as MvpItemRow['mvp_level'] }
-          : { added_by: value as MvpItemRow['added_by'] }
-      const updated = await updateMvpItem(itemId, patch)
-      if (!updated) return
-      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)))
+      const patch: Partial<Pick<MvpItemRow, "mvp_level" | "added_by">> =
+        field === "mvp_level"
+          ? { mvp_level: value as MvpItemRow["mvp_level"] }
+          : { added_by: value as MvpItemRow["added_by"] };
+      const updated = await updateMvpItem(itemId, patch);
+      if (!updated) return;
+      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)));
     } catch (updateError) {
-      setError(updateError instanceof Error ? updateError.message : 'Güncellenemedi.')
+      setError(updateError instanceof Error ? updateError.message : "Güncellenemedi.");
     }
   }
 
   async function handleUpdate(itemId: string) {
-    if (!supabase) return
-    setIsSubmitting(true)
-    setError(null)
+    if (!supabase) return;
+    setIsSubmitting(true);
+    setError(null);
     try {
       const updated = await updateMvpItem(itemId, {
         konu: editingState.konu,
@@ -119,30 +119,30 @@ export default function MvpManager() {
         ayrinti: editingState.ayrinti.trim() || null,
         mvp_level: editingState.mvpLevel,
         added_by: editingState.addedBy,
-      })
-      if (!updated) throw new Error('Madde güncellenemedi.')
-      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)))
-      cancelEdit()
+      });
+      if (!updated) throw new Error("Madde güncellenemedi.");
+      setItems((prev) => prev.map((i) => (i.id === itemId ? updated : i)));
+      cancelEdit();
     } catch (updateError) {
-      setError(updateError instanceof Error ? updateError.message : 'Madde güncellenemedi.')
+      setError(updateError instanceof Error ? updateError.message : "Madde güncellenemedi.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
   async function handleDelete(itemId: string) {
-    if (!supabase) return
-    if (typeof window !== 'undefined' && !window.confirm('Bu madde silinsin mi?')) return
-    setIsSubmitting(true)
-    setError(null)
+    if (!supabase) return;
+    if (typeof window !== "undefined" && !window.confirm("Bu madde silinsin mi?")) return;
+    setIsSubmitting(true);
+    setError(null);
     try {
-      await deleteMvpItem(itemId)
-      setItems((prev) => prev.filter((i) => i.id !== itemId))
-      if (editingId === itemId) cancelEdit()
+      await deleteMvpItem(itemId);
+      setItems((prev) => prev.filter((i) => i.id !== itemId));
+      if (editingId === itemId) cancelEdit();
     } catch (deleteError) {
-      setError(deleteError instanceof Error ? deleteError.message : 'Madde silinemedi.')
+      setError(deleteError instanceof Error ? deleteError.message : "Madde silinemedi.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
@@ -163,9 +163,13 @@ export default function MvpManager() {
 
       <div className="space-y-4">
         {isLoading ? (
-          <div className="rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white/80 p-8 text-center text-sm text-gray-400">Yükleniyor…</div>
+          <div className="rounded-2xl border border-[rgba(66,133,244,0.1)] bg-white/80 p-8 text-center text-sm text-gray-400">
+            Yükleniyor…
+          </div>
         ) : items.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500">Henüz madde yok.</div>
+          <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-500">
+            Henüz madde yok.
+          </div>
         ) : (
           <div className="flex flex-col gap-4">
             {konuGroups.map((group) => (
@@ -192,9 +196,9 @@ export default function MvpManager() {
         <AccordionCard
           items={[
             {
-              id: 'new-mvp',
-              title: 'Yeni Madde Ekle',
-              accentColor: '#1A6DC2',
+              id: "new-mvp",
+              title: "Yeni Madde Ekle",
+              accentColor: "#1A6DC2",
               children: (
                 <form
                   onSubmit={handleCreate}
@@ -202,32 +206,75 @@ export default function MvpManager() {
                 >
                   <label className="space-y-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Konu</span>
-                    <input type="text" value={formState.konu} onChange={(e) => setFormState((s) => ({ ...s, konu: e.target.value }))} placeholder="Başlık" className={INPUT_CLS} required />
+                    <input
+                      type="text"
+                      value={formState.konu}
+                      onChange={(e) => setFormState((s) => ({ ...s, konu: e.target.value }))}
+                      placeholder="Başlık"
+                      className={INPUT_CLS}
+                      required
+                    />
                   </label>
                   <label className="space-y-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Sub</span>
-                    <input type="text" value={formState.sub} onChange={(e) => setFormState((s) => ({ ...s, sub: e.target.value }))} placeholder="Alt başlık" className={INPUT_CLS} />
+                    <input
+                      type="text"
+                      value={formState.sub}
+                      onChange={(e) => setFormState((s) => ({ ...s, sub: e.target.value }))}
+                      placeholder="Alt başlık"
+                      className={INPUT_CLS}
+                    />
                   </label>
                   <label className="space-y-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Ayrıntı</span>
-                    <input type="text" value={formState.ayrinti} onChange={(e) => setFormState((s) => ({ ...s, ayrinti: e.target.value }))} placeholder="Madde metni" className={INPUT_CLS} />
+                    <input
+                      type="text"
+                      value={formState.ayrinti}
+                      onChange={(e) => setFormState((s) => ({ ...s, ayrinti: e.target.value }))}
+                      placeholder="Madde metni"
+                      className={INPUT_CLS}
+                    />
                   </label>
                   <label className="space-y-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">MVP</span>
-                    <select value={formState.mvpLevel} onChange={(e) => setFormState((s) => ({ ...s, mvpLevel: e.target.value as MvpFormState['mvpLevel'] }))} className={INPUT_CLS}>
-                      {MVP_LEVELS.map((l) => (<option key={l} value={l}>{l}</option>))}
+                    <select
+                      value={formState.mvpLevel}
+                      onChange={(e) =>
+                        setFormState((s) => ({ ...s, mvpLevel: e.target.value as MvpFormState["mvpLevel"] }))
+                      }
+                      className={INPUT_CLS}
+                    >
+                      {MVP_LEVELS.map((l) => (
+                        <option key={l} value={l}>
+                          {l}
+                        </option>
+                      ))}
                     </select>
                   </label>
                   <label className="space-y-2">
                     <span className="text-xs font-semibold uppercase tracking-widest text-gray-500">Kim</span>
-                    <select value={formState.addedBy} onChange={(e) => setFormState((s) => ({ ...s, addedBy: e.target.value as MvpFormState['addedBy'] }))} className={INPUT_CLS}>
-                      {MVP_AUTHORS.map((a) => (<option key={a} value={a}>{a}</option>))}
+                    <select
+                      value={formState.addedBy}
+                      onChange={(e) =>
+                        setFormState((s) => ({ ...s, addedBy: e.target.value as MvpFormState["addedBy"] }))
+                      }
+                      className={INPUT_CLS}
+                    >
+                      {MVP_AUTHORS.map((a) => (
+                        <option key={a} value={a}>
+                          {a}
+                        </option>
+                      ))}
                     </select>
                   </label>
                   <div className="flex items-end sm:col-span-2 lg:col-span-5">
-                    <button type="submit" disabled={isSubmitting} className="w-full rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-60">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-60"
+                    >
                       <Plus size={16} className="mr-1 inline" aria-hidden="true" />
-                      {isSubmitting ? 'Kaydediliyor...' : 'Yeni ekle'}
+                      {isSubmitting ? "Kaydediliyor..." : "Yeni ekle"}
                     </button>
                   </div>
                 </form>
@@ -237,5 +284,5 @@ export default function MvpManager() {
         />
       )}
     </section>
-  )
+  );
 }

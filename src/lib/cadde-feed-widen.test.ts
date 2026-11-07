@@ -102,11 +102,7 @@ describe("widenCaddeFilters", () => {
   });
 
   it("konum dışı filtreleri (bridge, hashtag) ASLA düşürmez", () => {
-    const target = widenCaddeFilters(
-      base({ cities: ["Berlin"], bridge: true, hashtag: "vize" }),
-      CITIES,
-      COUNTRIES,
-    );
+    const target = widenCaddeFilters(base({ cities: ["Berlin"], bridge: true, hashtag: "vize" }), CITIES, COUNTRIES);
 
     // Bunlar konum değil İÇERİK filtresidir; düşürmek kullanıcının sorduğu soruyu değiştirir.
     expect(target?.next.bridge).toBe(true);

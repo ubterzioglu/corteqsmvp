@@ -15,10 +15,7 @@ export type LansmanRegistration = {
   created_at: string;
 };
 
-export type LansmanRegistrationInsert = Omit<
-  LansmanRegistration,
-  "id" | "created_at"
->;
+export type LansmanRegistrationInsert = Omit<LansmanRegistration, "id" | "created_at">;
 
 export type LansmanRegistrationFormData = {
   first_name: string;

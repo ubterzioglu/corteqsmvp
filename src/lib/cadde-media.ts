@@ -30,13 +30,7 @@ export const CADDE_MEDIA_LIMITS = {
   maxVideoSeconds: 30,
 } as const;
 
-export const CADDE_IMAGE_MIME_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-  "image/avif",
-] as const;
+export const CADDE_IMAGE_MIME_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif", "image/avif"] as const;
 
 export const CADDE_VIDEO_MIME_TYPES = ["video/mp4", "video/webm", "video/quicktime"] as const;
 
@@ -153,7 +147,7 @@ export async function validateCaddeVideoDuration(
 
 /** Dosya adından güvenli uzantı türetir (uzantı teknik değerdir → düz toLowerCase doğru). */
 const safeExtension = (file: File): string => {
-  const raw = file.name.includes(".") ? file.name.split(".").pop() ?? "" : "";
+  const raw = file.name.includes(".") ? (file.name.split(".").pop() ?? "") : "";
   const cleaned = raw.toLowerCase().replace(/[^a-z0-9]/g, "");
   return cleaned ? `.${cleaned}` : "";
 };

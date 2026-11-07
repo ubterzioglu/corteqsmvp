@@ -92,9 +92,7 @@ describe("QuestionRenderer", () => {
       value = next;
     });
     const question = q("target_countries", "country");
-    const { rerender } = render(
-      <QuestionRenderer question={question} value={value} onChange={onChange} />,
-    );
+    const { rerender } = render(<QuestionRenderer question={question} value={value} onChange={onChange} />);
 
     for (const country of ["Almanya", "Hollanda", "ABD"]) {
       await user.click(screen.getByRole("combobox", { name: /ülke seç/i }));
@@ -140,9 +138,7 @@ describe("QuestionRenderer", () => {
       const onChange = vi.fn((next: ToolAnswerValue) => {
         value = next;
       });
-      const { rerender } = render(
-        <QuestionRenderer question={cityQuestion} value={value} onChange={onChange} />,
-      );
+      const { rerender } = render(<QuestionRenderer question={cityQuestion} value={value} onChange={onChange} />);
 
       await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
       await user.click(await screen.findByText("Almanya"));
@@ -179,16 +175,12 @@ describe("QuestionRenderer", () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
 
-      const { rerender } = render(
-        <QuestionRenderer question={cityQuestion} value={undefined} onChange={onChange} />,
-      );
+      const { rerender } = render(<QuestionRenderer question={cityQuestion} value={undefined} onChange={onChange} />);
 
       await user.click(screen.getByRole("button", { name: "Şehir fark etmez" }));
       expect(onChange).toHaveBeenCalledWith("Şehir fark etmez");
 
-      rerender(
-        <QuestionRenderer question={cityQuestion} value="Şehir fark etmez" onChange={onChange} />,
-      );
+      rerender(<QuestionRenderer question={cityQuestion} value="Şehir fark etmez" onChange={onChange} />);
       await user.click(screen.getByRole("button", { name: "Şehir fark etmez" }));
       expect(onChange).toHaveBeenLastCalledWith("");
     });
@@ -230,28 +222,19 @@ describe("QuestionRenderer", () => {
         />,
       );
 
-      expect(
-        screen.getByRole("combobox", { name: "Şehir için ülke seç" }),
-      ).toHaveTextContent("Seçtiğin ülkeler (2)");
+      expect(screen.getByRole("combobox", { name: "Şehir için ülke seç" })).toHaveTextContent("Seçtiğin ülkeler (2)");
     });
 
     it("kapsam ülkelerini listenin başına alır ama diğerlerini GİZLEMEZ", async () => {
       const user = userEvent.setup();
 
       render(
-        <QuestionRenderer
-          question={cityQuestion}
-          value={undefined}
-          onChange={vi.fn()}
-          scopeCountryCodes={["NL"]}
-        />,
+        <QuestionRenderer question={cityQuestion} value={undefined} onChange={vi.fn()} scopeCountryCodes={["NL"]} />,
       );
 
       await user.click(screen.getByRole("combobox", { name: "Şehir için ülke seç" }));
 
-      const labels = screen
-        .getAllByRole("option")
-        .map((option) => option.textContent ?? "");
+      const labels = screen.getAllByRole("option").map((option) => option.textContent ?? "");
       // Kapsam başta...
       expect(labels[0]).toContain("Hollanda");
       // ...ama kapsam dışı ülke hâlâ seçilebilir: ülke bir KAPI değil, daraltmadır.
@@ -281,14 +264,10 @@ describe("QuestionRenderer", () => {
     it("kapsam boşsa eski davranış korunur (ülke seçilmeden şehir gelmez)", async () => {
       const user = userEvent.setup();
 
-      render(
-        <QuestionRenderer question={cityQuestion} value={undefined} onChange={vi.fn()} />,
-      );
+      render(<QuestionRenderer question={cityQuestion} value={undefined} onChange={vi.fn()} />);
 
       await user.click(screen.getByRole("combobox", { name: "Şehir seç" }));
-      expect(
-        await screen.findByText("Önce ülke seç ya da şehir adını yazıp elle ekle."),
-      ).toBeInTheDocument();
+      expect(await screen.findByText("Önce ülke seç ya da şehir adını yazıp elle ekle.")).toBeInTheDocument();
       expect(screen.queryByText("Berlin")).not.toBeInTheDocument();
     });
   });

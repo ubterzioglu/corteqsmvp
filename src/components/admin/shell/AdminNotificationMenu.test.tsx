@@ -113,9 +113,7 @@ describe("AdminNotificationMenu", () => {
     await openMenu();
     await userEvent.click(await screen.findByLabelText("Revizyon isteği bildirimleri açık"));
 
-    await waitFor(() =>
-      expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true),
-    );
+    await waitFor(() => expect(setSettingMock).toHaveBeenCalledWith("email.revision_request.enabled", true));
   });
 
   it("genel anahtarı çevirince RPC'yi doğru anahtarla çağırır", async () => {
@@ -125,9 +123,7 @@ describe("AdminNotificationMenu", () => {
     await openMenu();
     await userEvent.click(await screen.findByLabelText("Güncelleme bildirimleri açık"));
 
-    await waitFor(() =>
-      expect(setSettingMock).toHaveBeenCalledWith("email.admin_update.enabled", true),
-    );
+    await waitFor(() => expect(setSettingMock).toHaveBeenCalledWith("email.admin_update.enabled", true));
   });
 
   it("admin olmayanda genel anahtarlar kilitli, kişisel abonelik açıktır", async () => {

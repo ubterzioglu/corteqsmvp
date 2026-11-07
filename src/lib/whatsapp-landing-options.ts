@@ -23,12 +23,12 @@ export const platformOptions = [
  * ZORUNDA (yoksa gruplar kategorisiz kalır). G11 sonrası tek hamlede yeni 7'ye
  * dönülecek (motor formu zaten yeni 7'yi kullanıyor — `MOTOR_CATEGORIES`).
  */
-export const categoryOptions: Array<{ value: LandingCategory; label: string }> = Object.entries(
-  categoryMeta,
-).map(([value, meta]) => ({
-  value: value as LandingCategory,
-  label: meta.label,
-}));
+export const categoryOptions: Array<{ value: LandingCategory; label: string }> = Object.entries(categoryMeta).map(
+  ([value, meta]) => ({
+    value: value as LandingCategory,
+    label: meta.label,
+  }),
+);
 
 export const languageOptions: Array<{ value: LandingLanguage; label: string }> = [
   { value: "tr", label: "Türkçe" },

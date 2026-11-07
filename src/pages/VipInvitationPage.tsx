@@ -6,11 +6,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSeo } from "@/lib/seo";
-import {
-  redeemVipInvitation,
-  resolveVipInvitation,
-  type ResolvedVipInvitation,
-} from "@/lib/vip-invitations";
+import { redeemVipInvitation, resolveVipInvitation, type ResolvedVipInvitation } from "@/lib/vip-invitations";
 
 const STATUS_COPY: Record<string, { title: string; description: string }> = {
   invalid: { title: "Davet bulunamadı", description: "Bu VIP bağlantısı geçerli değil." },
@@ -57,7 +53,9 @@ const VipInvitationPage = () => {
       if (result.status === "redeemed") {
         setRedeemed(true);
       } else {
-        setResolved((current) => current ? { ...current, status: result.status === "used" ? "used" : "invalid" } : current);
+        setResolved((current) =>
+          current ? { ...current, status: result.status === "used" ? "used" : "invalid" } : current,
+        );
       }
     } catch (error: unknown) {
       setErrorMessage(error instanceof Error ? error.message : "Davet kabul edilemedi.");
@@ -69,7 +67,9 @@ const VipInvitationPage = () => {
   if (loading || authLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
-        <div role="status" className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-5 w-5 animate-spin" /> Davet doğrulanıyor…</div>
+        <div role="status" className="flex items-center gap-2 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" /> Davet doğrulanıyor…
+        </div>
       </main>
     );
   }
@@ -82,7 +82,9 @@ const VipInvitationPage = () => {
             <ShieldCheck className="mx-auto h-12 w-12 text-emerald-500" />
             <h1 className="text-2xl font-bold">VIP davetin kabul edildi</h1>
             <p className="text-muted-foreground">Hoş geldin. Davet güvenli biçimde hesabına işlendi.</p>
-            <Button asChild><Link to="/profile">Profiline git</Link></Button>
+            <Button asChild>
+              <Link to="/profile">Profiline git</Link>
+            </Button>
           </CardContent>
         </Card>
       </main>
@@ -98,7 +100,9 @@ const VipInvitationPage = () => {
             <ShieldX className="mx-auto h-12 w-12 text-destructive" />
             <h1 className="text-2xl font-bold">{errorMessage ? "Davet doğrulanamadı" : copy.title}</h1>
             <p className="text-muted-foreground">{errorMessage ?? copy.description}</p>
-            <Button variant="outline" asChild><Link to="/">Ana sayfaya dön</Link></Button>
+            <Button variant="outline" asChild>
+              <Link to="/">Ana sayfaya dön</Link>
+            </Button>
           </CardContent>
         </Card>
       </main>
@@ -117,7 +121,11 @@ const VipInvitationPage = () => {
         <CardContent className="space-y-5 text-center">
           {resolved.recipientName && <p className="text-lg font-medium">Merhaba {resolved.recipientName},</p>}
           {resolved.message && <p className="whitespace-pre-wrap text-muted-foreground">{resolved.message}</p>}
-          {resolved.expiresAt && <p className="text-sm text-muted-foreground">Son kullanım: {new Date(resolved.expiresAt).toLocaleString("tr-TR")}</p>}
+          {resolved.expiresAt && (
+            <p className="text-sm text-muted-foreground">
+              Son kullanım: {new Date(resolved.expiresAt).toLocaleString("tr-TR")}
+            </p>
+          )}
           {user ? (
             <Button className="w-full gap-2" size="lg" disabled={redeeming} onClick={handleRedeem}>
               {redeeming ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
@@ -125,10 +133,16 @@ const VipInvitationPage = () => {
             </Button>
           ) : (
             <Button className="w-full gap-2" size="lg" asChild>
-              <Link to={loginTarget}><LogIn className="h-5 w-5" /> Giriş yap ve kabul et</Link>
+              <Link to={loginTarget}>
+                <LogIn className="h-5 w-5" /> Giriş yap ve kabul et
+              </Link>
             </Button>
           )}
-          {errorMessage && <p role="alert" className="text-sm text-destructive">{errorMessage}</p>}
+          {errorMessage && (
+            <p role="alert" className="text-sm text-destructive">
+              {errorMessage}
+            </p>
+          )}
         </CardContent>
       </Card>
     </main>

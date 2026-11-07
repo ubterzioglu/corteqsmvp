@@ -21,7 +21,8 @@ function routeMatches(link: string, route: string): boolean {
   // Catch-all route, bir iç bağlantının gerçekten tanımlı olduğunun kanıtı değildir.
   if (route === "*") return false;
   const normalizedRoute = route.startsWith("/") ? route : `/${route}`;
-  const pattern = `(?:^|/)${normalizedRoute.slice(1)
+  const pattern = `(?:^|/)${normalizedRoute
+    .slice(1)
     .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     .replace(/:[^/]+/g, "[^/]+")
     .replace(/\\\*/g, ".*")}$`;
@@ -35,9 +36,9 @@ describe("internal link contract", () => {
     const routes = routeFiles.flatMap((file) => {
       const source = readFileSync(file, "utf8");
       const directPaths = [...source.matchAll(/\bpath\s*=\s*["']([^"']+)["']/g)].map((match) => match[1]);
-      const nestedPaths = [...source.matchAll(
-        /<Route\s+path=["']([^"']+)["'][\s\S]*?<Route\s+path=["']([^"']+)["']/g,
-      )].map((match) => `${match[1]}/${match[2]}`);
+      const nestedPaths = [
+        ...source.matchAll(/<Route\s+path=["']([^"']+)["'][\s\S]*?<Route\s+path=["']([^"']+)["']/g),
+      ].map((match) => `${match[1]}/${match[2]}`);
       return [...directPaths, ...nestedPaths];
     });
     const links = files.flatMap((file) =>
@@ -56,6 +57,9 @@ describe("internal link contract", () => {
 
     const broken = links.filter(({ path }) => !routes.some((route) => routeMatches(path, route)));
 
-    expect(broken, `Undeclared internal links: ${broken.map(({ file, path }) => `${file} → ${path}`).join(", ")}`).toEqual([]);
+    expect(
+      broken,
+      `Undeclared internal links: ${broken.map(({ file, path }) => `${file} → ${path}`).join(", ")}`,
+    ).toEqual([]);
   });
 });

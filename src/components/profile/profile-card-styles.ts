@@ -17,32 +17,22 @@ export const GOOGLE_SOFT_CARD_GREEN_SECTION =
   "border-green-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(52,168,83,0.40)]";
 export const GOOGLE_SOFT_CARD_RED_SECTION =
   "border-red-100/60 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08),0_0_28px_-4px_rgba(234,67,53,0.40)]";
-export const GOOGLE_SOFT_CARD_SUBTLE =
-  "border border-gray-100 bg-gray-50/80";
+export const GOOGLE_SOFT_CARD_SUBTLE = "border border-gray-100 bg-gray-50/80";
 export const GOOGLE_SOFT_CARD_SUBTLE_INTERACTIVE =
   "border border-gray-100 bg-gray-50/80 transition hover:bg-gray-100/80 hover:-translate-y-0.5";
 
-export const GOOGLE_SOFT_SUBTLE_WARM =
-  "border border-orange-100 bg-orange-50/60";
-export const GOOGLE_SOFT_SUBTLE_COOL =
-  "border border-blue-100 bg-blue-50/60";
-export const GOOGLE_SOFT_SUBTLE_GREEN =
-  "border border-green-100 bg-green-50/60";
-export const GOOGLE_SOFT_SUBTLE_RED =
-  "border border-red-100 bg-red-50/60";
+export const GOOGLE_SOFT_SUBTLE_WARM = "border border-orange-100 bg-orange-50/60";
+export const GOOGLE_SOFT_SUBTLE_COOL = "border border-blue-100 bg-blue-50/60";
+export const GOOGLE_SOFT_SUBTLE_GREEN = "border border-green-100 bg-green-50/60";
+export const GOOGLE_SOFT_SUBTLE_RED = "border border-red-100 bg-red-50/60";
 
-export const GOOGLE_SOFT_HERO_SURFACE =
-  "border-b border-gray-100 bg-white";
+export const GOOGLE_SOFT_HERO_SURFACE = "border-b border-gray-100 bg-white";
 export const GOOGLE_SOFT_ACTION_PANEL =
   "rounded-2xl border border-gray-200 bg-gray-50 p-3 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.08)]";
-export const GOOGLE_SOFT_SUCCESS_PANEL =
-  "border border-green-200 bg-green-50";
-export const GOOGLE_SOFT_DANGER_PANEL =
-  "border border-red-200 bg-red-50";
-export const GOOGLE_SOFT_WARNING_PANEL =
-  "border border-orange-200 bg-orange-50";
-export const GOOGLE_SOFT_SWITCH_PANEL =
-  "border border-gray-100 bg-gray-50";
+export const GOOGLE_SOFT_SUCCESS_PANEL = "border border-green-200 bg-green-50";
+export const GOOGLE_SOFT_DANGER_PANEL = "border border-red-200 bg-red-50";
+export const GOOGLE_SOFT_WARNING_PANEL = "border border-orange-200 bg-orange-50";
+export const GOOGLE_SOFT_SWITCH_PANEL = "border border-gray-100 bg-gray-50";
 
 export const AMBER_BUTTON_PRIMARY =
   "text-[11px] border border-[rgba(234,88,12,0.3)] bg-[linear-gradient(180deg,rgba(249,115,22,0.95),rgba(234,88,0,0.9))] text-white shadow-[0_10px_24px_-12px_rgba(249,115,22,0.5)] hover:bg-[linear-gradient(180deg,rgba(251,146,60,0.97),rgba(249,115,22,0.95))] hover:shadow-[0_12px_28px_-10px_rgba(249,115,22,0.62)]";

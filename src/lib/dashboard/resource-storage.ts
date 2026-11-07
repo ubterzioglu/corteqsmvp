@@ -2,26 +2,26 @@
 // `resource-entries-api.ts` tablo satırlarını yönetir; dosyanın kendisi (yükleme,
 // imzalı URL, temizlik) burada durur. Bileşende doğrudan storage çağrısı bırakma.
 
-import { getSupabaseBrowserClient } from './supabase'
+import { getSupabaseBrowserClient } from "./supabase";
 
 /** İmzalı URL ömrü (saniye) — davranış eskisiyle birebir aynı olsun diye 300. */
-export const RESOURCE_SIGNED_URL_TTL_SECONDS = 300
+export const RESOURCE_SIGNED_URL_TTL_SECONDS = 300;
 
 /**
  * Dosyayı bucket'a yükler ve üretilen storage yolunu döner.
  * Dosya adı çakışmasın diye yol `crypto.randomUUID()` + orijinal uzantıdır.
  */
 export async function uploadResourceFile(bucket: string, file: File): Promise<string | null> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) return null
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return null;
 
-  const fileExt = file.name.split('.').pop()
-  const filePath = `${crypto.randomUUID()}.${fileExt}`
+  const fileExt = file.name.split(".").pop();
+  const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
-  const { error } = await supabase.storage.from(bucket).upload(filePath, file)
-  if (error) throw error
+  const { error } = await supabase.storage.from(bucket).upload(filePath, file);
+  if (error) throw error;
 
-  return filePath
+  return filePath;
 }
 
 /**
@@ -30,10 +30,10 @@ export async function uploadResourceFile(bucket: string, file: File): Promise<st
  * asıl hatanın üstüne yazmamalı.
  */
 export async function removeResourceFile(bucket: string, path: string): Promise<void> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) return
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return;
 
-  await supabase.storage.from(bucket).remove([path])
+  await supabase.storage.from(bucket).remove([path]);
 }
 
 /** Görüntüleme/indirme için kısa ömürlü imzalı URL üretir. */
@@ -42,11 +42,11 @@ export async function createResourceFileSignedUrl(
   path: string,
   expiresInSeconds: number = RESOURCE_SIGNED_URL_TTL_SECONDS,
 ): Promise<string> {
-  const supabase = getSupabaseBrowserClient()
-  if (!supabase) throw new Error('Dosya URL üretilemedi.')
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) throw new Error("Dosya URL üretilemedi.");
 
-  const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path, expiresInSeconds)
-  if (error || !data) throw error ?? new Error('Dosya URL üretilemedi.')
+  const { data, error } = await supabase.storage.from(bucket).createSignedUrl(path, expiresInSeconds);
+  if (error || !data) throw error ?? new Error("Dosya URL üretilemedi.");
 
-  return data.signedUrl
+  return data.signedUrl;
 }

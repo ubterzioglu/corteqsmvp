@@ -66,15 +66,10 @@ export const ADMIN_MENU_PROMPT_BLOCK = `Yönetici paneli menü kuralı: Platform
  * menü sorabilir. `page.path` yalnız vurguyu güçlendirir, kapıya KATILMAZ.
  * Üye için prompt hiç değişmez (boş string).
  */
-export function buildAdminModeNote(
-  isAdmin: boolean,
-  page?: { path?: string | null } | null,
-): string {
+export function buildAdminModeNote(isAdmin: boolean, page?: { path?: string | null } | null): string {
   if (isAdmin !== true) return "";
   const inAdminPanel = typeof page?.path === "string" && page.path.startsWith("/admin");
-  const emphasis = inAdminPanel
-    ? " Kullanıcı şu an yönetici panelinde; menü konumu sorusu olasılığı yüksek."
-    : "";
+  const emphasis = inAdminPanel ? " Kullanıcı şu an yönetici panelinde; menü konumu sorusu olasılığı yüksek." : "";
   return `\n\n${ADMIN_MENU_PROMPT_BLOCK}${emphasis}`;
 }
 
@@ -154,9 +149,7 @@ export function buildContextTurns(context: string): { role: "user" | "assistant"
 }
 
 /** Getirme için kullanılacak sorgu metni: son kullanıcı mesajı. */
-export function lastUserQuestion(
-  messages: { role: "user" | "assistant"; content: string }[],
-): string {
+export function lastUserQuestion(messages: { role: "user" | "assistant"; content: string }[]): string {
   for (let index = messages.length - 1; index >= 0; index -= 1) {
     if (messages[index].role === "user") return messages[index].content;
   }

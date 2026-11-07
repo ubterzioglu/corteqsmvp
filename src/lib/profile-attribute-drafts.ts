@@ -29,9 +29,8 @@ export const mapAttributeDraftValue = (attribute: ProfileAttributeState): string
   return getAttributeStringValue(attribute);
 };
 
-export const readBooleanAttributeValue = (
-  attribute: ProfileAttributeState | null | undefined,
-): boolean => attribute?.valueJson === true;
+export const readBooleanAttributeValue = (attribute: ProfileAttributeState | null | undefined): boolean =>
+  attribute?.valueJson === true;
 
 /** Belge kartındaki "PDF • 1,2 MB" alt satırı. */
 export const formatDocumentMeta = (document: ProfileDocumentRecord | null): string => {

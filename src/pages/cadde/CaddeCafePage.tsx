@@ -7,7 +7,17 @@
 import { useRef, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import { Archive, Clock3, ExternalLink, Image, KeyRound, MapPin, MoreHorizontal, ShieldQuestion, Users } from "lucide-react";
+import {
+  Archive,
+  Clock3,
+  ExternalLink,
+  Image,
+  KeyRound,
+  MapPin,
+  MoreHorizontal,
+  ShieldQuestion,
+  Users,
+} from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
@@ -46,7 +56,9 @@ import { emptyCaddeComposer } from "@/lib/cadde-composer";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDateTime = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
+  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
+    new Date(value),
+  );
 
 const remainingLabel = (endsAt: string): string => {
   const diffMs = new Date(endsAt).getTime() - Date.now();
@@ -112,13 +124,18 @@ const CaddeCafePage = () => {
   };
 
   const joinMutation = useMutation({
-    mutationFn: () => joinCaddeCafe({ cafeId, referralCode: referralCode || undefined, answer: joinAnswer || undefined }),
+    mutationFn: () =>
+      joinCaddeCafe({ cafeId, referralCode: referralCode || undefined, answer: joinAnswer || undefined }),
     onSuccess: async (result) => {
       await invalidateCafe();
       toast({ title: result.status === "pending" ? "Katılım talebin sahibe iletildi" : "Cafe'ye katıldın" });
     },
     onError: (error) => {
-      toast({ title: "Katılım başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Katılım başarısız",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -143,15 +160,24 @@ const CaddeCafePage = () => {
       toast({ title: "Paylaşım cafe'ye eklendi" });
     },
     onError: (error) => {
-      toast({ title: "Paylaşım gönderilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Paylaşım gönderilemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
   const approveMutation = useMutation({
-    mutationFn: ({ memberId, approve }: { memberId: string; approve: boolean }) => approveCaddeCafeMember(memberId, approve),
+    mutationFn: ({ memberId, approve }: { memberId: string; approve: boolean }) =>
+      approveCaddeCafeMember(memberId, approve),
     onSuccess: invalidateCafe,
     onError: (error) => {
-      toast({ title: "İşlem başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İşlem başarısız",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -162,7 +188,11 @@ const CaddeCafePage = () => {
       toast({ title: "Cafe arşivlendi" });
     },
     onError: (error) => {
-      toast({ title: "Arşivleme başarısız", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Arşivleme başarısız",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -177,7 +207,11 @@ const CaddeCafePage = () => {
       toast({ title: "Logo güncellendi" });
     },
     onError: (error) => {
-      toast({ title: "Logo güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Logo güncellenemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -237,13 +271,17 @@ const CaddeCafePage = () => {
           <CardHeader className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
               {isReadOnly ? (
-                <CaddeBadge tone="durum" intent="neutral">Arşiv (read-only)</CaddeBadge>
+                <CaddeBadge tone="durum" intent="neutral">
+                  Arşiv (read-only)
+                </CaddeBadge>
               ) : (
                 // 13 Eylül gözle QA'da bulundu: C0 (async-first) sonrası odalar artık
                 // 1-7 gün açık kalıyor ama rozet hâlâ "Canlı" diyordu — hemen altındaki
                 // "Bu Cafe asenkron çalışır" cümlesiyle DOĞRUDAN ÇELİŞİYORDU. "Açık" hem
                 // async modelle tutarlı hem de arşivin karşıtı olarak doğru okunuyor.
-                <CaddeBadge tone="durum" intent="positive">Açık</CaddeBadge>
+                <CaddeBadge tone="durum" intent="positive">
+                  Açık
+                </CaddeBadge>
               )}
               {/* Köprü bir DURUM değil, odanın türü — kategori tipinde. Eskiden yeşil
                   dolguyla "Canlı" ile aynı aileye giriyor ve ikisi karışıyordu. */}
@@ -253,7 +291,11 @@ const CaddeCafePage = () => {
             <CardTitle className="flex items-center gap-2 text-2xl">
               {/* m135: Kafe logosu varsa göster */}
               {cafe.logoUrl ? (
-                <img src={cafe.logoUrl} alt={`${cafe.title} logosu`} className="h-10 w-10 shrink-0 rounded-lg object-cover" />
+                <img
+                  src={cafe.logoUrl}
+                  alt={`${cafe.title} logosu`}
+                  className="h-10 w-10 shrink-0 rounded-lg object-cover"
+                />
               ) : (
                 <CaddeCafeIcon className="h-6 w-6 shrink-0 text-orange-600" />
               )}
@@ -266,13 +308,23 @@ const CaddeCafePage = () => {
             </CardTitle>
             <CardDescription>{cafe.summary}</CardDescription>
             <div className="flex flex-wrap gap-3 text-sm text-slate-600">
-              <span className="inline-flex items-center gap-1.5"><MapPin className="h-4 w-4 text-orange-500" />{[cafe.country, cafe.city].filter(Boolean).join(" • ") || "Global"}</span>
-              <span className="inline-flex items-center gap-1.5"><Clock3 className="h-4 w-4 text-orange-500" />{formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})</span>
-              <span className="inline-flex items-center gap-1.5"><Users className="h-4 w-4 text-orange-500" />{formatCafeOccupancy(cafe.memberCount, cafe.capacity)} • Ev Sahibi: {cafe.hostName}</span>
+              <span className="inline-flex items-center gap-1.5">
+                <MapPin className="h-4 w-4 text-orange-500" />
+                {[cafe.country, cafe.city].filter(Boolean).join(" • ") || "Global"}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock3 className="h-4 w-4 text-orange-500" />
+                {formatDateTime(cafe.startsAt)} → {formatDateTime(cafe.endsAt)} ({remainingLabel(cafe.endsAt)})
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Users className="h-4 w-4 text-orange-500" />
+                {formatCafeOccupancy(cafe.memberCount, cafe.capacity)} • Ev Sahibi: {cafe.hostName}
+              </span>
             </div>
             {!isReadOnly ? (
               <p className="text-sm leading-relaxed text-slate-600">
-                Bu Cafe asenkron çalışır; katılımcılar açık kaldığı süre boyunca farklı zamanlarda yazabilir. Süre bitince konuşmalar salt okunur arşiv olarak kalır.
+                Bu Cafe asenkron çalışır; katılımcılar açık kaldığı süre boyunca farklı zamanlarda yazabilir. Süre
+                bitince konuşmalar salt okunur arşiv olarak kalır.
               </p>
             ) : null}
             {/* C2 (m161): Arşivleme artık kebab (⋯) menüsünde.
@@ -285,13 +337,7 @@ const CaddeCafePage = () => {
             {isOwner && !isArchived ? (
               <div className="flex justify-end">
                 {/* m135: Logo yükleme input (gizli) */}
-                <input
-                  ref={logoInputRef}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleLogoChange}
-                />
+                <input ref={logoInputRef} type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -305,10 +351,7 @@ const CaddeCafePage = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem
-                      onSelect={() => logoInputRef.current?.click()}
-                      disabled={logoMutation.isPending}
-                    >
+                    <DropdownMenuItem onSelect={() => logoInputRef.current?.click()} disabled={logoMutation.isPending}>
                       <Image className="mr-2 h-4 w-4" />
                       {logoMutation.isPending ? "Yükleniyor..." : "Logo Yükle"}
                     </DropdownMenuItem>
@@ -345,18 +388,42 @@ const CaddeCafePage = () => {
               <CardContent className="space-y-3">
                 {cafe.entryMode === "approval" ? (
                   <div className="space-y-2">
-                    <Label className="flex items-center gap-1.5"><ShieldQuestion className="h-4 w-4 text-orange-500" />{cafe.entryQuestion ?? "Giriş sorusu"}</Label>
-                    <Textarea value={joinAnswer} onChange={(event) => setJoinAnswer(event.target.value)} rows={2} maxLength={500} placeholder="Yanıtın" />
+                    <Label className="flex items-center gap-1.5">
+                      <ShieldQuestion className="h-4 w-4 text-orange-500" />
+                      {cafe.entryQuestion ?? "Giriş sorusu"}
+                    </Label>
+                    <Textarea
+                      value={joinAnswer}
+                      onChange={(event) => setJoinAnswer(event.target.value)}
+                      rows={2}
+                      maxLength={500}
+                      placeholder="Yanıtın"
+                    />
                   </div>
                 ) : null}
                 {cafe.entryMode === "referral" ? (
                   <div className="space-y-2">
-                    <Label className="flex items-center gap-1.5"><KeyRound className="h-4 w-4 text-orange-500" />Davet kodu</Label>
-                    <Input value={referralCode} onChange={(event) => setReferralCode(event.target.value)} placeholder="Kodunu gir" />
+                    <Label className="flex items-center gap-1.5">
+                      <KeyRound className="h-4 w-4 text-orange-500" />
+                      Davet kodu
+                    </Label>
+                    <Input
+                      value={referralCode}
+                      onChange={(event) => setReferralCode(event.target.value)}
+                      placeholder="Kodunu gir"
+                    />
                   </div>
                 ) : null}
-                <Button className="cadde-primary-action" onClick={() => joinMutation.mutate()} disabled={joinMutation.isPending}>
-                  {joinMutation.isPending ? "Gönderiliyor..." : cafe.entryMode === "approval" ? "Katılım Talebi Gönder" : "Katıl"}
+                <Button
+                  className="cadde-primary-action"
+                  onClick={() => joinMutation.mutate()}
+                  disabled={joinMutation.isPending}
+                >
+                  {joinMutation.isPending
+                    ? "Gönderiliyor..."
+                    : cafe.entryMode === "approval"
+                      ? "Katılım Talebi Gönder"
+                      : "Katıl"}
                 </Button>
               </CardContent>
             ) : null}
@@ -383,7 +450,9 @@ const CaddeCafePage = () => {
                           ) : null}
                         </div>
                       ) : null}
-                      {member.shortBio ? <p className="mt-2 text-sm leading-5 text-slate-600">{member.shortBio}</p> : null}
+                      {member.shortBio ? (
+                        <p className="mt-2 text-sm leading-5 text-slate-600">{member.shortBio}</p>
+                      ) : null}
                       {member.answer ? <p className="mt-1 text-sm text-slate-600">"{member.answer}"</p> : null}
                       {member.hasPublicProfile ? (
                         <Link
@@ -398,8 +467,24 @@ const CaddeCafePage = () => {
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => approveMutation.mutate({ memberId: member.id, approve: true })} disabled={approveMutation.isPending}>Onayla</Button>
-                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => approveMutation.mutate({ memberId: member.id, approve: false })} disabled={approveMutation.isPending}>Reddet</Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="cadde-secondary-action"
+                        onClick={() => approveMutation.mutate({ memberId: member.id, approve: true })}
+                        disabled={approveMutation.isPending}
+                      >
+                        Onayla
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="cadde-secondary-action"
+                        onClick={() => approveMutation.mutate({ memberId: member.id, approve: false })}
+                        disabled={approveMutation.isPending}
+                      >
+                        Reddet
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -412,7 +497,12 @@ const CaddeCafePage = () => {
           <Card className="border-red-200 bg-red-50/70">
             <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
               <p className="text-sm text-red-800">Katılım talepleri yüklenemedi.</p>
-              <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => void membersQuery.refetch()}>
+              <Button
+                size="sm"
+                variant="outline"
+                className="cadde-secondary-action"
+                onClick={() => void membersQuery.refetch()}
+              >
                 Tekrar dene
               </Button>
             </CardContent>
@@ -449,7 +539,10 @@ const CaddeCafePage = () => {
             ) : null}
 
             {(feedQuery.data ?? []).map((post) => (
-              <div key={post.id} className="cadde-card cadde-card--cafe rounded-lg border border-slate-200 bg-white p-4">
+              <div
+                key={post.id}
+                className="cadde-card cadde-card--cafe rounded-lg border border-slate-200 bg-white p-4"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="text-sm font-semibold text-slate-900">{post.authorName}</p>
                   <span className="text-xs text-slate-500">{formatDateTime(post.createdAt)}</span>

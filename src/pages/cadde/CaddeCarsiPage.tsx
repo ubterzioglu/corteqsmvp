@@ -41,7 +41,6 @@ const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   expired: "Süresi doldu",
 };
 
-
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short" }).format(new Date(value));
 
@@ -59,10 +58,19 @@ const CaddeCarsiPage = () => {
   const diasporaKey = useCaddeDiasporaKey();
   const categoriesQuery = useQuery({ queryKey: caddeQueryKeys.carsiCategories, queryFn: listCarsiCategories });
   // Ücretli mod ürün kararı: cadde_settings'ten okunur, kod değişmeden açılıp kapanır.
-  const paidModeQuery = useQuery({ queryKey: ["cadde", "carsi", "paid-mode"], queryFn: getCarsiPaidMode, staleTime: 1000 * 60 * 10 });
+  const paidModeQuery = useQuery({
+    queryKey: ["cadde", "carsi", "paid-mode"],
+    queryFn: getCarsiPaidMode,
+    staleTime: 1000 * 60 * 10,
+  });
   const paidMode = paidModeQuery.data ?? false;
   const itemsQuery = useQuery({
-    queryKey: caddeQueryKeys.carsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
+    queryKey: caddeQueryKeys.carsiItems({
+      countries: [],
+      cities: [],
+      categoryKey: categoryKey || undefined,
+      diasporaKey,
+    }),
     queryFn: () => listCarsiItems({ countries: [], cities: [], categoryKey: categoryKey || undefined, diasporaKey }),
   });
   const myItemsQuery = useQuery({
@@ -71,7 +79,11 @@ const CaddeCarsiPage = () => {
     enabled: Boolean(user?.id),
   });
 
-  const countriesQuery = useQuery({ queryKey: caddeQueryKeys.countries(), queryFn: listCaddeCountries, enabled: formOpen });
+  const countriesQuery = useQuery({
+    queryKey: caddeQueryKeys.countries(),
+    queryFn: listCaddeCountries,
+    enabled: formOpen,
+  });
   const citiesQuery = useQuery({
     queryKey: caddeQueryKeys.cities(form.country ? [form.country] : []),
     queryFn: () => listCaddeCities(form.country ? [form.country] : []),
@@ -105,15 +117,24 @@ const CaddeCarsiPage = () => {
       toast({ title: "İlanın Çarşı'da yayınlandı" });
     },
     onError: (error) => {
-      toast({ title: "İlan yayınlanamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İlan yayınlanamadı",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
   const statusMutation = useMutation({
-    mutationFn: ({ itemId, status }: { itemId: string; status: CarsiItemStatus }) => updateCarsiItem({ itemId, status }),
+    mutationFn: ({ itemId, status }: { itemId: string; status: CarsiItemStatus }) =>
+      updateCarsiItem({ itemId, status }),
     onSuccess: invalidateCarsi,
     onError: (error) => {
-      toast({ title: "İlan güncellenemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İlan güncellenemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -124,7 +145,11 @@ const CaddeCarsiPage = () => {
       toast({ title: "İlan silindi" });
     },
     onError: (error) => {
-      toast({ title: "İlan silinemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İlan silinemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -169,7 +194,9 @@ const CaddeCarsiPage = () => {
                         countries={countriesQuery.data ?? []}
                         cities={citiesQuery.data ?? []}
                         paidMode={paidMode}
-                        onError={(message) => toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })}
+                        onError={(message) =>
+                          toast({ title: "Ek eklenemedi", description: message, variant: "destructive" })
+                        }
                       />
                     </DialogContent>
                   </Dialog>
@@ -218,10 +245,15 @@ const CaddeCarsiPage = () => {
             </CardHeader>
             <CardContent className="space-y-3">
               {myItems.map((item) => (
-                <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3">
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-200 p-3"
+                >
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">{item.title}</Link>
+                      <Link to={`/cadde/carsi/${item.id}`} className="font-semibold text-slate-900 hover:underline">
+                        {item.title}
+                      </Link>
                       <CaddeBadge tone="durum" intent={item.status === "published" ? "positive" : "neutral"}>
                         {STATUS_LABELS[item.status]}
                       </CaddeBadge>
@@ -240,11 +272,35 @@ const CaddeCarsiPage = () => {
                   </div>
                   <div className="flex gap-2">
                     {item.status === "published" ? (
-                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate({ itemId: item.id, status: "paused" })} disabled={statusMutation.isPending}>Pasife Al</Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="cadde-secondary-action"
+                        onClick={() => statusMutation.mutate({ itemId: item.id, status: "paused" })}
+                        disabled={statusMutation.isPending}
+                      >
+                        Pasife Al
+                      </Button>
                     ) : (
-                      <Button size="sm" variant="outline" className="cadde-secondary-action" onClick={() => statusMutation.mutate({ itemId: item.id, status: "published" })} disabled={statusMutation.isPending}>Yayına Al</Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="cadde-secondary-action"
+                        onClick={() => statusMutation.mutate({ itemId: item.id, status: "published" })}
+                        disabled={statusMutation.isPending}
+                      >
+                        Yayına Al
+                      </Button>
                     )}
-                    <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700" onClick={() => deleteMutation.mutate(item.id)} disabled={deleteMutation.isPending}>Sil</Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="text-red-600 hover:text-red-700"
+                      onClick={() => deleteMutation.mutate(item.id)}
+                      disabled={deleteMutation.isPending}
+                    >
+                      Sil
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -317,7 +373,11 @@ const CaddeCarsiPage = () => {
                 İkinci el eşya, oda, ders, hizmet — şehrindeki toplulukta karşılığı olan her şey burada yer bulur.
               </p>
               {user ? (
-                <Button variant="outline" className="cadde-secondary-action rounded-lg" onClick={() => setFormOpen(true)}>
+                <Button
+                  variant="outline"
+                  className="cadde-secondary-action rounded-lg"
+                  onClick={() => setFormOpen(true)}
+                >
                   <Plus className="mr-2 h-4 w-4" />
                   İlan Ver
                 </Button>

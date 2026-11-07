@@ -26,26 +26,19 @@ type QueryCall = {
   maybeSingle?: boolean;
 };
 
-const {
-  fromMock,
-  getSessionMock,
-  onAuthStateChangeMock,
-  signOutMock,
-  unsubscribeMock,
-  queryCalls,
-  responses,
-} = vi.hoisted(() => ({
-  fromMock: vi.fn(),
-  getSessionMock: vi.fn(),
-  onAuthStateChangeMock: vi.fn(),
-  signOutMock: vi.fn(),
-  unsubscribeMock: vi.fn(),
-  queryCalls: [] as QueryCall[],
-  responses: {
-    attributes: { data: [] as unknown[] },
-    role: { data: null as unknown },
-  },
-}));
+const { fromMock, getSessionMock, onAuthStateChangeMock, signOutMock, unsubscribeMock, queryCalls, responses } =
+  vi.hoisted(() => ({
+    fromMock: vi.fn(),
+    getSessionMock: vi.fn(),
+    onAuthStateChangeMock: vi.fn(),
+    signOutMock: vi.fn(),
+    unsubscribeMock: vi.fn(),
+    queryCalls: [] as QueryCall[],
+    responses: {
+      attributes: { data: [] as unknown[] },
+      role: { data: null as unknown },
+    },
+  }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {

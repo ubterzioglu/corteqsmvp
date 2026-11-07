@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 // Komuta Merkezi yöneticisi — ince BARREL.
 //
@@ -22,4 +22,4 @@
 //   manager/cells.tsx                  — ortak rozet/avatar/hücre parçaları
 //   manager/styles.ts · formatters.ts · page-size.ts · guide-items.ts
 
-export { default } from './manager/CommandCenterManager'
+export { default } from "./manager/CommandCenterManager";

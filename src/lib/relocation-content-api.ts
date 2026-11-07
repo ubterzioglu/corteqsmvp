@@ -17,7 +17,6 @@ import type {
   RelocationRequiredDocumentRow,
 } from "@/lib/relocation-content-types";
 
-
 /**
  * PostgREST tek sorguda 1000 satırda SESSİZCE keser (CLAUDE.md "Değişmez sözleşmeler" md.5).
  * Bu tablolar bugün küçük, ama ülke sayısı arttıkça belge listeleri büyür — tavanı
@@ -30,9 +29,7 @@ const MAX_ROWS = 1000;
 // ---------------------------------------------------------------------------
 
 /** Ülke(ler) için yaşam masrafı kalemleri. Boş dizi = içerik henüz girilmemiş. */
-export async function getLivingCosts(
-  countryCodes: string[],
-): Promise<RelocationLivingCostRow[]> {
+export async function getLivingCosts(countryCodes: string[]): Promise<RelocationLivingCostRow[]> {
   const codes = countryCodes.map((c) => c.trim().toUpperCase()).filter(Boolean);
   if (codes.length === 0) return [];
 
@@ -47,9 +44,7 @@ export async function getLivingCosts(
 }
 
 /** Ülke(ler) için gerekli belge listesi, sort_order'a göre. */
-export async function getRequiredDocuments(
-  countryCodes: string[],
-): Promise<RelocationRequiredDocumentRow[]> {
+export async function getRequiredDocuments(countryCodes: string[]): Promise<RelocationRequiredDocumentRow[]> {
   const codes = countryCodes.map((c) => c.trim().toUpperCase()).filter(Boolean);
   if (codes.length === 0) return [];
 
@@ -152,4 +147,3 @@ export async function getFxRates(): Promise<RelocationFxRateRow[]> {
   if (error) throw error;
   return (data ?? []) as RelocationFxRateRow[];
 }
-

@@ -87,9 +87,7 @@ describe("CarsiGlobalTicker (m39+m40 kapısı)", () => {
     listCarsiItemsMock.mockResolvedValue([]);
     renderTicker();
 
-    await waitFor(() =>
-      expect(screen.getByRole("link", { name: /Tümü/ })).toHaveAttribute("href", "/cadde/carsi"),
-    );
+    await waitFor(() => expect(screen.getByRole("link", { name: /Tümü/ })).toHaveAttribute("href", "/cadde/carsi"));
     // m53: sağ kolon başlığı da "CorteQS Çarşı".
     expect(screen.getByText("CorteQS Çarşı")).toBeInTheDocument();
     expect(screen.queryByTestId("carsi-teaser")).not.toBeInTheDocument();
@@ -117,9 +115,6 @@ describe("CarsiGlobalTicker (m39+m40 kapısı)", () => {
     await screen.findByTestId("carsi-ticker-category-item-1");
     expect(container.querySelectorAll("a a")).toHaveLength(0);
     // İlan detayına giden link yine de duruyor (kart tıklanabilirliği kaybolmadı).
-    expect(screen.getByRole("link", { name: "IKEA çalışma masası" })).toHaveAttribute(
-      "href",
-      "/cadde/carsi/item-1",
-    );
+    expect(screen.getByRole("link", { name: "IKEA çalışma masası" })).toHaveAttribute("href", "/cadde/carsi/item-1");
   });
 });

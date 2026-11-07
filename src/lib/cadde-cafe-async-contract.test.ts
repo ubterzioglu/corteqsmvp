@@ -8,8 +8,7 @@ const MIGRATION_PATHS = [
   "supabase/migrations/applied/20260913140000_cadde_cafe_async_first.sql",
 ];
 
-const migrationSql = () =>
-  readFileSync(MIGRATION_PATHS.find((path) => existsSync(path)) ?? MIGRATION_PATHS[0], "utf8");
+const migrationSql = () => readFileSync(MIGRATION_PATHS.find((path) => existsSync(path)) ?? MIGRATION_PATHS[0], "utf8");
 
 describe("Cafe async-first geçici ürün sözleşmesi", () => {
   it("yeni Cafe'leri 24 saat açık başlatır ve 1-7 gün seçenekleri sunar", () => {

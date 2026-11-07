@@ -81,7 +81,12 @@ const NotificationsBell = () => {
       <PopoverTrigger asChild>
         {/* Kullanıcı kararı 04.08.2026: zil büyütüldü (h-9 → h-11) ve ikon 4→5.
             Ikon-only olduğu için px yerine sabit genişlikle tam daire. */}
-        <Button variant="outline" size="sm" className="relative h-11 w-11 shrink-0 rounded-full p-0" aria-label="Bildirimler">
+        <Button
+          variant="outline"
+          size="sm"
+          className="relative h-11 w-11 shrink-0 rounded-full p-0"
+          aria-label="Bildirimler"
+        >
           <Bell className="h-5 w-5" />
           {unreadCount > 0 ? (
             <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-orange-500 px-1 text-[11px] font-bold text-white">
@@ -110,9 +115,7 @@ const NotificationsBell = () => {
             // görünüyordu; kullanıcı gelen bir yanıtı veya daveti kaçırıyordu.
             <div className="px-3 py-6 text-center">
               <p className="text-sm font-medium text-amber-900">Bildirimler yüklenemedi.</p>
-              <p className="mt-1 text-xs text-amber-800">
-                Bu, bildirimin olmadığı anlamına gelmez.
-              </p>
+              <p className="mt-1 text-xs text-amber-800">Bu, bildirimin olmadığı anlamına gelmez.</p>
               <button
                 type="button"
                 className="mt-3 text-xs font-medium text-primary underline-offset-2 hover:underline"

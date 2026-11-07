@@ -41,13 +41,9 @@ export function WeakestAreasCard({ areas, dimensionActions = {} }: WeakestAreasC
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-semibold text-foreground">{area.title}</span>
                   <Badge variant="secondary">{dimensionBandLabel(area.score)}</Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.round(area.score * 100)} / 100
-                  </span>
+                  <span className="text-xs text-muted-foreground">{Math.round(area.score * 100)} / 100</span>
                 </div>
-                {action && (
-                  <p className="text-sm leading-relaxed text-muted-foreground">{action}</p>
-                )}
+                {action && <p className="text-sm leading-relaxed text-muted-foreground">{action}</p>}
               </div>
             </div>
           );

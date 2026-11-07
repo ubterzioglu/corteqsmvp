@@ -96,12 +96,7 @@ describe("G17 · salt ekleme güvencesi", () => {
 
 describe("G17 · group_recommendations tablosu", () => {
   const table = () =>
-    sliceBetween(
-      code(),
-      "create table if not exists public.group_recommendations",
-      ");",
-      "recommendations tablosu",
-    );
+    sliceBetween(code(), "create table if not exists public.group_recommendations", ");", "recommendations tablosu");
 
   it("kullanıcı + grup TEKİL (tasarım §4)", () => {
     expect(table()).toContain("unique (landing_id, user_id)");
@@ -110,27 +105,16 @@ describe("G17 · group_recommendations tablosu", () => {
   it("istemciye yazma yolu YOK: grant yalnız select, yazma politikası yok", () => {
     const sql = flat();
 
-    expect(sql).toContain(
-      "revoke all on table public.group_recommendations from anon, authenticated;",
-    );
-    expect(sql).toContain(
-      "grant select on table public.group_recommendations to anon, authenticated;",
-    );
+    expect(sql).toContain("revoke all on table public.group_recommendations from anon, authenticated;");
+    expect(sql).toContain("grant select on table public.group_recommendations to anon, authenticated;");
     expect(sql).not.toContain("grant insert");
     expect(sql).not.toContain("grant update");
     expect(sql).not.toContain("grant delete");
-    expect(code()).not.toMatch(
-      /create policy[^;]*on public\.group_recommendations[^;]*for (insert|update|delete)/i,
-    );
+    expect(code()).not.toMatch(/create policy[^;]*on public\.group_recommendations[^;]*for (insert|update|delete)/i);
   });
 
   it("select görünürlüğü: kendi satırı + admin", () => {
-    const policy = sliceBetween(
-      code(),
-      "create policy group_recommendations_select_own",
-      ";",
-      "select politika",
-    );
+    const policy = sliceBetween(code(), "create policy group_recommendations_select_own", ";", "select politika");
 
     expect(policy).toContain("user_id = auth.uid()");
     expect(policy).toContain("public.is_admin(auth.uid())");
@@ -239,15 +223,11 @@ describe("G17 · kabul #11 — ilk 7 gün null", () => {
   it("grace dalı published_at'tan; skor null, rozet false", () => {
     const fn = computeFn();
 
-    expect(fn).toContain(
-      "v_landing.published_at > now() - make_interval(days => v_min_days)",
-    );
+    expect(fn).toContain("v_landing.published_at > now() - make_interval(days => v_min_days)");
     expect(fn).toContain("when v_in_grace then null");
     // Grace'te rozet de yok (skor null → false) + computed_at yazılmaz.
     expect(recomputeFn()).toContain("when v_score is null then false");
-    expect(recomputeFn()).toContain(
-      "group_score_computed_at = case when v_score is null then null else now() end",
-    );
+    expect(recomputeFn()).toContain("group_score_computed_at = case when v_score is null then null else now() end");
   });
 });
 
@@ -258,15 +238,11 @@ describe("G17 · yazma yetkisi ve guard v3", () => {
     expect(sql).toContain(
       "revoke all on function public.group_health_score_recompute(uuid) from public, anon, authenticated;",
     );
-    expect(sql).toContain(
-      "grant execute on function public.group_health_score_recompute(uuid) to service_role;",
-    );
+    expect(sql).toContain("grant execute on function public.group_health_score_recompute(uuid) to service_role;");
     expect(sql).toContain(
       "revoke all on function public.group_health_scores_recompute_all() from public, anon, authenticated;",
     );
-    expect(sql).toContain(
-      "grant execute on function public.group_health_scores_recompute_all() to service_role;",
-    );
+    expect(sql).toContain("grant execute on function public.group_health_scores_recompute_all() to service_role;");
   });
 
   it("recompute guard'ı via_rpc bayrağıyla geçer", () => {
@@ -281,12 +257,8 @@ describe("G17 · yazma yetkisi ve guard v3", () => {
 
     expect(guard).toContain("new.group_score is distinct from old.group_score");
     expect(guard).toContain("new.has_approved_badge is distinct from old.has_approved_badge");
-    expect(guard).toContain(
-      "new.group_score_computed_at is distinct from old.group_score_computed_at",
-    );
-    expect(guard).toContain(
-      "new.group_score_breakdown is distinct from old.group_score_breakdown",
-    );
+    expect(guard).toContain("new.group_score_computed_at is distinct from old.group_score_computed_at");
+    expect(guard).toContain("new.group_score_breakdown is distinct from old.group_score_breakdown");
     expect(guard).toContain("group_score_direct_update_forbidden");
   });
 

@@ -2,7 +2,18 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, MapPin, Clock, DollarSign, MessageSquare, ChevronDown, ChevronUp, CheckCircle, XCircle, Info } from "lucide-react";
+import {
+  Briefcase,
+  MapPin,
+  Clock,
+  DollarSign,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+  CheckCircle,
+  XCircle,
+  Info,
+} from "lucide-react";
 import { ServiceAttachmentLink } from "@/components/ServiceAttachmentLink";
 import { useDemoFlag, markRealServiceRequest } from "@/lib/demoFlags";
 import {
@@ -60,8 +71,8 @@ const TIME_MAP: Record<string, string> = {
   "weekday-morning": "Hafta İçi Sabah",
   "weekday-afternoon": "Hafta İçi Öğleden Sonra",
   "weekday-evening": "Hafta İçi Akşam",
-  "weekend": "Hafta Sonu",
-  "flexible": "Esnek",
+  weekend: "Hafta Sonu",
+  flexible: "Esnek",
 };
 
 const DEMO_REQUEST: ServiceRequest = {
@@ -89,7 +100,9 @@ const ServiceRequestsList = () => {
   const hasReal = useDemoFlag("serviceRequests");
 
   const fetchRequests = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) {
       setRequests([]);
       setLoading(false);
@@ -114,15 +127,19 @@ const ServiceRequestsList = () => {
       })
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleProposalAction = async (proposalId: string, action: "accepted" | "rejected") => {
     await updateServiceProposalStatus(proposalId, action);
     if (action === "accepted") {
-      const proposal = requests.flatMap(r => r.proposals || []).find(p => p.id === proposalId);
+      const proposal = requests.flatMap((r) => r.proposals || []).find((p) => p.id === proposalId);
       if (proposal) {
-        await markServiceRequestInProgress(requests.find(r => r.proposals?.some(p => p.id === proposalId))?.id || "");
+        await markServiceRequestInProgress(
+          requests.find((r) => r.proposals?.some((p) => p.id === proposalId))?.id || "",
+        );
       }
     }
     fetchRequests();
@@ -144,10 +161,10 @@ const ServiceRequestsList = () => {
     return (
       <div className="text-center py-12">
         <span className="text-5xl mb-4 block">📋</span>
-        <p className="text-lg font-semibold text-foreground mb-2">Bu bölgeye henüz bir hizmet talebiniz bulunmamaktadır</p>
-        <p className="text-sm text-muted-foreground">
-          Yeni bir talep oluşturarak danışmanlardan teklif alın.
+        <p className="text-lg font-semibold text-foreground mb-2">
+          Bu bölgeye henüz bir hizmet talebiniz bulunmamaktadır
         </p>
+        <p className="text-sm text-muted-foreground">Yeni bir talep oluşturarak danışmanlardan teklif alın.</p>
       </div>
     );
   }
@@ -158,7 +175,8 @@ const ServiceRequestsList = () => {
         <div className="flex items-start gap-2 rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs text-foreground">
           <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
           <span>
-            Bu bir <strong>demo görünümdür</strong>. İlk gerçek hizmet talebinizi oluşturduğunuzda demo kaldırılacak ve gerçek talepleriniz burada listelenecek.
+            Bu bir <strong>demo görünümdür</strong>. İlk gerçek hizmet talebinizi oluşturduğunuzda demo kaldırılacak ve
+            gerçek talepleriniz burada listelenecek.
           </span>
         </div>
       )}
@@ -180,16 +198,34 @@ const ServiceRequestsList = () => {
                   <div className="flex items-center gap-2 flex-wrap mb-1">
                     <h3 className="font-semibold text-foreground">{req.title}</h3>
                     <Badge className={statusInfo.color}>{statusInfo.label}</Badge>
-                    <Badge variant="outline" className={urgencyInfo.color}>{urgencyInfo.label}</Badge>
+                    <Badge variant="outline" className={urgencyInfo.color}>
+                      {urgencyInfo.label}
+                    </Badge>
                   </div>
                   <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                    <span className="flex items-center gap-1"><Briefcase className="h-3 w-3" /> {req.category}{req.subcategory ? ` / ${req.subcategory}` : ""}</span>
-                    {req.city && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {req.city}{req.country ? `, ${req.country}` : ""}</span>}
-                    {req.preferred_time && <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {TIME_MAP[req.preferred_time] || req.preferred_time}</span>}
+                    <span className="flex items-center gap-1">
+                      <Briefcase className="h-3 w-3" /> {req.category}
+                      {req.subcategory ? ` / ${req.subcategory}` : ""}
+                    </span>
+                    {req.city && (
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3" /> {req.city}
+                        {req.country ? `, ${req.country}` : ""}
+                      </span>
+                    )}
+                    {req.preferred_time && (
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" /> {TIME_MAP[req.preferred_time] || req.preferred_time}
+                      </span>
+                    )}
                     {(req.budget_min || req.budget_max) && (
                       <span className="flex items-center gap-1">
                         <DollarSign className="h-3 w-3" />
-                        {req.budget_min && req.budget_max ? `€${req.budget_min} - €${req.budget_max}` : req.budget_min ? `€${req.budget_min}+` : `Max €${req.budget_max}`}
+                        {req.budget_min && req.budget_max
+                          ? `€${req.budget_min} - €${req.budget_max}`
+                          : req.budget_min
+                            ? `€${req.budget_min}+`
+                            : `Max €${req.budget_max}`}
                       </span>
                     )}
                   </div>
@@ -200,7 +236,11 @@ const ServiceRequestsList = () => {
                       <MessageSquare className="h-3 w-3" /> {proposalCount} teklif
                     </Badge>
                   )}
-                  {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                  {isExpanded ? (
+                    <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  )}
                 </div>
               </div>
             </div>
@@ -244,14 +284,22 @@ const ServiceRequestsList = () => {
                             </div>
                             <div className="flex items-center gap-2">
                               {proposal.price && (
-                                <Badge className="bg-success/15 text-success border-success/30">€{proposal.price}</Badge>
+                                <Badge className="bg-success/15 text-success border-success/30">
+                                  €{proposal.price}
+                                </Badge>
                               )}
                               {proposal.status === "pending" ? (
-                                <Badge variant="outline" className="text-gold">Beklemede</Badge>
+                                <Badge variant="outline" className="text-gold">
+                                  Beklemede
+                                </Badge>
                               ) : proposal.status === "accepted" ? (
-                                <Badge className="bg-turquoise/15 text-turquoise border-turquoise/30">Kabul Edildi</Badge>
+                                <Badge className="bg-turquoise/15 text-turquoise border-turquoise/30">
+                                  Kabul Edildi
+                                </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-muted-foreground">Reddedildi</Badge>
+                                <Badge variant="outline" className="text-muted-foreground">
+                                  Reddedildi
+                                </Badge>
                               )}
                             </div>
                           </div>
@@ -261,23 +309,39 @@ const ServiceRequestsList = () => {
                           {(proposal.estimated_duration || proposal.scope || proposal.payment_terms) && (
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-muted-foreground bg-muted/30 rounded-lg p-3 mb-3">
                               {proposal.estimated_duration && (
-                                <div><span className="font-medium text-foreground">Süre:</span> {proposal.estimated_duration}</div>
+                                <div>
+                                  <span className="font-medium text-foreground">Süre:</span>{" "}
+                                  {proposal.estimated_duration}
+                                </div>
                               )}
                               {proposal.scope && (
-                                <div><span className="font-medium text-foreground">Kapsam:</span> {proposal.scope}</div>
+                                <div>
+                                  <span className="font-medium text-foreground">Kapsam:</span> {proposal.scope}
+                                </div>
                               )}
                               {proposal.payment_terms && (
-                                <div><span className="font-medium text-foreground">Ödeme:</span> {proposal.payment_terms}</div>
+                                <div>
+                                  <span className="font-medium text-foreground">Ödeme:</span> {proposal.payment_terms}
+                                </div>
                               )}
                             </div>
                           )}
 
                           {proposal.status === "pending" && (
                             <div className="flex gap-2">
-                              <Button size="sm" className="gap-1 h-7 text-xs" onClick={() => handleProposalAction(proposal.id, "accepted")}>
+                              <Button
+                                size="sm"
+                                className="gap-1 h-7 text-xs"
+                                onClick={() => handleProposalAction(proposal.id, "accepted")}
+                              >
                                 <CheckCircle className="h-3 w-3" /> Kabul Et
                               </Button>
-                              <Button size="sm" variant="outline" className="gap-1 h-7 text-xs text-destructive" onClick={() => handleProposalAction(proposal.id, "rejected")}>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="gap-1 h-7 text-xs text-destructive"
+                                onClick={() => handleProposalAction(proposal.id, "rejected")}
+                              >
                                 <XCircle className="h-3 w-3" /> Reddet
                               </Button>
                             </div>
@@ -289,7 +353,14 @@ const ServiceRequestsList = () => {
                 </div>
 
                 <p className="text-[11px] text-muted-foreground/60">
-                  Oluşturulma: {new Date(req.created_at).toLocaleDateString("tr-TR", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
+                  Oluşturulma:{" "}
+                  {new Date(req.created_at).toLocaleDateString("tr-TR", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  })}
                 </p>
               </div>
             )}

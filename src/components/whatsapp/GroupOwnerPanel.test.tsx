@@ -34,13 +34,23 @@ vi.mock("@/lib/group-owner-panel", async (importOriginal) => {
 
 vi.mock("@/components/SearchableCountrySelect", () => ({
   default: (props: { value: string; onChange: (v: string) => void; disabled?: boolean }) => (
-    <input aria-label="Ülke autocomplete" value={props.value} disabled={props.disabled} onChange={(e) => props.onChange(e.target.value)} />
+    <input
+      aria-label="Ülke autocomplete"
+      value={props.value}
+      disabled={props.disabled}
+      onChange={(e) => props.onChange(e.target.value)}
+    />
   ),
 }));
 
 vi.mock("@/components/SearchableCitySelect", () => ({
   default: (props: { value: string; onChange: (v: string) => void; disabled?: boolean }) => (
-    <input aria-label="Şehir autocomplete" value={props.value} disabled={props.disabled} onChange={(e) => props.onChange(e.target.value)} />
+    <input
+      aria-label="Şehir autocomplete"
+      value={props.value}
+      disabled={props.disabled}
+      onChange={(e) => props.onChange(e.target.value)}
+    />
   ),
 }));
 
@@ -100,9 +110,7 @@ const ownerState = (overrides: Partial<Extract<OwnerPanelState, { is_owner: true
 
 const renderPanel = (overrides: Partial<Parameters<typeof GroupOwnerPanel>[0]> = {}) => {
   const onHidden = vi.fn();
-  const view = render(
-    <GroupOwnerPanel landing={landing()} isSignedIn onHidden={onHidden} {...overrides} />,
-  );
+  const view = render(<GroupOwnerPanel landing={landing()} isSignedIn onHidden={onHidden} {...overrides} />);
   return { onHidden, container: view.container };
 };
 
@@ -207,9 +215,7 @@ describe("GroupOwnerPanel · kaldırma isteği (kabul #9 UI yakası)", () => {
     expect(screen.queryByRole("textbox", { name: /gerekçe/i })).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Evet, listeden kaldır/i }));
-    await waitFor(() =>
-      expect(requestGroupRemovalSpy).toHaveBeenCalledWith("11111111-1111-1111-1111-111111111111"),
-    );
+    await waitFor(() => expect(requestGroupRemovalSpy).toHaveBeenCalledWith("11111111-1111-1111-1111-111111111111"));
     await waitFor(() => expect(onHidden).toHaveBeenCalledTimes(1));
   });
 

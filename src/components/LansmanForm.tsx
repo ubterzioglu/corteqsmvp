@@ -64,8 +64,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
       try {
         validateOptionalUrl(values[field]);
       } catch (error) {
-        nextErrors[field] =
-          error instanceof Error ? error.message : "Geçerli bir URL girin.";
+        nextErrors[field] = error instanceof Error ? error.message : "Geçerli bir URL girin.";
       }
     }
 
@@ -92,9 +91,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
       onSuccess?.();
     } catch (error) {
       setSubmitError(
-        error instanceof Error
-          ? error.message
-          : "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
+        error instanceof Error ? error.message : "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.",
       );
     } finally {
       setIsSubmitting(false);
@@ -109,22 +106,14 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
     ) : null;
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      noValidate
-      className="space-y-3 text-slate-900"
-    >
+    <form onSubmit={handleSubmit} noValidate className="space-y-3 text-slate-900">
       <div>
         <h2 className="text-base font-semibold text-slate-900 sm:text-lg">Lansman Kaydı</h2>
-        <p className="mt-1 text-sm text-slate-600">
-          Formu doldur! Yakında daveti ileteceğiz!
-        </p>
+        <p className="mt-1 text-sm text-slate-600">Formu doldur! Yakında daveti ileteceğiz!</p>
       </div>
 
       <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm">
-          Zorunlu alanlar
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm">Zorunlu alanlar</p>
 
         <div className="space-y-1.5">
           <label htmlFor="first_name" className="text-sm font-medium text-slate-800">
@@ -167,9 +156,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
           aria-invalid={Boolean(errors.phone)}
           className="h-9 border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400"
         />
-        <p className="text-xs text-slate-500">
-          WhatsApp uyumlu uluslararası format kullanın.
-        </p>
+        <p className="text-xs text-slate-500">WhatsApp uyumlu uluslararası format kullanın.</p>
         {renderFieldError("phone")}
         <div className="space-y-1.5">
           <label htmlFor="instagram" className="text-sm font-medium text-slate-800">
@@ -183,17 +170,13 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
             aria-invalid={Boolean(errors.instagram)}
             className="h-9 border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400"
           />
-          <p className="text-xs text-slate-500">
-            Sadece Instagram kullanıcı adınızı yazın, link yazmayın.
-          </p>
+          <p className="text-xs text-slate-500">Sadece Instagram kullanıcı adınızı yazın, link yazmayın.</p>
           {renderFieldError("instagram")}
         </div>
       </div>
 
       <div className="space-y-3">
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm">
-          Opsiyonel
-        </p>
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-700 sm:text-sm">Opsiyonel</p>
 
         <div className="space-y-1.5">
           <label htmlFor="linkedin" className="text-sm font-medium text-slate-800">
@@ -207,9 +190,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
             aria-invalid={Boolean(errors.linkedin)}
             className="h-9 border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400"
           />
-          <p className="text-xs text-slate-500">
-            Sadece LinkedIn kullanıcı adınızı yazın, link yazmayın. Opsiyonel.
-          </p>
+          <p className="text-xs text-slate-500">Sadece LinkedIn kullanıcı adınızı yazın, link yazmayın. Opsiyonel.</p>
           {renderFieldError("linkedin")}
         </div>
 
@@ -225,9 +206,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
             aria-invalid={Boolean(errors.youtube)}
             className="h-9 border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400"
           />
-          <p className="text-xs text-slate-500">
-            Sadece YouTube kanal adınızı yazın, link yazmayın. Opsiyonel.
-          </p>
+          <p className="text-xs text-slate-500">Sadece YouTube kanal adınızı yazın, link yazmayın. Opsiyonel.</p>
           {renderFieldError("youtube")}
         </div>
 
@@ -243,9 +222,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
             aria-invalid={Boolean(errors.website)}
             className="h-9 border-slate-200 bg-white text-sm text-slate-900 placeholder:text-slate-400"
           />
-          <p className="text-xs text-slate-500">
-            Web siteniz varsa tam adresini yazabilirsiniz. Opsiyonel.
-          </p>
+          <p className="text-xs text-slate-500">Web siteniz varsa tam adresini yazabilirsiniz. Opsiyonel.</p>
           {renderFieldError("website")}
         </div>
       </div>
@@ -270,9 +247,7 @@ const LansmanForm = ({ onSuccess }: LansmanFormProps) => {
       ) : null}
 
       {submitError ? (
-        <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
-          {submitError}
-        </p>
+        <p className="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{submitError}</p>
       ) : null}
 
       <Button

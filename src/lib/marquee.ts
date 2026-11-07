@@ -198,7 +198,11 @@ export async function listImportableNewsPosts(): Promise<NewsPostRow[]> {
   return data ?? [];
 }
 
-const joinNewsParts = (parts: Array<string | null | undefined>) => parts.map((part) => part?.trim()).filter(Boolean).join(" • ");
+const joinNewsParts = (parts: Array<string | null | undefined>) =>
+  parts
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" • ");
 
 export function buildNewsPostSummary(post: NewsPostRow): string {
   const summary = post.summary?.trim();

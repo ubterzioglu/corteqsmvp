@@ -12,26 +12,28 @@ const CommercialIndexPage = () => {
   // `publicCommercialDocuments`); hiçbiri render arasında değişmez. Boş deps AÇIKÇA
   // geçiliyor: sözleşme testinin sezgisi `${document.slug}` gibi map değişkenlerini
   // durum sanabilir, niyeti tahmin ettirmek yerine kodda yazıyoruz (S08).
-  useSeo({
-    title: PAGE_TITLE,
-    description: PAGE_DESCRIPTION,
-    canonicalPath: "/commercial",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: PAGE_TITLE,
+  useSeo(
+    {
+      title: PAGE_TITLE,
       description: PAGE_DESCRIPTION,
-      url: `${SEO_CANONICAL_ORIGIN}/commercial`,
-      isPartOf: { "@id": `${SEO_CANONICAL_ORIGIN}/#website` },
-      hasPart: publicCommercialDocuments.map((document) => ({
-        "@type": "Article",
-        headline: document.title,
-        description: document.summary,
-        url: `${SEO_CANONICAL_ORIGIN}/commercial/${document.slug}`,
-      })),
+      canonicalPath: "/commercial",
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        name: PAGE_TITLE,
+        description: PAGE_DESCRIPTION,
+        url: `${SEO_CANONICAL_ORIGIN}/commercial`,
+        isPartOf: { "@id": `${SEO_CANONICAL_ORIGIN}/#website` },
+        hasPart: publicCommercialDocuments.map((document) => ({
+          "@type": "Article",
+          headline: document.title,
+          description: document.summary,
+          url: `${SEO_CANONICAL_ORIGIN}/commercial/${document.slug}`,
+        })),
+      },
     },
-  },
-  []);
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,hsl(var(--background))_0%,hsl(var(--section-warm))_52%,hsl(var(--background))_100%)]">
@@ -55,8 +57,8 @@ const CommercialIndexPage = () => {
               <span className="block text-primary">kısa doküman merkezi</span>
             </h1>
             <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg">
-              Bu alan, CorteQS rolleri ve iş birliği başlıkları hakkında hızlı bir ön bilgi sunmak için
-              hazırlanmıştır. Aşağıdaki başlıklardan ilgili dokümana geçebilirsiniz.
+              Bu alan, CorteQS rolleri ve iş birliği başlıkları hakkında hızlı bir ön bilgi sunmak için hazırlanmıştır.
+              Aşağıdaki başlıklardan ilgili dokümana geçebilirsiniz.
             </p>
           </div>
 
@@ -80,13 +82,14 @@ const CommercialIndexPage = () => {
                   {document.title}
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">{document.summary}</p>
-                <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">Dokümana git</div>
+                <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                  Dokümana git
+                </div>
               </Link>
             ))}
           </section>
         </div>
       </main>
-
     </div>
   );
 };

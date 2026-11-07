@@ -51,11 +51,7 @@ const InlineAttributeField = ({
     ) : attribute.data_type === "boolean" ? (
       <div className="flex items-center justify-between rounded-xl border border-border bg-card px-3 py-2">
         <span className="text-sm text-foreground">{attribute.label}</span>
-        <Switch
-          checked={value === true}
-          onCheckedChange={(checked) => onValueChange(checked)}
-          disabled={isSaving}
-        />
+        <Switch checked={value === true} onCheckedChange={(checked) => onValueChange(checked)} disabled={isSaving} />
       </div>
     ) : (
       <Input

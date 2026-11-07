@@ -13,10 +13,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import type { ProfileHeroVariant } from "@/lib/profile-presentation";
-import type {
-  PublicProfileBadgeViewModel,
-  PublicProfileHeroViewModel,
-} from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileBadgeViewModel, PublicProfileHeroViewModel } from "@/lib/public-catalog-profile-view-model";
 
 import type { ProfileAccent } from "./public-profile-utils";
 
@@ -82,20 +79,15 @@ interface PublicProfileHeroProps {
 const PublicProfileHero = ({ hero, heroVariant = "member", actions }: PublicProfileHeroProps) => {
   const categoryBadges = hero.badges.filter((badge) => badge.tone === "category");
   const statusBadges = hero.badges.filter(
-    (badge): badge is PublicProfileBadgeViewModel & { tone: StatusTone } =>
-      badge.tone !== "category",
+    (badge): badge is PublicProfileBadgeViewModel & { tone: StatusTone } => badge.tone !== "category",
   );
 
   const isExperimental = heroVariant === "experimental";
-  const headerSurface = isExperimental
-    ? EXPERIMENTAL_HEADER_SURFACE
-    : HEADER_SURFACE_BY_ACCENT[hero.accent];
+  const headerSurface = isExperimental ? EXPERIMENTAL_HEADER_SURFACE : HEADER_SURFACE_BY_ACCENT[hero.accent];
 
   return (
     <section className="overflow-hidden rounded-[28px] border border-border bg-card shadow-card">
-      <div
-        className={`relative border-b border-border px-5 py-5 md:px-7 md:py-6 ${headerSurface}`}
-      >
+      <div className={`relative border-b border-border px-5 py-5 md:px-7 md:py-6 ${headerSurface}`}>
         {hero.coverImageUrl ? (
           <img
             src={hero.coverImageUrl}
@@ -209,9 +201,7 @@ const PublicProfileHero = ({ hero, heroVariant = "member", actions }: PublicProf
 
             {/* Short description (only when no rich_text section covers it) */}
             {hero.headline ? (
-              <p className="mt-4 break-words text-sm font-medium text-foreground/80">
-                {hero.headline}
-              </p>
+              <p className="mt-4 break-words text-sm font-medium text-foreground/80">{hero.headline}</p>
             ) : null}
 
             {actions ? <div className="mt-4">{actions}</div> : null}

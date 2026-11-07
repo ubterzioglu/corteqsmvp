@@ -25,16 +25,7 @@ const formatSize = (bytes: number) => `${(bytes / (1024 * 1024)).toFixed(1)} MB`
  * atlar. Gerçek denetim `validate` ile BURADA yapılır; sunucu tarafında kova
  * MIME/boyut sınırı üçüncü savunmadır.
  */
-export function CareerFileDrop({
-  id,
-  label,
-  accept,
-  hint,
-  required,
-  file,
-  onChange,
-  validate,
-}: CareerFileDropProps) {
+export function CareerFileDrop({ id, label, accept, hint, required, file, onChange, validate }: CareerFileDropProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [dragging, setDragging] = useState(false);

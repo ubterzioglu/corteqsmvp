@@ -5,10 +5,7 @@ import { marqueeTypeLabels, type MarqueeItemRow, type MarqueeItemType } from "@/
 import { storageImageUrl } from "@/lib/storage-image";
 import { cn } from "@/lib/utils";
 
-const typeStyles: Record<
-  MarqueeItemType,
-  { className: string; icon: typeof Newspaper; banner: string }
-> = {
+const typeStyles: Record<MarqueeItemType, { className: string; icon: typeof Newspaper; banner: string }> = {
   news: {
     className: "bg-sky-50 text-sky-800 border-sky-200",
     icon: Newspaper,
@@ -72,12 +69,7 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
             decoding="async"
           />
         ) : (
-          <div
-            className={cn(
-              "flex h-full w-full items-center justify-center bg-gradient-to-br",
-              typeStyle.banner,
-            )}
-          >
+          <div className={cn("flex h-full w-full items-center justify-center bg-gradient-to-br", typeStyle.banner)}>
             <TypeIcon className="h-12 w-12 text-white/90" />
           </div>
         )}
@@ -90,23 +82,23 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
 
       <div className="flex flex-1 flex-col gap-2 p-4">
         <div className="flex items-center justify-between gap-2">
-          <span className={cn("inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold", typeStyle.className)}>
+          <span
+            className={cn(
+              "inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[11px] font-semibold",
+              typeStyle.className,
+            )}
+          >
             <TypeIcon className="h-3 w-3" />
             {marqueeTypeLabels[itemType]}
           </span>
-          <time
-            dateTime={item.published_at ?? undefined}
-            className="shrink-0 text-[11px] text-muted-foreground"
-          >
+          <time dateTime={item.published_at ?? undefined} className="shrink-0 text-[11px] text-muted-foreground">
             {formatDate(item.published_at)}
           </time>
         </div>
 
         <h3 className="line-clamp-2 text-base font-bold leading-snug text-foreground">{item.title}</h3>
 
-        {summary ? (
-          <p className="line-clamp-5 text-sm leading-relaxed text-muted-foreground">{summary}</p>
-        ) : null}
+        {summary ? <p className="line-clamp-5 text-sm leading-relaxed text-muted-foreground">{summary}</p> : null}
 
         {hasDetail ? (
           <span className="mt-auto inline-flex items-center gap-1 pt-1 text-sm font-semibold text-primary">Detay</span>
@@ -117,7 +109,10 @@ const MarqueeItemCard = ({ item, className }: MarqueeItemCardProps) => {
 
   if (item.link_enabled && item.slug) {
     return (
-      <Link to={`/diaspora/${item.slug}`} className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+      <Link
+        to={`/diaspora/${item.slug}`}
+        className="block h-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         {cardContent}
       </Link>
     );

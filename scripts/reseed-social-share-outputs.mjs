@@ -69,19 +69,9 @@ async function createAdminClient() {
 // yalnız import/re-export içerir. Bu yüzden regex, tek dosya yerine o klasördeki
 // tüm parça dosyaların birleşimi üzerinde çalışır.
 async function loadBurakOrderToGlobalId() {
-  const toolsDir = path.join(
-    projectRoot,
-    "src",
-    "lib",
-    "admin-shell",
-    "burak-share-tools",
-  );
-  const toolFiles = (await readdir(toolsDir))
-    .filter((name) => /^tool-\d+\.ts$/.test(name))
-    .sort();
-  const sources = await Promise.all(
-    toolFiles.map((name) => readFile(path.join(toolsDir, name), "utf8")),
-  );
+  const toolsDir = path.join(projectRoot, "src", "lib", "admin-shell", "burak-share-tools");
+  const toolFiles = (await readdir(toolsDir)).filter((name) => /^tool-\d+\.ts$/.test(name)).sort();
+  const sources = await Promise.all(toolFiles.map((name) => readFile(path.join(toolsDir, name), "utf8")));
   const src = sources.join("\n");
   // Her tool bloğu: id: "burak-tool-N", globalId: "item-M", order: N, ...
   const blockRegex = /id:\s*"burak-tool-\d+",\s*globalId:\s*"(item-\d+)",\s*order:\s*(\d+),/g;
@@ -123,7 +113,10 @@ async function run() {
   // kapsar (toolOrder 1..12, bkz. burak-share-image-filename.mjs) — diğer
   // kaynaklar (tools/diaspora/tests) bu script'in kapsamı dışındadır.
   const entries = await readdir(SOURCE_DIR, { withFileTypes: true });
-  const files = entries.filter((e) => e.isFile()).map((e) => e.name).sort();
+  const files = entries
+    .filter((e) => e.isFile())
+    .map((e) => e.name)
+    .sort();
 
   const parsed = [];
   const unparsed = [];
@@ -189,10 +182,7 @@ async function run() {
     console.log(`social_share_assets'ten silindi: ${oldCovers.length} kayıt`);
   }
   if ((oldExtras ?? []).length > 0) {
-    const { error } = await client
-      .from("social_share_asset_images")
-      .delete()
-      .not("slot_key", "is", null);
+    const { error } = await client.from("social_share_asset_images").delete().not("slot_key", "is", null);
     if (error) throw new Error(`Eski ek görsel kayıtları silinemedi: ${error.message}`);
     console.log(`social_share_asset_images'ten silindi: ${oldExtras.length} kayıt`);
   }
@@ -216,17 +206,15 @@ async function run() {
       if (uploadError) throw new Error(uploadError.message);
 
       if (isCover) {
-        const { error: upsertError } = await client
-          .from("social_share_assets")
-          .upsert(
-            {
-              slot_key: slotKey,
-              image_bucket: BUCKET,
-              image_path: storagePath,
-              updated_at: new Date().toISOString(),
-            },
-            { onConflict: "slot_key" },
-          );
+        const { error: upsertError } = await client.from("social_share_assets").upsert(
+          {
+            slot_key: slotKey,
+            image_bucket: BUCKET,
+            image_path: storagePath,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "slot_key" },
+        );
         if (upsertError) throw new Error(upsertError.message);
         coverUploaded += 1;
         console.log(`Kapak: ${item.filename} → ${slotKey}`);

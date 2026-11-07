@@ -86,8 +86,12 @@ describe("geo / field / language boyutları", () => {
 describe("trust + reciprocity", () => {
   it("3 trust sinyali + tecrübe yılı yoksa → 0.7; reciprocity max_intros ile artar", () => {
     const cand: CandidateVector = {
-      needs: [], offers: [], languages: ["tr"], targetCountryCodes: [],
-      professionTags: [], trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
+      needs: [],
+      offers: [],
+      languages: ["tr"],
+      targetCountryCodes: [],
+      professionTags: [],
+      trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
       maxMonthlyIntros: 5,
     };
     const b = computeDiasporaBreakdown(me, cand);
@@ -99,8 +103,12 @@ describe("trust + reciprocity", () => {
 
   it("tecrübe yılı verilirse trust_profile_completeness artar", () => {
     const cand: CandidateVector = {
-      needs: [], offers: [], languages: ["tr"], targetCountryCodes: [],
-      professionTags: [], trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
+      needs: [],
+      offers: [],
+      languages: ["tr"],
+      targetCountryCodes: [],
+      professionTags: [],
+      trustSignals: ["completed_profile", "catalog_claim", "phone_verified"],
       maxMonthlyIntros: 5,
       experienceYearsInTarget: 5,
     };
@@ -126,13 +134,24 @@ describe("computeDiasporaScore — güçlü eşleşme yüksek skor", () => {
 
   it("eksik/zayıf aday → düşük skor", () => {
     const weak: CandidateVector = {
-      needs: ["visa"], offers: ["recruiting"], languages: ["fr"],
-      targetCountryCodes: ["NL"], professionTags: ["teacher"], trustSignals: [], maxMonthlyIntros: 0,
+      needs: ["visa"],
+      offers: ["recruiting"],
+      languages: ["fr"],
+      targetCountryCodes: ["NL"],
+      professionTags: ["teacher"],
+      trustSignals: [],
+      maxMonthlyIntros: 0,
     };
-    expect(computeDiasporaScore(me, weak)).toBeLessThan(computeDiasporaScore(me, {
-      needs: ["language_practice"], offers: ["job", "housing"], languages: ["tr"],
-      targetCountryCodes: ["DE"], professionTags: ["software_engineer"],
-      trustSignals: ["completed_profile"], maxMonthlyIntros: 3,
-    }));
+    expect(computeDiasporaScore(me, weak)).toBeLessThan(
+      computeDiasporaScore(me, {
+        needs: ["language_practice"],
+        offers: ["job", "housing"],
+        languages: ["tr"],
+        targetCountryCodes: ["DE"],
+        professionTags: ["software_engineer"],
+        trustSignals: ["completed_profile"],
+        maxMonthlyIntros: 3,
+      }),
+    );
   });
 });

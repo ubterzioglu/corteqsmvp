@@ -116,7 +116,9 @@ export interface PendingClaimRow {
 export async function fetchPendingClaims(): Promise<PendingClaimRow[]> {
   const { data, error } = await supabase
     .from("group_claims" as never)
-    .select("id, landing_id, user_id, method, status, screenshot_path, review_note, is_contested, platform_name_read, created_at")
+    .select(
+      "id, landing_id, user_id, method, status, screenshot_path, review_note, is_contested, platform_name_read, created_at",
+    )
     .eq("status", "pending")
     .eq("method", "screenshot")
     .order("created_at", { ascending: true })
@@ -127,10 +129,7 @@ export async function fetchPendingClaims(): Promise<PendingClaimRow[]> {
   // Grup adları ayrı sorguda (join view'ı yok; 100 satır için tek IN sorgusu).
   const landingIds = [...new Set(rows.map((row) => row.landing_id))];
   if (landingIds.length > 0) {
-    const { data: landings } = await supabase
-      .from("whatsapp_landings")
-      .select("id, group_name")
-      .in("id", landingIds);
+    const { data: landings } = await supabase.from("whatsapp_landings").select("id, group_name").in("id", landingIds);
     const names = new Map((landings ?? []).map((row) => [row.id, row.group_name]));
     for (const row of rows) row.group_name = names.get(row.landing_id) ?? null;
   }
@@ -139,9 +138,7 @@ export async function fetchPendingClaims(): Promise<PendingClaimRow[]> {
 
 /** Ekran görüntüsü kanıtı: private kova, 5 dk'lık imzalı bağlantı (KR08 deseni). */
 export async function createClaimScreenshotUrl(path: string): Promise<string> {
-  const { data, error } = await supabase.storage
-    .from("group-claim-screenshots")
-    .createSignedUrl(path, 300);
+  const { data, error } = await supabase.storage.from("group-claim-screenshots").createSignedUrl(path, 300);
   if (error) throw error;
   if (!data?.signedUrl) throw new Error("İmzalı bağlantı üretilemedi.");
   return data.signedUrl;
@@ -171,10 +168,7 @@ export async function fetchPendingPosts(): Promise<PendingPostRow[]> {
 
   const landingIds = [...new Set(rows.map((row) => row.landing_id))];
   if (landingIds.length > 0) {
-    const { data: landings } = await supabase
-      .from("whatsapp_landings")
-      .select("id, group_name")
-      .in("id", landingIds);
+    const { data: landings } = await supabase.from("whatsapp_landings").select("id, group_name").in("id", landingIds);
     const names = new Map((landings ?? []).map((row) => [row.id, row.group_name]));
     for (const row of rows) row.group_name = names.get(row.landing_id) ?? null;
   }
@@ -187,40 +181,41 @@ export async function decidePendingGroup(
   decision: "approve" | "reject",
   note?: string,
 ): Promise<void> {
-  const { error } = await supabase.rpc("set_group_status_v1" as never, {
-    p_landing_id: landingDbId,
-    p_to_status: decision === "approve" ? "published" : "rejected",
-    p_reason: decision === "approve" ? "published" : "rejected",
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+  const { error } = await supabase.rpc(
+    "set_group_status_v1" as never,
+    {
+      p_landing_id: landingDbId,
+      p_to_status: decision === "approve" ? "published" : "rejected",
+      p_reason: decision === "approve" ? "published" : "rejected",
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
   if (error) throw mapModerationError(error, "Grup kararı kaydedilemedi.");
 }
 
 /** Karar 2 — sahiplik talebi (G13): approve → apply_verified zinciri. */
-export async function decideClaim(
-  claimId: string,
-  decision: "approve" | "reject",
-  note?: string,
-): Promise<void> {
-  const { error } = await supabase.rpc("admin_review_group_claim" as never, {
-    p_claim_id: claimId,
-    p_decision: decision,
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+export async function decideClaim(claimId: string, decision: "approve" | "reject", note?: string): Promise<void> {
+  const { error } = await supabase.rpc(
+    "admin_review_group_claim" as never,
+    {
+      p_claim_id: claimId,
+      p_decision: decision,
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
   if (error) throw mapModerationError(error, "Sahiplik kararı kaydedilemedi.");
 }
 
 /** Karar 3 — gönderi (G16). */
-export async function decidePost(
-  postId: string,
-  decision: "approve" | "reject",
-  note?: string,
-): Promise<void> {
-  const { error } = await supabase.rpc("group_post_review" as never, {
-    p_post_id: postId,
-    p_decision: decision,
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+export async function decidePost(postId: string, decision: "approve" | "reject", note?: string): Promise<void> {
+  const { error } = await supabase.rpc(
+    "group_post_review" as never,
+    {
+      p_post_id: postId,
+      p_decision: decision,
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
   if (error) throw mapModerationError(error, "Gönderi kararı kaydedilemedi.");
 }
 
@@ -231,22 +226,28 @@ export async function recordStrike(
   redlineNumber?: number | null,
   note?: string,
 ): Promise<string> {
-  const { data, error } = await supabase.rpc("admin_record_group_strike" as never, {
-    p_landing_id: landingDbId,
-    p_reason: reason,
-    p_redline_number: redlineNumber ?? null,
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "admin_record_group_strike" as never,
+    {
+      p_landing_id: landingDbId,
+      p_reason: reason,
+      p_redline_number: redlineNumber ?? null,
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
   if (error) throw mapModerationError(error, "Uyarı kaydedilemedi.");
   return String((data as { outcome?: string } | null)?.outcome ?? "");
 }
 
 /** Üst şerit — hızlı şerit anahtarı (beyaz liste tek anahtar; karar insanın). */
 export async function setFastLaneEnabled(enabled: boolean): Promise<void> {
-  const { error } = await supabase.rpc("admin_set_group_setting" as never, {
-    p_key: "groups.fast_lane_enabled",
-    p_value: enabled,
-  } as never);
+  const { error } = await supabase.rpc(
+    "admin_set_group_setting" as never,
+    {
+      p_key: "groups.fast_lane_enabled",
+      p_value: enabled,
+    } as never,
+  );
   if (error) throw mapModerationError(error, "Hızlı şerit anahtarı yazılamadı.");
 }
 

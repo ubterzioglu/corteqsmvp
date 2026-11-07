@@ -58,7 +58,8 @@ const ProfileDetailSheet = ({
       <CardContent className="text-sm text-muted-foreground">
         <div className="flex items-center gap-2">
           <UserRound className="h-4 w-4" />
-          Bu görünüm profile-uygun özet sunar. Kataloga özel rol, claim ve editor panelleri yalnız katalog item kayıtlarında açılır.
+          Bu görünüm profile-uygun özet sunar. Kataloga özel rol, claim ve editor panelleri yalnız katalog item
+          kayıtlarında açılır.
         </div>
       </CardContent>
     </Card>

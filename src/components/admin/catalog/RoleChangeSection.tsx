@@ -61,11 +61,7 @@ const RoleChangeSection = ({
             placeholder="Rol seçin..."
             className="flex-1"
           />
-          <Button
-            size="sm"
-            disabled={!isDirty || saving}
-            onClick={handleSave}
-          >
+          <Button size="sm" disabled={!isDirty || saving} onClick={handleSave}>
             {saving ? "Kaydediliyor..." : "Kaydet"}
           </Button>
         </div>

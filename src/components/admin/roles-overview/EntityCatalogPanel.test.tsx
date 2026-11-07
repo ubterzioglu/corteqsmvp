@@ -4,8 +4,22 @@ import type { EntityCatalogItem } from "./types";
 
 const items: EntityCatalogItem[] = [
   { kind: "attribute", key: "full_name", label: "Görünen İsim", description: null, data_type: "text", sort_order: 10 },
-  { kind: "feature", key: "profile.view_own", label: "Profilimi Görüntüle", description: null, scope_role: "*", sort_order: 20 },
-  { kind: "section", key: "contact_card", label: "İletişim Kartı", description: null, section_area: "profile", sort_order: 30 },
+  {
+    kind: "feature",
+    key: "profile.view_own",
+    label: "Profilimi Görüntüle",
+    description: null,
+    scope_role: "*",
+    sort_order: 20,
+  },
+  {
+    kind: "section",
+    key: "contact_card",
+    label: "İletişim Kartı",
+    description: null,
+    section_area: "profile",
+    sort_order: 30,
+  },
 ];
 
 test("renders all entity kinds with badges", () => {

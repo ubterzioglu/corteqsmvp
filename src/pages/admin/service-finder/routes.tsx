@@ -25,11 +25,7 @@ const ServiceFinderCostsPage = lazyWithReload(() => import("./ServiceFinderCosts
 const ServiceFinderGuidePage = lazyWithReload(() => import("./ServiceFinderGuidePage"));
 
 function PageFallback() {
-  return (
-    <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
-      Yükleniyor...
-    </div>
-  );
+  return <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">Yükleniyor...</div>;
 }
 
 export const serviceFinderRoutes = (

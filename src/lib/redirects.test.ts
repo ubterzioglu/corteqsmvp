@@ -65,8 +65,7 @@ describe("nginx.conf.template ile senkron", () => {
 
   it("her madde doğru hedefe 301 döner ve query string'i korur", () => {
     const hatali = LEGACY_REDIRECTS.filter(
-      ({ to }) =>
-        !new RegExp(`return\\s+301\\s+${escapeRegex(to)}\\$is_args\\$args\\s*;`).test(nginxConf),
+      ({ to }) => !new RegExp(`return\\s+301\\s+${escapeRegex(to)}\\$is_args\\$args\\s*;`).test(nginxConf),
     ).map((entry) => `${entry.from} → ${entry.to}`);
 
     expect(hatali, `301/query hedefi eksik: ${hatali.join(", ")}`).toEqual([]);
@@ -80,9 +79,7 @@ describe("nginx.conf.template ile senkron", () => {
     expect(DYNAMIC_LEGACY_REDIRECTS).toContain("/whatsapp-groups/:id");
     // SG8: yakalama grubu `(.+)` DEĞİL, dar karakter sınıfıdır — `$1` redirect hedefine
     // girdiği için serbest metin (satır sonu, `/`, `?`) yönlendirme enjeksiyonu açar.
-    expect(
-      /location\s+~\s+\^\/whatsapp-groups\/\(\[A-Za-z0-9_-\]\+\)\$\s*\{/.test(nginxConf),
-    ).toBe(true);
+    expect(/location\s+~\s+\^\/whatsapp-groups\/\(\[A-Za-z0-9_-\]\+\)\$\s*\{/.test(nginxConf)).toBe(true);
     expect(/location\s+~\s+\^\/whatsapp-groups\/\(\.\+\)\$/.test(nginxConf)).toBe(false);
     expect(/return\s+301\s+\/addcom\?group=\$1\s*;/.test(nginxConf)).toBe(true);
   });
@@ -284,9 +281,7 @@ describe("nginx yapısal bütünlük", () => {
   });
 
   it("blok açmayan her direktif ';' ile biter", () => {
-    const eksik = kodSatirlari.filter(
-      (satir) => !/[{}]/.test(satir) && !satir.endsWith(";"),
-    );
+    const eksik = kodSatirlari.filter((satir) => !/[{}]/.test(satir) && !satir.endsWith(";"));
 
     expect(eksik, `';' eksik satırlar: ${eksik.join(" | ")}`).toEqual([]);
   });

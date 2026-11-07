@@ -33,18 +33,20 @@ function typeBadgeVariant(type: string): "default" | "secondary" | "outline" {
   return "default";
 }
 
-
 export default function EventsPage() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [eventFormOpen, setEventFormOpen] = useState(false);
 
-  const filters = useMemo(() => ({
-    type: typeFilter !== "all" ? typeFilter : undefined,
-    category: categoryFilter !== "all" ? categoryFilter : undefined,
-    search: search || undefined,
-  }), [typeFilter, categoryFilter, search]);
+  const filters = useMemo(
+    () => ({
+      type: typeFilter !== "all" ? typeFilter : undefined,
+      category: categoryFilter !== "all" ? categoryFilter : undefined,
+      search: search || undefined,
+    }),
+    [typeFilter, categoryFilter, search],
+  );
 
   const { data: events, isLoading, error } = usePublishedEvents(filters);
 
@@ -59,10 +61,7 @@ export default function EventsPage() {
       <main className="container mx-auto px-4 pb-16 pt-6">
         <EventsHero />
 
-        <CreateEventFormSection
-          open={eventFormOpen}
-          onOpenChange={setEventFormOpen}
-        />
+        <CreateEventFormSection open={eventFormOpen} onOpenChange={setEventFormOpen} />
 
         <section className="mt-8">
           <div className="mt-5">
@@ -71,147 +70,152 @@ export default function EventsPage() {
             </div>
           </div>
 
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Etkinlik ara..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
+          <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Etkinlik ara..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Select value={typeFilter} onValueChange={setTypeFilter}>
+              <SelectTrigger className="w-full md:w-[180px]">
+                <SelectValue placeholder="Tür" />
+              </SelectTrigger>
+              <SelectContent>
+                {EVENT_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    {t.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+              <SelectTrigger className="w-full md:w-[200px]">
+                <SelectValue placeholder="Kategori" />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORIES.map((c) => (
+                  <SelectItem key={c.value} value={c.value}>
+                    {c.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="Tür" />
-            </SelectTrigger>
-            <SelectContent>
-              {EVENT_TYPES.map((t) => (
-                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-full md:w-[200px]">
-              <SelectValue placeholder="Kategori" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORIES.map((c) => (
-                <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-        {isLoading && <p className="text-sm text-slate-600">Yükleniyor...</p>}
-        {error && <p className="text-sm text-red-600">Etkinlikler yüklenemedi.</p>}
+          {isLoading && <p className="text-sm text-slate-600">Yükleniyor...</p>}
+          {error && <p className="text-sm text-red-600">Etkinlikler yüklenemedi.</p>}
 
-        {!isLoading && !error && events && events.length === 0 && (
-          <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
-            <Calendar className="mx-auto mb-4 h-12 w-12 text-slate-400" />
-            <h3 className="text-lg font-semibold text-slate-700">Henüz etkinlik yok</h3>
-            <p className="mt-1 text-sm text-slate-500">
-              Filtreleri değiştirmeyi deneyin veya ilk etkinliği oluşturun.
-            </p>
-          </div>
-        )}
+          {!isLoading && !error && events && events.length === 0 && (
+            <div className="rounded-lg border border-dashed border-slate-300 bg-white p-12 text-center">
+              <Calendar className="mx-auto mb-4 h-12 w-12 text-slate-400" />
+              <h3 className="text-lg font-semibold text-slate-700">Henüz etkinlik yok</h3>
+              <p className="mt-1 text-sm text-slate-500">
+                Filtreleri değiştirmeyi deneyin veya ilk etkinliği oluşturun.
+              </p>
+            </div>
+          )}
 
-        {events && events.length > 0 && (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {events.map((event) => (
-              // ⚠️ Paylaş düğmesi `<Link>`in İÇİNDE DEĞİL, KARDEŞİDİR. `<button>`ı
-              // `<a>` içine koymak geçersiz HTML'dir: ekran okuyucular iki
-              // etkileşimli öğeyi iç içe okur ve klavyeyle gezen kullanıcı
-              // düğmeye basınca sayfa da değişir. Bağlantı akış içinde (`block`),
-              // düğme ise `absolute` — konumlandırılmış öğeler akış içi blokların
-              // üstünde boyandığı için tıklama düğmeye gider, Link'e değil.
-              <div key={event.id} className="relative">
-                <Link to={`/events/${event.id}`} className="block">
-                <Card className="h-full transition-shadow hover:shadow-md">
-                  {event.cover_image && (
-                    <div className="h-40 w-full overflow-hidden rounded-t-lg">
-                      <img
-                        src={event.cover_image}
-                        alt={event.title}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <CardContent className={event.cover_image ? "p-4" : "p-4 pt-4"}>
-                    <div className="mb-2 flex items-center gap-2">
-                      <Badge variant={typeBadgeVariant(event.type)}>{eventTypeLabel(event.type)}</Badge>
-                      {event.featured && (
-                        <Badge variant="outline" className="border-amber-400 text-amber-600">
-                          Öne Çıkan
-                        </Badge>
-                      )}
-                    </div>
-                    <h3 className="mb-1 text-lg font-semibold leading-tight text-slate-900 line-clamp-2">
-                      {event.title}
-                    </h3>
-                    <p className="mb-3 text-sm text-slate-600 line-clamp-2">{event.description}</p>
-                    <div className="flex flex-col gap-1.5 text-xs text-slate-500">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="h-3.5 w-3.5" />
-                        <span>{formatEventDate(event.event_date, { day: "numeric", month: "long", year: "numeric" })}</span>
-                        {event.start_time && (
-                          <span className="text-slate-400">
-                            • {event.start_time.slice(0, 5)}
-                            {event.timezone ? ` (${eventTimezoneShortLabel(event.timezone)})` : ""}
-                          </span>
-                        )}
-                      </div>
-                      {isPhysicalEventType(event.type) && event.city && (
-                        <div className="flex items-center gap-1.5">
-                          <MapPin className="h-3.5 w-3.5" />
-                          <span>{event.city}{event.country ? `, ${event.country}` : ""}</span>
+          {events && events.length > 0 && (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {events.map((event) => (
+                // ⚠️ Paylaş düğmesi `<Link>`in İÇİNDE DEĞİL, KARDEŞİDİR. `<button>`ı
+                // `<a>` içine koymak geçersiz HTML'dir: ekran okuyucular iki
+                // etkileşimli öğeyi iç içe okur ve klavyeyle gezen kullanıcı
+                // düğmeye basınca sayfa da değişir. Bağlantı akış içinde (`block`),
+                // düğme ise `absolute` — konumlandırılmış öğeler akış içi blokların
+                // üstünde boyandığı için tıklama düğmeye gider, Link'e değil.
+                <div key={event.id} className="relative">
+                  <Link to={`/events/${event.id}`} className="block">
+                    <Card className="h-full transition-shadow hover:shadow-md">
+                      {event.cover_image && (
+                        <div className="h-40 w-full overflow-hidden rounded-t-lg">
+                          <img src={event.cover_image} alt={event.title} className="h-full w-full object-cover" />
                         </div>
                       )}
-                      {isOnlineEventType(event.type) && (
-                        <div className="flex items-center gap-1.5">
-                          <Monitor className="h-3.5 w-3.5" />
-                          <span>Online katılım mevcut</span>
+                      <CardContent className={event.cover_image ? "p-4" : "p-4 pt-4"}>
+                        <div className="mb-2 flex items-center gap-2">
+                          <Badge variant={typeBadgeVariant(event.type)}>{eventTypeLabel(event.type)}</Badge>
+                          {event.featured && (
+                            <Badge variant="outline" className="border-amber-400 text-amber-600">
+                              Öne Çıkan
+                            </Badge>
+                          )}
                         </div>
-                      )}
-                      {event.max_attendees && (
-                        <div className="flex items-center gap-1.5">
-                          <Users className="h-3.5 w-3.5" />
-                          <span>Maks. {event.max_attendees} katılımcı</span>
-                        </div>
-                      )}
-                      {event.tags && event.tags.length > 0 && (
-                        <div className="mt-1 flex items-center gap-1 flex-wrap">
-                          <Tag className="h-3 w-3" />
-                          {event.tags.slice(0, 3).map((tag) => (
-                            <span key={tag} className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600">
-                              {tag}
+                        <h3 className="mb-1 text-lg font-semibold leading-tight text-slate-900 line-clamp-2">
+                          {event.title}
+                        </h3>
+                        <p className="mb-3 text-sm text-slate-600 line-clamp-2">{event.description}</p>
+                        <div className="flex flex-col gap-1.5 text-xs text-slate-500">
+                          <div className="flex items-center gap-1.5">
+                            <Calendar className="h-3.5 w-3.5" />
+                            <span>
+                              {formatEventDate(event.event_date, { day: "numeric", month: "long", year: "numeric" })}
                             </span>
-                          ))}
+                            {event.start_time && (
+                              <span className="text-slate-400">
+                                • {event.start_time.slice(0, 5)}
+                                {event.timezone ? ` (${eventTimezoneShortLabel(event.timezone)})` : ""}
+                              </span>
+                            )}
+                          </div>
+                          {isPhysicalEventType(event.type) && event.city && (
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="h-3.5 w-3.5" />
+                              <span>
+                                {event.city}
+                                {event.country ? `, ${event.country}` : ""}
+                              </span>
+                            </div>
+                          )}
+                          {isOnlineEventType(event.type) && (
+                            <div className="flex items-center gap-1.5">
+                              <Monitor className="h-3.5 w-3.5" />
+                              <span>Online katılım mevcut</span>
+                            </div>
+                          )}
+                          {event.max_attendees && (
+                            <div className="flex items-center gap-1.5">
+                              <Users className="h-3.5 w-3.5" />
+                              <span>Maks. {event.max_attendees} katılımcı</span>
+                            </div>
+                          )}
+                          {event.tags && event.tags.length > 0 && (
+                            <div className="mt-1 flex items-center gap-1 flex-wrap">
+                              <Tag className="h-3 w-3" />
+                              {event.tags.slice(0, 3).map((tag) => (
+                                <span
+                                  key={tag}
+                                  className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-slate-600"
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-                </Link>
-                <div className="absolute right-2 top-2">
-                  <EventShareButtons
-                    variant="compact"
-                    share={{
-                      title: event.title,
-                      description: event.description,
-                      url:
-                        typeof window !== "undefined"
-                          ? buildEventShareUrl(event.id, window.location.origin)
-                          : "",
-                    }}
-                  />
+                      </CardContent>
+                    </Card>
+                  </Link>
+                  <div className="absolute right-2 top-2">
+                    <EventShareButtons
+                      variant="compact"
+                      share={{
+                        title: event.title,
+                        description: event.description,
+                        url: typeof window !== "undefined" ? buildEventShareUrl(event.id, window.location.origin) : "",
+                      }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-    </main>
-  </div>
-);
+              ))}
+            </div>
+          )}
+        </section>
+      </main>
+    </div>
+  );
 }

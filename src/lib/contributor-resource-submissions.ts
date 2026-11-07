@@ -64,18 +64,18 @@ const STATUSES: ContributorResourceStatus[] = ["draft", "submitted", "accepted",
 const PERMISSION_STATUSES: ContributorPermissionStatus[] = ["unknown", "confirmed", "not_required"];
 
 export function contributorResourceStatus(value: string): ContributorResourceStatus {
-  return STATUSES.includes(value as ContributorResourceStatus) ? value as ContributorResourceStatus : "submitted";
+  return STATUSES.includes(value as ContributorResourceStatus) ? (value as ContributorResourceStatus) : "submitted";
 }
 
 function contributorResourceType(value: string): ContributorResourceType {
   return CONTRIBUTOR_RESOURCE_TYPES.includes(value as ContributorResourceType)
-    ? value as ContributorResourceType
+    ? (value as ContributorResourceType)
     : "local_service";
 }
 
 function contributorPermissionStatus(value: string): ContributorPermissionStatus {
   return PERMISSION_STATUSES.includes(value as ContributorPermissionStatus)
-    ? value as ContributorPermissionStatus
+    ? (value as ContributorPermissionStatus)
     : "unknown";
 }
 
@@ -124,7 +124,9 @@ function mapRow(row: ContributorResourceRow): ContributorResourceSubmission {
 export async function listContributorResourceSubmissions(): Promise<ContributorResourceSubmission[]> {
   const { data, error } = await supabase
     .from("contributor_resource_submissions")
-    .select("id, resource_type, display_name, country, city, source_url, summary, verified_on, permission_status, conflict_disclosure, status, decision_note, canonical_submission_id, submitted_by, reviewed_by, reviewed_at, created_at")
+    .select(
+      "id, resource_type, display_name, country, city, source_url, summary, verified_on, permission_status, conflict_disclosure, status, decision_note, canonical_submission_id, submitted_by, reviewed_by, reviewed_at, created_at",
+    )
     .order("created_at", { ascending: false });
   if (error) throw error;
   return ((data ?? []) as unknown as ContributorResourceRow[]).map(mapRow);

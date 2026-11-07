@@ -28,9 +28,7 @@ function makeResult(overrides: Partial<CandidateResult> = {}): CandidateResult {
 
 describe("normalizeUrl", () => {
   it("utm parametrelerini ve fragment'ı atar", () => {
-    expect(normalizeUrl("https://example.com/page?utm_source=x&id=5#section")).toBe(
-      "https://example.com/page?id=5",
-    );
+    expect(normalizeUrl("https://example.com/page?utm_source=x&id=5#section")).toBe("https://example.com/page?id=5");
   });
 
   it("www önekini ve sondaki slash'ı temizler", () => {
@@ -58,9 +56,7 @@ describe("extractDomain", () => {
 
 describe("makeDuplicateKey", () => {
   it("telefon önceliklidir ve yalnız rakamlar kullanılır", () => {
-    const key = makeDuplicateKey(
-      makeResult({ contacts: [{ type: "phone", value: "+49 (231) 555-1234" }] }),
-    );
+    const key = makeDuplicateKey(makeResult({ contacts: [{ type: "phone", value: "+49 (231) 555-1234" }] }));
     expect(key).toBe("phone:492315551234");
   });
 
@@ -70,9 +66,7 @@ describe("makeDuplicateKey", () => {
   });
 
   it("telefon ve site yoksa isim+şehir kullanılır (Türkçe karakterler ASCII'leşir)", () => {
-    const key = makeDuplicateKey(
-      makeResult({ canonical_name: "Dr. Özgür Şahin", city: "Köln" }),
-    );
+    const key = makeDuplicateKey(makeResult({ canonical_name: "Dr. Özgür Şahin", city: "Köln" }));
     expect(key).toBe("name:dr-ozgur-sahin|city:koln");
   });
 

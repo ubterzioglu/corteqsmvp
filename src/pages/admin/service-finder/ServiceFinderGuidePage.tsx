@@ -99,19 +99,19 @@ const ServiceFinderGuidePage = () => {
       <Card>
         <CardHeader>
           <CardTitle>Hizmet Bulucu Kullanım Kılavuzu</CardTitle>
-          <CardDescription>
-            AI destekli web tarama modülünün günlük kullanım standardı.
-          </CardDescription>
+          <CardDescription>AI destekli web tarama modülünün günlük kullanım standardı.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            Hizmet Bulucu üç ekranlı bir iş akışına dayanır: önce <strong>Tarama İşleri</strong>'nde iş oluştur ve kuyruğa al,
-            arka plan işçisi taramayı tamamlayınca adayları gözden geçir, beğendiklerini <strong>Katalog</strong>'a yayınla.
-            Her şey kayıt altında — maliyetler, olaylar ve kaynaklar iş detayında görünür.
+            Hizmet Bulucu üç ekranlı bir iş akışına dayanır: önce <strong>Tarama İşleri</strong>'nde iş oluştur ve
+            kuyruğa al, arka plan işçisi taramayı tamamlayınca adayları gözden geçir, beğendiklerini{" "}
+            <strong>Katalog</strong>'a yayınla. Her şey kayıt altında — maliyetler, olaylar ve kaynaklar iş detayında
+            görünür.
           </p>
           <p>
             Sistem yeni ise önce düşük bütçeli bir canary işiyle ($0.10 / $0.20) başla, ardından şablonları ve bütçeleri
-            gerçek operasyona göre ayarla. Sağlayıcı sorunlarında kill-switch olarak <strong>Sağlayıcılar</strong> ekranını kullan.
+            gerçek operasyona göre ayarla. Sağlayıcı sorunlarında kill-switch olarak <strong>Sağlayıcılar</strong>{" "}
+            ekranını kullan.
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <Button asChild variant="outline">

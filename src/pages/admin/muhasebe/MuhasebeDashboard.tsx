@@ -1,53 +1,23 @@
 // src/pages/admin/muhasebe/MuhasebeDashboard.tsx
 // Ana muhasebe dashboard — çoklu para birimi destekli özet panel
 
-import { useMemo, useState } from 'react';
-import {
-  TrendingDown,
-  TrendingUp,
-  Wallet,
-  Clock,
-  CircleDollarSign,
-  Receipt,
-} from 'lucide-react';
-import {
-  Bar,
-  CartesianGrid,
-  Legend,
-  Line,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ComposedChart,
-} from 'recharts';
+import { useMemo, useState } from "react";
+import { TrendingDown, TrendingUp, Wallet, Clock, CircleDollarSign, Receipt } from "lucide-react";
+import { Bar, CartesianGrid, Legend, Line, ResponsiveContainer, Tooltip, XAxis, YAxis, ComposedChart } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
 import {
   aggregateCashflowMonthly,
   aggregateExpenseByCategory,
   aggregateExpenseByPerson,
   aggregateKpiSummary,
   getCurrencyTotal,
-} from '@/lib/muhasebe-aggregations';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { useExpenses, useIncomes } from '@/hooks/useMuhasebe';
+} from "@/lib/muhasebe-aggregations";
+import { formatCurrency } from "@/lib/muhasebe-format";
+import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
 import {
   CATEGORY_COLORS,
   CURRENCY_CODES,
@@ -56,28 +26,21 @@ import {
   PERSON_LABELS,
   type CurrencyCode,
   type ExpenseCategory,
-} from '@/types/muhasebe';
+} from "@/types/muhasebe";
 
 export default function MuhasebeDashboard() {
   const { data: expenses = [], isLoading: expensesLoading } = useExpenses();
   const { data: incomes = [], isLoading: incomesLoading } = useIncomes();
-  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>('TRY');
+  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>("TRY");
   const currentYear = new Date().getFullYear();
   const isLoading = expensesLoading || incomesLoading;
 
   const kpi = useMemo(() => aggregateKpiSummary(expenses, incomes), [expenses, incomes]);
 
-  const personRows = useMemo(
-    () => aggregateExpenseByPerson(expenses),
-    [expenses],
-  );
+  const personRows = useMemo(() => aggregateExpenseByPerson(expenses), [expenses]);
 
   const categoryRows = useMemo(
-    () =>
-      aggregateExpenseByCategory(
-        expenses,
-        Object.keys(EXPENSE_CATEGORY_LABELS) as ExpenseCategory[],
-      ),
+    () => aggregateExpenseByCategory(expenses, Object.keys(EXPENSE_CATEGORY_LABELS) as ExpenseCategory[]),
     [expenses],
   );
 
@@ -101,18 +64,13 @@ export default function MuhasebeDashboard() {
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            CorteQS — Finansal Takip Paneli
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">CorteQS — Finansal Takip Paneli</h1>
           <p className="text-sm text-muted-foreground mt-1">
             Şirket kurulana kadar geçici muhasebe · Burak &amp; Barış
           </p>
         </div>
 
-        <Tabs
-          value={selectedCurrency}
-          onValueChange={(value) => setSelectedCurrency(value as CurrencyCode)}
-        >
+        <Tabs value={selectedCurrency} onValueChange={(value) => setSelectedCurrency(value as CurrencyCode)}>
           <TabsList>
             {CURRENCY_CODES.map((currency) => (
               <TabsTrigger key={currency} value={currency}>
@@ -197,8 +155,8 @@ export default function MuhasebeDashboard() {
                   <YAxis
                     tick={{ fontSize: 12 }}
                     tickFormatter={(v) =>
-                      new Intl.NumberFormat('tr-TR', {
-                        notation: 'compact',
+                      new Intl.NumberFormat("tr-TR", {
+                        notation: "compact",
                         maximumFractionDigits: 1,
                       }).format(v as number)
                     }
@@ -210,13 +168,7 @@ export default function MuhasebeDashboard() {
                   <Legend wrapperStyle={{ fontSize: 12 }} />
                   <Bar dataKey="Gelir" fill="#22c55e" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="Gider" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                  <Line
-                    type="monotone"
-                    dataKey="Net"
-                    stroke="#6366f1"
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
-                  />
+                  <Line type="monotone" dataKey="Net" stroke="#6366f1" strokeWidth={2} dot={{ r: 3 }} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
@@ -249,20 +201,12 @@ export default function MuhasebeDashboard() {
                 <TableBody>
                   {personRows.map((row) => (
                     <TableRow key={row.person}>
-                      <TableCell className="font-medium">
-                        {PERSON_LABELS[row.person]}
-                      </TableCell>
+                      <TableCell className="font-medium">{PERSON_LABELS[row.person]}</TableCell>
                       <TableCell className="text-right tabular-nums">
-                        {formatCurrency(
-                          getCurrencyTotal(row.total_by_currency, selectedCurrency),
-                          selectedCurrency,
-                        )}
+                        {formatCurrency(getCurrencyTotal(row.total_by_currency, selectedCurrency), selectedCurrency)}
                       </TableCell>
                       <TableCell className="text-right tabular-nums text-emerald-600 dark:text-emerald-400">
-                        {formatCurrency(
-                          getCurrencyTotal(row.paid_by_currency, selectedCurrency),
-                          selectedCurrency,
-                        )}
+                        {formatCurrency(getCurrencyTotal(row.paid_by_currency, selectedCurrency), selectedCurrency)}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -302,18 +246,14 @@ export default function MuhasebeDashboard() {
                             <span
                               className="h-2 w-2 rounded-full"
                               style={{
-                                backgroundColor:
-                                  CATEGORY_COLORS[idx % CATEGORY_COLORS.length],
+                                backgroundColor: CATEGORY_COLORS[idx % CATEGORY_COLORS.length],
                               }}
                             />
                             {EXPENSE_CATEGORY_LABELS[row.category]}
                           </span>
                         </TableCell>
                         <TableCell className="text-right tabular-nums">
-                          {formatCurrency(
-                            getCurrencyTotal(row.total_by_currency, selectedCurrency),
-                            selectedCurrency,
-                          )}
+                          {formatCurrency(getCurrencyTotal(row.total_by_currency, selectedCurrency), selectedCurrency)}
                         </TableCell>
                         <TableCell className="text-right tabular-nums text-muted-foreground">
                           {row.record_count}

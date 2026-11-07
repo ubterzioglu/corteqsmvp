@@ -33,7 +33,11 @@ describe("App founders routing", () => {
 
   it("renders the founders page on /founders", async () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>);
+    render(
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>,
+    );
 
     // FoundersPage/AboutPage tembel yüklenir (Lighthouse 2026-10-13) — önce parçanın çözülmesini bekle.
     expect(await screen.findByRole("heading", { name: "Burak Akçakanat" })).toBeInTheDocument();

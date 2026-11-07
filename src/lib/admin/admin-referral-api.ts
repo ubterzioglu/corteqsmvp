@@ -71,7 +71,12 @@ export async function updateReferralSource(params: { id: string; name?: string; 
   const payload: { name?: string; is_active?: boolean } = {};
   if (typeof params.name === "string") payload.name = normalizeTurkishText(params.name);
   if (typeof params.is_active === "boolean") payload.is_active = params.is_active;
-  const { data, error } = await supabase.from("referral_sources").update(payload).eq("id", params.id).select("*").single();
+  const { data, error } = await supabase
+    .from("referral_sources")
+    .update(payload)
+    .eq("id", params.id)
+    .select("*")
+    .single();
   if (error) throw error;
   return data;
 }
@@ -80,7 +85,12 @@ export async function updateReferralGroup(params: { id: string; name?: string; i
   const payload: { name?: string; is_active?: boolean } = {};
   if (typeof params.name === "string") payload.name = normalizeTurkishText(params.name);
   if (typeof params.is_active === "boolean") payload.is_active = params.is_active;
-  const { data, error } = await supabase.from("referral_groups").update(payload).eq("id", params.id).select("*").single();
+  const { data, error } = await supabase
+    .from("referral_groups")
+    .update(payload)
+    .eq("id", params.id)
+    .select("*")
+    .single();
   if (error) throw error;
   return data;
 }
@@ -89,7 +99,12 @@ export async function updateReferralType(params: { id: string; name?: string; is
   const payload: { name?: string; is_active?: boolean } = {};
   if (typeof params.name === "string") payload.name = normalizeTurkishText(params.name);
   if (typeof params.is_active === "boolean") payload.is_active = params.is_active;
-  const { data, error } = await supabase.from("referral_types").update(payload).eq("id", params.id).select("*").single();
+  const { data, error } = await supabase
+    .from("referral_types")
+    .update(payload)
+    .eq("id", params.id)
+    .select("*")
+    .single();
   if (error) throw error;
   return data;
 }
@@ -219,14 +234,8 @@ export async function listReferralCodeUsages(referralCodeIds: string[]): Promise
 
 export async function deleteReferralCodeHard(id: string): Promise<void> {
   const [submissionCountResult, usageCountResult] = await Promise.all([
-    supabase
-      .from("submissions")
-      .select("id", { count: "exact", head: true })
-      .eq("referral_code_id", id),
-    supabase
-      .from("referral_code_usages")
-      .select("id", { count: "exact", head: true })
-      .eq("referral_code_id", id),
+    supabase.from("submissions").select("id", { count: "exact", head: true }).eq("referral_code_id", id),
+    supabase.from("referral_code_usages").select("id", { count: "exact", head: true }).eq("referral_code_id", id),
   ]);
 
   if (submissionCountResult.error) throw submissionCountResult.error;

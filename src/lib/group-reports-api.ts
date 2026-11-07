@@ -24,7 +24,7 @@ export const GROUP_REPORT_REASONS = [
   {
     key: "visa_slot_sale",
     redline: 2,
-    label: "Vize, oturum, çalışma izni, denklik veya randevu slotu satışı ya da \"garantili\" aracılık",
+    label: 'Vize, oturum, çalışma izni, denklik veya randevu slotu satışı ya da "garantili" aracılık',
   },
   {
     key: "crypto_mlm_finance",
@@ -147,11 +147,14 @@ export async function submitGroupReport(input: GroupReportInput): Promise<Submit
   if (!parsed.success) {
     throw new GroupReportError("client_validation", parsed.error.issues[0]?.message ?? "Şikayet bilgileri eksik.");
   }
-  const { data, error } = await supabase.rpc("submit_group_report_v1" as never, {
-    p_landing_id: parsed.data.landingId,
-    p_reason: parsed.data.reason,
-    p_note: parsed.data.note ? parsed.data.note : null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "submit_group_report_v1" as never,
+    {
+      p_landing_id: parsed.data.landingId,
+      p_reason: parsed.data.reason,
+      p_note: parsed.data.note ? parsed.data.note : null,
+    } as never,
+  );
   if (error) throw toGroupReportError(error, "Şikayet gönderilemedi.");
   return data as SubmitGroupReportResult;
 }
@@ -200,11 +203,14 @@ export async function reviewGroupReport(
   decision: GroupReportDecision,
   note?: string,
 ): Promise<ReviewGroupReportResult> {
-  const { data, error } = await supabase.rpc("review_group_report_v1" as never, {
-    p_report_id: reportId,
-    p_decision: decision,
-    p_note: note?.trim() ? note.trim() : null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "review_group_report_v1" as never,
+    {
+      p_report_id: reportId,
+      p_decision: decision,
+      p_note: note?.trim() ? note.trim() : null,
+    } as never,
+  );
   if (error) throw toGroupReportError(error, "Şikayet kararı kaydedilemedi.");
   return data as ReviewGroupReportResult;
 }

@@ -2,8 +2,7 @@
 // tool metadata türetir. Hafif regex/satır tarama; ağır TS AST kurulmaz.
 // Her çıkarıcı, tek bir "tool" nesnesi (veya nesne dizisi) döndürür.
 
-const SUPABASE_IMPORT_RE =
-  /@supabase\/supabase-js@([0-9]+\.[0-9]+\.[0-9]+)/;
+const SUPABASE_IMPORT_RE = /@supabase\/supabase-js@([0-9]+\.[0-9]+\.[0-9]+)/;
 const ZOD_PIN_RE = /zod@([0-9]+\.[0-9]+\.[0-9]+)/;
 
 /**
@@ -30,8 +29,7 @@ export function extractDataAccess(source) {
  */
 export function extractLimits(source) {
   const out = {};
-  const re =
-    /(?:const\s+)?(RATE_LIMIT_[A-Z_]+|MAX_BODY_BYTES|MIN_SUBMIT_SECONDS)\s*=\s*([0-9_]+)/g;
+  const re = /(?:const\s+)?(RATE_LIMIT_[A-Z_]+|MAX_BODY_BYTES|MIN_SUBMIT_SECONDS)\s*=\s*([0-9_]+)/g;
   for (const m of source.matchAll(re)) {
     out[m[1]] = Number(m[2].replace(/_/g, ""));
   }
@@ -96,8 +94,7 @@ export function extractEdgeTool(relPath, source) {
   const name = relPath.split("/")[2]; // supabase/functions/<name>/index.ts
   const supaPin = source.match(SUPABASE_IMPORT_RE)?.[1] ?? null;
   const zodPin = source.match(ZOD_PIN_RE)?.[1] ?? null;
-  const deprecated =
-    /\b410\b/.test(source) && /Deprecated/i.test(source);
+  const deprecated = /\b410\b/.test(source) && /Deprecated/i.test(source);
   const usesZod = /from\s+["']https:\/\/esm\.sh\/zod/.test(source) || /z\.object\(/.test(source);
   const { tables, rpcs } = extractDataAccess(source);
   const request = extractZodRequest(source);
@@ -156,9 +153,7 @@ export function extractWorkerTool(relPath, pkgJsonText, entrySource) {
     node_engine: pkg.engines?.node ?? null,
     tables_read_write: tables,
     rpcs,
-    dependencies: Object.entries(pkg.dependencies ?? {}).map(
-      ([k, v]) => `${k}@${v}`,
-    ),
+    dependencies: Object.entries(pkg.dependencies ?? {}).map(([k, v]) => `${k}@${v}`),
     version_pins: {
       "@supabase/supabase-js": pkg.dependencies?.["@supabase/supabase-js"] ?? null,
       zod: pkg.dependencies?.zod ?? null,
@@ -175,12 +170,8 @@ export function extractWorkerTool(relPath, pkgJsonText, entrySource) {
  */
 export function extractLibTool(relPath, source) {
   const base = relPath.split("/").pop().replace(/\.ts$/, "");
-  const exports = [
-    ...source.matchAll(/export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)/g),
-  ].map((m) => m[1]);
-  const constExports = [
-    ...source.matchAll(/export\s+const\s+([a-zA-Z0-9_]+)\s*=/g),
-  ].map((m) => m[1]);
+  const exports = [...source.matchAll(/export\s+(?:async\s+)?function\s+([a-zA-Z0-9_]+)/g)].map((m) => m[1]);
+  const constExports = [...source.matchAll(/export\s+const\s+([a-zA-Z0-9_]+)\s*=/g)].map((m) => m[1]);
   const { tables, rpcs } = extractDataAccess(source);
   return {
     tool_key: `module.${base.replace(/-/g, "_")}`,

@@ -10,10 +10,7 @@ import {
   buildRelocationChatContext,
   type RelocationChatProfile,
 } from "@/lib/relocation-chat-context";
-import type {
-  RelocationLivingCostRow,
-  RelocationRequiredDocumentRow,
-} from "@/lib/relocation-content-types";
+import type { RelocationLivingCostRow, RelocationRequiredDocumentRow } from "@/lib/relocation-content-types";
 
 const profile = (patch: Partial<RelocationChatProfile> = {}): RelocationChatProfile => ({
   targetCountryCodes: ["DE"],
@@ -43,9 +40,7 @@ const costRow = (patch: Partial<RelocationLivingCostRow> = {}): RelocationLiving
   ...patch,
 });
 
-const docRow = (
-  patch: Partial<RelocationRequiredDocumentRow> = {},
-): RelocationRequiredDocumentRow => ({
+const docRow = (patch: Partial<RelocationRequiredDocumentRow> = {}): RelocationRequiredDocumentRow => ({
   id: "d1",
   country_code: "DE",
   doc_name: "Diploma & Transkript",

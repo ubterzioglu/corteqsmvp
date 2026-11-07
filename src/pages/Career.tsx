@@ -29,8 +29,7 @@ const jobs: Job[] = [
     id: "global-local-contributor",
     title: "Global Contributor / Local Contributor",
     icon: Globe2,
-    tagline:
-      "Yaşadığın şehirde Türk diasporasını harekete geçirecek yerel/global temsilciler.",
+    tagline: "Yaşadığın şehirde Türk diasporasını harekete geçirecek yerel/global temsilciler.",
     description:
       "Bulunduğu şehirde veya ülkede Türk diasporasıyla bağlantısı güçlü olan; yerel işletmelere, profesyonellere, topluluklara ve son kullanıcılara ulaşabilecek kişiler arıyoruz. Yüksek takipçi sayısı zorunlu değil — önemli olan doğru insanlara ulaşabilmen, CorteQS'i anlatabilmen ve yerel ağı harekete geçirebilmen.",
     expectations: [
@@ -52,8 +51,7 @@ const jobs: Job[] = [
     id: "content-creator",
     title: "Content Creator / Blogger / Vlogger",
     icon: PenTool,
-    tagline:
-      "CorteQS'in global içerik ekosisteminde yer alacak içerik üreticileri.",
+    tagline: "CorteQS'in global içerik ekosisteminde yer alacak içerik üreticileri.",
     description:
       "Kendi hikayeni, yaşadığın ülkedeki diaspora deneyimlerini, şehir rehberlerini, işletme tanıtımlarını, profesyonel başarı hikayelerini veya global Türk diasporasına dair ilham verici içerikleri üretebilirsin.",
     topics: [
@@ -77,8 +75,7 @@ const jobs: Job[] = [
     id: "global-content-lead",
     title: "Global Content Lead — Core Team",
     icon: Megaphone,
-    tagline:
-      "CorteQS'in global sesini kuracak, içerik motorunu tasarlayacak içerik lideri.",
+    tagline: "CorteQS'in global sesini kuracak, içerik motorunu tasarlayacak içerik lideri.",
     description:
       "İçerik, sosyal medya, kampanya, storytelling ve global görünürlük stratejisini yönetecek; hızlı düşünen, çok zeki, deneyimli, son teknoloji araçlara hakim ve fırtına gibi çalışan bir içerik lideri arıyoruz. Yalnızca sosyal medya postu hazırlayan biri değil; creator ağını yönetecek, kampanyaları ölçekleyecek, markanın her dijital temas noktasında tutarlı ve büyüme odaklı bir yapı kuracak kişi.",
     expectations: [
@@ -104,8 +101,7 @@ const jobs: Job[] = [
     id: "technical-core-team",
     title: "Technical Core Team — CTO Altı Teknik Ekip",
     icon: Code2,
-    tagline:
-      "CTO ile birlikte CorteQS'in teknik çekirdeğini kuracak ekip üyeleri.",
+    tagline: "CTO ile birlikte CorteQS'in teknik çekirdeğini kuracak ekip üyeleri.",
     description:
       "Platformun mimarisi, ölçeklenebilirliği, AI entegrasyonları, dashboard yapıları, kullanıcı deneyimi, veri altyapısı ve global büyümeye hazır teknik sistemleri için güçlü bir çekirdek ekip oluşturuyoruz.",
     topics: [
@@ -170,34 +166,29 @@ const Career = () => {
         <section className="container mx-auto px-4 mb-14">
           <div className="max-w-4xl mx-auto rounded-2xl border border-border bg-card p-8 md:p-10">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">
-              CorteQS, Global Ölçekte Kurulacak Bir Start-up'ın Erken Dönem
-              Liderlerini Arıyor
+              CorteQS, Global Ölçekte Kurulacak Bir Start-up'ın Erken Dönem Liderlerini Arıyor
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Kendi işini yapan, bir kurumda çalışan ya da kariyerinde güçlü bir
-              noktaya gelmiş deneyimli profesyonellerle tanışmak istiyoruz.
+              Kendi işini yapan, bir kurumda çalışan ya da kariyerinde güçlü bir noktaya gelmiş deneyimli
+              profesyonellerle tanışmak istiyoruz.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Aradığımız kişiler; yalnızca operasyonel katkı verecek ekip
-              üyeleri değil, gerektiğinde <strong>ekip kurabilecek</strong>,
-              ekip yönetebilecek, strateji geliştirebilecek, hızlı uygulamaya
-              geçebilecek ve CorteQS'in global büyüme sürecinde sorumluluk
-              alabilecek <strong>erken dönem liderlerdir</strong>.
+              Aradığımız kişiler; yalnızca operasyonel katkı verecek ekip üyeleri değil, gerektiğinde{" "}
+              <strong>ekip kurabilecek</strong>, ekip yönetebilecek, strateji geliştirebilecek, hızlı uygulamaya
+              geçebilecek ve CorteQS'in global büyüme sürecinde sorumluluk alabilecek{" "}
+              <strong>erken dönem liderlerdir</strong>.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Bu profilin; son teknolojiye, AI araçlarına, dijital sistemlere ve
-              start-up çalışma kültürüne hakim olması; belirsizlik, hız, risk ve
-              değişkenlik içinde değer üretebilmesi beklenir.
+              Bu profilin; son teknolojiye, AI araçlarına, dijital sistemlere ve start-up çalışma kültürüne hakim
+              olması; belirsizlik, hız, risk ve değişkenlik içinde değer üretebilmesi beklenir.
             </p>
             <p className="text-foreground font-semibold uppercase tracking-wide text-sm mb-4">
               Yurt dışında yaşamış veya yaşıyor olmanız avantajdır.
             </p>
             <p className="text-muted-foreground leading-relaxed">
-              CorteQS şu anda <strong>erken aşama / pre-launch</strong>{" "}
-              dönemindedir. Bu nedenle bu fırsat, klasik güvenli maaşlı iş
-              modeli arayanlardan çok; risk ve kazanç dengesini anlayan, erken
-              dönem girişimlerde büyük sorumluluk ve uzun vadeli upside
-              potansiyelini görebilen kişiler için uygundur.
+              CorteQS şu anda <strong>erken aşama / pre-launch</strong> dönemindedir. Bu nedenle bu fırsat, klasik
+              güvenli maaşlı iş modeli arayanlardan çok; risk ve kazanç dengesini anlayan, erken dönem girişimlerde
+              büyük sorumluluk ve uzun vadeli upside potansiyelini görebilen kişiler için uygundur.
             </p>
           </div>
         </section>
@@ -206,12 +197,9 @@ const Career = () => {
             ayrı bölümde duruyor. Kaldırma koşulu KALANLAR'da yazılı. */}
         <section className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-center">
-              Önceki dönem ilanları
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-center">Önceki dönem ilanları</h2>
             <p className="text-center text-muted-foreground mb-10">
-              Bu ilanlar önceki dönemde yayınlandı ve hâlâ geçerli. Başvuruların
-              yukarıdaki formla aynı yere düşer.
+              Bu ilanlar önceki dönemde yayınlandı ve hâlâ geçerli. Başvuruların yukarıdaki formla aynı yere düşer.
             </p>
 
             <div className="grid gap-6">
@@ -230,26 +218,18 @@ const Career = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="mb-2 flex flex-wrap items-center gap-2">
-                          <span className="text-xs font-semibold text-turquoise">
-                            {idx + 1}. Pozisyon
-                          </span>
+                          <span className="text-xs font-semibold text-turquoise">{idx + 1}. Pozisyon</span>
                           <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground">
                             {LEGACY_POSITION_NOTE}
                           </span>
                         </div>
                         <h3 className="text-2xl font-bold mb-2">{job.title}</h3>
-                        <p className="text-sm text-muted-foreground italic mb-4">
-                          {job.tagline}
-                        </p>
-                        <p className="text-sm text-foreground/90 leading-relaxed mb-5">
-                          {job.description}
-                        </p>
+                        <p className="text-sm text-muted-foreground italic mb-4">{job.tagline}</p>
+                        <p className="text-sm text-foreground/90 leading-relaxed mb-5">{job.description}</p>
 
                         {job.expectations && (
                           <div className="mb-4">
-                            <h4 className="font-semibold text-sm mb-2">
-                              Senden beklediklerimiz
-                            </h4>
+                            <h4 className="font-semibold text-sm mb-2">Senden beklediklerimiz</h4>
                             <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
                               {job.expectations.map((e) => (
                                 <li key={e}>{e}</li>
@@ -261,9 +241,7 @@ const Career = () => {
                         {job.topics && (
                           <div className="mb-4">
                             <h4 className="font-semibold text-sm mb-2">
-                              {job.id === "technical-core-team"
-                                ? "İlgilendiğimiz alanlar"
-                                : "İçerik konuları"}
+                              {job.id === "technical-core-team" ? "İlgilendiğimiz alanlar" : "İçerik konuları"}
                             </h4>
                             <ul className="list-disc pl-5 space-y-1 text-sm text-muted-foreground">
                               {job.topics.map((e) => (
@@ -276,8 +254,7 @@ const Career = () => {
                         {job.fitFor && (
                           <div className="mb-5">
                             <h4 className="font-semibold text-sm mb-2">
-                              {job.id === "global-content-lead" ||
-                              job.id === "technical-core-team"
+                              {job.id === "global-content-lead" || job.id === "technical-core-team"
                                 ? "Aradığımız profil"
                                 : "Kimler için uygun?"}
                             </h4>
@@ -309,21 +286,17 @@ const Career = () => {
               <h3 className="text-xl font-bold">Önemli Not</h3>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-              CorteQS şu anda <strong>erken aşama / pre-launch</strong>{" "}
-              dönemindedir. Bu nedenle bazı roller başlangıçta gönüllülük,
-              performans bazlı kazanç, referral modeli, proje bazlı ödeme,
-              equity / opsiyon veya ilerleyen yatırım ve gelir dönemlerinde
-              ücretli pozisyona dönüşebilecek modellerle değerlendirilecektir.
+              CorteQS şu anda <strong>erken aşama / pre-launch</strong> dönemindedir. Bu nedenle bazı roller başlangıçta
+              gönüllülük, performans bazlı kazanç, referral modeli, proje bazlı ödeme, equity / opsiyon veya ilerleyen
+              yatırım ve gelir dönemlerinde ücretli pozisyona dönüşebilecek modellerle değerlendirilecektir.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-              Amacımız, para akışı başladığında kime hangi rolü, hangi
-              sorumlulukla ve hangi teklif modeliyle sunacağımızı önceden
-              netleştirmek ve global büyümeye hazır bir yetenek havuzu
-              oluşturmaktır.
+              Amacımız, para akışı başladığında kime hangi rolü, hangi sorumlulukla ve hangi teklif modeliyle
+              sunacağımızı önceden netleştirmek ve global büyümeye hazır bir yetenek havuzu oluşturmaktır.
             </p>
             <p className="text-sm text-foreground font-medium leading-relaxed">
-              Bu yolculuğa erken katılanlar yalnızca bir işe başvurmuş olmayacak;
-              CorteQS'in global kuruluş hikayesinin parçası olacak.
+              Bu yolculuğa erken katılanlar yalnızca bir işe başvurmuş olmayacak; CorteQS'in global kuruluş hikayesinin
+              parçası olacak.
             </p>
           </div>
         </section>
@@ -348,7 +321,6 @@ const Career = () => {
           </div>
         </section>
       </main>
-
     </div>
   );
 };

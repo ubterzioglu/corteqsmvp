@@ -28,13 +28,7 @@ interface CaddeGeoFilterProps {
   onChange: (next: { countries: string[]; cities: string[] }) => void;
 }
 
-const CaddeGeoFilter = ({
-  countries,
-  cities,
-  selectedCountries,
-  selectedCities,
-  onChange,
-}: CaddeGeoFilterProps) => {
+const CaddeGeoFilter = ({ countries, cities, selectedCountries, selectedCities, onChange }: CaddeGeoFilterProps) => {
   const [countrySearch, setCountrySearch] = useState("");
   const [citySearch, setCitySearch] = useState("");
 
@@ -195,7 +189,12 @@ const CaddeGeoFilter = ({
           {selectedCountries.map((name) => (
             <Badge key={name} variant="outline" className="max-w-full gap-1 pr-1">
               <span className="min-w-0 truncate">{name}</span>
-              <button type="button" onClick={() => toggleCountry(name)} className="shrink-0 rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
+              <button
+                type="button"
+                onClick={() => toggleCountry(name)}
+                className="shrink-0 rounded p-0.5 hover:bg-muted"
+                aria-label={`${name} filtresini kaldır`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </Badge>
@@ -204,7 +203,12 @@ const CaddeGeoFilter = ({
             <Badge key={name} variant="secondary" className="max-w-full gap-1 pr-1">
               <MapPin className="h-3 w-3 shrink-0" />
               <span className="min-w-0 truncate">{name}</span>
-              <button type="button" onClick={() => toggleCity(name)} className="shrink-0 rounded p-0.5 hover:bg-muted" aria-label={`${name} filtresini kaldır`}>
+              <button
+                type="button"
+                onClick={() => toggleCity(name)}
+                className="shrink-0 rounded p-0.5 hover:bg-muted"
+                aria-label={`${name} filtresini kaldır`}
+              >
                 <X className="h-3 w-3" />
               </button>
             </Badge>

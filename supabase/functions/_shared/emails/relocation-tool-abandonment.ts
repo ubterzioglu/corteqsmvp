@@ -29,14 +29,16 @@ export function buildRelocationToolAbandonmentEmail(
   const answeredCount = count(payload?.answered_count);
   const questionCount = count(payload?.question_count);
   const base = text(siteUrl, DEFAULT_SITE_URL).replace(/\/+$/, "") || DEFAULT_SITE_URL;
-  const toolPath = toolSlug && sessionId
-    ? `/tools/${encodeURIComponent(toolSlug)}/session/${encodeURIComponent(sessionId)}`
-    : "/tools";
+  const toolPath =
+    toolSlug && sessionId
+      ? `/tools/${encodeURIComponent(toolSlug)}/session/${encodeURIComponent(sessionId)}`
+      : "/tools";
   const continueUrl = `${base}${toolPath}`;
   const preferencesUrl = `${base}/settings/notifications`;
-  const progress = answeredCount !== null && questionCount !== null
-    ? `${answeredCount}/${questionCount} soru`
-    : "Yarım kalan ilerleme";
+  const progress =
+    answeredCount !== null && questionCount !== null
+      ? `${answeredCount}/${questionCount} soru`
+      : "Yarım kalan ilerleme";
 
   const html = `
     <h2 style="margin:0 0 12px 0;">${escapeHtml(toolTitle)} seni bekliyor</h2>
@@ -57,4 +59,3 @@ export function buildRelocationToolAbandonmentEmail(
 
   return { subject: `CorteQS: ${toolTitle} aracına devam et`, html, text: body };
 }
-

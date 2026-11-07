@@ -57,10 +57,7 @@ const ListingCard = ({ row, roleLabel, isDemo = false }: ListingCardProps) => {
           <h3 className="flex items-center gap-1.5 truncate font-bold text-foreground">
             <span className="truncate">{row.title}</span>
             {row.isVerified ? (
-              <BadgeCheck
-                className="h-4 w-4 shrink-0 text-turquoise"
-                aria-label="Doğrulanmış kayıt"
-              />
+              <BadgeCheck className="h-4 w-4 shrink-0 text-turquoise" aria-label="Doğrulanmış kayıt" />
             ) : null}
           </h3>
         </div>
@@ -72,16 +69,12 @@ const ListingCard = ({ row, roleLabel, isDemo = false }: ListingCardProps) => {
         </p>
       ) : null}
 
-      {row.headline ? (
-        <p className="line-clamp-2 font-body text-sm text-muted-foreground">{row.headline}</p>
-      ) : null}
+      {row.headline ? <p className="line-clamp-2 font-body text-sm text-muted-foreground">{row.headline}</p> : null}
 
       {/* `short_description` ölçümde şehir elçilerinin hiçbirinde YOKTU; varsa
           ikinci satır olarak gösterilir, yoksa kart kısalır (boş kutu çizilmez). */}
       {row.description && row.description !== row.headline ? (
-        <p className="mt-2 line-clamp-2 font-body text-sm text-muted-foreground/80">
-          {row.description}
-        </p>
+        <p className="mt-2 line-clamp-2 font-body text-sm text-muted-foreground/80">{row.description}</p>
       ) : null}
     </Link>
   );

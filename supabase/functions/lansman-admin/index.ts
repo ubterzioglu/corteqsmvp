@@ -16,15 +16,11 @@ function getCorsHeaders(req: Request): Record<string, string> {
     "Access-Control-Allow-Headers":
       "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Vary": "Origin",
+    Vary: "Origin",
   };
 }
 
-function jsonResponse(
-  body: unknown,
-  init: ResponseInit,
-  corsHeaders: Record<string, string>,
-) {
+function jsonResponse(body: unknown, init: ResponseInit, corsHeaders: Record<string, string>) {
   return new Response(JSON.stringify(body), {
     ...init,
     headers: {
@@ -40,9 +36,7 @@ function validateConfiguredSecrets() {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error(
-      "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.",
-    );
+    throw new Error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY.");
   }
 
   return {
@@ -72,10 +66,6 @@ Deno.serve(async (req) => {
     );
   } catch (error) {
     console.error("lansman-admin error:", error);
-    return jsonResponse(
-      { error: "Internal server error" },
-      { status: 500 },
-      corsHeaders,
-    );
+    return jsonResponse({ error: "Internal server error" }, { status: 500 }, corsHeaders);
   }
 });

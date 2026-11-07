@@ -71,8 +71,7 @@ const ChatWindow = ({
     lastMessage?.quickReplies &&
     lastMessage.quickReplies.length > 0;
 
-  const showFileInput =
-    state.step === "documents" || state.step === "documents_add_more";
+  const showFileInput = state.step === "documents" || state.step === "documents_add_more";
 
   return (
     <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-primary/5">
@@ -89,9 +88,7 @@ const ChatWindow = ({
               />
             </div>
             <div>
-              <p className="text-sm font-semibold text-foreground">
-                {assistantTitle}
-              </p>
+              <p className="text-sm font-semibold text-foreground">{assistantTitle}</p>
               <p className="text-xs text-muted-foreground">
                 {assistantStatus ?? (state.submitted ? "Kayıt tamamlandı, sorulara devam edebilirsin ✅" : "Online")}
               </p>

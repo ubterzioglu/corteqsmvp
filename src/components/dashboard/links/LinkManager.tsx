@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 // Birleşik Kaynak Merkezi (/admin/resources) — ekranın kabuğu.
 //
@@ -7,14 +7,14 @@
 // modüllerinde durur. Yeni bir bölüm eklerken buraya JSX yığmak yerine yeni bir
 // alt bileşen aç.
 
-import LinkManagerHeader from './LinkManagerHeader'
-import ResourceFilterBar from './ResourceFilterBar'
-import ResourceCreateForm from './ResourceCreateForm'
-import ResourceEntryList from './ResourceEntryList'
-import HiddenResourcesPanel from './HiddenResourcesPanel'
-import { useLinkManager } from './useLinkManager'
+import LinkManagerHeader from "./LinkManagerHeader";
+import ResourceFilterBar from "./ResourceFilterBar";
+import ResourceCreateForm from "./ResourceCreateForm";
+import ResourceEntryList from "./ResourceEntryList";
+import HiddenResourcesPanel from "./HiddenResourcesPanel";
+import { useLinkManager } from "./useLinkManager";
 
-const HEADING_ID = 'link-manager-heading'
+const HEADING_ID = "link-manager-heading";
 
 export default function LinkManager() {
   const {
@@ -51,7 +51,7 @@ export default function LinkManager() {
     handleToggleHidden,
     toggleEntryDetails,
     handleOpenStoredFile,
-  } = useLinkManager()
+  } = useLinkManager();
 
   return (
     <section className="space-y-4" aria-labelledby={HEADING_ID}>
@@ -86,9 +86,7 @@ export default function LinkManager() {
       />
 
       {error && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-          {error}
-        </div>
+        <div className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">{error}</div>
       )}
 
       {isLoading ? (
@@ -113,9 +111,7 @@ export default function LinkManager() {
             onToggleDetails={toggleEntryDetails}
             onStartEdit={startEdit}
             onToggleHidden={(entry, nextHidden) => void handleToggleHidden(entry, nextHidden)}
-            onOpenStoredFile={(entry, shouldDownload) =>
-              void handleOpenStoredFile(entry, shouldDownload)
-            }
+            onOpenStoredFile={(entry, shouldDownload) => void handleOpenStoredFile(entry, shouldDownload)}
             onDelete={(entry) => void handleDelete(entry)}
           />
 
@@ -127,5 +123,5 @@ export default function LinkManager() {
         </>
       )}
     </section>
-  )
+  );
 }

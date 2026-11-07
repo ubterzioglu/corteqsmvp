@@ -60,9 +60,7 @@ describe("ProfileSwitcherMenu — yeni profil talebi", () => {
     await user.click(screen.getByRole("button", { name: /Diğer Profiller/i }));
     await user.click(await screen.findByText("+ Yeni Profil"));
 
-    await waitFor(() =>
-      expect(dialogSpy).toHaveBeenCalledWith(expect.objectContaining({ open: true })),
-    );
+    await waitFor(() => expect(dialogSpy).toHaveBeenCalledWith(expect.objectContaining({ open: true })));
   });
 
   it("opens the Cadde promotion panel from the profile menu", async () => {

@@ -2,11 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import MarqueeItemCard from "@/components/MarqueeItemCard";
 import { Button } from "@/components/ui/button";
-import {
-  fallbackMarqueeItems,
-  listPublicMarqueeItems,
-  type MarqueeItemRow,
-} from "@/lib/marquee";
+import { fallbackMarqueeItems, listPublicMarqueeItems, type MarqueeItemRow } from "@/lib/marquee";
 
 const DiasporaMarqueeSection = () => {
   const [items, setItems] = useState<MarqueeItemRow[]>(fallbackMarqueeItems);
@@ -54,9 +50,7 @@ const DiasporaMarqueeSection = () => {
             </div>
           </div>
           <Button asChild variant="outline" className="w-fit shrink-0">
-            <Link to="/radar">
-              Tüm Radar
-            </Link>
+            <Link to="/radar">Tüm Radar</Link>
           </Button>
         </div>
       </div>
@@ -66,7 +60,11 @@ const DiasporaMarqueeSection = () => {
           <div className="diaspora-marquee-viewport overflow-hidden px-4 sm:px-8 lg:px-10">
             <div className="diaspora-marquee-track flex min-w-max gap-4">
               {marqueeItems.map((item, index) => (
-                <MarqueeItemCard key={`${item.id}-${index}`} item={item} className="w-[300px] sm:w-[360px] lg:w-[400px]" />
+                <MarqueeItemCard
+                  key={`${item.id}-${index}`}
+                  item={item}
+                  className="w-[300px] sm:w-[360px] lg:w-[400px]"
+                />
               ))}
             </div>
           </div>

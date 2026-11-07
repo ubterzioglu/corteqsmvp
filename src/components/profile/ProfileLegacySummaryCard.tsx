@@ -50,11 +50,15 @@ export const ProfileLegacySummaryCard = ({
       {open ? (
         <CardContent id="profile-summary-content" className="pt-0 pb-4">
           <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-6">
-            <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+            <div
+              className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}
+            >
               <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Profil Tipi</p>
               <p className="font-bold text-slate-950">{profileTypeLabel}</p>
             </div>
-            <div className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}>
+            <div
+              className={`flex items-center gap-2 rounded-[20px] px-2.5 py-1.5 text-[11px] ${GOOGLE_SOFT_CARD_SUBTLE}`}
+            >
               <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">Profil Skoru</p>
               <p className="font-bold text-slate-950">%{completionPercentage}</p>
             </div>

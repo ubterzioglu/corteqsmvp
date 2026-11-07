@@ -45,12 +45,13 @@ export function RadarSourceForm({ source, onSave }: Props) {
         <div className="flex items-center justify-between gap-2">
           <CardTitle className="text-base">{source.name}</CardTitle>
           <div className="flex gap-1">
-            <Badge variant="outline" className="text-xs">{source.source_type}</Badge>
-            <Badge variant="outline" className="text-xs">{source.trust_level}</Badge>
-            <Badge
-              variant={source.is_enabled && source.terms_checked ? "outline" : "secondary"}
-              className="text-xs"
-            >
+            <Badge variant="outline" className="text-xs">
+              {source.source_type}
+            </Badge>
+            <Badge variant="outline" className="text-xs">
+              {source.trust_level}
+            </Badge>
+            <Badge variant={source.is_enabled && source.terms_checked ? "outline" : "secondary"} className="text-xs">
               {source.is_enabled && source.terms_checked ? "Aktif" : "Pasif"}
             </Badge>
           </div>
@@ -76,15 +77,9 @@ export function RadarSourceForm({ source, onSave }: Props) {
           <div className="flex items-center justify-between rounded-md border border-border p-3">
             <div>
               <Label className="text-sm">Tarama Aktif</Label>
-              {!canEnable && (
-                <p className="text-xs text-destructive">Önce şartları kontrol et</p>
-              )}
+              {!canEnable && <p className="text-xs text-destructive">Önce şartları kontrol et</p>}
             </div>
-            <Switch
-              checked={isEnabled}
-              onCheckedChange={setIsEnabled}
-              disabled={!canEnable}
-            />
+            <Switch checked={isEnabled} onCheckedChange={setIsEnabled} disabled={!canEnable} />
           </div>
         </div>
 
@@ -120,7 +115,9 @@ export function RadarSourceForm({ source, onSave }: Props) {
         {source.last_success_at && (
           <p className="text-xs text-muted-foreground">
             Son başarılı tarama:{" "}
-            {new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" }).format(new Date(source.last_success_at))}
+            {new Intl.DateTimeFormat("tr-TR", { dateStyle: "medium", timeStyle: "short" }).format(
+              new Date(source.last_success_at),
+            )}
           </p>
         )}
 

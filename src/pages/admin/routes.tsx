@@ -52,7 +52,9 @@ const AdminWorkspaceHomePage = lazyWithReload(() => import("@/pages/admin/worksp
 const AdminCommandCenterPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminCommandCenterPage"));
 const AdminResourcesPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminResourcesPage"));
 const AdminTodoWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminTodoWorkspacePage"));
-const AdminMeetingNotesWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMeetingNotesWorkspacePage"));
+const AdminMeetingNotesWorkspacePage = lazyWithReload(
+  () => import("@/pages/admin/workspace/AdminMeetingNotesWorkspacePage"),
+);
 const AdminMvpWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMvpWorkspacePage"));
 const AdminWorkspaceDocPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceDocPage"));
 const AdminWhatsAppLandingsPage = lazyWithReload(() => import("@/pages/admin/AdminWhatsAppLandingsPage"));
@@ -115,17 +117,32 @@ export const adminRoutes = (
     <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
     <Route path="new-member/roles-overview" element={<AdminRolesOverviewPage />} />
     <Route path="brainstorming" element={<AdminBrainstormingPage />} />
-    <Route path="new-member/users-roles" element={<Navigate to="/admin/new-member/profile-role-assignment" replace />} />
+    <Route
+      path="new-member/users-roles"
+      element={<Navigate to="/admin/new-member/profile-role-assignment" replace />}
+    />
     <Route path="data" element={<AdminCatalogPage />} />
     <Route path="bulk-import" element={<AdminBulkImportPage />} />
     <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
     <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
     <Route path="new-member/durum-raporu" element={<AdminDurumRaporuPage />} />
     <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
-    <Route path="new-member/roles-features" element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />} />
-    <Route path="new-member/attributes" element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />} />
-    <Route path="new-member/profile-sections" element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />} />
-    <Route path="new-member/taxonomy" element={<Navigate to="/admin/new-member/guide?notice=taxonomy-retired" replace />} />
+    <Route
+      path="new-member/roles-features"
+      element={<Navigate to="/admin/new-member/role-matrix?kind=feature" replace />}
+    />
+    <Route
+      path="new-member/attributes"
+      element={<Navigate to="/admin/new-member/role-matrix?kind=attribute" replace />}
+    />
+    <Route
+      path="new-member/profile-sections"
+      element={<Navigate to="/admin/new-member/role-matrix?kind=profile_section" replace />}
+    />
+    <Route
+      path="new-member/taxonomy"
+      element={<Navigate to="/admin/new-member/guide?notice=taxonomy-retired" replace />}
+    />
     <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />
     <Route path="new-member/role-management" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="new-member/roles-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
@@ -137,7 +154,7 @@ export const adminRoutes = (
     <Route path="whatsapp-landings" element={<AdminWhatsAppLandingsPage />} />
     <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />
     <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
-        <Route path="gruplar" element={<AdminGruplarPage />} />
+    <Route path="gruplar" element={<AdminGruplarPage />} />
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />

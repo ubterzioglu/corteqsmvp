@@ -76,7 +76,10 @@ const linkClass =
 const SEOContentSection = () => {
   return (
     <section className="relative mt-12 overflow-hidden py-4 lg:mt-16 lg:py-5">
-      <article className="container relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4" aria-labelledby="geo-content-title">
+      <article
+        className="container relative z-10 mx-auto flex max-w-6xl flex-col gap-4 px-4"
+        aria-labelledby="geo-content-title"
+      >
         <div className="flex flex-col gap-4">
           <CorteqsWhatIsAccordion />
           {featuredLinks.map((link) => {

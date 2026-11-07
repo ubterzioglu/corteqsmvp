@@ -22,15 +22,9 @@ type ExtraImagesGalleryProps = {
 
 type GalleryEntry = BurakShareExtraImage & { previewUrl: string | null };
 
-const errMessage = (error: unknown): string =>
-  error instanceof Error ? error.message : "Beklenmeyen hata";
+const errMessage = (error: unknown): string => (error instanceof Error ? error.message : "Beklenmeyen hata");
 
-export function ExtraImagesGallery({
-  slotKey,
-  globalId,
-  variantIndex,
-  onCountChange,
-}: ExtraImagesGalleryProps) {
+export function ExtraImagesGallery({ slotKey, globalId, variantIndex, onCountChange }: ExtraImagesGalleryProps) {
   const { toast } = useToast();
   const [entries, setEntries] = useState<GalleryEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -79,9 +73,7 @@ export function ExtraImagesGallery({
     try {
       const nextOrder = entries.length;
       const image = await addBurakShareExtraImage(globalId, variantIndex, slotKey, file, nextOrder);
-      const previewUrl = await getBurakShareImageUrl(image.imageBucket, image.imagePath).catch(
-        () => null,
-      );
+      const previewUrl = await getBurakShareImageUrl(image.imageBucket, image.imagePath).catch(() => null);
       setEntries((current) => {
         const next = [...current, { ...image, previewUrl }];
         onCountChange?.(next.length);
@@ -123,11 +115,7 @@ export function ExtraImagesGallery({
         {entries.map((entry) => (
           <div key={entry.id} className="group relative h-16 w-16">
             {entry.previewUrl ? (
-              <img
-                src={entry.previewUrl}
-                alt=""
-                className="h-16 w-16 rounded object-cover"
-              />
+              <img src={entry.previewUrl} alt="" className="h-16 w-16 rounded object-cover" />
             ) : (
               <div className="flex h-16 w-16 items-center justify-center rounded bg-muted text-[0.6rem] text-muted-foreground">
                 yüklenemedi
@@ -155,11 +143,7 @@ export function ExtraImagesGallery({
               e.target.value = "";
             }}
           />
-          {uploading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="h-4 w-4" />
-          )}
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           <span className="text-[0.6rem]">Ekle</span>
         </label>
       </div>

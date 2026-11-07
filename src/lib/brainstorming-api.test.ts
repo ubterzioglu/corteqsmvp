@@ -43,10 +43,7 @@ const VALID_ROW_FORM: BrainstormingRowForm = {
 };
 
 // Zincirlenebilir sorgu kurucusu mock'u: terminal davranış son adımda belirlenir.
-function chainable(opts: {
-  resolved?: { data: unknown; error: unknown };
-  single?: { data: unknown; error: unknown };
-}) {
+function chainable(opts: { resolved?: { data: unknown; error: unknown }; single?: { data: unknown; error: unknown } }) {
   const builder: Record<string, unknown> = {};
   for (const method of ["select", "insert", "update", "delete", "eq", "order"]) {
     builder[method] = vi.fn(() => builder);
@@ -64,9 +61,7 @@ beforeEach(() => {
 
 describe("createSection / updateSection validation", () => {
   it("rejects an empty title via Zod", async () => {
-    await expect(
-      createSection({ ...VALID_SECTION_FORM, title: "  " }, 0),
-    ).rejects.toThrow();
+    await expect(createSection({ ...VALID_SECTION_FORM, title: "  " }, 0)).rejects.toThrow();
   });
 
   it("creates a section with derived section_key", async () => {
@@ -87,20 +82,14 @@ describe("createSection / updateSection validation", () => {
   });
 
   it("surfaces a friendly error on update failure", async () => {
-    fromMock.mockReturnValue(
-      chainable({ single: { data: null, error: { message: "boom" } } }),
-    );
-    await expect(updateSection("sec-1", VALID_SECTION_FORM)).rejects.toThrow(
-      "Bölüm güncellenemedi.",
-    );
+    fromMock.mockReturnValue(chainable({ single: { data: null, error: { message: "boom" } } }));
+    await expect(updateSection("sec-1", VALID_SECTION_FORM)).rejects.toThrow("Bölüm güncellenemedi.");
   });
 });
 
 describe("createRow / updateRow validation", () => {
   it("rejects an empty label via Zod", async () => {
-    await expect(
-      createRow("sec-1", { ...VALID_ROW_FORM, label: "" }, 0),
-    ).rejects.toThrow();
+    await expect(createRow("sec-1", { ...VALID_ROW_FORM, label: "" }, 0)).rejects.toThrow();
   });
 
   it("creates a row under a section", async () => {
@@ -121,12 +110,8 @@ describe("createRow / updateRow validation", () => {
   });
 
   it("surfaces a friendly error on update failure", async () => {
-    fromMock.mockReturnValue(
-      chainable({ single: { data: null, error: { message: "boom" } } }),
-    );
-    await expect(updateRow("row-1", VALID_ROW_FORM)).rejects.toThrow(
-      "Satır güncellenemedi.",
-    );
+    fromMock.mockReturnValue(chainable({ single: { data: null, error: { message: "boom" } } }));
+    await expect(updateRow("row-1", VALID_ROW_FORM)).rejects.toThrow("Satır güncellenemedi.");
   });
 });
 
@@ -144,9 +129,7 @@ describe("deleteSection / deleteRow", () => {
 
 describe("fetchSections", () => {
   it("groups rows under their section, ordered", async () => {
-    const sections = [
-      { id: "sec-1", section_key: "a", group_label: null, title: "A", intro: null, order_index: 0 },
-    ];
+    const sections = [{ id: "sec-1", section_key: "a", group_label: null, title: "A", intro: null, order_index: 0 }];
     const rows = [
       {
         id: "row-1",

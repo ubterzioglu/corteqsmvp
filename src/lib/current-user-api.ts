@@ -21,5 +21,6 @@ async function callCurrentUserRpc<T>(name: string): Promise<T> {
 }
 
 export const getCurrentUserProfile = () => callCurrentUserRpc<Json>("get_current_user_profile");
-export const getCurrentUserDashboard = () => callCurrentUserRpc<CurrentUserDashboardFeature[]>("get_current_user_dashboard");
+export const getCurrentUserDashboard = () =>
+  callCurrentUserRpc<CurrentUserDashboardFeature[]>("get_current_user_dashboard");
 export const getCurrentUserFeatures = () => callCurrentUserRpc<CurrentUserFeatureRow[]>("get_current_user_features");

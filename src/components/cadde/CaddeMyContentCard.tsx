@@ -18,7 +18,9 @@ import { listMyCaddeCafes } from "@/lib/cadde-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const formatDate = (value: string) =>
-  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(value));
+  new Intl.DateTimeFormat("tr-TR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" }).format(
+    new Date(value),
+  );
 
 const CaddeMyContentCard = () => {
   const { user } = useAuth();
@@ -55,9 +57,7 @@ const CaddeMyContentCard = () => {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-[11px]">Cadde İçeriklerim</CardTitle>
-        <CardDescription className="text-[11px]">
-          Açık cafe'lerin; yönetim cafe sayfasında.
-        </CardDescription>
+        <CardDescription className="text-[11px]">Açık cafe'lerin; yönetim cafe sayfasında.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-2">
         <p className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
@@ -65,9 +65,15 @@ const CaddeMyContentCard = () => {
           Açık Cafelerim ({activeCafes.length})
         </p>
         {activeCafes.slice(0, 3).map((cafe) => (
-          <Link key={cafe.id} to={`/cadde/cafe/${cafe.id}`} className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 transition hover:border-orange-300">
+          <Link
+            key={cafe.id}
+            to={`/cadde/cafe/${cafe.id}`}
+            className="flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 transition hover:border-orange-300"
+          >
             <span className="truncate text-xs font-medium text-slate-900">{cafe.title}</span>
-            <span className="shrink-0 text-[10px] text-slate-500">{cafe.memberCount} üye • bitiş {formatDate(cafe.endsAt)}</span>
+            <span className="shrink-0 text-[10px] text-slate-500">
+              {cafe.memberCount} üye • bitiş {formatDate(cafe.endsAt)}
+            </span>
           </Link>
         ))}
       </CardContent>

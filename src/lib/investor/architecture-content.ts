@@ -25,8 +25,7 @@ export interface ArchRow {
 export const ARCH_HERO = {
   kicker: "Teknik Mimari · CTO Özeti",
   title: "CorteQS platformu uçtan uca nasıl çalışır",
-  lead:
-    "Uygulama mimarisi, çalışma düzeni, kimlik ve entegrasyonlar, kalite kapıları ve ölçülebilir teknik hacim — beş sayfada, ölçülmüş rakamlarla.",
+  lead: "Uygulama mimarisi, çalışma düzeni, kimlik ve entegrasyonlar, kalite kapıları ve ölçülebilir teknik hacim — beş sayfada, ölçülmüş rakamlarla.",
 } as const;
 
 export const ARCH_SECTIONS: readonly InvestorSection[] = [
@@ -34,36 +33,31 @@ export const ARCH_SECTIONS: readonly InvestorSection[] = [
     id: "mimari-butun",
     eyebrow: "01 · Sistemin bütünü",
     title: "Uygulama mimarisi",
-    lead:
-      "Sosyal akış, dizin, yapay zekâ asistanı, taşınma rehberi, kariyer ve yönetim paneli; ortak kimlik ve veri katmanı üzerinde çalışan tek sayfa uygulaması (SPA).",
+    lead: "Sosyal akış, dizin, yapay zekâ asistanı, taşınma rehberi, kariyer ve yönetim paneli; ortak kimlik ve veri katmanı üzerinde çalışan tek sayfa uygulaması (SPA).",
   },
   {
     id: "mimari-isletim",
     eyebrow: "02 · Çalışma düzeni",
     title: "Konteyner + yönetilen veri platformu",
-    lead:
-      "Ön yüz Docker konteynerinde nginx ile sunulur; kimlik, veri, dosya ve sunucu fonksiyonları yönetilen PostgreSQL platformunda çalışır. Derleme bir kez yapılır, yapılandırma çalışma anında verilir.",
+    lead: "Ön yüz Docker konteynerinde nginx ile sunulur; kimlik, veri, dosya ve sunucu fonksiyonları yönetilen PostgreSQL platformunda çalışır. Derleme bir kez yapılır, yapılandırma çalışma anında verilir.",
   },
   {
     id: "mimari-kimlik",
     eyebrow: "03 · Tek üyelik",
     title: "Kimlik ve entegrasyonlar",
-    lead:
-      "Google ve e-posta/şifre girişi aynı üyelik modelinde birleşir. Rol, profil alanları ve özellik bayrakları oturum açılınca veritabanından yüklenir; istemcinin rol iddiasına güvenilmez.",
+    lead: "Google ve e-posta/şifre girişi aynı üyelik modelinde birleşir. Rol, profil alanları ve özellik bayrakları oturum açılınca veritabanından yüklenir; istemcinin rol iddiasına güvenilmez.",
   },
   {
     id: "mimari-kalite",
     eyebrow: "04 · Main'den canlıya",
     title: "Kalite kapılarıyla dağıtım",
-    lead:
-      "Her pull request ve main'e her gönderim aynı kalite hattından geçer. Bir adım düşerse değişiklik birleşmez; sessizce bozulabilecek kurallar sözleşme testleriyle kilitlidir.",
+    lead: "Her pull request ve main'e her gönderim aynı kalite hattından geçer. Bir adım düşerse değişiklik birleşmez; sessizce bozulabilecek kurallar sözleşme testleriyle kilitlidir.",
   },
   {
     id: "mimari-olcum",
     eyebrow: "05 · Ölçülebilir durum",
     title: "Veri ve kaynak ölçümleri",
-    lead:
-      "Veritabanı rakamları canlı katalog sorgusuyla, kaynak rakamları Git'te izlenen dosyalar üzerinden betikle üretilir. Elle yazılmış rakam yoktur.",
+    lead: "Veritabanı rakamları canlı katalog sorgusuyla, kaynak rakamları Git'te izlenen dosyalar üzerinden betikle üretilir. Elle yazılmış rakam yoktur.",
   },
 ];
 
@@ -160,14 +154,26 @@ export const AUTH_STEPS: readonly ArchTile[] = [
 
 export const AUTH_ROWS: readonly ArchRow[] = [
   { label: "Google", value: "OAuth 2.0 / OpenID Connect", note: "Ad, e-posta, fotoğraf; tek tıkla üyelik." },
-  { label: "E-posta / şifre", value: "Doğrulama postası zorunlu", note: "Kurumsal alan adından SMTP ile gönderim; parola özetlenerek saklanır." },
+  {
+    label: "E-posta / şifre",
+    value: "Doğrulama postası zorunlu",
+    note: "Kurumsal alan adından SMTP ile gönderim; parola özetlenerek saklanır.",
+  },
   {
     label: "Telefon",
     value: "WhatsApp ile doğrulama kodu",
     note: "Yalnız mevcut hesaba numara ekler; numara herkese açık yüzeylerde gösterilmez. Pilot.",
   },
-  { label: "Yapay zekâ", value: "Google Gemini", note: "Sohbet ve 1536 boyutlu vektör; sağlayıcı soyutlamasıyla değiştirilebilir." },
-  { label: "Bildirimler", value: "Olay tabanlı e-posta kuyruğu", note: "Zamanlanmış gönderim, abonelik tercihleri, günlük yönetici özeti." },
+  {
+    label: "Yapay zekâ",
+    value: "Google Gemini",
+    note: "Sohbet ve 1536 boyutlu vektör; sağlayıcı soyutlamasıyla değiştirilebilir.",
+  },
+  {
+    label: "Bildirimler",
+    value: "Olay tabanlı e-posta kuyruğu",
+    note: "Zamanlanmış gönderim, abonelik tercihleri, günlük yönetici özeti.",
+  },
   { label: "Haber taraması", value: "Radar", note: "Zamanlanmış tarama, dil ve kalite süzgeci, yönetici onayı." },
 ];
 
@@ -181,7 +187,10 @@ export const AUTH_FOOTNOTE =
 
 // ── 04 · Kalite kapıları ──────────────────────────────────────────────────
 
-export const PIPELINE_SOURCE: ArchTile = { title: "GitHub / PR → main", text: "Kilitli bağımlılıklar · özete sabitli CI aksiyonları" };
+export const PIPELINE_SOURCE: ArchTile = {
+  title: "GitHub / PR → main",
+  text: "Kilitli bağımlılıklar · özete sabitli CI aksiyonları",
+};
 
 export const PIPELINE_CHECKS: readonly ArchTile[] = [
   { title: "Kalite ön denetimi", text: "Metin kodlama + Türkçe karakter" },
@@ -195,9 +204,21 @@ export const PIPELINE_CHECKS: readonly ArchTile[] = [
 ];
 
 export const PIPELINE_STEPS: readonly (ArchTile & { readonly tone: "light" | "plain" | "navy" })[] = [
-  { title: "Sözleşme testleri", text: "Yönlendirme ↔ nginx, site haritası ↔ yetki, SQL ↔ TS kuralları çift yönlü kilitli.", tone: "light" },
-  { title: "Docker imajı → PaaS", text: "main'e birleşen sürüm konteynere derlenir ve otomatik yayınlanır.", tone: "plain" },
-  { title: "Yayın sonrası doğrulama", text: "Canlı paketler, güvenlik başlıkları ve yönlendirmeler betikle denetlenir.", tone: "navy" },
+  {
+    title: "Sözleşme testleri",
+    text: "Yönlendirme ↔ nginx, site haritası ↔ yetki, SQL ↔ TS kuralları çift yönlü kilitli.",
+    tone: "light",
+  },
+  {
+    title: "Docker imajı → PaaS",
+    text: "main'e birleşen sürüm konteynere derlenir ve otomatik yayınlanır.",
+    tone: "plain",
+  },
+  {
+    title: "Yayın sonrası doğrulama",
+    text: "Canlı paketler, güvenlik başlıkları ve yönlendirmeler betikle denetlenir.",
+    tone: "navy",
+  },
 ];
 
 export const PIPELINE_NOTE =
@@ -217,14 +238,25 @@ export const DB_ROWS: readonly ArchRow[] = [
   { label: "Denetlenmiş sunucu fonksiyonu", value: tr(LIVE_DB.securedFunctions) },
   { label: "İndeks / tetikleyici", value: `${tr(LIVE_DB.indexes)} / ${tr(LIVE_DB.triggers)}` },
   { label: "Zamanlanmış iş / eklenti", value: `${LIVE_DB.scheduledJobs} / ${LIVE_DB.extensions}` },
-  { label: "Rol (aktif) · alan · özellik", value: `${LIVE_DB.rolesTotal} (${LIVE_DB.rolesActive}) · ${LIVE_DB.profileAttributes} · ${LIVE_DB.features}` },
+  {
+    label: "Rol (aktif) · alan · özellik",
+    value: `${LIVE_DB.rolesTotal} (${LIVE_DB.rolesActive}) · ${LIVE_DB.profileAttributes} · ${LIVE_DB.features}`,
+  },
 ];
 
 export const CODE_ROWS: readonly ArchRow[] = [
-  { label: "Kaynak dosya (TypeScript / TSX)", value: `${tr(REPO.sourceFiles)} dosya`, note: `${tr(REPO.productionLines)} satır` },
+  {
+    label: "Kaynak dosya (TypeScript / TSX)",
+    value: `${tr(REPO.sourceFiles)} dosya`,
+    note: `${tr(REPO.productionLines)} satır`,
+  },
   { label: "Sayfa / bileşen", value: `${REPO.pages} sayfa`, note: `${REPO.components} bileşen` },
   { label: "Test", value: `${tr(REPO.testFiles)} dosya`, note: `${REPO.e2eSpecs} uçtan uca senaryo` },
-  { label: "Şema ve sunucu", value: `${tr(REPO.migrations)} migration`, note: `${REPO.edgeFunctions} sunucu fonksiyonu` },
+  {
+    label: "Şema ve sunucu",
+    value: `${tr(REPO.migrations)} migration`,
+    note: `${REPO.edgeFunctions} sunucu fonksiyonu`,
+  },
 ];
 
 export const CODE_FOOTNOTE =

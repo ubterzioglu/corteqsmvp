@@ -87,7 +87,9 @@ const CatalogClaimRequestsPanel = ({ itemId }: CatalogClaimRequestsPanelProps) =
                       <Badge variant={isPending ? "secondary" : "outline"}>{claim.status}</Badge>
                       <Badge variant="outline">{claim.claimType}</Badge>
                     </div>
-                    <div className="text-sm text-muted-foreground">{claim.requesterEmail ?? claim.requestedByUserId}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {claim.requesterEmail ?? claim.requestedByUserId}
+                    </div>
                     {claim.note ? <p className="text-sm text-slate-700">{claim.note}</p> : null}
                     <div className="text-xs text-muted-foreground">
                       Talep: {formatDateTime(claim.createdAt)}
@@ -101,7 +103,13 @@ const CatalogClaimRequestsPanel = ({ itemId }: CatalogClaimRequestsPanelProps) =
                       <Button type="button" size="sm" onClick={() => handleApprove(claim.id)} disabled={isSaving}>
                         {isSaving ? "İşleniyor..." : "Approve"}
                       </Button>
-                      <Button type="button" size="sm" variant="outline" onClick={() => handleReject(claim.id)} disabled={isSaving}>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleReject(claim.id)}
+                        disabled={isSaving}
+                      >
                         Reject
                       </Button>
                     </div>

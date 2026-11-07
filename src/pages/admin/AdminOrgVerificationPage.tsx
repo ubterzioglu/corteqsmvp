@@ -46,9 +46,7 @@ function VerificationClaimCard({ row }: { row: OrgVerificationQueueRow }) {
       const url = await openOrgVerificationDocumentUrl(path);
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (error) {
-      setActionError(
-        error instanceof Error ? error.message : "Belge için imzalı bağlantı üretilemedi.",
-      );
+      setActionError(error instanceof Error ? error.message : "Belge için imzalı bağlantı üretilemedi.");
     } finally {
       setOpeningDoc(null);
     }
@@ -65,9 +63,7 @@ function VerificationClaimCard({ row }: { row: OrgVerificationQueueRow }) {
       <CardContent className="space-y-4">
         <div className="text-sm text-muted-foreground">
           <span className="font-medium text-foreground">Talep eden:</span> {row.requester_name}
-          {row.note ? (
-            <p className="mt-1 rounded-lg bg-muted/50 px-3 py-2 text-foreground">“{row.note}”</p>
-          ) : null}
+          {row.note ? <p className="mt-1 rounded-lg bg-muted/50 px-3 py-2 text-foreground">“{row.note}”</p> : null}
         </div>
 
         <div className="space-y-2">
@@ -152,9 +148,9 @@ export default function AdminOrgVerificationPage() {
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Kurumsal Doğrulama İncelemesi</h1>
         <p className="text-sm text-muted-foreground">
-          Bekleyen Seviye 2 doğrulama talepleri. Belgeyi imzalı bağlantıyla önizle, sonra onayla
-          (kaydı <code>verified</code> yapar) ya da sebeple reddet. Rozet/filtre yayılımı bu
-          ekranda yok — yalnız inceleme ve karar.
+          Bekleyen Seviye 2 doğrulama talepleri. Belgeyi imzalı bağlantıyla önizle, sonra onayla (kaydı{" "}
+          <code>verified</code> yapar) ya da sebeple reddet. Rozet/filtre yayılımı bu ekranda yok — yalnız inceleme ve
+          karar.
         </p>
       </header>
 

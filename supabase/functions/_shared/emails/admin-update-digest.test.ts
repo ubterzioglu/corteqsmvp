@@ -50,9 +50,7 @@ describe("buildAdminUpdateEmail — günlük özet (2+ kayıt)", () => {
   it("verilen sırayı korur (claim created_at artan sırada verir)", () => {
     const email = buildAdminUpdateEmail([ENTRY, SECOND]);
 
-    expect(email.html.indexOf("Örnek güncelleme")).toBeLessThan(
-      email.html.indexOf("İkinci güncelleme"),
-    );
+    expect(email.html.indexOf("Örnek güncelleme")).toBeLessThan(email.html.indexOf("İkinci güncelleme"));
   });
 
   it("başlık ve maddelerdeki HTML'i kaçırır", () => {

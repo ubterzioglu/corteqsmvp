@@ -45,8 +45,7 @@ type PremiumProfileHeroProps = {
 };
 
 /** Shared sizing for the hero's vertical action-button column (matches tab sizing). */
-const HERO_ACTION_BUTTON =
-  "h-8 w-full justify-start rounded-lg text-xs font-medium";
+const HERO_ACTION_BUTTON = "h-8 w-full justify-start rounded-lg text-xs font-medium";
 
 const HERO_SURFACE =
   "bg-[radial-gradient(circle_at_top_left,rgba(139,92,246,0.18),transparent_44%),radial-gradient(circle_at_bottom_right,rgba(56,189,248,0.12),transparent_42%),linear-gradient(135deg,rgba(15,23,42,0.04),rgba(15,23,42,0))]";
@@ -101,9 +100,7 @@ const PremiumProfileHero = ({
           ) : null}
 
           <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <h1 className="break-words text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-              {displayName}
-            </h1>
+            <h1 className="break-words text-2xl font-bold tracking-tight text-foreground md:text-3xl">{displayName}</h1>
             {roleLabel ? (
               <span className="inline-flex items-center gap-1.5" data-testid="profile-type-chip">
                 <span className="text-xs text-muted-foreground">Profil tipi:</span>
@@ -139,9 +136,7 @@ const PremiumProfileHero = ({
           </div>
 
           {shortBio ? (
-            <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-foreground/80">
-              {shortBio}
-            </p>
+            <p className="mt-3 max-w-2xl break-words text-sm leading-relaxed text-foreground/80">{shortBio}</p>
           ) : null}
 
           <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -183,30 +178,15 @@ const PremiumProfileHero = ({
             so the tab bar below collapses to a single row. */}
         <div className="flex w-full shrink-0 flex-col gap-1.5 md:w-44">
           {switcherSlot}
-          <Button
-            type="button"
-            variant="outline"
-            className={HERO_ACTION_BUTTON}
-            onClick={onShowSettings}
-          >
+          <Button type="button" variant="outline" className={HERO_ACTION_BUTTON} onClick={onShowSettings}>
             <Settings className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
             Profil Ayarları
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className={HERO_ACTION_BUTTON}
-            onClick={onShowNotifications}
-          >
+          <Button type="button" variant="outline" className={HERO_ACTION_BUTTON} onClick={onShowNotifications}>
             <Bell className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
             Bildirimler
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className={HERO_ACTION_BUTTON}
-            onClick={onShowHelp}
-          >
+          <Button type="button" variant="outline" className={HERO_ACTION_BUTTON} onClick={onShowHelp}>
             <HelpCircle className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
             Yardım
           </Button>

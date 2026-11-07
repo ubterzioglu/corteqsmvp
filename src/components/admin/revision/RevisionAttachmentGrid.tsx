@@ -7,15 +7,7 @@
 
 import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  File as FileIcon,
-  FileSpreadsheet,
-  FileText,
-  Loader2,
-  Presentation,
-  Trash2,
-  Upload,
-} from "lucide-react";
+import { File as FileIcon, FileSpreadsheet, FileText, Loader2, Presentation, Trash2, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -40,8 +32,7 @@ function attachmentsKey(parent: AttachmentParent) {
     : (["revision-attachments", "comment", parent.commentId] as const);
 }
 
-const errMessage = (error: unknown): string =>
-  error instanceof Error ? error.message : "Beklenmeyen hata";
+const errMessage = (error: unknown): string => (error instanceof Error ? error.message : "Beklenmeyen hata");
 
 function documentIcon(fileName: string, contentType: string | null) {
   const ext = revisionAttachmentExtension(fileName);
@@ -106,12 +97,8 @@ export function AttachmentCard({
           title={attachment.fileName}
         >
           <DocumentIcon className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden="true" />
-          <span className="w-full truncate text-[10px] font-medium text-foreground">
-            {attachment.fileName}
-          </span>
-          {sizeLabel ? (
-            <span className="text-[9px] text-muted-foreground">{sizeLabel}</span>
-          ) : null}
+          <span className="w-full truncate text-[10px] font-medium text-foreground">{attachment.fileName}</span>
+          {sizeLabel ? <span className="text-[9px] text-muted-foreground">{sizeLabel}</span> : null}
         </a>
       )}
       <button
@@ -144,14 +131,7 @@ function AttachmentThumbnail({
       .catch(() => setUrl(null));
   });
 
-  return (
-    <AttachmentCard
-      attachment={attachment}
-      url={url}
-      onDelete={onDelete}
-      isDeleting={isDeleting}
-    />
-  );
+  return <AttachmentCard attachment={attachment} url={url} onDelete={onDelete} isDeleting={isDeleting} />;
 }
 
 export type RevisionAttachmentGridProps = {
@@ -181,8 +161,7 @@ export function RevisionAttachmentGrid({ parent }: RevisionAttachmentGridProps) 
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (attachment: RevisionAttachment) =>
-      deleteAttachment(attachment.id, attachment.storagePath),
+    mutationFn: (attachment: RevisionAttachment) => deleteAttachment(attachment.id, attachment.storagePath),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: key });
     },
@@ -217,12 +196,7 @@ export function RevisionAttachmentGrid({ parent }: RevisionAttachmentGridProps) 
         className="hidden"
         onChange={(event) => handleFiles(event.target.files)}
       />
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={uploadMutation.isPending}
-        onClick={() => fileRef.current?.click()}
-      >
+      <Button variant="outline" size="sm" disabled={uploadMutation.isPending} onClick={() => fileRef.current?.click()}>
         {uploadMutation.isPending ? (
           <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
         ) : (

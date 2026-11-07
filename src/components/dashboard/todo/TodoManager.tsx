@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import CommandCenterManager from '@/components/dashboard/commandcenter/CommandCenterManager'
+import CommandCenterManager from "@/components/dashboard/commandcenter/CommandCenterManager";
 
 export default function TodoManager() {
   return (
@@ -10,5 +10,5 @@ export default function TodoManager() {
       compatibilityMessage="Bu içerik artık /commandcenter üzerinden yönetiliyor. Bu sayfa geçiş sürecinde yalnız todo filtresiyle yeni kaynağı gösterir."
       lockedItemType="todo"
     />
-  )
+  );
 }

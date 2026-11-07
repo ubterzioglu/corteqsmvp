@@ -27,7 +27,8 @@ export function KadroFilters({ filters, onChange, onExport }: KadroFiltersProps)
     });
   };
 
-  const hasActiveFilters = filters.q || filters.dept || filters.wave || filters.type || filters.status || filters.openOnly;
+  const hasActiveFilters =
+    filters.q || filters.dept || filters.wave || filters.type || filters.status || filters.openOnly;
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg p-4 border border-slate-200 dark:border-slate-700 mb-6">

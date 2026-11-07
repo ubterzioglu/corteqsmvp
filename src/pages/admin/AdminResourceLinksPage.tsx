@@ -59,17 +59,11 @@ const AdminResourceLinksPage = ({ tableName, title, description, emptyMessage }:
     void refresh();
   }, [refresh]);
 
-  const updateForm = <Key extends keyof ResourceLinkFormState>(
-    key: Key,
-    value: ResourceLinkFormState[Key],
-  ) => {
+  const updateForm = <Key extends keyof ResourceLinkFormState>(key: Key, value: ResourceLinkFormState[Key]) => {
     setForm((current) => ({ ...current, [key]: value }));
   };
 
-  const updateEditingForm = <Key extends keyof ResourceLinkFormState>(
-    key: Key,
-    value: ResourceLinkFormState[Key],
-  ) => {
+  const updateEditingForm = <Key extends keyof ResourceLinkFormState>(key: Key, value: ResourceLinkFormState[Key]) => {
     setEditingForm((current) => ({ ...current, [key]: value }));
   };
 

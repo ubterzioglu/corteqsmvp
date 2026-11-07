@@ -4,7 +4,8 @@ const PAGE_EXPECTATIONS = [
   {
     path: "/",
     title: "CorteQS | Dünyadaki Türkleri Bir Araya Getiren Platform",
-    description: "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
+    description:
+      "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
     canonical: "https://corteqs.net/",
     heading: /Dünyanın\s*Her Yerindeki\s*Türkler İçin\s*Tek Ağ/i,
   },
@@ -32,28 +33,32 @@ const PAGE_EXPECTATIONS = [
   {
     path: "/iletisim",
     title: "İletişim | CorteQS",
-    description: "CorteQS ile iletişime geçin. Destek, iş birliği ve topluluk soruları için resmi kanallarımızı kullanın.",
+    description:
+      "CorteQS ile iletişime geçin. Destek, iş birliği ve topluluk soruları için resmi kanallarımızı kullanın.",
     canonical: "https://corteqs.net/iletisim",
     heading: /İletişim/i,
   },
   {
     path: "/kariyer",
     title: "Kariyer | CorteQS",
-    description: "CorteQS kariyer sayfasında açık rollerimizi ve global diaspora ekosistemini birlikte büyütme fırsatlarını inceleyin.",
+    description:
+      "CorteQS kariyer sayfasında açık rollerimizi ve global diaspora ekosistemini birlikte büyütme fırsatlarını inceleyin.",
     canonical: "https://corteqs.net/kariyer",
     heading: /CorteQS Global Ekibine Katıl/i,
   },
   {
     path: "/radar/rehberler",
     title: "CorteQS Radar | Ülke Rehberleri",
-    description: "CorteQS Radar rehberlerinde ülkeler, şehirler ve diaspora yaşamına dair başlangıç bilgilerini tek sayfada bulun.",
+    description:
+      "CorteQS Radar rehberlerinde ülkeler, şehirler ve diaspora yaşamına dair başlangıç bilgilerini tek sayfada bulun.",
     canonical: "https://corteqs.net/radar/rehberler",
     heading: /Haberler, Duyurular ve Ülke Rehberleri/i,
   },
   {
     path: "/legal/privacy",
     title: "Gizlilik Politikası | CorteQS",
-    description: "CorteQS Gizlilik Politikası; kişisel verilerin nasıl toplandığını, işlendiğini, korunduğunu ve hangi haklara sahip olduğunuzu açıklar.",
+    description:
+      "CorteQS Gizlilik Politikası; kişisel verilerin nasıl toplandığını, işlendiğini, korunduğunu ve hangi haklara sahip olduğunuzu açıklar.",
     canonical: "https://corteqs.net/legal/privacy",
     heading: /Gizlilik Politikası/i,
   },
@@ -67,14 +72,16 @@ const PAGE_EXPECTATIONS = [
   {
     path: "/legal/terms",
     title: "Kullanım Şartları | CorteQS",
-    description: "CorteQS kullanım şartlarını, platform sorumluluklarını ve üyelik kurallarını Türkçe olarak inceleyin.",
+    description:
+      "CorteQS kullanım şartlarını, platform sorumluluklarını ve üyelik kurallarını Türkçe olarak inceleyin.",
     canonical: "https://corteqs.net/legal/terms",
     heading: /Kullanım Şartları/i,
   },
   {
     path: "/legal/cookies",
     title: "Çerez Politikası | CorteQS",
-    description: "CorteQS çerez politikası; zorunlu, işlevsel ve analitik çerezlerin kullanımını ve tercih yönetimini açıklar.",
+    description:
+      "CorteQS çerez politikası; zorunlu, işlevsel ve analitik çerezlerin kullanımını ve tercih yönetimini açıklar.",
     canonical: "https://corteqs.net/legal/cookies",
     heading: /Çerez Politikası/i,
   },
@@ -101,9 +108,9 @@ test("contact and CTA surfaces use the official WhatsApp community link", async 
   // bekleyen bu satır olmadan test deterministik olarak başarısız oluyordu.
   await expect(page.getByRole("link").first()).toBeVisible();
 
-  const hrefs = await page.locator("a").evaluateAll((elements) =>
-    elements.map((element) => element.getAttribute("href") ?? ""),
-  );
+  const hrefs = await page
+    .locator("a")
+    .evaluateAll((elements) => elements.map((element) => element.getAttribute("href") ?? ""));
 
   expect(hrefs).not.toContain("https://wa.me/message/corteqs");
   expect(hrefs).toContain("https://chat.whatsapp.com/K9im9jUtU056hjA1G7gSib");

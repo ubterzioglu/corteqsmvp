@@ -24,12 +24,7 @@ import {
   Video,
 } from "lucide-react";
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -59,25 +54,19 @@ type UnifiedShareListProps = {
 
 // Görünüm sırası kartın sabit globalIndex'ine göre (UNIFIED_ITEMS zaten bu
 // sırada gelir — bkz. social-share-unified.ts RANDOMIZED_ORDER).
-const VISIBLE_ITEMS: UnifiedItem[] = [...UNIFIED_ITEMS].sort(
-  (a, b) => a.globalIndex - b.globalIndex,
-);
+const VISIBLE_ITEMS: UnifiedItem[] = [...UNIFIED_ITEMS].sort((a, b) => a.globalIndex - b.globalIndex);
 
 export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedShareListProps) {
   const { toast } = useToast();
   const [assets, setAssets] = useState<Record<string, BurakShareAsset>>({});
   const [extraImageCounts, setExtraImageCounts] = useState<Record<string, number>>({});
-  const [firstExtraImages, setFirstExtraImages] = useState<
-    Record<string, { imageBucket: string; imagePath: string }>
-  >({});
+  const [firstExtraImages, setFirstExtraImages] = useState<Record<string, { imageBucket: string; imagePath: string }>>(
+    {},
+  );
 
   useEffect(() => {
     let active = true;
-    Promise.all([
-      listBurakShareAssets(),
-      countBurakShareExtraImagesBySlot(),
-      listBurakShareFirstExtraImageBySlot(),
-    ])
+    Promise.all([listBurakShareAssets(), countBurakShareExtraImagesBySlot(), listBurakShareFirstExtraImageBySlot()])
       .then(([map, counts, firstExtras]) => {
         if (active) {
           setAssets(map);
@@ -112,8 +101,7 @@ export function UnifiedShareList({ copiedId, onCopy, renderShareBar }: UnifiedSh
             firstExtraImages={item.hasMediaPanel ? firstExtraImages : undefined}
             onExtraImageCountChange={
               item.hasMediaPanel
-                ? (slotKey, count) =>
-                    setExtraImageCounts((current) => ({ ...current, [slotKey]: count }))
+                ? (slotKey, count) => setExtraImageCounts((current) => ({ ...current, [slotKey]: count }))
                 : undefined
             }
             renderShareBar={renderShareBar}
@@ -184,10 +172,7 @@ function UnifiedAccordionItem({
           <Badge variant="outline" className={item.sourceBadgeClass}>
             {item.sourceLabel}
           </Badge>
-          <Badge
-            variant="outline"
-            className="border-muted-foreground/30 bg-muted/40 text-muted-foreground"
-          >
+          <Badge variant="outline" className="border-muted-foreground/30 bg-muted/40 text-muted-foreground">
             {item.assignedDate}
           </Badge>
           {item.categoryLabel && (
@@ -196,10 +181,7 @@ function UnifiedAccordionItem({
             </Badge>
           )}
           {item.themeLabel && (
-            <Badge
-              variant="outline"
-              className="border-amber-500/40 bg-amber-500/15 text-amber-600 dark:text-amber-300"
-            >
+            <Badge variant="outline" className="border-amber-500/40 bg-amber-500/15 text-amber-600 dark:text-amber-300">
               {item.themeLabel}
             </Badge>
           )}
@@ -210,19 +192,14 @@ function UnifiedAccordionItem({
               count={totalImageCount}
             />
           ) : item.hasMediaPanel ? (
-            <Badge
-              variant="outline"
-              className="gap-1 border-muted-foreground/30 bg-muted/20 text-muted-foreground"
-            >
+            <Badge variant="outline" className="gap-1 border-muted-foreground/30 bg-muted/20 text-muted-foreground">
               <ImageOff className="h-3 w-3" /> Görsel yok
             </Badge>
           ) : null}
         </div>
       </AccordionTrigger>
       <AccordionContent>
-        {item.description && (
-          <p className="mb-4 text-sm text-muted-foreground">{item.description}</p>
-        )}
+        {item.description && <p className="mb-4 text-sm text-muted-foreground">{item.description}</p>}
         <div className="space-y-4">
           {item.variants.map((variant, index) => {
             const variantNo = index + 1;
@@ -260,9 +237,7 @@ function UnifiedAccordionItem({
                         <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
                           <CardTitle className="flex items-center gap-2 text-sm">
                             <Palette className="h-4 w-4" /> Görsel Promptu {promptNo}
-                            <span className="text-xs font-normal text-muted-foreground">
-                              ChatGPT · metinsiz
-                            </span>
+                            <span className="text-xs font-normal text-muted-foreground">ChatGPT · metinsiz</span>
                             <span className="font-mono text-[0.68rem] font-normal text-muted-foreground">
                               {simpleLabel}
                             </span>
@@ -270,16 +245,8 @@ function UnifiedAccordionItem({
                               <PromptImageLink bucket={promptImage?.bucket ?? null} path={promptImage?.path ?? null} />
                             )}
                           </CardTitle>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => onCopy(prompt, promptId)}
-                          >
-                            {copiedId === promptId ? (
-                              <Check className="h-4 w-4" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
+                          <Button variant="ghost" size="sm" onClick={() => onCopy(prompt, promptId)}>
+                            {copiedId === promptId ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                           </Button>
                         </CardHeader>
                         <CardContent>
@@ -296,9 +263,7 @@ function UnifiedAccordionItem({
                     <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
                       <CardTitle className="flex items-center gap-2 text-sm">
                         <Linkedin className="h-4 w-4" /> LinkedIn Postu
-                        <span className="text-xs font-normal text-muted-foreground">
-                          kopyala-yapıştır
-                        </span>
+                        <span className="text-xs font-normal text-muted-foreground">kopyala-yapıştır</span>
                       </CardTitle>
                       <Button
                         variant="ghost"
@@ -321,9 +286,7 @@ function UnifiedAccordionItem({
                     <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
                       <CardTitle className="flex items-center gap-2 text-sm">
                         <Instagram className="h-4 w-4" /> Instagram Postu
-                        <span className="text-xs font-normal text-muted-foreground">
-                          kopyala-yapıştır
-                        </span>
+                        <span className="text-xs font-normal text-muted-foreground">kopyala-yapıştır</span>
                       </CardTitle>
                       <Button
                         variant="ghost"
@@ -346,9 +309,7 @@ function UnifiedAccordionItem({
                     <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0 pb-3">
                       <CardTitle className="flex items-center gap-2 text-sm">
                         <MessageCircle className="h-4 w-4" /> Reddit Postu
-                        <span className="text-xs font-normal text-muted-foreground">
-                          kopyala-yapıştır
-                        </span>
+                        <span className="text-xs font-normal text-muted-foreground">kopyala-yapıştır</span>
                       </CardTitle>
                       <Button
                         variant="ghost"
@@ -375,9 +336,7 @@ function UnifiedAccordionItem({
                     variantIndex={index}
                     asset={asset?.[slotKey as string]}
                     extraImageCount={extraImageCounts?.[slotKey as string] ?? 0}
-                    onExtraImageCountChange={(count) =>
-                      onExtraImageCountChange?.(slotKey as string, count)
-                    }
+                    onExtraImageCountChange={(count) => onExtraImageCountChange?.(slotKey as string, count)}
                   />
                 )}
               </div>
@@ -419,10 +378,7 @@ function MediaToggle({
         <Button
           variant={totalImageCount > 0 ? "default" : open ? "secondary" : "ghost"}
           size="sm"
-          className={cn(
-            "h-7 px-2 text-xs",
-            totalImageCount > 0 && "bg-emerald-600 text-white hover:bg-emerald-700",
-          )}
+          className={cn("h-7 px-2 text-xs", totalImageCount > 0 && "bg-emerald-600 text-white hover:bg-emerald-700")}
           onClick={() => setOpen((v) => !v)}
         >
           <ImageIcon className="mr-1 h-3.5 w-3.5" />
@@ -431,10 +387,7 @@ function MediaToggle({
         <Button
           variant={hasVideo ? "default" : open ? "secondary" : "ghost"}
           size="sm"
-          className={cn(
-            "h-7 px-2 text-xs",
-            hasVideo && "bg-emerald-600 text-white hover:bg-emerald-700",
-          )}
+          className={cn("h-7 px-2 text-xs", hasVideo && "bg-emerald-600 text-white hover:bg-emerald-700")}
           onClick={() => setOpen((v) => !v)}
         >
           <Video className="mr-1 h-3.5 w-3.5" />
@@ -493,11 +446,7 @@ function ImageLinkBadge({ bucket, path, count }: ImageLinkBadgeProps) {
       onClick={(event) => void handleClick(event)}
       className="cursor-pointer gap-1 border-emerald-500/40 bg-emerald-500/15 text-emerald-600 hover:bg-emerald-500/25 dark:text-emerald-300"
     >
-      {loading ? (
-        <Loader2 className="h-3 w-3 animate-spin" />
-      ) : (
-        <ImageIcon className="h-3 w-3" />
-      )}
+      {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ImageIcon className="h-3 w-3" />}
       {count}
       <ExternalLink className="h-3 w-3" />
     </Badge>
@@ -551,11 +500,7 @@ function PromptImageLink({ bucket, path }: PromptImageLinkProps) {
       onClick={() => void handleClick()}
       className="inline-flex items-center gap-1 text-[0.68rem] font-normal text-emerald-600 hover:underline dark:text-emerald-400"
     >
-      {loading ? (
-        <Loader2 className="h-3 w-3 animate-spin" />
-      ) : (
-        <ExternalLink className="h-3 w-3" />
-      )}
+      {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ExternalLink className="h-3 w-3" />}
       görseli aç
     </button>
   );

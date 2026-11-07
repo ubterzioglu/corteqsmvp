@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  blogCategoryLabels,
-  groupBlogPostsByCountry,
-  slugifyBlogTitle,
-  type BlogPostRow,
-} from "./blog";
+import { blogCategoryLabels, groupBlogPostsByCountry, slugifyBlogTitle, type BlogPostRow } from "./blog";
 
 const makePost = (overrides: Partial<BlogPostRow>): BlogPostRow => ({
   id: overrides.id ?? "id",

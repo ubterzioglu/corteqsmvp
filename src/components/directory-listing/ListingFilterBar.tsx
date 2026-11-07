@@ -10,13 +10,7 @@
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { RoleGroup } from "@/lib/directory-role-groups";
 import type { FilterOption, ListingFilterState } from "@/lib/public-listing-filter";
 
@@ -43,8 +37,7 @@ const ListingFilterBar = ({
   searchPlaceholder,
   showGroups = true,
 }: ListingFilterBarProps) => {
-  const patch = (partial: Partial<ListingFilterState>) =>
-    onFilterChange({ ...filter, ...partial });
+  const patch = (partial: Partial<ListingFilterState>) => onFilterChange({ ...filter, ...partial });
 
   return (
     <div className="mb-8 space-y-4">
@@ -92,10 +85,7 @@ const ListingFilterBar = ({
 
         {/* Ülke değişince şehir SIFIRLANIR — yoksa "Almanya + Dubai" gibi
             imkânsız bir kombinasyon kalır ve liste sessizce boş görünür. */}
-        <Select
-          value={filter.country}
-          onValueChange={(value) => patch({ country: value, city: "all" })}
-        >
+        <Select value={filter.country} onValueChange={(value) => patch({ country: value, city: "all" })}>
           <SelectTrigger className="w-full sm:w-52" aria-label="Ülkeye göre süz">
             <SelectValue placeholder="Tüm Ülkeler" />
           </SelectTrigger>

@@ -5,7 +5,16 @@ export function normalizeUrl(rawUrl: string): string {
   try {
     const url = new URL(rawUrl.trim());
     url.hash = "";
-    const dropParams = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content", "fbclid", "gclid", "ref"];
+    const dropParams = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "fbclid",
+      "gclid",
+      "ref",
+    ];
     for (const param of dropParams) url.searchParams.delete(param);
     url.hostname = url.hostname.toLowerCase().replace(/^www\./, "");
     let pathname = url.pathname.replace(/\/+$/, "");

@@ -1,19 +1,19 @@
 // Komuta Merkezi — sayfalama çubuğu (aralık metni + sayfa boyutu + gezinme).
 // Sayfa boyutu tercihi tarayıcıda saklanır; bkz. `page-size.ts`.
 
-import { PAGE_SIZE_OPTIONS } from './page-size'
+import { PAGE_SIZE_OPTIONS } from "./page-size";
 
 interface CommandCenterPaginationProps {
-  rangeStart: number
-  rangeEnd: number
-  totalCount: number
-  pageSize: number
-  onPageSizeChange: (nextPageSize: number) => void
-  currentPage: number
-  totalPages: number
-  isPageLoading: boolean
-  onPreviousPage: () => void
-  onNextPage: () => void
+  rangeStart: number;
+  rangeEnd: number;
+  totalCount: number;
+  pageSize: number;
+  onPageSizeChange: (nextPageSize: number) => void;
+  currentPage: number;
+  totalPages: number;
+  isPageLoading: boolean;
+  onPreviousPage: () => void;
+  onNextPage: () => void;
 }
 
 export default function CommandCenterPagination({
@@ -72,5 +72,5 @@ export default function CommandCenterPagination({
         </button>
       </div>
     </div>
-  )
+  );
 }

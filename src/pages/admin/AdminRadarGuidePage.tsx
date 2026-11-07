@@ -114,14 +114,16 @@ const AdminRadarGuidePage = () => {
         <CardHeader>
           <CardTitle>Radar Kural Kitabı</CardTitle>
           <CardDescription>
-            Radar Haber Pipeline'ın ne işe yaradığını ve admin tarafında nasıl yönetildiğini günlük dille, adım adım anlatır.
+            Radar Haber Pipeline'ın ne işe yaradığını ve admin tarafında nasıl yönetildiğini günlük dille, adım adım
+            anlatır.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            Bu rehber iki bölümdür: önce Radar'ın ne yaptığı ve haberleri nasıl bulduğu (1-2), sonra senin gözünden yönetim
-            (3-7). Teknik bilgi gerektirmez; amaç, bir aday haberi değerlendirirken veya yeni bir kaynak eklerken tek sayfada
-            doğru kararı verebilmendir. Unutma: Radar yalnızca aday toplar — banda ne çıkacağına her zaman sen karar verirsin.
+            Bu rehber iki bölümdür: önce Radar'ın ne yaptığı ve haberleri nasıl bulduğu (1-2), sonra senin gözünden
+            yönetim (3-7). Teknik bilgi gerektirmez; amaç, bir aday haberi değerlendirirken veya yeni bir kaynak
+            eklerken tek sayfada doğru kararı verebilmendir. Unutma: Radar yalnızca aday toplar — banda ne çıkacağına
+            her zaman sen karar verirsin.
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <Button asChild variant="outline">

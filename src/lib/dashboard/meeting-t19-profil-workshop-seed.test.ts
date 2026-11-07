@@ -20,10 +20,7 @@ const MEETING_DATE_LABEL = "3 Eylül 2026";
 
 /** Seed dosyası uygulanınca `applied/` altına taşınır; her iki konumu da kabul et. */
 function readMigration(fileName: string): string {
-  const candidates = [
-    `supabase/migrations/${fileName}`,
-    `supabase/migrations/applied/${fileName}`,
-  ];
+  const candidates = [`supabase/migrations/${fileName}`, `supabase/migrations/applied/${fileName}`];
   const found = candidates.find((path) => existsSync(path));
   if (!found) {
     throw new Error(`Migration bulunamadı: ${fileName}`);
@@ -73,9 +70,9 @@ describe("T19 komuta merkezi seed'i", () => {
   it("yalnız tanımlı toplantı kategorilerini kullanır", () => {
     const sql = t19Sql();
     const categoryIds = new Set(MEETING_CATEGORIES.map((category) => category.id));
-    const used = Array.from(
-      sql.matchAll(/'meeting_notes', 'T19', '3 Eylül 2026', '([^']+)'/g),
-    ).map((match) => match[1]);
+    const used = Array.from(sql.matchAll(/'meeting_notes', 'T19', '3 Eylül 2026', '([^']+)'/g)).map(
+      (match) => match[1],
+    );
 
     expect(used).toHaveLength(T19_ROW_COUNT);
     for (const category of used) {
@@ -87,24 +84,20 @@ describe("T19 komuta merkezi seed'i", () => {
 describe("Profil Workshop WS1 seed'i", () => {
   it("26 maddeyi 1'den başlayarak kesintisiz numaralandırır", () => {
     const sql = profilSql();
-    const itemNumbers = Array.from(sql.matchAll(/\('profil', 'WS1', '[^']+', (\d+),/g)).map(
-      (match) => Number.parseInt(match[1], 10),
+    const itemNumbers = Array.from(sql.matchAll(/\('profil', 'WS1', '[^']+', (\d+),/g)).map((match) =>
+      Number.parseInt(match[1], 10),
     );
 
     expect(itemNumbers).toHaveLength(PROFIL_ITEM_COUNT);
     // (workshop_key, item_no) tekil olduğu için profil workshop'u 1'den başlar;
     // Cadde'nin 136 maddesiyle çakışmaz.
-    expect(itemNumbers).toEqual(
-      Array.from({ length: PROFIL_ITEM_COUNT }, (_value, index) => index + 1),
-    );
+    expect(itemNumbers).toEqual(Array.from({ length: PROFIL_ITEM_COUNT }, (_value, index) => index + 1));
     expect(sql).toContain(`Profil workshop WS1 seed ${PROFIL_ITEM_COUNT} madde olmalıydı`);
   });
 
   it("toplantıda konuşulan profil bölümlerini kapsar", () => {
     const sql = profilSql();
-    const sections = new Set(
-      Array.from(sql.matchAll(/\('profil', 'WS1', '([^']+)', \d+,/g)).map((match) => match[1]),
-    );
+    const sections = new Set(Array.from(sql.matchAll(/\('profil', 'WS1', '([^']+)', \d+,/g)).map((match) => match[1]));
 
     expect(sections).toEqual(
       new Set([

@@ -13,15 +13,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { memberCatalogItemsKeys } from "@/hooks/useMemberCatalogSlug";
-import {
-  getMyEditableCatalogItems,
-  type EditableCatalogItemSummary,
-} from "@/lib/member-catalog";
+import { getMyEditableCatalogItems, type EditableCatalogItemSummary } from "@/lib/member-catalog";
 import { profileEditorPathFor } from "@/lib/profile-routing";
-import {
-  isPremiumPresentation,
-  resolveProfilePresentation,
-} from "@/lib/profile-presentation";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
 import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
 import RequestNewProfileDialog from "@/components/profile/RequestNewProfileDialog";
 
@@ -36,17 +30,13 @@ type ProfileSwitcherMenuProps = {
 };
 
 /** Member (Bireysel) item'ı her zaman en üste alır; diğerleri DB sırasında kalır. */
-const sortMemberFirst = (
-  items: EditableCatalogItemSummary[],
-): EditableCatalogItemSummary[] => {
-  return items
-    .slice()
-    .sort((left, right) => {
-      if (left.itemType === right.itemType) return 0;
-      if (left.itemType === "member") return -1;
-      if (right.itemType === "member") return 1;
-      return 0;
-    });
+const sortMemberFirst = (items: EditableCatalogItemSummary[]): EditableCatalogItemSummary[] => {
+  return items.slice().sort((left, right) => {
+    if (left.itemType === right.itemType) return 0;
+    if (left.itemType === "member") return -1;
+    if (right.itemType === "member") return 1;
+    return 0;
+  });
 };
 
 const profileTypeLabel = (item: EditableCatalogItemSummary): string => {
@@ -79,8 +69,7 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
     return null;
   }
 
-  const activeItemId =
-    currentItemId ?? items.find((item) => item.itemType === "member")?.itemId ?? null;
+  const activeItemId = currentItemId ?? items.find((item) => item.itemType === "member")?.itemId ?? null;
 
   return (
     <>
@@ -112,9 +101,7 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
                   {isActive ? <Check className="h-3.5 w-3.5" aria-hidden="true" /> : null}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-medium text-foreground">
-                    {item.title}
-                  </span>
+                  <span className="block truncate text-sm font-medium text-foreground">{item.title}</span>
                   <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     {profileTypeLabel(item)}
                     {isPremium ? (
@@ -132,16 +119,12 @@ const ProfileSwitcherMenu = ({ currentItemId, triggerClassName }: ProfileSwitche
           {/* m46: hedef sabit "bireysel" DEĞİL — /profile kullanıcının kendi profil tipine
               yönlenir (danışman/işletme de olabilir) ve ProfilePage redirect'i artık hash'i
               koruyor. "?tab=settings" kaldırıldı: ProfilePage tab parametresi okumuyor. */}
-          <DropdownMenuItem
-            onSelect={() => navigate("/profile#cadde-tanitim")}
-            className="gap-2"
-          >
+          <DropdownMenuItem onSelect={() => navigate("/profile#cadde-tanitim")} className="gap-2">
             <Megaphone className="h-3.5 w-3.5" aria-hidden="true" />
             Caddeye reklam ver
           </DropdownMenuItem>
           <DropdownMenuItem onSelect={() => setIsRequestDialogOpen(true)} className="gap-2">
-            <Plus className="h-3.5 w-3.5" aria-hidden="true" />
-            + Yeni Profil
+            <Plus className="h-3.5 w-3.5" aria-hidden="true" />+ Yeni Profil
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

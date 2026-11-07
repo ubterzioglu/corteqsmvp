@@ -28,14 +28,10 @@ const EXTENSION_TO_MIME = {
 export const REVISION_ATTACHMENT_MAX_BYTES = 15 * 1024 * 1024;
 
 /** Bucket'taki `allowed_mime_types` ile BİREBİR aynı — haritadan türetilir. */
-export const REVISION_ATTACHMENT_MIME_TYPES: readonly string[] = [
-  ...new Set<string>(Object.values(EXTENSION_TO_MIME)),
-];
+export const REVISION_ATTACHMENT_MIME_TYPES: readonly string[] = [...new Set<string>(Object.values(EXTENSION_TO_MIME))];
 
 /** `validateFile` uzantı kümesi — aynı haritadan türetilir. */
-export const REVISION_ATTACHMENT_EXTENSIONS: Set<string> = new Set<string>(
-  Object.keys(EXTENSION_TO_MIME),
-);
+export const REVISION_ATTACHMENT_EXTENSIONS: Set<string> = new Set<string>(Object.keys(EXTENSION_TO_MIME));
 
 /** `<input type="file" accept=...>` için. Elle yazma, buradan türet. */
 export const REVISION_ATTACHMENT_ACCEPT = REVISION_ATTACHMENT_MIME_TYPES.join(",");
@@ -45,10 +41,7 @@ export const REVISION_ATTACHMENT_ACCEPT = REVISION_ATTACHMENT_MIME_TYPES.join(",
  * kartı)? `content_type` satıra yüklemede yazılır ama null olabilir (eski satırlar
  * / tarayıcı türü bilmiyor) — o durumda uzantıdan sezilir.
  */
-export function isRevisionAttachmentImage(
-  contentType: string | null,
-  fileName: string,
-): boolean {
+export function isRevisionAttachmentImage(contentType: string | null, fileName: string): boolean {
   if (contentType) {
     return contentType.startsWith("image/");
   }

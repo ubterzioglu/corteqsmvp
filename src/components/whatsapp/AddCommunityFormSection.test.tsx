@@ -107,11 +107,7 @@ describe("AddCommunityFormSection · politika §2 satırları", () => {
   });
 
   it("kısa açıklama 160 karakterle sınırlı + sayaç görünür", () => {
-    render(
-      <AddCommunityFormSection
-        {...baseProps({ form: { ...initialGroupForm, shortDescription: "Merhaba" } })}
-      />,
-    );
+    render(<AddCommunityFormSection {...baseProps({ form: { ...initialGroupForm, shortDescription: "Merhaba" } })} />);
 
     const textarea = screen.getByLabelText(/Kısa Açıklama/);
     expect(textarea).toHaveAttribute("maxlength", "160");
@@ -119,9 +115,7 @@ describe("AddCommunityFormSection · politika §2 satırları", () => {
   });
 
   it("Global işaretlenince şehir kapanır, ülke 'Hedef Ülke' olur", () => {
-    render(
-      <AddCommunityFormSection {...baseProps({ form: { ...initialGroupForm, isGlobal: true } })} />,
-    );
+    render(<AddCommunityFormSection {...baseProps({ form: { ...initialGroupForm, isGlobal: true } })} />);
 
     expect(screen.getByLabelText("Şehir autocomplete")).toBeDisabled();
     expect(screen.getByText("Hedef Ülke *")).toBeInTheDocument();
@@ -150,11 +144,7 @@ describe("AddCommunityFormSection · politika §2 satırları", () => {
   });
 
   it("Grup Sözü işaretliyken gönderim açık", () => {
-    render(
-      <AddCommunityFormSection
-        {...baseProps({ form: { ...initialGroupForm, pledgeAccepted: true } })}
-      />,
-    );
+    render(<AddCommunityFormSection {...baseProps({ form: { ...initialGroupForm, pledgeAccepted: true } })} />);
 
     expect(screen.getByRole("button", { name: /Grubu Gönder/i })).not.toBeDisabled();
   });
@@ -169,7 +159,13 @@ describe("AddCommunityFormSection · önizleme ve yasak durumları", () => {
           form: { ...initialGroupForm, pledgeAccepted: true },
           preview: {
             status: "done",
-            data: { exists: true, slug: "berlin-grup", group_name: "Berlin Grubu", ownership: "unclaimed", listing_status: "published" },
+            data: {
+              exists: true,
+              slug: "berlin-grup",
+              group_name: "Berlin Grubu",
+              ownership: "unclaimed",
+              listing_status: "published",
+            },
           },
           onOpenExistingGroup,
         })}
@@ -222,9 +218,7 @@ describe("AddCommunityFormSection · önizleme ve yasak durumları", () => {
 
   it("banned → uyarı + gönderim kapalı (G15)", () => {
     render(
-      <AddCommunityFormSection
-        {...baseProps({ form: { ...initialGroupForm, pledgeAccepted: true }, banned: true })}
-      />,
+      <AddCommunityFormSection {...baseProps({ form: { ...initialGroupForm, pledgeAccepted: true }, banned: true })} />,
     );
 
     expect(screen.getByRole("alert")).toBeInTheDocument();

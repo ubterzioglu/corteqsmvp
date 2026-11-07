@@ -21,18 +21,13 @@ describe("notification dispatch secret storage", () => {
     const functionStart = sql.indexOf("create or replace function");
     const functionEnd = sql.indexOf("\n$$;", functionStart);
     const dispatcherFunction = sql.slice(functionStart, functionEnd);
-    expect(dispatcherFunction).not.toMatch(
-      /select\s+value\s+#>>\s+'\{\}'[\s\S]*key\s*=\s*'dispatch\.secret'/i,
-    );
+    expect(dispatcherFunction).not.toMatch(/select\s+value\s+#>>\s+'\{\}'[\s\S]*key\s*=\s*'dispatch\.secret'/i);
   });
 
   it("keeps future setup runs from restoring the plaintext DB row", async () => {
     const [setupScript, configSql] = await Promise.all([
       readFile(path.join(projectRoot, "scripts/setup-notification-dispatch.ps1"), "utf8"),
-      readFile(
-        path.join(projectRoot, "supabase/manual/2026-07-29_notification_dispatch_config.sql"),
-        "utf8",
-      ),
+      readFile(path.join(projectRoot, "supabase/manual/2026-07-29_notification_dispatch_config.sql"), "utf8"),
     ]);
 
     expect(setupScript).toContain("notification_dispatch_secret");

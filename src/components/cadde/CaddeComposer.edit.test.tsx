@@ -15,7 +15,9 @@ import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde-compose
 
 vi.mock("@/components/cadde/CaddeEmojiPickerContent", () => ({
   default: ({ onSelect }: { onSelect: (emoji: string) => void }) => (
-    <button type="button" onClick={() => onSelect("😊")}>😊</button>
+    <button type="button" onClick={() => onSelect("😊")}>
+      😊
+    </button>
   ),
 }));
 

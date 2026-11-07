@@ -1,12 +1,4 @@
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  MessageCircle,
-  Send,
-  Twitter,
-  Youtube,
-} from "lucide-react";
+import { Facebook, Instagram, Linkedin, MessageCircle, Send, Twitter, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import { footerFlatLinks } from "@/components/footerLinks";
 import DiasporaRoutesLayer from "@/components/landing/DiasporaRoutesLayer";
@@ -83,9 +75,7 @@ const Footer = () => {
       />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 pt-4 text-center">
-        <p className="mb-2.5 text-[11px] font-medium tracking-[0.08em] text-muted-foreground">
-          İletişim Kanallarımız
-        </p>
+        <p className="mb-2.5 text-[11px] font-medium tracking-[0.08em] text-muted-foreground">İletişim Kanallarımız</p>
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           {socialLinks.map(({ href, label, icon: Icon, className }) => (
             <a
@@ -135,9 +125,7 @@ const Footer = () => {
         <span className="font-semibold text-foreground/85">CorteQS</span>
         {" · "}
         Türk Diasporası Topluluk ve Network Platformu
-        {" · "}
-        © 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları
-        saklıdır.
+        {" · "}© 2026 CorteQS bir Qualtron Sinclair ve Akçakanat-Terzioğlu Girişimidir. Tüm hakları saklıdır.
         {" · "}
         Son güncelleme: 19.09.2026
       </div>

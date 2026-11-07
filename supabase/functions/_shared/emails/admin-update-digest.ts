@@ -26,8 +26,7 @@ export type BuiltAdminUpdateEmail = {
 
 const MUTED = "#71717a";
 
-const FOOTNOTE =
-  "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
+const FOOTNOTE = "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
 
 type NormalizedEntry = {
   title: string;
@@ -53,13 +52,7 @@ function buildEntryHtml(entry: NormalizedEntry): string {
 }
 
 function buildEntryText(entry: NormalizedEntry): string {
-  return [
-    entry.title,
-    entry.date,
-    ...entry.items.map((item) => `- ${item}`),
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
+  return [entry.title, entry.date, ...entry.items.map((item) => `- ${item}`)].filter((line) => line !== "").join("\n");
 }
 
 /**

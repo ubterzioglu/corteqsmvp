@@ -3,10 +3,7 @@ import type { KadroRole, KadroRoleState, KadroResolvedRole } from "./kadro-types
 import { KADRO_OPEN_STATUSES, KADRO_FILLED_STATUSES } from "./kadro-taxonomy";
 import { KADRO_ROLE_IDS } from "./roles";
 
-export function resolveKadroRoles(
-  roles: KadroRole[],
-  states: KadroRoleState[],
-): KadroResolvedRole[] {
+export function resolveKadroRoles(roles: KadroRole[], states: KadroRoleState[]): KadroResolvedRole[] {
   const stateMap = new Map(states.map((s) => [s.roleKey, s]));
 
   return roles.map((role) => {
@@ -46,10 +43,7 @@ export const KADRO_EMPTY_FILTERS: KadroFilters = {
   openOnly: false,
 };
 
-export function filterKadroRoles(
-  roles: KadroResolvedRole[],
-  filters: KadroFilters,
-): KadroResolvedRole[] {
+export function filterKadroRoles(roles: KadroResolvedRole[], filters: KadroFilters): KadroResolvedRole[] {
   return roles.filter((role) => {
     if (filters.dept && role.dept !== filters.dept) return false;
     if (filters.wave && String(role.wave) !== filters.wave) return false;
@@ -58,13 +52,7 @@ export function filterKadroRoles(
     if (filters.openOnly && !KADRO_OPEN_STATUSES.includes(role.currentStatus)) return false;
 
     if (filters.q) {
-      const searchFields = [
-        role.title,
-        role.currentOwner,
-        role.note,
-        role.jd,
-        ...role.kpi,
-      ].join(" ");
+      const searchFields = [role.title, role.currentOwner, role.note, role.jd, ...role.kpi].join(" ");
 
       if (!trIncludes(searchFields, filters.q)) return false;
     }

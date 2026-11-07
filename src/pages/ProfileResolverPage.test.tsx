@@ -99,7 +99,14 @@ describe("ProfileResolverPage", () => {
     authedUser();
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
     getMyEditableCatalogItemsMock.mockResolvedValue([
-      memberItem({ itemId: "item-2", slug: "isletme-xyz", title: "Test Business", itemType: "business", roleKey: "Business_RestaurantCafe", legacyProfileType: "isletme" }),
+      memberItem({
+        itemId: "item-2",
+        slug: "isletme-xyz",
+        title: "Test Business",
+        itemType: "business",
+        roleKey: "Business_RestaurantCafe",
+        legacyProfileType: "isletme",
+      }),
       memberItem(),
     ]);
 
@@ -121,8 +128,22 @@ describe("ProfileResolverPage", () => {
     authedUser();
     getCurrentMemberCatalogProfileMock.mockResolvedValue(null);
     getMyEditableCatalogItemsMock.mockResolvedValue([
-      memberItem({ itemId: "item-2", slug: "isletme-xyz", title: "Test Business", itemType: "business", roleKey: "Business_RestaurantCafe", legacyProfileType: "isletme" }),
-      memberItem({ itemId: "item-3", slug: "kurulus-abc", title: "Test Org", itemType: "organization", roleKey: "Organization_AssociationFoundation", legacyProfileType: "kurulus-dernek" }),
+      memberItem({
+        itemId: "item-2",
+        slug: "isletme-xyz",
+        title: "Test Business",
+        itemType: "business",
+        roleKey: "Business_RestaurantCafe",
+        legacyProfileType: "isletme",
+      }),
+      memberItem({
+        itemId: "item-3",
+        slug: "kurulus-abc",
+        title: "Test Org",
+        itemType: "organization",
+        roleKey: "Organization_AssociationFoundation",
+        legacyProfileType: "kurulus-dernek",
+      }),
     ]);
 
     render(

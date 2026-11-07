@@ -164,9 +164,13 @@ Deno.serve(async (req) => {
     }
     const ipHashInput = `${ip}:${salt}`;
     const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(ipHashInput));
-    const ipHash = Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, "0")).join("");
+    const ipHash = Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
 
-    const rateLimitMax = survey.allow_multiple_submissions ? RATE_LIMIT_MAX_MULTI_SUBMISSION : RATE_LIMIT_MAX_SINGLE_SUBMISSION;
+    const rateLimitMax = survey.allow_multiple_submissions
+      ? RATE_LIMIT_MAX_MULTI_SUBMISSION
+      : RATE_LIMIT_MAX_SINGLE_SUBMISSION;
 
     // SG9: atomik tek kaynak. Eskiden select+update ayrıydı (yarış durumu) ve veritabanı
     // hataları sessizce yutuluyordu; artık altyapı hatası dış catch'e düşer (500).
@@ -210,13 +214,20 @@ Deno.serve(async (req) => {
     for (const question of questions ?? []) {
       const value = answerMap.get(question.id);
       if (question.is_required) {
-        const missing = value === undefined || value === null || (typeof value === "string" && value.trim() === "") || (Array.isArray(value) && value.length === 0);
+        const missing =
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "") ||
+          (Array.isArray(value) && value.length === 0);
         if (missing) {
           return json({ error: "Required answer missing", questionId: question.id }, 400);
         }
       }
       if (value !== undefined && value !== null && !(typeof value === "string" && value.trim() === "")) {
-        const validationError = validateAnswer({ type: question.type as QuestionType, options: question.options }, value);
+        const validationError = validateAnswer(
+          { type: question.type as QuestionType, options: question.options },
+          value,
+        );
         if (validationError) return json({ error: validationError, questionId: question.id }, 400);
       }
     }

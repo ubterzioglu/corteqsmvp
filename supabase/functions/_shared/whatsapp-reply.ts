@@ -88,10 +88,7 @@ export function parseWhatsAppReplyInput(value: unknown): WhatsAppReplyInput | nu
   };
 }
 
-export function buildMetaReplyPayload(
-  recipient: string,
-  prepared: PreparedWhatsAppReply,
-): MetaReplyPayload {
+export function buildMetaReplyPayload(recipient: string, prepared: PreparedWhatsAppReply): MetaReplyPayload {
   if (prepared.sendMode === "template") {
     if (!prepared.templateName || !prepared.templateLanguage) throw new Error("invalid_prepared_template");
     return {

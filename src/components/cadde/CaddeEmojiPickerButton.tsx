@@ -26,7 +26,10 @@ const CaddeEmojiPickerButton = ({ onSelect, disabled, className }: CaddeEmojiPic
           size="icon"
           aria-label="Emoji ekle"
           disabled={disabled}
-          className={cn("h-10 w-10 shrink-0 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900", className)}
+          className={cn(
+            "h-10 w-10 shrink-0 rounded-full text-slate-500 hover:bg-slate-100 hover:text-slate-900",
+            className,
+          )}
         >
           <SmilePlus className="h-4 w-4" aria-hidden />
         </Button>

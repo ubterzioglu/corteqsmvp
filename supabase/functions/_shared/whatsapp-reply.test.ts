@@ -1,11 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { encryptWhatsAppIdentifier } from "./whatsapp-webhook";
-import {
-  buildMetaReplyPayload,
-  createWhatsAppReplyHandler,
-  type PreparedWhatsAppReply,
-} from "./whatsapp-reply";
+import { buildMetaReplyPayload, createWhatsAppReplyHandler, type PreparedWhatsAppReply } from "./whatsapp-reply";
 
 const APP_SECRET = "reply-test-app-secret";
 const AUTHORIZATION = "Bearer admin-jwt";
@@ -47,23 +43,27 @@ describe("WhatsApp controlled replies", () => {
   it("sends only the approved zero-parameter template returned by the database gate", async () => {
     const sendMessage = vi.fn().mockResolvedValue("wamid.outbound-1");
     const finalizeReply = vi.fn().mockResolvedValue(undefined);
-    const prepareReply = vi.fn().mockResolvedValue(await prepared({
-      sendMode: "template",
-      messageBody: null,
-      templateName: "request_follow_up",
-      templateLanguage: "tr_TR",
-    }));
+    const prepareReply = vi.fn().mockResolvedValue(
+      await prepared({
+        sendMode: "template",
+        messageBody: null,
+        templateName: "request_follow_up",
+        templateLanguage: "tr_TR",
+      }),
+    );
     const response = await createWhatsAppReplyHandler({
       appSecret: APP_SECRET,
       prepareReply,
       sendMessage,
       finalizeReply,
-    })(request({
-      requestId: REQUEST_ID,
-      threadId: THREAD_ID,
-      templateName: "request_follow_up",
-      templateLanguage: "tr_TR",
-    }));
+    })(
+      request({
+        requestId: REQUEST_ID,
+        threadId: THREAD_ID,
+        templateName: "request_follow_up",
+        templateLanguage: "tr_TR",
+      }),
+    );
 
     expect(response.status).toBe(200);
     expect(sendMessage).toHaveBeenCalledWith({

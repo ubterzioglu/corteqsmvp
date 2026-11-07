@@ -27,9 +27,7 @@ export const importRecordSchema = z.object({
 
 export type ImportRecord = z.infer<typeof importRecordSchema>;
 
-export const importRecordListSchema = z
-  .array(importRecordSchema)
-  .min(1, "En az bir kayıt gerekli");
+export const importRecordListSchema = z.array(importRecordSchema).min(1, "En az bir kayıt gerekli");
 
 /** RPC sonucu (admin_bulk_import_catalog_items dönüşü). */
 export const bulkImportResultSchema = z.object({

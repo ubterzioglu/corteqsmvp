@@ -16,8 +16,14 @@ import { useSeo } from "@/lib/seo";
 const magicBallHero = "/lmaskot.png";
 
 const themes = [
-  { title: "Kültür", desc: "Yaşanılan ülkedeki kültürel deneyimler, Türk diasporasının izleri ve kültürler arası gözlemler." },
-  { title: "Mücadele", desc: "Göç, kariyer, eğitim, iş kurma, yeniden başlama, dayanışma ve kolektif mücadele hikâyeleri." },
+  {
+    title: "Kültür",
+    desc: "Yaşanılan ülkedeki kültürel deneyimler, Türk diasporasının izleri ve kültürler arası gözlemler.",
+  },
+  {
+    title: "Mücadele",
+    desc: "Göç, kariyer, eğitim, iş kurma, yeniden başlama, dayanışma ve kolektif mücadele hikâyeleri.",
+  },
   { title: "Mizah", desc: "Yurtdışında yaşamdan komik olaylar, kültürel yanlış anlamalar ve eğlenceli gözlemler." },
   { title: "Gusto", desc: "Yaşam zevki, yemek, mekan, seyahat, şehir kültürü, lezzet ve diaspora mekanları." },
 ];
@@ -83,7 +89,10 @@ const VloggerContestPage = () => {
       </div>
 
       <section className="relative overflow-hidden bg-gradient-to-br from-background via-card to-secondary/40">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--accent)/0.08),hsl(var(--primary)/0.07),hsl(var(--background)))]" aria-hidden />
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--accent)/0.08),hsl(var(--primary)/0.07),hsl(var(--background)))]"
+          aria-hidden
+        />
 
         <div className="container mx-auto px-4 py-16 lg:py-24 relative z-10">
           {/* HERO */}
@@ -98,18 +107,14 @@ const VloggerContestPage = () => {
               </div>
 
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 leading-tight">
-                Hikâyeni ya da Global Türklerin hikâyesini{" "}
-                <span className="text-accent">video ile anlat</span>
-                . Dünyaya duyur.
+                Hikâyeni ya da Global Türklerin hikâyesini <span className="text-accent">video ile anlat</span>. Dünyaya
+                duyur.
               </h1>
 
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                Diaspora deneyimlerini, kültürel gözlemlerini, mücadeleni, mizahını ve gustonu video
-                formatında bir araya getir. CorteQS sosyal medya kanallarında ve dijital yayın
-                akışlarında global görünürlük kazan.
+                Diaspora deneyimlerini, kültürel gözlemlerini, mücadeleni, mizahını ve gustonu video formatında bir
+                araya getir. CorteQS sosyal medya kanallarında ve dijital yayın akışlarında global görünürlük kazan.
               </p>
-
-
             </div>
 
             {/* Hero visual column — CorteQS Magic Ball */}
@@ -155,31 +160,28 @@ const VloggerContestPage = () => {
           <div className="max-w-4xl mx-auto mb-20 space-y-5 rounded-2xl border border-white/60 bg-card/80 p-6 text-lg leading-relaxed text-muted-foreground shadow-sm backdrop-blur-sm md:p-8">
             <p>
               CorteQS Vlogger İçerik Yarışması, dünyanın farklı ülkelerinde yaşayan{" "}
-              <span className="text-primary font-semibold">Global Türklerin</span> hikâyelerini,
-              diaspora deneyimlerini, kültürel gözlemlerini, mücadelelerini, mizahını ve gusto anlayışını
-              video formatında bir araya getiriyor.
+              <span className="text-primary font-semibold">Global Türklerin</span> hikâyelerini, diaspora deneyimlerini,
+              kültürel gözlemlerini, mücadelelerini, mizahını ve gusto anlayışını video formatında bir araya getiriyor.
             </p>
             <p>
-              Kendi yaşam hikâyeni anlatabileceğin gibi, yaşadığın ülkedeki Türk diasporasının ortak
-              deneyimlerini, topluluk başarılarını, kültürel karşılaşmaları, iş hayatını, sosyal yaşamı
-              veya yeni nesil göç hikâyelerini de konu edinebilirsin.
+              Kendi yaşam hikâyeni anlatabileceğin gibi, yaşadığın ülkedeki Türk diasporasının ortak deneyimlerini,
+              topluluk başarılarını, kültürel karşılaşmaları, iş hayatını, sosyal yaşamı veya yeni nesil göç
+              hikâyelerini de konu edinebilirsin.
             </p>
             <p>
               Yarışmaya gönderilen uygun video içerikler{" "}
               <span className="text-foreground font-semibold">
                 CorteQS sosyal medya kanallarında ve dijital yayın akışlarında
               </span>{" "}
-              kullanıma alınır. Bu süreç içerik sahibine global görünürlük, kendini tanıtma ve CorteQS
-              topluluğu içinde öne çıkma fırsatı sağlar.
+              kullanıma alınır. Bu süreç içerik sahibine global görünürlük, kendini tanıtma ve CorteQS topluluğu içinde
+              öne çıkma fırsatı sağlar.
             </p>
           </div>
 
           {/* PARTICIPATION */}
           <div className="max-w-4xl mx-auto mb-20">
             <div className="rounded-2xl bg-gradient-to-br from-accent/10 via-card to-primary/10 border border-accent/20 p-8 shadow-sm md:p-10">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">
-                Katılım Limiti ve Ücret
-              </h2>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-6">Katılım Limiti ve Ücret</h2>
               <ul className="space-y-3">
                 {participationDetails.map((d) => (
                   <li key={d} className="flex items-start gap-3">
@@ -205,8 +207,8 @@ const VloggerContestPage = () => {
                   <h3 className="font-bold text-foreground text-xl">Otantik İçerik</h3>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Tamamen katılımcının kendi üretimi olan, yapay zekâ izi taşımayan özgün video
-                  içeriklerdir. AI kullanımı tespit edilirse başvuru diskalifiye edilebilir.
+                  Tamamen katılımcının kendi üretimi olan, yapay zekâ izi taşımayan özgün video içeriklerdir. AI
+                  kullanımı tespit edilirse başvuru diskalifiye edilebilir.
                 </p>
               </div>
               <div className={softCardClass}>
@@ -217,8 +219,8 @@ const VloggerContestPage = () => {
                   <h3 className="font-bold text-foreground text-xl">AI Serbest İçerik</h3>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Teknoloji kullanımı serbesttir. Hibrit, kısmi veya tamamen AI destekli video üretimleri
-                  kabul edilir. Yaratıcılık, anlatım gücü ve içerik etkisi değerlendirilir.
+                  Teknoloji kullanımı serbesttir. Hibrit, kısmi veya tamamen AI destekli video üretimleri kabul edilir.
+                  Yaratıcılık, anlatım gücü ve içerik etkisi değerlendirilir.
                 </p>
               </div>
             </div>
@@ -247,8 +249,16 @@ const VloggerContestPage = () => {
             <div className="grid md:grid-cols-3 gap-5 mb-6">
               {[
                 { rank: "1.", prize: "€1.500", desc: "Birincilik para ödülü", glow: true },
-                { rank: "2.", prize: "Dubai Uçak Bileti", desc: "Dubai-İstanbul standardı; ülkeye göre eşdeğer ödül sunulabilir" },
-                { rank: "3.", prize: "Big Chefs Akşam Yemeği", desc: "2 kişilik; erişim olmayan ülkelerde eşdeğer restoran/deneyim sunulabilir" },
+                {
+                  rank: "2.",
+                  prize: "Dubai Uçak Bileti",
+                  desc: "Dubai-İstanbul standardı; ülkeye göre eşdeğer ödül sunulabilir",
+                },
+                {
+                  rank: "3.",
+                  prize: "Big Chefs Akşam Yemeği",
+                  desc: "2 kişilik; erişim olmayan ülkelerde eşdeğer restoran/deneyim sunulabilir",
+                },
               ].map((p) => (
                 <div
                   key={p.rank}
@@ -269,9 +279,9 @@ const VloggerContestPage = () => {
             <div className="rounded-xl bg-primary/10 border border-primary/20 p-5 flex items-start gap-3">
               <BadgeCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <p className="text-foreground text-sm leading-relaxed">
-                Öne çıkan <span className="font-bold text-primary">ilk 20 içerik üreticisine</span>{" "}
-                CorteQS'te <span className="font-semibold">1 yıl süreyle Onursal Blogger/Vlogger Badge'i</span>{" "}
-                verilir ve platformda özel tanıtım yapılır.
+                Öne çıkan <span className="font-bold text-primary">ilk 20 içerik üreticisine</span> CorteQS'te{" "}
+                <span className="font-semibold">1 yıl süreyle Onursal Blogger/Vlogger Badge'i</span> verilir ve
+                platformda özel tanıtım yapılır.
               </p>
             </div>
           </div>
@@ -297,11 +307,11 @@ const VloggerContestPage = () => {
             <div className={`${softCardClass} flex items-start gap-4`}>
               <Globe2 className="w-6 h-6 text-primary shrink-0 mt-1" />
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Her yarışmacıya veya her içeriğe özel <span className="text-foreground font-semibold">referral
-                kodu / referral linki</span> tanımlanır. Bu kod üzerinden corteqs.net'e gelen ve platforma
-                kayıt olan kullanıcılar, yarışmanın en yüksek ağırlıklı performans kriteri olan{" "}
-                <span className="text-primary font-semibold">subscription conversion</span> puanını
-                oluşturur.
+                Her yarışmacıya veya her içeriğe özel{" "}
+                <span className="text-foreground font-semibold">referral kodu / referral linki</span> tanımlanır. Bu kod
+                üzerinden corteqs.net'e gelen ve platforma kayıt olan kullanıcılar, yarışmanın en yüksek ağırlıklı
+                performans kriteri olan <span className="text-primary font-semibold">subscription conversion</span>{" "}
+                puanını oluşturur.
               </p>
             </div>
           </div>
@@ -332,19 +342,14 @@ const VloggerContestPage = () => {
           {/* APPLICATION */}
           <div className="max-w-3xl mx-auto text-center rounded-2xl bg-gradient-to-br from-accent/12 via-card to-primary/12 border border-accent/25 p-10 shadow-lg shadow-accent/10 md:p-14">
             <Video className="w-12 h-12 text-accent mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4 leading-tight">
-              Başvuru
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-4 leading-tight">Başvuru</h2>
             <p className="text-muted-foreground text-lg mb-8 leading-relaxed">
-              Formun tamamlanması, video bağlantısının yüklenmesi, gerekli onayların verilmesi ve her
-              içerik için <span className="text-accent font-bold">€25 katılım bedelinin</span> ödenmesi
-              gerekir.
+              Formun tamamlanması, video bağlantısının yüklenmesi, gerekli onayların verilmesi ve her içerik için{" "}
+              <span className="text-accent font-bold">€25 katılım bedelinin</span> ödenmesi gerekir.
             </p>
-
           </div>
         </div>
       </section>
-
     </div>
   );
 };

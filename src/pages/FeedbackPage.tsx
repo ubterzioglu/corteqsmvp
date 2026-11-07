@@ -35,9 +35,7 @@ export default function FeedbackPage() {
       setSent(true);
       setBody("");
     } catch (submitError: unknown) {
-      setError(
-        submitError instanceof Error ? submitError.message : "Feedback gönderilemedi.",
-      );
+      setError(submitError instanceof Error ? submitError.message : "Feedback gönderilemedi.");
     } finally {
       setIsSubmitting(false);
     }
@@ -51,8 +49,7 @@ export default function FeedbackPage() {
             <CheckCircle2 className="mx-auto mb-3 h-10 w-10 text-emerald-500" />
             <h1 className="text-xl font-bold text-foreground">Teşekkürler!</h1>
             <p className="mt-2 text-sm text-muted-foreground">
-              Geri bildirimin ekibimize ulaştı. Görüşlerin CorteQS'i birlikte
-              geliştirmemize yardımcı oluyor.
+              Geri bildirimin ekibimize ulaştı. Görüşlerin CorteQS'i birlikte geliştirmemize yardımcı oluyor.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Button variant="outline" onClick={() => setSent(false)}>
@@ -64,17 +61,14 @@ export default function FeedbackPage() {
             </div>
           </div>
         ) : (
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-2xl border border-border bg-card p-6 sm:p-8"
-          >
+          <form onSubmit={handleSubmit} className="rounded-2xl border border-border bg-card p-6 sm:p-8">
             <div className="mb-5 flex items-start gap-3">
               <MessageSquareHeart className="mt-1 h-6 w-6 shrink-0 text-primary" />
               <div>
                 <h1 className="text-xl font-bold text-foreground">Geri Bildirim</h1>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Hata bildirimi, öneri veya genel görüş — aklındaki her şeyi yazabilirsin.
-                  Geri bildirimini yalnız CorteQS ekibi görür.
+                  Hata bildirimi, öneri veya genel görüş — aklındaki her şeyi yazabilirsin. Geri bildirimini yalnız
+                  CorteQS ekibi görür.
                 </p>
               </div>
             </div>

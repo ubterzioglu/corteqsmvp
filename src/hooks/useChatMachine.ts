@@ -1,8 +1,5 @@
 import { useReducer, useCallback, useRef } from "react";
-import {
-  getCategoryLabel,
-  validateSubmissionDocuments,
-} from "@/lib/submissions";
+import { getCategoryLabel, validateSubmissionDocuments } from "@/lib/submissions";
 import {
   type ChatStep,
   type ChatMessage,
@@ -223,9 +220,11 @@ function chatReducer(state: ChatState, action: ChatAction): ChatState {
 
       if (command === "skip") {
         const stepIdx = STEP_ORDER.indexOf(state.step);
-        const isOptional = stepIdx >= 0 && ![
-          "category", "fullname", "country", "city", "field", "email", "phone", "consent",
-        ].includes(state.step as string);
+        const isOptional =
+          stepIdx >= 0 &&
+          !["category", "fullname", "country", "city", "field", "email", "phone", "consent"].includes(
+            state.step as string,
+          );
 
         if (isOptional) {
           const msgs = addUserMessage(state.messages, "Ge\u00e7");
@@ -364,18 +363,20 @@ export function useChatMachine() {
   const [state, dispatch] = useReducer(chatReducer, undefined, INITIAL_STATE);
   const submitRef = useRef(false);
 
-  const sendMessage = useCallback((input: string) => {
-    if (state.loading || state.submitted) return;
+  const sendMessage = useCallback(
+    (input: string) => {
+      if (state.loading || state.submitted) return;
 
-    const resolvedCategory =
-      state.step === "category" ? resolveCategoryInput(input) : null;
-    if (resolvedCategory) {
-      dispatch({ type: "SELECT_QUICK_REPLY", payload: resolvedCategory });
-      return;
-    }
+      const resolvedCategory = state.step === "category" ? resolveCategoryInput(input) : null;
+      if (resolvedCategory) {
+        dispatch({ type: "SELECT_QUICK_REPLY", payload: resolvedCategory });
+        return;
+      }
 
-    dispatch({ type: "SEND_MESSAGE", payload: input });
-  }, [state.loading, state.step, state.submitted]);
+      dispatch({ type: "SEND_MESSAGE", payload: input });
+    },
+    [state.loading, state.step, state.submitted],
+  );
 
   const selectQuickReply = useCallback((value: string) => {
     dispatch({ type: "SELECT_QUICK_REPLY", payload: value });

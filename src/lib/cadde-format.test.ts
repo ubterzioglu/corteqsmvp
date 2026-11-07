@@ -1,7 +1,20 @@
 import { describe, expect, it } from "vitest";
 
-import { buildCaddeInterestsMirrorText, injectSponsoredPlacement, interleavePromotions, parseCaddeFilters, serializeCaddeFilters, summarizeCaddeFilters } from "@/lib/cadde-format";
-import type { CaddeFeedListItem, CaddeInterest, CaddePost, CaddePromotionCard, CaddeSponsoredPlacement } from "@/lib/cadde-types";
+import {
+  buildCaddeInterestsMirrorText,
+  injectSponsoredPlacement,
+  interleavePromotions,
+  parseCaddeFilters,
+  serializeCaddeFilters,
+  summarizeCaddeFilters,
+} from "@/lib/cadde-format";
+import type {
+  CaddeFeedListItem,
+  CaddeInterest,
+  CaddePost,
+  CaddePromotionCard,
+  CaddeSponsoredPlacement,
+} from "@/lib/cadde-types";
 
 const makePost = (id: string): CaddePost => ({
   id,
@@ -75,11 +88,20 @@ describe("parseCaddeFilters", () => {
 
   it("parses single-value legacy URLs as one-element lists (geriye uyumluluk)", () => {
     const filters = parseCaddeFilters(new URLSearchParams("country=Almanya&city=Berlin&bridge=1"));
-    expect(filters).toEqual({ mode: "real", countries: ["Almanya"], cities: ["Berlin"], bridge: true, hashtag: "", scope: "all" });
+    expect(filters).toEqual({
+      mode: "real",
+      countries: ["Almanya"],
+      cities: ["Berlin"],
+      bridge: true,
+      hashtag: "",
+      scope: "all",
+    });
   });
 
   it("parses comma-separated multi geo values, trims and dedupes (Faz 3)", () => {
-    const filters = parseCaddeFilters(new URLSearchParams("country=Almanya,%20Hollanda%20,Almanya&city=Berlin,K%C3%B6ln"));
+    const filters = parseCaddeFilters(
+      new URLSearchParams("country=Almanya,%20Hollanda%20,Almanya&city=Berlin,K%C3%B6ln"),
+    );
     expect(filters.countries).toEqual(["Almanya", "Hollanda"]);
     expect(filters.cities).toEqual(["Berlin", "Köln"]);
   });
@@ -87,37 +109,112 @@ describe("parseCaddeFilters", () => {
 
 describe("serializeCaddeFilters", () => {
   it("omits the mode param for the real default and writes demo explicitly", () => {
-    expect(serializeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const }).toString()).toBe("");
-    expect(serializeCaddeFilters({ mode: "demo", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const }).toString()).toBe("mode=demo");
+    expect(
+      serializeCaddeFilters({
+        mode: "real",
+        countries: [],
+        cities: [],
+        bridge: false,
+        hashtag: "",
+        scope: "all" as const,
+      }).toString(),
+    ).toBe("");
+    expect(
+      serializeCaddeFilters({
+        mode: "demo",
+        countries: [],
+        cities: [],
+        bridge: false,
+        hashtag: "",
+        scope: "all" as const,
+      }).toString(),
+    ).toBe("mode=demo");
   });
 
   it("round-trips multi geo filter state through the URL", () => {
-    const original = { mode: "demo" as const, countries: ["Almanya", "Hollanda"], cities: ["Berlin", "Amsterdam"], bridge: true, hashtag: "", scope: "all" as const };
+    const original = {
+      mode: "demo" as const,
+      countries: ["Almanya", "Hollanda"],
+      cities: ["Berlin", "Amsterdam"],
+      bridge: true,
+      hashtag: "",
+      scope: "all" as const,
+    };
     expect(parseCaddeFilters(serializeCaddeFilters(original))).toEqual(original);
 
-    const realDefault = { mode: "real" as const, countries: ["Hollanda"], cities: [], bridge: false, hashtag: "", scope: "all" as const };
+    const realDefault = {
+      mode: "real" as const,
+      countries: ["Hollanda"],
+      cities: [],
+      bridge: false,
+      hashtag: "",
+      scope: "all" as const,
+    };
     expect(parseCaddeFilters(serializeCaddeFilters(realDefault))).toEqual(realDefault);
   });
 });
 
 describe("summarizeCaddeFilters", () => {
   it("derives a short badge label from the selection", () => {
-    expect(summarizeCaddeFilters({ mode: "real", countries: [], cities: [], bridge: false, hashtag: "", scope: "all" as const })).toBe("Global Akış");
-    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: [], bridge: false, hashtag: "", scope: "all" as const })).toBe("Almanya");
-    expect(summarizeCaddeFilters({ mode: "real", countries: ["Almanya"], cities: ["Berlin", "Köln"], bridge: false, hashtag: "", scope: "all" as const })).toBe("Berlin +2");
+    expect(
+      summarizeCaddeFilters({
+        mode: "real",
+        countries: [],
+        cities: [],
+        bridge: false,
+        hashtag: "",
+        scope: "all" as const,
+      }),
+    ).toBe("Global Akış");
+    expect(
+      summarizeCaddeFilters({
+        mode: "real",
+        countries: ["Almanya"],
+        cities: [],
+        bridge: false,
+        hashtag: "",
+        scope: "all" as const,
+      }),
+    ).toBe("Almanya");
+    expect(
+      summarizeCaddeFilters({
+        mode: "real",
+        countries: ["Almanya"],
+        cities: ["Berlin", "Köln"],
+        bridge: false,
+        hashtag: "",
+        scope: "all" as const,
+      }),
+    ).toBe("Berlin +2");
   });
 });
 
 describe("injectSponsoredPlacement", () => {
   it("injects sponsored content after the third real post", () => {
-    const items = injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4")], sponsor, "real");
+    const items = injectSponsoredPlacement(
+      [makePost("1"), makePost("2"), makePost("3"), makePost("4")],
+      sponsor,
+      "real",
+    );
     expect(items.map((item) => item.kind)).toEqual(["post", "post", "post", "sponsor", "post"]);
   });
 
   it("does not inject in demo mode, without a sponsor, or with too few posts", () => {
-    expect(injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4")], sponsor, "demo").every((item) => item.kind === "post")).toBe(true);
-    expect(injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4")], null, "real").every((item) => item.kind === "post")).toBe(true);
-    expect(injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3")], sponsor, "real").every((item) => item.kind === "post")).toBe(true);
+    expect(
+      injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4")], sponsor, "demo").every(
+        (item) => item.kind === "post",
+      ),
+    ).toBe(true);
+    expect(
+      injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4")], null, "real").every(
+        (item) => item.kind === "post",
+      ),
+    ).toBe(true);
+    expect(
+      injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3")], sponsor, "real").every(
+        (item) => item.kind === "post",
+      ),
+    ).toBe(true);
   });
 });
 
@@ -137,8 +234,16 @@ describe("interleavePromotions (Faz 6, spec 11.4/15)", () => {
   it("her 4 organik postta bir kampanya karti ekler", () => {
     const result = interleavePromotions(posts(9), [makePromo("c1"), makePromo("c2")], "real", 4, 2);
     expect(result.map((item) => item.kind)).toEqual([
-      "post", "post", "post", "post", "promotion",
-      "post", "post", "post", "post", "promotion",
+      "post",
+      "post",
+      "post",
+      "post",
+      "promotion",
+      "post",
+      "post",
+      "post",
+      "post",
+      "promotion",
       "post",
     ]);
   });
@@ -156,7 +261,20 @@ describe("interleavePromotions (Faz 6, spec 11.4/15)", () => {
   });
 
   it("iki sponsor karti art arda gelmez (legacy sponsor + kampanya birlikte)", () => {
-    const withLegacySponsor = injectSponsoredPlacement([makePost("1"), makePost("2"), makePost("3"), makePost("4"), makePost("5"), makePost("6"), makePost("7"), makePost("8")], sponsor, "real");
+    const withLegacySponsor = injectSponsoredPlacement(
+      [
+        makePost("1"),
+        makePost("2"),
+        makePost("3"),
+        makePost("4"),
+        makePost("5"),
+        makePost("6"),
+        makePost("7"),
+        makePost("8"),
+      ],
+      sponsor,
+      "real",
+    );
     const result = interleavePromotions(withLegacySponsor, [makePromo("c1"), makePromo("c2")], "real", 4, 2);
     for (let index = 1; index < result.length; index += 1) {
       const consecutive = result[index].kind !== "post" && result[index - 1].kind !== "post";

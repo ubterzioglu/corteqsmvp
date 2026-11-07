@@ -180,9 +180,27 @@ const PRICING_JSON_LD = {
   offerCount: ALL_YEARLY_PRICES.length,
   url: "https://corteqs.net/pricing",
   offers: [
-    { "@type": "Offer", name: consultantPlans.premium.name, price: String(consultantPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "Danışman" },
-    { "@type": "Offer", name: associationPlans.premium.name, price: String(associationPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "Kuruluş" },
-    { "@type": "Offer", name: businessPlans.premium.name, price: String(businessPlans.premium.yearlyPrice), priceCurrency: "EUR", category: "İşletme" },
+    {
+      "@type": "Offer",
+      name: consultantPlans.premium.name,
+      price: String(consultantPlans.premium.yearlyPrice),
+      priceCurrency: "EUR",
+      category: "Danışman",
+    },
+    {
+      "@type": "Offer",
+      name: associationPlans.premium.name,
+      price: String(associationPlans.premium.yearlyPrice),
+      priceCurrency: "EUR",
+      category: "Kuruluş",
+    },
+    {
+      "@type": "Offer",
+      name: businessPlans.premium.name,
+      price: String(businessPlans.premium.yearlyPrice),
+      priceCurrency: "EUR",
+      category: "İşletme",
+    },
   ],
 };
 
@@ -191,11 +209,8 @@ const Pricing = () => {
   const [userType, setUserType] = useState<UserType>("consultant");
   const [isYearly, setIsYearly] = useState(false);
 
-  const plans = userType === "consultant" 
-    ? consultantPlans 
-    : userType === "association" 
-      ? associationPlans 
-      : businessPlans;
+  const plans =
+    userType === "consultant" ? consultantPlans : userType === "association" ? associationPlans : businessPlans;
   const yearlyDiscount = 20;
 
   return (
@@ -207,9 +222,7 @@ const Pricing = () => {
             <Badge variant="outline" className="mb-4 text-primary border-primary/30">
               <Sparkles className="h-3 w-3 mr-1" /> Abonelik Paketleri
             </Badge>
-            <h1 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">
-              İhtiyacına uygun planı seç
-            </h1>
+            <h1 className="text-3xl md:text-5xl font-extrabold text-foreground mb-4">İhtiyacına uygun planı seç</h1>
             <p className="text-muted-foreground font-body text-lg max-w-xl mx-auto">
               Freemium ile başla, Premium ile fark yarat
             </p>
@@ -264,9 +277,7 @@ const Pricing = () => {
               Yıllık
             </span>
             {isYearly && (
-              <Badge className="bg-success/15 text-success border-success/20 ml-1">
-                %{yearlyDiscount} indirim
-              </Badge>
+              <Badge className="bg-success/15 text-success border-success/20 ml-1">%{yearlyDiscount} indirim</Badge>
             )}
           </div>
 
@@ -279,10 +290,10 @@ const Pricing = () => {
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <Flame className="h-5 w-5 text-primary" />
                     <span className="text-lg font-extrabold text-foreground">
-                      {userType === "business" 
-                        ? "İlk 1.000 İşletme İçin %50 İndirim!" 
-                        : userType === "consultant" 
-                          ? "İlk 1.000 Danışman İçin %50 İndirim!" 
+                      {userType === "business"
+                        ? "İlk 1.000 İşletme İçin %50 İndirim!"
+                        : userType === "consultant"
+                          ? "İlk 1.000 Danışman İçin %50 İndirim!"
                           : "İlk 1.000 Kuruluş İçin %50 İndirim!"}
                     </span>
                     <Flame className="h-5 w-5 text-primary" />
@@ -314,8 +325,8 @@ const Pricing = () => {
 
           {/* FAQ hint */}
           <p className="text-center text-sm text-muted-foreground mt-12 font-body">
-            Bireysel kullanıcılar için platform tamamen <span className="font-semibold text-foreground">ücretsizdir</span>.{" "}
-            Sorularınız mı var?{" "}
+            Bireysel kullanıcılar için platform tamamen{" "}
+            <span className="font-semibold text-foreground">ücretsizdir</span>. Sorularınız mı var?{" "}
             <a href="mailto:info@corteqs.net" className="text-primary hover:underline font-semibold">
               Bize yazın
             </a>
@@ -360,9 +371,9 @@ const PlanCard = ({ plan, isYearly, featured }: PlanCardProps) => {
       )}
 
       <div className="flex items-center gap-3 mb-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-          featured ? "bg-primary/20" : "bg-muted"
-        }`}>
+        <div
+          className={`w-10 h-10 rounded-xl flex items-center justify-center ${featured ? "bg-primary/20" : "bg-muted"}`}
+        >
           <Icon className={`h-5 w-5 ${featured ? "text-primary" : "text-muted-foreground"}`} />
         </div>
         <h3 className="text-xl font-bold">{plan.name}</h3>
@@ -392,9 +403,12 @@ const PlanCard = ({ plan, isYearly, featured }: PlanCardProps) => {
 
       <ul className="space-y-3 mb-8 flex-1">
         {plan.features.map((f, i) => (
-          <li key={i} className={`flex items-center gap-2.5 text-sm font-body ${
-            !f.included ? (featured ? "text-secondary-foreground/30" : "text-muted-foreground/50") : ""
-          }`}>
+          <li
+            key={i}
+            className={`flex items-center gap-2.5 text-sm font-body ${
+              !f.included ? (featured ? "text-secondary-foreground/30" : "text-muted-foreground/50") : ""
+            }`}
+          >
             {f.included ? (
               <Check className="h-4 w-4 text-success flex-shrink-0" />
             ) : (
@@ -405,11 +419,7 @@ const PlanCard = ({ plan, isYearly, featured }: PlanCardProps) => {
         ))}
       </ul>
 
-      <Button
-        variant={featured ? "hero" : "outline"}
-        className="w-full"
-        size="lg"
-      >
+      <Button variant={featured ? "hero" : "outline"} className="w-full" size="lg">
         {isFree ? "Ücretsiz Başla" : "1 Ay Ücretsiz Dene"}
       </Button>
     </div>

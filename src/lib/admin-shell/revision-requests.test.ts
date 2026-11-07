@@ -74,24 +74,18 @@ describe("validateRevisionRequestForm", () => {
   });
 
   it("rejects an empty title", () => {
-    expect(validateRevisionRequestForm({ ...VALID_FORM, title: "   " })).toBe(
-      "Başlık boş bırakılamaz.",
-    );
+    expect(validateRevisionRequestForm({ ...VALID_FORM, title: "   " })).toBe("Başlık boş bırakılamaz.");
   });
 
   it("rejects an out-of-range priority", () => {
-    expect(validateRevisionRequestForm({ ...VALID_FORM, priority: 0 })).toBe(
-      "Geçersiz öncelik değeri.",
-    );
-    expect(validateRevisionRequestForm({ ...VALID_FORM, priority: 11 })).toBe(
-      "Geçersiz öncelik değeri.",
-    );
+    expect(validateRevisionRequestForm({ ...VALID_FORM, priority: 0 })).toBe("Geçersiz öncelik değeri.");
+    expect(validateRevisionRequestForm({ ...VALID_FORM, priority: 11 })).toBe("Geçersiz öncelik değeri.");
   });
 
   it("rejects an invalid status", () => {
-    expect(
-      validateRevisionRequestForm({ ...VALID_FORM, status: "bogus" as RevisionRequestForm["status"] }),
-    ).toBe("Geçersiz durum.");
+    expect(validateRevisionRequestForm({ ...VALID_FORM, status: "bogus" as RevisionRequestForm["status"] })).toBe(
+      "Geçersiz durum.",
+    );
   });
 });
 
@@ -170,9 +164,7 @@ describe("fetchComments", () => {
 
 describe("createRevisionRequest", () => {
   it("validates before inserting and rejects an empty title", async () => {
-    await expect(
-      createRevisionRequest({ ...VALID_FORM, title: "" }),
-    ).rejects.toThrow("Başlık boş bırakılamaz.");
+    await expect(createRevisionRequest({ ...VALID_FORM, title: "" })).rejects.toThrow("Başlık boş bırakılamaz.");
     expect(fromMock).not.toHaveBeenCalled();
   });
 
@@ -310,9 +302,7 @@ describe("fetchAttachments", () => {
 
   it("throws a sanitized message on error", async () => {
     fromMock.mockReturnValue(chainable({ resolved: { data: null, error: { message: "boom" } } }));
-    await expect(fetchAttachments({ requestId: "r-1" })).rejects.toThrow(
-      "Ekler yüklenemedi.",
-    );
+    await expect(fetchAttachments({ requestId: "r-1" })).rejects.toThrow("Ekler yüklenemedi.");
   });
 });
 
@@ -382,9 +372,7 @@ describe("uploadAttachment", () => {
 
   it("rejects a disallowed file type before touching storage", async () => {
     const file = new File(["x"], "malware.exe", { type: "application/x-msdownload" });
-    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow(
-      "Geçersiz dosya uzantısı",
-    );
+    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow("Geçersiz dosya uzantısı");
     expect(storageFromMock).not.toHaveBeenCalled();
   });
 
@@ -422,9 +410,7 @@ describe("uploadAttachment", () => {
       upload: vi.fn().mockResolvedValue({ error: { message: "storage full" } }),
     });
     const file = new File(["x"], "test.png", { type: "image/png" });
-    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow(
-      "Dosya yüklenemedi.",
-    );
+    await expect(uploadAttachment({ requestId: "r-1" }, file)).rejects.toThrow("Dosya yüklenemedi.");
   });
 });
 
@@ -465,8 +451,6 @@ describe("getAttachmentUrl", () => {
     storageFromMock.mockReturnValue({
       createSignedUrl: vi.fn().mockResolvedValue({ data: null, error: { message: "nope" } }),
     });
-    await expect(getAttachmentUrl("request/r-1/x.png")).rejects.toThrow(
-      "Dosya için erişim linki üretilemedi.",
-    );
+    await expect(getAttachmentUrl("request/r-1/x.png")).rejects.toThrow("Dosya için erişim linki üretilemedi.");
   });
 });

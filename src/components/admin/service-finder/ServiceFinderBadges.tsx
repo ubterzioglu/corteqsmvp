@@ -7,10 +7,7 @@ import {
   REVIEW_STATUS_LABELS,
   REVIEW_STATUS_VARIANTS,
 } from "@/lib/service-finder-format";
-import type {
-  ServiceFinderJobStatus,
-  ServiceFinderReviewStatus,
-} from "@/lib/service-finder-schemas";
+import type { ServiceFinderJobStatus, ServiceFinderReviewStatus } from "@/lib/service-finder-schemas";
 
 interface JobStatusBadgeProps {
   status: ServiceFinderJobStatus;

@@ -34,9 +34,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-const makePayload = (
-  overrides: Partial<PublicCatalogProfilePagePayload> = {},
-): PublicCatalogProfilePagePayload => ({
+const makePayload = (overrides: Partial<PublicCatalogProfilePagePayload> = {}): PublicCatalogProfilePagePayload => ({
   item: {
     id: "item-1",
     slug: "member-arkin-kara",
@@ -129,7 +127,12 @@ describe("PublicProfileShell", () => {
   it("kurumsal kayıtta (itemType=organization) JSON-LD tipi Organization'dır", async () => {
     renderShell(
       makePayload({
-        item: { ...makePayload().item, itemType: "organization", roleKey: "Organization_Consulate", roleLabel: "Konsolosluk" },
+        item: {
+          ...makePayload().item,
+          itemType: "organization",
+          roleKey: "Organization_Consulate",
+          roleLabel: "Konsolosluk",
+        },
       }),
     );
 
@@ -215,18 +218,37 @@ describe("PublicProfileShell", () => {
       );
     });
     expect(await screen.findByText("Talep Gönderildi")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Düzenleme yetkisi talebiniz admin onayına gönderildi/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Düzenleme yetkisi talebiniz admin onayına gönderildi/i)).toBeInTheDocument();
   });
 
   it("renders opt-in hero badges, the tagline pill and social link pills", () => {
     renderShell(
       makePayload({
         attributes: [
-          { key: "job_seeking_opt_in", label: "İş Arıyorum", dataType: "boolean", sortOrder: 1, valueText: null, valueJson: true },
-          { key: "volunteer_mentorship_opt_in", label: "Gönüllü Mentörlük", dataType: "boolean", sortOrder: 2, valueText: null, valueJson: true },
-          { key: "linkedin_url", label: "LinkedIn", dataType: "url", sortOrder: 3, valueText: "https://www.linkedin.com/in/arkin-kara", valueJson: null },
+          {
+            key: "job_seeking_opt_in",
+            label: "İş Arıyorum",
+            dataType: "boolean",
+            sortOrder: 1,
+            valueText: null,
+            valueJson: true,
+          },
+          {
+            key: "volunteer_mentorship_opt_in",
+            label: "Gönüllü Mentörlük",
+            dataType: "boolean",
+            sortOrder: 2,
+            valueText: null,
+            valueJson: true,
+          },
+          {
+            key: "linkedin_url",
+            label: "LinkedIn",
+            dataType: "url",
+            sortOrder: 3,
+            valueText: "https://www.linkedin.com/in/arkin-kara",
+            valueJson: null,
+          },
         ],
       }),
     );
@@ -315,8 +337,6 @@ describe("PublicProfileShell", () => {
     );
 
     expect(screen.getByText("Profil Güvencesi")).toBeInTheDocument();
-    expect(
-      screen.getByText("Bu profil sahibi tarafından aktif olarak yönetiliyor."),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Bu profil sahibi tarafından aktif olarak yönetiliyor.")).toBeInTheDocument();
   });
 });

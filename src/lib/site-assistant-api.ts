@@ -90,9 +90,12 @@ export async function askSiteAssistant(
     throw new Error(message);
   }
 
-  const payload = data as
-    | { answer?: string; hasContext?: boolean; sources?: SiteAssistantSource[]; error?: string }
-    | null;
+  const payload = data as {
+    answer?: string;
+    hasContext?: boolean;
+    sources?: SiteAssistantSource[];
+    error?: string;
+  } | null;
 
   if (payload?.error) throw new Error(payload.error);
   if (!payload?.answer) throw new Error("Asistan yanıt döndürmedi.");

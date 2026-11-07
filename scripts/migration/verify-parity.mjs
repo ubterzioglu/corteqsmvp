@@ -341,7 +341,9 @@ Kaynak .env.local'den okunur (Supabase pooler).
     • Giriş / kayıt / parola sıfırlama / Google OAuth akışları`);
     return;
   }
-  console.error(`✗ ${totalProblems} sorun bulundu (kritik: ${criticalMismatch}, tablo: ${rowDiffs.length}, sequence: ${seqDiffs.length}).`);
+  console.error(
+    `✗ ${totalProblems} sorun bulundu (kritik: ${criticalMismatch}, tablo: ${rowDiffs.length}, sequence: ${seqDiffs.length}).`,
+  );
   console.error(`  Bunları çözmeden cutover YAPMA.`);
   process.exit(1);
 }

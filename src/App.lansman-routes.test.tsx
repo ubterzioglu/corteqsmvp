@@ -27,7 +27,9 @@ describe("App removed lansman admin routing", () => {
   });
 
   it("renders admin not found inside the shared admin shell", async () => {
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Admin Not Found")).toBeInTheDocument();

@@ -261,12 +261,14 @@ export default function WhatsAppLandingsModeration() {
                       </Badge>
                     </div>
 
-                    <div className="truncate text-muted-foreground">
-                      {platformLabelByRowId[row.dbId ?? row.id]}
-                    </div>
+                    <div className="truncate text-muted-foreground">{platformLabelByRowId[row.dbId ?? row.id]}</div>
 
                     <div className="truncate text-muted-foreground">
-                      {row.submitterRole === "manager" ? "Topluluk Yöneticisi" : row.submitterRole === "member" ? "Üye" : "Belirtilmedi"}
+                      {row.submitterRole === "manager"
+                        ? "Topluluk Yöneticisi"
+                        : row.submitterRole === "member"
+                          ? "Üye"
+                          : "Belirtilmedi"}
                     </div>
 
                     <div className="flex min-w-0 items-center gap-1 text-muted-foreground">
@@ -361,12 +363,15 @@ export default function WhatsAppLandingsModeration() {
 
               <div className="space-y-1.5">
                 <Label>Kategori</Label>
-                <Select value={editState.category} onValueChange={(value) =>
+                <Select
+                  value={editState.category}
+                  onValueChange={(value) =>
                     // Liste takma ad ("girisim") da sunuyor; SAKLANAN deger kanonik
                     // olmali, bu yuzden secim aninda normallestirilir ("girisim" -> "yatirim").
                     // Eski `as LandingCategory` cast'i bu donusumu gizliyordu.
                     updateEditState("category", normalizeLandingCategory(value))
-                  }>
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -503,7 +508,9 @@ export default function WhatsAppLandingsModeration() {
                     <RadioGroupItem
                       id="approval-admin"
                       value="admin"
-                      className={editState.adminApproved ? "border-white text-white" : "border-orange-600 text-orange-600"}
+                      className={
+                        editState.adminApproved ? "border-white text-white" : "border-orange-600 text-orange-600"
+                      }
                     />
                     <span className="font-medium">Admin onaylı!</span>
                   </label>
@@ -550,7 +557,11 @@ export default function WhatsAppLandingsModeration() {
                 <Button variant="outline" onClick={() => setEditOpen(false)} disabled={savingEdit}>
                   Vazgeç
                 </Button>
-                <Button className="bg-emerald-600 text-white hover:bg-emerald-700" onClick={() => void handleEditSave()} disabled={savingEdit}>
+                <Button
+                  className="bg-emerald-600 text-white hover:bg-emerald-700"
+                  onClick={() => void handleEditSave()}
+                  disabled={savingEdit}
+                >
                   {savingEdit ? "Kaydediliyor..." : "Kaydet"}
                 </Button>
               </div>

@@ -46,19 +46,13 @@ const renderCard = (props: Partial<React.ComponentProps<typeof OrgVerificationRe
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
   return render(
-    <OrgVerificationRequestCard
-      itemId="item-1"
-      slug="dernek-x"
-      isVerified={false}
-      isOwner
-      canClaim
-      {...props}
-    />,
+    <OrgVerificationRequestCard itemId="item-1" slug="dernek-x" isVerified={false} isOwner canClaim {...props} />,
     { wrapper },
   );
 };
 
-const fileNamed = (name: string, size = 1024) => new File(["x".repeat(Math.min(size, 8))], name, { type: "application/pdf" });
+const fileNamed = (name: string, size = 1024) =>
+  new File(["x".repeat(Math.min(size, 8))], name, { type: "application/pdf" });
 
 describe("OrgVerificationRequestCard", () => {
   beforeEach(() => {
@@ -110,9 +104,7 @@ describe("OrgVerificationRequestCard", () => {
     fireEvent.click(screen.getByRole("button", { name: /Doğrulama Talebini Gönder/i }));
 
     await waitFor(() => expect(requestMock).toHaveBeenCalledWith("item-1", expect.any(Array), ""));
-    await waitFor(() =>
-      expect(screen.getByText(/Doğrulama talebin yönetici onayına gönderildi/i)).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.getByText(/Doğrulama talebin yönetici onayına gönderildi/i)).toBeInTheDocument());
   });
 
   it("RPC not_linked derse (bayat sahip) → claim yoluna düşer", async () => {
@@ -123,9 +115,7 @@ describe("OrgVerificationRequestCard", () => {
     fireEvent.change(input, { target: { files: [fileNamed("tuzuk.pdf")] } });
     fireEvent.click(screen.getByRole("button", { name: /Doğrulama Talebini Gönder/i }));
 
-    await waitFor(() =>
-      expect(screen.getByRole("button", { name: /Önce Kaydı Sahiplen/i })).toBeInTheDocument(),
-    );
+    await waitFor(() => expect(screen.getByRole("button", { name: /Önce Kaydı Sahiplen/i })).toBeInTheDocument());
   });
 
   it("5'ten fazla belge → istemci ön kontrolü düşürür (RPC çağrılmaz)", () => {

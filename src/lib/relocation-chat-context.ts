@@ -11,14 +11,8 @@
 // user_id, e-posta, telefon, ad-soyad ASLA gönderilmez (client-error-reports.ts
 // ile aynı ilke). Bağlam metni dışarıdaki bir modele gider.
 
-import {
-  formatCostRange,
-  pickRowForHousehold,
-} from "@/lib/relocation-content-format";
-import type {
-  RelocationLivingCostRow,
-  RelocationRequiredDocumentRow,
-} from "@/lib/relocation-content-types";
+import { formatCostRange, pickRowForHousehold } from "@/lib/relocation-content-format";
+import type { RelocationLivingCostRow, RelocationRequiredDocumentRow } from "@/lib/relocation-content-types";
 
 /** Kalem anahtarı → Türkçe etiket. Bu bir GÖRÜNTÜ sözlüğüdür, DB anahtarı değildir. */
 export const COST_ITEM_LABELS: Record<string, string> = {
@@ -67,9 +61,10 @@ function formatHousehold(profile: RelocationChatProfile): string {
 function buildProfileBlock(profile: RelocationChatProfile): string {
   const lines: string[] = ["## Kullanıcının taşınma dosyası"];
 
-  const countries = profile.targetCountryNames.length > 0
-    ? profile.targetCountryNames.join(", ")
-    : profile.targetCountryCodes.join(", ");
+  const countries =
+    profile.targetCountryNames.length > 0
+      ? profile.targetCountryNames.join(", ")
+      : profile.targetCountryCodes.join(", ");
   lines.push(`- Hedef ülke(ler): ${countries || "Belirtilmedi"}`);
   lines.push(`- Hane: ${formatHousehold(profile)}`);
 
@@ -77,9 +72,7 @@ function buildProfileBlock(profile: RelocationChatProfile): string {
     lines.push(`- Aylık konut bütçesi: ${profile.budgetMonthly} ${profile.currency}`);
   }
   if (profile.moveWindowStart || profile.moveWindowEnd) {
-    lines.push(
-      `- Taşınma penceresi: ${profile.moveWindowStart ?? "?"} – ${profile.moveWindowEnd ?? "?"}`,
-    );
+    lines.push(`- Taşınma penceresi: ${profile.moveWindowStart ?? "?"} – ${profile.moveWindowEnd ?? "?"}`);
   }
   if (profile.mustHaves.length > 0) {
     lines.push(`- Olmazsa olmazlar: ${profile.mustHaves.join(", ")}`);
@@ -88,10 +81,7 @@ function buildProfileBlock(profile: RelocationChatProfile): string {
   return lines.join("\n");
 }
 
-function buildCostBlock(
-  rows: RelocationLivingCostRow[],
-  householdSize: number,
-): string | null {
+function buildCostBlock(rows: RelocationLivingCostRow[], householdSize: number): string | null {
   if (rows.length === 0) return null;
 
   // Anahtar ülke DEĞİL kapsamdır (ülke + şehir). Yalnız ülkeye göre gruplansaydı
@@ -171,8 +161,5 @@ export function buildRelocationChatContext(input: RelocationChatContextInput): s
   const text = blocks.join("\n\n");
   if (text.length <= MAX_CONTEXT_CHARS) return text;
 
-  return (
-    text.slice(0, MAX_CONTEXT_CHARS) +
-    "\n\n[Bağlam uzunluk sınırına ulaştı ve kesildi — liste eksik olabilir.]"
-  );
+  return text.slice(0, MAX_CONTEXT_CHARS) + "\n\n[Bağlam uzunluk sınırına ulaştı ve kesildi — liste eksik olabilir.]";
 }

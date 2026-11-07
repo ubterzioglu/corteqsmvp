@@ -15,7 +15,11 @@ const RoleListPanel = ({ roles, selectedRoleKey, onSelectRole, isLoading }: Prop
     <CardHeader className="pb-2">
       <CardTitle className="text-sm font-semibold">
         Roller
-        {!isLoading && <Badge variant="secondary" className="ml-2">{roles.length}</Badge>}
+        {!isLoading && (
+          <Badge variant="secondary" className="ml-2">
+            {roles.length}
+          </Badge>
+        )}
       </CardTitle>
     </CardHeader>
     <CardContent className="p-0 flex-1 overflow-auto">

@@ -113,9 +113,7 @@ describe("useCaddeComposerState · düzenleme", () => {
     const { hook } = setup();
 
     await act(async () => {
-      await expect(hook.result.current.updateMutation.mutateAsync()).rejects.toThrow(
-        "Düzenlenen paylaşım bulunamadı.",
-      );
+      await expect(hook.result.current.updateMutation.mutateAsync()).rejects.toThrow("Düzenlenen paylaşım bulunamadı.");
     });
     expect(updateCaddePostSpy).not.toHaveBeenCalled();
   });

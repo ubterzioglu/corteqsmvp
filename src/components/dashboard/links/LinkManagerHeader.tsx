@@ -1,21 +1,20 @@
-'use client'
+"use client";
 
 // Ekran başlığı, Drive klasör kısayolu ve kayıt sayacı şeridi.
 
-import { ExternalLink } from 'lucide-react'
-import { safeHref } from '@/lib/security'
+import { ExternalLink } from "lucide-react";
+import { safeHref } from "@/lib/security";
 
-const DRIVE_FOLDER_URL =
-  'https://drive.google.com/drive/folders/1TYFEdjDPOLOMWAf_MScs6XJXRW9FHh-r?usp=drive_link'
+const DRIVE_FOLDER_URL = "https://drive.google.com/drive/folders/1TYFEdjDPOLOMWAf_MScs6XJXRW9FHh-r?usp=drive_link";
 
 /** Şeritte gösterilen sabit tarih — içerik sahibi tarafından elle güncellenir. */
-const LAST_UPDATED_LABEL = '24.05.26'
+const LAST_UPDATED_LABEL = "24.05.26";
 
 interface LinkManagerHeaderProps {
-  headingId: string
-  totalCount: number
-  visibleCount: number
-  hiddenCount: number
+  headingId: string;
+  totalCount: number;
+  visibleCount: number;
+  hiddenCount: number;
 }
 
 export default function LinkManagerHeader({
@@ -47,5 +46,5 @@ export default function LinkManagerHeader({
         </p>
       </div>
     </>
-  )
+  );
 }

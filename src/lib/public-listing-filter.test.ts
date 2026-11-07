@@ -101,37 +101,21 @@ describe("filterListingRows", () => {
 
   it("aksan-toleranslı Türkçe arama yapar", () => {
     // trIncludes: "uskudar" yazan "Üsküdar"ı bulmalı.
-    const result = filterListingRows(
-      rows,
-      { ...EMPTY_LISTING_FILTER, searchText: "uskudar" },
-      GROUPS,
-    );
+    const result = filterListingRows(rows, { ...EMPTY_LISTING_FILTER, searchText: "uskudar" }, GROUPS);
     expect(result.map((item) => item.id)).toEqual(["3"]);
   });
 
   it("çok kelimeli aramada VE anlamı uygular", () => {
-    const both = filterListingRows(
-      rows,
-      { ...EMPTY_LISTING_FILTER, searchText: "hukuk berlin" },
-      GROUPS,
-    );
+    const both = filterListingRows(rows, { ...EMPTY_LISTING_FILTER, searchText: "hukuk berlin" }, GROUPS);
     expect(both.map((item) => item.id)).toEqual(["3"]);
 
-    const impossible = filterListingRows(
-      rows,
-      { ...EMPTY_LISTING_FILTER, searchText: "hukuk doha" },
-      GROUPS,
-    );
+    const impossible = filterListingRows(rows, { ...EMPTY_LISTING_FILTER, searchText: "hukuk doha" }, GROUPS);
     expect(impossible).toEqual([]);
   });
 
   it("headline ve açıklamada da arar", () => {
     const withHeadline = [row({ id: "9", title: "Kayıt", headline: "Vize danışmanı" })];
-    const result = filterListingRows(
-      withHeadline,
-      { ...EMPTY_LISTING_FILTER, searchText: "vize" },
-      GROUPS,
-    );
+    const result = filterListingRows(withHeadline, { ...EMPTY_LISTING_FILTER, searchText: "vize" }, GROUPS);
     expect(result).toHaveLength(1);
   });
 });
@@ -186,11 +170,7 @@ describe("deriveGroupCounts", () => {
   it("sayılar diğer süzgeçleri hesaba katar ama kendi grup seçimini yok sayar", () => {
     // Ülke Katar seçili + grup "hukuk" seçili olsa bile, sekme sayıları
     // ülkeye göre süzülmüş TÜM grupları göstermeli.
-    const counts = deriveGroupCounts(
-      rows,
-      { ...EMPTY_LISTING_FILTER, country: "Katar", groupKey: "hukuk" },
-      GROUPS,
-    );
+    const counts = deriveGroupCounts(rows, { ...EMPTY_LISTING_FILTER, country: "Katar", groupKey: "hukuk" }, GROUPS);
     expect(counts.get("all")).toBe(1);
     expect(counts.get("hukuk")).toBe(0);
     expect(counts.get("saglik")).toBe(1);

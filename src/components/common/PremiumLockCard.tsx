@@ -44,11 +44,7 @@ export function PremiumLockCard({
   testId = "premium-lock-card",
 }: PremiumLockCardProps) {
   return (
-    <Card
-      data-testid={testId}
-      className="border-amber-200 bg-amber-50/60"
-      aria-label={`${title} (kilitli)`}
-    >
+    <Card data-testid={testId} className="border-amber-200 bg-amber-50/60" aria-label={`${title} (kilitli)`}>
       <CardContent className="flex items-start gap-3 p-4">
         <span className="relative mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-200 text-amber-700">
           <Crown className="h-4.5 w-4.5" aria-hidden="true" />

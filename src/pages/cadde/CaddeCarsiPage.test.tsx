@@ -134,10 +134,7 @@ describe("CaddeCarsiPage", () => {
 
     await screen.findByTestId("carsi-card-category-item-1");
     expect(container.querySelectorAll("a a")).toHaveLength(0);
-    expect(screen.getByRole("link", { name: "IKEA çalışma masası" })).toHaveAttribute(
-      "href",
-      "/cadde/carsi/item-1",
-    );
+    expect(screen.getByRole("link", { name: "IKEA çalışma masası" })).toHaveAttribute("href", "/cadde/carsi/item-1");
   });
 
   it("İlanlarım satırındaki kategori etiketi de link", async () => {

@@ -83,8 +83,7 @@ const CHUNK_ERROR_PATTERNS = [
 ];
 
 export const looksLikeChunkLoadError = (reason: unknown): boolean => {
-  const message =
-    reason instanceof Error ? reason.message : typeof reason === "string" ? reason : "";
+  const message = reason instanceof Error ? reason.message : typeof reason === "string" ? reason : "";
   const normalized = message.toLowerCase();
   return CHUNK_ERROR_PATTERNS.some((pattern) => normalized.includes(pattern));
 };

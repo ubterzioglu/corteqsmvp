@@ -21,11 +21,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import ConsentCheckboxes, {
-  emptyConsent,
-  isConsentValid,
-  type ConsentState,
-} from "@/components/ConsentCheckboxes";
+import ConsentCheckboxes, { emptyConsent, isConsentValid, type ConsentState } from "@/components/ConsentCheckboxes";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -97,8 +93,7 @@ const AmbassadorApplicationForm = () => {
         <CardContent className="p-6 text-center md:p-8">
           <h3 className="text-lg font-bold text-foreground">Başvuru için giriş yap</h3>
           <p className="mx-auto mt-2 max-w-md font-body text-sm text-muted-foreground">
-            Şehir elçisi başvurusu hesabına bağlanır, böylece sürecini takip edebilir ve
-            ekibimizle yazışabilirsin.
+            Şehir elçisi başvurusu hesabına bağlanır, böylece sürecini takip edebilir ve ekibimizle yazışabilirsin.
           </p>
           <Button asChild className="mt-5 gap-2">
             <Link to="/login?next=%2Fcity-ambassadors">
@@ -117,8 +112,8 @@ const AmbassadorApplicationForm = () => {
           <CheckCircle2 className="mx-auto mb-3 h-10 w-10 text-turquoise" aria-hidden="true" />
           <h3 className="text-lg font-bold text-foreground">Başvurun bize ulaştı</h3>
           <p className="mx-auto mt-2 max-w-md font-body text-sm text-muted-foreground">
-            Şehrindeki ağ için attığın bu adım için teşekkürler. Başvuruları sırayla
-            değerlendiriyoruz ve her başvuruya dönüş yapıyoruz.
+            Şehrindeki ağ için attığın bu adım için teşekkürler. Başvuruları sırayla değerlendiriyoruz ve her başvuruya
+            dönüş yapıyoruz.
           </p>
         </CardContent>
       </Card>
@@ -142,13 +137,7 @@ const AmbassadorApplicationForm = () => {
             </div>
             <div>
               <Label htmlFor="amb-phone">Telefon (WhatsApp) *</Label>
-              <Input
-                id="amb-phone"
-                {...register("phone")}
-                placeholder="+49…"
-                autoComplete="tel"
-                inputMode="tel"
-              />
+              <Input id="amb-phone" {...register("phone")} placeholder="+49…" autoComplete="tel" inputMode="tel" />
               <FieldError message={errors.phone?.message} />
             </div>
             <div>
@@ -171,13 +160,7 @@ const AmbassadorApplicationForm = () => {
             <div>
               <Label htmlFor="amb-reachCount">Doğrudan kaç kişiye ulaşabilirsin?</Label>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <Input
-                  id="amb-reachCount"
-                  type="number"
-                  min={0}
-                  {...register("reachCount")}
-                  placeholder="Sayı"
-                />
+                <Input id="amb-reachCount" type="number" min={0} {...register("reachCount")} placeholder="Sayı" />
                 <div className="sm:col-span-2">
                   <Input
                     {...register("reachDescription")}
@@ -222,12 +205,7 @@ const AmbassadorApplicationForm = () => {
 
           <ConsentCheckboxes value={consent} onChange={setConsent} />
 
-          <Button
-            type="submit"
-            size="lg"
-            className="w-full gap-2"
-            disabled={isSubmitting || !isConsentValid(consent)}
-          >
+          <Button type="submit" size="lg" className="w-full gap-2" disabled={isSubmitting || !isConsentValid(consent)}>
             {isSubmitting ? (
               <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
             ) : (

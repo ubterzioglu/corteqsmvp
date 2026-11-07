@@ -232,7 +232,11 @@ export const VIZE_QUESTIONS: VizeQuestion[] = [
     text: "Serbest meslek türünüz nedir?",
     hint: '"Freie Berufe" kapsamındaki freelancerlar ile şirket kuranlar için farklı süreçler geçerlidir.',
     options: [
-      { key: "freelancer", label: "💻 Freelancer — BT, tasarım, danışmanlık, içerik üretimi", next: "RESULT:FREELANCER" },
+      {
+        key: "freelancer",
+        label: "💻 Freelancer — BT, tasarım, danışmanlık, içerik üretimi",
+        next: "RESULT:FREELANCER",
+      },
       { key: "artist", label: "🎨 Sanat / Kültür / Medya alanında serbest çalışma", next: "RESULT:FREELANCER" },
       { key: "startup", label: "🏢 Şirket kurmak / Girişimcilik / E-ticaret", next: "RESULT:SELF_EMPLOY" },
     ],
@@ -598,11 +602,7 @@ export const VIZE_RESULTS: VizeResult[] = [
     title: "İş Arama Vizesi",
     subtitle: "Job Seeker Visa — Mesleki Eğitim Mezunu (§20 AufenthG)",
     color: "yellow",
-    requirements: [
-      "Almanya'da tanınan mesleki eğitim sertifikası",
-      "Finansal kaynak kanıtı",
-      "Sağlık sigortası",
-    ],
+    requirements: ["Almanya'da tanınan mesleki eğitim sertifikası", "Finansal kaynak kanıtı", "Sağlık sigortası"],
     steps: [
       "Mesleki sertifikanızın tanınırlığını anerkennung-in-deutschland.de ile teyit edin",
       "Finansal kanıt hazırlayın",

@@ -8,9 +8,4 @@ export { AdminEmptyState, type AdminEmptyStateProps } from "./AdminEmptyState";
 export { AdminLoadingState, type AdminLoadingStateProps } from "./AdminLoadingState";
 export { AdminErrorState, type AdminErrorStateProps } from "./AdminErrorState";
 export { AdminDetailDrawer, type AdminDetailDrawerProps } from "./AdminDetailDrawer";
-export {
-  AdminStatusBadge,
-  statusToTone,
-  type AdminStatusBadgeProps,
-  type AdminStatusTone,
-} from "./AdminStatusBadge";
+export { AdminStatusBadge, statusToTone, type AdminStatusBadgeProps, type AdminStatusTone } from "./AdminStatusBadge";

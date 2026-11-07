@@ -1,33 +1,29 @@
-'use client'
+"use client";
 
 // "Gizlenmiş Dosyalar" akordeonu. Gizli kayıtlar da aktif filtrelerden geçer;
 // tek eylem geri gösterme (göz düğmesi).
 
-import { Eye } from 'lucide-react'
-import AccordionCard from '@/components/dashboard/AccordionCard'
-import type { ResourceEntry } from '@/lib/dashboard/resource-items'
-import { ICON_BTN_CLS } from './link-manager-styles'
+import { Eye } from "lucide-react";
+import AccordionCard from "@/components/dashboard/AccordionCard";
+import type { ResourceEntry } from "@/lib/dashboard/resource-items";
+import { ICON_BTN_CLS } from "./link-manager-styles";
 
 interface HiddenResourcesPanelProps {
-  entries: ResourceEntry[]
-  isSubmitting: boolean
-  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void
+  entries: ResourceEntry[];
+  isSubmitting: boolean;
+  onToggleHidden: (entry: ResourceEntry, nextHidden: boolean) => void;
 }
 
-export default function HiddenResourcesPanel({
-  entries,
-  isSubmitting,
-  onToggleHidden,
-}: HiddenResourcesPanelProps) {
+export default function HiddenResourcesPanel({ entries, isSubmitting, onToggleHidden }: HiddenResourcesPanelProps) {
   return (
     <AccordionCard
       className="mt-3"
       items={[
         {
-          id: 'hidden-resources',
-          title: 'Gizlenmiş Dosyalar',
+          id: "hidden-resources",
+          title: "Gizlenmiş Dosyalar",
           badge: String(entries.length),
-          accentColor: '#8B5CF6',
+          accentColor: "#8B5CF6",
           children:
             entries.length === 0 ? (
               <p className="text-xs text-gray-500">Gizlenmiş kayıt yok.</p>
@@ -45,7 +41,7 @@ export default function HiddenResourcesPanel({
                             {entry.section}
                           </span>
                           <span className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 font-semibold text-indigo-700">
-                            {entry.subsection || '-'}
+                            {entry.subsection || "-"}
                           </span>
                         </div>
                         <p className="mt-1 truncate text-xs text-gray-900">
@@ -73,5 +69,5 @@ export default function HiddenResourcesPanel({
         },
       ]}
     />
-  )
+  );
 }

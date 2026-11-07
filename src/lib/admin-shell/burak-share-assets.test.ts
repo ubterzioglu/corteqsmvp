@@ -113,9 +113,7 @@ describe("upsertBurakShareAsset", () => {
 
   it("throws when the upsert errors", async () => {
     fromMock.mockReturnValue({ upsert: vi.fn().mockResolvedValue({ error: new Error("nope") }) });
-    await expect(
-      upsertBurakShareAsset("burak/burak-tool-1/variant-0", { note: "x" }),
-    ).rejects.toThrow("nope");
+    await expect(upsertBurakShareAsset("burak/burak-tool-1/variant-0", { note: "x" })).rejects.toThrow("nope");
   });
 });
 
@@ -154,9 +152,7 @@ describe("listBurakShareExtraImages", () => {
     const order = vi.fn().mockResolvedValue({ data: null, error: { code: "42501" } });
     fromMock.mockReturnValue({ select: vi.fn().mockReturnValue({ eq: vi.fn().mockReturnValue({ order }) }) });
 
-    await expect(listBurakShareExtraImages("tools/tool-1/variant-0")).rejects.toThrow(
-      "Ek görseller yüklenemedi",
-    );
+    await expect(listBurakShareExtraImages("tools/tool-1/variant-0")).rejects.toThrow("Ek görseller yüklenemedi");
   });
 });
 
@@ -179,18 +175,10 @@ describe("addBurakShareExtraImage", () => {
     fromMock.mockReturnValue({ insert });
 
     const file = new File(["x"], "b.png", { type: "image/png" });
-    const result = await addBurakShareExtraImage(
-      "item-5",
-      0,
-      "tools/tool-1/variant-0",
-      file,
-      1,
-    );
+    const result = await addBurakShareExtraImage("item-5", 0, "tools/tool-1/variant-0", file, 1);
 
     expect(upload).toHaveBeenCalled();
-    expect(insert).toHaveBeenCalledWith(
-      expect.objectContaining({ slot_key: "tools/tool-1/variant-0", sort_order: 1 }),
-    );
+    expect(insert).toHaveBeenCalledWith(expect.objectContaining({ slot_key: "tools/tool-1/variant-0", sort_order: 1 }));
     expect(result).toEqual({
       id: "img-2",
       slotKey: "tools/tool-1/variant-0",
@@ -211,9 +199,9 @@ describe("addBurakShareExtraImage", () => {
     });
 
     const file = new File(["x"], "b.png", { type: "image/png" });
-    await expect(
-      addBurakShareExtraImage("item-5", 0, "tools/tool-1/variant-0", file, 0),
-    ).rejects.toThrow("insert failed");
+    await expect(addBurakShareExtraImage("item-5", 0, "tools/tool-1/variant-0", file, 0)).rejects.toThrow(
+      "insert failed",
+    );
     expect(remove).toHaveBeenCalled();
   });
 });

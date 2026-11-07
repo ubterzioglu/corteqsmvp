@@ -1,7 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { KADRO_DEPTS, KADRO_AXES, KADRO_WAVES, KADRO_WORK_TYPES, KADRO_STATUSES, KADRO_PRIORITIES } from "@/lib/kadro/kadro-taxonomy";
+import {
+  KADRO_DEPTS,
+  KADRO_AXES,
+  KADRO_WAVES,
+  KADRO_WORK_TYPES,
+  KADRO_STATUSES,
+  KADRO_PRIORITIES,
+} from "@/lib/kadro/kadro-taxonomy";
 import type { KadroResolvedRole } from "@/lib/kadro/kadro-types";
 import { useKadroRoleDetail } from "@/hooks/kadro/useKadroRoleDetail";
 import { KadroStateForm } from "./KadroStateForm";
@@ -76,21 +83,15 @@ export function KadroRoleDrawer({ role, onClose }: KadroRoleDrawerProps) {
                 </div>
                 <div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Çalışma Tipi</div>
-                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {workType}
-                  </div>
+                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{workType}</div>
                 </div>
                 <div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Durum</div>
-                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {status.label}
-                  </div>
+                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{status.label}</div>
                 </div>
                 <div>
                   <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Öncelik</div>
-                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    {priority.label}
-                  </div>
+                  <div className="text-sm font-medium text-slate-900 dark:text-slate-100">{priority.label}</div>
                 </div>
               </div>
             </CardContent>
@@ -101,9 +102,7 @@ export function KadroRoleDrawer({ role, onClose }: KadroRoleDrawerProps) {
               <CardTitle className="text-sm">Görev Tanımı</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">
-                {role.jd}
-              </p>
+              <p className="text-sm text-slate-700 dark:text-slate-300 whitespace-pre-wrap">{role.jd}</p>
             </CardContent>
           </Card>
 

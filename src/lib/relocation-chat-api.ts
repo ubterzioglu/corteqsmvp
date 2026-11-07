@@ -42,9 +42,7 @@ export interface AskRelocationAssistantInput {
  * Asistana sorar. Hata durumunda Türkçe mesajla `Error` fırlatır —
  * çağıran taraf toast gösterir.
  */
-export async function askRelocationAssistant(
-  input: AskRelocationAssistantInput,
-): Promise<string> {
+export async function askRelocationAssistant(input: AskRelocationAssistantInput): Promise<string> {
   const { data, error } = await supabase.functions.invoke("relocation-assistant", {
     body: {
       moveId: input.moveId,
@@ -56,8 +54,7 @@ export async function askRelocationAssistant(
   if (error) {
     // supabase-js fonksiyon hataları düz nesne olabilir — `instanceof Error`'a
     // daraltmak mesajı kaybettirir (cadde-rules.ts'te aynı tuzak yaşandı).
-    const message =
-      (error as { message?: string })?.message ?? "Asistana ulaşılamadı.";
+    const message = (error as { message?: string })?.message ?? "Asistana ulaşılamadı.";
     throw new Error(message);
   }
 

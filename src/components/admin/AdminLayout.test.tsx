@@ -243,10 +243,7 @@ describe("AdminLayout (Admin Panel V2 shell)", () => {
     await screen.findByText("Admin Home Content");
 
     expect(screen.getByRole("link", { name: "Kullanım kılavuzu" })).toHaveAttribute("href", "/admin/guide");
-    expect(screen.getByRole("link", { name: "Yardım — kullanım kılavuzu" })).toHaveAttribute(
-      "href",
-      "/admin/guide",
-    );
+    expect(screen.getByRole("link", { name: "Yardım — kullanım kılavuzu" })).toHaveAttribute("href", "/admin/guide");
   });
 
   it("güncellemeler rozeti okunmamış sayıyı gösterir, menü açılınca okundu sayılır", async () => {

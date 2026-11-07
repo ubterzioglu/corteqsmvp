@@ -1,10 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export async function updateUserTaxonomySelectionAsAdmin(
-  userId: string,
-  groupKey: string,
-  optionKeys: string[],
-) {
+export async function updateUserTaxonomySelectionAsAdmin(userId: string, groupKey: string, optionKeys: string[]) {
   const { error } = await supabase.rpc("admin_update_user_taxonomy_selection", {
     target_user_id: userId,
     group_key: groupKey,

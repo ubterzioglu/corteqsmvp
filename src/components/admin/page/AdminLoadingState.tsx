@@ -10,11 +10,7 @@ export type AdminLoadingStateProps = {
   className?: string;
 };
 
-export function AdminLoadingState({
-  label = "Yükleniyor...",
-  rows = 3,
-  className,
-}: AdminLoadingStateProps) {
+export function AdminLoadingState({ label = "Yükleniyor...", rows = 3, className }: AdminLoadingStateProps) {
   return (
     <div role="status" aria-label={label} className={cn("space-y-3", className)}>
       {Array.from({ length: rows }, (_, index) => (

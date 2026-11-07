@@ -32,8 +32,8 @@ export default function CaddeRecommendationCard() {
       </CardHeader>
       <CardContent className="space-y-3 p-5 pt-0">
         <p className="text-sm text-slate-600">
-          Güvenilir terzi, doktor, usta mı arıyorsun? Topluluktan tavsiye iste — eşleşen
-          profesyoneller ve üyeler yanıtlasın.
+          Güvenilir terzi, doktor, usta mı arıyorsun? Topluluktan tavsiye iste — eşleşen profesyoneller ve üyeler
+          yanıtlasın.
         </p>
 
         {/* Liste YALNIZ başlık + şehir çizer; gövde (serbest metin) BİLEREK yok —
@@ -43,10 +43,7 @@ export default function CaddeRecommendationCard() {
           <ul className="space-y-1.5">
             {rows.map((row) => (
               <li key={row.id}>
-                <Link
-                  to={`/tavsiye/${row.id}`}
-                  className="block text-sm font-medium text-sky-700 hover:underline"
-                >
+                <Link to={`/tavsiye/${row.id}`} className="block text-sm font-medium text-sky-700 hover:underline">
                   {row.title}
                   {row.city ? <span className="ml-1.5 text-xs font-normal text-slate-500">{row.city}</span> : null}
                 </Link>

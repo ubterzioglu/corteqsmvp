@@ -83,13 +83,10 @@ export function ActionButtons({
         className={`flex flex-wrap gap-2.5 ${align === "center" ? "justify-center" : "justify-start"} ${className ?? ""}`}
       >
         {buttons.map((button, index) => {
-          const hiddenOnMobile =
-            hideOnMobileFrom !== undefined && index >= hideOnMobileFrom;
+          const hiddenOnMobile = hideOnMobileFrom !== undefined && index >= hideOnMobileFrom;
           // `relative`: DEMO rozeti köşeye `absolute` oturur (bkz. DemoBadge).
           const shared = {
-            className: `${BUTTON_CLASS} relative ${button.gradient}${
-              hiddenOnMobile ? " hidden sm:inline-flex" : ""
-            }`,
+            className: `${BUTTON_CLASS} relative ${button.gradient}${hiddenOnMobile ? " hidden sm:inline-flex" : ""}`,
             style: { boxShadow: `0 16px 34px -12px ${button.shadow}` },
           };
           // Rozet düğmenin İÇİNE konur. Düğmeyi bir sarmalayıcıya almak
@@ -101,11 +98,7 @@ export function ActionButtons({
             <Tooltip key={button.label}>
               <TooltipTrigger asChild>
                 {button.to ? (
-                  <Link
-                    to={button.to}
-                    state={button.carryOrigin ? { from: originPath } : undefined}
-                    {...shared}
-                  >
+                  <Link to={button.to} state={button.carryOrigin ? { from: originPath } : undefined} {...shared}>
                     {button.label}
                     {badge}
                   </Link>

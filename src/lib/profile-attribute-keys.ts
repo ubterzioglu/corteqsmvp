@@ -31,11 +31,7 @@ export const PRIVATE_ONLY_ONBOARDING_ATTRIBUTE_KEYS = new Set([
 // WS1 madde 4 (T19): "Bizi nereden buldunuz?" kayıt akışından tamamen kaldırıldı.
 // Attribute canlıda pasif (mig 20260904200000); eski veri taşıyan bir profilde bile
 // düzenleyici gösterilmez.
-export const HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS = new Set([
-  "full_name",
-  "interests",
-  REFERRAL_SOURCE_ATTRIBUTE_KEY,
-]);
+export const HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS = new Set(["full_name", "interests", REFERRAL_SOURCE_ATTRIBUTE_KEY]);
 export const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
   PHONE_ATTRIBUTE_KEY,
   PROFILE_PHOTO_ATTRIBUTE_KEY,
@@ -51,7 +47,7 @@ export const SPECIAL_PROFILE_ATTRIBUTE_KEYS = new Set([
 
 // WS1 madde 2 (T19): profil tipi kullanıcıya net görünsün — çip + açıklama.
 export const PROFILE_TYPE_TIP =
-  "Profil tipin hangi alanları doldurabileceğini ve hangi özellikleri kullanabileceğini belirler. Değiştirmek için aşağıdaki \"Başvurular & Erişimler\" kartından rol başvurusu yap.";
+  'Profil tipin hangi alanları doldurabileceğini ve hangi özellikleri kullanabileceğini belirler. Değiştirmek için aşağıdaki "Başvurular & Erişimler" kartından rol başvurusu yap.';
 
 export const PROFILE_CV_BUCKET = "profile-cv-files";
 export const PROFILE_PRESENTATION_BUCKET = "profile-presentation-files";

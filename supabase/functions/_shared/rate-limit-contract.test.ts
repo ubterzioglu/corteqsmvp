@@ -9,7 +9,9 @@ describe("assistant rate-limit single-source contract", () => {
 
     expect(source).toContain('import { enforceRateLimit } from "../_shared/rate-limit.ts"');
     expect(source).toContain('await enforceRateLimit(supabase, req, "site-assistant"');
-    expect(relocationSource).toContain('import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts"');
+    expect(relocationSource).toContain(
+      'import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts"',
+    );
     expect(relocationSource).toContain("await enforceSharedRateLimit(");
     expect(relocationSource).not.toContain("async function enforceRateLimit");
   });
@@ -54,9 +56,7 @@ describe("rate-limit: yerel select+update kopyası yasak", () => {
   it("whatsapp-autoreply hâlâ doğrudan edge_rate_limits kullanıyor (bilinen borç)", () => {
     const source = readFileSync("supabase/functions/_shared/whatsapp-autoreply.ts", "utf8");
 
-    expect(source, "borç kapandı: bu ratchet testini ve notunu sil").toMatch(
-      /from\(\s*["']edge_rate_limits["']\s*\)/,
-    );
+    expect(source, "borç kapandı: bu ratchet testini ve notunu sil").toMatch(/from\(\s*["']edge_rate_limits["']\s*\)/);
   });
 
   it("hiçbir edge function edge_rate_limits tablosuna doğrudan dokunmaz", () => {

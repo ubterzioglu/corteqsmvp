@@ -10,10 +10,7 @@ export type WhatsAppWebhookEvent = {
   providerTimestamp: string | null;
 };
 
-export type StoredWhatsAppWebhookEvent = Omit<
-  WhatsAppWebhookEvent,
-  "waId" | "phoneNumberId"
-> & {
+export type StoredWhatsAppWebhookEvent = Omit<WhatsAppWebhookEvent, "waId" | "phoneNumberId"> & {
   waIdHash: string | null;
   waIdCiphertext: string | null;
   phoneNumberIdHash: string | null;
@@ -39,9 +36,7 @@ function asRecordArray(value: unknown): Record<string, unknown>[] {
 }
 
 function asString(value: unknown, maxLength = 512): string | null {
-  return typeof value === "string" && value.length > 0
-    ? value.slice(0, maxLength)
-    : null;
+  return typeof value === "string" && value.length > 0 ? value.slice(0, maxLength) : null;
 }
 
 function bytesToHex(bytes: Uint8Array): string {
@@ -101,7 +96,10 @@ function base64UrlEncode(bytes: Uint8Array): string {
 }
 
 function base64UrlDecode(value: string): Uint8Array {
-  const padded = value.replaceAll("-", "+").replaceAll("_", "/").padEnd(Math.ceil(value.length / 4) * 4, "=");
+  const padded = value
+    .replaceAll("-", "+")
+    .replaceAll("_", "/")
+    .padEnd(Math.ceil(value.length / 4) * 4, "=");
   return Uint8Array.from(atob(padded), (character) => character.charCodeAt(0));
 }
 
@@ -112,11 +110,13 @@ async function deriveEncryptionKey(secret: string): Promise<CryptoKey> {
 
 export async function encryptWhatsAppIdentifier(value: string, secret: string): Promise<string> {
   const iv = crypto.getRandomValues(new Uint8Array(12));
-  const ciphertext = new Uint8Array(await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    await deriveEncryptionKey(secret),
-    new TextEncoder().encode(value),
-  ));
+  const ciphertext = new Uint8Array(
+    await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      await deriveEncryptionKey(secret),
+      new TextEncoder().encode(value),
+    ),
+  );
   return `v1.${base64UrlEncode(iv)}.${base64UrlEncode(ciphertext)}`;
 }
 
@@ -142,10 +142,7 @@ function extractMessageText(message: Record<string, unknown>): string | null {
   if (!interactive) return null;
   const buttonReply = isRecord(interactive.button_reply) ? interactive.button_reply : null;
   const listReply = isRecord(interactive.list_reply) ? interactive.list_reply : null;
-  return (
-    asString(buttonReply?.title, MAX_MESSAGE_TEXT_LENGTH) ??
-    asString(listReply?.title, MAX_MESSAGE_TEXT_LENGTH)
-  );
+  return asString(buttonReply?.title, MAX_MESSAGE_TEXT_LENGTH) ?? asString(listReply?.title, MAX_MESSAGE_TEXT_LENGTH);
 }
 
 /**
@@ -266,12 +263,8 @@ export function createWhatsAppWebhookHandler(dependencies: WhatsAppWebhookDepend
         providerMessageId: event.providerMessageId,
         eventType: event.eventType,
         waIdHash: event.waId ? await opaqueHash(event.waId, dependencies.appSecret) : null,
-        waIdCiphertext: event.waId
-          ? await encryptWhatsAppIdentifier(event.waId, dependencies.appSecret)
-          : null,
-        phoneNumberIdHash: event.phoneNumberId
-          ? await opaqueHash(event.phoneNumberId, dependencies.appSecret)
-          : null,
+        waIdCiphertext: event.waId ? await encryptWhatsAppIdentifier(event.waId, dependencies.appSecret) : null,
+        phoneNumberIdHash: event.phoneNumberId ? await opaqueHash(event.phoneNumberId, dependencies.appSecret) : null,
         messageType: event.messageType,
         messageText: event.messageText,
         messageStatus: event.messageStatus,
@@ -279,7 +272,7 @@ export function createWhatsAppWebhookHandler(dependencies: WhatsAppWebhookDepend
       };
       if (await dependencies.ingestEvent(storedEvent)) {
         inserted += 1;
-        
+
         // Trigger autoreply for inbound messages (non-blocking)
         if (event.eventType === "inbound_message" && event.messageText && dependencies.onInboundMessage) {
           try {

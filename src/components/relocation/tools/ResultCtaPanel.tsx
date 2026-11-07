@@ -30,8 +30,7 @@ interface ResultCtaPanelProps {
 }
 
 /** Her hücre aynı genişlik/yüksekliği paylaşır; uzun etiketler taşmadan sarar. */
-const CELL_CLASS =
-  "h-auto min-h-16 w-full flex-col gap-1.5 whitespace-normal px-3 py-3 text-center leading-snug";
+const CELL_CLASS = "h-auto min-h-16 w-full flex-col gap-1.5 whitespace-normal px-3 py-3 text-center leading-snug";
 
 /**
  * CTA href'i DB'den gelir (relocation_tool_results.ctas / skorlama fonksiyonlarının

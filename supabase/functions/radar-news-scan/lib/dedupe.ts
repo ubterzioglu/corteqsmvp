@@ -1,14 +1,9 @@
 import type { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import type { NormalizedNewsItem } from "./types.ts";
 
-export type DupeCheckResult =
-  | { isDupe: true; level: "url" | "content"; existingId: string }
-  | { isDupe: false };
+export type DupeCheckResult = { isDupe: true; level: "url" | "content"; existingId: string } | { isDupe: false };
 
-export async function checkDuplicate(
-  supabase: SupabaseClient,
-  item: NormalizedNewsItem,
-): Promise<DupeCheckResult> {
+export async function checkDuplicate(supabase: SupabaseClient, item: NormalizedNewsItem): Promise<DupeCheckResult> {
   // Seviye 1: canonical URL hash
   const { data: byUrl } = await supabase
     .from("radar_news_candidates")

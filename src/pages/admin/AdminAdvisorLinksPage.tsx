@@ -140,7 +140,7 @@ const AdminAdvisorLinksPage = () => {
       const nextItems = await listAdvisorResourceLinks(activeProfile.tableName);
       setItems(nextItems);
       setSelectedAdvisorId((current) =>
-        current && nextItems.some((item) => item.id === current) ? current : nextItems[0]?.id ?? null,
+        current && nextItems.some((item) => item.id === current) ? current : (nextItems[0]?.id ?? null),
       );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Bilinmeyen hata";
@@ -209,7 +209,11 @@ const AdminAdvisorLinksPage = () => {
   const handleUpdate = async (id: string) => {
     setSubmitting(true);
     try {
-      const updated = await updateAdvisorResourceLink(activeProfile.tableName, id, toAdvisorResourceLinkPayload(editingForm));
+      const updated = await updateAdvisorResourceLink(
+        activeProfile.tableName,
+        id,
+        toAdvisorResourceLinkPayload(editingForm),
+      );
       setItems((current) => current.map((item) => (item.id === id ? updated : item)));
       setSelectedAdvisorId(updated.id);
       cancelEdit();
@@ -320,11 +324,7 @@ const AdminAdvisorLinksPage = () => {
         rows={3}
       />
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <ContactStatusButtons
-          values={state}
-          disabled={submitting}
-          onToggle={(key, value) => onChange(key, value)}
-        />
+        <ContactStatusButtons values={state} disabled={submitting} onToggle={(key, value) => onChange(key, value)} />
         <div className="flex flex-wrap gap-2">
           <Button type="button" onClick={onSubmit} disabled={submitting}>
             {onCancel ? <Save className="h-4 w-4" /> : <Plus className="h-4 w-4" />}

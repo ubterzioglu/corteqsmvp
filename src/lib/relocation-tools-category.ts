@@ -51,8 +51,5 @@ export function buildCategoryFilters(tools: RelocationToolRow[]): ToolCategoryFi
     ...toolCategoryMeta(key),
   }));
 
-  return [
-    { key: ALL_TOOL_CATEGORIES, count: tools.length, label: "Tümü", Icon: Wrench },
-    ...categories,
-  ];
+  return [{ key: ALL_TOOL_CATEGORIES, count: tools.length, label: "Tümü", Icon: Wrench }, ...categories];
 }

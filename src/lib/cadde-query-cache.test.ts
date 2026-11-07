@@ -15,11 +15,7 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import {
-  CADDE_LIST_STALE_MS,
-  CADDE_PROMO_STALE_MS,
-  CADDE_REFERENCE_STALE_MS,
-} from "@/lib/cadde-query-cache";
+import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde-query-cache";
 
 /** Aynı QueryClient'ı paylaşan, /cadde ile birlikte mount olan yüzeyler. */
 const caddeQuerySurfaces = [
@@ -89,7 +85,10 @@ const queryOptionBlocks = (file: string): Array<{ file: string; options: string 
 
 /** İnsan tarafından okunabilir bir etiket: sorgunun queryKey satırı. */
 const labelFor = (options: string): string =>
-  options.split("\n").find((line) => line.includes("queryKey"))?.trim() ?? options.slice(0, 60);
+  options
+    .split("\n")
+    .find((line) => line.includes("queryKey"))
+    ?.trim() ?? options.slice(0, 60);
 
 describe("cadde sorgu tazelik sözleşmesi", () => {
   it("her Cadde sorgusu ya staleTime ya refetchInterval taşır", () => {

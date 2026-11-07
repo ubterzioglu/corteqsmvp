@@ -14,14 +14,7 @@
 // ("types.ts bu tabloları içermeyebilir") ölçümle çürüdü — iki tablo da tipli.
 // Tipli istemciye geçişte `tsc` 0 hata verdi.
 
-import {
-  Facebook,
-  Instagram,
-  Linkedin,
-  MessageCircle,
-  Twitter,
-  type LucideIcon,
-} from "lucide-react";
+import { Facebook, Instagram, Linkedin, MessageCircle, Twitter, type LucideIcon } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -29,14 +22,7 @@ import { supabase } from "@/integrations/supabase/client";
 export type ShareTab = "tools" | "diaspora" | "tests" | "burak";
 
 /** Desteklenen paylaşım platformları — DB CHECK ile eşleşir. */
-export const SHARE_PLATFORMS = [
-  "linkedin",
-  "instagram",
-  "reddit",
-  "x",
-  "facebook",
-  "threads",
-] as const;
+export const SHARE_PLATFORMS = ["linkedin", "instagram", "reddit", "x", "facebook", "threads"] as const;
 
 export type SharePlatform = (typeof SHARE_PLATFORMS)[number];
 
@@ -97,8 +83,7 @@ type NoteRow = {
   marked_by: string | null;
 };
 
-const errorMessage = (error: unknown, fallback: string): string =>
-  error instanceof Error ? error.message : fallback;
+const errorMessage = (error: unknown, fallback: string): string => (error instanceof Error ? error.message : fallback);
 
 /** Her iki tabloyu çekip globalId anahtarlı haritalara dönüştürür. */
 export async function fetchShareState(): Promise<ShareState> {
@@ -142,11 +127,7 @@ async function currentUserId(): Promise<string | null> {
 }
 
 /** Bir kalem × platform rozetini aç/kapatır (upsert). */
-export async function toggleShare(args: {
-  globalId: string;
-  platform: SharePlatform;
-  shared: boolean;
-}): Promise<void> {
+export async function toggleShare(args: { globalId: string; platform: SharePlatform; shared: boolean }): Promise<void> {
   const markedBy = await currentUserId();
   const { error } = await supabase.from("social_share_log").upsert(
     {
@@ -165,10 +146,7 @@ export async function toggleShare(args: {
 }
 
 /** Bir kalemin tek notunu kaydeder (upsert). */
-export async function saveItemNote(args: {
-  globalId: string;
-  note: string;
-}): Promise<void> {
+export async function saveItemNote(args: { globalId: string; note: string }): Promise<void> {
   const markedBy = await currentUserId();
   const { error } = await supabase.from("social_share_item_note").upsert(
     {
@@ -184,4 +162,3 @@ export async function saveItemNote(args: {
     throw new Error(errorMessage(error, "Not kaydedilemedi"));
   }
 }
-

@@ -64,7 +64,14 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
       data: {
         request: request(),
         answers: [
-          { id: "a1", request_id: "r1", user_id: "u2", body: "Şu terzi iyi.", is_professional: true, created_at: "2026-10-03T11:00:00Z" },
+          {
+            id: "a1",
+            request_id: "r1",
+            user_id: "u2",
+            body: "Şu terzi iyi.",
+            is_professional: true,
+            created_at: "2026-10-03T11:00:00Z",
+          },
         ],
       },
       isLoading: false,
@@ -81,7 +88,16 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
     detailMock.mockReturnValue({ data: { request: request(), answers: [] }, isLoading: false });
     matchMock.mockReturnValue({
       data: [
-        { item_id: "p1", title: "Terzi Ayşe", slug: "terzi-ayse", country_code: "DE", city: "Dortmund", category_slugs: ["terzi"], match_score: 145, match_reason: "kategori, şehir, ülke" },
+        {
+          item_id: "p1",
+          title: "Terzi Ayşe",
+          slug: "terzi-ayse",
+          country_code: "DE",
+          city: "Dortmund",
+          category_slugs: ["terzi"],
+          match_score: 145,
+          match_reason: "kategori, şehir, ülke",
+        },
       ],
     });
     renderPage();
@@ -164,7 +180,14 @@ describe("RecommendationDetailPage (/tavsiye/:id)", () => {
       data: {
         request: request(),
         answers: [
-          { id: "a1", request_id: "r1", user_id: "u1", body: "Benim yanıtım.", is_professional: false, created_at: "2026-10-04T11:00:00Z" },
+          {
+            id: "a1",
+            request_id: "r1",
+            user_id: "u1",
+            body: "Benim yanıtım.",
+            is_professional: false,
+            created_at: "2026-10-04T11:00:00Z",
+          },
         ],
       },
       isLoading: false,

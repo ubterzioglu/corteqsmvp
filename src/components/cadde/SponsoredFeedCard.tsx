@@ -37,19 +37,28 @@ const SponsoredFeedCard = ({ promotion, compact = false }: SponsoredFeedCardProp
     </Button>
   ) : (
     <Button asChild size={compact ? "sm" : "default"} variant="outline" className="cadde-secondary-action rounded-lg">
-      <Link to={promotion.targetUrl} onClick={handleClick}>İncele</Link>
+      <Link to={promotion.targetUrl} onClick={handleClick}>
+        İncele
+      </Link>
     </Button>
   );
 
   return (
     <Card className="cadde-sponsored">
-      <CardContent className={compact ? "space-y-2 p-4" : "flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between"}>
+      <CardContent
+        className={compact ? "space-y-2 p-4" : "flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between"}
+      >
         <div className="min-w-0 space-y-2">
           {/* KİMLİK: kartın ne olduğunu söyler, değişen bir hâl değil. Turuncu dolgu
               reklam içeriğini akıştaki en ağır rozet yapıyordu — yanlış sinyal. */}
           <CaddeBadge tone="kimlik">Sponsorlu</CaddeBadge>
           {promotion.imageUrl && !compact ? (
-            <img src={promotion.imageUrl} alt={promotion.title} className="h-32 w-full rounded-lg border border-orange-200/60 object-cover" loading="lazy" />
+            <img
+              src={promotion.imageUrl}
+              alt={promotion.title}
+              className="h-32 w-full rounded-lg border border-orange-200/60 object-cover"
+              loading="lazy"
+            />
           ) : null}
           <h3 className={`font-semibold text-slate-900 ${compact ? "text-sm" : "text-lg"}`}>{promotion.title}</h3>
           <p className={`text-slate-700 ${compact ? "line-clamp-2 text-xs" : "text-sm"}`}>{promotion.description}</p>

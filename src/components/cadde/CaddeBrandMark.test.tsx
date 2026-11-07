@@ -27,15 +27,7 @@ import { sliceBetween } from "@/test/source-slice";
 const LOGO = "public/cadde-logo.png";
 
 const renderBar = (extra: Partial<Parameters<typeof CaddeFeedScopeBar>[0]> = {}) =>
-  render(
-    <CaddeFeedScopeBar
-      scope="all"
-      hashtag=""
-      onScopeChange={vi.fn()}
-      onClearHashtag={vi.fn()}
-      {...extra}
-    />,
-  );
+  render(<CaddeFeedScopeBar scope="all" hashtag="" onScopeChange={vi.fn()} onClearHashtag={vi.fn()} {...extra} />);
 
 describe("A15 · kimlik işareti yerleşimi", () => {
   it("işaret kapsam şeridinin İÇİNDE durur — akışın üstünde ayrı blok değil", () => {

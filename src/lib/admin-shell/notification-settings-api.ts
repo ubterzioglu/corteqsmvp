@@ -27,8 +27,7 @@ export const NOTIFICATION_SETTING_KEYS = {
   weeklyCityDigest: "email.weekly_city_digest.enabled",
 } as const;
 
-export type NotificationSettingKey =
-  (typeof NOTIFICATION_SETTING_KEYS)[keyof typeof NOTIFICATION_SETTING_KEYS];
+export type NotificationSettingKey = (typeof NOTIFICATION_SETTING_KEYS)[keyof typeof NOTIFICATION_SETTING_KEYS];
 
 export const OUTBOX_STATUSES = ["pending", "sent", "failed", "skipped"] as const;
 export type OutboxStatus = (typeof OUTBOX_STATUSES)[number];
@@ -41,11 +40,7 @@ export const OUTBOX_STATUS_LABELS: Record<OutboxStatus, string> = {
 };
 
 export type NotificationEventType =
-  | "new_member"
-  | "admin_update"
-  | "member_welcome"
-  | "revision_request"
-  | "radar_scan_digest";
+  "new_member" | "admin_update" | "member_welcome" | "revision_request" | "radar_scan_digest";
 
 export const NOTIFICATION_EVENT_LABELS: Record<NotificationEventType, string> = {
   new_member: "Yeni üye",
@@ -120,10 +115,7 @@ function toNullableString(value: unknown): string | null {
 
 function isEventType(value: unknown): value is NotificationEventType {
   return (
-    value === "new_member" ||
-    value === "admin_update" ||
-    value === "member_welcome" ||
-    value === "revision_request"
+    value === "new_member" || value === "admin_update" || value === "member_welcome" || value === "revision_request"
   );
 }
 
@@ -199,14 +191,14 @@ export async function fetchAdminNotificationState(): Promise<AdminNotificationSt
 }
 
 /** Global anahtar — yalnız admin. DB tarafında p_key allowlist'lidir. */
-export async function setNotificationSetting(
-  key: NotificationSettingKey,
-  enabled: boolean,
-): Promise<void> {
-  const { error } = await supabase.rpc("set_notification_setting" as never, {
-    p_key: key,
-    p_enabled: enabled,
-  } as never);
+export async function setNotificationSetting(key: NotificationSettingKey, enabled: boolean): Promise<void> {
+  const { error } = await supabase.rpc(
+    "set_notification_setting" as never,
+    {
+      p_key: key,
+      p_enabled: enabled,
+    } as never,
+  );
   if (error) {
     throw new Error(error.message);
   }
@@ -222,12 +214,15 @@ export async function setMyNotificationSubscription(input: {
   // DİKKAT: dört argümanın DÖRDÜ de gönderilmelidir. RPC'nin son iki parametresi
   // DEFAULT false'tur — eksik gönderilen alan "kapat" anlamına gelir ve kullanıcının
   // mevcut aboneliğini sessizce siler (upsert tüm sütunları yazar).
-  const { error } = await supabase.rpc("set_my_notification_subscription" as never, {
-    p_new_member: input.newMemberEmail,
-    p_admin_update: input.adminUpdateEmail,
-    p_revision_request: input.revisionRequestEmail,
-    p_radar_scan_digest: input.radarScanDigestEmail,
-  } as never);
+  const { error } = await supabase.rpc(
+    "set_my_notification_subscription" as never,
+    {
+      p_new_member: input.newMemberEmail,
+      p_admin_update: input.adminUpdateEmail,
+      p_revision_request: input.revisionRequestEmail,
+      p_radar_scan_digest: input.radarScanDigestEmail,
+    } as never,
+  );
   if (error) {
     throw new Error(error.message);
   }

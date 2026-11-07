@@ -29,7 +29,7 @@ function AdminKadroIlanlarPage() {
     return true;
   });
 
-  const handleCopy = async (role: typeof KADRO_ROLES[0]) => {
+  const handleCopy = async (role: (typeof KADRO_ROLES)[0]) => {
     const adText = buildKadroAdText(role);
     if (adText) {
       await navigator.clipboard.writeText(adText);
@@ -41,12 +41,8 @@ function AdminKadroIlanlarPage() {
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
-          İlan Metinleri
-        </h1>
-        <p className="text-slate-600 dark:text-slate-400">
-          {rolesWithAd.length} pozisyon için hazır ilan metinleri
-        </p>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">İlan Metinleri</h1>
+        <p className="text-slate-600 dark:text-slate-400">{rolesWithAd.length} pozisyon için hazır ilan metinleri</p>
       </div>
 
       <div className="mb-6 flex gap-4">
@@ -88,11 +84,7 @@ function AdminKadroIlanlarPage() {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleCopy(role)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleCopy(role)}>
                       {copiedRole === role.id ? (
                         <>
                           <Check className="w-4 h-4 mr-1" />
@@ -105,11 +97,7 @@ function AdminKadroIlanlarPage() {
                         </>
                       )}
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setExpandedRole(isExpanded ? null : role.id)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setExpandedRole(isExpanded ? null : role.id)}>
                       {isExpanded ? "Gizle" : "Göster"}
                     </Button>
                   </div>
@@ -131,9 +119,7 @@ function AdminKadroIlanlarPage() {
 
       {filteredRoles.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-slate-600 dark:text-slate-400">
-            Filtrelere uygun ilan metni bulunamadı
-          </p>
+          <p className="text-slate-600 dark:text-slate-400">Filtrelere uygun ilan metni bulunamadı</p>
         </div>
       )}
     </div>

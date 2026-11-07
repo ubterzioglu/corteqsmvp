@@ -75,43 +75,37 @@ export const INVESTOR_SECTIONS: readonly InvestorSection[] = [
     id: "ozellikler",
     eyebrow: "01 · Featurlar",
     title: "Platformun yaptığı işler",
-    lead:
-      "Tek bir uygulamada sosyal akış, dizin, yapay zekâ asistanı, taşınma rehberi, kariyer ve yönetim araçları. Her modül canlı veritabanı üzerinde, rol bazlı yetkiyle çalışır.",
+    lead: "Tek bir uygulamada sosyal akış, dizin, yapay zekâ asistanı, taşınma rehberi, kariyer ve yönetim araçları. Her modül canlı veritabanı üzerinde, rol bazlı yetkiyle çalışır.",
   },
   {
     id: "teknolojiler",
     eyebrow: "02 · Teknolojiler",
     title: "Modern, yaygın ve bakımı kolay bir yığın",
-    lead:
-      "Ekosistemi en geniş araçlar seçildi: işe alım kolay, topluluk desteği güçlü, satıcıya bağımlılık düşük. Yapay zekâ katmanı sağlayıcıdan bağımsız tasarlandı.",
+    lead: "Ekosistemi en geniş araçlar seçildi: işe alım kolay, topluluk desteği güçlü, satıcıya bağımlılık düşük. Yapay zekâ katmanı sağlayıcıdan bağımsız tasarlandı.",
   },
   {
     id: "altyapi",
     eyebrow: "03 · Serverlar",
     title: "Konteyner tabanlı, yönetilen veri katmanlı altyapı",
-    lead:
-      "Ön yüz Docker konteynerinde nginx ile sunulur; veri, kimlik doğrulama, dosya ve sunucu fonksiyonları yönetilen PostgreSQL platformunda çalışır. Güvenlik başlıkları ve içerik güvenlik politikası her yanıtta zorunludur.",
+    lead: "Ön yüz Docker konteynerinde nginx ile sunulur; veri, kimlik doğrulama, dosya ve sunucu fonksiyonları yönetilen PostgreSQL platformunda çalışır. Güvenlik başlıkları ve içerik güvenlik politikası her yanıtta zorunludur.",
   },
   {
     id: "veritabani",
     eyebrow: "04 · Database",
     title: "Güvenliği veritabanının içinde olan bir veri modeli",
-    lead:
-      "Yetki kontrolü uygulama kodunda değil, PostgreSQL satır düzeyi güvenliğinde (RLS) yaşar. Kritik yazma işlemleri yalnız denetlenmiş sunucu fonksiyonlarından geçer.",
+    lead: "Yetki kontrolü uygulama kodunda değil, PostgreSQL satır düzeyi güvenliğinde (RLS) yaşar. Kritik yazma işlemleri yalnız denetlenmiş sunucu fonksiyonlarından geçer.",
   },
   {
     id: "kod",
     eyebrow: "05 · Kodlar",
     title: "Ölçülen, test edilen, kendini denetleyen bir kod tabanı",
-    lead:
-      "Kalite rakamları elle yazılmaz, araçlarla ölçülür. Her değişiklik otomatik kalite hattından geçer; sessizce bozulabilecek her kritik kural bir sözleşme testiyle kilitlidir.",
+    lead: "Kalite rakamları elle yazılmaz, araçlarla ölçülür. Her değişiklik otomatik kalite hattından geçer; sessizce bozulabilecek her kritik kural bir sözleşme testiyle kilitlidir.",
   },
   {
     id: "danismanlik",
     eyebrow: "06 · Teknik Danışmanlık",
     title: "Masadaki tablo: güçlü temeller ve olgunlaşacak alanlar",
-    lead:
-      "Teknoloji danışmanlığı için dürüst bir başlangıç noktası. Temeller sağlam; büyüme evresinde stratejik yön ve deneyimin en çok değer katacağı alanlar da açıkça bellidir.",
+    lead: "Teknoloji danışmanlığı için dürüst bir başlangıç noktası. Temeller sağlam; büyüme evresinde stratejik yön ve deneyimin en çok değer katacağı alanlar da açıkça bellidir.",
   },
   {
     id: "baglantilar",
@@ -130,7 +124,11 @@ export interface EcosystemLink {
 /** 07 · Bağlantılar — hepsi herkese açık adresler. */
 export const ECOSYSTEM_LINKS: readonly EcosystemLink[] = [
   // Bize ait olmayan adresler kendi kısa yolumuzdan yönlenir (investor-route.ts → INFORMATION_REDIRECTS).
-  { title: "Venture Studio", text: "Qualtron Sinclair — QS Networks", url: "https://corteqs.net/information/venture-studio" },
+  {
+    title: "Venture Studio",
+    text: "Qualtron Sinclair — QS Networks",
+    url: "https://corteqs.net/information/venture-studio",
+  },
   { title: "CorteQS Türk", text: "Ana platform", url: "https://corteqs.net" },
   { title: "CorteQS Product", text: "Global ürün prototipi", url: "https://corteqs.net/information/product" },
   { title: "CorteQS Sosyal Medya", text: "Cadde — diaspora sosyal akışı", url: "https://corteqs.net/cadde" },
@@ -145,8 +143,7 @@ export const ECOSYSTEM_LINKS: readonly EcosystemLink[] = [
 export const HERO = {
   kicker: "Yatırımcı Bilgi Dosyası · Teknik Görünüm",
   title: "Dünyadaki Türk diasporası için kurulmuş dijital altyapı",
-  lead:
-    "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturur. Bu sayfa ürünün arkasındaki teknolojiyi, veriyi ve mühendislik disiplinini özetler.",
+  lead: "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturur. Bu sayfa ürünün arkasındaki teknolojiyi, veriyi ve mühendislik disiplinini özetler.",
 } as const;
 
 export const MODULES: readonly InvestorModule[] = [
@@ -168,7 +165,11 @@ export const MODULES: readonly InvestorModule[] = [
     key: "asistan",
     title: "Yapay Zekâ Site Asistanı",
     summary: "Platformun kendi içeriğinden beslenen soru-cevap asistanı.",
-    highlights: ["Erişime göre süzülen bilgi tabanı", "Alaka eşiğiyle uydurma cevap önleme", "Her sayfada erişilebilir"],
+    highlights: [
+      "Erişime göre süzülen bilgi tabanı",
+      "Alaka eşiğiyle uydurma cevap önleme",
+      "Her sayfada erişilebilir",
+    ],
     status: "canli",
   },
   {
@@ -210,7 +211,11 @@ export const MODULES: readonly InvestorModule[] = [
     key: "relocation",
     title: "Taşınma (Relocation) Motoru",
     summary: "Ülke bazlı bürokrasi adımları, hizmet rehberi ve değerlendirme araçları.",
-    highlights: ["10 değerlendirme aracı", "Yapay zekâ destekli taşınma asistanı", "Motor hazır, içerik genişletiliyor"],
+    highlights: [
+      "10 değerlendirme aracı",
+      "Yapay zekâ destekli taşınma asistanı",
+      "Motor hazır, içerik genişletiliyor",
+    ],
     status: "pilot",
   },
   {
@@ -223,7 +228,7 @@ export const MODULES: readonly InvestorModule[] = [
   {
     key: "gruplar",
     title: "Dijital Gruplar",
-    summary: "\"Linkini saklama, kapını paylaş\": doğrulamalı topluluk grubu katılımı.",
+    summary: '"Linkini saklama, kapını paylaş": doğrulamalı topluluk grubu katılımı.',
     highlights: ["Kimlik doğrulamalı katılım", "Yönetici onayı", "Spam'i kapıda durdurma"],
     status: "gelistiriliyor",
   },
@@ -299,15 +304,27 @@ export const INFRA_POINTS: readonly InvestorMetric[] = [
 export const DB_METRICS: readonly InvestorMetric[] = [
   { value: tr(LIVE_DB.tables), label: "tablo", hint: "uygulama tablolarının tamamında RLS" },
   { value: tr(LIVE_DB.policies), label: "erişim politikası", hint: "RLS" },
-  { value: `${Math.floor(LIVE_DB.securedFunctions / 100) * 100}+`, label: "denetlenmiş sunucu fonksiyonu", hint: "yetkiyi içeride doğrular" },
+  {
+    value: `${Math.floor(LIVE_DB.securedFunctions / 100) * 100}+`,
+    label: "denetlenmiş sunucu fonksiyonu",
+    hint: "yetkiyi içeride doğrular",
+  },
   { value: tr(LIVE_DB.indexes), label: "indeks", hint: "sorgu performansı" },
   { value: tr(REPO.migrations), label: "sürümlü şema değişikliği", hint: "migration" },
-  { value: tr(LIVE_DB.rolesActive), label: "aktif rol", hint: `${LIVE_DB.profileAttributes} alan · ${LIVE_DB.features} özellik` },
+  {
+    value: tr(LIVE_DB.rolesActive),
+    label: "aktif rol",
+    hint: `${LIVE_DB.profileAttributes} alan · ${LIVE_DB.features} özellik`,
+  },
 ];
 
 export const CODE_METRICS: readonly InvestorMetric[] = [
   { value: tr(REPO.sourceFiles), label: "kaynak dosya", hint: "TypeScript / TSX" },
-  { value: `${Math.round(REPO.productionLines / 1000)} bin`, label: "satır üretim kodu", hint: "üretilen dosyalar hariç" },
+  {
+    value: `${Math.round(REPO.productionLines / 1000)} bin`,
+    label: "satır üretim kodu",
+    hint: "üretilen dosyalar hariç",
+  },
   { value: tr(REPO.testFiles), label: "test dosyası", hint: `${REPO.e2eSpecs} uçtan uca senaryo` },
   { value: tr(REPO.lazyRoutes), label: "ayrı yüklenen sayfa paketi", hint: "hızlı ilk açılış" },
 ];
@@ -337,7 +354,7 @@ export const TECH_DETAILS: Record<string, readonly DetailBlock[]> = {
       title: "Türkçe öncelikli",
       points: [
         "Arama, sıralama ve büyük/küçük harf dönüşümleri Türkçe kurallarına göre yapılır (İ/ı sorunu yok).",
-        "Aksan duyarsız eşleşme: \"uskudar\" yazan \"Üsküdar\"ı bulur.",
+        'Aksan duyarsız eşleşme: "uskudar" yazan "Üsküdar"ı bulur.',
       ],
     },
   ],
@@ -428,7 +445,7 @@ export const TECH_DETAILS: Record<string, readonly DetailBlock[]> = {
     {
       title: "Mühendislik çalışma modeli",
       points: [
-        "Yapay zekâ destekli geliştirme: kodu yazan ve inceleyen ajanlar ayrıdır; inceleme \"onayla\" değil \"çürütmeye çalış\" görevidir.",
+        'Yapay zekâ destekli geliştirme: kodu yazan ve inceleyen ajanlar ayrıdır; inceleme "onayla" değil "çürütmeye çalış" görevidir.',
         "Önce ölç, sonra yaz: dokümandaki her rakam bir komutla yeniden üretilebilir.",
         "Kurumsal hafıza repoda: mimari kararlar, değişmez kurallar ve olay notları kodun yanında tutulur.",
       ],
@@ -458,22 +475,49 @@ export const HANDOVER: readonly HandoverColumn[] = [
     title: "Güçlü temeller",
     tone: "strong",
     items: [
-      { title: "Veritabanında güvenlik", text: "Yetki kararı istemcide değil; veritabanı politikalarında ve denetlenmiş fonksiyonlarda verilir." },
-      { title: "Satıcıdan bağımsızlık", text: "Çekirdek açık kaynak PostgreSQL; kendi sunucumuza taşınma yolu değerlendirildi." },
+      {
+        title: "Veritabanında güvenlik",
+        text: "Yetki kararı istemcide değil; veritabanı politikalarında ve denetlenmiş fonksiyonlarda verilir.",
+      },
+      {
+        title: "Satıcıdan bağımsızlık",
+        text: "Çekirdek açık kaynak PostgreSQL; kendi sunucumuza taşınma yolu değerlendirildi.",
+      },
       { title: "Ölçüm kültürü", text: "Rakamlar betiklerle üretilir; repo ↔ canlı sapmaları otomatik yakalanır." },
-      { title: "Kurallar testte yaşar", text: "Sessiz hata sınıfları sözleşme testleriyle kilitli; bilgi kişide değil kodda." },
-      { title: "Yapay zekâ hazır veri katmanı", text: "Vektör arama veritabanının içinde; model sağlayıcısı ayarla değişir." },
+      {
+        title: "Kurallar testte yaşar",
+        text: "Sessiz hata sınıfları sözleşme testleriyle kilitli; bilgi kişide değil kodda.",
+      },
+      {
+        title: "Yapay zekâ hazır veri katmanı",
+        text: "Vektör arama veritabanının içinde; model sağlayıcısı ayarla değişir.",
+      },
     ],
   },
   {
     title: "Olgunlaşacak alanlar",
     tone: "grow",
     items: [
-      { title: "Uçtan uca test kapsamı", text: "Güvence bugün birim ve sözleşme testlerinde; tarayıcı senaryoları büyütülmeli." },
-      { title: "Sunucu fonksiyonu dağıtımı", text: "Ön yüz otomatik yayınlanır; sunucu fonksiyonlarının da aynı CI/CD hattına bağlanması sıradaki adımdır." },
-      { title: "Tip katılığı", text: "Derleyici katı modu bilinçli kapalı (tip hatası 0); yeni kod katı yazılıyor, kademeli açılış planlanmalı." },
-      { title: "Gözlemlenebilirlik", text: "İstemci hataları merkezi kayıtta; uygulama performansı izleme (APM) ve uyarı katmanı eklenmeli." },
-      { title: "Ölçek ve maliyet planı", text: "Büyüme senaryolarına göre kapasite, önbellek ve maliyet planı çıkarılmalı." },
+      {
+        title: "Uçtan uca test kapsamı",
+        text: "Güvence bugün birim ve sözleşme testlerinde; tarayıcı senaryoları büyütülmeli.",
+      },
+      {
+        title: "Sunucu fonksiyonu dağıtımı",
+        text: "Ön yüz otomatik yayınlanır; sunucu fonksiyonlarının da aynı CI/CD hattına bağlanması sıradaki adımdır.",
+      },
+      {
+        title: "Tip katılığı",
+        text: "Derleyici katı modu bilinçli kapalı (tip hatası 0); yeni kod katı yazılıyor, kademeli açılış planlanmalı.",
+      },
+      {
+        title: "Gözlemlenebilirlik",
+        text: "İstemci hataları merkezi kayıtta; uygulama performansı izleme (APM) ve uyarı katmanı eklenmeli.",
+      },
+      {
+        title: "Ölçek ve maliyet planı",
+        text: "Büyüme senaryolarına göre kapasite, önbellek ve maliyet planı çıkarılmalı.",
+      },
     ],
   },
 ];

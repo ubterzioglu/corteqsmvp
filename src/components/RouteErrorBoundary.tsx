@@ -16,10 +16,7 @@ interface RouteErrorBoundaryProps {
 
 const RouteErrorFallback = ({ homeHref, homeLabel }: { homeHref: string; homeLabel: string }) => (
   <div className="container mx-auto px-4 py-12">
-    <div
-      role="alert"
-      className="mx-auto max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-card"
-    >
+    <div role="alert" className="mx-auto max-w-md rounded-2xl border border-border bg-card p-8 text-center shadow-card">
       <h1 className="mb-3 text-xl font-extrabold">Bu sayfa yüklenemedi</h1>
       <p className="mb-6 text-sm text-muted-foreground">
         Menüden başka bir sayfaya geçebilir veya sayfayı yenileyerek tekrar deneyebilirsiniz.

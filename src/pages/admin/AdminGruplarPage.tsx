@@ -226,7 +226,10 @@ export default function AdminGruplarPage() {
       const target = event.target as HTMLElement | null;
       if (
         target &&
-        (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT" || target.isContentEditable)
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.tagName === "SELECT" ||
+          target.isContentEditable)
       ) {
         return;
       }
@@ -268,20 +271,26 @@ export default function AdminGruplarPage() {
     if (!rejectTarget) return;
     const note = [rejectPreset, rejectNote.trim()].filter(Boolean).join(" — ") || undefined;
     if (rejectTarget.kind === "group") {
-      void runDecision(() => decidePendingGroup(rejectTarget.row.id, "reject", note), "Grup reddedildi — ekleyene bildirim gitti.");
+      void runDecision(
+        () => decidePendingGroup(rejectTarget.row.id, "reject", note),
+        "Grup reddedildi — ekleyene bildirim gitti.",
+      );
     } else if (rejectTarget.kind === "claim") {
       void runDecision(() => decideClaim(rejectTarget.row.id, "reject", note), "Sahiplik talebi reddedildi.");
     } else if (rejectTarget.kind === "reports") {
       const targets = rejectTarget.only ? [rejectTarget.only] : rejectTarget.row.reports;
-      void runDecision(async () => {
-        let republished = false;
-        // Sırayla: son açık şikayetin reddi grubu (gizliyse) yayına döndürür.
-        for (const report of targets) {
-          const result = await reviewGroupReport(report.id, "rejected", note);
-          republished = republished || result.group_republished;
-        }
-        if (republished) toast.info("Grup yeniden yayında (açık şikayet kalmadı).");
-      }, targets.length > 1 ? `${targets.length} şikayet reddedildi.` : "Şikayet reddedildi.");
+      void runDecision(
+        async () => {
+          let republished = false;
+          // Sırayla: son açık şikayetin reddi grubu (gizliyse) yayına döndürür.
+          for (const report of targets) {
+            const result = await reviewGroupReport(report.id, "rejected", note);
+            republished = republished || result.group_republished;
+          }
+          if (republished) toast.info("Grup yeniden yayında (açık şikayet kalmadı).");
+        },
+        targets.length > 1 ? `${targets.length} şikayet reddedildi.` : "Şikayet reddedildi.",
+      );
     } else {
       void runDecision(() => decidePost(rejectTarget.row.id, "reject", note), "Gönderi reddedildi.");
     }
@@ -441,8 +450,8 @@ export default function AdminGruplarPage() {
               ) : null}
             </ul>
             <p className="mt-2 text-xs text-muted-foreground">
-              ⚠️ "succeeded" yalnız çağrının döndüğünü gösterir (Radar dersi) — görevlerin ETKİSİ kabul
-              testleriyle ölçülür.
+              ⚠️ "succeeded" yalnız çağrının döndüğünü gösterir (Radar dersi) — görevlerin ETKİSİ kabul testleriyle
+              ölçülür.
             </p>
           </CardContent>
         ) : null}
@@ -463,9 +472,7 @@ export default function AdminGruplarPage() {
 
           {/* ── Kuyruk 1: yeni gruplar ── */}
           <TabsContent value="groups" className="space-y-3">
-            {groups.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Yeni grup kuyruğu boş.</p>
-            ) : null}
+            {groups.length === 0 ? <p className="text-sm text-muted-foreground">Yeni grup kuyruğu boş.</p> : null}
             {groups.map((row, index) => (
               <Card
                 key={row.id}
@@ -476,10 +483,14 @@ export default function AdminGruplarPage() {
                   <CardTitle className="flex flex-wrap items-center gap-2 text-base">
                     {row.group_name}
                     <Badge variant="outline">{getCategoryMeta(row.category).label}</Badge>
-                    <Badge variant="outline">{row.country} / {row.city}</Badge>
+                    <Badge variant="outline">
+                      {row.country} / {row.city}
+                    </Badge>
                     {row.submitted_as_admin ? <Badge className="bg-orange-500">admin ekledi</Badge> : null}
                     {(row.review_flags ?? []).map((flag) => (
-                      <Badge key={flag} variant="destructive">işaret: {flag}</Badge>
+                      <Badge key={flag} variant="destructive">
+                        işaret: {flag}
+                      </Badge>
                     ))}
                     <span className="text-xs font-normal text-muted-foreground">{timeAgo(row.created_at)}</span>
                   </CardTitle>
@@ -493,7 +504,9 @@ export default function AdminGruplarPage() {
                       size="sm"
                       className="gap-1 bg-emerald-600 text-white hover:bg-emerald-700"
                       disabled={busy}
-                      onClick={() => void runDecision(() => decidePendingGroup(row.id, "approve"), `"${row.group_name}" yayınlandı.`)}
+                      onClick={() =>
+                        void runDecision(() => decidePendingGroup(row.id, "approve"), `"${row.group_name}" yayınlandı.`)
+                      }
                     >
                       <Check className="h-4 w-4" /> Onayla (A)
                     </Button>
@@ -538,7 +551,9 @@ export default function AdminGruplarPage() {
           {/* ── Kuyruk 2: sahiplik talepleri (ekran görüntüsü) ── */}
           <TabsContent value="claims" className="space-y-3">
             {claims.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Sahiplik kuyruğu boş (kod yolu otomatik işler; buraya yalnız ekran görüntüsü talepleri düşer).</p>
+              <p className="text-sm text-muted-foreground">
+                Sahiplik kuyruğu boş (kod yolu otomatik işler; buraya yalnız ekran görüntüsü talepleri düşer).
+              </p>
             ) : null}
             {claims.map((row, index) => (
               <Card
@@ -559,14 +574,24 @@ export default function AdminGruplarPage() {
                   ) : null}
                   {row.review_note ? <p className="text-sm text-muted-foreground">Not: {row.review_note}</p> : null}
                   <div className="flex flex-wrap gap-2">
-                    <Button size="sm" variant="outline" disabled={busy} onClick={() => void openScreenshot(row.screenshot_path)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busy}
+                      onClick={() => void openScreenshot(row.screenshot_path)}
+                    >
                       Ekran görüntüsünü aç
                     </Button>
                     <Button
                       size="sm"
                       className="gap-1 bg-emerald-600 text-white hover:bg-emerald-700"
                       disabled={busy}
-                      onClick={() => void runDecision(() => decideClaim(row.id, "approve"), "Sahiplik onaylandı — doğrulandı yapıldı.")}
+                      onClick={() =>
+                        void runDecision(
+                          () => decideClaim(row.id, "approve"),
+                          "Sahiplik onaylandı — doğrulandı yapıldı.",
+                        )
+                      }
                     >
                       <Check className="h-4 w-4" /> Onayla (A)
                     </Button>
@@ -603,9 +628,7 @@ export default function AdminGruplarPage() {
 
           {/* ── Kuyruk 4: platform gönderi kuyruğu ── */}
           <TabsContent value="posts" className="space-y-3">
-            {posts.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Gönderi kuyruğu boş.</p>
-            ) : null}
+            {posts.length === 0 ? <p className="text-sm text-muted-foreground">Gönderi kuyruğu boş.</p> : null}
             {posts.map((row, index) => (
               <Card
                 key={row.id}
@@ -657,7 +680,12 @@ export default function AdminGruplarPage() {
         <Card className="border-red-200">
           <CardHeader>
             <CardTitle className="text-base">
-              Reddet: {rejectTarget.kind === "group" ? rejectTarget.row.group_name : rejectTarget.kind === "claim" ? (rejectTarget.row.group_name ?? "sahiplik talebi") : (rejectTarget.row.group_name ?? "gönderi")}
+              Reddet:{" "}
+              {rejectTarget.kind === "group"
+                ? rejectTarget.row.group_name
+                : rejectTarget.kind === "claim"
+                  ? (rejectTarget.row.group_name ?? "sahiplik talebi")
+                  : (rejectTarget.row.group_name ?? "gönderi")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -669,7 +697,9 @@ export default function AdminGruplarPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {REJECT_REASON_PRESETS.map((preset) => (
-                    <SelectItem key={preset} value={preset}>{preset}</SelectItem>
+                    <SelectItem key={preset} value={preset}>
+                      {preset}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -705,8 +735,8 @@ export default function AdminGruplarPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-xs text-muted-foreground">
-              Merdiven otomatik işler: 1. uyarı · 2. ihlal 30 gün askı · 3. ihlal listeden kaldırma +
-              yasak. Kırmızı çizgi 2/4/6 İLK ihlalde kaldırır.
+              Merdiven otomatik işler: 1. uyarı · 2. ihlal 30 gün askı · 3. ihlal listeden kaldırma + yasak. Kırmızı
+              çizgi 2/4/6 İLK ihlalde kaldırır.
             </p>
             <div>
               <Label htmlFor="strike-reason">Gerekçe *</Label>
@@ -728,7 +758,9 @@ export default function AdminGruplarPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {[1, 2, 3, 4, 5, 6, 7].map((n) => (
-                    <SelectItem key={n} value={String(n)}>Kırmızı çizgi {n}</SelectItem>
+                    <SelectItem key={n} value={String(n)}>
+                      Kırmızı çizgi {n}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>

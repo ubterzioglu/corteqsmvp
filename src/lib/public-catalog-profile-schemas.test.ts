@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import {
-  parsePublicCatalogProfilePage,
-  publicCatalogProfilePageSchema,
-} from "@/lib/public-catalog-profile-schemas";
+import { parsePublicCatalogProfilePage, publicCatalogProfilePageSchema } from "@/lib/public-catalog-profile-schemas";
 
 const makeRawPayload = (overrides: Record<string, unknown> = {}) => ({
   item: {

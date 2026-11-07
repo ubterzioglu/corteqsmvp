@@ -20,9 +20,7 @@ export type WorkerEnv = z.infer<typeof envSchema>;
 export function loadEnv(): WorkerEnv {
   const parsed = envSchema.safeParse(process.env);
   if (!parsed.success) {
-    const detail = parsed.error.issues
-      .map((issue) => `${issue.path.join(".")}: ${issue.message}`)
-      .join("; ");
+    const detail = parsed.error.issues.map((issue) => `${issue.path.join(".")}: ${issue.message}`).join("; ");
     throw new Error(`Service Finder worker env eksik/geçersiz: ${detail}`);
   }
   return parsed.data;

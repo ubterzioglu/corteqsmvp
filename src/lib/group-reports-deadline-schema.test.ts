@@ -75,9 +75,7 @@ describe("G14b · group_reports_expire_unreviewed fonksiyonu", () => {
   });
 
   it("yetki: service_role (pg_cron)", () => {
-    expect(flat()).toContain(
-      "grant execute on function public.group_reports_expire_unreviewed() to service_role;",
-    );
+    expect(flat()).toContain("grant execute on function public.group_reports_expire_unreviewed() to service_role;");
   });
 });
 

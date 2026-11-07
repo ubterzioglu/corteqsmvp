@@ -25,10 +25,7 @@ export function useAdminUpdates(): AdminUpdatesState {
     sanitizeIds(readAdminStorage<unknown>(ADMIN_STORAGE_KEYS.updatesSeen, [])),
   );
 
-  const unreadCount = useMemo(
-    () => ADMIN_UPDATES.filter((update) => !seenIds.includes(update.id)).length,
-    [seenIds],
-  );
+  const unreadCount = useMemo(() => ADMIN_UPDATES.filter((update) => !seenIds.includes(update.id)).length, [seenIds]);
 
   const isUnread = useCallback((id: string) => !seenIds.includes(id), [seenIds]);
 

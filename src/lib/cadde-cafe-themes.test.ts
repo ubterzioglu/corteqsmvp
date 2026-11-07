@@ -88,14 +88,7 @@ describe("cadde kafe tema kataloğu", () => {
     expect(form).toContain("themesQuery.data");
 
     // Sabit etiket listesi geri gelirse bu düşer. İ=İ, ş=ş, ğ=ğ, ü=ü.
-    const hardcodedLabels = [
-      "Girişim",
-      "Sağlık",
-      "Müzik",
-      "Gündem",
-      "İK",
-      "İş",
-    ];
+    const hardcodedLabels = ["Girişim", "Sağlık", "Müzik", "Gündem", "İK", "İş"];
     for (const label of hardcodedLabels) {
       expect(form, `Form'da sabit tema etiketi var: ${label}`).not.toContain(`"${label}"`);
       expect(form, `Form'da sabit tema etiketi var: ${label}`).not.toContain(`>${label}<`);

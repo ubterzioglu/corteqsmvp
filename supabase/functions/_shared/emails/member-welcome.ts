@@ -56,20 +56,17 @@ export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
 const DISCOVER_SECTIONS: ReadonlyArray<{ title: string; description: string; path: string }> = [
   {
     title: "Cadde",
-    description:
-      "Diasporadaki insanların gündemi: paylaşımlar, kafeler ve çarşı ilanları. Tanış, sor, paylaş.",
+    description: "Diasporadaki insanların gündemi: paylaşımlar, kafeler ve çarşı ilanları. Tanış, sor, paylaş.",
     path: "/cadde",
   },
   {
     title: "Rehber",
-    description:
-      "Ülke ülke, şehir şehir kişiler ve kuruluşlar. Aradığın hizmeti veya iş ortağını bul.",
+    description: "Ülke ülke, şehir şehir kişiler ve kuruluşlar. Aradığın hizmeti veya iş ortağını bul.",
     path: "/directory",
   },
   {
     title: "Kaynaklar",
-    description:
-      "Taşınma, vize, iş ve yaşam üzerine rehberler; deneyimlerden süzülmüş pratik bilgiler.",
+    description: "Taşınma, vize, iş ve yaşam üzerine rehberler; deneyimlerden süzülmüş pratik bilgiler.",
     path: "/radar/rehberler",
   },
 ];
@@ -150,9 +147,7 @@ export function buildMemberWelcomeEmail(input: MemberWelcomeInput): BuiltEmail {
   const privacyUrl = `${siteUrl}/legal/privacy`;
   const replyTo = (input.replyTo ?? "").trim() || MEMBER_SUPPORT_EMAIL;
 
-  const subject = firstName
-    ? `CorteQS'e hoş geldin ${firstName}`
-    : "CorteQS'e hoş geldin";
+  const subject = firstName ? `CorteQS'e hoş geldin ${firstName}` : "CorteQS'e hoş geldin";
 
   // Gelen kutusunda konu satırının yanında görünen önizleme metni. Boş bırakılırsa
   // Gmail HTML'in ilk çöpünü gösterir; bu yüzden hem gizli div hem de sıfır genişlikli

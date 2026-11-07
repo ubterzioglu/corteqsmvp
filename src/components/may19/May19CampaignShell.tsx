@@ -68,61 +68,57 @@ export default function May19CampaignShell({
         <div className="container mx-auto px-4 pb-10 pt-5 lg:px-6 lg:pb-12">
           <div className="grid items-center gap-6 pt-3 lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.9fr)]">
             <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-[linear-gradient(135deg,#fff_0%,#fff5f5_100%)] px-4 py-2 text-xs font-bold tracking-[0.18em] text-rose-700 shadow-[0_10px_30px_rgba(244,63,94,0.16)]">
-              <span aria-hidden="true">🇹🇷</span>
-              {eyebrow}
-            </div>
-
-            <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
-              {title}
-            </h1>
-            <p className="mt-5 max-w-3xl whitespace-pre-line text-sm leading-8 text-slate-700 sm:text-base">
-              {description}
-            </p>
-
-            {(primaryCta || secondaryCta) && (
-              <div className="mt-8 flex flex-wrap gap-3">
-                {primaryCta ? (
-                  <Button
-                    asChild
-                    size="lg"
-                    className="rounded-full bg-rose-500 px-6 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(244,63,94,0.32)] hover:bg-rose-600"
-                  >
-                    {isExternal(primaryCta.to) ? (
-                      <a href={primaryCta.to} target="_blank" rel="noopener noreferrer">
-                        {primaryCta.label}
-                      </a>
-                    ) : (
-                      <Link to={primaryCta.to}>{primaryCta.label}</Link>
-                    )}
-                  </Button>
-                ) : null}
-                {secondaryCta ? (
-                  <Button
-                    asChild
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur hover:bg-white/20 hover:text-white"
-                  >
-                    {isExternal(secondaryCta.to) ? (
-                      <a href={secondaryCta.to} target="_blank" rel="noopener noreferrer">
-                        {secondaryCta.label}
-                      </a>
-                    ) : (
-                      <Link to={secondaryCta.to}>{secondaryCta.label}</Link>
-                    )}
-                  </Button>
-                ) : null}
+              <div className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-[linear-gradient(135deg,#fff_0%,#fff5f5_100%)] px-4 py-2 text-xs font-bold tracking-[0.18em] text-rose-700 shadow-[0_10px_30px_rgba(244,63,94,0.16)]">
+                <span aria-hidden="true">🇹🇷</span>
+                {eyebrow}
               </div>
-            )}
+
+              <h1 className="mt-6 text-4xl font-black leading-tight tracking-tight text-slate-900 sm:text-5xl lg:text-6xl">
+                {title}
+              </h1>
+              <p className="mt-5 max-w-3xl whitespace-pre-line text-sm leading-8 text-slate-700 sm:text-base">
+                {description}
+              </p>
+
+              {(primaryCta || secondaryCta) && (
+                <div className="mt-8 flex flex-wrap gap-3">
+                  {primaryCta ? (
+                    <Button
+                      asChild
+                      size="lg"
+                      className="rounded-full bg-rose-500 px-6 text-sm font-semibold text-white shadow-[0_18px_45px_rgba(244,63,94,0.32)] hover:bg-rose-600"
+                    >
+                      {isExternal(primaryCta.to) ? (
+                        <a href={primaryCta.to} target="_blank" rel="noopener noreferrer">
+                          {primaryCta.label}
+                        </a>
+                      ) : (
+                        <Link to={primaryCta.to}>{primaryCta.label}</Link>
+                      )}
+                    </Button>
+                  ) : null}
+                  {secondaryCta ? (
+                    <Button
+                      asChild
+                      size="lg"
+                      variant="outline"
+                      className="rounded-full border-white/25 bg-white/10 px-6 text-sm font-semibold text-white backdrop-blur hover:bg-white/20 hover:text-white"
+                    >
+                      {isExternal(secondaryCta.to) ? (
+                        <a href={secondaryCta.to} target="_blank" rel="noopener noreferrer">
+                          {secondaryCta.label}
+                        </a>
+                      ) : (
+                        <Link to={secondaryCta.to}>{secondaryCta.label}</Link>
+                      )}
+                    </Button>
+                  ) : null}
+                </div>
+              )}
             </div>
             {heroImageSrc ? (
               <div className="hidden lg:flex lg:justify-end">
-                <img
-                  src={heroImageSrc}
-                  alt={heroImageAlt}
-                  className="h-auto w-full max-w-[680px] object-contain"
-                />
+                <img src={heroImageSrc} alt={heroImageAlt} className="h-auto w-full max-w-[680px] object-contain" />
               </div>
             ) : null}
           </div>

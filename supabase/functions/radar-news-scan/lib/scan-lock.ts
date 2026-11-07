@@ -34,10 +34,7 @@ export const SCAN_LOCK_STALE_MS = 30 * 60 * 1000;
  * olarak kapatılır ve kilit verilir. Böylece çöken bir koşu sistemi en fazla
  * `SCAN_LOCK_STALE_MS` kadar durdurur, süresiz değil.
  */
-export async function acquireScanLock(
-  supabase: SupabaseClient,
-  now: Date = new Date(),
-): Promise<boolean> {
+export async function acquireScanLock(supabase: SupabaseClient, now: Date = new Date()): Promise<boolean> {
   // radar_news_scan_runs'ta 'running' durumunda kayıt varsa kilitleme
   const { data, error } = await supabase
     .from("radar_news_scan_runs")
@@ -63,8 +60,7 @@ export async function acquireScanLock(
     .update({
       status: "failed",
       completed_at: now.toISOString(),
-      error_message:
-        "Bayat kilit otomatik kapatıldı: koşu kaydı açık kaldı (fonksiyon kapanmadan sonlandı).",
+      error_message: "Bayat kilit otomatik kapatıldı: koşu kaydı açık kaldı (fonksiyon kapanmadan sonlandı).",
     })
     .eq("id", data.id)
     .eq("status", "running"); // yarış durumu: başkası kapattıysa dokunma

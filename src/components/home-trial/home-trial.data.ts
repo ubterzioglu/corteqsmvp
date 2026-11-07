@@ -6,13 +6,7 @@
  * Mevcut HeroNetworkStats.tsx ile aynı çizgide ("8M+ diaspora potansiyeli", "∞").
  */
 
-import type {
-  AtlasCity,
-  AtlasLink,
-  DiasporaStory,
-  EcosystemCard,
-  ProofStat,
-} from "./home-trial.types";
+import type { AtlasCity, AtlasLink, DiasporaStory, EcosystemCard, ProofStat } from "./home-trial.types";
 
 /**
  * Atlas haritasındaki diaspora şehirleri (deterministik koordinat — hydration güvenli).

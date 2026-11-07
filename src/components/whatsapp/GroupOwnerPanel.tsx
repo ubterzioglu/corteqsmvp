@@ -238,12 +238,17 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
       </div>
 
       {errorText ? (
-        <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700">
+        <p
+          role="alert"
+          className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-left text-sm font-semibold text-red-700"
+        >
           {errorText}
         </p>
       ) : null}
       {message ? (
-        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">{message}</p>
+        <p role="status" className="mt-4 text-left text-sm font-semibold text-emerald-700">
+          {message}
+        </p>
       ) : null}
 
       {/* ── Skor + eksik adımlar ── */}
@@ -276,7 +281,9 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
               <li
                 key={item.label}
                 className={`flex items-center justify-between rounded-xl border px-3 py-2 text-sm ${
-                  full ? "border-emerald-200 bg-emerald-50 text-emerald-800" : "border-slate-200 bg-slate-50 text-slate-600"
+                  full
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-800"
+                    : "border-slate-200 bg-slate-50 text-slate-600"
                 }`}
               >
                 <span>{item.label}</span>
@@ -292,7 +299,9 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
           <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Eksik adımlar</p>
           <ul className="mt-2 space-y-1">
             {hints.map((hint) => (
-              <li key={hint} className="text-left text-sm text-slate-700">• {hint}</li>
+              <li key={hint} className="text-left text-sm text-slate-700">
+                • {hint}
+              </li>
             ))}
           </ul>
         </div>
@@ -325,7 +334,11 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
                     onClick={() => void handleReview(post.id, "approve")}
                     disabled={busy !== ""}
                   >
-                    {busy === "review" ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Check className="mr-1 h-4 w-4" />}
+                    {busy === "review" ? (
+                      <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                    ) : (
+                      <Check className="mr-1 h-4 w-4" />
+                    )}
                     Onayla
                   </Button>
                   <Button
@@ -348,8 +361,8 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
       <div className="mt-5 rounded-2xl border border-border bg-white p-5">
         <h3 className="text-base font-bold text-foreground">Grup bilgilerini düzenle</h3>
         <p className="mt-1 text-xs text-muted-foreground">
-          Mevcut kategori: <span className="font-semibold">{categoryMeta.label}</span>. Skor
-          kalemlerine doğrudan etki eden alanlar: kısa açıklama, kurallar, kategori, şehir.
+          Mevcut kategori: <span className="font-semibold">{categoryMeta.label}</span>. Skor kalemlerine doğrudan etki
+          eden alanlar: kısa açıklama, kurallar, kategori, şehir.
         </p>
 
         <div className="mt-4 space-y-4">
@@ -363,9 +376,7 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
               value={shortDescription ?? ""}
               onChange={(event) => setShortDescription(event.target.value)}
             />
-            <p className="mt-1 text-right text-xs tabular-nums text-slate-500">
-              {(shortDescription ?? "").length}/160
-            </p>
+            <p className="mt-1 text-right text-xs tabular-nums text-slate-500">{(shortDescription ?? "").length}/160</p>
           </div>
 
           <div>
@@ -482,8 +493,8 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
           Grubu listeden kaldır
         </h3>
         <p className="mt-1 text-left text-sm text-red-700/80">
-          Grup ANINDA gizlenir — gerekçe sormayız. 24 saat içinde moderatör kalıcı kaldırmaya
-          çevirir. Bu işlem geri alınamaz.
+          Grup ANINDA gizlenir — gerekçe sormayız. 24 saat içinde moderatör kalıcı kaldırmaya çevirir. Bu işlem geri
+          alınamaz.
         </p>
         {confirmingRemoval ? (
           <div className="mt-3 flex gap-2">
@@ -492,7 +503,11 @@ export function GroupOwnerPanel({ landing, isSignedIn, onHidden }: GroupOwnerPan
               onClick={() => void handleRemove()}
               disabled={busy !== ""}
             >
-              {busy === "remove" ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+              {busy === "remove" ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
               Evet, listeden kaldır
             </Button>
             <Button variant="outline" onClick={() => setConfirmingRemoval(false)} disabled={busy !== ""}>

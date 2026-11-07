@@ -33,9 +33,7 @@ describe("toLocalInputValue", () => {
   it("datetime-local biçimi üretir (saniye YOK)", () => {
     // Saniyeli değeri `<input type="datetime-local">` sessizce yok sayar ve alan
     // boş görünür.
-    expect(toLocalInputValue("2026-05-19T09:30:00.000Z")).toMatch(
-      /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/,
-    );
+    expect(toLocalInputValue("2026-05-19T09:30:00.000Z")).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/);
   });
 
   it("YEREL duvar saatini korur — gidiş-dönüş aynı anı verir", () => {
@@ -83,9 +81,7 @@ describe("emptyMarqueeForm", () => {
   });
 
   it("yayın tarihi datetime-local biçiminde", () => {
-    expect(emptyMarqueeForm(new Date("2026-05-19T09:30:00.000Z")).published_at).toBe(
-      "2026-05-19T09:30",
-    );
+    expect(emptyMarqueeForm(new Date("2026-05-19T09:30:00.000Z")).published_at).toBe("2026-05-19T09:30");
   });
 });
 

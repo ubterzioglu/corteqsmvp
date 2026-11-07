@@ -84,8 +84,7 @@ export function pickRelatedPosts(
   if (limit <= 0) return [];
 
   const scoreOf = (post: BlogPostSummary): number =>
-    (current.country && post.country === current.country ? 2 : 0) +
-    (post.category === current.category ? 1 : 0);
+    (current.country && post.country === current.country ? 2 : 0) + (post.category === current.category ? 1 : 0);
 
   return posts
     .filter((post) => post.slug !== current.slug && post.id !== current.id)

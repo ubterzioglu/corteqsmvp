@@ -58,25 +58,33 @@ describe("App 19 Mayıs routing", () => {
 
   it("renders the public 19051919 route", async () => {
     window.history.pushState({}, "", "/19051919");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
     await waitFor(() => expect(screen.getByText("May19 Campaign Route")).toBeInTheDocument());
   });
 
   it("renders the public 19051919 harita route", async () => {
     window.history.pushState({}, "", "/19051919/harita");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
     await waitFor(() => expect(screen.getByText("May19 Map Route")).toBeInTheDocument());
   });
 
   it("renders the public 190519idea route", async () => {
     window.history.pushState({}, "", "/190519idea");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
     await waitFor(() => expect(screen.getByText("May19 Idea Route")).toBeInTheDocument());
   });
 
   it("renders the public 190519memory route", async () => {
     window.history.pushState({}, "", "/190519memory");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
     await waitFor(() => expect(screen.getByText("May19 Moment Route")).toBeInTheDocument());
   });
 });

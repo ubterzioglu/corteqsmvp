@@ -25,9 +25,7 @@ export function buildPublicProfileJsonLd(input: PublicProfileJsonLdInput): Recor
     name: input.title,
     description: input.description,
     url: `${SEO_CANONICAL_ORIGIN}${input.path}`,
-    ...(input.locationLabel
-      ? { address: { "@type": "PostalAddress", addressLocality: input.locationLabel } }
-      : {}),
+    ...(input.locationLabel ? { address: { "@type": "PostalAddress", addressLocality: input.locationLabel } } : {}),
   };
 
   if (input.isOrganization) {

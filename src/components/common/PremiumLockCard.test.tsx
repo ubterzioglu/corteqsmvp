@@ -17,7 +17,7 @@ const renderCard = (props: Partial<React.ComponentProps<typeof PremiumLockCard>>
         description="Bu özelliği kullanmak için Premium'a geçin."
         {...props}
       />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 

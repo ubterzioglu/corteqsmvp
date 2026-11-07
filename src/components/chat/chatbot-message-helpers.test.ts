@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  appendSources,
-  classifyLinkTarget,
-  parseRichText,
-  toAssistantHistory,
-} from "./chatbot-message-helpers";
+import { appendSources, classifyLinkTarget, parseRichText, toAssistantHistory } from "./chatbot-message-helpers";
 import type { ChatMessage } from "@/lib/chatConfig";
 
 const message = (role: ChatMessage["role"], content: string): ChatMessage => ({
@@ -64,7 +59,9 @@ describe("appendSources", () => {
       url: `/directory/${index}`,
     }));
 
-    const lines = appendSources("Yanit", sources).split("\n").filter((line) => line.startsWith("- "));
+    const lines = appendSources("Yanit", sources)
+      .split("\n")
+      .filter((line) => line.startsWith("- "));
     expect(lines).toHaveLength(4);
   });
 });

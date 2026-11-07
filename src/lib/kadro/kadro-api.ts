@@ -29,8 +29,7 @@ type Tables = Database["public"]["Tables"];
 
 const ROLE_STATE_COLUMNS = "role_key, status, priority, owner_name, note, updated_at, updated_by";
 const ROLE_EVENT_COLUMNS = "id, role_key, field, old_value, new_value, changed_by, changed_at";
-const CANDIDATE_COLUMNS =
-  "id, role_key, full_name, links, stage, note, created_by, created_at, updated_at";
+const CANDIDATE_COLUMNS = "id, role_key, full_name, links, stage, note, created_by, created_at, updated_at";
 
 type RoleStateRow = Pick<
   Tables["kadro_role_states"]["Row"],
@@ -42,15 +41,7 @@ type RoleEventRow = Pick<
 >;
 type CandidateRow = Pick<
   Tables["kadro_candidates"]["Row"],
-  | "id"
-  | "role_key"
-  | "full_name"
-  | "links"
-  | "stage"
-  | "note"
-  | "created_by"
-  | "created_at"
-  | "updated_at"
+  "id" | "role_key" | "full_name" | "links" | "stage" | "note" | "created_by" | "created_at" | "updated_at"
 >;
 
 /** snake_case satır → camelCase alan tipi. Sütun adı değişirse burası da değişir. */
@@ -95,10 +86,7 @@ export function mapKadroCandidate(row: CandidateRow): KadroCandidate {
 }
 
 export async function fetchKadroRoleStates(): Promise<KadroRoleState[]> {
-  const { data, error } = await supabase
-    .from("kadro_role_states")
-    .select(ROLE_STATE_COLUMNS)
-    .order("role_key");
+  const { data, error } = await supabase.from("kadro_role_states").select(ROLE_STATE_COLUMNS).order("role_key");
 
   if (error) throw error;
   return (data ?? []).map(mapKadroRoleState);
@@ -198,10 +186,7 @@ export async function createKadroCandidate(
   return mapKadroCandidate(data);
 }
 
-export async function updateKadroCandidate(
-  candidateId: string,
-  draft: KadroCandidateDraft,
-): Promise<KadroCandidate> {
+export async function updateKadroCandidate(candidateId: string, draft: KadroCandidateDraft): Promise<KadroCandidate> {
   const validationError = validateKadroCandidateDraft(draft);
   if (validationError) {
     throw new Error(validationError);

@@ -76,12 +76,16 @@ const AdminCustomerRequestsPage = () => {
       const assignedTo = input.assignSelf ? await currentAdminUserId() : selected.assignedTo;
       await updateCustomerRequestThread(selected.id, input.status, assignedTo);
     },
-    onSuccess: async () => { await refresh(); toast({ title: "Müşteri talebi güncellendi" }); },
-    onError: (error: unknown) => toast({
-      title: "Talep güncellenemedi",
-      description: error instanceof Error ? error.message : "Beklenmeyen hata",
-      variant: "destructive",
-    }),
+    onSuccess: async () => {
+      await refresh();
+      toast({ title: "Müşteri talebi güncellendi" });
+    },
+    onError: (error: unknown) =>
+      toast({
+        title: "Talep güncellenemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen hata",
+        variant: "destructive",
+      }),
   });
 
   const replyMutation = useMutation({
@@ -100,15 +104,17 @@ const AdminCustomerRequestsPage = () => {
       await refresh();
       toast({ title: "WhatsApp yanıtı gönderildi" });
     },
-    onError: (error: unknown) => toast({
-      title: "Yanıt gönderilemedi",
-      description: error instanceof Error ? error.message : "Beklenmeyen hata",
-      variant: "destructive",
-    }),
+    onError: (error: unknown) =>
+      toast({
+        title: "Yanıt gönderilemedi",
+        description: error instanceof Error ? error.message : "Beklenmeyen hata",
+        variant: "destructive",
+      }),
   });
 
   if (threadsQuery.isLoading) return <AdminLoadingState label="Müşteri talepleri yükleniyor…" />;
-  if (threadsQuery.isError) return <AdminErrorState title="Müşteri talepleri yüklenemedi" onRetry={() => void threadsQuery.refetch()} />;
+  if (threadsQuery.isError)
+    return <AdminErrorState title="Müşteri talepleri yüklenemedi" onRetry={() => void threadsQuery.refetch()} />;
 
   return (
     <AdminPageShell
@@ -119,11 +125,16 @@ const AdminCustomerRequestsPage = () => {
       contentWidth="wide"
     >
       {threads.length === 0 ? (
-        <AdminEmptyState title="Henüz müşteri talebi yok" description="İmzalı bir WhatsApp mesajı geldiğinde kuyruk otomatik oluşur." />
+        <AdminEmptyState
+          title="Henüz müşteri talebi yok"
+          description="İmzalı bir WhatsApp mesajı geldiğinde kuyruk otomatik oluşur."
+        />
       ) : (
         <div className="grid gap-5 xl:grid-cols-[360px_minmax(0,1fr)]">
           <Card>
-            <CardHeader><CardTitle className="text-base">Talep kuyruğu ({threads.length})</CardTitle></CardHeader>
+            <CardHeader>
+              <CardTitle className="text-base">Talep kuyruğu ({threads.length})</CardTitle>
+            </CardHeader>
             <CardContent className="space-y-2">
               {threads.map((thread) => (
                 <button
@@ -137,10 +148,16 @@ const AdminCustomerRequestsPage = () => {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-medium">Talep {thread.id.slice(0, 8)}</span>
-                    <Badge variant={thread.status === "new" ? "default" : "secondary"}>{STATUS_LABELS[thread.status]}</Badge>
+                    <Badge variant={thread.status === "new" ? "default" : "secondary"}>
+                      {STATUS_LABELS[thread.status]}
+                    </Badge>
                   </div>
-                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{thread.latestMessagePreview ?? "Mesaj önizlemesi yok"}</p>
-                  <p className="mt-2 text-xs text-muted-foreground">{formatDate(thread.lastMessageAt)} · {thread.messageCount} mesaj</p>
+                  <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                    {thread.latestMessagePreview ?? "Mesaj önizlemesi yok"}
+                  </p>
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    {formatDate(thread.lastMessageAt)} · {thread.messageCount} mesaj
+                  </p>
                 </button>
               ))}
             </CardContent>
@@ -155,10 +172,14 @@ const AdminCustomerRequestsPage = () => {
                     value={selected.status}
                     onValueChange={(status: CustomerRequestStatus) => updateMutation.mutate({ status })}
                   >
-                    <SelectTrigger id="customer-request-status" className="w-52"><SelectValue /></SelectTrigger>
+                    <SelectTrigger id="customer-request-status" className="w-52">
+                      <SelectValue />
+                    </SelectTrigger>
                     <SelectContent>
                       {(Object.keys(STATUS_LABELS) as CustomerRequestStatus[]).map((status) => (
-                        <SelectItem key={status} value={status}>{STATUS_LABELS[status]}</SelectItem>
+                        <SelectItem key={status} value={status}>
+                          {STATUS_LABELS[status]}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -173,15 +194,21 @@ const AdminCustomerRequestsPage = () => {
                   </Button>
                   <div className="ml-auto flex items-center gap-2 text-xs text-muted-foreground">
                     <Clock3 className="h-4 w-4" />
-                    {serviceWindowOpen ? "24 saatlik serbest yanıt penceresi açık" : "Yalnız onaylı template gönderilebilir"}
+                    {serviceWindowOpen
+                      ? "24 saatlik serbest yanıt penceresi açık"
+                      : "Yalnız onaylı template gönderilebilir"}
                   </div>
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader><CardTitle className="text-base">Konuşma</CardTitle></CardHeader>
+                <CardHeader>
+                  <CardTitle className="text-base">Konuşma</CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-3">
-                  {messagesQuery.isLoading ? <p className="text-sm text-muted-foreground">Mesajlar yükleniyor…</p> : null}
+                  {messagesQuery.isLoading ? (
+                    <p className="text-sm text-muted-foreground">Mesajlar yükleniyor…</p>
+                  ) : null}
                   {(messagesQuery.data ?? []).map((message) => (
                     <div
                       key={message.id}
@@ -190,19 +217,30 @@ const AdminCustomerRequestsPage = () => {
                         message.direction === "outbound" ? "ml-auto bg-emerald-500/10" : "bg-muted/50",
                       )}
                     >
-                      <p className="whitespace-pre-wrap text-sm">{message.body ?? (message.templateName ? `Template: ${message.templateName}` : "[Desteklenmeyen mesaj]")}</p>
-                      <p className="mt-2 text-[11px] text-muted-foreground">{formatDate(message.createdAt)} · {message.deliveryStatus}</p>
+                      <p className="whitespace-pre-wrap text-sm">
+                        {message.body ??
+                          (message.templateName ? `Template: ${message.templateName}` : "[Desteklenmeyen mesaj]")}
+                      </p>
+                      <p className="mt-2 text-[11px] text-muted-foreground">
+                        {formatDate(message.createdAt)} · {message.deliveryStatus}
+                      </p>
                     </div>
                   ))}
                 </CardContent>
               </Card>
 
               <Card>
-                <CardHeader><CardTitle className="flex items-center gap-2 text-base"><MessageCircleReply className="h-4 w-4" /> Denetimli yanıt</CardTitle></CardHeader>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-base">
+                    <MessageCircleReply className="h-4 w-4" /> Denetimli yanıt
+                  </CardTitle>
+                </CardHeader>
                 <CardContent className="space-y-4">
                   {serviceWindowOpen && (
                     <Select value={replyMode} onValueChange={(value: "text" | "template") => setReplyMode(value)}>
-                      <SelectTrigger aria-label="Yanıt türü" className="w-56"><SelectValue /></SelectTrigger>
+                      <SelectTrigger aria-label="Yanıt türü" className="w-56">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="text">Serbest metin</SelectItem>
                         <SelectItem value="template">Onaylı template</SelectItem>
@@ -221,22 +259,37 @@ const AdminCustomerRequestsPage = () => {
                     <div className="space-y-2">
                       <Label htmlFor="whatsapp-template">Meta tarafından onaylanmış template</Label>
                       <Select value={templateId} onValueChange={setTemplateId}>
-                        <SelectTrigger id="whatsapp-template"><SelectValue placeholder="Template seç" /></SelectTrigger>
+                        <SelectTrigger id="whatsapp-template">
+                          <SelectValue placeholder="Template seç" />
+                        </SelectTrigger>
                         <SelectContent>
                           {templates.map((template: ApprovedWhatsAppTemplate) => (
-                            <SelectItem key={template.id} value={template.id}>{template.name} · {template.language}</SelectItem>
+                            <SelectItem key={template.id} value={template.id}>
+                              {template.name} · {template.language}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
-                      {templates.length === 0 && <p className="text-sm text-amber-700">Doğrulanmış, parametresiz ve onaylı template kaydı yok.</p>}
+                      {templates.length === 0 && (
+                        <p className="text-sm text-amber-700">
+                          Doğrulanmış, parametresiz ve onaylı template kaydı yok.
+                        </p>
+                      )}
                     </div>
                   )}
                   <Button
                     className="gap-2"
-                    disabled={replyMutation.isPending || (effectiveReplyMode === "template" ? !selectedTemplate : !replyBody.trim())}
+                    disabled={
+                      replyMutation.isPending ||
+                      (effectiveReplyMode === "template" ? !selectedTemplate : !replyBody.trim())
+                    }
                     onClick={() => replyMutation.mutate()}
                   >
-                    {replyMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <MessageCircleReply className="h-4 w-4" />}
+                    {replyMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <MessageCircleReply className="h-4 w-4" />
+                    )}
                     Yanıtı gönder
                   </Button>
                 </CardContent>

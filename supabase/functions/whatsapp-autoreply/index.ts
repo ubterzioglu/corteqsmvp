@@ -48,10 +48,10 @@ serve(async (req) => {
   // Verify shared secret
   const secret = req.headers.get("x-autoreply-secret");
   if (!secretsMatch(secret, autoreplySecret)) {
-    return new Response(
-      JSON.stringify({ error: "unauthorized" }),
-      { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   // Parse request body
@@ -60,19 +60,19 @@ serve(async (req) => {
   try {
     body = await req.json();
   } catch (error) {
-    return new Response(
-      JSON.stringify({ error: "invalid_json" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "invalid_json" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   // Validate required fields
   const { threadId, messageId, waIdHash, waIdCiphertext, messageText } = body;
   if (!threadId || !messageId || !waIdHash || !waIdCiphertext || !messageText) {
-    return new Response(
-      JSON.stringify({ error: "missing_required_fields" }),
-      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "missing_required_fields" }), {
+      status: 400,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 
   // Handle auto-reply
@@ -91,7 +91,7 @@ serve(async (req) => {
         skipped: result.skipped,
         providerMessageId: result.providerMessageId,
       }),
-      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } else {
     return new Response(
@@ -99,7 +99,7 @@ serve(async (req) => {
         success: false,
         error: result.error,
       }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });

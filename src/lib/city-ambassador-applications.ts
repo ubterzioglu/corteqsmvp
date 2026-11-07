@@ -34,9 +34,7 @@ export const cityAmbassadorApplicationSchema = z.object({
     .regex(/^\+?[0-9\s()-]{7,24}$/, "Telefon numarası yalnızca rakam ve + içerebilir."),
   city: z.string().trim().min(2, "Şehir girin."),
   country: z.string().trim().min(2, "Ülke girin."),
-  reachCount: z
-    .union([z.literal(""), z.coerce.number().int().min(0).max(1_000_000)])
-    .optional(),
+  reachCount: z.union([z.literal(""), z.coerce.number().int().min(0).max(1_000_000)]).optional(),
   reachDescription: z.string().trim().max(500).optional(),
   organizedEvents: z.string().trim().max(1000).optional(),
   knownProfessionals: z.string().trim().max(1000).optional(),
@@ -86,8 +84,7 @@ export async function submitCityAmbassadorApplication(
     phone: input.phone.trim(),
     city: input.city.trim(),
     country: input.country.trim(),
-    reach_count:
-      input.reachCount === "" || input.reachCount === undefined ? null : Number(input.reachCount),
+    reach_count: input.reachCount === "" || input.reachCount === undefined ? null : Number(input.reachCount),
     reach_description: orNull(input.reachDescription),
     organized_events: orNull(input.organizedEvents),
     known_professionals: orNull(input.knownProfessionals),

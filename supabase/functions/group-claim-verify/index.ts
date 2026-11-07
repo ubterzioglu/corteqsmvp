@@ -17,11 +17,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
-import {
-  buildAssistantCorsHeaders,
-  isAssistantOriginAllowed,
-  readJsonWithLimit,
-} from "../_shared/edge-security.ts";
+import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit } from "../_shared/rate-limit.ts";
 import { findClaimCode, readInvitePage } from "../_shared/group-invite-read.ts";
 import { jsonResponse } from "../_shared/http.ts";

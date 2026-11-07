@@ -9,10 +9,7 @@ import { associations } from "@/data/mock";
 import DemoBadge from "@/components/DemoBadge";
 import CategoryListingBanner from "@/components/CategoryListingBanner";
 import InterestForm from "@/components/InterestForm";
-import {
-  listPublishedIndependentProfiles,
-  type IndependentProfile,
-} from "@/lib/independent-profiles";
+import { listPublishedIndependentProfiles, type IndependentProfile } from "@/lib/independent-profiles";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 
@@ -41,7 +38,9 @@ const Associations = () => {
   const [independentProfiles, setIndependentProfiles] = useState<IndependentProfile[]>([]);
 
   // Reset city when country changes
-  useEffect(() => { setCity("all"); }, [country]);
+  useEffect(() => {
+    setCity("all");
+  }, [country]);
 
   useEffect(() => {
     let isMounted = true;
@@ -85,29 +84,34 @@ const Associations = () => {
   const filtered = associationCards.filter((a) => {
     const matchesCountry = country === "all" || a.country === country;
     const matchesCity = city === "all" || a.city === city;
-    const matchesType = typeFilter === "all"
-      || (typeFilter === "dernek" && ["Dernek", "Vakıf", "İş Örgütü", "Sosyal Örgüt"].includes(a.type))
-      || (typeFilter === "oda" && ["Oda", "Konsey", "İş Örgütü"].includes(a.type))
-      || (typeFilter === "akademik" && ["Akademik", "Üniversite"].includes(a.type))
-      || (typeFilter === "egitim" && a.type === "Okul")
-      || (typeFilter === "medya" && ["TV Kanalı", "Radyo"].includes(a.type))
-      || (typeFilter === "diplomatik" && ["Büyükelçilik", "Başkonsolosluk", "Konsolosluk", "Konsolosluk Ofisi"].includes(a.type))
-      || (typeFilter === "hastane" && a.type === "Hastane")
-      || (typeFilter === "dijital" && ["Dijital Topluluk", "WhatsApp Grubu", "Telegram Grubu", "Discord Topluluğu", "Online Topluluk"].includes(a.type));
+    const matchesType =
+      typeFilter === "all" ||
+      (typeFilter === "dernek" && ["Dernek", "Vakıf", "İş Örgütü", "Sosyal Örgüt"].includes(a.type)) ||
+      (typeFilter === "oda" && ["Oda", "Konsey", "İş Örgütü"].includes(a.type)) ||
+      (typeFilter === "akademik" && ["Akademik", "Üniversite"].includes(a.type)) ||
+      (typeFilter === "egitim" && a.type === "Okul") ||
+      (typeFilter === "medya" && ["TV Kanalı", "Radyo"].includes(a.type)) ||
+      (typeFilter === "diplomatik" &&
+        ["Büyükelçilik", "Başkonsolosluk", "Konsolosluk", "Konsolosluk Ofisi"].includes(a.type)) ||
+      (typeFilter === "hastane" && a.type === "Hastane") ||
+      (typeFilter === "dijital" &&
+        ["Dijital Topluluk", "WhatsApp Grubu", "Telegram Grubu", "Discord Topluluğu", "Online Topluluk"].includes(
+          a.type,
+        ));
     return matchesCountry && matchesCity && matchesType;
   });
 
   const typeColors: Record<string, string> = {
-    "Dernek": "bg-primary/10 text-primary",
-    "Vakıf": "bg-turquoise/10 text-turquoise",
+    Dernek: "bg-primary/10 text-primary",
+    Vakıf: "bg-turquoise/10 text-turquoise",
     "İş Örgütü": "bg-gold/10 text-gold",
     "Sosyal Örgüt": "bg-primary/10 text-primary",
-    "Okul": "bg-success/10 text-success",
-    "Radyo": "bg-purple-500/10 text-purple-600",
+    Okul: "bg-success/10 text-success",
+    Radyo: "bg-purple-500/10 text-purple-600",
     "TV Kanalı": "bg-destructive/10 text-destructive",
-    "Büyükelçilik": "bg-secondary text-secondary-foreground",
-    "Konsolosluk": "bg-secondary text-secondary-foreground",
-    "Hastane": "bg-turquoise/10 text-turquoise",
+    Büyükelçilik: "bg-secondary text-secondary-foreground",
+    Konsolosluk: "bg-secondary text-secondary-foreground",
+    Hastane: "bg-turquoise/10 text-turquoise",
     "Dijital Topluluk": "bg-success/10 text-success",
     "WhatsApp Grubu": "bg-success/10 text-success",
     "Telegram Grubu": "bg-primary/10 text-primary",
@@ -122,9 +126,7 @@ const Associations = () => {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-foreground">Kuruluşlar</h1>
-              <p className="text-muted-foreground font-body mt-1">
-                {filtered.length} kuruluş bulundu
-              </p>
+              <p className="text-muted-foreground font-body mt-1">{filtered.length} kuruluş bulundu</p>
             </div>
           </div>
 
@@ -161,7 +163,9 @@ const Associations = () => {
                     {a.logo}
                   </div>
                   <div className="min-w-0">
-                    <span className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-1 ${typeColors[a.type] || "bg-primary/10 text-primary"}`}>
+                    <span
+                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold mb-1 ${typeColors[a.type] || "bg-primary/10 text-primary"}`}
+                    >
                       {a.type}
                     </span>
                     <h3 className="font-bold text-foreground truncate">{a.name}</h3>
@@ -175,7 +179,9 @@ const Associations = () => {
                 <div className="flex items-center gap-4 mb-4">
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <Users className="h-4 w-4" />
-                    <span className="font-body">{a.members.toLocaleString()} {a.type === "Radyo" || a.type === "TV Kanalı" ? "dinleyici" : "üye"}</span>
+                    <span className="font-body">
+                      {a.members.toLocaleString()} {a.type === "Radyo" || a.type === "TV Kanalı" ? "dinleyici" : "üye"}
+                    </span>
                   </div>
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
                     <CalendarIcon className="h-4 w-4" />
@@ -183,13 +189,15 @@ const Associations = () => {
                   </div>
                 </div>
 
-                 <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-3">{a.description}</p>
+                <p className="text-sm text-muted-foreground font-body line-clamp-2 mb-3">{a.description}</p>
 
-                 <MapShareButtons name={a.name} city={a.city} country={a.country} className="mb-3" />
+                <MapShareButtons name={a.name} city={a.city} country={a.country} className="mb-3" />
 
-                 <div className="flex gap-2">
+                <div className="flex gap-2">
                   <Link to={a.href} className="flex-1" onClick={(e) => e.stopPropagation()}>
-                    <Button variant="default" size="sm" className="w-full">Detay</Button>
+                    <Button variant="default" size="sm" className="w-full">
+                      Detay
+                    </Button>
                   </Link>
                   {/* ⚠️ Radyo kartı 2026-09-21'e kadar `/radio/${a.id}/song-request`
                       adresine gidiyordu. O rota `App.tsx`'te HİÇ TANIMLI DEĞİLDİ
@@ -203,13 +211,20 @@ const Associations = () => {
                       variant="outline"
                       size="sm"
                       className="flex-1 gap-1"
-                      onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
                     >
                       <Music className="h-3 w-3" /> Dinle
                     </Button>
                   ) : a.type === "Hastane" ? (
                     <Link to={`/hospital-appointment/${a.id}`} className="flex-1" onClick={(e) => e.stopPropagation()}>
-                      <Button variant="outline" size="sm" className="w-full gap-1 border-turquoise/30 text-turquoise hover:bg-turquoise/10">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full gap-1 border-turquoise/30 text-turquoise hover:bg-turquoise/10"
+                      >
                         <Stethoscope className="h-3 w-3" /> Randevu Al
                       </Button>
                     </Link>
@@ -220,7 +235,15 @@ const Associations = () => {
                       </Button>
                     </Link>
                   ) : (
-                    <Button variant="outline" size="sm" className="flex-1" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex-1"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                    >
                       {a.type === "TV Kanalı" ? "İzle" : "Etkinlikler"}
                     </Button>
                   )}
@@ -230,9 +253,7 @@ const Associations = () => {
           </div>
 
           {filtered.length === 0 && (
-            <div className="text-center py-10 text-muted-foreground font-body">
-              Bu filtrelerde kuruluş bulunamadı.
-            </div>
+            <div className="text-center py-10 text-muted-foreground font-body">Bu filtrelerde kuruluş bulunamadı.</div>
           )}
 
           <div className="mt-10 max-w-2xl mx-auto" id="kayit-form">

@@ -33,17 +33,14 @@ export function referralSearchHaystack(referral: ReferralCodeLike): string {
  * `"İSTANBUL".toLowerCase()` sade "istanbul" ÜRETMEZ ve kullanıcı aradığını bulamaz
  * (CLAUDE.md "Türkçe Metin Kuralları" md.1). Aksan toleransı da oradan gelir.
  */
-export function filterReferralCodes<T extends ReferralCodeLike>(
-  codes: readonly T[],
-  searchQuery: string,
-): T[] {
+export function filterReferralCodes<T extends ReferralCodeLike>(codes: readonly T[], searchQuery: string): T[] {
   if (!searchQuery.trim()) return [...codes];
 
   return codes.filter(
     (referral) =>
-      trIncludes(referral.note, searchQuery)
-      || trIncludes(referral.code, searchQuery)
-      || trIncludes(referralSearchHaystack(referral), searchQuery),
+      trIncludes(referral.note, searchQuery) ||
+      trIncludes(referral.code, searchQuery) ||
+      trIncludes(referralSearchHaystack(referral), searchQuery),
   );
 }
 
@@ -65,9 +62,7 @@ export function buildReferralCodePreview(parts: {
 }
 
 /** Kullanım kayıtlarını kod kimliğine göre gruplar. */
-export function groupUsagesByCode<T extends ReferralUsageLike>(
-  usages: readonly T[],
-): Record<string, T[]> {
+export function groupUsagesByCode<T extends ReferralUsageLike>(usages: readonly T[]): Record<string, T[]> {
   const grouped: Record<string, T[]> = {};
   for (const usage of usages) {
     if (!grouped[usage.referral_code_id]) grouped[usage.referral_code_id] = [];

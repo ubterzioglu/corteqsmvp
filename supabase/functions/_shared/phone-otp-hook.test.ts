@@ -70,7 +70,12 @@ describe("verifyWebhookSignature", () => {
   it("rejects a tampered body", async () => {
     const request = signedRequest(VALID_PAYLOAD);
     await expect(
-      verifyWebhookSignature(SECRET, request.headers, JSON.stringify({ ...VALID_PAYLOAD, sms: { otp: "000000" } }), NOW_MS),
+      verifyWebhookSignature(
+        SECRET,
+        request.headers,
+        JSON.stringify({ ...VALID_PAYLOAD, sms: { otp: "000000" } }),
+        NOW_MS,
+      ),
     ).resolves.toBe(false);
   });
 
@@ -135,7 +140,9 @@ describe("hashRecipient", () => {
 
 describe("buildOtpTemplatePayload", () => {
   it("builds an authentication template with body and copy-code button parameters", () => {
-    expect(buildOtpTemplatePayload({ to: "491701234567", otp: "561166", templateName: "corteqs_otp", languageCode: "tr" })).toEqual({
+    expect(
+      buildOtpTemplatePayload({ to: "491701234567", otp: "561166", templateName: "corteqs_otp", languageCode: "tr" }),
+    ).toEqual({
       messaging_product: "whatsapp",
       recipient_type: "individual",
       to: "491701234567",
@@ -217,7 +224,13 @@ describe("createPhoneOtpHookHandler", () => {
   });
 
   it("leaves the attempt claimed (still counted) when delivery is uncertain: timeout, network, 5xx, bad body", async () => {
-    for (const message of ["The operation was aborted due to timeout", "fetch failed", "meta_http_500", "meta_http_200", "meta_response_invalid"]) {
+    for (const message of [
+      "The operation was aborted due to timeout",
+      "fetch failed",
+      "meta_http_500",
+      "meta_http_200",
+      "meta_response_invalid",
+    ]) {
       const deps = makeDeps({ sendOtpMessage: vi.fn().mockRejectedValue(new Error(message)) });
       const response = await createPhoneOtpHookHandler(deps)(signedRequest(VALID_PAYLOAD));
 
@@ -274,7 +287,9 @@ describe("createPhoneOtpHookHandler", () => {
       const noisy = makeDeps({
         sendOtpMessage: vi.fn().mockRejectedValue(new Error("send to 491701234567 with code 561166 failed")),
       });
-      const limited = makeDeps({ claimSend: vi.fn().mockResolvedValue({ allowed: false, reason: "daily", retryAfterSeconds: 60 }) });
+      const limited = makeDeps({
+        claimSend: vi.fn().mockResolvedValue({ allowed: false, reason: "daily", retryAfterSeconds: 60 }),
+      });
       const bodies: string[] = [];
       for (const deps of [failing, noisy, limited]) {
         const response = await createPhoneOtpHookHandler(deps)(signedRequest(VALID_PAYLOAD));

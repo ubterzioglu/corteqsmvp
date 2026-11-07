@@ -16,7 +16,7 @@ function extractText(value: unknown): string | undefined {
   if (typeof value === "string") return value.trim() || undefined;
   if (typeof value === "object" && value !== null) {
     const obj = value as Record<string, unknown>;
-    return (String(obj["#text"] ?? obj["_"] ?? "")).trim() || undefined;
+    return String(obj["#text"] ?? obj["_"] ?? "").trim() || undefined;
   }
   return undefined;
 }
@@ -79,7 +79,9 @@ export const rssAdapter: RadarNewsAdapter = {
     const rawItems = channel["item"];
     const itemList: Record<string, unknown>[] = Array.isArray(rawItems)
       ? rawItems
-      : rawItems ? [rawItems as Record<string, unknown>] : [];
+      : rawItems
+        ? [rawItems as Record<string, unknown>]
+        : [];
 
     const items: RawNewsItem[] = [];
     for (const raw of itemList.slice(0, source.max_items_per_scan)) {

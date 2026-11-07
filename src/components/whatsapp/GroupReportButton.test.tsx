@@ -154,7 +154,9 @@ describe("GroupReportButton · gönderim", () => {
   });
 
   it("sunucu reddi kullanıcıya YAZILIR", async () => {
-    submitSpy.mockRejectedValue(new GroupReportError("group_report_cooldown", "Bu gruba yakın zamanda şikayet gönderdin."));
+    submitSpy.mockRejectedValue(
+      new GroupReportError("group_report_cooldown", "Bu gruba yakın zamanda şikayet gönderdin."),
+    );
     renderButton();
     fireEvent.click(await screen.findByRole("button", { name: /^Şikayet et$/ }));
     fireEvent.click(screen.getByLabelText("Nefret, şiddet, taciz veya yetişkin içerik"));

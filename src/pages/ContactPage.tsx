@@ -28,9 +28,7 @@ const ContactPage = () => {
               <div>
                 <h2 className="font-bold text-foreground mb-1">E-posta</h2>
                 <p className="text-sm text-muted-foreground">info@corteqs.net</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Genel sorular ve destek talepleriniz için
-                </p>
+                <p className="text-xs text-muted-foreground mt-1">Genel sorular ve destek talepleriniz için</p>
               </div>
             </a>
 
@@ -46,9 +44,7 @@ const ContactPage = () => {
               <div>
                 <h2 className="font-bold text-foreground mb-1">Web</h2>
                 <p className="text-sm text-muted-foreground">corteqs.net</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Platform ve hizmetlerimiz hakkında
-                </p>
+                <p className="text-xs text-muted-foreground mt-1">Platform ve hizmetlerimiz hakkında</p>
               </div>
             </a>
 
@@ -64,9 +60,7 @@ const ContactPage = () => {
               <div>
                 <h2 className="font-bold text-foreground mb-1">WhatsApp</h2>
                 <p className="text-sm text-muted-foreground">Resmi topluluk kanalına katılın</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Hızlı destek ve topluluk kanalları için
-                </p>
+                <p className="text-xs text-muted-foreground mt-1">Hızlı destek ve topluluk kanalları için</p>
               </div>
             </a>
 
@@ -87,8 +81,7 @@ const ContactPage = () => {
           <div className="mt-12 rounded-2xl border border-border bg-card p-8 text-center">
             <h2 className="text-xl font-bold text-foreground mb-2">İş Birliği & Ortaklık</h2>
             <p className="text-sm text-muted-foreground mb-4 max-w-lg mx-auto">
-              Reklam, sponsorluk, kurumsal üyelik veya stratejik ortaklık teklifleri için
-              doğrudan e-posta gönderin.
+              Reklam, sponsorluk, kurumsal üyelik veya stratejik ortaklık teklifleri için doğrudan e-posta gönderin.
             </p>
             <a
               href="mailto:info@corteqs.net"

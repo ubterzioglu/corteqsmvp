@@ -17,9 +17,7 @@ describe("buildRevisionRequestEmail", () => {
   it("başlığı konuya taşır ve tüm alanları gövdeye yazar", () => {
     const email = buildRevisionRequestEmail(PAYLOAD);
 
-    expect(email.subject).toBe(
-      "CorteQS yeni revizyon isteği: Üsküdar sayfasındaki başlık düzeltilsin",
-    );
+    expect(email.subject).toBe("CorteQS yeni revizyon isteği: Üsküdar sayfasındaki başlık düzeltilsin");
     expect(email.html).toContain("Üsküdar sayfasındaki başlık düzeltilsin");
     expect(email.html).toContain("Rehber");
     expect(email.html).toContain("corteqssocial@gmail.com");
@@ -28,9 +26,7 @@ describe("buildRevisionRequestEmail", () => {
 
   it("durum kodunu Türkçe etikete çevirir", () => {
     expect(buildRevisionRequestEmail(PAYLOAD).text).toContain("Durum: Açık");
-    expect(buildRevisionRequestEmail({ ...PAYLOAD, status: "yapildi" }).text).toContain(
-      "Durum: Yapıldı",
-    );
+    expect(buildRevisionRequestEmail({ ...PAYLOAD, status: "yapildi" }).text).toContain("Durum: Yapıldı");
   });
 
   it("bilinmeyen durumu ham haliyle gösterir (veri kaybetmez)", () => {

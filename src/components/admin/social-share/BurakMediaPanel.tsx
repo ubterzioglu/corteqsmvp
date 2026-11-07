@@ -30,8 +30,7 @@ type BurakMediaPanelProps = {
   onExtraImageCountChange?: (count: number) => void;
 };
 
-const errMessage = (error: unknown): string =>
-  error instanceof Error ? error.message : "Beklenmeyen hata";
+const errMessage = (error: unknown): string => (error instanceof Error ? error.message : "Beklenmeyen hata");
 
 export function BurakMediaPanel({
   slotKey,
@@ -133,12 +132,7 @@ export function BurakMediaPanel({
                 if (file) void handleUpload(file);
               }}
             />
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={uploading}
-              onClick={() => fileRef.current?.click()}
-            >
+            <Button variant="outline" size="sm" disabled={uploading} onClick={() => fileRef.current?.click()}>
               {uploading ? (
                 <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
               ) : (
@@ -163,9 +157,7 @@ export function BurakMediaPanel({
 
       {/* Görsel linki (foto yüklenmezse) */}
       <div className="space-y-1">
-        <Label className="text-xs text-muted-foreground">
-          Görsel linki (foto yüklenmezse Gmail/Drive)
-        </Label>
+        <Label className="text-xs text-muted-foreground">Görsel linki (foto yüklenmezse Gmail/Drive)</Label>
         <div className="flex items-center gap-2">
           <Input
             value={imageUrl}

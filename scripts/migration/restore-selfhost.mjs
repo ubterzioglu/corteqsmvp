@@ -65,12 +65,7 @@ function maskUrl(url) {
 }
 
 function psql(targetEnv, sqlOrFile, { isFile = false, stopOnError = true, extraArgs = [] } = {}) {
-  const args = [
-    "--no-psqlrc",
-    "--quiet",
-    `--set=ON_ERROR_STOP=${stopOnError ? 1 : 0}`,
-    ...extraArgs,
-  ];
+  const args = ["--no-psqlrc", "--quiet", `--set=ON_ERROR_STOP=${stopOnError ? 1 : 0}`, ...extraArgs];
   if (isFile) args.push("--file", sqlOrFile);
   else args.push("--tuples-only", "--no-align", "--command", sqlOrFile);
 
@@ -194,10 +189,7 @@ function main() {
     );
   }
 
-  const tableCount = psql(
-    targetEnv,
-    "select count(*) from pg_tables where schemaname in ('public','ops');",
-  );
+  const tableCount = psql(targetEnv, "select count(*) from pg_tables where schemaname in ('public','ops');");
   const existingTables = Number.parseInt((tableCount.stdout || "0").trim(), 10) || 0;
   console.log(`  hedefte public+ops tablo sayısı: ${existingTables}`);
 
@@ -227,9 +219,7 @@ function main() {
     process.stdout.write(`  ${step.file} … `);
     const filePath = join(fromDir, step.file);
 
-    const extraArgs = step.dataOnly
-      ? ["--command", "SET session_replication_role = replica;"]
-      : [];
+    const extraArgs = step.dataOnly ? ["--command", "SET session_replication_role = replica;"] : [];
 
     const r = psql(targetEnv, filePath, {
       isFile: true,
@@ -240,10 +230,7 @@ function main() {
     if (r.status !== 0 && !step.tolerateErrors) {
       console.log("HATA");
       console.error((r.stderr || "").trim().split("\n").slice(-25).join("\n"));
-      fail(
-        `${step.file} başarısız.`,
-        "Hedef YARIM KALDI. Devam etme — temiz bir veritabanıyla baştan başla.",
-      );
+      fail(`${step.file} başarısız.`, "Hedef YARIM KALDI. Devam etme — temiz bir veritabanıyla baştan başla.");
     }
     if (step.tolerateErrors && r.status !== 0) {
       // Hata YUTULMUYOR: görünür kılınıyor, sonra doğrulanıyor.
@@ -281,7 +268,10 @@ function main() {
   const checks = [
     ["public tablo", "select count(*) from pg_tables where schemaname='public';"],
     ["RLS politikası", "select count(*) from pg_policies where schemaname='public';"],
-    ["fonksiyon", "select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public';"],
+    [
+      "fonksiyon",
+      "select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public';",
+    ],
     ["auth.users satırı", "select count(*) from auth.users;"],
     ["storage.objects satırı", "select count(*) from storage.objects;"],
     ["storage.buckets satırı", "select count(*) from storage.buckets;"],

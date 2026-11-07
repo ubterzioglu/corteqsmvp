@@ -75,10 +75,7 @@ describe("etkinlik formu taslağı", () => {
   });
 
   it("bilinmeyen tür değeri varsayılana çekilir", () => {
-    window.sessionStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ ...makeDraft(), type: "yuz yuze", at: Date.now() }),
-    );
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...makeDraft(), type: "yuz yuze", at: Date.now() }));
     expect(readEventFormDraft()?.type).toBe("yüz yüze");
   });
 

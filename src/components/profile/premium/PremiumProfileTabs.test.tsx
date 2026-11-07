@@ -28,10 +28,7 @@ vi.mock("@/components/ui/tabs", async () => {
       </TabsContext.Provider>
     ),
     TabsList: ({ children }: React.PropsWithChildren) => <div role="tablist">{children}</div>,
-    TabsTrigger: ({
-      value,
-      children,
-    }: React.PropsWithChildren<{ value: string }>) => {
+    TabsTrigger: ({ value, children }: React.PropsWithChildren<{ value: string }>) => {
       const context = React.useContext(TabsContext);
       return (
         <button
@@ -44,10 +41,7 @@ vi.mock("@/components/ui/tabs", async () => {
         </button>
       );
     },
-    TabsContent: ({
-      value,
-      children,
-    }: React.PropsWithChildren<{ value: string }>) => {
+    TabsContent: ({ value, children }: React.PropsWithChildren<{ value: string }>) => {
       const context = React.useContext(TabsContext);
       if (context.value !== value) return null;
       return <div role="tabpanel">{children}</div>;

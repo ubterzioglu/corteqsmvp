@@ -14,12 +14,7 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.2";
 import { z } from "https://esm.sh/zod@3.25.76";
-import {
-  ModelProviderError,
-  callModel,
-  resolveProviderName,
-  type ModelMessage,
-} from "./providers.ts";
+import { ModelProviderError, callModel, resolveProviderName, type ModelMessage } from "./providers.ts";
 import { buildAssistantCorsHeaders, isAssistantOriginAllowed, readJsonWithLimit } from "../_shared/edge-security.ts";
 import { enforceRateLimit as enforceSharedRateLimit } from "../_shared/rate-limit.ts";
 import { recordAssistantUsage, type UsageWriter } from "../_shared/assistant-usage.ts";
@@ -110,13 +105,7 @@ Deno.serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceKey);
     usageClient = supabase;
     usageUserId = userData.user.id;
-    await enforceSharedRateLimit(
-      supabase,
-      req,
-      "relocation-assistant",
-      RATE_LIMIT_MAX,
-      RATE_LIMIT_WINDOW_SECONDS,
-    );
+    await enforceSharedRateLimit(supabase, req, "relocation-assistant", RATE_LIMIT_MAX, RATE_LIMIT_WINDOW_SECONDS);
 
     const raw = await readJsonWithLimit(req, MAX_BODY_BYTES);
     const payload = RequestSchema.parse(raw);
@@ -185,10 +174,7 @@ Deno.serve(async (req) => {
       }
       // 429 = kota/yoğunluk. Ücretsiz katmanda aşım burada görünür: para değil,
       // bekleme. Kullanıcıya teknik ayrıntı gitmez.
-      const message =
-        error.status === 429
-          ? "Şu anda çok yoğunuz, biraz sonra tekrar deneyin."
-          : error.message;
+      const message = error.status === 429 ? "Şu anda çok yoğunuz, biraz sonra tekrar deneyin." : error.message;
       return jsonResponse({ error: message }, error.status, corsHeaders);
     }
     if (error instanceof z.ZodError) {
@@ -198,11 +184,7 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "İstek gövdesi çok büyük." }, 413, corsHeaders);
     }
     if (error instanceof Error && error.message === "RATE_LIMITED") {
-      return jsonResponse(
-        { error: "Çok fazla istek gönderdiniz, lütfen biraz bekleyin." },
-        429,
-        corsHeaders,
-      );
+      return jsonResponse({ error: "Çok fazla istek gönderdiniz, lütfen biraz bekleyin." }, 429, corsHeaders);
     }
     console.error("relocation-assistant error", error);
     return jsonResponse({ error: "Beklenmeyen bir hata oluştu." }, 500, corsHeaders);

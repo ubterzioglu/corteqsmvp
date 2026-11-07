@@ -72,9 +72,7 @@ describe("CaddeCafesPanel — 2b9a8d04 başlık filtreyi söyler", () => {
     renderPanel(null);
 
     expect(screen.getByTestId("cadde-cafes-heading")).toHaveTextContent("Cafeler · tüm konumlar");
-    expect(screen.getByTestId("cadde-cafes-toggle")).toHaveAccessibleName(
-      "Cafeler · tüm konumlar bölümünü kapat",
-    );
+    expect(screen.getByTestId("cadde-cafes-toggle")).toHaveAccessibleName("Cafeler · tüm konumlar bölümünü kapat");
   });
 
   it("başlık kapalıyken aria-label 'aç' der", () => {

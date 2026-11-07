@@ -41,9 +41,7 @@ export function buildRadarScanDigestEmail(payloads: RadarScanDigestPayload[]): {
   const totalDuplicate = payloads.reduce((sum, p) => sum + (p.total_duplicate ?? 0), 0);
   const totalFiltered = payloads.reduce((sum, p) => sum + (p.total_filtered ?? 0), 0);
 
-  const allTopItems = payloads
-    .flatMap((p) => p.top_items ?? [])
-    .slice(0, 10);
+  const allTopItems = payloads.flatMap((p) => p.top_items ?? []).slice(0, 10);
 
   const subject = `CorteQS Radar: ${totalInserted} yeni haber bulundu`;
 
@@ -58,10 +56,14 @@ export function buildRadarScanDigestEmail(payloads: RadarScanDigestPayload[]): {
       <tr><td><strong>Filtrelenen (düşük skor)</strong></td><td>${totalFiltered}</td></tr>
     </table>
 
-    ${allTopItems.length > 0 ? `
+    ${
+      allTopItems.length > 0
+        ? `
       <h3>Öne Çıkan Haberler</h3>
       <ol style="padding-left: 24px;">
-        ${allTopItems.map((item) => `
+        ${allTopItems
+          .map(
+            (item) => `
           <li style="margin-bottom: 12px;">
             <a href="${escapeHtml(item.url)}" style="color: #2563eb; text-decoration: none;">
               ${escapeHtml(item.title)}
@@ -69,9 +71,13 @@ export function buildRadarScanDigestEmail(payloads: RadarScanDigestPayload[]): {
             ${item.source_name ? `<br/><span style="color: #71717a; font-size: 12px;">${escapeHtml(item.source_name)}</span>` : ""}
             ${item.relevance_score ? `<br/><span style="color: #71717a; font-size: 12px;">Skor: ${item.relevance_score}</span>` : ""}
           </li>
-        `).join("")}
+        `,
+          )
+          .join("")}
       </ol>
-    ` : "<p>Bu taramada öne çıkan haber bulunamadı.</p>"}
+    `
+        : "<p>Bu taramada öne çıkan haber bulunamadı.</p>"
+    }
 
     <p style="color:#71717a;font-size:12px;margin-top:24px;">
       Bu mail tüm adminlere otomatik olarak gönderilir.
@@ -88,10 +94,14 @@ Yeni eklenen: ${totalInserted}
 Duplicate (atlanan): ${totalDuplicate}
 Filtrelenen (düşük skor): ${totalFiltered}
 
-${allTopItems.length > 0 ? `
+${
+  allTopItems.length > 0
+    ? `
 Öne Çıkan Haberler:
 ${allTopItems.map((item, i) => `${i + 1}. ${item.title}\n   ${item.url}${item.source_name ? `\n   Kaynak: ${item.source_name}` : ""}${item.relevance_score ? `\n   Skor: ${item.relevance_score}` : ""}`).join("\n\n")}
-` : "Bu taramada öne çıkan haber bulunamadı."}
+`
+    : "Bu taramada öne çıkan haber bulunamadı."
+}
 
 ---
 Bu mail tüm adminlere otomatik olarak gönderilir.

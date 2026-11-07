@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { AlertTriangle, Flame, Plus } from 'lucide-react'
-import AccordionCard from '@/components/dashboard/AccordionCard'
-import HotFixTable from './HotFixTable'
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { AlertTriangle, Flame, Plus } from "lucide-react";
+import AccordionCard from "@/components/dashboard/AccordionCard";
+import HotFixTable from "./HotFixTable";
 import {
   archiveHotFixItem,
   countOpenHotFixItems,
@@ -26,20 +26,20 @@ import {
   updateHotFixItem,
   type HotFixFormState,
   type HotFixItem,
-} from '@/lib/dashboard/command-center-hot-fixes'
+} from "@/lib/dashboard/command-center-hot-fixes";
 
 const INPUT_CLS =
-  'w-full rounded-xl border border-[rgba(220,38,38,0.18)] bg-white px-3 py-2 text-[13px] text-gray-800 placeholder-gray-400 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400'
-const FIELD_LABEL_CLS = 'text-xs font-semibold uppercase tracking-widest text-gray-500'
-const HOT_FIX_ACCENT = '#DC2626'
+  "w-full rounded-xl border border-[rgba(220,38,38,0.18)] bg-white px-3 py-2 text-[13px] text-gray-800 placeholder-gray-400 shadow-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-200 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400";
+const FIELD_LABEL_CLS = "text-xs font-semibold uppercase tracking-widest text-gray-500";
+const HOT_FIX_ACCENT = "#DC2626";
 
 function formatArchivedAt(value: string | null): string {
-  if (!value) return 'Bilinmiyor'
+  if (!value) return "Bilinmiyor";
 
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return 'Bilinmiyor'
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Bilinmiyor";
 
-  return date.toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+  return date.toLocaleString("tr-TR", { dateStyle: "short", timeStyle: "short" });
 }
 
 /**
@@ -49,122 +49,113 @@ function formatArchivedAt(value: string | null): string {
  * bir işi bitirir bitirmez yenisi girilebilir.
  */
 export default function HotFixPanel() {
-  const [items, setItems] = useState<HotFixItem[]>([])
-  const [archivedItems, setArchivedItems] = useState<HotFixItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [formState, setFormState] = useState<HotFixFormState>(() => createEmptyHotFixFormState())
-  const [editingId, setEditingId] = useState<string | null>(null)
-  const [editingState, setEditingState] = useState<HotFixFormState>(() =>
-    createEmptyHotFixFormState()
-  )
+  const [items, setItems] = useState<HotFixItem[]>([]);
+  const [archivedItems, setArchivedItems] = useState<HotFixItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formState, setFormState] = useState<HotFixFormState>(() => createEmptyHotFixFormState());
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingState, setEditingState] = useState<HotFixFormState>(() => createEmptyHotFixFormState());
 
-  const openCount = useMemo(() => countOpenHotFixItems(items), [items])
-  const limitReached = useMemo(() => isHotFixLimitReached(items), [items])
-  const completedCount = items.length - openCount
+  const openCount = useMemo(() => countOpenHotFixItems(items), [items]);
+  const limitReached = useMemo(() => isHotFixLimitReached(items), [items]);
+  const completedCount = items.length - openCount;
 
   const loadItems = useCallback(async () => {
     try {
-      const [active, archived] = await Promise.all([
-        fetchHotFixItems(),
-        fetchArchivedHotFixItems(),
-      ])
-      setItems(active)
-      setArchivedItems(archived)
+      const [active, archived] = await Promise.all([fetchHotFixItems(), fetchArchivedHotFixItems()]);
+      setItems(active);
+      setArchivedItems(archived);
     } catch (loadError) {
-      setError(
-        loadError instanceof Error ? loadError.message : 'Hot fix kayıtları yüklenemedi.'
-      )
+      setError(loadError instanceof Error ? loadError.message : "Hot fix kayıtları yüklenemedi.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    void loadItems()
-  }, [loadItems])
+    void loadItems();
+  }, [loadItems]);
 
   async function handleCreate(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
     if (limitReached) {
-      setError(getHotFixLimitMessage())
-      return
+      setError(getHotFixLimitMessage());
+      return;
     }
 
-    setIsSubmitting(true)
-    setError(null)
+    setIsSubmitting(true);
+    setError(null);
 
-    const result = await createHotFixItem(formState)
+    const result = await createHotFixItem(formState);
     if (!result.ok) {
-      setError(result.message)
-      setIsSubmitting(false)
-      return
+      setError(result.message);
+      setIsSubmitting(false);
+      return;
     }
 
-    setItems((current) => sortHotFixItems([...current, result.item]))
-    setFormState(createEmptyHotFixFormState())
-    setIsSubmitting(false)
+    setItems((current) => sortHotFixItems([...current, result.item]));
+    setFormState(createEmptyHotFixFormState());
+    setIsSubmitting(false);
   }
 
   function startEdit(item: HotFixItem) {
-    setEditingId(item.id)
-    setEditingState(toHotFixFormState(item))
-    setError(null)
+    setEditingId(item.id);
+    setEditingState(toHotFixFormState(item));
+    setError(null);
   }
 
   function cancelEdit() {
-    setEditingId(null)
-    setEditingState(createEmptyHotFixFormState())
+    setEditingId(null);
+    setEditingState(createEmptyHotFixFormState());
   }
 
   async function handleUpdate(itemId: string) {
-    setIsSubmitting(true)
-    setError(null)
+    setIsSubmitting(true);
+    setError(null);
 
-    const result = await updateHotFixItem(itemId, editingState)
+    const result = await updateHotFixItem(itemId, editingState);
     if (!result.ok) {
-      setError(result.message)
-      setIsSubmitting(false)
-      return
+      setError(result.message);
+      setIsSubmitting(false);
+      return;
     }
 
-    setItems((current) =>
-      sortHotFixItems(current.map((item) => (item.id === itemId ? result.item : item)))
-    )
-    cancelEdit()
-    setIsSubmitting(false)
+    setItems((current) => sortHotFixItems(current.map((item) => (item.id === itemId ? result.item : item))));
+    cancelEdit();
+    setIsSubmitting(false);
   }
 
   async function handleArchive(itemId: string) {
-    setIsSubmitting(true)
-    setError(null)
+    setIsSubmitting(true);
+    setError(null);
 
-    const archived = await archiveHotFixItem(itemId)
+    const archived = await archiveHotFixItem(itemId);
     if (!archived) {
-      setError('Hot fix kaydı arşivlenemedi.')
-      setIsSubmitting(false)
-      return
+      setError("Hot fix kaydı arşivlenemedi.");
+      setIsSubmitting(false);
+      return;
     }
 
-    await loadItems()
-    setIsSubmitting(false)
+    await loadItems();
+    setIsSubmitting(false);
   }
 
   async function handleDelete(itemId: string) {
-    setIsSubmitting(true)
-    setError(null)
+    setIsSubmitting(true);
+    setError(null);
 
-    const deleted = await deleteHotFixItem(itemId)
+    const deleted = await deleteHotFixItem(itemId);
     if (!deleted) {
-      setError('Hot fix kaydı silinemedi.')
-      setIsSubmitting(false)
-      return
+      setError("Hot fix kaydı silinemedi.");
+      setIsSubmitting(false);
+      return;
     }
 
-    setItems((current) => current.filter((item) => item.id !== itemId))
-    setIsSubmitting(false)
+    setItems((current) => current.filter((item) => item.id !== itemId));
+    setIsSubmitting(false);
   }
 
   return (
@@ -179,22 +170,18 @@ export default function HotFixPanel() {
               TOP 10 HOT FIX
             </h2>
             <p className="text-xs text-gray-500">
-              En fazla {HOT_FIX_OPEN_LIMIT} açık madde. Tamamlananlar listeden çıkmaz, tablonun altına
-              iner ve slotu boşaltır.
+              En fazla {HOT_FIX_OPEN_LIMIT} açık madde. Tamamlananlar listeden çıkmaz, tablonun altına iner ve slotu
+              boşaltır.
             </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
           <span
-            className={`rounded-full px-3 py-1 ${
-              limitReached ? 'bg-red-100 text-red-700' : 'bg-red-50 text-red-600'
-            }`}
+            className={`rounded-full px-3 py-1 ${limitReached ? "bg-red-100 text-red-700" : "bg-red-50 text-red-600"}`}
           >
             Açık: {openCount} / {HOT_FIX_OPEN_LIMIT}
           </span>
-          <span className="rounded-full bg-green-50 px-3 py-1 text-green-700">
-            Tamamlanan: {completedCount}
-          </span>
+          <span className="rounded-full bg-green-50 px-3 py-1 text-green-700">Tamamlanan: {completedCount}</span>
         </div>
       </div>
 
@@ -208,8 +195,8 @@ export default function HotFixPanel() {
       <AccordionCard
         items={[
           {
-            id: 'new-hot-fix-item',
-            title: 'Yeni Hot Fix Ekle',
+            id: "new-hot-fix-item",
+            title: "Yeni Hot Fix Ekle",
             badge: `${HOT_FIX_OPEN_LIMIT - openCount} slot`,
             accentColor: HOT_FIX_ACCENT,
             children: limitReached ? (
@@ -223,9 +210,7 @@ export default function HotFixPanel() {
                   <input
                     type="text"
                     value={formState.title}
-                    onChange={(event) =>
-                      setFormState((current) => ({ ...current, title: event.target.value }))
-                    }
+                    onChange={(event) => setFormState((current) => ({ ...current, title: event.target.value }))}
                     placeholder="Opsiyonel kısa başlık"
                     className={INPUT_CLS}
                   />
@@ -235,9 +220,7 @@ export default function HotFixPanel() {
                   <span className={FIELD_LABEL_CLS}>Kategori</span>
                   <select
                     value={formState.categoryLabel}
-                    onChange={(event) =>
-                      setFormState((current) => ({ ...current, categoryLabel: event.target.value }))
-                    }
+                    onChange={(event) => setFormState((current) => ({ ...current, categoryLabel: event.target.value }))}
                     className={INPUT_CLS}
                     required
                   >
@@ -256,7 +239,7 @@ export default function HotFixPanel() {
                     onChange={(event) =>
                       setFormState((current) => ({
                         ...current,
-                        assignee: event.target.value as HotFixFormState['assignee'],
+                        assignee: event.target.value as HotFixFormState["assignee"],
                       }))
                     }
                     className={INPUT_CLS}
@@ -273,9 +256,7 @@ export default function HotFixPanel() {
                   <span className={FIELD_LABEL_CLS}>Detay</span>
                   <textarea
                     value={formState.detail}
-                    onChange={(event) =>
-                      setFormState((current) => ({ ...current, detail: event.target.value }))
-                    }
+                    onChange={(event) => setFormState((current) => ({ ...current, detail: event.target.value }))}
                     placeholder="Ne bozuk, nasıl tekrar ediliyor, ne yapılacak?"
                     rows={3}
                     className={`${INPUT_CLS} resize-y leading-5`}
@@ -290,7 +271,7 @@ export default function HotFixPanel() {
                     onChange={(event) =>
                       setFormState((current) => ({
                         ...current,
-                        status: event.target.value as HotFixFormState['status'],
+                        status: event.target.value as HotFixFormState["status"],
                       }))
                     }
                     className={INPUT_CLS}
@@ -310,7 +291,7 @@ export default function HotFixPanel() {
                     onChange={(event) =>
                       setFormState((current) => ({
                         ...current,
-                        priority: Number(event.target.value) as HotFixFormState['priority'],
+                        priority: Number(event.target.value) as HotFixFormState["priority"],
                       }))
                     }
                     className={INPUT_CLS}
@@ -328,9 +309,7 @@ export default function HotFixPanel() {
                   <input
                     type="date"
                     value={formState.dueDate}
-                    onChange={(event) =>
-                      setFormState((current) => ({ ...current, dueDate: event.target.value }))
-                    }
+                    onChange={(event) => setFormState((current) => ({ ...current, dueDate: event.target.value }))}
                     className={INPUT_CLS}
                   />
                 </label>
@@ -340,9 +319,7 @@ export default function HotFixPanel() {
                     <input
                       type="checkbox"
                       checked={formState.urgent}
-                      onChange={(event) =>
-                        setFormState((current) => ({ ...current, urgent: event.target.checked }))
-                      }
+                      onChange={(event) => setFormState((current) => ({ ...current, urgent: event.target.checked }))}
                       className="h-4 w-4 rounded border border-[rgba(220,38,38,0.25)] text-red-500 focus:ring-2 focus:ring-red-200"
                     />
                     Acil!
@@ -372,9 +349,9 @@ export default function HotFixPanel() {
       <AccordionCard
         items={[
           {
-            id: 'hot-fix-list',
-            title: 'Hot Fix Listesi',
-            badge: isLoading ? '…' : `${items.length} madde`,
+            id: "hot-fix-list",
+            title: "Hot Fix Listesi",
+            badge: isLoading ? "…" : `${items.length} madde`,
             accentColor: HOT_FIX_ACCENT,
             children: isLoading ? (
               <div className="p-4 text-center text-sm text-gray-400">Yükleniyor…</div>
@@ -405,10 +382,10 @@ export default function HotFixPanel() {
         <AccordionCard
           items={[
             {
-              id: 'archived-hot-fix-items',
-              title: 'Arşivlenen Hot Fixler',
+              id: "archived-hot-fix-items",
+              title: "Arşivlenen Hot Fixler",
               badge: String(archivedItems.length),
-              accentColor: '#D97706',
+              accentColor: "#D97706",
               children: (
                 <ul className="space-y-2">
                   {archivedItems.map((item) => (
@@ -418,8 +395,7 @@ export default function HotFixPanel() {
                     >
                       <span className="font-medium text-gray-800">{item.title}</span>
                       <span className="text-xs text-gray-500">
-                        {item.categoryLabel} · {getHotFixStatusLabel(item.status)} ·{' '}
-                        {formatArchivedAt(item.archivedAt)}
+                        {item.categoryLabel} · {getHotFixStatusLabel(item.status)} · {formatArchivedAt(item.archivedAt)}
                       </span>
                     </li>
                   ))}
@@ -431,5 +407,5 @@ export default function HotFixPanel() {
         />
       )}
     </section>
-  )
+  );
 }

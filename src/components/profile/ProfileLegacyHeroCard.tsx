@@ -71,11 +71,15 @@ export const ProfileLegacyHeroCard = ({
               <div className="space-y-2">
                 {hasPartialData ? (
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge variant="destructive" className="text-[11px]">Kısmi veri yüklendi</Badge>
+                    <Badge variant="destructive" className="text-[11px]">
+                      Kısmi veri yüklendi
+                    </Badge>
                   </div>
                 ) : null}
                 <div>
-                  <CardTitle className="text-[11px] tracking-tight text-slate-950 md:text-[11px]">{displayName}</CardTitle>
+                  <CardTitle className="text-[11px] tracking-tight text-slate-950 md:text-[11px]">
+                    {displayName}
+                  </CardTitle>
                   {heroDescription ? (
                     <CardDescription className="mt-1 max-w-2xl text-[11px] text-slate-600">
                       {heroDescription}
@@ -88,7 +92,9 @@ export const ProfileLegacyHeroCard = ({
                   </span>
                   <span className="inline-flex items-center gap-1.5" data-testid="profile-type-chip">
                     <BadgeCheck className="h-3.5 w-3.5 text-emerald-600" /> Profil tipi:
-                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">{profileTypeLabel}</Badge>
+                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                      {profileTypeLabel}
+                    </Badge>
                     <ProfileInfoTip label="Profil tipi" text={PROFILE_TYPE_TIP} />
                   </span>
                   {locationLabel ? (
@@ -115,14 +121,20 @@ export const ProfileLegacyHeroCard = ({
               <CardTitle className="text-[11px]">{roleTitle}</CardTitle>
               <div className="flex flex-wrap items-center gap-1.5" data-testid="profile-type-chip">
                 <span className="text-[11px] text-muted-foreground">Profil tipi:</span>
-                <Badge variant="secondary" className="text-[11px]">{profileTypeLabel}</Badge>
+                <Badge variant="secondary" className="text-[11px]">
+                  {profileTypeLabel}
+                </Badge>
                 <ProfileInfoTip label="Profil tipi" text={PROFILE_TYPE_TIP} />
-                <Badge variant="outline" className="text-[11px]">Tamamlanma %{completionPercentage}</Badge>
-                {hasPartialData ? <Badge variant="destructive" className="text-[11px]">Kısmi veri yüklendi</Badge> : null}
+                <Badge variant="outline" className="text-[11px]">
+                  Tamamlanma %{completionPercentage}
+                </Badge>
+                {hasPartialData ? (
+                  <Badge variant="destructive" className="text-[11px]">
+                    Kısmi veri yüklendi
+                  </Badge>
+                ) : null}
               </div>
-              <div className="pt-1">
-                {avatarActionButtons}
-              </div>
+              <div className="pt-1">{avatarActionButtons}</div>
             </div>
           </CardHeader>
           <CardContent className="grid gap-2 pb-4 md:grid-cols-3">

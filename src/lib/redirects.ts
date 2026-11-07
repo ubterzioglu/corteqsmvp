@@ -59,7 +59,4 @@ export const LEGACY_REDIRECTS: readonly LegacyRedirect[] = [
  * `WhatsAppGroupDetailRedirect`); nginx tarafında regex `location` ile karşılanır.
  * Anti-drift testi bunların nginx karşılığını da arar — listeden çıkarma.
  */
-export const DYNAMIC_LEGACY_REDIRECTS: readonly string[] = [
-  "/auth",
-  "/whatsapp-groups/:id",
-] as const;
+export const DYNAMIC_LEGACY_REDIRECTS: readonly string[] = ["/auth", "/whatsapp-groups/:id"] as const;

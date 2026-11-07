@@ -177,39 +177,39 @@ describe("AdminCatalogPage", () => {
       }
 
       return Promise.resolve({
-      id: "item-1",
-      itemType: "organization",
-      slug: "berlin-dernegi",
-      title: "Berlin Derneği",
-      headline: "Resmi topluluk kaydı",
-      shortDescription: "Berlin merkezli dernek kaydı",
-      longDescription: "Uzun açıklama 1",
-      status: "published",
-      visibility: "public",
-      verificationStatus: "official_source",
-      createdAt: "2026-06-04T10:00:00.000Z",
-      updatedAt: "2026-06-04T10:15:00.000Z",
-      publishedAt: "2026-06-04T11:00:00.000Z",
-      primaryCity: "Berlin",
-      primaryCountryCode: "DE",
-      categoryLabels: ["Association"],
-      sourceTypes: ["turkish_mission"],
-      thumbnailUrl: null,
-      platformRoleKey: "Organization_Association",
-      attributes: { featured: true },
-      createdByUserId: "user-1",
-      categories: [{ slug: "association", name: "Association", isPrimary: true }],
-      locations: [{ city: "Berlin", countryCode: "DE", addressLine: "Alexanderplatz 1", isPrimary: true }],
-      sources: [
-        {
-          sourceType: "turkish_mission",
-          externalId: "source-1",
-          sourceUrl: "https://example.com/source-1",
-          importedAt: "2026-06-04T09:00:00.000Z",
-          lastSeenAt: "2026-06-04T09:30:00.000Z",
-        },
-      ],
-    });
+        id: "item-1",
+        itemType: "organization",
+        slug: "berlin-dernegi",
+        title: "Berlin Derneği",
+        headline: "Resmi topluluk kaydı",
+        shortDescription: "Berlin merkezli dernek kaydı",
+        longDescription: "Uzun açıklama 1",
+        status: "published",
+        visibility: "public",
+        verificationStatus: "official_source",
+        createdAt: "2026-06-04T10:00:00.000Z",
+        updatedAt: "2026-06-04T10:15:00.000Z",
+        publishedAt: "2026-06-04T11:00:00.000Z",
+        primaryCity: "Berlin",
+        primaryCountryCode: "DE",
+        categoryLabels: ["Association"],
+        sourceTypes: ["turkish_mission"],
+        thumbnailUrl: null,
+        platformRoleKey: "Organization_Association",
+        attributes: { featured: true },
+        createdByUserId: "user-1",
+        categories: [{ slug: "association", name: "Association", isPrimary: true }],
+        locations: [{ city: "Berlin", countryCode: "DE", addressLine: "Alexanderplatz 1", isPrimary: true }],
+        sources: [
+          {
+            sourceType: "turkish_mission",
+            externalId: "source-1",
+            sourceUrl: "https://example.com/source-1",
+            importedAt: "2026-06-04T09:00:00.000Z",
+            lastSeenAt: "2026-06-04T09:30:00.000Z",
+          },
+        ],
+      });
     });
   });
 
@@ -246,7 +246,6 @@ describe("AdminCatalogPage", () => {
     expect(screen.getByRole("tab", { name: "Düzenleyiciler" })).toBeInTheDocument();
     expect(screen.getByText(/Alexanderplatz 1/i)).toBeInTheDocument();
   });
-
 
   it("opens catalog detail for member_profile records", async () => {
     render(<AdminCatalogPage />);
@@ -388,11 +387,7 @@ describe("AdminCatalogPage", () => {
     const bek = screen.getByText("BEK");
     const dgr = screen.getByText("DGR");
 
-    expect(
-      arz.compareDocumentPosition(bek) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
-    expect(
-      bek.compareDocumentPosition(dgr) & Node.DOCUMENT_POSITION_FOLLOWING,
-    ).toBeTruthy();
+    expect(arz.compareDocumentPosition(bek) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(bek.compareDocumentPosition(dgr) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

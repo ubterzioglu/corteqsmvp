@@ -45,11 +45,7 @@ export async function recordCost(db: Db, payload: CostRecord): Promise<number> {
   return Number(result.data ?? 0);
 }
 
-export async function upsertCandidate(
-  db: Db,
-  jobId: string,
-  candidate: NormalizedCandidate,
-): Promise<string | null> {
+export async function upsertCandidate(db: Db, jobId: string, candidate: NormalizedCandidate): Promise<string | null> {
   const result = await db.rpc("worker_upsert_relocation_candidate", {
     p_payload: {
       job_id: jobId,

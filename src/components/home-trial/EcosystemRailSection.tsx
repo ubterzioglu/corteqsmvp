@@ -5,16 +5,7 @@
  */
 
 import { Link } from "react-router-dom";
-import {
-  ArrowUpRight,
-  Briefcase,
-  Building2,
-  Landmark,
-  MapPin,
-  Sparkles,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowUpRight, Briefcase, Building2, Landmark, MapPin, Sparkles, Users, type LucideIcon } from "lucide-react";
 import DemoBadge from "@/components/common/DemoBadge";
 import { isDemoRoute } from "@/lib/demo-pages";
 import { ECOSYSTEM_CARDS } from "./home-trial.data";
@@ -31,10 +22,7 @@ const ICONS: Record<EcosystemIconKey, LucideIcon> = {
 
 // Accent → tam Tailwind sınıfları (statik — purge güvenli, string concat YOK).
 // Her kart logonun bir tonunu alır: ikon zemini, ikon ve CTA aynı renkte.
-const ACCENT_CLASSES: Record<
-  EcosystemAccent,
-  { iconWrap: string; cta: string }
-> = {
+const ACCENT_CLASSES: Record<EcosystemAccent, { iconWrap: string; cta: string }> = {
   teal: { iconWrap: "bg-brand-teal/10 text-brand-teal", cta: "text-brand-teal" },
   blue: { iconWrap: "bg-brand-blue/10 text-brand-blue", cta: "text-brand-blue" },
   indigo: { iconWrap: "bg-brand-indigo/10 text-brand-indigo", cta: "text-brand-indigo" },
@@ -87,14 +75,14 @@ const EcosystemRailSection = () => {
                 >
                   <Icon className="h-[18px] w-[18px] sm:h-5 sm:w-5" aria-hidden="true" />
                 </span>
-                <h3 className="font-display text-base font-bold text-foreground sm:mt-5 sm:text-xl">
-                  {card.title}
-                </h3>
+                <h3 className="font-display text-base font-bold text-foreground sm:mt-5 sm:text-xl">{card.title}</h3>
               </div>
               <p className="mt-2 flex-1 text-[13px] leading-relaxed text-muted-foreground sm:text-sm">
                 {card.description}
               </p>
-              <span className={`mt-3 inline-flex items-center gap-1 text-[13px] font-semibold sm:mt-5 sm:text-sm ${accent.cta}`}>
+              <span
+                className={`mt-3 inline-flex items-center gap-1 text-[13px] font-semibold sm:mt-5 sm:text-sm ${accent.cta}`}
+              >
                 {card.cta}
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"

@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { activeMentionToken, extractHashtags, extractMentionTokens, normalizeHashtag, splitCaddeBody } from "@/lib/cadde-text";
+import {
+  activeMentionToken,
+  extractHashtags,
+  extractMentionTokens,
+  normalizeHashtag,
+  splitCaddeBody,
+} from "@/lib/cadde-text";
 
 /**
  * SQL ↔ TS AYNA KÜLLİYATI.

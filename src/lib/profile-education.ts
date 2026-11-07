@@ -38,8 +38,7 @@ export const EDUCATION_ATTRIBUTE_KEYS: readonly string[] = [
 
 export const EDUCATION_ATTRIBUTE_KEY_SET: ReadonlySet<string> = new Set(EDUCATION_ATTRIBUTE_KEYS);
 
-export const isEducationAttributeKey = (attributeKey: string): boolean =>
-  EDUCATION_ATTRIBUTE_KEY_SET.has(attributeKey);
+export const isEducationAttributeKey = (attributeKey: string): boolean => EDUCATION_ATTRIBUTE_KEY_SET.has(attributeKey);
 
 export const isEducationLevelValue = (value: unknown): value is string =>
   typeof value === "string" && EDUCATION_LEVEL_OPTIONS.some((option) => option.value === value);

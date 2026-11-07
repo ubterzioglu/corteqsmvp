@@ -200,7 +200,11 @@ export default function WhatsAppLandingEditorPage() {
   };
 
   if (loading) {
-    return <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">Landing yükleniyor...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background text-sm text-muted-foreground">
+        Landing yükleniyor...
+      </div>
+    );
   }
 
   if (!state) {
@@ -210,7 +214,9 @@ export default function WhatsAppLandingEditorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Erişim bulunamadı</CardTitle>
-              <CardDescription>Bu topluluk landing kaydını düzenleme yetkiniz yok veya kayıt bulunamadı.</CardDescription>
+              <CardDescription>
+                Bu topluluk landing kaydını düzenleme yetkiniz yok veya kayıt bulunamadı.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Link to="/addcom">
@@ -252,12 +258,19 @@ export default function WhatsAppLandingEditorPage() {
           <CardContent className="space-y-4">
             <div className="space-y-1.5">
               <Label htmlFor="landing-group-name">Topluluk Adı</Label>
-              <Input id="landing-group-name" value={state.groupName} onChange={(event) => updateField("groupName", event.target.value)} />
+              <Input
+                id="landing-group-name"
+                value={state.groupName}
+                onChange={(event) => updateField("groupName", event.target.value)}
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label>Kategori</Label>
-              <Select value={state.category} onValueChange={(value) => updateField("category", value as LandingCategory)}>
+              <Select
+                value={state.category}
+                onValueChange={(value) => updateField("category", value as LandingCategory)}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -290,69 +303,120 @@ export default function WhatsAppLandingEditorPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="landing-country">Ülke</Label>
-                <Input id="landing-country" value={state.country} onChange={(event) => updateField("country", event.target.value)} />
+                <Input
+                  id="landing-country"
+                  value={state.country}
+                  onChange={(event) => updateField("country", event.target.value)}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="landing-city">Şehir</Label>
-                <Input id="landing-city" value={state.city} onChange={(event) => updateField("city", event.target.value)} />
+                <Input
+                  id="landing-city"
+                  value={state.city}
+                  onChange={(event) => updateField("city", event.target.value)}
+                />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-link">Topluluk Linki</Label>
-              <Input id="landing-link" value={state.whatsappLink} onChange={(event) => updateField("whatsappLink", event.target.value)} />
+              <Input
+                id="landing-link"
+                value={state.whatsappLink}
+                onChange={(event) => updateField("whatsappLink", event.target.value)}
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-hero-image">Hero Görsel URL</Label>
-              <Input id="landing-hero-image" value={state.heroImage} onChange={(event) => updateField("heroImage", event.target.value)} placeholder="https://..." />
+              <Input
+                id="landing-hero-image"
+                value={state.heroImage}
+                onChange={(event) => updateField("heroImage", event.target.value)}
+                placeholder="https://..."
+              />
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-1.5">
                 <Label htmlFor="landing-admin-name">Yönetici Adı</Label>
-                <Input id="landing-admin-name" value={state.adminName} onChange={(event) => updateField("adminName", event.target.value)} />
+                <Input
+                  id="landing-admin-name"
+                  value={state.adminName}
+                  onChange={(event) => updateField("adminName", event.target.value)}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="landing-admin-email">Yönetici Mail</Label>
-                <Input id="landing-admin-email" type="email" value={state.adminEmail} onChange={(event) => updateField("adminEmail", event.target.value)} />
+                <Input
+                  id="landing-admin-email"
+                  type="email"
+                  value={state.adminEmail}
+                  onChange={(event) => updateField("adminEmail", event.target.value)}
+                />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="landing-admin-phone">Yönetici Telefon</Label>
-                <Input id="landing-admin-phone" value={state.adminPhone} onChange={(event) => updateField("adminPhone", event.target.value)} />
+                <Input
+                  id="landing-admin-phone"
+                  value={state.adminPhone}
+                  onChange={(event) => updateField("adminPhone", event.target.value)}
+                />
               </div>
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-member-count">Üye Sayısı</Label>
-              <Input id="landing-member-count" type="number" value={state.memberCount} onChange={(event) => updateField("memberCount", event.target.value)} placeholder="Örn: 250" min={0} />
+              <Input
+                id="landing-member-count"
+                type="number"
+                value={state.memberCount}
+                onChange={(event) => updateField("memberCount", event.target.value)}
+                placeholder="Örn: 250"
+                min={0}
+              />
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <Label>Topluluk Dili</Label>
-                <Select value={state.language || "__none__"} onValueChange={(value) => updateField("language", (value === "__none__" ? "" : value) as LandingLanguage | "")}>
+                <Select
+                  value={state.language || "__none__"}
+                  onValueChange={(value) =>
+                    updateField("language", (value === "__none__" ? "" : value) as LandingLanguage | "")
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Dil seçin" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Seçilmedi</SelectItem>
                     {languageOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-1.5">
                 <Label>Köken / Bölge</Label>
-                <Select value={state.origin || "__none__"} onValueChange={(value) => updateField("origin", (value === "__none__" ? "" : value) as LandingOrigin | "")}>
+                <Select
+                  value={state.origin || "__none__"}
+                  onValueChange={(value) =>
+                    updateField("origin", (value === "__none__" ? "" : value) as LandingOrigin | "")
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Bölge seçin" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Seçilmedi</SelectItem>
                     {originOptions.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      <SelectItem key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -361,21 +425,40 @@ export default function WhatsAppLandingEditorPage() {
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-cta">Yeni Üyeler İçin Mesaj</Label>
-              <Textarea id="landing-cta" rows={4} value={state.callToActionText} onChange={(event) => updateField("callToActionText", event.target.value)} />
+              <Textarea
+                id="landing-cta"
+                rows={4}
+                value={state.callToActionText}
+                onChange={(event) => updateField("callToActionText", event.target.value)}
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-conditions">Topluluk Kuralları</Label>
-              <Textarea id="landing-conditions" rows={4} value={state.conditions} onChange={(event) => updateField("conditions", event.target.value)} />
+              <Textarea
+                id="landing-conditions"
+                rows={4}
+                value={state.conditions}
+                onChange={(event) => updateField("conditions", event.target.value)}
+              />
             </div>
 
             <div className="space-y-1.5">
               <Label htmlFor="landing-description">Açıklama / Metadata</Label>
-              <Textarea id="landing-description" rows={5} value={state.description} onChange={(event) => updateField("description", event.target.value)} />
+              <Textarea
+                id="landing-description"
+                rows={5}
+                value={state.description}
+                onChange={(event) => updateField("description", event.target.value)}
+              />
             </div>
 
             <div className="flex justify-end">
-              <Button className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700" disabled={saving} onClick={() => void handleSave()}>
+              <Button
+                className="gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+                disabled={saving}
+                onClick={() => void handleSave()}
+              >
                 <Save className="h-4 w-4" />
                 {saving ? "Kaydediliyor..." : "Kaydet ve İncelemeye Gönder"}
               </Button>

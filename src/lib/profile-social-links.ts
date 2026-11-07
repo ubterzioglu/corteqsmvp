@@ -54,12 +54,9 @@ export const SOCIAL_ATTRIBUTE_CONFIGS: SocialAttributeConfig[] = [
   },
 ] as const;
 
-export const SOCIAL_ATTRIBUTE_KEYS: Set<string> = new Set(
-  SOCIAL_ATTRIBUTE_CONFIGS.map((config) => config.key),
-);
+export const SOCIAL_ATTRIBUTE_KEYS: Set<string> = new Set(SOCIAL_ATTRIBUTE_CONFIGS.map((config) => config.key));
 
-export const ensureHttpsUrl = (value: string): string =>
-  value.match(/^https?:\/\//i) ? value : `https://${value}`;
+export const ensureHttpsUrl = (value: string): string => (value.match(/^https?:\/\//i) ? value : `https://${value}`);
 
 /**
  * Kullanıcının yazdığı kısa formu (@kullanıcıadı, u/kullanıcı, çıplak alan adı)

@@ -30,9 +30,9 @@ function parseCsv(content) {
     const char = headerLine[i];
     const next = headerLine[i + 1];
 
-    if (char === "\"") {
-      if (inQuotes && next === "\"") {
-        current += "\"";
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        current += '"';
         i += 1;
       } else {
         inQuotes = !inQuotes;
@@ -55,9 +55,9 @@ function parseCsv(content) {
       const char = line[i];
       const next = line[i + 1];
 
-      if (char === "\"") {
-        if (quoted && next === "\"") {
-          chunk += "\"";
+      if (char === '"') {
+        if (quoted && next === '"') {
+          chunk += '"';
           i += 1;
         } else {
           quoted = !quoted;
@@ -168,7 +168,7 @@ async function main() {
 
   if (error) throw error;
 
-  const insertedCount = Array.isArray(data) && data.length > 0 ? data[0]?.inserted_count ?? 0 : 0;
+  const insertedCount = Array.isArray(data) && data.length > 0 ? (data[0]?.inserted_count ?? 0) : 0;
   console.log(`RPC inserted_count: ${insertedCount}`);
 
   const { count: afterCount, error: afterError } = await supabase

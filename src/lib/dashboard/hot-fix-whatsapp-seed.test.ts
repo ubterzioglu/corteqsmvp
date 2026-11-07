@@ -25,10 +25,7 @@ import { describe, expect, it } from "vitest";
 
 /** Uygulanınca `applied/` altına taşınır; her iki konumu da kabul et. */
 function readMigration(fileName: string): string {
-  const candidates = [
-    `supabase/migrations/${fileName}`,
-    `supabase/migrations/applied/${fileName}`,
-  ];
+  const candidates = [`supabase/migrations/${fileName}`, `supabase/migrations/applied/${fileName}`];
   const found = candidates.find((path) => existsSync(path));
   if (!found) {
     throw new Error(`Migration bulunamadı: ${fileName}`);

@@ -58,8 +58,7 @@ export const SIGNUP_CONFIRMATION_SENT_MESSAGE =
 
 export const SIGNUP_SIGNED_IN_MESSAGE = "Hesabın oluşturuldu ve giriş yapıldı.";
 
-export const SIGNUP_ALREADY_REGISTERED_MESSAGE =
-  "Bu e-posta zaten kayıtlı. Giriş yap ya da şifreni sıfırla.";
+export const SIGNUP_ALREADY_REGISTERED_MESSAGE = "Bu e-posta zaten kayıtlı. Giriş yap ya da şifreni sıfırla.";
 
 /**
  * signUp() sonucunu yorumlar:

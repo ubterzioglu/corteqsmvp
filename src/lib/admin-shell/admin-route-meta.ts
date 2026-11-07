@@ -136,17 +136,45 @@ export const adminRouteMeta: AdminRouteMeta[] = [
 
   // Redirect-only route'lar (App.tsx <Navigate /> hedefleri)
   { pattern: "/admin/advisors", kind: "redirect", redirectTo: "/admin/advisors/consultant" },
-  { pattern: "/admin/new-member/users-roles", kind: "redirect", redirectTo: "/admin/new-member/profile-role-assignment" },
+  {
+    pattern: "/admin/new-member/users-roles",
+    kind: "redirect",
+    redirectTo: "/admin/new-member/profile-role-assignment",
+  },
   { pattern: "/admin/new-member/roles-list", kind: "redirect", redirectTo: "/admin/new-member/guide#rol-listesi" },
-  { pattern: "/admin/new-member/roles-features", kind: "redirect", redirectTo: "/admin/new-member/role-matrix?kind=feature" },
-  { pattern: "/admin/new-member/attributes", kind: "redirect", redirectTo: "/admin/new-member/role-matrix?kind=attribute" },
-  { pattern: "/admin/new-member/profile-sections", kind: "redirect", redirectTo: "/admin/new-member/role-matrix?kind=profile_section" },
-  { pattern: "/admin/new-member/taxonomy", kind: "redirect", redirectTo: "/admin/new-member/guide?notice=taxonomy-retired" },
+  {
+    pattern: "/admin/new-member/roles-features",
+    kind: "redirect",
+    redirectTo: "/admin/new-member/role-matrix?kind=feature",
+  },
+  {
+    pattern: "/admin/new-member/attributes",
+    kind: "redirect",
+    redirectTo: "/admin/new-member/role-matrix?kind=attribute",
+  },
+  {
+    pattern: "/admin/new-member/profile-sections",
+    kind: "redirect",
+    redirectTo: "/admin/new-member/role-matrix?kind=profile_section",
+  },
+  {
+    pattern: "/admin/new-member/taxonomy",
+    kind: "redirect",
+    redirectTo: "/admin/new-member/guide?notice=taxonomy-retired",
+  },
   { pattern: "/admin/new-member/role-management", kind: "redirect", redirectTo: "/admin/new-member/role-matrix" },
   { pattern: "/admin/new-member/roles-preview", kind: "redirect", redirectTo: "/admin/new-member/role-matrix" },
   { pattern: "/admin/new-member/entity-preview", kind: "redirect", redirectTo: "/admin/new-member/role-matrix" },
   { pattern: "/admin/data/:category", kind: "redirect", redirectTo: "/admin/data" },
-  { pattern: "/admin/workspace/resources/arge", kind: "redirect", redirectTo: "/admin/workspace/resources?section=arge" },
-  { pattern: "/admin/workspace/resources/insankaynaklari", kind: "redirect", redirectTo: "/admin/workspace/resources?section=insankaynaklari" },
+  {
+    pattern: "/admin/workspace/resources/arge",
+    kind: "redirect",
+    redirectTo: "/admin/workspace/resources?section=arge",
+  },
+  {
+    pattern: "/admin/workspace/resources/insankaynaklari",
+    kind: "redirect",
+    redirectTo: "/admin/workspace/resources?section=insankaynaklari",
+  },
   { pattern: "/admin/workshop", kind: "redirect", redirectTo: "/admin/workshop/cadde" },
 ];

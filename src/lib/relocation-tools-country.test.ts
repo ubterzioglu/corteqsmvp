@@ -61,10 +61,7 @@ describe("budget_fit — bütçe yoksa nötr 0.5", () => {
     expect(b.budget_fit).toBeCloseTo(0.755, 4);
   });
   it("tax_burden_tolerance yüksekse budget_fit artar", () => {
-    const b = computeCountryBreakdown(
-      { cost_index: 0.2 },
-      { monthly_budget: 1500, tax_burden_tolerance: 5 },
-    );
+    const b = computeCountryBreakdown({ cost_index: 0.2 }, { monthly_budget: 1500, tax_burden_tolerance: 5 });
     // (1 - 0.2) * 0.85 + 1.0 * 0.15 = 0.83
     expect(b.budget_fit).toBeCloseTo(0.83, 4);
   });
@@ -72,14 +69,8 @@ describe("budget_fit — bütçe yoksa nötr 0.5", () => {
 
 describe("deal-breaker cap — ilgili boyut 0.40'ta sınırlanır", () => {
   it("high_cost dealbreaker budget_fit'i cap'ler", () => {
-    const without = computeCountryBreakdown(
-      { cost_index: 0.1 },
-      { monthly_budget: 1500 },
-    );
-    const withDb = computeCountryBreakdown(
-      { cost_index: 0.1 },
-      { monthly_budget: 1500, deal_breakers: ["high_cost"] },
-    );
+    const without = computeCountryBreakdown({ cost_index: 0.1 }, { monthly_budget: 1500 });
+    const withDb = computeCountryBreakdown({ cost_index: 0.1 }, { monthly_budget: 1500, deal_breakers: ["high_cost"] });
     expect(without.budget_fit).toBeGreaterThan(DEAL_BREAKER_CAP);
     expect(withDb.budget_fit).toBe(DEAL_BREAKER_CAP);
   });
@@ -95,14 +86,8 @@ describe("deal-breaker cap — ilgili boyut 0.40'ta sınırlanır", () => {
 
 describe("language_fit — english_only ülkeye göre değişir", () => {
   it("english_only iken İngilizce-zayıf ülke düşük language_fit", () => {
-    const weakEnglish = computeCountryBreakdown(
-      { english_workability: 0.2 },
-      { language_profile: "english_only" },
-    );
-    const openLang = computeCountryBreakdown(
-      { english_workability: 0.2 },
-      { language_profile: "open" },
-    );
+    const weakEnglish = computeCountryBreakdown({ english_workability: 0.2 }, { language_profile: "english_only" });
+    const openLang = computeCountryBreakdown({ english_workability: 0.2 }, { language_profile: "open" });
     // english_only: 0.2 ; open: 0.5 + 0.5*0.2 = 0.6
     expect(weakEnglish.language_fit).toBeCloseTo(0.2, 4);
     expect(openLang.language_fit).toBeCloseTo(0.6, 4);
@@ -111,17 +96,10 @@ describe("language_fit — english_only ülkeye göre değişir", () => {
 
 describe("climate_fit — etiket eşleşmesi", () => {
   it("tercih eşleşirse 1.0, eşleşmezse 0.3, fark etmezse 0.6", () => {
+    expect(computeCountryBreakdown({ climate_tags: ["warm"] }, { climate_preference: "warm" }).climate_fit).toBe(1.0);
+    expect(computeCountryBreakdown({ climate_tags: ["cold"] }, { climate_preference: "warm" }).climate_fit).toBe(0.3);
     expect(
-      computeCountryBreakdown({ climate_tags: ["warm"] }, { climate_preference: "warm" })
-        .climate_fit,
-    ).toBe(1.0);
-    expect(
-      computeCountryBreakdown({ climate_tags: ["cold"] }, { climate_preference: "warm" })
-        .climate_fit,
-    ).toBe(0.3);
-    expect(
-      computeCountryBreakdown({ climate_tags: ["cold"] }, { climate_preference: "no_preference" })
-        .climate_fit,
+      computeCountryBreakdown({ climate_tags: ["cold"] }, { climate_preference: "no_preference" }).climate_fit,
     ).toBe(0.6);
   });
 });

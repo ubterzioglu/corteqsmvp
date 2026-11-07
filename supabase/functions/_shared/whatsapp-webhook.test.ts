@@ -47,9 +47,7 @@ async function signatureFor(body: string, secret = APP_SECRET) {
     false,
     ["sign"],
   );
-  const signature = new Uint8Array(
-    await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)),
-  );
+  const signature = new Uint8Array(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body)));
   const hex = Array.from(signature, (byte) => byte.toString(16).padStart(2, "0")).join("");
   return `sha256=${hex}`;
 }
@@ -100,12 +98,8 @@ describe("WhatsApp webhook verification", () => {
   it("validates the raw body with Meta HMAC-SHA256", async () => {
     const body = JSON.stringify(payload);
     const valid = await signatureFor(body);
-    await expect(
-      verifyMetaSignature(new TextEncoder().encode(body), valid, APP_SECRET),
-    ).resolves.toBe(true);
-    await expect(
-      verifyMetaSignature(new TextEncoder().encode(`${body} `), valid, APP_SECRET),
-    ).resolves.toBe(false);
+    await expect(verifyMetaSignature(new TextEncoder().encode(body), valid, APP_SECRET)).resolves.toBe(true);
+    await expect(verifyMetaSignature(new TextEncoder().encode(`${body} `), valid, APP_SECRET)).resolves.toBe(false);
   });
 
   it("rejects an invalid signature before rate-limit or database work", async () => {
@@ -141,9 +135,7 @@ describe("WhatsApp webhook ingestion", () => {
 
   it("hashes phone identifiers and accepts a signed event", async () => {
     const ingestEvent = vi.fn().mockResolvedValue(true);
-    const response = await makeHandler({ ingestEvent })(
-      await signedRequest(JSON.stringify(payload)),
-    );
+    const response = await makeHandler({ ingestEvent })(await signedRequest(JSON.stringify(payload)));
     const result = await response.json();
 
     expect(response.status).toBe(200);
@@ -160,9 +152,7 @@ describe("WhatsApp webhook ingestion", () => {
 
   it("returns 200 for a provider duplicate while reporting zero inserts", async () => {
     const ingestEvent = vi.fn().mockResolvedValue(false);
-    const response = await makeHandler({ ingestEvent })(
-      await signedRequest(JSON.stringify(payload)),
-    );
+    const response = await makeHandler({ ingestEvent })(await signedRequest(JSON.stringify(payload)));
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual({ received: 1, inserted: 0 });

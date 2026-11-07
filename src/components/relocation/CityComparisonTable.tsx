@@ -20,11 +20,7 @@ interface CityComparisonTableProps {
   whyLabel: string;
 }
 
-export function CityComparisonTable({
-  recommendations,
-  emptyLabel,
-  whyLabel,
-}: CityComparisonTableProps) {
+export function CityComparisonTable({ recommendations, emptyLabel, whyLabel }: CityComparisonTableProps) {
   const items = recommendations ?? [];
   if (items.length === 0) {
     return <p className="text-sm text-muted-foreground py-8 text-center">{emptyLabel}</p>;
@@ -38,42 +34,42 @@ export function CityComparisonTable({
         const explanations = rec.explanations ?? [];
         const finalScore = Number.isFinite(rec.final_score) ? rec.final_score : 0;
         return (
-        <Card key={rec.entity_id}>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{rec.title}</CardTitle>
-              <Badge variant="secondary" className="text-sm">
-                {Math.round(finalScore * 100)}%
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
-              {(Object.keys(SCORE_LABELS) as RelocationScoreKey[]).map((key) => {
-                const value = rec.score_breakdown?.[key] ?? 0;
-                return (
-                  <div key={key} className="space-y-1">
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{SCORE_LABELS[key]}</span>
-                      <span>{Math.round(value * 100)}</span>
-                    </div>
-                    <Progress value={value * 100} className="h-1.5" />
-                  </div>
-                );
-              })}
-            </div>
-            {explanations.length > 0 && (
-              <div className="pt-1">
-                <p className="text-xs font-semibold text-foreground">{whyLabel}</p>
-                <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
-                  {explanations.map((why, i) => (
-                    <li key={i}>• {why}</li>
-                  ))}
-                </ul>
+          <Card key={rec.entity_id}>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">{rec.title}</CardTitle>
+                <Badge variant="secondary" className="text-sm">
+                  {Math.round(finalScore * 100)}%
+                </Badge>
               </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
+                {(Object.keys(SCORE_LABELS) as RelocationScoreKey[]).map((key) => {
+                  const value = rec.score_breakdown?.[key] ?? 0;
+                  return (
+                    <div key={key} className="space-y-1">
+                      <div className="flex justify-between text-xs text-muted-foreground">
+                        <span>{SCORE_LABELS[key]}</span>
+                        <span>{Math.round(value * 100)}</span>
+                      </div>
+                      <Progress value={value * 100} className="h-1.5" />
+                    </div>
+                  );
+                })}
+              </div>
+              {explanations.length > 0 && (
+                <div className="pt-1">
+                  <p className="text-xs font-semibold text-foreground">{whyLabel}</p>
+                  <ul className="mt-1 space-y-0.5 text-xs text-muted-foreground">
+                    {explanations.map((why, i) => (
+                      <li key={i}>• {why}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         );
       })}
     </div>

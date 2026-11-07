@@ -52,8 +52,7 @@ export function RelocationToolsHub({ tools, isLoading, isError, onRetry }: Reloc
     () =>
       tools.filter(
         (tool) =>
-          (activeCategory === ALL_TOOL_CATEGORIES || tool.category === activeCategory) &&
-          toolMatchesQuery(tool, query),
+          (activeCategory === ALL_TOOL_CATEGORIES || tool.category === activeCategory) && toolMatchesQuery(tool, query),
       ),
     [tools, activeCategory, query],
   );
@@ -99,18 +98,11 @@ export function RelocationToolsHub({ tools, isLoading, isError, onRetry }: Reloc
 
       {!isLoading && !isError && tools.length > 0 && (
         <>
-          <ToolsHubCategoryFilter
-            categories={categories}
-            activeKey={activeCategory}
-            onSelect={setActiveCategory}
-          />
+          <ToolsHubCategoryFilter categories={categories} activeKey={activeCategory} onSelect={setActiveCategory} />
 
           {/* Çipler zaten kendi sayılarını taşıyor; görünür sayaç yalnızca filtre aktifken
               bilgi verir. aria-live her durumda bağlı: ekran okuyucu sonucun değiştiğini duyar. */}
-          <p
-            className={cn("text-center text-xs text-muted-foreground", !isFiltered && "sr-only")}
-            aria-live="polite"
-          >
+          <p className={cn("text-center text-xs text-muted-foreground", !isFiltered && "sr-only")} aria-live="polite">
             {visibleTools.length} araç
           </p>
 

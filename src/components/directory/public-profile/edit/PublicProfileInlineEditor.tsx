@@ -3,11 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { publicCatalogProfileKeys } from "@/hooks/usePublicCatalogProfile";
 import { useToast } from "@/hooks/use-toast";
-import {
-  parseDraftValue,
-  readDraftValue,
-  type CatalogAttributeDraftValue,
-} from "@/lib/catalog-attribute-draft";
+import { parseDraftValue, readDraftValue, type CatalogAttributeDraftValue } from "@/lib/catalog-attribute-draft";
 import {
   getCatalogItemProfile,
   updateCatalogItemAttribute,
@@ -46,25 +42,18 @@ const PublicProfileInlineEditor = ({ itemId, slug }: PublicProfileInlineEditorPr
     if (!profileQuery.data) return;
     setDraftValues(
       Object.fromEntries(
-        profileQuery.data.attributes.map((attribute) => [
-          attribute.attribute_key,
-          readDraftValue(attribute),
-        ]),
+        profileQuery.data.attributes.map((attribute) => [attribute.attribute_key, readDraftValue(attribute)]),
       ),
     );
     setDraftVisibility(
       Object.fromEntries(
-        profileQuery.data.attributes.map((attribute) => [
-          attribute.attribute_key,
-          attribute.visibility,
-        ]),
+        profileQuery.data.attributes.map((attribute) => [attribute.attribute_key, attribute.visibility]),
       ),
     );
   }, [profileQuery.data]);
 
   const editableAttributes = useMemo(
-    () =>
-      (profileQuery.data?.attributes ?? []).filter((attribute) => attribute.editor_can_edit),
+    () => (profileQuery.data?.attributes ?? []).filter((attribute) => attribute.editor_can_edit),
     [profileQuery.data],
   );
 
@@ -91,7 +80,7 @@ const PublicProfileInlineEditor = ({ itemId, slug }: PublicProfileInlineEditorPr
   });
 
   const savingKey = saveMutation.isPending
-    ? (saveMutation.variables as CatalogEntityProfileAttribute | undefined)?.attribute_key ?? null
+    ? ((saveMutation.variables as CatalogEntityProfileAttribute | undefined)?.attribute_key ?? null)
     : null;
 
   if (profileQuery.isLoading) {
@@ -118,15 +107,13 @@ const PublicProfileInlineEditor = ({ itemId, slug }: PublicProfileInlineEditorPr
       <div className="mb-4">
         <h2 className="text-base font-semibold text-foreground">Profil Bilgilerini Düzenle</h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Alanları tek tek kaydedebilir, görünürlük anahtarıyla bir alanı public profilden
-          gizleyebilirsin. Değişiklikler kaydedildiği anda profilde görünür.
+          Alanları tek tek kaydedebilir, görünürlük anahtarıyla bir alanı public profilden gizleyebilirsin.
+          Değişiklikler kaydedildiği anda profilde görünür.
         </p>
       </div>
 
       {editableAttributes.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Bu profil için düzenlenebilir alan bulunamadı.
-        </p>
+        <p className="text-sm text-muted-foreground">Bu profil için düzenlenebilir alan bulunamadı.</p>
       ) : (
         <div className="space-y-3">
           {editableAttributes.map((attribute) => (
@@ -136,9 +123,7 @@ const PublicProfileInlineEditor = ({ itemId, slug }: PublicProfileInlineEditorPr
               value={draftValues[attribute.attribute_key] ?? ""}
               visibility={draftVisibility[attribute.attribute_key] ?? attribute.visibility}
               isSaving={savingKey === attribute.attribute_key}
-              onValueChange={(value) =>
-                setDraftValues((current) => ({ ...current, [attribute.attribute_key]: value }))
-              }
+              onValueChange={(value) => setDraftValues((current) => ({ ...current, [attribute.attribute_key]: value }))}
               onVisibilityChange={(visibility) =>
                 setDraftVisibility((current) => ({
                   ...current,

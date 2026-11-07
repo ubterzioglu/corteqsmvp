@@ -19,7 +19,11 @@ const EntityCatalogPanel = ({ items, isLoading }: Props) => (
     <CardHeader className="pb-2">
       <CardTitle className="text-sm font-semibold">
         Attribute / Feature / Section
-        {!isLoading && <Badge variant="secondary" className="ml-2">{items.length}</Badge>}
+        {!isLoading && (
+          <Badge variant="secondary" className="ml-2">
+            {items.length}
+          </Badge>
+        )}
       </CardTitle>
     </CardHeader>
     <CardContent className="p-0 flex-1 overflow-auto">
@@ -38,7 +42,9 @@ const EntityCatalogPanel = ({ items, isLoading }: Props) => (
             {items.map((item) => (
               <TableRow key={`${item.kind}:${item.key}`} className="hover:bg-muted/50">
                 <TableCell className="py-1.5">
-                  <Badge variant="outline" className="text-[10px] font-mono">{KIND_CODE[item.kind]}</Badge>
+                  <Badge variant="outline" className="text-[10px] font-mono">
+                    {KIND_CODE[item.kind]}
+                  </Badge>
                 </TableCell>
                 <TableCell className="text-xs py-1.5">{item.label}</TableCell>
                 <TableCell className="text-[10px] text-muted-foreground py-1.5">{item.key}</TableCell>

@@ -11,8 +11,10 @@ const quickPillClass =
 const quickPillStyles = {
   blue: "border-[#4285F4]/35 bg-[linear-gradient(135deg,rgba(66,133,244,0.12),rgba(66,133,244,0.2))] text-[#185ABC] hover:bg-[linear-gradient(135deg,rgba(66,133,244,0.18),rgba(66,133,244,0.26))]",
   red: "border-[#EA4335]/35 bg-[linear-gradient(135deg,rgba(234,67,53,0.12),rgba(234,67,53,0.2))] text-[#C5221F] hover:bg-[linear-gradient(135deg,rgba(234,67,53,0.18),rgba(234,67,53,0.26))]",
-  yellow: "border-[#FBBC05]/45 bg-[linear-gradient(135deg,rgba(251,188,5,0.14),rgba(251,188,5,0.24))] text-[#B06000] hover:bg-[linear-gradient(135deg,rgba(251,188,5,0.2),rgba(251,188,5,0.3))]",
-  green: "border-[#34A853]/35 bg-[linear-gradient(135deg,rgba(52,168,83,0.12),rgba(52,168,83,0.2))] text-[#137333] hover:bg-[linear-gradient(135deg,rgba(52,168,83,0.18),rgba(52,168,83,0.26))]",
+  yellow:
+    "border-[#FBBC05]/45 bg-[linear-gradient(135deg,rgba(251,188,5,0.14),rgba(251,188,5,0.24))] text-[#B06000] hover:bg-[linear-gradient(135deg,rgba(251,188,5,0.2),rgba(251,188,5,0.3))]",
+  green:
+    "border-[#34A853]/35 bg-[linear-gradient(135deg,rgba(52,168,83,0.12),rgba(52,168,83,0.2))] text-[#137333] hover:bg-[linear-gradient(135deg,rgba(52,168,83,0.18),rgba(52,168,83,0.26))]",
 } as const;
 
 const DiasporaSearchBar = () => {
@@ -102,7 +104,10 @@ const DiasporaSearchBar = () => {
           {/* Hızlı erişim butonları — emoji yerine Lucide çizgi ikonları (tech görünüm) */}
           <Reveal className="mx-auto flex max-w-6xl flex-col items-center gap-3">
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <button onClick={() => handleQuickSearch("Konsolosluk")} className={`${quickPillClass} ${quickPillStyles.blue}`}>
+              <button
+                onClick={() => handleQuickSearch("Konsolosluk")}
+                className={`${quickPillClass} ${quickPillStyles.blue}`}
+              >
                 <Landmark className="h-4 w-4" aria-hidden="true" />
                 Konsolosluk
               </button>
@@ -113,7 +118,10 @@ const DiasporaSearchBar = () => {
                 <Award className="h-4 w-4" aria-hidden="true" />
                 Şehir Elçine Ulaş
               </button>
-              <button onClick={() => handleQuickSearch("Vize danışmanı")} className={`${quickPillClass} ${quickPillStyles.yellow}`}>
+              <button
+                onClick={() => handleQuickSearch("Vize danışmanı")}
+                className={`${quickPillClass} ${quickPillStyles.yellow}`}
+              >
                 <Plane className="h-4 w-4" aria-hidden="true" />
                 Vize & Göçmenlik
               </button>
@@ -122,7 +130,10 @@ const DiasporaSearchBar = () => {
                   yani çip her tıklamada boş sonuç veriyordu ve kullanıcıya
                   "arama bozuk" öğretiyordu. Geri eklemeden ÖNCE veri gelsin;
                   çip veriyi yaratmaz. */}
-              <button onClick={() => handleQuickSearch("Dernek")} className={`${quickPillClass} ${quickPillStyles.green}`}>
+              <button
+                onClick={() => handleQuickSearch("Dernek")}
+                className={`${quickPillClass} ${quickPillStyles.green}`}
+              >
                 <Briefcase className="h-4 w-4" aria-hidden="true" />
                 Dernek & Vakıf
               </button>

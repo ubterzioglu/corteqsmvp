@@ -37,9 +37,12 @@ export interface InviteLeaderboard {
 
 /** Liderlik tablosu — anonim açık (sayfa RequireAuth'sız). */
 export async function fetchInviteLeaderboard(limit?: number): Promise<InviteLeaderboard> {
-  const { data, error } = await supabase.rpc("get_invite_leaderboard" as never, {
-    p_limit: limit ?? null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "get_invite_leaderboard" as never,
+    {
+      p_limit: limit ?? null,
+    } as never,
+  );
 
   if (error) throw mapInviteError(error, "Liderlik tablosu okunamadı.");
   const payload = data as InviteLeaderboard | null;
@@ -134,9 +137,12 @@ export function takeInviteCarrier(): string | null {
  */
 export async function redeemInviteCodeSafely(code: string): Promise<boolean> {
   try {
-    const { error } = await supabase.rpc("redeem_invite_code" as never, {
-      p_code: code,
-    } as never);
+    const { error } = await supabase.rpc(
+      "redeem_invite_code" as never,
+      {
+        p_code: code,
+      } as never,
+    );
 
     if (error) {
       // Bilinen kodlar (geçersiz/kendi kodu/ikinci kullanım) BEKLENEN durumdur —

@@ -71,9 +71,7 @@ describe("G06b · RPC hata kodu ↔ Türkçe mesaj (ÇİFT YÖNLÜ)", () => {
 
   it("düz nesne hatadan kodu çıkarır (Error örneği DEĞİL — instanceof daraltması ölür)", () => {
     const rpcError = { message: "org_verification_pending_exists", code: "P0001", details: null, hint: null };
-    expect(orgVerificationErrorMessage(rpcError)).toBe(
-      ORG_VERIFICATION_ERROR_MESSAGES.org_verification_pending_exists,
-    );
+    expect(orgVerificationErrorMessage(rpcError)).toBe(ORG_VERIFICATION_ERROR_MESSAGES.org_verification_pending_exists);
   });
 
   it("bilinmeyen hatada ham metin DEĞİL, genel mesaj döner", () => {
@@ -103,7 +101,9 @@ describe("G06b · kova sınırları ve depolama anahtarı", () => {
   });
 
   it("`accept` niteliği doğrulanan uzantılarla birebir aynı küme", () => {
-    const fromAccept = ORG_VERIFICATION_ACCEPT.split(",").map((s) => s.replace(".", "")).sort();
+    const fromAccept = ORG_VERIFICATION_ACCEPT.split(",")
+      .map((s) => s.replace(".", ""))
+      .sort();
     expect(fromAccept).toEqual([...ORG_VERIFICATION_EXTENSIONS].sort());
     // Kovanın 4 MIME'ı: pdf + jpeg(jpg/jpeg) + png + webp — octet-stream YOK.
     expect(ORG_VERIFICATION_EXTENSIONS).toEqual(new Set(["pdf", "jpg", "jpeg", "png", "webp"]));
@@ -129,18 +129,14 @@ describe("G06b · kova sınırları ve depolama anahtarı", () => {
     expect(key).not.toContain("..");
     expect(key).not.toContain(" ");
     // <uuid>/<uuid>/<güvenli-ad> — güvenli ad yalnız [A-Za-z0-9._-], ≤120.
-    expect(key).toMatch(
-      /^[0-9a-fA-F-]{36}\/[0-9a-fA-F-]{36}\/[A-Za-z0-9._-]{1,120}$/,
-    );
+    expect(key).toMatch(/^[0-9a-fA-F-]{36}\/[0-9a-fA-F-]{36}\/[A-Za-z0-9._-]{1,120}$/);
   });
 
   it("anahtar kovanın INSERT politikası deseniyle uyumlu (ilk klasör = auth.uid())", () => {
     // Politika: (storage.foldername(name))[1] = auth.uid()::text. Anahtarın İLK
     // segmenti uuid olmalı ki politika çağıranın klasörünü doğrulayabilsin.
     const policy = migrationSql();
-    expect(policy, "politika foldername desenini içermeli").toContain(
-      "(storage.foldername(name))[1] = auth.uid()",
-    );
+    expect(policy, "politika foldername desenini içermeli").toContain("(storage.foldername(name))[1] = auth.uid()");
     const uid = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
     const key = orgVerificationStorageKey(uid, "11111111-2222-3333-4444-555555555555", "Tüzük.pdf");
     expect(key.split("/")[0]).toBe(uid);

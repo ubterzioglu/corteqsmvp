@@ -11,9 +11,7 @@ import {
   resolvePublicSectionRenderer,
 } from "./renderer-registry";
 
-const makeSection = (
-  overrides: Partial<PublicProfileSectionViewModel> = {},
-): PublicProfileSectionViewModel => ({
+const makeSection = (overrides: Partial<PublicProfileSectionViewModel> = {}): PublicProfileSectionViewModel => ({
   key: "detail.test",
   label: "Test Bölümü",
   description: null,

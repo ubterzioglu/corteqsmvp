@@ -43,8 +43,7 @@ const FETCH_TIMEOUT_MS = 15_000;
 /** Supabase REST kimlik bilgileri; eksikse null (çağıran graceful atlar). */
 function supabaseEnv() {
   const url = process.env.VITE_SUPABASE_URL ?? process.env.SUPABASE_URL;
-  const key =
-    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   return url && key ? { url: url.replace(/\/+$/, ""), key } : null;
 }
 
@@ -165,10 +164,7 @@ const STATIC_ROUTES = [
 // Commercial slug'ları statik kaynaktan (src/lib/commercial-documents.ts) oku.
 async function getCommercialRoutes() {
   try {
-    const src = await readFile(
-      path.join(rootDir, "src", "lib", "commercial-documents.ts"),
-      "utf8",
-    );
+    const src = await readFile(path.join(rootDir, "src", "lib", "commercial-documents.ts"), "utf8");
     const slugs = [...src.matchAll(/slug:\s*["']([a-z0-9-]+)["']/gi)].map((m) => m[1]);
     return [...new Set(slugs)].map((slug) => ({
       path: `/commercial/${slug}`,
@@ -333,11 +329,7 @@ async function getDiasporaRoutes() {
 export function qualifiesForSitemap(row) {
   const text = (value) => String(value ?? "").trim();
   if (text(row.long_description).length > 0) return true;
-  return (
-    text(row.headline).length > 0 &&
-    text(row.short_description).length > 0 &&
-    text(row.city).length > 0
-  );
+  return text(row.headline).length > 0 && text(row.short_description).length > 0 && text(row.city).length > 0;
 }
 
 async function getDirectoryCatalogRoutes() {
@@ -404,8 +396,9 @@ async function getIndependentProfileRoutes() {
 // içerik değil (bkz. DemoPageBanner, AssociationDetail.tsx — noindex).
 
 function escapeXml(value) {
-  return value.replace(/[<>&'"]/g, (c) =>
-    ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c],
+  return value.replace(
+    /[<>&'"]/g,
+    (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" })[c],
   );
 }
 
@@ -541,10 +534,7 @@ const buDosya = path.resolve(fileURLToPath(import.meta.url));
 if (calistirilanDosya === buDosya) {
   main().catch((error) => {
     // Build'i kırma: hata olsa bile mevcut sitemap.xml korunur.
-    console.warn(
-      "[sitemap] üretim başarısız, mevcut sitemap.xml korunuyor:",
-      error?.message ?? error,
-    );
+    console.warn("[sitemap] üretim başarısız, mevcut sitemap.xml korunuyor:", error?.message ?? error);
     process.exit(0);
   });
 }

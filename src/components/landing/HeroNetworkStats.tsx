@@ -24,10 +24,7 @@ interface HeroNetworkStatsProps {
 
 const HeroNetworkStats = ({ className }: HeroNetworkStatsProps) => {
   return (
-    <ul
-      className={`flex flex-wrap items-center gap-2 ${className ?? ""}`}
-      aria-label="CorteQS ağı kapsamı"
-    >
+    <ul className={`flex flex-wrap items-center gap-2 ${className ?? ""}`} aria-label="CorteQS ağı kapsamı">
       {STATS.map((stat) => (
         <li
           key={stat.label}

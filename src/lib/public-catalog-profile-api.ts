@@ -16,8 +16,14 @@ type PublicCatalogProfileRpcClient = {
 type CatalogSlugQueryClient = {
   from: (tableName: "catalog_items") => {
     select: (columns: string) => {
-      eq: (column: string, value: unknown) => {
-        order: (orderColumn: string, options: { ascending: boolean }) => {
+      eq: (
+        column: string,
+        value: unknown,
+      ) => {
+        order: (
+          orderColumn: string,
+          options: { ascending: boolean },
+        ) => {
           limit: (count: number) => {
             maybeSingle: () => Promise<{
               data: { slug: string } | null;
@@ -38,9 +44,7 @@ const slugQueryClient = supabase as unknown as CatalogSlugQueryClient;
  * Returns `null` when the item is missing, private or unpublished —
  * callers must render the same not-found state for all three.
  */
-export async function getPublicCatalogProfilePage(
-  slug: string,
-): Promise<PublicCatalogProfilePagePayload | null> {
+export async function getPublicCatalogProfilePage(slug: string): Promise<PublicCatalogProfilePagePayload | null> {
   const { data, error } = await rpcClient.rpc("get_catalog_item_public_page_v2", {
     p_slug: slug,
   });

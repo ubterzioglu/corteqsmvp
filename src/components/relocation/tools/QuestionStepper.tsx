@@ -7,10 +7,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import {
-  QuestionRenderer,
-  SCALE_DEFAULT_VALUE,
-} from "@/components/relocation/tools/QuestionRenderer";
+import { QuestionRenderer, SCALE_DEFAULT_VALUE } from "@/components/relocation/tools/QuestionRenderer";
 import { cityScopeFromAnswers } from "@/lib/relocation-city-scope";
 import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
 import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
@@ -107,10 +104,7 @@ export function QuestionStepper({
       return;
     }
     // Dokunulmamış ölçek sorusunda görünen varsayılanı gerçek cevaba dönüştür.
-    const nextAnswers =
-      committedValue === value
-        ? answers
-        : { ...answers, [question.question_key]: committedValue };
+    const nextAnswers = committedValue === value ? answers : { ...answers, [question.question_key]: committedValue };
     if (nextAnswers !== answers) setAnswers(nextAnswers);
     if (isLast) {
       onComplete(nextAnswers);
@@ -152,9 +146,7 @@ export function QuestionStepper({
           scopeCountryCodes={cityScopeFromAnswers(answers)}
         />
 
-        {showError && blocked && (
-          <p className="text-sm text-destructive">{TOOLS_UI_COPY.required}</p>
-        )}
+        {showError && blocked && <p className="text-sm text-destructive">{TOOLS_UI_COPY.required}</p>}
       </div>
 
       <div className="flex items-center justify-between">
@@ -162,11 +154,7 @@ export function QuestionStepper({
           {TOOLS_UI_COPY.back}
         </Button>
         <Button onClick={next} disabled={isSubmitting}>
-          {isSubmitting
-            ? TOOLS_UI_COPY.submitting
-            : isLast
-              ? TOOLS_UI_COPY.finish
-              : TOOLS_UI_COPY.next}
+          {isSubmitting ? TOOLS_UI_COPY.submitting : isLast ? TOOLS_UI_COPY.finish : TOOLS_UI_COPY.next}
         </Button>
       </div>
     </div>

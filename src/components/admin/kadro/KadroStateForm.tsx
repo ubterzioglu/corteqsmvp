@@ -25,7 +25,7 @@ export function KadroStateForm({ role, onSave, isSaving }: KadroStateFormProps) 
     setNote(role.note);
   }, [role]);
 
-  const hasChanges = 
+  const hasChanges =
     status !== role.currentStatus ||
     priority !== role.currentPriority ||
     ownerName !== role.currentOwner ||
@@ -43,9 +43,7 @@ export function KadroStateForm({ role, onSave, isSaving }: KadroStateFormProps) 
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Durum
-        </label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Durum</label>
         <Select value={status} onValueChange={(value) => setStatus(value as KadroStatus)}>
           <SelectTrigger>
             <SelectValue />
@@ -61,9 +59,7 @@ export function KadroStateForm({ role, onSave, isSaving }: KadroStateFormProps) 
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Öncelik
-        </label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Öncelik</label>
         <Select value={priority} onValueChange={(value) => setPriority(value as KadroPriority)}>
           <SelectTrigger>
             <SelectValue />
@@ -79,20 +75,12 @@ export function KadroStateForm({ role, onSave, isSaving }: KadroStateFormProps) 
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Sorumlu Kişi
-        </label>
-        <Input
-          value={ownerName}
-          onChange={(e) => setOwnerName(e.target.value)}
-          placeholder="İsim soyisim"
-        />
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Sorumlu Kişi</label>
+        <Input value={ownerName} onChange={(e) => setOwnerName(e.target.value)} placeholder="İsim soyisim" />
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          Not
-        </label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Not</label>
         <Textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
@@ -101,11 +89,7 @@ export function KadroStateForm({ role, onSave, isSaving }: KadroStateFormProps) 
         />
       </div>
 
-      <Button
-        onClick={handleSave}
-        disabled={!hasChanges || isSaving}
-        className="w-full"
-      >
+      <Button onClick={handleSave} disabled={!hasChanges || isSaving} className="w-full">
         {isSaving ? "Kaydediliyor..." : hasChanges ? "Değişiklikleri Kaydet" : "Değişiklik Yok"}
       </Button>
     </div>

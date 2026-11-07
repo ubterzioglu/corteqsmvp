@@ -68,8 +68,7 @@ const WelcomeActivatePage = () => {
       });
       navigate("/profile/bireysel", { replace: true });
     } catch (mutationError) {
-      const message =
-        mutationError instanceof Error ? mutationError.message : "Aktivasyon tamamlanamadı.";
+      const message = mutationError instanceof Error ? mutationError.message : "Aktivasyon tamamlanamadı.";
       toast({
         title: "Aktivasyon başarısız",
         description: message,
@@ -86,8 +85,7 @@ const WelcomeActivatePage = () => {
         description: "E-posta kutunu kontrol edip aynı aktivasyon ekranına dönebilirsin.",
       });
     } catch (mutationError) {
-      const message =
-        mutationError instanceof Error ? mutationError.message : "Link yeniden gönderilemedi.";
+      const message = mutationError instanceof Error ? mutationError.message : "Link yeniden gönderilemedi.";
       toast({
         title: "Link gönderilemedi",
         description: message,
@@ -102,7 +100,8 @@ const WelcomeActivatePage = () => {
         <CardHeader>
           <CardTitle>Profil Aktivasyonu</CardTitle>
           <CardDescription>
-            Daha önce bıraktığın CorteQS formundan güvenli bir taslak oluşturduk. Son kez gözden geçirip profilini aktive edebilirsin.
+            Daha önce bıraktığın CorteQS formundan güvenli bir taslak oluşturduk. Son kez gözden geçirip profilini
+            aktive edebilirsin.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -119,9 +118,15 @@ const WelcomeActivatePage = () => {
           {!isLoading && !error && !data ? (
             <div className="space-y-3 rounded-xl border border-border bg-muted/40 p-4">
               <p className="text-sm text-muted-foreground">
-                Bu hesap için bekleyen bir onboarding taslağı bulunamadı. Eğer davet linkinin süresi dolduysa yeni giriş linki isteyebilirsin.
+                Bu hesap için bekleyen bir onboarding taslağı bulunamadı. Eğer davet linkinin süresi dolduysa yeni giriş
+                linki isteyebilirsin.
               </p>
-              <Button type="button" variant="outline" onClick={() => void handleResend()} disabled={resendMutation.isPending}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => void handleResend()}
+                disabled={resendMutation.isPending}
+              >
                 {resendMutation.isPending ? "Gönderiliyor..." : "Yeni Giriş Linki Gönder"}
               </Button>
             </div>
@@ -144,19 +149,11 @@ const WelcomeActivatePage = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="activation-country">Ülke</Label>
-                  <Input
-                    id="activation-country"
-                    value={country}
-                    onChange={(event) => setCountry(event.target.value)}
-                  />
+                  <Input id="activation-country" value={country} onChange={(event) => setCountry(event.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="activation-city">Şehir</Label>
-                  <Input
-                    id="activation-city"
-                    value={city}
-                    onChange={(event) => setCity(event.target.value)}
-                  />
+                  <Input id="activation-city" value={city} onChange={(event) => setCity(event.target.value)} />
                 </div>
               </div>
 
@@ -207,14 +204,20 @@ const WelcomeActivatePage = () => {
               </div>
 
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground">
-                Profilin sen onay verene kadar public hale gelmez. Aktivasyon sonrası istediğin alanları profil ekranından tekrar düzenleyebilirsin.
+                Profilin sen onay verene kadar public hale gelmez. Aktivasyon sonrası istediğin alanları profil
+                ekranından tekrar düzenleyebilirsin.
               </div>
 
               <div className="flex flex-wrap gap-3">
                 <Button type="button" onClick={() => void handleActivate()} disabled={activateMutation.isPending}>
                   {activateMutation.isPending ? "Aktive ediliyor..." : "Profili Aktive Et"}
                 </Button>
-                <Button type="button" variant="outline" onClick={() => void handleResend()} disabled={resendMutation.isPending}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => void handleResend()}
+                  disabled={resendMutation.isPending}
+                >
                   {resendMutation.isPending ? "Gönderiliyor..." : "Linki Yeniden Gönder"}
                 </Button>
               </div>

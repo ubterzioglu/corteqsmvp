@@ -47,14 +47,14 @@ export function LandingCard({ landing }: LandingCardProps) {
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-col gap-2">
           <LandingApprovalBadges landing={landing} />
-          <Badge className={`flex h-8 w-full items-center justify-center border px-3 text-xs font-semibold ${category.chipClass}`}>
+          <Badge
+            className={`flex h-8 w-full items-center justify-center border px-3 text-xs font-semibold ${category.chipClass}`}
+          >
             <Icon className="mr-1.5 h-3 w-3" />
             {category.label}
           </Badge>
         </div>
-        <h3 className="mt-4 text-xl font-bold text-foreground group-hover:text-emerald-700">
-          {landing.groupName}
-        </h3>
+        <h3 className="mt-4 text-xl font-bold text-foreground group-hover:text-emerald-700">{landing.groupName}</h3>
         <p className="mt-2 flex-1 line-clamp-2 text-sm text-muted-foreground">{cardSummary}</p>
         <hr className="mt-4 border-t border-border/40" />
         <div className="flex flex-wrap items-center gap-2 pt-3 text-muted-foreground">

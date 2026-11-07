@@ -39,10 +39,7 @@ export function useFollow() {
     };
   }, []);
 
-  const isFollowed = useCallback(
-    (kind: string, id: string) => !!map[makeKey(kind, id)],
-    [map]
-  );
+  const isFollowed = useCallback((kind: string, id: string) => !!map[makeKey(kind, id)], [map]);
 
   const toggle = useCallback(
     (kind: string, id: string, name: string) => {
@@ -61,7 +58,7 @@ export function useFollow() {
       toast({ title: "Takip edildi! 🔔", description: `${name} yeni paylaşım yaptığında bildirim alacaksınız.` });
       return true;
     },
-    [toast]
+    [toast],
   );
 
   const list = useCallback(
@@ -71,7 +68,7 @@ export function useFollow() {
       const prefix = `${kind}:`;
       return entries.filter((k) => k.startsWith(prefix)).map((k) => k.slice(prefix.length));
     },
-    [map]
+    [map],
   );
 
   return { isFollowed, toggle, list };

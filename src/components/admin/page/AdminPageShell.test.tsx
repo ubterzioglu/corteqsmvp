@@ -47,10 +47,7 @@ describe("AdminPageShell", () => {
   it("breadcrumbs verilirse linkli zincir render eder", () => {
     render(
       <MemoryRouter>
-        <AdminPageShell
-          title="Detay"
-          breadcrumbs={[{ label: "Liste", to: "/admin/data" }, { label: "Kayıt" }]}
-        >
+        <AdminPageShell title="Detay" breadcrumbs={[{ label: "Liste", to: "/admin/data" }, { label: "Kayıt" }]}>
           icerik
         </AdminPageShell>
       </MemoryRouter>,

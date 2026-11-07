@@ -49,10 +49,7 @@ const PublicProfileQuickActions = ({ actions, shareUrl, shareTitle }: PublicProf
             size="sm"
             className="min-h-[44px] rounded-full sm:min-h-9"
           >
-            <a
-              href={action.href}
-              {...(action.external ? { target: "_blank", rel: "noreferrer" } : {})}
-            >
+            <a href={action.href} {...(action.external ? { target: "_blank", rel: "noreferrer" } : {})}>
               <Icon className="mr-1.5 h-3.5 w-3.5" aria-hidden="true" />
               {action.label}
             </a>

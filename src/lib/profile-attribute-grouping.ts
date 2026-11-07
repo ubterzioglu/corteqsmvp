@@ -1,11 +1,5 @@
-import {
-  HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS,
-  SPECIAL_PROFILE_ATTRIBUTE_KEYS,
-} from "@/lib/profile-attribute-keys";
-import {
-  EDUCATION_ATTRIBUTE_KEYS,
-  isEducationAttributeKey,
-} from "@/lib/profile-education";
+import { HIDDEN_ROLE_SPECIFIC_ATTRIBUTE_KEYS, SPECIAL_PROFILE_ATTRIBUTE_KEYS } from "@/lib/profile-attribute-keys";
+import { EDUCATION_ATTRIBUTE_KEYS, isEducationAttributeKey } from "@/lib/profile-education";
 import { SOCIAL_ATTRIBUTE_CONFIGS, SOCIAL_ATTRIBUTE_KEYS } from "@/lib/profile-social-links";
 import type { ProfileAttributeState } from "@/lib/member-profile";
 
@@ -69,8 +63,7 @@ export function groupProfileAttributes(
 
   education.sort(
     (left, right) =>
-      EDUCATION_ATTRIBUTE_KEYS.indexOf(left.attributeKey) -
-      EDUCATION_ATTRIBUTE_KEYS.indexOf(right.attributeKey),
+      EDUCATION_ATTRIBUTE_KEYS.indexOf(left.attributeKey) - EDUCATION_ATTRIBUTE_KEYS.indexOf(right.attributeKey),
   );
 
   return { common, education, socialMedia, roleSpecific };

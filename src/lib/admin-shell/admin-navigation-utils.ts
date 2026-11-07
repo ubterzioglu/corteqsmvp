@@ -5,12 +5,7 @@
 
 import { adminNavGroups } from "./admin-navigation-registry";
 import { adminRouteMeta } from "./admin-route-meta";
-import type {
-  AdminBreadcrumb,
-  AdminNavGroup,
-  AdminNavItem,
-  AdminRouteMeta,
-} from "./admin-shell-types";
+import type { AdminBreadcrumb, AdminNavGroup, AdminNavItem, AdminRouteMeta } from "./admin-shell-types";
 
 /** Registry'deki bir item'ın grup ve parent zinciriyle birlikte görünümü. */
 export type AdminNavEntry = {
@@ -115,9 +110,7 @@ export function matchesRoutePattern(pattern: string, pathname: string): boolean 
   const patternSegments = normalizeAdminPath(pattern).split("/");
   const pathSegments = normalizeAdminPath(pathname).split("/");
   if (patternSegments.length !== pathSegments.length) return false;
-  return patternSegments.every(
-    (segment, index) => segment.startsWith(":") || segment === pathSegments[index],
-  );
+  return patternSegments.every((segment, index) => segment.startsWith(":") || segment === pathSegments[index]);
 }
 
 function findRouteMeta(pathname: string, meta: AdminRouteMeta[]): AdminRouteMeta | undefined {
@@ -156,9 +149,7 @@ export function buildAdminBreadcrumbs(
 
   const metaEntry = findRouteMeta(path, meta);
   if (metaEntry?.kind === "page" && metaEntry.label) {
-    const parent = metaEntry.parentId
-      ? entries.find((entry) => entry.item.id === metaEntry.parentId)
-      : undefined;
+    const parent = metaEntry.parentId ? entries.find((entry) => entry.item.id === metaEntry.parentId) : undefined;
     if (parent) {
       return [...entryToBreadcrumbs(parent), { label: metaEntry.label }];
     }
@@ -179,10 +170,7 @@ function toSearchable(value: string): string {
  * Command palette araması: label, shortLabel, alias, description,
  * grup adı ve URL üzerinden arar.
  */
-export function searchAdminNav(
-  query: string,
-  groups: AdminNavGroup[] = adminNavGroups,
-): AdminNavEntry[] {
+export function searchAdminNav(query: string, groups: AdminNavGroup[] = adminNavGroups): AdminNavEntry[] {
   const needle = toSearchable(query.trim());
   if (!needle) return [];
 

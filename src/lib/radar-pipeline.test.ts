@@ -4,14 +4,30 @@ import { describe, it, expect } from "vitest";
 // Edge Function'daki mantığın frontend-safe kopyası (aynı algoritma)
 
 const TRACKING_PARAMS = new Set([
-  "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
-  "fbclid", "gclid", "mc_cid", "mc_eid", "ref", "source",
-  "_ga", "msclkid", "twclid", "igshid",
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "fbclid",
+  "gclid",
+  "mc_cid",
+  "mc_eid",
+  "ref",
+  "source",
+  "_ga",
+  "msclkid",
+  "twclid",
+  "igshid",
 ]);
 
 function canonicalizeUrl(rawUrl: string): string | null {
   let parsed: URL;
-  try { parsed = new URL(rawUrl); } catch { return null; }
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    return null;
+  }
   if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return null;
   const params = new URLSearchParams();
   for (const [key, value] of parsed.searchParams.entries()) {
@@ -28,23 +44,40 @@ function canonicalizeUrl(rawUrl: string): string | null {
 async function sha256Hex(input: string): Promise<string> {
   const encoded = new TextEncoder().encode(input);
   const buf = await crypto.subtle.digest("SHA-256", encoded);
-  return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 function normalizeTitle(title: string): string {
-  return title.toLowerCase().trim().replace(/\s+/g, " ").replace(/[^\w\sÀ-ɏ]/g, "").normalize("NFC");
+  return title
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[^\w\sÀ-ɏ]/g, "")
+    .normalize("NFC");
 }
 
 // ── SSRF guard ───────────────────────────────────────────────────────────────
 
 const PRIVATE_IP_PATTERNS = [
-  /^localhost$/i, /^127\./, /^10\./, /^172\.(1[6-9]|2\d|3[01])\./, /^192\.168\./,
-  /^169\.254\./, /^::1$/, /^0\.0\.0\.0$/,
+  /^localhost$/i,
+  /^127\./,
+  /^10\./,
+  /^172\.(1[6-9]|2\d|3[01])\./,
+  /^192\.168\./,
+  /^169\.254\./,
+  /^::1$/,
+  /^0\.0\.0\.0$/,
 ];
 
 function validateSourceUrl(url: string): { ok: boolean; reason?: string } {
   let parsed: URL;
-  try { parsed = new URL(url); } catch { return { ok: false, reason: "Geçersiz URL" }; }
+  try {
+    parsed = new URL(url);
+  } catch {
+    return { ok: false, reason: "Geçersiz URL" };
+  }
   if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
     return { ok: false, reason: `Engellenen protokol: ${parsed.protocol}` };
   }
@@ -70,9 +103,7 @@ function scoreRelevance(title: string): number {
 
 describe("canonicalizeUrl", () => {
   it("utm parametrelerini temizler", () => {
-    const result = canonicalizeUrl(
-      "https://example.com/article?utm_source=twitter&utm_medium=social&id=42"
-    );
+    const result = canonicalizeUrl("https://example.com/article?utm_source=twitter&utm_medium=social&id=42");
     expect(result).toBe("https://example.com/article?id=42");
   });
 

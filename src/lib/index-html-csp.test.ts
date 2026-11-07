@@ -35,9 +35,9 @@ describe("index.html CSP sözleşmesi", () => {
   });
 
   it("hiçbir stylesheet print'e park edilmez (media=print hilesi yok)", () => {
-    const stylesheetLinks = Array.from(
-      INDEX_HTML.matchAll(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi),
-    ).map((m) => m[0]);
+    const stylesheetLinks = Array.from(INDEX_HTML.matchAll(/<link[^>]*rel=["']stylesheet["'][^>]*>/gi)).map(
+      (m) => m[0],
+    );
 
     for (const tag of stylesheetLinks) {
       expect(tag).not.toMatch(/media=["']print["']/i);
@@ -66,9 +66,7 @@ describe("index.html CSP sözleşmesi", () => {
   });
 
   it("inline <script> yalnız JSON-LD olabilir (çalıştırılabilir inline script yok)", () => {
-    const inlineScripts = Array.from(INDEX_HTML.matchAll(/<script(?![^>]*\ssrc=)[^>]*>/gi)).map(
-      (m) => m[0],
-    );
+    const inlineScripts = Array.from(INDEX_HTML.matchAll(/<script(?![^>]*\ssrc=)[^>]*>/gi)).map((m) => m[0]);
 
     for (const tag of inlineScripts) {
       expect(tag).toMatch(/type=["']application\/ld\+json["']/i);

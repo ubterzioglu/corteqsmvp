@@ -92,9 +92,7 @@ describe("CaddeRecommendationCard · KARAR 2 kilidi (bant/skor sıralamasına BU
   it("kart CaddeFeedView'da TEK kez ve feedWithSponsor.map bloğunun ÖNCESİNDE", () => {
     const occurrences = feedView.split("<CaddeRecommendationCard />").length - 1;
     expect(occurrences).toBe(1);
-    expect(feedView.indexOf("<CaddeRecommendationCard />")).toBeLessThan(
-      feedView.indexOf("feedWithSponsor.map("),
-    );
+    expect(feedView.indexOf("<CaddeRecommendationCard />")).toBeLessThan(feedView.indexOf("feedWithSponsor.map("));
   });
 
   it("feedWithSponsor.map satırı BİREBİR yerinde (kompozisyon değişmedi)", () => {

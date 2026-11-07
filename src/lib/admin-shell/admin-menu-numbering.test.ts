@@ -123,9 +123,7 @@ describe("N01 · canlı registry", () => {
 
   it("üst seviye numaralar 1'den başlayıp boşluksuz artar", () => {
     const topLevel = catalog.filter((entry) => entry.childIndex === null);
-    expect(topLevel.map((entry) => entry.topLevelIndex)).toEqual(
-      topLevel.map((_, index) => index + 1),
-    );
+    expect(topLevel.map((entry) => entry.topLevelIndex)).toEqual(topLevel.map((_, index) => index + 1));
   });
 
   it("katalog registry'deki TÜM öğeleri kapsar — hiçbiri düşmez", () => {

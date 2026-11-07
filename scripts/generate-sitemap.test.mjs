@@ -62,9 +62,7 @@ describe("STATIC_ROUTES ↔ App.tsx", () => {
 
   it("hiçbir statik rota bir yönlendirme kaynağı değildir", () => {
     // /blog gibi bir redirect'i sitemap'e koymak botu 301 zincirine sokar.
-    const redirectKaynaklari = new Set(
-      [...appSource.matchAll(/\{\s*from:\s*"([^"]+)"/g)].map((m) => m[1]),
-    );
+    const redirectKaynaklari = new Set([...appSource.matchAll(/\{\s*from:\s*"([^"]+)"/g)].map((m) => m[1]));
     // redirects.ts'i de doğrudan oku (App.tsx artık tabloyu import ediyor).
     const redirectsSource = readFileSync(resolve(process.cwd(), "src/lib/redirects.ts"), "utf8");
     for (const match of redirectsSource.matchAll(/from:\s*"([^"]+)"/g)) {
@@ -97,15 +95,7 @@ describe("STATIC_ROUTES ↔ App.tsx", () => {
       expect(route.path.startsWith("/"), `mutlak değil: ${route.path}`).toBe(true);
       expect(Number(route.priority)).toBeGreaterThanOrEqual(0);
       expect(Number(route.priority)).toBeLessThanOrEqual(1);
-      expect([
-        "always",
-        "hourly",
-        "daily",
-        "weekly",
-        "monthly",
-        "yearly",
-        "never",
-      ]).toContain(route.changefreq);
+      expect(["always", "hourly", "daily", "weekly", "monthly", "yearly", "never"]).toContain(route.changefreq);
     }
   });
 });
@@ -173,9 +163,7 @@ describe("qualifiesForSitemap — katalog kapsam kuralı (22.09)", () => {
 
   it("başlık + kısa açıklama + şehir üçlüsü olan kaydı alır (konsolosluk/uzman)", () => {
     expect(
-      qualifiesForSitemap(
-        row({ headline: "Başkonsolosluk", short_description: "T.C. temsilcilik", city: "Münih" }),
-      ),
+      qualifiesForSitemap(row({ headline: "Başkonsolosluk", short_description: "T.C. temsilcilik", city: "Münih" })),
     ).toBe(true);
   });
 
@@ -188,9 +176,7 @@ describe("qualifiesForSitemap — katalog kapsam kuralı (22.09)", () => {
   });
 
   it("boşluktan ibaret alanları dolu saymaz", () => {
-    expect(
-      qualifiesForSitemap(row({ headline: "   ", short_description: "  ", city: " " })),
-    ).toBe(false);
+    expect(qualifiesForSitemap(row({ headline: "   ", short_description: "  ", city: " " }))).toBe(false);
     expect(qualifiesForSitemap(row({ long_description: "   " }))).toBe(false);
   });
 });

@@ -1,14 +1,6 @@
 // Worker döngüsü: claim → provider fetch → normalize → upsert candidate → complete(review).
 // Maliyet hard_cap aşılırsa budget_stopped. Service-finder worker-loop deseni (sade).
-import {
-  claimJobs,
-  completeJob,
-  failJob,
-  heartbeat,
-  recordCost,
-  upsertCandidate,
-  type Db,
-} from "./db.js";
+import { claimJobs, completeJob, failJob, heartbeat, recordCost, upsertCandidate, type Db } from "./db.js";
 import { resolveSecret, type WorkerEnv } from "./env.js";
 import { normalizeRecord } from "./normalize.js";
 import { fixtureProvider } from "./providers/fixture.js";
@@ -25,7 +17,14 @@ function pickProvider(job: RelocationJob): SourceProvider | null {
 async function processJob(env: WorkerEnv, db: Db, job: RelocationJob): Promise<void> {
   const provider = pickProvider(job);
   if (!provider) {
-    await failJob(db, job.id, env.RELOCATION_WORKER_ID, "rl_no_provider", `target_kind=${job.target_kind} için adapter yok`, false);
+    await failJob(
+      db,
+      job.id,
+      env.RELOCATION_WORKER_ID,
+      "rl_no_provider",
+      `target_kind=${job.target_kind} için adapter yok`,
+      false,
+    );
     return;
   }
 

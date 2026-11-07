@@ -6,11 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import type { ReviewDecision } from "@/lib/catalog-import-schemas";
 
-const ImportReviewSection = ({
-  onReview,
-}: {
-  onReview: (decision: ReviewDecision, note: string | null) => void;
-}) => {
+const ImportReviewSection = ({ onReview }: { onReview: (decision: ReviewDecision, note: string | null) => void }) => {
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -33,11 +29,7 @@ const ImportReviewSection = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">
-        <Input
-          value={note}
-          onChange={(event) => setNote(event.target.value)}
-          placeholder="Karar notu (opsiyonel)"
-        />
+        <Input value={note} onChange={(event) => setNote(event.target.value)} placeholder="Karar notu (opsiyonel)" />
         <div className="flex gap-2">
           <Button className="flex-1" disabled={submitting} onClick={() => void handle("approved")}>
             {submitting ? "İşleniyor..." : "Onayla ve Yayınla"}

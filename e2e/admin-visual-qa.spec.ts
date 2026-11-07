@@ -71,16 +71,11 @@ const APPROVAL_ROWS = [
   },
 ];
 
-const mockSupabase = async (
-  page: Page,
-  { approvalsStatus = 200 }: { approvalsStatus?: number } = {},
-) => {
+const mockSupabase = async (page: Page, { approvalsStatus = 200 }: { approvalsStatus?: number } = {}) => {
   await page.route(/\/rest\/v1\//, (route) => route.fulfill(json([])));
   await page.route(/\/rest\/v1\/rpc\//, (route) => route.fulfill(json(null)));
   await page.route(/\/rest\/v1\/rpc\/is_admin/, (route) => route.fulfill(json(true)));
-  await page.route(/\/rest\/v1\/rpc\/admin_list_member_catalog_profiles/, (route) =>
-    route.fulfill(json([])),
-  );
+  await page.route(/\/rest\/v1\/rpc\/admin_list_member_catalog_profiles/, (route) => route.fulfill(json([])));
   await page.route(/\/rest\/v1\/approval_requests/, (route) =>
     approvalsStatus === 200
       ? route.fulfill(json(APPROVAL_ROWS))

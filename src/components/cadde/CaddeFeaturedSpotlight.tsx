@@ -33,7 +33,9 @@ const CaddeFeaturedSpotlight = ({ card }: CaddeFeaturedSpotlightProps) => {
         <img src={card.imageUrl} alt="" className="h-28 w-full rounded-lg object-cover" loading="lazy" />
       ) : null}
       <div className="flex flex-wrap items-center gap-2">
-        <CaddeBadge tone="durum" intent="neutral">Öne Çıkan</CaddeBadge>
+        <CaddeBadge tone="durum" intent="neutral">
+          Öne Çıkan
+        </CaddeBadge>
         <Badge variant="outline">{card.type}</Badge>
         {card.badgeText ? <Badge variant="secondary">{card.badgeText}</Badge> : null}
       </div>
@@ -52,10 +54,7 @@ const CaddeFeaturedSpotlight = ({ card }: CaddeFeaturedSpotlightProps) => {
   const bodyClassName = "flex flex-col gap-3 rounded-lg p-3 transition hover:bg-orange-50/60";
 
   return (
-    <Card
-      className="cadde-featured overflow-hidden"
-      data-testid="cadde-featured-spotlight"
-    >
+    <Card className="cadde-featured overflow-hidden" data-testid="cadde-featured-spotlight">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 font-display text-base">
           <Sparkles className="h-4 w-4 text-orange-500" />

@@ -44,10 +44,7 @@ import {
 } from "@/lib/profile-attribute-keys";
 import { groupProfileAttributes } from "@/lib/profile-attribute-grouping";
 import { parseProfileDocumentRecord } from "@/lib/profile-documents";
-import {
-  isPremiumPresentation,
-  resolveProfilePresentation,
-} from "@/lib/profile-presentation";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
 import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
 import { supabase } from "@/integrations/supabase/client";
 import ProfilePremiumLayout from "@/components/profile/premium/ProfilePremiumLayout";
@@ -148,10 +145,7 @@ const ProfilePage = () => {
 
   // Pilot izolasyonu: premium layout yalnızca flat rol anahtarından çözülür
   // (UI kategorisi değil). Tanımsız roller generic config alır.
-  const presentation = useMemo(
-    () => resolveProfilePresentation(profile?.roleKey),
-    [profile?.roleKey],
-  );
+  const presentation = useMemo(() => resolveProfilePresentation(profile?.roleKey), [profile?.roleKey]);
   const isPremiumPilot = isPremiumPresentation(presentation);
   const { slug: memberCatalogSlug, isLoading: isMemberSlugLoading } = useMemberCatalogSlug(
     isPremiumPilot && Boolean(profile),
@@ -161,15 +155,15 @@ const ProfilePage = () => {
     return new Map((profile?.features ?? []).map((feature) => [feature.key, feature]));
   }, [profile?.features]);
 
-  const isFeatureEnabled = useCallback((featureKey: string) => {
-    return featureMap.get(featureKey)?.isEnabled ?? false;
-  }, [featureMap]);
+  const isFeatureEnabled = useCallback(
+    (featureKey: string) => {
+      return featureMap.get(featureKey)?.isEnabled ?? false;
+    },
+    [featureMap],
+  );
 
   // Bölümleme ve sıralama kuralları `profile-attribute-grouping.ts`'te (A07e).
-  const groupedAttributes = useMemo(
-    () => groupProfileAttributes(profile?.attributes),
-    [profile?.attributes],
-  );
+  const groupedAttributes = useMemo(() => groupProfileAttributes(profile?.attributes), [profile?.attributes]);
 
   const attributeMap = useMemo(() => {
     return new Map((profile?.attributes ?? []).map((attribute) => [attribute.attributeKey, attribute]));
@@ -178,10 +172,13 @@ const ProfilePage = () => {
   // WS1 madde 1: telefon kuralı role_attributes'ta yoksa alan hiç çizilmez (RPC döndürmez).
   const phoneAttribute = attributeMap.get(PHONE_ATTRIBUTE_KEY) ?? null;
 
-  const readAttributeValue = useCallback((attributeKey: string) => {
-    const attribute = attributeMap.get(attributeKey);
-    return attribute ? getAttributeStringValue(attribute) : "";
-  }, [attributeMap]);
+  const readAttributeValue = useCallback(
+    (attributeKey: string) => {
+      const attribute = attributeMap.get(attributeKey);
+      return attribute ? getAttributeStringValue(attribute) : "";
+    },
+    [attributeMap],
+  );
 
   const linkedinAttribute = attributeMap.get(LINKEDIN_ATTRIBUTE_KEY) ?? null;
   const websiteAttribute = attributeMap.get(WEBSITE_ATTRIBUTE_KEY) ?? null;
@@ -206,7 +203,8 @@ const ProfilePage = () => {
   const cvUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileCvUpload);
   const presentationUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profilePresentationUpload);
   const licenseUploadEnabled = isFeatureEnabled(GENERIC_FEATURE_KEYS.profileLicenseUpload);
-  const displayName = readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
+  const displayName =
+    readAttributeValue("full_name") || profile?.fullName || user?.user_metadata?.name || "CorteQS Üyesi";
   const displayNameLabel = roleMeta?.displayNameLabel ?? "Görünen İsim";
   const shortBio = readAttributeValue("bio_short");
   const country = readAttributeValue("country");
@@ -226,7 +224,7 @@ const ProfilePage = () => {
         .map((part) => part[0])
         .filter(Boolean)
         .slice(0, 2)
-        .join("")
+        .join(""),
     ) || "CQ";
   const pendingCount = profile?.pendingRequests.length ?? 0;
   const profileTypeLabel = profile?.roleLabel ?? roleMeta?.adminLabel ?? "Bireysel";
@@ -241,12 +239,11 @@ const ProfilePage = () => {
     refreshProfile,
   });
 
-  const {
-    avatarUploading,
-    avatarRemoving,
-    handleAvatarFileChange,
-    handleRemoveAvatar,
-  } = useProfileAvatar({ userId: user?.id, currentAvatarUrl, refreshProfile });
+  const { avatarUploading, avatarRemoving, handleAvatarFileChange, handleRemoveAvatar } = useProfileAvatar({
+    userId: user?.id,
+    currentAvatarUrl,
+    refreshProfile,
+  });
 
   const {
     uploadingDocumentKey,
@@ -271,7 +268,10 @@ const ProfilePage = () => {
     { key: "country", label: "Ülke" },
     { key: "city", label: "Şehir" },
     { key: "bio_short", label: "Kısa açıklama" },
-    { key: roleMeta?.defaultAttributeKey ?? "interests", label: roleMeta?.defaultAttributeKey === "interests" ? "İlgi alanları" : "Rol detayı" },
+    {
+      key: roleMeta?.defaultAttributeKey ?? "interests",
+      label: roleMeta?.defaultAttributeKey === "interests" ? "İlgi alanları" : "Rol detayı",
+    },
   ].map((item) => ({
     ...item,
     complete: Boolean(readAttributeValue(item.key).trim()),
@@ -282,8 +282,8 @@ const ProfilePage = () => {
       enabled: jobSeekingFeatureEnabled,
       checked: readBooleanAttributeValue(jobSeekingOptInAttribute),
       title: "İş Arıyorum Badge'i",
-      description: "Profilinde \"İş Arıyorum\" etiketi görünür.",
-      info: "Açıkken herkese açık profilinde ve Cadde'de \"İş Arıyorum\" rozeti görünür; işverenler ve topluluk seni bu rozetle bulur. İstediğin zaman kapatabilirsin.",
+      description: 'Profilinde "İş Arıyorum" etiketi görünür.',
+      info: 'Açıkken herkese açık profilinde ve Cadde\'de "İş Arıyorum" rozeti görünür; işverenler ve topluluk seni bu rozetle bulur. İstediğin zaman kapatabilirsin.',
       icon: Briefcase,
       toneClassName: GOOGLE_SOFT_CARD_SUBTLE,
     },
@@ -326,7 +326,9 @@ const ProfilePage = () => {
   // F14: derin bağlantılar (ör. Cadde'den "/profile#cadde-tanitim") bu redirect'lerden
   // geçiyor — search+hash KORUNMAZSA çapa kaybolur ve kullanıcı sayfanın tepesine düşer.
   if (!type || !isProfileType(type)) {
-    return <Navigate to={`/profile/${getUiProfileType(profile?.profileType)}${location.search}${location.hash}`} replace />;
+    return (
+      <Navigate to={`/profile/${getUiProfileType(profile?.profileType)}${location.search}${location.hash}`} replace />
+    );
   }
 
   if (isLoading) {
@@ -367,9 +369,7 @@ const ProfilePage = () => {
 
   const heroActionButtons = (
     <div className={`w-full max-w-[280px] shrink-0 self-start ${GOOGLE_SOFT_ACTION_PANEL}`}>
-      <div className="mb-1.5 px-1 text-center text-[11px] font-medium text-orange-700">
-        Profil Fotoğrafı
-      </div>
+      <div className="mb-1.5 px-1 text-center text-[11px] font-medium text-orange-700">Profil Fotoğrafı</div>
       <div className="grid grid-cols-2 gap-1.5">
         <Card className="col-span-2">
           <div className="flex gap-1.5 p-1">
@@ -655,27 +655,28 @@ const ProfilePage = () => {
     />
   );
 
-  const contributorResourcesCard = profile?.roleKey === "User_Contributor" ? (
-    <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_GREEN_SECTION}`}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <MapPin className="h-5 w-5 text-emerald-600" />
-          Contributor Kaynakları
-        </CardTitle>
-        <CardDescription>
-          Şehrinde kontrol ettiğin işletme, topluluk, etkinlik ve hizmetleri incelemeye gönder.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <a
-          href="/contributor/resources"
-          className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-        >
-          Şehrinden kaynak öner
-        </a>
-      </CardContent>
-    </Card>
-  ) : null;
+  const contributorResourcesCard =
+    profile?.roleKey === "User_Contributor" ? (
+      <Card className={`overflow-hidden ${GOOGLE_SOFT_CARD_GREEN_SECTION}`}>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <MapPin className="h-5 w-5 text-emerald-600" />
+            Contributor Kaynakları
+          </CardTitle>
+          <CardDescription>
+            Şehrinde kontrol ettiğin işletme, topluluk, etkinlik ve hizmetleri incelemeye gönder.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <a
+            href="/contributor/resources"
+            className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Şehrinden kaynak öner
+          </a>
+        </CardContent>
+      </Card>
+    ) : null;
 
   const accessCard = (
     <ProfileAccessCard
@@ -715,16 +716,14 @@ const ProfilePage = () => {
           <AlertTriangle className="h-5 w-5" />
           Tehlikeli Bölge
         </CardTitle>
-        <CardDescription>
-          Bu işlemler geri alınamaz. Lütfen dikkatli olun.
-        </CardDescription>
+        <CardDescription>Bu işlemler geri alınamaz. Lütfen dikkatli olun.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="rounded-lg border border-red-300 bg-white p-4">
           <h4 className="mb-2 font-semibold text-red-700">Hesabı Kalıcı Olarak Sil</h4>
           <p className="mb-3 text-sm text-slate-600">
-            Hesabınızı sildiğinizde tüm kişisel verileriniz kalıcı olarak silinir.
-            Cadde'deki gönderileriniz ve grup içerikleriniz "Silinmiş Üye" olarak kalır.
+            Hesabınızı sildiğinizde tüm kişisel verileriniz kalıcı olarak silinir. Cadde'deki gönderileriniz ve grup
+            içerikleriniz "Silinmiş Üye" olarak kalır.
           </p>
           <ul className="mb-4 space-y-1 text-sm text-slate-600">
             <li>• Kişisel bilgiler (ad, e-posta, telefon, foto)</li>
@@ -832,10 +831,7 @@ const ProfilePage = () => {
   return (
     <div className="relative">
       {hiddenFileInputs}
-      <ProfileSidebarLayout
-        menuItems={sidebarMenuItems}
-        defaultActiveId="overview"
-      />
+      <ProfileSidebarLayout menuItems={sidebarMenuItems} defaultActiveId="overview" />
     </div>
   );
 };

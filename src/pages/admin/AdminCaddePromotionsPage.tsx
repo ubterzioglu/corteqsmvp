@@ -13,11 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import {
-  CADDE_PROMOTION_TYPE_LABELS,
-  adminListPendingPromotions,
-  adminReviewPromotion,
-} from "@/lib/cadde-tanitim-api";
+import { CADDE_PROMOTION_TYPE_LABELS, adminListPendingPromotions, adminReviewPromotion } from "@/lib/cadde-tanitim-api";
 import { caddeQueryKeys } from "@/lib/cadde-query-keys";
 
 const AdminCaddePromotionsPage = () => {
@@ -39,7 +35,11 @@ const AdminCaddePromotionsPage = () => {
       toast({ title: variables.approve ? "Kampanya onaylandı" : "Kampanya reddedildi" });
     },
     onError: (error) => {
-      toast({ title: "İnceleme kaydedilemedi", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "İnceleme kaydedilemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -54,7 +54,9 @@ const AdminCaddePromotionsPage = () => {
             Tanıtım Onay Kuyruğu
           </CardTitle>
           <CardDescription>
-            {pendingQuery.isLoading ? "Yükleniyor..." : `${pending.length} bekleyen kampanya. Onaylanan kampanya tarih aralığında otomatik yayınlanır.`}
+            {pendingQuery.isLoading
+              ? "Yükleniyor..."
+              : `${pending.length} bekleyen kampanya. Onaylanan kampanya tarih aralığında otomatik yayınlanır.`}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -70,16 +72,28 @@ const AdminCaddePromotionsPage = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex flex-wrap gap-3 text-xs text-slate-600">
-              <a href={campaign.targetUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 font-medium text-blue-700 hover:underline">
+              <a
+                href={campaign.targetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 font-medium text-blue-700 hover:underline"
+              >
                 {campaign.targetUrl}
                 <ExternalLink className="h-3 w-3" />
               </a>
               <span>Placement: {campaign.placementKeys.join(", ") || "—"}</span>
-              {campaign.startsAt ? <span>Başlangıç: {new Date(campaign.startsAt).toLocaleDateString("tr-TR")}</span> : null}
+              {campaign.startsAt ? (
+                <span>Başlangıç: {new Date(campaign.startsAt).toLocaleDateString("tr-TR")}</span>
+              ) : null}
               {campaign.endsAt ? <span>Bitiş: {new Date(campaign.endsAt).toLocaleDateString("tr-TR")}</span> : null}
             </div>
             {campaign.imageUrl ? (
-              <img src={campaign.imageUrl} alt={campaign.title} className="h-32 rounded-xl border border-slate-200 object-cover" loading="lazy" />
+              <img
+                src={campaign.imageUrl}
+                alt={campaign.title}
+                className="h-32 rounded-xl border border-slate-200 object-cover"
+                loading="lazy"
+              />
             ) : null}
             <Textarea
               value={notes[campaign.id] ?? ""}
@@ -88,10 +102,17 @@ const AdminCaddePromotionsPage = () => {
               rows={2}
             />
             <div className="flex gap-2">
-              <Button onClick={() => reviewMutation.mutate({ campaignId: campaign.id, approve: true })} disabled={reviewMutation.isPending}>
+              <Button
+                onClick={() => reviewMutation.mutate({ campaignId: campaign.id, approve: true })}
+                disabled={reviewMutation.isPending}
+              >
                 Onayla
               </Button>
-              <Button variant="outline" onClick={() => reviewMutation.mutate({ campaignId: campaign.id, approve: false })} disabled={reviewMutation.isPending}>
+              <Button
+                variant="outline"
+                onClick={() => reviewMutation.mutate({ campaignId: campaign.id, approve: false })}
+                disabled={reviewMutation.isPending}
+              >
                 Reddet
               </Button>
             </div>

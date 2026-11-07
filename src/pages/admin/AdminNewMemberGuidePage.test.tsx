@@ -26,9 +26,7 @@ vi.mock("@/lib/role-catalog", async () => {
 describe("AdminNewMemberGuidePage", () => {
   it("shows the left navigation, role list button, and visible roles section from hash", async () => {
     orderMock.mockResolvedValue({
-      data: [
-        { key: "User_Standard", label: "Standart Kullanıcı", sort_order: 1000, is_active: true },
-      ],
+      data: [{ key: "User_Standard", label: "Standart Kullanıcı", sort_order: 1000, is_active: true }],
       error: null,
     });
     selectMock.mockReturnValue({ order: orderMock });

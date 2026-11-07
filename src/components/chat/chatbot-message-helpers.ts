@@ -15,10 +15,7 @@ import type { SiteAssistantMessage, SiteAssistantSource } from "@/lib/site-assis
  * beslenmemeli — hiçbir bilgi katmazlar, tur bütçesinden yer yerler ve modelin
  * kendi uyarısını tekrarlamasına yol açarlar.
  */
-export function toAssistantHistory(
-  messages: ChatMessage[],
-  excluded: readonly string[],
-): SiteAssistantMessage[] {
+export function toAssistantHistory(messages: ChatMessage[], excluded: readonly string[]): SiteAssistantMessage[] {
   return messages
     .filter((message) => !excluded.includes(message.content))
     .map((message) => ({
@@ -31,16 +28,11 @@ export function toAssistantHistory(
 const MAX_VISIBLE_SOURCES = 4;
 
 /** Kaynak listesini yanıtın altına ekler — botun asıl işi doğru sayfaya yöneltmek. */
-export function appendSources(
-  answer: string,
-  sources: Pick<SiteAssistantSource, "title" | "url">[],
-): string {
+export function appendSources(answer: string, sources: Pick<SiteAssistantSource, "title" | "url">[]): string {
   const linked = sources.filter((source) => source.url);
   if (linked.length === 0) return answer;
 
-  const lines = linked
-    .slice(0, MAX_VISIBLE_SOURCES)
-    .map((source) => `- [${source.title}](${source.url})`);
+  const lines = linked.slice(0, MAX_VISIBLE_SOURCES).map((source) => `- [${source.title}](${source.url})`);
 
   return `${answer}\n\n**Kaynaklar**\n${lines.join("\n")}`;
 }
@@ -66,8 +58,7 @@ export type RichTextSegment =
 // (`…/wiki/A_(b)`) hem de saldırı denemeleri (`javascript:alert(1)`) AYNI yoldan
 // geçip beyaz listede sınıflandırılmak zorunda — eşleşmeyen hedef "link değil"
 // sayılıp ham markdown'ı metne sızdırırdı.
-const RICH_TEXT_PATTERN =
-  /\*\*([^*]+)\*\*|\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g;
+const RICH_TEXT_PATTERN = /\*\*([^*]+)\*\*|\[([^\]]+)\]\(([^()\s]*(?:\([^()\s]*\)[^()\s]*)*)\)/g;
 
 export function classifyLinkTarget(target: string): "internal" | "external" | null {
   if (/^\/(?![/\\])/.test(target)) return "internal";

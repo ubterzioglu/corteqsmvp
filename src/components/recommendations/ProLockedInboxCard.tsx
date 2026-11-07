@@ -15,11 +15,7 @@ import { Check, Lock, MailOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import {
-  fetchMyFeatureInterests,
-  registerFeatureInterest,
-  type FeatureInterestKey,
-} from "@/lib/feature-interest-api";
+import { fetchMyFeatureInterests, registerFeatureInterest, type FeatureInterestKey } from "@/lib/feature-interest-api";
 import { getErrorMessage } from "@/lib/whatsapp-landing-form";
 
 // EventFeaturePromo ile AYNI anahtar — ilgi listesi tek cache'ten okunur,
@@ -68,8 +64,8 @@ export function ProLockedInboxCard() {
         <div className="min-w-0 text-left">
           <p className="text-sm font-semibold text-slate-800">Talep sahibine doğrudan ulaş</p>
           <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
-            İletişim bilgisi kilitli — ücretli yüzey yakında. Yanıtını şimdilik talebin
-            sayfasından verebilirsin. İlgin, bu özelliğin önceliğini belirliyor.
+            İletişim bilgisi kilitli — ücretli yüzey yakında. Yanıtını şimdilik talebin sayfasından verebilirsin. İlgin,
+            bu özelliğin önceliğini belirliyor.
           </p>
           {registered ? (
             <p

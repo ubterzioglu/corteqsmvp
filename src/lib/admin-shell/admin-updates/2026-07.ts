@@ -7,8 +7,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260731-yapilacaklar-karti",
     date: "31 Temmuz 2026",
-    title:
-      "Durum Raporu sayfasına butonlu 'Yapılacaklar' kartı eklendi — bekleyen el işleri artık panelde",
+    title: "Durum Raporu sayfasına butonlu 'Yapılacaklar' kartı eklendi — bekleyen el işleri artık panelde",
     items: [
       "Şimdiye kadar 'sende kalanlar' listesi yalnızca sohbet mesajlarında ve devir notlarında yaşıyordu — panelde görünmüyordu. Artık Durum Raporu sayfasının üstünde bir Yapılacaklar kartı var: her madde kısa açıklamasıyla listeleniyor ve seni doğrudan ilgili ekrana götüren butonlar taşıyor.",
       "İlk beş madde: hoş geldin mailini yayına alma (kritik) · login gerektiren QA turu (Cadde/Araçlar/Referral test butonlarıyla) · kafe ikonu seçimi (5 öneri tek sayfada, buton oradan açıyor) · QA sonrası revizyon panosu çevirisi · ilk 18:00 günlük özetinin doğrulanması.",
@@ -20,8 +19,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260730-gunluk-ozet-maili",
     date: "30 Temmuz 2026",
-    title:
-      "Güncelleme mailleri artık gün boyu tek tek değil, akşam 18:00'de TEK özet mail olarak gelecek",
+    title: "Güncelleme mailleri artık gün boyu tek tek değil, akşam 18:00'de TEK özet mail olarak gelecek",
     items: [
       "Bugün fark edilen sorun: panele giren her kayıt, commit anında aboneye ayrı bir mail oluyordu — bugün gelen kutusuna 13 ayrı 'admin güncellemesi' maili düştü. Sıklığı sınırlayan bir kıstas yoktu.",
       "Yeni düzen: gün içinde girilen kayıtlar kuyrukta biriktiriliyor ve her akşam 18:00'de (Avrupa saati) hepsi tek mailde, bölüm bölüm gönderiliyor. Aboneler yine kendi maillerini ayrı ayrı alıyor; birleşen şey kayıtlar.",
@@ -33,8 +31,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260730-mail-hatti-zohoya-gecti",
     date: "30 Temmuz 2026",
-    title:
-      "Mail sistemi Zoho'ya taşındı ve ÇALIŞIYOR — bekleyen 11 bildirim maili kurtarılıp gönderildi",
+    title: "Mail sistemi Zoho'ya taşındı ve ÇALIŞIYOR — bekleyen 11 bildirim maili kurtarılıp gönderildi",
     items: [
       "Sabahki kayıtta 'mail servisinin anahtarı geçersiz, yenilenmesi bekleniyor' demiştik. Karar değişti: eski servis (Resend) tamamen bırakıldı, gönderim artık kendi Zoho Mail hesabımız üzerinden yapılıyor. Yani dışarıdan yeni bir anahtar beklemeye gerek kalmadı.",
       "Geçiş sırasında bir platform sınırına takıldık: hazır mail kütüphanesi, sunucumuzun izin verdiği işlem süresini tek mailde aşıp çöküyordu. Çözüm olarak gönderim katmanı sıfırdan, çok daha hafif şekilde yazıldı. Yayına almadan önce üç bağımsız kontrol turundan geçirildi.",
@@ -77,8 +74,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260730-revizyon-panosu-gercege-dondu",
     date: "30 Temmuz 2026",
-    title:
-      "Revizyon panosu gerçeğe döndürüldü: 43 'açık' maddenin 18'i aslında yapılmıştı — hepsine kanıt yazıldı",
+    title: "Revizyon panosu gerçeğe döndürüldü: 43 'açık' maddenin 18'i aslında yapılmıştı — hepsine kanıt yazıldı",
     items: [
       "Sabahki tespitin uygulaması: pano kodun gerisinde kalmıştı. 43 açık maddenin 14'ü son iki günün Cadde çalışmalarıyla, 4'ü de bugünkü Araçlar onarımıyla zaten karşılanmış durumdaydı.",
       "18 maddenin her birine 'bunu hangi değişiklik çözdü' bilgisini içeren bir kanıt yorumu düşüldü ve durumları 'inceleniyor'a çekildi. Bilinçli olarak 'yapıldı' DENMEDİ — çünkü işlerin çoğu henüz canlıya deploy edilmedi; pano olduğundan iyi görünmemeli. Deploy + kontrol sonrası 'yapıldı'ya çevrilecekler.",
@@ -90,8 +86,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260730-bildirim-maili-anahtari-gecersiz",
     date: "30 Temmuz 2026",
-    title:
-      "Bildirim maillerinin neden gitmediği bulundu: mail servisinin anahtarı geçersiz — 8 mail kuyrukta bekliyor",
+    title: "Bildirim maillerinin neden gitmediği bulundu: mail servisinin anahtarı geçersiz — 8 mail kuyrukta bekliyor",
     items: [
       "Bugünün güncellemeleri kaydedildiğinde sistem 8 bildirim maili göndermeyi denedi ve 8'i de başarısız oldu. Sebep canlı kuyruktan okundu: mail servisi (Resend) 'API anahtarı geçersiz' cevabı veriyor.",
       "Bu, 29 Temmuz'da yakalanan 'form başvuru maillerinin sessizce gitmemesi' arızasının gerçek nedenidir. O gün teşhis 'anahtar fonksiyon ortamında tanımlı değil' şeklindeydi; bugün anlaşıldı ki anahtar TANIMLI ama ÇÜRÜK. Yani eksik ayar değil, yenilenmesi gereken bir anahtar.",
@@ -120,8 +115,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260729-cadde-sehir-eslestirme-onarimi",
     date: "29 Temmuz 2026",
-    title:
-      "Cadde'de üyelerin %89'u 'şehirsiz' görünüyormuş — akışın şehir eşleştirmesi onarıldı",
+    title: "Cadde'de üyelerin %89'u 'şehirsiz' görünüyormuş — akışın şehir eşleştirmesi onarıldı",
     items: [
       "Cadde akışı sana en yakın içeriği öne çıkarmak için 'aynı şehirdeyiz' sinyalini kullanıyor. Ölçüldü: şehri kayıtlı 110 üyeden yalnızca 12'sinde (%11) bu sinyal çalışıyormuş. Yani akış, üyelerin neredeyse tamamı için şehir bilgisini yok saymış gibi davranıyordu.",
       "İki bağımsız sebep vardı. Birincisi yine Türkçe 'İ' harfi: sistem 'İstanbul'u küçültürken sade 'istanbul' yerine farklı bir harf dizisi üretiyor ve ikisini eşleştirmiyordu. En kalabalık grup olan 13 İstanbul üyesi bu yüzden hiç eşleşmiyordu. Aynı sorun ülke tarafında da vardı: üye profilinde 'Türkiye', katalogda 'Turkiye' yazıyordu.",
@@ -150,8 +144,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260729-cadde-cafe-tema-marka-korumasi",
     date: "29 Temmuz 2026",
-    title:
-      "Cafelere 16 gerçek tema, 999'a kadar kontenjan ve marka adı koruması geldi (96 marka)",
+    title: "Cafelere 16 gerçek tema, 999'a kadar kontenjan ve marka adı koruması geldi (96 marka)",
     items: [
       "Cafe temaları eskiden kodun içine gömülü 7 kategoriydi (IT, Hekimler, Profesyoneller...). Artık veritabanında 16 gerçek tema var: Girişim, Startup, Yatırım, Yazılım, AI, Meslek, HR, Networking, Eğitim, Sağlık, Spor, Gusto, Müzik, Hobi, Party, Gündem. Yeni tema eklemek artık kod değişikliği değil — deploy gerekmiyor.",
       "Kontenjan seçenekleri 10/25/50'den 50/100/250/500/999'a çıkarıldı.",
@@ -180,8 +173,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260729-cadde-paylasim-medya-composer",
     date: "29 Temmuz 2026",
-    title:
-      "Cadde paylaşımlarına fotoğraf ve video eklenebiliyor — paylaşım kutusu 6 alanlı formdan tek kutuya indi",
+    title: "Cadde paylaşımlarına fotoğraf ve video eklenebiliyor — paylaşım kutusu 6 alanlı formdan tek kutuya indi",
     items: [
       "Cadde akışı bugüne kadar yalnızca metin taşıyordu. Artık bir paylaşıma en fazla 4 fotoğraf + 1 video eklenebiliyor. Akış kartında ek sayısına göre düzen kuruluyor (1 tam genişlik, 2 yan yana, 3'te ilki büyük, 4'te 2x2) ve tıklayınca ok tuşlarıyla gezilebilen büyük görüntüleyici açılıyor.",
       "Paylaşım kutusu eskiden 6 görünür alanlı bir formdu (tür, başlık, metin, hedef ülke, hedef şehir, etiketler) ve ilk izlenimde 'form doldur' hissi veriyordu. Artık tek bir kutu; altında Fotoğraf · Video · Konum · Etkinlik şeridi var. Paylaşım türü kullanıcıdan gizlendi — seçtiği ekten kendiliğinden anlaşılıyor.",
@@ -194,8 +186,7 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260729-uyeye-hos-geldin-maili",
     date: "29 Temmuz 2026",
-    title:
-      "Yeni üyeye artık markalı bir 'hoş geldin' maili gidiyor — ama bu henüz canlıda DEĞİL",
+    title: "Yeni üyeye artık markalı bir 'hoş geldin' maili gidiyor — ama bu henüz canlıda DEĞİL",
     items: [
       "Bir üye e-postasını doğruladığı anda kendisine Türkçe, markalı bir karşılama maili gidiyor. Bu, Supabase'in standart 'e-postanı doğrula' mailinin yerine geçmiyor — ondan SONRA gelen ayrı bir mail.",
       "Mevcut bildirim altyapısını (kuyruk, tekrar gönderme, çift gönderme koruması) aynen kullanıyor. Tek fark: alıcı, abone listesinden değil kaydolan üyenin kendisinden geliyor.",
@@ -248,7 +239,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260729-tasinma-araci-sonuc-butonlari",
     date: "29 Temmuz 2026",
-    title: "Taşınma araçlarının sonuç ekranındaki butonlar düzeltildi: eşit boyutlu 2×2 ızgara + çalışmayanlara 'Yakında' rozeti",
+    title:
+      "Taşınma araçlarının sonuç ekranındaki butonlar düzeltildi: eşit boyutlu 2×2 ızgara + çalışmayanlara 'Yakında' rozeti",
     items: [
       "Bir aracı çözüp sonuç ekranına geldiğinde alttaki yönlendirme butonları farklı farklı boyutlardaydı; etiketi uzun olan buton kocaman, kısa olan minicik görünüyordu. Artık hepsi 2 sütunlu bir ızgarada, birbirine eşit genişlik ve yükseklikte duruyor — en uzun etiket hepsini birlikte büyütüyor.",
       "Daha önemlisi: bu butonların bir kısmı aslında var olmayan sayfalara götürüyordu, yani tıklayan kullanıcı boş ekranla karşılaşıyordu. Şimdi bunlar 'Yakında' rozetiyle ve tıklanamaz halde gösteriliyor — kullanıcı neyin hazır olmadığını görüyor, hataya düşmüyor.",
@@ -271,7 +263,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260728-muhasebe-butce-sekmesi-temeli",
     date: "28 Temmuz 2026",
-    title: "Muhasebe modülüne yıllık 'Bütçe' sekmesi geliyor — tasarımı, planı ve kodunun büyük bölümü bugün hazırlandı",
+    title:
+      "Muhasebe modülüne yıllık 'Bütçe' sekmesi geliyor — tasarımı, planı ve kodunun büyük bölümü bugün hazırlandı",
     items: [
       "Amaç: departman departman (ör. yazılım, pazarlama) 12 aylık gider bütçesini, gelir beklentisini ve ikisinin birleştiği nakit akışını tek ekrandan planlayabilmek. Ekranın üstünde 'eldeki para bu gidişle kaç ay yeter' özeti (runway) yer alıyor.",
       "Bugün önce bir tasarım dokümanı, ardından adım adım uygulama planı yazıldı. Sonra kodun temel katmanları çıkarıldı: veritabanı tablosu, hesaplama mantığı (aylık toplamlar, bakiye, runway), Supabase bağlantısı, veri çekme kancaları, yazarken kendiliğinden kaydeden otomatik kayıt mekanizması, üç ana panel (Departman Bütçesi, Gelirler, Konsolide Nakit Akışı) ve CSV olarak dışa aktarma. Her parça için testleri de yazıldı.",
@@ -281,7 +274,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260728-sitemap-bos-profil-temizligi",
     date: "28 Temmuz 2026",
-    title: "Google '236 sayfayı keşfettim ama indekslemedim' diyordu — sebebi bulundu, site haritası gerçek içeriğe indirildi",
+    title:
+      "Google '236 sayfayı keşfettim ama indekslemedim' diyordu — sebebi bulundu, site haritası gerçek içeriğe indirildi",
     items: [
       "Google Search Console 236 sayfa için 'Keşfedildi – şu anda dizine eklenmedi' uyarısı veriyordu. Kök neden bulundu: Google'a bildirdiğimiz sayfa listesinde (sitemap) gerçek profillerin yanında ~205 adet içi boş 'rol şablonu' kaydı ve 'hakkında' metni boş üye profilleri de vardı. Google bu içi boş sayfaları düşük değerli görüp, gerçek profillere ayıracağı tarama kaynağını onlara harcıyordu.",
       "Düzeltme: listeye artık yalnızca yayınlanmış, herkese açık, şablon olmayan ve 'hakkında' metni dolu profiller giriyor. Liste 312 adresten 107 adrese indi; katalog profili sayısı ~225'ten 20 gerçek profile düştü.",
@@ -337,7 +331,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260721-google-indeksleme-sorunlari-teshisi-ve-addwa-yonlendirme",
     date: "21 Temmuz 2026",
-    title: "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",
+    title:
+      "Google'ın sitemizi neden bazı sayfalarda indekslemediği araştırıldı: çoğu aslında sorun değilmiş, bir gerçek eksik bulunup düzeltildi",
     items: [
       "Google Search Console'daki 4 farklı 'indekslenmedi' raporu tek tek incelendi. İkisi aslında sorun değil, Google'ın doğru çalıştığının kanıtı: bir sayfa başka bir sayfaya yönleniyorsa ('Sayfa yönlendirmeli') veya doğru bir canonical etiketi başka bir adrese işaret ediyorsa ('Doğru canonical etiketli alternatif sayfa'), Google bunu bilerek indekslemiyor — bu istenen davranış, düzeltilecek bir hata değil.",
       "Gerçek bir eksik bulundu: /addwa adresi şimdiye kadar yalnızca tarayıcı içinde (JavaScript ile) başka bir sayfaya yönlendiriliyordu, sunucu seviyesinde gerçek bir yönlendirme (HTTP 301) yoktu. Artık sunucu da bu adresi doğrudan 301 ile doğru sayfaya yönlendiriyor — hem arama motorları için daha sağlam hem de biraz daha hızlı.",
@@ -378,7 +373,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260720-burak-share-gorsel-canliya-yuklendi-ve-radar-tarama-tetikleme",
     date: "20 Temmuz 2026",
-    title: "Burak'ın 32 görseli canlıya yüklendi; bir yükleme hatası tespit edilip düzeltildi; haber tarayıcı elle tetiklenebilir hale getirildi",
+    title:
+      "Burak'ın 32 görseli canlıya yüklendi; bir yükleme hatası tespit edilip düzeltildi; haber tarayıcı elle tetiklenebilir hale getirildi",
     items: [
       "Daha önce sadece koda hazır bekleyen görsel yükleme script'i bugün gerçekten canlı veritabanına karşı çalıştırıldı: docs/social-share-outputs/ altındaki 32 görselin tamamı (14 değil, sayı 32'ye çıkmıştı) doğru araç/varyant/prompt slotuna, 'burak-share' Storage deposuna ve ilgili tablolara başarıyla yüklendi. Artık /admin/social-share-vault sayfasında BURAK BURAYA BAK bölümündeki ilgili kartların altında bu görseller görünüyor.",
       "İlk çalıştırmada script'in 'tekrar çalıştırınca aynı görseli iki kez ekleme' korumasında gerçek bir hata bulundu: ek görseller doğru şekilde 'zaten var' diye tanınamıyordu, bu yüzden test sırasında bazı görseller yanlışlıkla 2-3 kez veritabanına eklendi (18 fazladan kayıt). Bu fazlalıklar tespit edilip, her slotta en eski (ilk yüklenen) kayıt tutularak fazlalıklar hem veritabanından hem depolama alanından temizlendi — hiçbir görsel kaybolmadı, sadece kopyalar silindi. Ardından script'teki hata da kalıcı olarak düzeltildi ve canlıda tekrar test edilerek artık güvenle tekrar tekrar çalıştırılabildiği doğrulandı.",
@@ -423,7 +419,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260720-prompt-katalogu-sembolik-illustrasyon-ve-dosya-adi-etiketi",
     date: "20 Temmuz 2026",
-    title: "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",
+    title:
+      "Sosyal paylaşım görsel promptları insan-merkezli sembolik illüstrasyon tarzına çevrildi + kartlara dosya adı etiketi eklendi",
     items: [
       "Admin panelindeki Sosyal Medya Paylaşım Deposu'nun (/admin/social-share-vault) 4 kaynağındaki (Araç Tanıtımları, Diaspora Postları, Test Araçları, Burak — 100 kalem, 288 görsel promptu) tamamı, ultra-fotogerçekçi fotoğraf tarzından yeni bir görsel dile çevrildi: her sahnede bir insan figürü kompozisyonun duygusal merkezinde kalıyor, etrafında sahneyi anlatan basit yuvarlak sembolik ikonlar (büyüteç, konum iğnesi, tokalaşma, konuşma balonu vb.) bir hâle/yörünge düzeninde beliriyor. Telefon/laptop ekranları artık ana görsel odak değil, ikincil bir aksesuar. LinkedIn/Instagram metinleri değişmedi.",
       "Kanonik referans dosyası docs/social-share-outputs/prompt-katalogu.html aynı 288 promptla senkronlandı; artık kullanılmayan sonkatalog.html kaynağı depodan kaldırıldı.",
@@ -491,7 +488,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260718-canva-yerine-chatgpt-instagram",
     date: "18 Temmuz 2026",
-    title: "Sosyal Medya Paylaşım Deposu'nda Canva görsel promptları kaldırıldı, yerine ChatGPT promptu + Instagram postu geldi",
+    title:
+      "Sosyal Medya Paylaşım Deposu'nda Canva görsel promptları kaldırıldı, yerine ChatGPT promptu + Instagram postu geldi",
     items: [
       "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasındaki 82 kalemin (10 Araç Tanıtımı, 50 Diaspora Postu, 10 Test Aracı, 12 Burak aracı) her varyantındaki eski Canva görsel promptları tamamen kaldırıldı — Canva artık kullanılmıyor. Yerine her varyant için, doğrudan ChatGPT'ye yapıştırılabilecek 2 farklı İngilizce görsel promptu geldi: kare (1:1) format, ortalanmış kompozisyon ve görselde hiç yazı/harf/logo olmaması gibi katı kurallara uyuyor, aynı zamanda hepsi tutarlı bir görsel kimlikte (krem arka plan, teal ana renk, turuncu/mavi/indigo/pembe/sarı vurgu renkleri).",
       "Aynı zamanda her varyanta, LinkedIn postunun yanına ayrı bir Instagram postu eklendi — LinkedIn'in kısaltması değil, Instagram'a özgü kendi üslubuyla (daha kısa, daha samimi, sonunda yoğun bir hashtag bloğu) yeniden yazıldı. Sayfadaki toplu kopyalama butonları da güncellendi: artık 'Tüm Görsel Promptları', 'Tüm LinkedIn Postları' ve 'Tüm Instagram Postları' olarak üç ayrı buton var.",
@@ -543,7 +541,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260718-sosyal-paylasim-vault-birlesik-liste",
     date: "18 Temmuz 2026",
-    title: "Sosyal Medya Paylaşım Deposu'ndaki 4 sekme kaldırıldı, tek liste oldu + Burak'ın bölümüne de paylaşım rozetleri geldi",
+    title:
+      "Sosyal Medya Paylaşım Deposu'ndaki 4 sekme kaldırıldı, tek liste oldu + Burak'ın bölümüne de paylaşım rozetleri geldi",
     items: [
       "Admin panelindeki Sosyal Medya Paylaşım Deposu (/admin/social-share-vault) sayfasında daha önce ayrı sekmeler halinde duran dört bölüm (Araç Tanıtımları, Diaspora Postları, Test Araçları, BURAK BURAYA BAK) artık sekmesiz — tek sayfada, başlıklarıyla art arda sıralı tek liste halinde görünüyor. İçerikte hiçbir kayıp yok, sadece gezinme şekli değişti: artık sekme tıklamadan sayfayı aşağı kaydırarak hepsine ulaşılıyor. Toplu kopyalama butonları da artık tüm bölümlerdeki kalemleri birden kapsıyor.",
       "Diğer üç bölümde zaten var olan LinkedIn / Instagram / Reddit / X / Facebook / Threads paylaşım durumu rozetleri (kırmızı-yeşil, tıklanabilir, kalıcı) artık Burak'ın bölümündeki 12 araç için de görünüyor — önceden sadece o bölümde bu rozetler eksikti, şimdi dört bölüm de aynı paylaşım takibi özelliğine sahip.",
@@ -637,7 +636,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260705-relocation-gorseller-ve-soru-sayilari-paneli",
     date: "5 Temmuz 2026",
-    title: "Taşınma Araçları'ndaki eksik kart görselleri tamamlandı + admin paneline 'Araç Soru Sayıları' bölümü eklendi",
+    title:
+      "Taşınma Araçları'ndaki eksik kart görselleri tamamlandı + admin paneline 'Araç Soru Sayıları' bölümü eklendi",
     items: [
       "Taşınma Araçları sayfasında (/relocation/tools) Almanya'ya özel 7 aracın (Banka Seçimi, Sigorta Seçimi, Maaş Hesaplama, Vize Seçimi, Vatandaşlık Testi, Para Transferi, StepStone Maaş Karşılaştırma) kart görseli eksikti — kartlar görselsiz, boş görünüyordu. Diğer 10 aracın stiline uygun (aynı renk paleti ve çizim tarzı) 7 yeni görsel üretilip eklendi; artık sayfadaki 17 kartın tamamında görsel var.",
       "Admin paneline yeni bir 'Araç Soru Sayıları' bölümü eklendi (Taşınma Veri Toplama grubunda; adres: /admin/relocation-tools/soru-sayilari). Bu sayfa, Taşınma Araçları'ndaki 17 aracın HER BİRİNİN kaç sorudan/adımdan oluştuğunu canlı veritabanından çekip tek bir tabloda gösteriyor: araç adı, kategori, tipi (Soru Bankası / Karar Ağacı / Hesaplayıcı) ve toplam soru sayısı. Arama kutusuyla araç adına veya kategoriye göre filtrelenebiliyor. Amaç: hangi aracın soru içeriğinin daha sonra derinleştirilebileceğini tek bakışta görebilmek.",
@@ -659,7 +659,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260701-statusreport3006-sade-sutun-yorum",
     date: "1 Temmuz 2026",
-    title: "Durum raporu sayfasına (/statusreport3006) Burak için sade açıklama sütunu + her bölüme yorum alanı eklendi",
+    title:
+      "Durum raporu sayfasına (/statusreport3006) Burak için sade açıklama sütunu + her bölüme yorum alanı eklendi",
     items: [
       "Bir önceki gün eklenen Cadde 3.0 / premium panel durum raporu (corteqs.net/statusreport3006) yeniden düzenlendi. Önceki hali teknik bir insan için yazılmıştı; talep üzerine her satır artık İKİ SÜTUN: solda eski teknik açıklama aynen duruyor, sağda Burak gibi teknik olmayan birinin anlayacağı sade Türkçe karşılığı var. Sayfa daha geniş hale getirildi (iki sütun rahat sığsın diye); telefonda alt alta diziliyor.",
       "Her ana bölümün altına bir YORUM ALANI eklendi. Sayfaya giren herkes (siteye giriş yapmadan) adını yazıp o bölümle ilgili yorum bırakabiliyor; yorumlar veritabanında KALICI ve herkese görünür, böylece ortakla sayfa üzerinde yazışarak ilerlenebiliyor. Spam'e karşı basit bir hız freni ve uzunluk sınırı var.",
@@ -670,7 +671,8 @@ export const ADMIN_UPDATES_2026_07: AdminUpdateEntry[] = [
   {
     id: "20260701-almanya-araclari-7-yeni-tasinma-araci",
     date: "1 Temmuz 2026",
-    title: "Taşınma Araçları'na Almanya'ya özel 7 yeni araç eklendi (banka, sigorta, maaş, vize, vatandaşlık testi, para transferi, StepStone)",
+    title:
+      "Taşınma Araçları'na Almanya'ya özel 7 yeni araç eklendi (banka, sigorta, maaş, vize, vatandaşlık testi, para transferi, StepStone)",
     items: [
       "Referans aldığımız 'almanya101' sitesindeki pratik araçlardan bizde OLMAYANLARI inceleyip CorteQS'in Taşınma Araçları bölümüne (/relocation/tools) ekledik. Mevcut 10 aracın yanına, isimlerinde '(Almanya)' etiketiyle 7 yeni kart geldi; eski araçların düzeni hiç değişmedi.",
       "Yeni araçlar: 1) Banka Seçimi — 20 soruyla Almanya'da sana en uygun 3 bankayı önerir. 2) Sigorta Seçimi — sigortalarını 'önce al / güçlü öneri / opsiyonel' diye önceliklendirir. 3) Maaş Hesaplama — brütten nete ve netten brüte 2026 hesabı (vergi sınıfı, eyalet, kilise vergisi, çocuk, sağlık sigortası). 4) Vize Seçimi — birkaç soruda hangi Almanya vizesine (Mavi Kart, Chancenkarte, Ausbildung vb.) uygun olduğunu söyler. 5) Vatandaşlık Testi — resmî BAMF havuzundan 469 soruyla Einbürgerungstest pratiği (3 mod: tüm sorular, gerçek deneme sınavı, eyalet soruları), her soru Almanca + Türkçe. 6) Para Transferi — Almanya'dan Türkiye'ye en avantajlı gönderim yöntemini ücret + kur sonrası eline geçecek TL'ye göre sıralar. 7) StepStone Maaş Karşılaştırma — maaşını StepStone 2026 raporu medyanlarıyla kıyaslar.",

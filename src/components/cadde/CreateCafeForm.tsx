@@ -67,9 +67,19 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
   const [form, setForm] = useState(emptyForm);
   const diasporaKey = useCaddeDiasporaKey();
 
-  const themesQuery = useQuery({ queryKey: ["cadde", "cafe-themes"], queryFn: listCaddeCafeThemes, enabled: open, staleTime: 1000 * 60 * 60 });
+  const themesQuery = useQuery({
+    queryKey: ["cadde", "cafe-themes"],
+    queryFn: listCaddeCafeThemes,
+    enabled: open,
+    staleTime: 1000 * 60 * 60,
+  });
   // Marka listesi form açılırken çekilir; anında uyarı için. Gerçek engelleme RPC'de.
-  const brandsQuery = useQuery({ queryKey: ["cadde", "protected-brands"], queryFn: listCaddeProtectedBrands, enabled: open, staleTime: 1000 * 60 * 60 });
+  const brandsQuery = useQuery({
+    queryKey: ["cadde", "protected-brands"],
+    queryFn: listCaddeProtectedBrands,
+    enabled: open,
+    staleTime: 1000 * 60 * 60,
+  });
 
   const countriesQuery = useQuery({ queryKey: caddeQueryKeys.countries(), queryFn: listCaddeCountries, enabled: open });
   const citiesQuery = useQuery({
@@ -117,7 +127,11 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
       navigate(`/cadde/cafe/${cafeId}`);
     },
     onError: (error) => {
-      toast({ title: "Cafe açılamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Cafe açılamadı",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -139,12 +153,17 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
         <div className="space-y-4">
           <div className="space-y-2">
             <Label>Cafe adı *</Label>
-            <Input value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Örn. Berlin Yazılım Sohbeti" maxLength={80} />
+            <Input
+              value={form.title}
+              onChange={(event) => update("title", event.target.value)}
+              placeholder="Örn. Berlin Yazılım Sohbeti"
+              maxLength={80}
+            />
             {brandConflict && parodySuggestion ? (
               <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-900">
                 <p>
-                  <strong>{brandConflict}</strong> korumalı bir marka. Bu adla cafe açmak yalnız markanın
-                  doğrulanmış sahibine açık.
+                  <strong>{brandConflict}</strong> korumalı bir marka. Bu adla cafe açmak yalnız markanın doğrulanmış
+                  sahibine açık.
                 </p>
                 <button
                   type="button"
@@ -161,21 +180,32 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
             <div className="space-y-2">
               <Label>Tema *</Label>
               <Select value={form.theme || undefined} onValueChange={(value) => update("theme", value)}>
-                <SelectTrigger><SelectValue placeholder="Tema seç" /></SelectTrigger>
+                <SelectTrigger>
+                  <SelectValue placeholder="Tema seç" />
+                </SelectTrigger>
                 <SelectContent>
                   {(themesQuery.data ?? []).map((theme) => (
-                    <SelectItem key={theme.key} value={theme.key}>{theme.labelTr}</SelectItem>
+                    <SelectItem key={theme.key} value={theme.key}>
+                      {theme.labelTr}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>Süre</Label>
-              <Select value={String(form.durationHours)} onValueChange={(value) => update("durationHours", Number(value))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Select
+                value={String(form.durationHours)}
+                onValueChange={(value) => update("durationHours", Number(value))}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
                 <SelectContent>
                   {DURATION_OPTIONS.map((option) => (
-                    <SelectItem key={option.hours} value={String(option.hours)}>{option.label}</SelectItem>
+                    <SelectItem key={option.hours} value={String(option.hours)}>
+                      {option.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -184,7 +214,13 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
 
           <div className="space-y-2">
             <Label>Özet *</Label>
-            <Textarea value={form.summary} onChange={(event) => update("summary", event.target.value)} placeholder="Bu odada ne konuşulacak?" rows={3} maxLength={500} />
+            <Textarea
+              value={form.summary}
+              onChange={(event) => update("summary", event.target.value)}
+              placeholder="Bu odada ne konuşulacak?"
+              rows={3}
+              maxLength={500}
+            />
           </div>
 
           <div className="flex items-center justify-between rounded-lg border border-emerald-100 bg-emerald-50 px-4 py-3">
@@ -199,24 +235,42 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>Ülke</Label>
-                <Select value={form.country || "__none__"} onValueChange={(value) => { update("country", value === "__none__" ? "" : value); update("city", ""); }}>
-                  <SelectTrigger><SelectValue placeholder="Global" /></SelectTrigger>
+                <Select
+                  value={form.country || "__none__"}
+                  onValueChange={(value) => {
+                    update("country", value === "__none__" ? "" : value);
+                    update("city", "");
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Global" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Global</SelectItem>
                     {(countriesQuery.data ?? []).map((country) => (
-                      <SelectItem key={country.id} value={country.name}>{country.name}</SelectItem>
+                      <SelectItem key={country.id} value={country.name}>
+                        {country.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2">
                 <Label>Şehir</Label>
-                <Select value={form.city || "__none__"} onValueChange={(value) => update("city", value === "__none__" ? "" : value)} disabled={!form.country}>
-                  <SelectTrigger><SelectValue placeholder="Tüm şehirler" /></SelectTrigger>
+                <Select
+                  value={form.city || "__none__"}
+                  onValueChange={(value) => update("city", value === "__none__" ? "" : value)}
+                  disabled={!form.country}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Tüm şehirler" />
+                  </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="__none__">Tüm şehirler</SelectItem>
                     {(citiesQuery.data ?? []).map((city) => (
-                      <SelectItem key={city.id} value={city.name}>{city.name}</SelectItem>
+                      <SelectItem key={city.id} value={city.name}>
+                        {city.name}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -227,10 +281,14 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
           <div className="space-y-2">
             <Label>Giriş tipi</Label>
             <Select value={form.entryMode} onValueChange={(value) => update("entryMode", value as CaddeCafeEntryMode)}>
-              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
               <SelectContent>
                 {(Object.keys(ENTRY_MODE_LABELS) as CaddeCafeEntryMode[]).map((mode) => (
-                  <SelectItem key={mode} value={mode}>{ENTRY_MODE_LABELS[mode]}</SelectItem>
+                  <SelectItem key={mode} value={mode}>
+                    {ENTRY_MODE_LABELS[mode]}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -238,38 +296,64 @@ const CreateCafeForm = ({ trigger }: CreateCafeFormProps) => {
 
           {form.entryMode === "referral" ? (
             <div className="space-y-2">
-              <Label>Davet kodu * <span className="font-normal text-slate-500">(plain saklanmaz, hash'lenir)</span></Label>
-              <Input value={form.referralCode} onChange={(event) => update("referralCode", event.target.value)} placeholder="Örn. BERLIN2026" />
+              <Label>
+                Davet kodu * <span className="font-normal text-slate-500">(plain saklanmaz, hash'lenir)</span>
+              </Label>
+              <Input
+                value={form.referralCode}
+                onChange={(event) => update("referralCode", event.target.value)}
+                placeholder="Örn. BERLIN2026"
+              />
             </div>
           ) : null}
 
           {form.entryMode === "approval" ? (
             <div className="space-y-2">
               <Label>Giriş sorusu *</Label>
-              <Input value={form.entryQuestion} onChange={(event) => update("entryQuestion", event.target.value)} placeholder="Katılımcıya sorulacak soru" maxLength={200} />
+              <Input
+                value={form.entryQuestion}
+                onChange={(event) => update("entryQuestion", event.target.value)}
+                placeholder="Katılımcıya sorulacak soru"
+                maxLength={200}
+              />
             </div>
           ) : null}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label>Kontenjan</Label>
-              <Select value={form.capacity || "__unlimited__"} onValueChange={(value) => update("capacity", value === "__unlimited__" ? "" : value)}>
-                <SelectTrigger><SelectValue placeholder="Sınırsız" /></SelectTrigger>
+              <Select
+                value={form.capacity || "__unlimited__"}
+                onValueChange={(value) => update("capacity", value === "__unlimited__" ? "" : value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sınırsız" />
+                </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="__unlimited__">Sınırsız</SelectItem>
                   {CADDE_CAFE_CAPACITY_OPTIONS.map((capacity) => (
-                    <SelectItem key={capacity} value={String(capacity)}>{capacity} kişi</SelectItem>
+                    <SelectItem key={capacity} value={String(capacity)}>
+                      {capacity} kişi
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
               <Label>Dış link</Label>
-              <Input value={form.externalLink} onChange={(event) => update("externalLink", event.target.value)} placeholder="https://..." />
+              <Input
+                value={form.externalLink}
+                onChange={(event) => update("externalLink", event.target.value)}
+                placeholder="https://..."
+              />
             </div>
           </div>
 
-          <Button className="cadde-primary-action w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
+          <Button
+            className="cadde-primary-action w-full"
+            onClick={() => createMutation.mutate()}
+            disabled={createMutation.isPending}
+          >
             {createMutation.isPending ? "Açılıyor..." : "Cafe'yi Aç"}
           </Button>
         </div>

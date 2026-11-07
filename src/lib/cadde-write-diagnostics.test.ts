@@ -27,11 +27,7 @@ import { sliceUntil } from "@/test/source-slice";
 // Sabit liste YASAK: yeni bölünen/eklenen cadde API dosyaları otomatik kapsanır.
 const API_FILES = readdirSync("src/lib")
   .filter(
-    (name) =>
-      name.startsWith("cadde") &&
-      name.endsWith(".ts") &&
-      !name.endsWith(".test.ts") &&
-      name.includes("api"),
+    (name) => name.startsWith("cadde") && name.endsWith(".ts") && !name.endsWith(".test.ts") && name.includes("api"),
   )
   .map((name) => `src/lib/${name}`)
   .sort();
@@ -102,8 +98,7 @@ describe("cadde yazma yolu teşhis sözleşmesi", () => {
         const body = block.body.join("\n");
         if (!body.includes("if (error) throw error;")) return;
         const hasReportingCatch =
-          body.includes("catch") &&
-          /(reportCaddeApiError|caddeWriteError|caddeReadError)/.test(body);
+          body.includes("catch") && /(reportCaddeApiError|caddeWriteError|caddeReadError)/.test(body);
         if (!hasReportingCatch) {
           offenders.push(`${file}:${block.startLine} (fonksiyon bloğu)`);
         }

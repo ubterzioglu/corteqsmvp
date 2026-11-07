@@ -90,7 +90,11 @@ const CaddeTanitimPanel = () => {
       toast({ title: "Kampanya onaya gönderildi" });
     },
     onError: (error) => {
-      toast({ title: "Kampanya oluşturulamadı", description: error instanceof Error ? error.message : "Bilinmeyen hata", variant: "destructive" });
+      toast({
+        title: "Kampanya oluşturulamadı",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
     },
   });
 
@@ -132,7 +136,9 @@ const CaddeTanitimPanel = () => {
           {canCreate ? (
             <Dialog open={formOpen} onOpenChange={setFormOpen}>
               <DialogTrigger asChild>
-                <Button size="sm" variant="outline" className="cadde-secondary-action">Yeni Kampanya</Button>
+                <Button size="sm" variant="outline" className="cadde-secondary-action">
+                  Yeni Kampanya
+                </Button>
               </DialogTrigger>
               <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
                 <DialogHeader>
@@ -144,35 +150,62 @@ const CaddeTanitimPanel = () => {
                     <Select
                       value={form.campaignType}
                       onValueChange={(value) =>
-                        setForm((current) => ({ ...current, campaignType: value as CaddePromotionType, placementKeys: [] }))
+                        setForm((current) => ({
+                          ...current,
+                          campaignType: value as CaddePromotionType,
+                          placementKeys: [],
+                        }))
                       }
                     >
-                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
                         {availableTypes.map((type) => (
-                          <SelectItem key={type} value={type}>{CADDE_PROMOTION_TYPE_LABELS[type]}</SelectItem>
+                          <SelectItem key={type} value={type}>
+                            {CADDE_PROMOTION_TYPE_LABELS[type]}
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
                     <Label>Başlık *</Label>
-                    <Input value={form.title} onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))} maxLength={100} />
+                    <Input
+                      value={form.title}
+                      onChange={(event) => setForm((current) => ({ ...current, title: event.target.value }))}
+                      maxLength={100}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Açıklama *</Label>
-                    <Textarea value={form.description} onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))} rows={3} maxLength={500} />
+                    <Textarea
+                      value={form.description}
+                      onChange={(event) => setForm((current) => ({ ...current, description: event.target.value }))}
+                      rows={3}
+                      maxLength={500}
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Hedef URL *</Label>
-                    <Input value={form.targetUrl} onChange={(event) => setForm((current) => ({ ...current, targetUrl: event.target.value }))} placeholder="https://... veya /commercial/..." />
+                    <Input
+                      value={form.targetUrl}
+                      onChange={(event) => setForm((current) => ({ ...current, targetUrl: event.target.value }))}
+                      placeholder="https://... veya /commercial/..."
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label>Görsel URL</Label>
-                    <Input value={form.imageUrl} onChange={(event) => setForm((current) => ({ ...current, imageUrl: event.target.value }))} placeholder="https://..." />
+                    <Input
+                      value={form.imageUrl}
+                      onChange={(event) => setForm((current) => ({ ...current, imageUrl: event.target.value }))}
+                      placeholder="https://..."
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label>Placementler * <span className="font-normal text-slate-500">(en az 1)</span></Label>
+                    <Label>
+                      Placementler * <span className="font-normal text-slate-500">(en az 1)</span>
+                    </Label>
                     <div className="space-y-1.5">
                       {availablePlacements.map((placement) => {
                         const selected = form.placementKeys.includes(placement.key);
@@ -182,17 +215,25 @@ const CaddeTanitimPanel = () => {
                             type="button"
                             onClick={() => togglePlacement(placement.key)}
                             className={`w-full rounded-lg border px-3 py-2 text-left text-xs transition ${
-                              selected ? "border-orange-500 bg-orange-50" : "border-slate-200 bg-white hover:bg-slate-50"
+                              selected
+                                ? "border-orange-500 bg-orange-50"
+                                : "border-slate-200 bg-white hover:bg-slate-50"
                             }`}
                           >
                             <span className="font-medium text-slate-900">{placement.labelTr}</span>
-                            {placement.description ? <span className="block text-slate-500">{placement.description}</span> : null}
+                            {placement.description ? (
+                              <span className="block text-slate-500">{placement.description}</span>
+                            ) : null}
                           </button>
                         );
                       })}
                     </div>
                   </div>
-                  <Button className="cadde-primary-action w-full" onClick={() => createMutation.mutate()} disabled={createMutation.isPending}>
+                  <Button
+                    className="cadde-primary-action w-full"
+                    onClick={() => createMutation.mutate()}
+                    disabled={createMutation.isPending}
+                  >
                     {createMutation.isPending ? "Gönderiliyor..." : "Onaya Gönder"}
                   </Button>
                 </div>
@@ -228,9 +269,13 @@ const CaddeTanitimPanel = () => {
                   <Badge variant={STATUS_BADGE_VARIANTS[campaign.status]} className="text-[10px]">
                     {CADDE_PROMOTION_STATUS_LABELS[campaign.status]}
                   </Badge>
-                  <Badge variant="outline" className="text-[10px]">{CADDE_PROMOTION_TYPE_LABELS[campaign.campaignType]}</Badge>
+                  <Badge variant="outline" className="text-[10px]">
+                    {CADDE_PROMOTION_TYPE_LABELS[campaign.campaignType]}
+                  </Badge>
                 </div>
-                <p className="text-[11px] text-slate-500">{campaign.impressionCount} gösterim • {campaign.clickCount} tıklama</p>
+                <p className="text-[11px] text-slate-500">
+                  {campaign.impressionCount} gösterim • {campaign.clickCount} tıklama
+                </p>
               </div>
               <p className="mt-1 text-[11px] text-slate-500">{campaign.placementKeys.join(", ")}</p>
               {campaign.status === "rejected" && campaign.reviewNote ? (

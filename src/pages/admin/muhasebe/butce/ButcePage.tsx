@@ -1,17 +1,17 @@
 // src/pages/admin/muhasebe/butce/ButcePage.tsx
 // Bütçe sekmesi — container: yıl seçici, CSV indirme, iç-sekme yönetimi, autosave.
 
-import { useEffect, useState } from 'react';
-import { Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useButceYear, useDebouncedButceSave } from '@/hooks/useMuhasebeButce';
-import { downloadButceCsv } from '@/lib/muhasebe-butce-csv';
-import { BUTCE_YEARS, DEPTS, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
-import { DepartmentBudgetPanel } from '@/pages/admin/muhasebe/butce/DepartmentBudgetPanel';
-import { RevenuePanel } from '@/pages/admin/muhasebe/butce/RevenuePanel';
-import { ConsolidatedCashflowPanel } from '@/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel';
+import { useEffect, useState } from "react";
+import { Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useButceYear, useDebouncedButceSave } from "@/hooks/useMuhasebeButce";
+import { downloadButceCsv } from "@/lib/muhasebe-butce-csv";
+import { BUTCE_YEARS, DEPTS, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
+import { DepartmentBudgetPanel } from "@/pages/admin/muhasebe/butce/DepartmentBudgetPanel";
+import { RevenuePanel } from "@/pages/admin/muhasebe/butce/RevenuePanel";
+import { ConsolidatedCashflowPanel } from "@/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel";
 
 export default function ButcePage(): JSX.Element {
   const [year, setYear] = useState<string>(BUTCE_YEARS[0]);
@@ -46,14 +46,23 @@ export default function ButcePage(): JSX.Element {
     return <div className="py-12 text-center text-sm text-muted-foreground">Yükleniyor...</div>;
   }
 
-  const saveLabel = status === 'saving' ? 'kaydediliyor…' : status === 'saved' ? 'kaydedildi' : status === 'error' ? 'kayıt hatası' : '·';
+  const saveLabel =
+    status === "saving"
+      ? "kaydediliyor…"
+      : status === "saved"
+        ? "kaydedildi"
+        : status === "error"
+          ? "kayıt hatası"
+          : "·";
 
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Bütçe Konsolu</h1>
-          <p className="text-sm text-muted-foreground">Departman bazlı yıllık bütçe, alokasyon ve nakit akışı planlaması</p>
+          <p className="text-sm text-muted-foreground">
+            Departman bazlı yıllık bütçe, alokasyon ve nakit akışı planlaması
+          </p>
         </div>
         <div className="flex-1" />
         <Select value={year} onValueChange={setYear}>
@@ -62,7 +71,9 @@ export default function ButcePage(): JSX.Element {
           </SelectTrigger>
           <SelectContent>
             {BUTCE_YEARS.map((y) => (
-              <SelectItem key={y} value={y}>{y}</SelectItem>
+              <SelectItem key={y} value={y}>
+                {y}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -76,7 +87,9 @@ export default function ButcePage(): JSX.Element {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="flex-wrap h-auto">
           {DEPTS.map((d) => (
-            <TabsTrigger key={d.id} value={d.id}>{d.name}</TabsTrigger>
+            <TabsTrigger key={d.id} value={d.id}>
+              {d.name}
+            </TabsTrigger>
           ))}
           <TabsTrigger value="rev">Gelirler</TabsTrigger>
           <TabsTrigger value="cons">Konsolide</TabsTrigger>

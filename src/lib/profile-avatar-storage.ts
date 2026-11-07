@@ -4,7 +4,12 @@ export const AVATARS_BUCKET = "avatars";
 export const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 
 export const buildAvatarStoragePath = (userId: string, file: File): string => {
-  const safeExtension = file.name.split(".").pop()?.toLowerCase().replace(/[^a-z0-9]/g, "") || "jpg";
+  const safeExtension =
+    file.name
+      .split(".")
+      .pop()
+      ?.toLowerCase()
+      .replace(/[^a-z0-9]/g, "") || "jpg";
   return `${userId}/profile-${Date.now()}.${safeExtension}`;
 };
 

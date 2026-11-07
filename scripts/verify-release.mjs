@@ -13,7 +13,7 @@ const args = process.argv.slice(2);
 const baseUrlArg = args.find((arg) => arg.startsWith("--base-url="));
 const baseUrlValue = baseUrlArg
   ? baseUrlArg.slice("--base-url=".length)
-  : process.env.BASE_URL ?? process.env.npm_config_base_url ?? null;
+  : (process.env.BASE_URL ?? process.env.npm_config_base_url ?? null);
 const baseUrl = baseUrlValue ? baseUrlValue.replace(/\/+$/, "") : null;
 
 const fail = (message) => {
@@ -48,9 +48,9 @@ const ensureStatusOk = async (url, expectedContentTypes) => {
 };
 
 export const extractHtmlAssets = (html) => {
-  const moduleScripts = [
-    ...html.matchAll(/<script type="module" crossorigin src="([^"]+)"><\/script>/gi),
-  ].map((match) => match[1]);
+  const moduleScripts = [...html.matchAll(/<script type="module" crossorigin src="([^"]+)"><\/script>/gi)].map(
+    (match) => match[1],
+  );
   const mainScript = moduleScripts.find((scriptPath) => /^main-[^/]+\.js$/i.test(path.basename(scriptPath)));
   const styleMatch = html.match(/<link rel="stylesheet" crossorigin href="([^"]+)">/i);
 
@@ -122,7 +122,10 @@ const verifyRemoteRelease = async () => {
   await ensureStatusOk(`${baseUrl}${mainStyle}`, ["text/css"]);
   ok(`remote stylesheet is reachable: ${mainStyle}`);
 
-  const mainScriptResponse = await ensureStatusOk(`${baseUrl}${mainScript}`, ["text/javascript", "application/javascript"]);
+  const mainScriptResponse = await ensureStatusOk(`${baseUrl}${mainScript}`, [
+    "text/javascript",
+    "application/javascript",
+  ]);
   const mainScriptSource = await mainScriptResponse.text();
   const muhasebeChunks = extractMuhasebeChunks(mainScriptSource);
 

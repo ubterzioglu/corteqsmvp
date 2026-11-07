@@ -110,9 +110,7 @@ export function useShareTracking(): ShareTracking {
           badges={state.badges[key] ?? {}}
           note={state.notes[key]}
           pending={isMutating}
-          onToggle={(platform, shared) =>
-            toggleMutation.mutate({ globalId, platform, shared })
-          }
+          onToggle={(platform, shared) => toggleMutation.mutate({ globalId, platform, shared })}
           onSaveNote={(note) => noteMutation.mutate({ globalId, note })}
         />
       );

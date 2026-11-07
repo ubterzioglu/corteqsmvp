@@ -38,7 +38,7 @@ export type ApprovedWhatsAppTemplate = {
 const THREAD_STATUSES: CustomerRequestStatus[] = ["new", "in_progress", "waiting_customer", "resolved", "closed"];
 
 function customerRequestStatus(value: string): CustomerRequestStatus {
-  return THREAD_STATUSES.includes(value as CustomerRequestStatus) ? value as CustomerRequestStatus : "new";
+  return THREAD_STATUSES.includes(value as CustomerRequestStatus) ? (value as CustomerRequestStatus) : "new";
 }
 
 export async function listCustomerRequestThreads(): Promise<CustomerRequestThread[]> {

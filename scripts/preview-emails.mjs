@@ -69,9 +69,7 @@ ${items}
 }
 
 async function main() {
-  const { buildMemberWelcomeEmail } = await import(
-    new URL(TEMPLATE_MODULE, import.meta.url).href
-  );
+  const { buildMemberWelcomeEmail } = await import(new URL(TEMPLATE_MODULE, import.meta.url).href);
 
   const variants = buildVariants(buildMemberWelcomeEmail);
   await mkdir(OUTPUT_DIR, { recursive: true });
@@ -79,11 +77,7 @@ async function main() {
   for (const variant of variants) {
     await writeFile(path.join(OUTPUT_DIR, variant.file), variant.email.html, "utf8");
     // Düz metin sürümü de yazılır: spam skoru için gönderilen asıl alternatif budur.
-    await writeFile(
-      path.join(OUTPUT_DIR, variant.file.replace(/\.html$/, ".txt")),
-      variant.email.text,
-      "utf8",
-    );
+    await writeFile(path.join(OUTPUT_DIR, variant.file.replace(/\.html$/, ".txt")), variant.email.text, "utf8");
   }
 
   await writeFile(path.join(OUTPUT_DIR, "index.html"), buildIndexHtml(variants), "utf8");

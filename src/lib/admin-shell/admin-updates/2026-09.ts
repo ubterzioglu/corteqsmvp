@@ -67,7 +67,8 @@ export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
     id: "20260929-sade-gunun-ozeti",
     date: "29 Eylül 2026",
-    title: "29 Eylül, sade dille: revizyon taleplerine belge eklenebiliyor, “Şifremi unuttum” geldi, asistan her sayfada",
+    title:
+      "29 Eylül, sade dille: revizyon taleplerine belge eklenebiliyor, “Şifremi unuttum” geldi, asistan her sayfada",
     items: [
       "KISACA: Bugün dört küçük ama kullanıcıya görünen iş yapıldı.",
       "REVİZYON TALEPLERİ: Revizyon talebine ve yorumlarına eskiden yalnız görsel eklenebiliyordu. Artık PDF, Word, Excel ve PowerPoint belgeleri de eklenebiliyor (boyut sınırı aynı, 15 MB). Belgeler kırık görsel gibi görünmüyor; ad, tür ikonu ve boyutla bir kart olarak çiziliyor ve tıklayınca açılıyor. Çalıştırılabilir ya da tehlikeli dosya türleri kabul edilmiyor.",
@@ -621,8 +622,7 @@ export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
     id: "20260919-etkinlik-ve-radar-sistemleri",
     date: "19 Eylül 2026",
-    title:
-      "Etkinlik modülü tamamlandı, Radar sistemi yeniden aktif edildi ve çoklu haber kaynağı rotasyonu eklendi",
+    title: "Etkinlik modülü tamamlandı, Radar sistemi yeniden aktif edildi ve çoklu haber kaynağı rotasyonu eklendi",
     items: [
       "ETKİNLİK MODÜLÜ TAMAMEN YENİDEN YAZILDI: 6 Eylül'de silinen etkinlik sayfaları ve eksik altyapı tamamen yeniden oluşturuldu. Veritabanı şeması (events tablosu) zaten vardı ama frontend'i hiç yoktu. Şimdi her şey çalışır durumda.",
       "YENİ ÖZELLİKLER — ETKİNLİKLER: (1) /events sayfası — tüm yayınlanmış etkinlikleri listeler, tür (fiziksel/dijital/hibrit) ve kategori filtreleri var, arama yapabilirsiniz. (2) /events/:id sayfası — etkinlik detayı, tarih/saat/konum/online bağlantı/fiyat/kayıt linki gösterir, sosyal medya paylaşım butonları var (X, Facebook, LinkedIn, WhatsApp, bağlantı kopyala). (3) /events/create sayfası — giriş yapmış kullanıcılar etkinlik oluşturabilir, fiziksel/dijital/hibrit seçimine göre alanlar dinamik görünür, admin onayı gerekir (status: pending → published). (4) /admin/events sayfası — tüm etkinlikleri listeler, onaylama/yayından kaldırma/öne çıkarma/silme işlemleri yapılır, durum ve tür filtreleri var.",
@@ -785,8 +785,7 @@ export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
     id: "20260913-tip-denetimi-borcu-sifira-indi",
     date: "13 Eylül 2026",
-    title:
-      "Aylardır biriken tip-denetimi uyarılarının sonuncusu da kapandı, bir form daha güvenli koda taşındı",
+    title: "Aylardır biriken tip-denetimi uyarılarının sonuncusu da kapandı, bir form daha güvenli koda taşındı",
     items: [
       "GÜNÜN ÖZETİ: Bir süre önce 109 olarak ölçülen 'tip denetimi uyarısı' sayısı, art arda yapılan küçük düzeltmelerle bugün SIFIRA indi (109 → 22 → 16 → 12 → 9 → 0). Bu sayı kodun çalışırken hata vermeden ama arka planda 'yanlış yazılmış' sayılan yerlerini gösteriyordu; kullanıcı hiçbir zaman doğrudan görmedi ama biriken her satır ileride gerçek bir hataya dönüşme riski taşıyordu.",
       "KULLANILMAYAN BİR GÖRSEL SİLİNDİ: 600 KB'lık kullanılmayan bir görsel kaldırıldı; ekranda hâlâ kullanılan benzer isimli başka bir dosyayla karıştırılmasın diye önce tek tek doğrulandı.",
@@ -837,8 +836,7 @@ export const ADMIN_UPDATES_2026_09: AdminUpdateEntry[] = [
   {
     id: "20260910-gorsel-dil-ve-acil-liste",
     date: "10 Eylül 2026",
-    title:
-      "Cadde'nin görsel dili tek kurala bağlandı, acil işler listesine soru-cevap bölümü eklendi",
+    title: "Cadde'nin görsel dili tek kurala bağlandı, acil işler listesine soru-cevap bölümü eklendi",
     items: [
       "GÜNÜN ÖZETİ: 27 Ağustos denetiminin 31 maddesinden 23'ü artık kapandı (dün 14'tü). Bugün kapatılanların tamamı görsel dille ilgili — yani sitenin dağınık görünmesinin asıl sebebiyle.",
       "SORUNUN KÖKÜ NEYDİ: Denetim, tek tek kusurlardan çok 'tanımlı bir tasarım kuralının olmaması'nı işaret ediyordu. Ölçtük, haklıydı: Cadde sayfalarında DOKUZ farklı köşe yuvarlaklığı ve ONÜÇ farklı rozet stili aynı anda dolaşıyordu. Her sayfa kendi kuralını uydurmuştu.",

@@ -61,15 +61,13 @@ export const MOTOR_PLATFORM_LABELS: Record<MotorPlatform, string> = {
 export const GROUP_SUBMIT_ERROR_MESSAGES: Record<string, string> = {
   group_submit_auth_required: "Grup eklemek için giriş yapmalısınız.",
   group_submit_pledge_required: "Grup Sözü onayı zorunludur.",
-  group_submit_admin_answer_required: "\"Bu grubun admini misin?\" sorusunu yanıtlayın.",
+  group_submit_admin_answer_required: '"Bu grubun admini misin?" sorusunu yanıtlayın.',
   group_submit_name_required: "Grup adı zorunludur.",
   group_submit_description_required: "Kısa açıklama zorunludur.",
   group_submit_description_too_long: "Kısa açıklama en fazla 160 karakter olabilir.",
   group_submit_invalid_category: "Geçerli bir kategori seçin.",
-  group_submit_category_locked:
-    "Aile & Çocuk kategorisi şu anda kapalı — yakında doğrulanmış kuruluşlara açılacak.",
-  group_submit_link_unsupported:
-    "Yalnızca WhatsApp, Telegram ve Discord davet linkleri destekleniyor.",
+  group_submit_category_locked: "Aile & Çocuk kategorisi şu anda kapalı — yakında doğrulanmış kuruluşlara açılacak.",
+  group_submit_link_unsupported: "Yalnızca WhatsApp, Telegram ve Discord davet linkleri destekleniyor.",
   group_submission_banned: "Grup ekleme yetkiniz askıya alınmış. Ekiple iletişime geçin.",
   group_submit_rate_limited: "Günlük grup gönderim sınırına ulaştınız (günde en fazla 5).",
   group_submit_country_not_found: "Ülke katalogda bulunamadı — listeden seçin.",
@@ -110,18 +108,21 @@ export type GroupSubmitResult =
 
 /** Gönderim: TEK kapı `submit_group_v1` (doğrudan tabloya insert YOK). */
 export async function submitGroupV1(params: GroupSubmitParams): Promise<GroupSubmitResult> {
-  const { data, error } = await supabase.rpc("submit_group_v1" as never, {
-    p_link: params.link.trim(),
-    p_group_name: params.groupName,
-    p_category: params.category,
-    p_short_description: params.shortDescription,
-    p_country_code: params.countryCode,
-    p_city_id: params.cityId,
-    p_is_global: params.isGlobal,
-    p_claims_admin: params.claimsAdmin,
-    p_pledge_accepted: params.pledgeAccepted,
-    p_hero_image: params.heroImage ?? null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "submit_group_v1" as never,
+    {
+      p_link: params.link.trim(),
+      p_group_name: params.groupName,
+      p_category: params.category,
+      p_short_description: params.shortDescription,
+      p_country_code: params.countryCode,
+      p_city_id: params.cityId,
+      p_is_global: params.isGlobal,
+      p_claims_admin: params.claimsAdmin,
+      p_pledge_accepted: params.pledgeAccepted,
+      p_hero_image: params.heroImage ?? null,
+    } as never,
+  );
 
   if (error) {
     // RPC hataları DÜZ NESNE — instanceof Error ile daraltma YOK; message
@@ -249,9 +250,12 @@ export async function resolveMotorLocation(params: {
 
 /** Yasaklı gönderici ön kontrolü (G15 yardımcısı — form açılışında okunur). */
 export async function checkGroupSubmissionBanned(): Promise<boolean> {
-  const { data, error } = await supabase.rpc("group_submission_banned" as never, {
-    p_user_id: (await supabase.auth.getUser()).data.user?.id ?? null,
-  } as never);
+  const { data, error } = await supabase.rpc(
+    "group_submission_banned" as never,
+    {
+      p_user_id: (await supabase.auth.getUser()).data.user?.id ?? null,
+    } as never,
+  );
   if (error) return false; // ön kontrol sessiz düşer — trigger sunucuda zaten keser
   return data === true;
 }

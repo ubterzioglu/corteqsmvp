@@ -52,10 +52,7 @@ const AdminSidebarGroup = ({ group, collapsed = false, onNavigate, favorites }: 
         className="flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80 transition-colors hover:text-foreground"
       >
         {group.label}
-        <ChevronDown
-          aria-hidden="true"
-          className={cn("h-3 w-3 transition-transform", open && "rotate-180")}
-        />
+        <ChevronDown aria-hidden="true" className={cn("h-3 w-3 transition-transform", open && "rotate-180")} />
       </button>
       {open && (
         <div className="mt-0.5 space-y-0.5">

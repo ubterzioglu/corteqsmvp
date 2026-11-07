@@ -26,7 +26,13 @@ const KPI_CARDS: KpiCard[] = [
   { key: "catalogItems", label: "Katalog Kaydı", to: "/admin/data", icon: Database, accent: "sky" },
   { key: "roles", label: "Tanımlı Rol", to: "/admin/new-member/roles-overview", icon: Layers, accent: "emerald" },
   { key: "pendingApprovals", label: "Bekleyen Approval", to: "/admin/approvals", icon: ClipboardList, accent: "amber" },
-  { key: "featureOverrides", label: "Feature Override", to: "/admin/new-member/overrides", icon: SlidersHorizontal, accent: "indigo" },
+  {
+    key: "featureOverrides",
+    label: "Feature Override",
+    to: "/admin/new-member/overrides",
+    icon: SlidersHorizontal,
+    accent: "indigo",
+  },
   { key: "auditLogsLast24h", label: "Audit (24 saat)", to: "/admin/audit-logs", icon: ScrollText, accent: "red" },
 ];
 
@@ -49,9 +55,7 @@ const AdminDashboardKpis = ({ summary, isLoading }: AdminDashboardKpisProps) => 
           {isLoading ? (
             <div className="mt-2 h-8 w-16 animate-pulse rounded bg-muted" />
           ) : (
-            <div className="mt-1 text-2xl font-bold text-foreground">
-              {typeof value === "number" ? value : "—"}
-            </div>
+            <div className="mt-1 text-2xl font-bold text-foreground">{typeof value === "number" ? value : "—"}</div>
           )}
         </Link>
       );

@@ -27,17 +27,12 @@ const PublicProfileProvenanceCard = ({ provenance }: PublicProfileProvenanceCard
         Bu profili kişinin kendisi oluşturmadı
       </p>
       <p className="mt-1.5 leading-relaxed">
-        Kayıt, CorteQS&apos;in{" "}
-        {provenance.importedAt ? <strong>{provenance.importedAt}</strong> : "daha önce"} tarihli{" "}
-        <code className="rounded bg-amber-100 px-1 py-0.5 text-xs dark:bg-amber-900/50">
-          {provenance.sourceKey}
-        </code>{" "}
-        derlemesinden geldi ve{" "}
-        {provenance.isVerified ? "doğrulandı" : <strong>henüz doğrulanmadı</strong>}.
+        Kayıt, CorteQS&apos;in {provenance.importedAt ? <strong>{provenance.importedAt}</strong> : "daha önce"} tarihli{" "}
+        <code className="rounded bg-amber-100 px-1 py-0.5 text-xs dark:bg-amber-900/50">{provenance.sourceKey}</code>{" "}
+        derlemesinden geldi ve {provenance.isVerified ? "doğrulandı" : <strong>henüz doğrulanmadı</strong>}.
       </p>
       <p className="mt-1.5 leading-relaxed">
-        Bu kayıt size aitse sayfanın üstünden düzenleme yetkisi talep edebilir,
-        kaldırılmasını istiyorsanız{" "}
+        Bu kayıt size aitse sayfanın üstünden düzenleme yetkisi talep edebilir, kaldırılmasını istiyorsanız{" "}
         <Link to="/iletisim" className="font-medium underline underline-offset-2">
           iletişim sayfasından
         </Link>{" "}

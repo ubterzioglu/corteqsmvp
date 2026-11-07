@@ -94,12 +94,8 @@ describe("submitFeedback", () => {
   });
 
   it("DB hatasında sanitize edilmiş mesaj fırlatır", async () => {
-    fromMock.mockReturnValue(
-      chainable({ resolved: { data: null, error: new Error("boom") } }),
-    );
-    await expect(submitFeedback("Görüşüm var.", "/")).rejects.toThrow(
-      "Feedback gönderilemedi.",
-    );
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: new Error("boom") } }));
+    await expect(submitFeedback("Görüşüm var.", "/")).rejects.toThrow("Feedback gönderilemedi.");
   });
 });
 
@@ -139,18 +135,14 @@ describe("fetchFeedbackList", () => {
   });
 
   it("hatada sanitize edilmiş mesaj fırlatır", async () => {
-    fromMock.mockReturnValue(
-      chainable({ resolved: { data: null, error: new Error("boom") } }),
-    );
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: new Error("boom") } }));
     await expect(fetchFeedbackList()).rejects.toThrow("Geri bildirimler yüklenemedi.");
   });
 });
 
 describe("updateFeedbackStatus", () => {
   it("geçersiz durumu DB'ye gitmeden reddeder", async () => {
-    await expect(
-      updateFeedbackStatus("f-1", "bogus" as FeedbackStatus),
-    ).rejects.toThrow("Geçersiz durum.");
+    await expect(updateFeedbackStatus("f-1", "bogus" as FeedbackStatus)).rejects.toThrow("Geçersiz durum.");
     expect(fromMock).not.toHaveBeenCalled();
   });
 
@@ -167,9 +159,7 @@ describe("updateFeedbackStatus", () => {
 
 describe("deleteFeedback", () => {
   it("soft-delete update'i hatada sanitize mesajla fırlatır", async () => {
-    fromMock.mockReturnValue(
-      chainable({ resolved: { data: null, error: new Error("nope") } }),
-    );
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: new Error("nope") } }));
     await expect(deleteFeedback("f-1")).rejects.toThrow("Geri bildirim silinemedi.");
   });
 

@@ -96,8 +96,7 @@ export type BlogPostSummary = Pick<
   "id" | "slug" | "title" | "excerpt" | "country" | "country_label" | "category" | "sort_order" | "published_at"
 >;
 
-const BLOG_SUMMARY_COLUMNS =
-  "id, slug, title, excerpt, country, country_label, category, sort_order, published_at";
+const BLOG_SUMMARY_COLUMNS = "id, slug, title, excerpt, country, country_label, category, sort_order, published_at";
 
 // PostgREST varsayılan olarak 1000 satırda SESSİZCE keser (CLAUDE.md "Değişmez sözleşmeler" md.5);
 // sınır burada AÇIKÇA yazılır. Yayınlanmış yazı sayısı bunun çok altındadır.
@@ -151,12 +150,7 @@ export async function listLatestBlogPostCards(limit: number): Promise<BlogPostCa
 }
 
 export async function getPublishedBlogPostBySlug(slug: string): Promise<BlogPostRow | null> {
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .maybeSingle();
+  const { data, error } = await supabase.from(TABLE).select("*").eq("slug", slug).eq("published", true).maybeSingle();
   if (error) throw error;
   return (data as BlogPostRow | null) ?? null;
 }

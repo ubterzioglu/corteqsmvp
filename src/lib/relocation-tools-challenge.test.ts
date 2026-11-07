@@ -1,10 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  type ChallengeAnswers,
-  computeChallengeScores,
-  resolveChallenge,
-} from "@/lib/relocation-tools-challenge";
+import { type ChallengeAnswers, computeChallengeScores, resolveChallenge } from "@/lib/relocation-tools-challenge";
 
 // docs/10tool/09 §4 — kategori skor formülü aynası (SQL relocation_score_top_challenge_v1).
 // category_score = user_stress*0.35 + progress_blocker*0.35 + urgency*risk*0.20 + dependency*0.10

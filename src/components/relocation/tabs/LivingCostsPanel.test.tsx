@@ -57,9 +57,7 @@ describe("LivingCostsPanel — kapsam ayrımı (B29)", () => {
 });
 
 describe("LivingCostsPanel — bütçe para birimi karşılığı (B30)", () => {
-  const fxRates = [
-    { base_currency: "EUR", quote_currency: "TRY", rate: 40, rate_at: "2026-09-22T00:00:00Z" },
-  ];
+  const fxRates = [{ base_currency: "EUR", quote_currency: "TRY", rate: 40, rate_at: "2026-09-22T00:00:00Z" }];
 
   it("karşılığı, kur tarihini ve kaynağı gösterir", () => {
     render(

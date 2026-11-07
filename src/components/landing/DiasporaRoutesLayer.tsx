@@ -86,12 +86,7 @@ const DiasporaRoutesLayer = ({ className }: { className?: string }) => {
       {/* Rotalar boyunca süzülen ışık pulse'ları — "yolda olan" bağlantılar. */}
       {PULSES.map((pulse, i) => (
         <circle key={`p-${i}`} className="corteqs-network-flow" r={pulse.r} fill={pulse.fill}>
-          <animateMotion
-            dur={`${pulse.dur}s`}
-            begin={`${pulse.begin}s`}
-            repeatCount="indefinite"
-            path={pulse.path}
-          />
+          <animateMotion dur={`${pulse.dur}s`} begin={`${pulse.begin}s`} repeatCount="indefinite" path={pulse.path} />
         </circle>
       ))}
 

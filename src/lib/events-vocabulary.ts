@@ -32,14 +32,7 @@ export const EVENT_TYPE_OPTIONS: { value: EventType; label: string }[] = [
   { value: "hybrid", label: "Hibrit" },
 ];
 
-export const EVENT_CATEGORY_VALUES = [
-  "networking",
-  "eğitim",
-  "kültür",
-  "iş",
-  "sosyal",
-  "spor",
-] as const;
+export const EVENT_CATEGORY_VALUES = ["networking", "eğitim", "kültür", "iş", "sosyal", "spor"] as const;
 
 export type EventCategory = (typeof EVENT_CATEGORY_VALUES)[number];
 

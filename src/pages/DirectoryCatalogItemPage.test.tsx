@@ -105,9 +105,7 @@ describe("DirectoryCatalogItemPage", () => {
 
     renderPage("gizli-profil");
 
-    expect(
-      await screen.findByText(/Bu profil şu anda görüntülenemiyor/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Bu profil şu anda görüntülenemiyor/i)).toBeInTheDocument();
     expect(screen.getByText(/yayınlanmamış olabilir/i)).toBeInTheDocument();
   });
 
@@ -116,8 +114,6 @@ describe("DirectoryCatalogItemPage", () => {
 
     renderPage();
 
-    expect(
-      await screen.findByText(/Bu profil şu anda görüntülenemiyor/i),
-    ).toBeInTheDocument();
+    expect(await screen.findByText(/Bu profil şu anda görüntülenemiyor/i)).toBeInTheDocument();
   });
 });

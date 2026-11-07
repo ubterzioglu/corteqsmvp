@@ -9,11 +9,7 @@ import { readDraftText } from "@/lib/profile-attribute-drafts";
 import type { DraftValueMap } from "@/lib/profile-attribute-keys";
 import { SOCIAL_ATTRIBUTE_CONFIGS } from "@/lib/profile-social-links";
 
-import {
-  AMBER_BUTTON_PRIMARY,
-  GOOGLE_SOFT_CARD_RED_SECTION,
-  GOOGLE_SOFT_SWITCH_PANEL,
-} from "./profile-card-styles";
+import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_RED_SECTION, GOOGLE_SOFT_SWITCH_PANEL } from "./profile-card-styles";
 
 export type ProfileSocialMediaCardProps = {
   attributes: ProfileAttributeState[];
@@ -66,7 +62,10 @@ export const ProfileSocialMediaCard = ({
               })}
             </div>
             <div className="flex items-center justify-end gap-2">
-              <div className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`} style={{ height: '32px' }}>
+              <div
+                className={`flex items-center gap-1.5 rounded-full px-2 ${GOOGLE_SOFT_SWITCH_PANEL}`}
+                style={{ height: "32px" }}
+              >
                 {allVisible ? (
                   <Eye className="h-3.5 w-3.5 text-primary" />
                 ) : (

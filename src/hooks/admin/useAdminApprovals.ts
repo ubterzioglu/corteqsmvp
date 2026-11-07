@@ -4,10 +4,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import {
-  fetchAdminApprovalsBundle,
-  type AdminApprovalsBundle,
-} from "@/lib/admin-shell/admin-approvals-api";
+import { fetchAdminApprovalsBundle, type AdminApprovalsBundle } from "@/lib/admin-shell/admin-approvals-api";
 import { adminQueryKeys } from "@/lib/admin-shell/admin-query-keys";
 import { reviewApprovalRequestAsAdmin } from "@/lib/admin";
 
@@ -36,9 +33,7 @@ export function useAdminApprovals() {
           ? {
               ...current,
               requests: current.requests.map((request) =>
-                request.id === requestId
-                  ? { ...request, status: decision, admin_note: note }
-                  : request,
+                request.id === requestId ? { ...request, status: decision, admin_note: note } : request,
               ),
             }
           : current,

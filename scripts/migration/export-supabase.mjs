@@ -138,10 +138,7 @@ function loadEnvFile(path) {
     const eq = line.indexOf("=");
     if (eq === -1) continue;
     let value = line.slice(eq + 1).trim();
-    if (
-      (value.startsWith('"') && value.endsWith('"')) ||
-      (value.startsWith("'") && value.endsWith("'"))
-    ) {
+    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
     }
     out[line.slice(0, eq).trim()] = value;
@@ -246,10 +243,7 @@ function main() {
   const env = { ...loadEnvFile(join(REPO_ROOT, ".env.local")), ...process.env };
   const conn = resolveConnection(env);
   if (!conn) {
-    fail(
-      "Bağlantı çözülemedi.",
-      ".env.local içinde SUPABASE_PROJECT_ID ve SUPABASE_DB_PASSWORD olmalı.",
-    );
+    fail("Bağlantı çözülemedi.", ".env.local içinde SUPABASE_PROJECT_ID ve SUPABASE_DB_PASSWORD olmalı.");
   }
   // Parola BURADA DA yazdırılmıyor.
   console.log(`  kaynak       : ${conn.user.replace(/\..*/, ".***")}@${conn.host}:${conn.port}/${conn.database}`);
@@ -257,8 +251,7 @@ function main() {
   if (!conn.host.includes("supabase.com") && !conn.host.includes("supabase.co")) {
     fail(
       `Kaynak host Supabase değil: ${conn.host}`,
-      "Bu script yalnız Supabase Cloud'dan export içindir. Yanlış veritabanını " +
-        "dökümlememek için duruyorum.",
+      "Bu script yalnız Supabase Cloud'dan export içindir. Yanlış veritabanını " + "dökümlememek için duruyorum.",
     );
   }
 
@@ -365,10 +358,7 @@ function main() {
     if (r.status !== 0) {
       console.log("HATA");
       console.error((r.stderr || "").trim().split("\n").slice(-15).join("\n"));
-      fail(
-        `${step.name} başarısız (çıkış kodu ${r.status}).`,
-        `Kısmi çıktı SİLİNMEDİ, incelemek için: ${outDir}`,
-      );
+      fail(`${step.name} başarısız (çıkış kodu ${r.status}).`, `Kısmi çıktı SİLİNMEDİ, incelemek için: ${outDir}`);
     }
     if (!existsSync(filePath)) {
       console.log("HATA");

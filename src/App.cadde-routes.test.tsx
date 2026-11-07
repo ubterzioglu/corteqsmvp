@@ -45,7 +45,13 @@ describe("App cadde routing", () => {
 
   it("renders the cadde public route", async () => {
     const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-    await act(async () => { render(<QueryClientProvider client={queryClient}><App /></QueryClientProvider>); });
+    await act(async () => {
+      render(
+        <QueryClientProvider client={queryClient}>
+          <App />
+        </QueryClientProvider>,
+      );
+    });
     expect(screen.getByText("Cadde Public Page")).toBeInTheDocument();
   });
 });

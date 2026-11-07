@@ -73,22 +73,18 @@ export function contractCompleteness(meta: RouterToolMeta): number {
  * Araçları skorlayıp sıralar. deprecated/unknown araçlar eligible=false ve
  * skoru sıfırlanır (asla seçilmez). Eşitlikte deterministik (tool_key) sıralama.
  */
-export function rankTools(
-  tools: RouterToolMeta[],
-  featuresByTool: Record<string, RouteFeatures>,
-): ScoredTool[] {
+export function rankTools(tools: RouterToolMeta[], featuresByTool: Record<string, RouteFeatures>): ScoredTool[] {
   const scored = tools.map((t) => {
     const eligible = t.status === "active";
-    const features =
-      featuresByTool[t.tool_key] ?? {
-        intent: 0,
-        contract: contractCompleteness(t),
-        privacy: 0.5,
-        freshness: 0.5,
-        latency: 0.5,
-        determinism: 0.5,
-        availability: eligible ? 0.8 : 0,
-      };
+    const features = featuresByTool[t.tool_key] ?? {
+      intent: 0,
+      contract: contractCompleteness(t),
+      privacy: 0.5,
+      freshness: 0.5,
+      latency: 0.5,
+      determinism: 0.5,
+      availability: eligible ? 0.8 : 0,
+    };
     const raw = scoreFeatures(features);
     const score = eligible ? raw : 0;
     const reason = eligible
@@ -97,9 +93,7 @@ export function rankTools(
     return { toolKey: t.tool_key, score, features, eligible, reason };
   });
 
-  return scored.sort(
-    (a, b) => b.score - a.score || a.toolKey.localeCompare(b.toolKey),
-  );
+  return scored.sort((a, b) => b.score - a.score || a.toolKey.localeCompare(b.toolKey));
 }
 
 /** Eşik bantları: 80+ doğrudan, 65-79 orta güven, 50-64 ikincil, <50 gösterme. */

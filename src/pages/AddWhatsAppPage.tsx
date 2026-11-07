@@ -205,17 +205,12 @@ export default function AddWhatsAppPage() {
   }, [selectedLanding?.dbId, user]);
 
   const filteredLandings = useMemo(() => {
-    const mergedLandings = landings.length >= 6 ? landings : [...landings, ...placeholderLandings.slice(0, 6 - landings.length)];
+    const mergedLandings =
+      landings.length >= 6 ? landings : [...landings, ...placeholderLandings.slice(0, 6 - landings.length)];
 
     return mergedLandings.filter((landing) => {
       if (searchQuery.trim()) {
-        const haystack = [
-          landing.groupName,
-          landing.tagline,
-          landing.country,
-          landing.city,
-          landing.description,
-        ]
+        const haystack = [landing.groupName, landing.tagline, landing.country, landing.city, landing.description]
           .filter(Boolean)
           .join(" ");
 
@@ -295,9 +290,7 @@ export default function AddWhatsAppPage() {
           // Kullanıcının ELLE yazdığı adı ezme; yalnız boşsa veya önceki
           // önizlemeden geldiyse güncelle.
           groupName:
-            current.groupName.trim() === "" || current.groupName === previousPrefill
-              ? readName
-              : current.groupName,
+            current.groupName.trim() === "" || current.groupName === previousPrefill ? readName : current.groupName,
           heroImage: current.heroImage || data.image_url || "",
         }));
         prefilledGroupNameRef.current = readName;
@@ -483,9 +476,7 @@ export default function AddWhatsAppPage() {
         description: published
           ? "Hızlı şerit açık ve admin sahipliğin doğrulandı — grup doğrudan yayına çıktı."
           : "İnceleme genelde 24 saat sürer." +
-            (result.ownership === "claim_pending"
-              ? " Sahiplik doğrulama adımı grup sayfasında seni bekliyor."
-              : ""),
+            (result.ownership === "claim_pending" ? " Sahiplik doğrulama adımı grup sayfasında seni bekliyor." : ""),
       });
 
       resetGroupForm();
@@ -615,8 +606,7 @@ export default function AddWhatsAppPage() {
                 onHidden={() => {
                   toast({
                     title: "Grup listeden kaldırıldı",
-                    description:
-                      "Grup anında gizlendi. 24 saat içinde moderatör kalıcı kaldırmaya çevirir.",
+                    description: "Grup anında gizlendi. 24 saat içinde moderatör kalıcı kaldırmaya çevirir.",
                   });
                   backToList();
                 }}

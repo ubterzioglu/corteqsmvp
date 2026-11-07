@@ -1,11 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import {
-  collapseWhitespace,
-  decodeHtmlEntities,
-  htmlToPlainText,
-  markdownToPlainText,
-} from "./text-extract.mjs";
+import { collapseWhitespace, decodeHtmlEntities, htmlToPlainText, markdownToPlainText } from "./text-extract.mjs";
 
 describe("markdownToPlainText", () => {
   it("baslik metnini korur, diyezi atar", () => {

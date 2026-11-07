@@ -2,15 +2,7 @@
 // URL path'leri App.tsx route ağacıyla birebir aynıdır ve değiştirilemez
 // (masterplan §4.3). Grup sırası ../admin-navigation-registry.ts'te belirlenir.
 
-import {
-  BarChart3,
-  BellRing,
-  BookOpen,
-  Boxes,
-  ExternalLink,
-  FolderOpen,
-  Newspaper,
-} from "lucide-react";
+import { BarChart3, BellRing, BookOpen, Boxes, ExternalLink, FolderOpen, Newspaper } from "lucide-react";
 
 import type { AdminNavGroup } from "../admin-shell-types";
 

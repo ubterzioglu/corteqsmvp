@@ -1,14 +1,14 @@
 // src/hooks/useMuhasebeButce.ts
 // React Query hook'ları — muhasebe bütçe sekmesi
 
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe-butce-api';
-import { seedYear, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { fetchButceYear, upsertButceYear } from "@/lib/muhasebe-butce-api";
+import { seedYear, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
 
 export const muhasebeButceKeys = {
-  all: ['muhasebe-butce'] as const,
+  all: ["muhasebe-butce"] as const,
   year: (year: number) => [...muhasebeButceKeys.all, year] as const,
 };
 
@@ -27,7 +27,7 @@ export function useSaveButceYear(year: number) {
   return useMutation({
     mutationFn: (state: ButceYearState) => upsertButceYear(year, state),
     onError: (err: Error) => {
-      toast.error('Bütçe kaydedilemedi', { description: err.message });
+      toast.error("Bütçe kaydedilemedi", { description: err.message });
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: muhasebeButceKeys.year(year) });
@@ -37,7 +37,7 @@ export function useSaveButceYear(year: number) {
 
 export function useDebouncedButceSave(year: number, delayMs = 700) {
   const { mutate, isPending, isError } = useSaveButceYear(year);
-  const [status, setStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [status, setStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -48,17 +48,17 @@ export function useDebouncedButceSave(year: number, delayMs = 700) {
 
   const save = useCallback(
     (state: ButceYearState) => {
-      setStatus('saving');
+      setStatus("saving");
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => {
         mutate(state, {
-          onSuccess: () => setStatus('saved'),
-          onError: () => setStatus('error'),
+          onSuccess: () => setStatus("saved"),
+          onError: () => setStatus("error"),
         });
       }, delayMs);
     },
     [delayMs, mutate],
   );
 
-  return { save, status: isPending ? 'saving' : isError ? 'error' : status };
+  return { save, status: isPending ? "saving" : isError ? "error" : status };
 }

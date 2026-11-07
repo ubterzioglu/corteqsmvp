@@ -31,11 +31,7 @@ export type CaddeActorContext = {
 
 // TR "bireysel" sayılan flat roller; geri kalan tüm roller kurumsal aktör kuralına tabidir
 // (User_CityAmbassador ve User_BloggerVlogger dahil). SQL ile birebir aynı liste.
-const INDIVIDUAL_ROLE_KEYS: ReadonlySet<string> = new Set([
-  "User_Standard",
-  "User_DiasporaMember",
-  "User_Contributor",
-]);
+const INDIVIDUAL_ROLE_KEYS: ReadonlySet<string> = new Set(["User_Standard", "User_DiasporaMember", "User_Contributor"]);
 
 export function isIndividualRoleKey(roleKey: string | null): boolean {
   return roleKey !== null && INDIVIDUAL_ROLE_KEYS.has(roleKey);
@@ -104,8 +100,10 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
   cadde_profile_incomplete: "Caddeye paylaşım için önce profilinde ülke ve şehir bilgini tamamla.",
   phone_verification_required: "Bu işlem için telefon doğrulaması gerekiyor.",
   cadde_post_permission_denied: "Hesabının Cadde paylaşım yetkisi bulunmuyor.",
-  cadde_bridge_permission_denied: "Köprü akışına paylaşım yetkin bulunmuyor. Profil ayarlarından Köprü koşullarını kontrol et.",
-  cadde_tr_scope_restricted: "Türkiye yerleşik üyeler normal Cadde'de yalnız Türkiye kapsamına paylaşabilir. Ülke filtresini Türkiye seç veya Köprü modunu kullan.",
+  cadde_bridge_permission_denied:
+    "Köprü akışına paylaşım yetkin bulunmuyor. Profil ayarlarından Köprü koşullarını kontrol et.",
+  cadde_tr_scope_restricted:
+    "Türkiye yerleşik üyeler normal Cadde'de yalnız Türkiye kapsamına paylaşabilir. Ülke filtresini Türkiye seç veya Köprü modunu kullan.",
   cadde_invalid_post_type: "Geçersiz paylaşım tipi.",
   cadde_invalid_body: "Paylaşım metni 1-4000 karakter olmalı.",
   cadde_invalid_title: "Başlık en fazla 160 karakter olabilir.",
@@ -212,7 +210,10 @@ const CADDE_RPC_ERROR_MESSAGES: Record<string, string> = {
  */
 
 /** Supabase RPC hatasını kullanıcıya gösterilebilir mesaja çevirir. */
-export function resolveCaddeRpcErrorMessage(error: unknown, fallback = "İşlem tamamlanamadı. Lütfen tekrar dene."): string {
+export function resolveCaddeRpcErrorMessage(
+  error: unknown,
+  fallback = "İşlem tamamlanamadı. Lütfen tekrar dene.",
+): string {
   const raw = extractRpcErrorText(error);
   for (const [code, message] of Object.entries(CADDE_RPC_ERROR_MESSAGES)) {
     if (raw.includes(code)) return message;
@@ -332,10 +333,13 @@ export function mapActorContext(raw: unknown): CaddeActorContext | null {
   const bool = (key: string): boolean => value[key] === true;
 
   const featureKeys = new Set<string>(
-    Array.isArray(value.featureKeys) ? (value.featureKeys as unknown[]).filter((k): k is string => typeof k === "string") : [],
+    Array.isArray(value.featureKeys)
+      ? (value.featureKeys as unknown[]).filter((k): k is string => typeof k === "string")
+      : [],
   );
-  const missingGateFields = (Array.isArray(value.missingGateFields) ? (value.missingGateFields as unknown[]) : [])
-    .filter((f): f is CaddeMissingGateField => f === "country" || f === "city" || f === "phone_verification");
+  const missingGateFields = (
+    Array.isArray(value.missingGateFields) ? (value.missingGateFields as unknown[]) : []
+  ).filter((f): f is CaddeMissingGateField => f === "country" || f === "city" || f === "phone_verification");
 
   return {
     userId: str("userId"),

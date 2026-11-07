@@ -16,10 +16,7 @@ import {
   sumMonthlyCosts,
 } from "@/lib/relocation-content-format";
 import { COST_ITEM_LABELS } from "@/lib/relocation-chat-context";
-import type {
-  RelocationFxRateRow,
-  RelocationLivingCostRow,
-} from "@/lib/relocation-content-types";
+import type { RelocationFxRateRow, RelocationLivingCostRow } from "@/lib/relocation-content-types";
 
 const ITEM_ICONS: Record<string, string> = {
   rent: "🏠",
@@ -46,9 +43,8 @@ const ITEM_ICONS: Record<string, string> = {
  */
 const CostQualifierNote = () => (
   <p className="text-xs leading-relaxed text-muted-foreground">
-    Bu tutarlar, ilgili ülkenin büyük şehirleri için <strong>tipik aylık aralıklardır</strong>;
-    genel piyasa bilgisine dayanır ve resmî bir fiyat endeksinden türetilmemiştir. Kendi
-    durumunuz bu aralığın dışında olabilir.
+    Bu tutarlar, ilgili ülkenin büyük şehirleri için <strong>tipik aylık aralıklardır</strong>; genel piyasa bilgisine
+    dayanır ve resmî bir fiyat endeksinden türetilmemiştir. Kendi durumunuz bu aralığın dışında olabilir.
   </p>
 );
 
@@ -160,9 +156,7 @@ export function LivingCostsPanel({
                   </span>
                 )}
               </CardTitle>
-              <p className="text-sm text-muted-foreground">
-                {householdSize} kişilik hane için platform verisi.
-              </p>
+              <p className="text-sm text-muted-foreground">{householdSize} kişilik hane için platform verisi.</p>
             </CardHeader>
             <CardContent className="space-y-2">
               {COST_ITEM_ORDER.map((itemKey) => {
@@ -172,17 +166,12 @@ export function LivingCostsPanel({
                 if (!picked) return null;
 
                 return (
-                  <div
-                    key={itemKey}
-                    className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
-                  >
+                  <div key={itemKey} className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2">
                     <span className="flex items-center gap-2 text-sm">
                       <span aria-hidden>{ITEM_ICONS[itemKey] ?? "•"}</span>
                       {COST_ITEM_LABELS[itemKey] ?? itemKey}
                       {picked.household_size !== householdSize && (
-                        <span className="text-xs text-muted-foreground">
-                          ({picked.household_size} kişilik veri)
-                        </span>
+                        <span className="text-xs text-muted-foreground">({picked.household_size} kişilik veri)</span>
                       )}
                     </span>
                     <span className="text-sm font-semibold">{formatCostRange(picked)}</span>

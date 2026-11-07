@@ -133,9 +133,7 @@ describe("CaddeComposer", () => {
 
     const button = screen.getByRole("button", { name: /Yakında/ });
     expect(button).toBeDisabled();
-    expect(screen.getByTestId("cadde-extra-target-locked")).toHaveTextContent(
-      /Şimdilik tek konuma paylaşabilirsin/i,
-    );
+    expect(screen.getByTestId("cadde-extra-target-locked")).toHaveTextContent(/Şimdilik tek konuma paylaşabilirsin/i);
 
     fireEvent.click(button);
     expect(onChange).not.toHaveBeenCalled();
@@ -240,7 +238,10 @@ describe("CaddeComposer", () => {
     it("yükleme sürerken yazılan metni geri almaz", async () => {
       let finishUpload: ((asset: unknown) => void) | undefined;
       vi.mocked(uploadCaddeMedia).mockImplementation(
-        () => new Promise((resolve) => { finishUpload = resolve; }) as ReturnType<typeof uploadCaddeMedia>,
+        () =>
+          new Promise((resolve) => {
+            finishUpload = resolve;
+          }) as ReturnType<typeof uploadCaddeMedia>,
       );
 
       const { container } = render(<ControlledComposer />);
@@ -267,7 +268,10 @@ describe("CaddeComposer", () => {
     it("yükleme sürerken görünür bir gösterge çizer", async () => {
       let finishUpload: ((asset: unknown) => void) | undefined;
       vi.mocked(uploadCaddeMedia).mockImplementation(
-        () => new Promise((resolve) => { finishUpload = resolve; }) as ReturnType<typeof uploadCaddeMedia>,
+        () =>
+          new Promise((resolve) => {
+            finishUpload = resolve;
+          }) as ReturnType<typeof uploadCaddeMedia>,
       );
 
       const { container } = render(<ControlledComposer />);

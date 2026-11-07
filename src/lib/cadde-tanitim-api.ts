@@ -41,7 +41,9 @@ export async function listPromotionPlacementOptions(): Promise<CaddePromotionPla
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
     if (error) throw error;
-    return ((data ?? []) as Array<{ key: string; label_tr: string; description: string | null; sort_order: number }>).map((row) => ({
+    return (
+      (data ?? []) as Array<{ key: string; label_tr: string; description: string | null; sort_order: number }>
+    ).map((row) => ({
       key: row.key,
       labelTr: row.label_tr,
       description: row.description,
@@ -81,12 +83,15 @@ async function enrichCampaigns(rows: CampaignRow[]): Promise<CaddePromotionCampa
   ]);
 
   const placementsByCampaign = new Map<string, string[]>();
-  for (const row of ((placementsRes.data ?? []) as Array<{ campaign_id: string; placement_key: string }>)) {
-    placementsByCampaign.set(row.campaign_id, [...(placementsByCampaign.get(row.campaign_id) ?? []), row.placement_key]);
+  for (const row of (placementsRes.data ?? []) as Array<{ campaign_id: string; placement_key: string }>) {
+    placementsByCampaign.set(row.campaign_id, [
+      ...(placementsByCampaign.get(row.campaign_id) ?? []),
+      row.placement_key,
+    ]);
   }
 
   const counts = new Map<string, { impression: number; click: number }>();
-  for (const row of ((eventsRes.data ?? []) as Array<{ campaign_id: string; event_type: string }>)) {
+  for (const row of (eventsRes.data ?? []) as Array<{ campaign_id: string; event_type: string }>) {
     const current = counts.get(row.campaign_id) ?? { impression: 0, click: 0 };
     if (row.event_type === "impression") current.impression += 1;
     if (row.event_type === "click") current.click += 1;
@@ -212,7 +217,11 @@ const SESSION_IMPRESSION_PREFIX = "cadde.promotion.impression.";
  * Impression/click kaydı — fire-and-forget: analitik hatası UX'i asla kırmaz
  * (yalnız console telemetrisi). DB tarafında ayrıca saatlik abuse limiti vardır.
  */
-export function recordPromotionEvent(campaignId: string, placementKey: string, eventType: "impression" | "click"): void {
+export function recordPromotionEvent(
+  campaignId: string,
+  placementKey: string,
+  eventType: "impression" | "click",
+): void {
   if (!isSupabaseConfigured) return;
 
   if (eventType === "impression") {

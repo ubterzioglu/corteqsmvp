@@ -242,18 +242,30 @@ const AdminMarqueePage = () => {
             </div>
             <div className="space-y-2">
               <Label>Yayın tarihi</Label>
-              <Input type="datetime-local" value={form.published_at} onChange={(event) => updateForm("published_at", event.target.value)} />
+              <Input
+                type="datetime-local"
+                value={form.published_at}
+                onChange={(event) => updateForm("published_at", event.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label>Sıralama</Label>
-              <Input value={form.sort_order} onChange={(event) => updateForm("sort_order", event.target.value)} inputMode="numeric" />
+              <Input
+                value={form.sort_order}
+                onChange={(event) => updateForm("sort_order", event.target.value)}
+                inputMode="numeric"
+              />
             </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
             <div className="space-y-2">
               <Label>Başlık</Label>
-              <Input value={form.title} onChange={(event) => updateForm("title", event.target.value)} placeholder="Türk diasporası 164 ülkede görünür" />
+              <Input
+                value={form.title}
+                onChange={(event) => updateForm("title", event.target.value)}
+                placeholder="Türk diasporası 164 ülkede görünür"
+              />
             </div>
             <div className="space-y-2">
               <Label>Slug</Label>
@@ -287,13 +299,21 @@ const AdminMarqueePage = () => {
 
           <div className="space-y-2">
             <Label>Detay metni</Label>
-            <Textarea value={form.detail_content} onChange={(event) => updateForm("detail_content", event.target.value)} rows={6} />
+            <Textarea
+              value={form.detail_content}
+              onChange={(event) => updateForm("detail_content", event.target.value)}
+              rows={6}
+            />
           </div>
 
           <div className="grid gap-4 md:grid-cols-[2fr_1fr]">
             <div className="space-y-2">
               <Label>Görsel URL</Label>
-              <Input value={form.image_url} onChange={(event) => updateForm("image_url", event.target.value)} placeholder="https://..." />
+              <Input
+                value={form.image_url}
+                onChange={(event) => updateForm("image_url", event.target.value)}
+                placeholder="https://..."
+              />
             </div>
             <div className="space-y-2">
               <Label>Görsel alt metni</Label>
@@ -304,7 +324,11 @@ const AdminMarqueePage = () => {
           <div className="grid gap-4 rounded-lg border border-dashed border-primary/30 bg-primary/5 p-4 md:grid-cols-[180px_1fr]">
             <div className="aspect-[4/3] overflow-hidden rounded-md border border-border bg-background">
               {form.image_url ? (
-                <img src={form.image_url} alt={form.image_alt || "Haber bandı görsel önizleme"} className="h-full w-full object-cover" />
+                <img
+                  src={form.image_url}
+                  alt={form.image_alt || "Haber bandı görsel önizleme"}
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full items-center justify-center text-muted-foreground">
                   <ImagePlus className="h-8 w-8" />
@@ -315,7 +339,8 @@ const AdminMarqueePage = () => {
               <div>
                 <Label htmlFor="marquee-image-upload">Photo upload</Label>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Görsel `newsimage` bucket içine yüklenir ve URL alanına otomatik yazılır. JPG, PNG, WEBP veya GIF; maksimum 5 MB.
+                  Görsel `newsimage` bucket içine yüklenir ve URL alanına otomatik yazılır. JPG, PNG, WEBP veya GIF;
+                  maksimum 5 MB.
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -344,7 +369,11 @@ const AdminMarqueePage = () => {
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label>Sayı / değer</Label>
-              <Input value={form.metric_value} onChange={(event) => updateForm("metric_value", event.target.value)} placeholder="8.8 milyon" />
+              <Input
+                value={form.metric_value}
+                onChange={(event) => updateForm("metric_value", event.target.value)}
+                placeholder="8.8 milyon"
+              />
             </div>
             <div className="flex items-center justify-between rounded-md border border-border p-3">
               <div>
@@ -379,7 +408,9 @@ const AdminMarqueePage = () => {
       <Card>
         <CardHeader>
           <CardTitle>OpenClaw Haber Havuzu</CardTitle>
-          <CardDescription>Aktif haberleri tek tek marquee akışına ekleyin. Aynı haber ikinci kez eklenmez.</CardDescription>
+          <CardDescription>
+            Aktif haberleri tek tek marquee akışına ekleyin. Aynı haber ikinci kez eklenmez.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -427,7 +458,11 @@ const AdminMarqueePage = () => {
                             onClick={() => void handleImportNewsPost(post)}
                             disabled={Boolean(importedItem) || importingNewsPostId === post.id}
                           >
-                            {importingNewsPostId === post.id ? "Ekleniyor..." : importedItem ? "Eklendi" : "Marquee’ye ekle"}
+                            {importingNewsPostId === post.id
+                              ? "Ekleniyor..."
+                              : importedItem
+                                ? "Eklendi"
+                                : "Marquee’ye ekle"}
                           </Button>
                           {importedItem && (
                             <Button variant="outline" size="sm" onClick={() => editItem(importedItem)}>
@@ -483,7 +518,10 @@ const AdminMarqueePage = () => {
                 </TableRow>
               ) : (
                 items.map((item) => {
-                  const type = item.type === "news" || item.type === "stat" || item.type === "announcement" ? item.type : "announcement";
+                  const type =
+                    item.type === "news" || item.type === "stat" || item.type === "announcement"
+                      ? item.type
+                      : "announcement";
                   return (
                     <TableRow key={item.id}>
                       <TableCell>
@@ -499,7 +537,9 @@ const AdminMarqueePage = () => {
                       </TableCell>
                       <TableCell>{marqueeTypeLabels[type]}</TableCell>
                       <TableCell>
-                        <Badge variant={item.is_active ? "outline" : "secondary"}>{item.is_active ? "Aktif" : "Pasif"}</Badge>
+                        <Badge variant={item.is_active ? "outline" : "secondary"}>
+                          {item.is_active ? "Aktif" : "Pasif"}
+                        </Badge>
                       </TableCell>
                       <TableCell>{item.link_enabled ? "Açık" : "Kapalı"}</TableCell>
                       <TableCell>{item.sort_order}</TableCell>

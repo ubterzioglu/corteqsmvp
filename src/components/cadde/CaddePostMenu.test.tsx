@@ -41,9 +41,7 @@ describe("CaddePostMenu — üç nokta menüsü (A11c)", () => {
     await user.click(screen.getByTestId("cadde-post-menu-trigger"));
     await user.click(await screen.findByRole("menuitem", { name: /Sil/ }));
 
-    expect(
-      await screen.findByText("Bu paylaşımı silmek istiyor musun?")
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Bu paylaşımı silmek istiyor musun?")).toBeInTheDocument();
 
     await user.click(screen.getByTestId("cadde-post-delete-confirm"));
 
@@ -58,11 +56,7 @@ describe("CaddePostMenu — üç nokta menüsü (A11c)", () => {
     await user.click(await screen.findByRole("menuitem", { name: /Sil/ }));
     await user.click(await screen.findByText("Vazgeç"));
 
-    await waitFor(() =>
-      expect(
-        screen.queryByText("Bu paylaşımı silmek istiyor musun?")
-      ).not.toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.queryByText("Bu paylaşımı silmek istiyor musun?")).not.toBeInTheDocument());
     expect(deleteCaddePostMock).not.toHaveBeenCalled();
   });
 

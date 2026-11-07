@@ -96,9 +96,7 @@ describe("AdminAccessGate / AdminShell erişim akışı", () => {
     mocks.userIsAdmin.mockResolvedValue(false);
     const { container } = renderShell();
 
-    expect(
-      await screen.findByText("Bu hesabın yönetici yetkisi bulunmuyor"),
-    ).toBeInTheDocument();
+    expect(await screen.findByText("Bu hesabın yönetici yetkisi bulunmuyor")).toBeInTheDocument();
     expect(screen.getByText(/is_admin\(\) kontrolü üzerinden doğrulanır/)).toBeInTheDocument();
     expect(screen.getByText("admin@corteqs.test")).toBeInTheDocument();
     expect(container.textContent).not.toContain("admin_users");

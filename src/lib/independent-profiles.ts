@@ -228,18 +228,13 @@ export async function getPublicIndependentProfile(slug: string): Promise<Indepen
 export async function listPublishedIndependentProfiles(
   profileKind: IndependentProfileKindFilter = "all",
 ): Promise<IndependentProfile[]> {
-  let query = supabase
-    .from("independent_profiles")
-    .select("*")
-    .eq("is_published", true);
+  let query = supabase.from("independent_profiles").select("*").eq("is_published", true);
 
   if (profileKind !== "all") {
     query = query.eq("profile_kind", profileKind);
   }
 
-  const { data, error } = await query
-    .order("sort_order", { ascending: true })
-    .order("title", { ascending: true });
+  const { data, error } = await query.order("sort_order", { ascending: true }).order("title", { ascending: true });
 
   if (error || !Array.isArray(data)) return [];
   return data.map((row) => rowToIndependentProfile(row as IndependentProfileRow));

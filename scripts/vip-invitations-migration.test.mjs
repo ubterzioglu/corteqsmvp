@@ -7,10 +7,7 @@ const migration = readFileSync(
   "utf8",
 );
 const resolveFix = readFileSync(
-  path.resolve(
-    process.cwd(),
-    "supabase/migrations/applied/20260830131000_fix_vip_resolve_terminal_return.sql",
-  ),
+  path.resolve(process.cwd(), "supabase/migrations/applied/20260830131000_fix_vip_resolve_terminal_return.sql"),
   "utf8",
 );
 

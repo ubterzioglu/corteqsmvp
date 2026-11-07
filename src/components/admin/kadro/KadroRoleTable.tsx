@@ -71,11 +71,12 @@ export function KadroRoleTable({ groups, onSelectRole }: KadroRoleTableProps) {
   return (
     <div className="space-y-6">
       {groups.map((group) => (
-        <div key={group.deptId} className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700">
+        <div
+          key={group.deptId}
+          className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700"
+        >
           <div className="px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
-            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              {getDeptName(group.deptId)}
-            </h2>
+            <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{getDeptName(group.deptId)}</h2>
           </div>
 
           <div className="divide-y divide-slate-200 dark:divide-slate-700">
@@ -101,22 +102,22 @@ export function KadroRoleTable({ groups, onSelectRole }: KadroRoleTableProps) {
                           <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                             {role.title}
                           </h4>
-                          <span className="text-xs text-slate-500 dark:text-slate-400">
-                            Dalga {role.wave}
-                          </span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Dalga {role.wave}</span>
                         </div>
 
                         {role.currentOwner && (
-                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">
-                            {role.currentOwner}
-                          </p>
+                          <p className="text-xs text-slate-600 dark:text-slate-400 mb-2">{role.currentOwner}</p>
                         )}
 
                         <div className="flex flex-wrap gap-2">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusTone(role.currentStatus)}`}>
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getStatusTone(role.currentStatus)}`}
+                          >
                             {getStatusLabel(role.currentStatus)}
                           </span>
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityTone(role.currentPriority)}`}>
+                          <span
+                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${getPriorityTone(role.currentPriority)}`}
+                          >
                             {getPriorityLabel(role.currentPriority)}
                           </span>
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300">

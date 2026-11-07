@@ -16,14 +16,8 @@ import {
 } from "@/lib/relocation-content-api";
 import { relocationKeys } from "@/lib/relocation-query-keys";
 import { askRelocationAssistant, type RelocationChatMessage } from "@/lib/relocation-chat-api";
-import {
-  buildRelocationChatContext,
-  type RelocationChatProfile,
-} from "@/lib/relocation-chat-context";
-import type {
-  RelocationMoveDocumentType,
-  RelocationProgressItemType,
-} from "@/lib/relocation-content-types";
+import { buildRelocationChatContext, type RelocationChatProfile } from "@/lib/relocation-chat-context";
+import type { RelocationMoveDocumentType, RelocationProgressItemType } from "@/lib/relocation-content-types";
 
 interface UseRelocationMoveContentInput {
   moveId: string | null;
@@ -39,8 +33,7 @@ interface UseRelocationMoveContentInput {
   onError: (message: string) => void;
 }
 
-const errorMessage = (error: unknown): string =>
-  error instanceof Error ? error.message : "Beklenmeyen hata";
+const errorMessage = (error: unknown): string => (error instanceof Error ? error.message : "Beklenmeyen hata");
 
 export function useRelocationMoveContent(input: UseRelocationMoveContentInput) {
   const queryClient = useQueryClient();
@@ -74,10 +67,7 @@ export function useRelocationMoveContent(input: UseRelocationMoveContentInput) {
   });
 
   const livingCosts = useMemo(() => livingCostsQuery.data ?? [], [livingCostsQuery.data]);
-  const requiredDocuments = useMemo(
-    () => requiredDocumentsQuery.data ?? [],
-    [requiredDocumentsQuery.data],
-  );
+  const requiredDocuments = useMemo(() => requiredDocumentsQuery.data ?? [], [requiredDocumentsQuery.data]);
 
   /** Tamamlanmış belge id'leri — panel `Set` ile O(1) sorgular. */
   const doneDocumentKeys = useMemo(() => {
@@ -191,9 +181,7 @@ export function useRelocationMoveContent(input: UseRelocationMoveContentInput) {
 
   const saveChatTranscript = useCallback(() => {
     if (chatMessages.length === 0) return;
-    const content = chatMessages
-      .map((m) => `${m.role === "user" ? "Siz" : "Asistan"}: ${m.content}`)
-      .join("\n\n");
+    const content = chatMessages.map((m) => `${m.role === "user" ? "Siz" : "Asistan"}: ${m.content}`).join("\n\n");
     saveDocumentMutation.mutate({
       title: `Asistan sohbeti — ${new Date().toLocaleDateString("tr-TR")}`,
       content,

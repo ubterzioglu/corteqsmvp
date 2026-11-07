@@ -58,9 +58,7 @@ describe("N02 · sidebar numaraları", () => {
     }
 
     const positions = drawn.map((number) => catalogOrder.indexOf(number));
-    expect(positions, "çizim sırası katalog sırasıyla uyuşmuyor").toEqual(
-      [...positions].sort((a, b) => a - b),
-    );
+    expect(positions, "çizim sırası katalog sırasıyla uyuşmuyor").toEqual([...positions].sort((a, b) => a - b));
   });
 
   it("numara ile etiket AYNI satırda — bot referansı yanlış satıra düşmesin", () => {

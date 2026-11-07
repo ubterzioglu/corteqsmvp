@@ -87,42 +87,42 @@ describe("DirectoryPage", () => {
     listUnifiedDirectoryRowsMock.mockResolvedValue({
       totalCount: 2,
       rows: [
-      {
-        recordType: "catalog_item",
-        id: "item-1",
-        href: "/directory/catalog/ayse-kaya",
-        title: "Ayşe Kaya",
-        roleKey: "Business_Market_Bakkal",
-        roleLabel: "Bakkal",
-        description: "Mahalle bakkalı",
-        country: "DE",
-        city: "Berlin",
-        imageUrl: null,
-        specialLabel: "Uzmanlık / Kategori",
-        specialValue: "Gıda",
-        isFeatured: false,
-        isVerified: true,
-        isClaimable: false,
-        itemType: "business",
-      },
-      {
-        recordType: "catalog_item",
-        id: "item-2",
-        href: "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
-        title: "Arkin Kara",
-        roleKey: "Healthcare_Doctor",
-        roleLabel: "Doktor",
-        description: "Dortmund'da Türkçe hizmet veren doktor.",
-        country: "DE",
-        city: "Dortmund",
-        imageUrl: null,
-        specialLabel: "Uzmanlık / Kategori",
-        specialValue: "Genel Tıp",
-        isFeatured: false,
-        isVerified: false,
-        isClaimable: true,
-        itemType: "advisor",
-      },
+        {
+          recordType: "catalog_item",
+          id: "item-1",
+          href: "/directory/catalog/ayse-kaya",
+          title: "Ayşe Kaya",
+          roleKey: "Business_Market_Bakkal",
+          roleLabel: "Bakkal",
+          description: "Mahalle bakkalı",
+          country: "DE",
+          city: "Berlin",
+          imageUrl: null,
+          specialLabel: "Uzmanlık / Kategori",
+          specialValue: "Gıda",
+          isFeatured: false,
+          isVerified: true,
+          isClaimable: false,
+          itemType: "business",
+        },
+        {
+          recordType: "catalog_item",
+          id: "item-2",
+          href: "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
+          title: "Arkin Kara",
+          roleKey: "Healthcare_Doctor",
+          roleLabel: "Doktor",
+          description: "Dortmund'da Türkçe hizmet veren doktor.",
+          country: "DE",
+          city: "Dortmund",
+          imageUrl: null,
+          specialLabel: "Uzmanlık / Kategori",
+          specialValue: "Genel Tıp",
+          isFeatured: false,
+          isVerified: false,
+          isClaimable: true,
+          itemType: "advisor",
+        },
       ],
     });
   });
@@ -167,9 +167,9 @@ describe("DirectoryPage", () => {
     expect(blogLink).toHaveAttribute("href", "/blog/almanya-gundelik-butce");
     expect(screen.getByRole("heading", { name: "İçerikler" })).toBeInTheDocument();
 
-    const directoryLinks = screen.getAllByRole("link").filter((link) =>
-      link.getAttribute("href")?.startsWith("/directory/catalog/"),
-    );
+    const directoryLinks = screen
+      .getAllByRole("link")
+      .filter((link) => link.getAttribute("href")?.startsWith("/directory/catalog/"));
     expect(directoryLinks.map((link) => link.getAttribute("href"))).toEqual([
       "/directory/catalog/ayse-kaya",
       "/directory/catalog/dortmund-turkce-doktor-arkin-kara",
@@ -185,9 +185,7 @@ describe("DirectoryPage", () => {
 
     expect(await screen.findByText("Ayşe Kaya")).toBeInTheDocument();
     await waitFor(() => {
-      expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
-        expect.objectContaining({ searchText: "doktor" }),
-      );
+      expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(expect.objectContaining({ searchText: "doktor" }));
     });
     expect(screen.queryByText(/Tam dizin için giriş gerekiyor/i)).toBeNull();
   });
@@ -217,9 +215,7 @@ describe("DirectoryPage", () => {
       renderPage();
 
       await waitFor(() => {
-        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
-          expect.objectContaining({ offset: 0 }),
-        );
+        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(expect.objectContaining({ offset: 0 }));
       });
     });
 
@@ -265,9 +261,7 @@ describe("DirectoryPage", () => {
       moreButton.click();
 
       await waitFor(() => {
-        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(
-          expect.objectContaining({ offset: 24 }),
-        );
+        expect(listUnifiedDirectoryRowsMock).toHaveBeenCalledWith(expect.objectContaining({ offset: 24 }));
       });
     });
   });

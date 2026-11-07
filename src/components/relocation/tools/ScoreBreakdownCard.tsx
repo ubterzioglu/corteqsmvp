@@ -32,9 +32,7 @@ export function ScoreBreakdownCard({
     <Card>
       <CardHeader>
         <CardTitle>{TOOLS_UI_COPY.breakdownTitle}</CardTitle>
-        {hasWeights && (
-          <p className="text-sm text-muted-foreground">{TOOLS_UI_COPY.breakdownHint}</p>
-        )}
+        {hasWeights && <p className="text-sm text-muted-foreground">{TOOLS_UI_COPY.breakdownHint}</p>}
       </CardHeader>
       <CardContent className="space-y-4">
         {entries.map(([dim, value]) => {
@@ -45,13 +43,9 @@ export function ScoreBreakdownCard({
             <div key={dim} className="space-y-1.5">
               <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 text-sm">
                 <span className="flex flex-wrap items-baseline gap-2">
-                  <span className="font-medium text-foreground">
-                    {dimensionLabels[dim] ?? dim}
-                  </span>
+                  <span className="font-medium text-foreground">{dimensionLabels[dim] ?? dim}</span>
                   {weight !== undefined && (
-                    <span className="text-xs text-muted-foreground">
-                      skorun %{Math.round(weight * 100)}'i
-                    </span>
+                    <span className="text-xs text-muted-foreground">skorun %{Math.round(weight * 100)}'i</span>
                   )}
                 </span>
                 <span className="flex items-center gap-2">
@@ -62,14 +56,8 @@ export function ScoreBreakdownCard({
                   <span className="tabular-nums text-muted-foreground">{pct}</span>
                 </span>
               </div>
-              <ScoreBandBar
-                value01={value ?? 0}
-                ariaLabel={dimensionLabels[dim] ?? dim}
-                className="h-1.5"
-              />
-              {description && (
-                <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>
-              )}
+              <ScoreBandBar value01={value ?? 0} ariaLabel={dimensionLabels[dim] ?? dim} className="h-1.5" />
+              {description && <p className="text-xs leading-relaxed text-muted-foreground">{description}</p>}
             </div>
           );
         })}

@@ -93,9 +93,7 @@ const AssistantBubble = () => {
           className="fixed z-40 max-w-[min(70vw,16rem)] rounded-2xl bg-card border border-border shadow-lg px-4 py-3 text-sm text-foreground transition-all duration-300 opacity-100 scale-100 hover:shadow-xl cursor-pointer text-left"
           style={{ right: RIGHT, bottom: `calc(${BUBBLE_BOTTOM} + 4.5rem)` }}
         >
-          {user
-            ? "Platform hakkında soracakların olursa buradayım! 👋"
-            : "Giriş yap, sorularını yanıtlayayım"}
+          {user ? "Platform hakkında soracakların olursa buradayım! 👋" : "Giriş yap, sorularını yanıtlayayım"}
         </button>
       )}
 

@@ -35,8 +35,7 @@ const OTP_PATTERN = /^\d{4,10}$/;
 const RECIPIENT_PATTERN = /^[1-9]\d{6,14}$/;
 
 export type ClaimResult =
-  | { allowed: true; attemptId: number }
-  | { allowed: false; reason: string; retryAfterSeconds: number };
+  { allowed: true; attemptId: number } | { allowed: false; reason: string; retryAfterSeconds: number };
 
 export type SendOutcome = "sent" | "failed";
 
@@ -96,13 +95,7 @@ export async function verifyWebhookSignature(
   const keyBytes = decodeSecret(secret);
   if (!keyBytes) return false;
 
-  const key = await crypto.subtle.importKey(
-    "raw",
-    keyBytes,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
+  const key = await crypto.subtle.importKey("raw", keyBytes, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
   const mac = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${id}.${timestamp}.${body}`));
   const expected = new Uint8Array(mac);
 

@@ -44,10 +44,7 @@ describe("groupDirectoryResults", () => {
       row({ id: "1", recordType: "catalog_item", title: "Sonra" }),
     ];
 
-    expect(groupDirectoryResults(rows).catalogItems.map((entry) => entry.title)).toEqual([
-      "Önce",
-      "Sonra",
-    ]);
+    expect(groupDirectoryResults(rows).catalogItems.map((entry) => entry.title)).toEqual(["Önce", "Sonra"]);
   });
 
   it("tek tip sonuçta diğer grup boş kalır", () => {

@@ -4,24 +4,12 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
- 
 const db = supabase;
 
 export type RelocationJobStatus =
-  | "queued"
-  | "running"
-  | "review"
-  | "completed"
-  | "failed"
-  | "cancelled"
-  | "budget_stopped";
+  "queued" | "running" | "review" | "completed" | "failed" | "cancelled" | "budget_stopped";
 
-export type RelocationCandidateReviewStatus =
-  | "pending"
-  | "approved"
-  | "rejected"
-  | "needs_edit"
-  | "published";
+export type RelocationCandidateReviewStatus = "pending" | "approved" | "rejected" | "needs_edit" | "published";
 
 export interface RelocationJobRow {
   id: string;
@@ -66,9 +54,7 @@ export async function listIngestionJobs(status?: string | null): Promise<Relocat
   return (data ?? []) as RelocationJobRow[];
 }
 
-export async function listCandidates(
-  reviewStatus?: string | null,
-): Promise<RelocationCandidateRow[]> {
+export async function listCandidates(reviewStatus?: string | null): Promise<RelocationCandidateRow[]> {
   let query = db
     .from("relocation_candidates")
     .select(

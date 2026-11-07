@@ -2,12 +2,7 @@ import { type ReactNode, useState } from "react";
 import { ChevronDown, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 export type SidebarMenuItem = {
@@ -23,11 +18,7 @@ type ProfileSidebarLayoutProps = {
   sidebarHeader?: ReactNode;
 };
 
-const ProfileSidebarLayout = ({
-  menuItems,
-  defaultActiveId,
-  sidebarHeader,
-}: ProfileSidebarLayoutProps) => {
+const ProfileSidebarLayout = ({ menuItems, defaultActiveId, sidebarHeader }: ProfileSidebarLayoutProps) => {
   const [activeId, setActiveId] = useState(defaultActiveId);
   const [mobileOpen, setMobileOpen] = useState(false);
 

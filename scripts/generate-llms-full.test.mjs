@@ -23,9 +23,7 @@ describe("llms-full.txt içerik tutarlılığı", () => {
   });
 
   it("service.json alanları llms-full.txt'te görünür", () => {
-    const serviceJson = JSON.parse(
-      readFileSync(resolve(rootDir, "public/ai/service.json"), "utf8"),
-    );
+    const serviceJson = JSON.parse(readFileSync(resolve(rootDir, "public/ai/service.json"), "utf8"));
     const llmsFull = readFileSync(resolve(rootDir, "public/llms-full.txt"), "utf8");
 
     expect(llmsFull).toContain(serviceJson.name);

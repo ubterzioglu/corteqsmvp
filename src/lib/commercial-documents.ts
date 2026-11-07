@@ -38,13 +38,8 @@ export const commercialDocuments: CommercialDocument[] = [
   },
 ];
 
-export const commercialDocumentMap = new Map(
-  commercialDocuments.map((document) => [document.slug, document]),
-);
+export const commercialDocumentMap = new Map(commercialDocuments.map((document) => [document.slug, document]));
 
-export const publicCommercialDocuments = commercialDocuments.filter(
-  (document) => document.isPublic !== false,
-);
+export const publicCommercialDocuments = commercialDocuments.filter((document) => document.isPublic !== false);
 
-export const getCommercialDocumentBySlug = (slug: string) =>
-  commercialDocumentMap.get(slug);
+export const getCommercialDocumentBySlug = (slug: string) => commercialDocumentMap.get(slug);

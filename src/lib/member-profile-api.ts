@@ -46,9 +46,7 @@ export async function updateProfileAttribute(attributeKey: string, value: Json, 
       throw new Error("Member profil kaydı bulunamadı.");
     }
 
-    const normalizedValue = typeof value === "string"
-      ? value.trim()
-      : String(value ?? "").trim();
+    const normalizedValue = typeof value === "string" ? value.trim() : String(value ?? "").trim();
 
     const { error } = await supabase.rpc("update_catalog_item_attribute", {
       p_item_id: currentMemberProfile.itemId,

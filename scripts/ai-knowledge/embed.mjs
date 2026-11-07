@@ -78,9 +78,7 @@ export async function embedText(text, apiKey, { taskType = "RETRIEVAL_DOCUMENT" 
   const data = await response.json();
   const values = data?.embedding?.values;
   if (!Array.isArray(values) || values.length !== EMBEDDING_DIMENSIONS) {
-    throw new Error(
-      `Beklenmeyen embedding boyutu: ${values?.length ?? "yok"} (beklenen ${EMBEDDING_DIMENSIONS})`,
-    );
+    throw new Error(`Beklenmeyen embedding boyutu: ${values?.length ?? "yok"} (beklenen ${EMBEDDING_DIMENSIONS})`);
   }
   return values;
 }

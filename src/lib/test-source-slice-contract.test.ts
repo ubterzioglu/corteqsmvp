@@ -33,8 +33,7 @@ function collectTestFiles(directory: string): string[] {
 }
 
 /** `indexOf` sonucunun -1 olamayacağını kanıtlayan ifadeler. */
-const GUARD =
-  /toBeGreaterThan\(\s*-1\s*\)|toBeGreaterThanOrEqual\(\s*0\s*\)|!==?\s*-1|===?\s*-1|>\s*-1|>=\s*0/;
+const GUARD = /toBeGreaterThan\(\s*-1\s*\)|toBeGreaterThanOrEqual\(\s*0\s*\)|!==?\s*-1|===?\s*-1|>\s*-1|>=\s*0/;
 
 type Offender = { file: string; line: number; text: string };
 
@@ -61,9 +60,7 @@ function findBareSliceIndexOf(files: string[]): Offender[] {
         const assigned = before.match(/(?:const|let)\s+(\w+)\s*=\s*[^=]*$/)?.[1];
         const window = lines.slice(index, index + 12).join("\n");
         const usedLater =
-          !inlineSlice && assigned
-            ? new RegExp(`\\.(slice|substring)\\([^)]*\\b${assigned}\\b`).test(window)
-            : false;
+          !inlineSlice && assigned ? new RegExp(`\\.(slice|substring)\\([^)]*\\b${assigned}\\b`).test(window) : false;
 
         if (!inlineSlice && !usedLater) continue; // dilime girmiyor: -1 zaten anlamlı
         if (GUARD.test(lines.slice(index, index + 6).join("\n"))) continue;

@@ -21,12 +21,9 @@ describe("public asset sınırı", () => {
   });
 
   it("tutulan büyük videoların üretim kodunda kullanım kanıtı vardır", () => {
-    expect(read("src/components/home-trial/HeroNetworkSection.tsx")).toContain(
-      "/landing-assets/hero-network.mp4",
-    );
+    expect(read("src/components/home-trial/HeroNetworkSection.tsx")).toContain("/landing-assets/hero-network.mp4");
     expect(read("src/components/CorteqsWhatIsAccordion.tsx")).toContain("/whatmaskot.mp4");
     expect(read("src/components/HeroSection.tsx")).toContain("/herovideo.mp4");
     expect(read("src/pages/LoginPage.tsx")).toContain("/herovideo.mp4");
   });
 });
-

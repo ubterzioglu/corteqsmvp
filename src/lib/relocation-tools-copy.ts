@@ -52,10 +52,7 @@ export const PERSONA_DIMENSION_LABELS: Record<string, string> = {
  * sub_scores boyut anahtarı → görünen etiket. Önce tool_key (aracın kendi kategori
  * etiketleri), yoksa result_kind genel haritası. Yoksa boş (ham anahtar gösterilir).
  */
-export function dimensionLabelsForResult(
-  resultKind: string,
-  toolKey?: string,
-): Record<string, string> {
+export function dimensionLabelsForResult(resultKind: string, toolKey?: string): Record<string, string> {
   if (toolKey === "top_relocation_challenge") return CHALLENGE_LABELS;
   if (toolKey === "relocation_readiness") return READINESS_LABELS;
   if (toolKey === "city_match") return CITY_LABELS;
@@ -74,10 +71,7 @@ export function dimensionLabelsForResult(
  * döner ve arayüz açıklama satırını hiç çizmez. Yeni araç eklerken buraya bir
  * satır ekle — bileşen tarafında değişiklik gerekmez.
  */
-export function dimensionDescriptionsForResult(
-  _resultKind: string,
-  toolKey?: string,
-): Record<string, string> {
+export function dimensionDescriptionsForResult(_resultKind: string, toolKey?: string): Record<string, string> {
   if (toolKey === "relocation_readiness") return READINESS_DIMENSION_DESCRIPTIONS;
   return {};
 }
@@ -108,12 +102,9 @@ export function dimensionWeightsForResult(toolKey?: string): Record<string, numb
 export const BUCKET_DESCRIPTIONS: Record<string, string> = {
   // #3 readiness
   ready: "Temel hazırlıkların tamam. Artık tarih belirleyip uygulamaya geçebilirsin.",
-  proceed:
-    "Yola çıkabilirsin ama açık kalan alanlar var. Aşağıdaki zayıf başlıkları taşınmadan önce kapat.",
-  prepare:
-    "Henüz taşınma tarihi vermek için erken. Önce aşağıdaki zayıf alanları güçlendir, sonra testi tekrar çöz.",
-  high_risk:
-    "Bu tabloyla taşınmak yüksek risk taşır. Finans ve evrak başlıklarını kapatmadan tarih belirleme.",
+  proceed: "Yola çıkabilirsin ama açık kalan alanlar var. Aşağıdaki zayıf başlıkları taşınmadan önce kapat.",
+  prepare: "Henüz taşınma tarihi vermek için erken. Önce aşağıdaki zayıf alanları güçlendir, sonra testi tekrar çöz.",
+  high_risk: "Bu tabloyla taşınmak yüksek risk taşır. Finans ve evrak başlıklarını kapatmadan tarih belirleme.",
 };
 
 /** Bucket açıklaması; tanımsız bucket → boş (arayüz satırı hiç çizmez). */

@@ -2,10 +2,7 @@
 // Son 200 admin işlemi + actor/target etiketleri için kullanıcı listesi.
 
 import { supabase } from "@/integrations/supabase/client";
-import {
-  fetchAdminUserLabels,
-  type AdminUserLabel,
-} from "./admin-user-labels";
+import { fetchAdminUserLabels, type AdminUserLabel } from "./admin-user-labels";
 
 export type AdminAuditLogRow = {
   id: string;

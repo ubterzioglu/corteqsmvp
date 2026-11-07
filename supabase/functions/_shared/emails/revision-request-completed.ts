@@ -39,8 +39,7 @@ const ACCENT = "#0d9488";
 const DEFAULT_SITE_URL = "https://corteqs.net";
 const ADMIN_PATH = "/admin/revision-requests";
 
-const FOOTNOTE =
-  "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
+const FOOTNOTE = "Bu bildirimi admin panelindeki Bildirim Ayarları sayfasından kapatabilirsin.";
 
 function asText(value: unknown): string {
   return typeof value === "string" && value.trim() !== "" ? value.trim() : "";
@@ -100,8 +99,7 @@ export function buildRevisionCompletedEmail(
   const base = asText(siteUrl).replace(/\/+$/, "") || DEFAULT_SITE_URL;
   const link = `${base}${ADMIN_PATH}`;
 
-  const basligiOlustur = (ayrac: string) =>
-    entry.numara ? `${entry.numara}${ayrac}${entry.title}` : entry.title;
+  const basligiOlustur = (ayrac: string) => (entry.numara ? `${entry.numara}${ayrac}${entry.title}` : entry.title);
 
   const detailBlock = entry.detail
     ? `<p style="margin:0 0 16px 0;">${detailHtml(entry.detail)}</p>`

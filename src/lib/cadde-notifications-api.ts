@@ -78,7 +78,9 @@ export function notificationUsesCafeIcon(notification: Pick<CaddeNotification, "
 }
 
 /** Bildirim tipi → deep link (spec §17.2). Bilinmeyen tipler Cadde köküne düşer. */
-export function notificationDeepLink(notification: Pick<CaddeNotification, "type" | "entityType" | "entityId">): string {
+export function notificationDeepLink(
+  notification: Pick<CaddeNotification, "type" | "entityType" | "entityId">,
+): string {
   if (notification.entityType === "cafe" && notification.entityId) return `/cadde/cafe/${notification.entityId}`;
   if (notification.entityType === "carsi_item" && notification.entityId) return `/cadde/carsi/${notification.entityId}`;
   if (notification.entityType === "promotion") return "/profile";

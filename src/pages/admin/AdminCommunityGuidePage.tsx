@@ -84,13 +84,13 @@ const AdminCommunityGuidePage = () => {
         </CardHeader>
         <CardContent className="space-y-4 text-sm text-muted-foreground">
           <p>
-            Bu rehber, admin panelindeki topluluk akışını güvenli ve tutarlı şekilde yürütmek için hazırlandı. Amaç yalnızca kayıt
-            açmak değil; doğru topluluğu doğru içerikle yayınlamak, gerekirse doğru editöre yetki vermek ve canlı sayfadaki kullanıcı
-            deneyimini bozmadan süreci tamamlamak.
+            Bu rehber, admin panelindeki topluluk akışını güvenli ve tutarlı şekilde yürütmek için hazırlandı. Amaç
+            yalnızca kayıt açmak değil; doğru topluluğu doğru içerikle yayınlamak, gerekirse doğru editöre yetki vermek
+            ve canlı sayfadaki kullanıcı deneyimini bozmadan süreci tamamlamak.
           </p>
           <p>
-            Kısa özet: yeni kayıt gerekiyorsa önce `Topluluklar`, yetki devri gerekiyorsa `Topluluk Editörleri`, süreç hakkında hızlı
-            referans gerekiyorsa `Topluluk Kullanma Kılavuzu` kullanılmalı.
+            Kısa özet: yeni kayıt gerekiyorsa önce `Topluluklar`, yetki devri gerekiyorsa `Topluluk Editörleri`, süreç
+            hakkında hızlı referans gerekiyorsa `Topluluk Kullanma Kılavuzu` kullanılmalı.
           </p>
           <div className="flex flex-wrap gap-2 pt-1">
             <Button asChild variant="outline">

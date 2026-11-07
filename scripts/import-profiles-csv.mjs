@@ -94,7 +94,9 @@ async function run() {
 
   if (!writeMode) {
     for (const record of records) {
-      console.log(`- ${record.title} | ${record.roleLabel} | ${record.location.city || "-"} | ${record.sourceUrl || "source yok"}`);
+      console.log(
+        `- ${record.title} | ${record.roleLabel} | ${record.location.city || "-"} | ${record.sourceUrl || "source yok"}`,
+      );
     }
     return;
   }

@@ -12,9 +12,12 @@ import { __resetClientErrorReportsForTests, describeError, reportClientError } f
 
 describe("describeError", () => {
   it("supabase-js düz nesne hatasından code/details/hint okur (instanceof Error'a daraltmaz)", () => {
-    expect(
-      describeError({ message: "phone_verification_required", code: "P0001", details: "x", hint: null }),
-    ).toEqual({ message: "phone_verification_required", code: "P0001", details: "x", hint: null });
+    expect(describeError({ message: "phone_verification_required", code: "P0001", details: "x", hint: null })).toEqual({
+      message: "phone_verification_required",
+      code: "P0001",
+      details: "x",
+      hint: null,
+    });
   });
 
   it("Error örneğinde ek alanları da okur", () => {
@@ -98,8 +101,6 @@ describe("reportClientError", () => {
     rpcMock.mockImplementationOnce(() => {
       throw new Error("client yok");
     });
-    expect(() =>
-      reportClientError({ source: "unhandled", context: "window", error: "x" }),
-    ).not.toThrow();
+    expect(() => reportClientError({ source: "unhandled", context: "window", error: "x" })).not.toThrow();
   });
 });

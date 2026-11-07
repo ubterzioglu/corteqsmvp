@@ -57,9 +57,12 @@ const ProfileResolverPage = () => {
     };
   }, [isLoading, user]);
 
-  const handleOpenEditableItem = useCallback((item: EditableCatalogItemSummary) => {
-    navigate(profileEditorPathFor(item), { replace: true });
-  }, [navigate]);
+  const handleOpenEditableItem = useCallback(
+    (item: EditableCatalogItemSummary) => {
+      navigate(profileEditorPathFor(item), { replace: true });
+    },
+    [navigate],
+  );
 
   // Bireysel öncelikli açılış: tek profil VEYA (birden çok profil + bir Bireysel
   // profil) durumunda doğrudan Bireysel'e (member) yönlendir. Diğer profillere
@@ -107,12 +110,7 @@ const ProfileResolverPage = () => {
     return (
       <div className="mx-auto w-full max-w-5xl px-4 py-10">
         <div className="mb-4 flex justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            className="gap-2 rounded-full"
-            onClick={() => void handleSignOut()}
-          >
+          <Button type="button" variant="outline" className="gap-2 rounded-full" onClick={() => void handleSignOut()}>
             <LogOut className="h-4 w-4" aria-hidden="true" />
             Çıkış Yap
           </Button>

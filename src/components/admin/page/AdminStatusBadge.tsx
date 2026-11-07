@@ -7,13 +7,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 
-export type AdminStatusTone =
-  | "success"
-  | "warning"
-  | "danger"
-  | "info"
-  | "pending"
-  | "neutral";
+export type AdminStatusTone = "success" | "warning" | "danger" | "info" | "pending" | "neutral";
 
 const toneClasses: Record<AdminStatusTone, string> = {
   success: "border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400",

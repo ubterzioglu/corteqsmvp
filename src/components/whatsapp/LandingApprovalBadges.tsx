@@ -1,10 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import {
-  approvedGroupBadgeMeta,
-  getOwnershipStatusMeta,
-  newBadgeMeta,
-} from "@/lib/whatsapp-landing-presentation";
+import { approvedGroupBadgeMeta, getOwnershipStatusMeta, newBadgeMeta } from "@/lib/whatsapp-landing-presentation";
 import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
 
 interface LandingBadgeProps {
@@ -31,7 +27,9 @@ export function LandingApprovalBadges({ landing }: LandingBadgeProps) {
       {badges.map((badge) => (
         <Tooltip key={badge.label}>
           <TooltipTrigger asChild>
-            <Badge className={`flex h-8 w-full cursor-default items-center justify-center border px-3 text-center text-xs font-semibold ${badge.className}`}>
+            <Badge
+              className={`flex h-8 w-full cursor-default items-center justify-center border px-3 text-center text-xs font-semibold ${badge.className}`}
+            >
               {badge.label}
             </Badge>
           </TooltipTrigger>

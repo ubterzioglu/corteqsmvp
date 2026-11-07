@@ -27,7 +27,9 @@ describe("App data routing", () => {
   });
 
   it("renders the unified data route inside the shared admin shell", async () => {
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();
@@ -35,7 +37,9 @@ describe("App data routing", () => {
 
   it("redirects legacy data category routes to the unified data page", async () => {
     window.history.pushState({}, "", "/admin/data/buyukelcilik");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();
@@ -43,7 +47,9 @@ describe("App data routing", () => {
 
   it("keeps the old kullanici-rolleri data alias inside the unified data flow", async () => {
     window.history.pushState({}, "", "/admin/data/kullanici-rolleri");
-    await act(async () => { render(<App />); });
+    await act(async () => {
+      render(<App />);
+    });
 
     expect(screen.getByText("Shared Admin Layout")).toBeInTheDocument();
     expect(screen.getByText("Unified Admin Data Page")).toBeInTheDocument();

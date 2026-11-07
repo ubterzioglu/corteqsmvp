@@ -8,10 +8,16 @@ export default function SurveySuccessMessage() {
         Cevabın başarıyla alındı. CorteQS topluluğunu birlikte geliştirmek için paylaştığın görüşler çok değerli.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Link to="/" className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50">
+        <Link
+          to="/"
+          className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-800 hover:bg-slate-50"
+        >
           Ana Sayfaya Dön
         </Link>
-        <Link to="/anket" className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">
+        <Link
+          to="/anket"
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700"
+        >
           Diğer Anketleri Gör
         </Link>
       </div>

@@ -37,19 +37,27 @@ const baseKopru: KopruRuleInput = {
 // Spec §22.1 zorunlu truth-table senaryoları
 describe("canPostKopruRule (CKS §7.2 truth table)", () => {
   it("TR bireysel + indivRelocating OFF → Köprü reddedilir", () => {
-    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: true, indivRelocating: false })).toBe(false);
+    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: true, indivRelocating: false })).toBe(
+      false,
+    );
   });
 
   it("TR bireysel + indivRelocating ON → Köprü yayınlanır", () => {
-    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: true, indivRelocating: true })).toBe(true);
+    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: true, indivRelocating: true })).toBe(
+      true,
+    );
   });
 
   it("TR işletme + digitalCommunity OFF → Köprü reddedilir", () => {
-    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: false, digitalCommunityEnabled: false })).toBe(false);
+    expect(
+      canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: false, digitalCommunityEnabled: false }),
+    ).toBe(false);
   });
 
   it("TR işletme + digitalCommunity ON → Köprü yayınlanır", () => {
-    expect(canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: false, digitalCommunityEnabled: true })).toBe(true);
+    expect(
+      canPostKopruRule({ ...baseKopru, isTRResident: true, isIndividualRole: false, digitalCommunityEnabled: true }),
+    ).toBe(true);
   });
 
   it("Diaspora yerleşik doğrulanmış → Köprü her zaman", () => {
@@ -65,7 +73,9 @@ describe("canPostKopruRule (CKS §7.2 truth table)", () => {
   });
 
   it("Admin / moderator → her durumda override", () => {
-    expect(canPostKopruRule({ ...baseKopru, isAdminOrModerator: true, profileComplete: false, hasBridgeFeature: false })).toBe(true);
+    expect(
+      canPostKopruRule({ ...baseKopru, isAdminOrModerator: true, profileComplete: false, hasBridgeFeature: false }),
+    ).toBe(true);
   });
 
   it("yerleşikliği belirsiz kullanıcı (ne TR ne diaspora) → reddedilir", () => {
@@ -86,14 +96,18 @@ describe("canPostCaddeRule", () => {
 
 describe("computeMissingGateFields", () => {
   it("ülke + şehir eksiklerini listeler; telefon yalnız zorunluysa istenir (D-03 stub)", () => {
-    expect(computeMissingGateFields({ country: null, city: " ", phoneRequired: false, isPhoneVerified: false }))
-      .toEqual(["country", "city"]);
-    expect(computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: false, isPhoneVerified: false }))
-      .toEqual([]);
-    expect(computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: true, isPhoneVerified: false }))
-      .toEqual(["phone_verification"]);
-    expect(computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: true, isPhoneVerified: true }))
-      .toEqual([]);
+    expect(
+      computeMissingGateFields({ country: null, city: " ", phoneRequired: false, isPhoneVerified: false }),
+    ).toEqual(["country", "city"]);
+    expect(
+      computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: false, isPhoneVerified: false }),
+    ).toEqual([]);
+    expect(
+      computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: true, isPhoneVerified: false }),
+    ).toEqual(["phone_verification"]);
+    expect(
+      computeMissingGateFields({ country: "Almanya", city: "Berlin", phoneRequired: true, isPhoneVerified: true }),
+    ).toEqual([]);
   });
 });
 
@@ -141,9 +155,9 @@ describe("resolveCaddeRpcErrorMessage", () => {
   });
 
   it("kodu details/hint alanında taşıyan düz nesneyi de çözer", () => {
-    expect(
-      resolveCaddeRpcErrorMessage({ message: "unexpected", details: "cadde_media_limit", hint: null }),
-    ).toContain("en fazla 4 görsel");
+    expect(resolveCaddeRpcErrorMessage({ message: "unexpected", details: "cadde_media_limit", hint: null })).toContain(
+      "en fazla 4 görsel",
+    );
     expect(
       resolveCaddeRpcErrorMessage({ message: "unexpected", details: null, hint: "cadde_video_disabled" }),
     ).toContain("Video");
@@ -205,7 +219,9 @@ const baseCafeJoin: CafeJoinRuleInput = {
 // SQL public.can_join_cadde_cafe ile birebir (mig 20260611100000)
 describe("canJoinCafeRule (CKS 7.3 cafe giris kurallari)", () => {
   it("arsiv ve sona ermis cafe herkese kapali (admin dahil)", () => {
-    expect(canJoinCafeRule({ ...baseCafeJoin, isArchivedOrInactive: true, isAdminOrModerator: true })).toBe("cadde_cafe_archived");
+    expect(canJoinCafeRule({ ...baseCafeJoin, isArchivedOrInactive: true, isAdminOrModerator: true })).toBe(
+      "cadde_cafe_archived",
+    );
     expect(canJoinCafeRule({ ...baseCafeJoin, hasEnded: true, isAdminOrModerator: true })).toBe("cadde_cafe_ended");
   });
 
@@ -219,15 +235,35 @@ describe("canJoinCafeRule (CKS 7.3 cafe giris kurallari)", () => {
   });
 
   it("telefon flag'i acikken dogrulanmamis kullanici katilamaz (D-03 stub'da flag kapali)", () => {
-    expect(canJoinCafeRule({ ...baseCafeJoin, phoneRequired: true, isPhoneVerified: false })).toBe("phone_verification_required");
+    expect(canJoinCafeRule({ ...baseCafeJoin, phoneRequired: true, isPhoneVerified: false })).toBe(
+      "phone_verification_required",
+    );
     expect(canJoinCafeRule({ ...baseCafeJoin, phoneRequired: false, isPhoneVerified: false })).toBeNull();
   });
 
   it("TR cafe yalniz TR yerlesik uyeye acik; flag acikken TR telefonu da gerekir", () => {
     expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: false })).toBe("cadde_cafe_tr_only");
     expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true })).toBeNull();
-    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true, phoneRequired: true, isPhoneVerified: true, hasTRPhone: false })).toBe("cadde_cafe_tr_only");
-    expect(canJoinCafeRule({ ...baseCafeJoin, isTRCafe: true, isTRResident: true, phoneRequired: true, isPhoneVerified: true, hasTRPhone: true })).toBeNull();
+    expect(
+      canJoinCafeRule({
+        ...baseCafeJoin,
+        isTRCafe: true,
+        isTRResident: true,
+        phoneRequired: true,
+        isPhoneVerified: true,
+        hasTRPhone: false,
+      }),
+    ).toBe("cadde_cafe_tr_only");
+    expect(
+      canJoinCafeRule({
+        ...baseCafeJoin,
+        isTRCafe: true,
+        isTRResident: true,
+        phoneRequired: true,
+        isPhoneVerified: true,
+        hasTRPhone: true,
+      }),
+    ).toBeNull();
   });
 });
 

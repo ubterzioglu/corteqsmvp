@@ -11,11 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FileText, MessageSquare, RotateCcw, UserPlus, Users } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  fetchTractionMetrics,
-  formatRatePercent,
-  totalContentCreated,
-} from "@/lib/admin/admin-traction-api";
+import { fetchTractionMetrics, formatRatePercent, totalContentCreated } from "@/lib/admin/admin-traction-api";
 import type { LucideIcon } from "lucide-react";
 
 interface MetricCardProps {
@@ -60,15 +56,14 @@ export default function AdminTractionPage() {
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold tracking-tight">Traction — Büyüme Metrikleri</h1>
         <p className="text-sm text-muted-foreground">
-          Faz 6 türetilmiş metrikler (M14 view'ları). Sayılar canlı veritabanından okunur;
-          tavsiye yanıt oranı M17 tavsiye modülü gelene dek boş görünür (normal).
+          Faz 6 türetilmiş metrikler (M14 view'ları). Sayılar canlı veritabanından okunur; tavsiye yanıt oranı M17
+          tavsiye modülü gelene dek boş görünür (normal).
         </p>
       </header>
 
       {isError ? (
         <p className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
-          Metrikler okunamadı. Yönetici yetkisi gerekiyor olabilir; sayfayı yenileyip tekrar
-          deneyin.
+          Metrikler okunamadı. Yönetici yetkisi gerekiyor olabilir; sayfayı yenileyip tekrar deneyin.
         </p>
       ) : null}
 
@@ -91,13 +86,7 @@ export default function AdminTractionPage() {
         />
         <MetricCard
           label="Tavsiye Yanıt Oranı"
-          value={
-            isLoading
-              ? "…"
-              : recommendation?.available
-                ? formatRatePercent(recommendation.response_rate)
-                : "—"
-          }
+          value={isLoading ? "…" : recommendation?.available ? formatRatePercent(recommendation.response_rate) : "—"}
           subtitle={
             recommendation?.available
               ? `${recommendation.responded}/${recommendation.total} talep yanıtlandı`
