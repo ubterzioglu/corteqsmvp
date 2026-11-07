@@ -15,6 +15,7 @@ import { createReadStream } from "node:fs";
 import { access, mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { normalizeRequestPath as normalizeRequestPathIn } from "./scripts/server/request-path.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -148,29 +149,9 @@ const writeRuntimeConfig = async () => {
   );
 };
 
-const normalizeRequestPath = (requestUrl) => {
-  const pathname = new URL(requestUrl, "http://localhost").pathname;
-  const decodedPath = decodeURIComponent(pathname);
-  
-  // SG8: Windows backslash traversal koruması
-  if (decodedPath.includes("\\")) {
-    return null;
-  }
-  
-  const normalizedPath = path.posix.normalize(decodedPath);
-
-  if (normalizedPath.startsWith("/..")) {
-    return null;
-  }
-
-  // SG8: distDir dışında dosya erişimini engelle
-  const resolvedPath = path.resolve(distDir, "." + normalizedPath);
-  if (!resolvedPath.startsWith(path.resolve(distDir))) {
-    return null;
-  }
-
-  return normalizedPath;
-};
+// SG8 traversal korumasının tek kaynağı ayrı modüldedir ki gerçek fonksiyon test edilebilsin
+// (testi: scripts/server/request-path.test.mjs).
+const normalizeRequestPath = (requestUrl) => normalizeRequestPathIn(requestUrl, distDir);
 
 const hasFileExtension = (requestPath) =>
   path.posix.extname(requestPath) !== "";
