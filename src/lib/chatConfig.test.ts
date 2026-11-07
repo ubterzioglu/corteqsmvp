@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   INITIAL_DATA,
   STEP_ORDER,
+  detectCommand,
   getNextStep,
   getStepMessage,
   resolveCategoryInput,
@@ -10,6 +11,68 @@ import {
   shouldStartRegistration,
   validateStep,
 } from "@/lib/chatConfig";
+
+// Görünmez boşluklar kod noktasıyla üretilir: kaçış dizisini araç katmanı ham karaktere
+// çevirebiliyor (CLAUDE.md — "gerekiyorsa String.fromCharCode ile üret").
+const TAB = String.fromCharCode(9);
+const NEWLINE = String.fromCharCode(10);
+const NBSP = String.fromCharCode(0xa0);
+
+// Sohbet komutları (07.11): bare toLowerCase "İPTAL"i "i + birleşen nokta" yapıyor,
+// "SIFIRLA"yı "sifirla" yapıyordu → büyük harfle ya da Türkçe karaktersiz yazılan komut
+// tanınmıyordu.
+describe("detectCommand", () => {
+  it("komutları Türkçe yazımlarıyla tanır", () => {
+    expect(detectCommand("geri")).toBe("back");
+    expect(detectCommand("düzenle")).toBe("back");
+    expect(detectCommand("geç")).toBe("skip");
+    expect(detectCommand("sıfırla")).toBe("reset");
+    expect(detectCommand("formu aç")).toBe("classic_form");
+  });
+
+  it("büyük harf ve boşluktan etkilenmez — İ/I Türkçe kuralla katlanır", () => {
+    expect(detectCommand("  İPTAL ")).toBe("reset");
+    expect(detectCommand("SIFIRLA")).toBe("reset");
+    expect(detectCommand("BAŞTAN")).toBe("reset");
+    expect(detectCommand("Geri Al")).toBe("back");
+    expect(detectCommand("KLASİK FORM")).toBe("classic_form");
+  });
+
+  it("Türkçe karaktersiz yazımı da tanır", () => {
+    expect(detectCommand("gec")).toBe("skip");
+    expect(detectCommand("sifirla")).toBe("reset");
+    expect(detectCommand("bastan")).toBe("reset");
+    expect(detectCommand("duzenle")).toBe("back");
+    expect(detectCommand("formu ac")).toBe("classic_form");
+  });
+
+  it("İngilizce ve tek kelimelik komutları da tanır: skip, sonraki, form", () => {
+    expect(detectCommand("skip")).toBe("skip");
+    expect(detectCommand("sonraki")).toBe("skip");
+    expect(detectCommand("form")).toBe("classic_form");
+    // Mobil klavye ilk harfi büyütür.
+    expect(detectCommand("Sonraki")).toBe("skip");
+    expect(detectCommand("Form")).toBe("classic_form");
+    // tr-TR küçültmesi İngilizce "I"yı "ı" yapar; trFold "ı"yı "i"ye katladığı için tutar.
+    expect(detectCommand("SKIP")).toBe("skip");
+  });
+
+  it("ara boşlukları tek boşluğa indirir: çift boşluk, sekme, satır sonu, bölünmez boşluk", () => {
+    expect(detectCommand("geri  al")).toBe("back");
+    expect(detectCommand(" GERİ   AL ")).toBe("back");
+    expect(detectCommand(`klasik${TAB}form`)).toBe("classic_form");
+    expect(detectCommand(`geri${NEWLINE}al`)).toBe("back");
+    expect(detectCommand(`formu${NBSP}aç`)).toBe("classic_form");
+  });
+
+  it("komut olmayan cevapları komut saymaz", () => {
+    expect(detectCommand("İstanbul")).toBeNull();
+    expect(detectCommand("geri dönmek istiyorum")).toBeNull();
+    expect(detectCommand("")).toBeNull();
+    // Boşluk SİLİNMEZ, yalnız sadeleşir: harflerin arasına giren boşluk komut üretmez.
+    expect(detectCommand("g e r i")).toBeNull();
+  });
+});
 
 describe("chatConfig helpers", () => {
   it("accepts typed category labels and aliases", () => {

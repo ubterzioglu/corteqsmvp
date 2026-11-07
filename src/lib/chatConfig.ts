@@ -1,4 +1,5 @@
 import { categoryOptions, getCategoryLabel } from "@/lib/submissions";
+import { trFold } from "@/lib/text-normalization";
 
 export type ChatStep =
   | "welcome"
@@ -458,13 +459,21 @@ export function validateStep(step: ChatStep, input: string, _data: ChatCollected
 
 export type CommandType = "back" | "skip" | "reset" | "classic_form" | null;
 
+// Komut kelimeleri trFold ile KATLANMIŞ biçimde tutulur: "İPTAL", "Sıfırla" ve Türkçe
+// karaktersiz "sifirla" aynı komuta düşer (eski bare toLowerCase "İ"yi bozuyordu).
+// ⚠️ Canlı sohbet (ChatBot) detectCommand'ı ÇAĞIRMAZ: üretim kodunda tek çağıran useChatMachine.ts,
+// o hook da yalnız kendi testinde kullanılıyor (ölçüldü 07.11.2026) — bu düzeltme ekranda görünmez.
+const COMMAND_WORDS: ReadonlyArray<readonly [Exclude<CommandType, null>, readonly string[]]> = [
+  ["back", ["geri", "duzenle", "geri al"]],
+  ["skip", ["gec", "skip", "sonraki"]],
+  ["reset", ["iptal", "sifirla", "bastan"]],
+  ["classic_form", ["klasik form", "form", "formu ac"]],
+];
+
 export function detectCommand(input: string): CommandType {
-  const lower = input.trim().toLowerCase();
-  if (lower === "geri" || lower === "d\u00fczenle" || lower === "geri al") return "back";
-  if (lower === "ge\u00e7" || lower === "skip" || lower === "sonraki") return "skip";
-  if (lower === "iptal" || lower === "s\u0131f\u0131rla" || lower === "ba\u015ftan") return "reset";
-  if (lower === "klasik form" || lower === "form" || lower === "formu a\u00e7") return "classic_form";
-  return null;
+  const folded = trFold(input.trim()).replace(/\s+/g, " ");
+  const match = COMMAND_WORDS.find(([, words]) => words.includes(folded));
+  return match ? match[0] : null;
 }
 
 export function getNextStep(currentStep: ChatStep, data: ChatCollectedData): ChatStep {
