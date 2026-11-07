@@ -49,10 +49,20 @@ export const CONFIG_REFERENCED_EXCEPTIONS = new Set([
 //     3 adımlı rol seçici arayüzü (docs/plans/2026-10-05-birlesik-uygulama-plani.md).
 //   • CaddeReactionActorsPopover.tsx — "kimler beğendi" arayüzü; RPC + API (listCaddePostReactors)
 //     canlı, bileşen henüz bir reaksiyon çubuğuna bağlanmadı. 🔴 Kim siler: B11 bağlama batch'i.
+//
+// ⏳ 07.11: iki dosya daha aynı sınıfta (kullanıcı kararı: TUT). 9cc236a7 (07.10) bunları
+// eklerken listeye yazmayı atlamıştı → check:dead o günden beri kırmızıydı.
+//   • RoleSelector.tsx + useRoleStructure.ts — A3.4 · R4 "3 adımlı rol seçici" UI'ının
+//     yarım kodu (ana rol → alt rol → uzmanlık). Veriyi canlı `role_structure` tablosundan
+//     RPC ile okur (role-structure.ts'ten DEĞİL). B3 "Excel açık noktaları" cevabını bekliyor
+//     (docs/plans/2026-10-05-birlesik-uygulama-plani.md). 🔴 Kim siler: seçiciyi profil
+//     formuna bağlayan A3.4 batch'i.
 export const KNOWN_DEAD_FILES = new Set([
   "src/lib/plans.ts",
   "src/lib/role-structure.ts",
   "src/components/cadde/CaddeReactionActorsPopover.tsx",
+  "src/components/profile/RoleSelector.tsx",
+  "src/hooks/useRoleStructure.ts",
 ]);
 
 // Yalnız testlerin kullandığı paylaşılan yardımcıların yaşadığı dizin. Buradaki bir

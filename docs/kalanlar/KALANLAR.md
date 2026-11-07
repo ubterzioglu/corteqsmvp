@@ -255,6 +255,11 @@ traction ölçülecek.
 - ✅ **K06 CEVAPLANDI (03.10, kullanıcı): KALSIN.** `docs-admin` korpusu (4.214 iç
   doküman / 30 MB) silinmez — Pro plana geçildiği için bellek baskısı yok. Bu soruyu
   yeniden açma.
+  ↳ **07.11 daraltma (kullanıcı kararı, K06'yı İHLAL ETMEZ):** korpus silinmedi; yalnız
+  bayat kısmı dışlandı — `docs/archive|history|reference|commandcenter` + kendini bot
+  dışı ilan eden doküman (`sources.mjs` → `EXCLUDED_DOCUMENTATION_PREFIXES`,
+  `isExcludedByContent`). Canlı: `docs-admin` 483 → 338 doküman. Aynı gün üye kitlesi
+  açık izin listesine bağlandı (`docs-member` 19 → 1; sızıntı vardı). Commit `3d9bbab5`.
 - ✅ **K03 CEVAPLANDI (03.10, kullanıcı): HAYIR — özel alan adı ALINMAYACAK.** Google
   onay ekranında ham Supabase adresi görünmeye devam edecek; 10 $/ay eklenti açılmaz.
   Bu soruyu yeniden açma.
@@ -272,6 +277,18 @@ traction ölçülecek.
   ilkesi korunur: yalnız DEFAULT rol yükseltmeye açıktır). G13'ün `role_skipped_reason`
   güvenli-atlama kodu gerçek atamaya çevrilecek — küçük batch (K10a olarak sıraya alındı,
   aşağıda G bölümü notuna bakın). Çoklu rol (b) REDDEDİLDİ, erteleme (c) değil.
+- 🔴 **K15 · Migration ledger boşluğu — AÇIK (07.11, kullanıcı: "önce kaydet, sonra karar").**
+  Canlıda ETKİSİ olan 5 migration'ın `supabase_migrations.schema_migrations` satırı YOK
+  (ledger'da `20261007*` ailesinden yalnız `20261007000000` var): `20261007080000`
+  strike_threshold_tighten · `20261007090000` report_decision_deadline ·
+  `20261007130000` role_structure_table + role_structure_seed (**aynı zaman damgası** —
+  ikincisi `…0001` olarak yazılmalı, bkz. CLAUDE.md iki-dosya-tek-damga notu) ·
+  `20261007140000` user_specialty_tags. Kanıt (salt-okunur katalog sorgusu, 07.11):
+  `role_structure` 259 satır + `eski_roles_key` kolonu · `user_specialty_tags` tablosu var ·
+  `groups.report_decision_deadline_days=15`, strike eşikleri 1/2. Etki: `check:migrations`
+  bu beşini "uygulanmamış" sayar. Seçenek: ledger satırlarını yaz (canlı DB yazımı) ya da
+  bırak. Aynı temizlikte üst dizindeki 6 kopya kaldırıldı ve applied/ `role_structure`
+  dosyaları canlıyla hizalandı (`64ce943a`).
 - **P02–P07** — clean-code planının canlı DB/deploy/ürün kararı isteyen maddeleri.
 - **X** — batch'e bölünmeden önce ayrı plan isteyen büyük işler.
 
