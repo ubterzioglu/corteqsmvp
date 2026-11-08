@@ -33,14 +33,15 @@ const LandingTrialPage = () => {
 
       <main id="main" className="relative isolate overflow-hidden">
         <HeroNetworkSection />
+        {/* L5: arama, Lovable düzenindeki gibi hero'nun HEMEN altında. */}
         <Reveal>
+          <DiasporaSearchSection />
+        </Reveal>
+        <Reveal delay={0.05}>
           <ManifestoSection />
         </Reveal>
         <Reveal delay={0.05}>
           <DiasporaMarqueeSection />
-        </Reveal>
-        <Reveal delay={0.05}>
-          <DiasporaSearchSection />
         </Reveal>
         <Reveal delay={0.05}>
           <EcosystemRailSection />

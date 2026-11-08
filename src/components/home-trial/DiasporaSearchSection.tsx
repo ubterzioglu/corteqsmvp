@@ -106,7 +106,7 @@ const DiasporaSearchSection = () => {
   };
 
   return (
-    <section id="landingtrial-atlas" className="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
+    <section id="landingtrial-atlas" className="relative mx-auto max-w-5xl px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal" aria-hidden="true" />
@@ -119,7 +119,7 @@ const DiasporaSearchSection = () => {
           <span className="text-gradient-logo">tek aramada</span> bul
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Şehir, meslek ya da isim — 80+ kategoride dünyaya yayılmış diaspora ağında ara, bağlan, keşfet.
+          Şehir, meslek ya da isim — dünyaya yayılmış diaspora ağında ara, bağlan, keşfet.
         </p>
       </div>
 
@@ -139,14 +139,14 @@ const DiasporaSearchSection = () => {
           aria-label="Diasporada ara"
           className="min-w-0 flex-1 bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
         />
+        {/* L5: "Ara" yazısı her ekranda GÖRÜNÜR (eskiden mobilde yalnız ok vardı;
+            ikonla yetinmek aramanın nasıl gönderileceğini belli etmiyordu). Erişilebilir
+            ad artık görünen metinden gelir (Lighthouse `button-name`). */}
         <button
           type="submit"
-          // Mobilde "Ara" yazısı gizli, yalnız ok ikonu kalır → erişilebilir ad buradan
-          // gelir (Lighthouse 2026-10-12 `button-name`).
-          aria-label="Ara"
           className="group inline-flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-5 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal sm:px-6"
         >
-          <span className="hidden sm:inline">Ara</span>
+          <span>Ara</span>
           <ArrowRight
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
             aria-hidden="true"
@@ -178,8 +178,13 @@ const DiasporaSearchSection = () => {
         </p>
       ) : null}
 
-      {/* Canlı istatistik şeridi — gerçek veriden. */}
-      <ul className="mx-auto mt-12 flex max-w-3xl flex-wrap items-center justify-center gap-x-12 gap-y-6">
+      {/* Canlı istatistik şeridi — YALNIZ gerçek veriden (L5: sabit "80+ kategori" ve
+          "7/24" kaldırıldı). İki sayaç da yüklenemezse şerit hiç çizilmez. */}
+      <ul
+        className={`mx-auto mt-12 flex max-w-3xl flex-wrap items-center justify-center gap-x-12 gap-y-6 ${
+          totalCount || countryCount ? "" : "hidden"
+        }`}
+      >
         {totalCount && totalCount > 0 ? (
           <li className="text-center">
             <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
@@ -196,14 +201,6 @@ const DiasporaSearchSection = () => {
             <div className="mt-1 text-sm text-muted-foreground">ülke</div>
           </li>
         ) : null}
-        <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">80+</div>
-          <div className="mt-1 text-sm text-muted-foreground">kategori</div>
-        </li>
-        <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">7/24</div>
-          <div className="mt-1 text-sm text-muted-foreground">yaşayan ağ</div>
-        </li>
       </ul>
     </section>
   );

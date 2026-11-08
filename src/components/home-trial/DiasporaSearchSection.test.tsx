@@ -103,6 +103,26 @@ describe("DiasporaSearchSection", () => {
     expect(screen.queryByText(/Arama herkese açık/)).toBeNull();
   });
 
+  // L5: "Ara" yazısı mobilde de görünür olmalı (eskiden `hidden sm:inline` idi).
+  it("Ara düğmesinin metni her ekranda görünür", () => {
+    renderSection();
+
+    const button = screen.getByRole("button", { name: "Ara" });
+    expect(button).toHaveAttribute("type", "submit");
+    expect(button.querySelector(".hidden")).toBeNull();
+    expect(button).toHaveTextContent("Ara");
+  });
+
+  // Sabit "80+ kategori" / "7/24" kaldırıldı; şerit yalnız gerçek sayaçlardan beslenir.
+  it("sabit istatistik göstermez", async () => {
+    renderSection();
+    await waitFor(() => {
+      expect(screen.getByText("248+")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("80+")).toBeNull();
+    expect(screen.queryByText("7/24")).toBeNull();
+  });
+
   it("sayaç etiketi dizinde görünen kayıt sayısını anlatır", async () => {
     renderSection();
     await waitFor(() => {

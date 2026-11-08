@@ -7,7 +7,7 @@ const PAGE_EXPECTATIONS = [
     description:
       "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
     canonical: "https://corteqs.net/",
-    heading: /Dünyanın\s*Her Yerindeki\s*Türkler İçin\s*Tek Ağ/i,
+    heading: /Gittiğin ülkede\s*organize bir ağ\s*seni bekliyor/i,
   },
   {
     path: "/founders",
