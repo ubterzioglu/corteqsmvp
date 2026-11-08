@@ -5,6 +5,17 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-sorular-hakkinda-son-not",
+    date: "9 Kasım 2026",
+    title: "Son not: sorular hakkında — cevabını bilmediklerini atla",
+    items: [
+      "KISACA: Bu geceki son iki kayıtta (Barış ve Burak'ın yapacakları + 14 soru; Barış'a 12 soru) çok sayıda soru var. Konu çok kapsamlı olduğu için ürün kararlarını geliştirme ve altyapı konularından ayıramadık.",
+      "BURAK İÇİN: Cevabını bilmediğin ya da seni ilgilendirmeyen soruları atlayabilirsin. Bazı sorular geliştirme odaklı (yayın izinleri, sunucu ve veritabanı ayarları, deneme ortamı, maliyet, denetim kuralları gibi); onlara Barış karar verecek.",
+      "CEVAPSIZ KALANLAR: Cevaplanmayan ürün sorularında, her sorunun altında yazan önerilen seçenekle ilerlenir. Önerinin uygun olmadığı bir madde varsa 14:00 toplantısında söylemen yeterli.",
+      "BUGÜNLÜK BU KADAR: Bu, bu gecenin son güncellemesidir. Bir sonraki güncelleme 14:00 kararlarından sonra gelecek.",
+    ],
+  },
+  {
     id: "20261109-lansman-barisa-sorular",
     date: "9 Kasım 2026",
     title: "1 Ocak lansmanı — Barış'a 12 soru (çalışma biçimi, altyapı, bekleyen kararlar)",
