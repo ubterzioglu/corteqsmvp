@@ -32,6 +32,16 @@ Hepsi `sent`, hiçbiri hata vermedi.
 - **Kapılar (birleşik hâl):** 4.657 test · Playwright smoke 5/5 · lint · typecheck · build · check:bundle (ilk JS **250,6 KB** gzip) · check:dead · check:docs · ingest:tools hepsi yeşil.
 - **Mailler:** L0 ve ara durum gönderildi (`processed 2 / sent 2`). Son kayıt `20261109-lansman-l3-l10a-l5-ana-dalda` gönderilmek üzere kuyrukta; bu notun commit'iyle gider.
 
+## 1b. Gece kapanışı (9 Kasım)
+
+- `main` = `origin/main` = `b745c3ef`. Açık iş yok.
+- Toplam 11 Güncellemeler maili gitti, hepsi hatasız.
+- Sorular şu kayıtlarda duruyor:
+  - `20261109-lansman-baris-ve-burak-yapilacaklar-ve-sorular`: Burak'a 14 soru ve yapılacaklar.
+  - `20261109-lansman-barisa-sorular`: Barış'a 12 geliştirme/altyapı sorusu.
+  - `20261109-lansman-sorular-hakkinda-son-not`: Burak bilmediğini ve geliştirme sorularını atlar, onlara Barış karar verir.
+- **L1'in ilk işi:** Burak'ın ve Barış'ın cevaplarını kaydet. Cevapsız ürün sorularında önerilen seçenek geçerlidir.
+
 ## 2. Barış'ın kararları (8–9 Kasım)
 
 - `GGVBLA-M7SDSR` bizim gerçek kampanya kodumuz; yasak listeye girmez.
