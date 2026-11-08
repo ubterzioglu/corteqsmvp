@@ -5,6 +5,21 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261108-lansman-ara-durum-l3-l10a-l5",
+    date: "8 Kasım 2026",
+    title:
+      "Lansman ara durumu: güvenlik testleri, profilde Geri Bildirim sekmesi ve yeni ana sayfa yazıldı, son denetimde",
+    items: [
+      "KISACA: 1 Ocak planının kararsız ilerleyebilen üç adımı yazıldı: (1) siteyi yenilerken bugünkü hiçbir şeyin bozulmamasını denetleyen otomatik kontroller, (2) üye profilinde 'Geri Bildirim' sekmesi, (3) Lovable görünümündeki yeni ana sayfa üst bölümü. Bağımsız denetimde Geri Bildirim sekmesi ve yeni ana sayfa onay aldı; güvence kontrollerinin denetimi sürüyor. Onaylananlar ana dala alınınca ayrıca bildirilecek. Sitede bugün değişen bir şey yok.",
+      "1) GÜVENCE KONTROLLERİ: Burak'ın 12 maddelik 'kaybedilmeyecekler' listesinin her maddesi otomatik bir teste bağlandı (üye girişi, roller, katalog, profil sekmeleri, 18 araç, Cadde, etkinlikler, referans kodları, admin, eski adreslerin yönlendirmesi, analitik, rehberler). Lovable'dan siteye girmemesi gereken parçalar (sahte arama, demo kod, başka markanın e-postası vb.) için yasak listesi kuruldu. Ana sayfanın ilk yükleme ağırlığına bir üst sınır kondu. Tüm testler yeşil: 4.628 test, tarayıcıda 5 temel akış.",
+      "2) PROFİLDE GERİ BİLDİRİM: Üye, profilinden geri bildirim gönderebilecek ve gönderdiklerinin durumunu görebilecek. Yönetici, admin panelindeki listeden bir geri bildirimi tek tıkla Revizyon İstekleri'ne taşıyabilecek. Denetçi ilk turda bir gizlilik açığı buldu (üye e-postası revizyon kaydına ve bildirim maillerine geçiyordu); düzeltildi, ikinci denetim sürüyor.",
+      "3) YENİ ANA SAYFA ÜST BÖLÜMÜ: Lovable'daki düzen alındı: 'Gittiğin ülkede organize bir ağ seni bekliyor' başlığı, 'Kaydol — Diaspora Pasaportun Çıksın' düğmesi, WhatsApp, Kurucu 1000, Blogger ve Vlogger düğmeleri, arama çubuğu hemen altta. Uydurma sayılar kaldırıldı; yalnız gerçek kayıt sayıları gösteriliyor. Sayfa hızı korundu (+%0,2). Lovable'daki dönen dünya animasyonu ağır olduğu için alınmadı.",
+      "KARARLAR (Barış, 8 Kasım): Kurucu 1000 sayfasındaki GGVBLA-M7SDSR referans kodu bizim gerçek kodumuz, yerinde kalıyor. Ana sayfanın yeni başlığı Lovable'daki gibi kalıyor.",
+      "SİZDEN BEKLENEN: (1) Denetim bitince yapılacak yeniden yayınlama (Coolify). (2) Geri Bildirim için veritabanı güncellemesinin canlıya uygulanması — uygulanmadan site çökmez, yalnız 'REV'e taşı' ve üyenin geçmiş listesi çalışmaz. (3) 🔴 Anahtar yenileme (GB1) hâlâ en acil iş. (4) Yarın 14:00: 14 karar.",
+      "BİLMENİZ GEREKEN: Her iş, yazan değil ayrı bir denetçi tarafından 'bozmaya çalışarak' inceleniyor; onaydan sonra ana dala alınıp ayrıca bildirilecek.",
+    ],
+  },
+  {
     id: "20261108-lansman-l0-plan-ve-tutarsizlik-raporu",
     date: "8 Kasım 2026",
     title: "1 Ocak lansman planı yerinde incelendi: 14 karar 9 Kasım'a, iş 22 küçük adıma bölündü",
