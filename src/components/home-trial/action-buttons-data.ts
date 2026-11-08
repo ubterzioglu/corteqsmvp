@@ -27,9 +27,10 @@ export interface ActionButtonSpec {
 }
 
 /**
- * Ana sayfadaki "Ağı keşfet" düğmesi — hem hero'da hem kapanış kartında kullanılır,
- * ikisi de aynı bölüme (diaspora atlası) iner. Kapanıştan tıklanınca sayfa yukarı
- * kayar; bu bilinçlidir (kullanıcı kararı, 2026-09-20).
+ * Ana sayfadaki "Ağı keşfet" düğmesi — YALNIZ kapanış kartında kullanılır (L5'ten beri
+ * hero farklı bir düzen çizer, bkz. HeroActions.tsx); arama bölümüne
+ * (`#landingtrial-atlas`, hero'nun hemen altı) iner. Kapanıştan tıklanınca sayfa
+ * yukarı kayar; bu bilinçlidir (kullanıcı kararı, 2026-09-20).
  */
 const scrollToAtlas = () => {
   const el = document.getElementById("landingtrial-atlas");
@@ -37,8 +38,9 @@ const scrollToAtlas = () => {
 };
 
 /**
- * BİRİNCİL eylemler. Hero ve kapanış kartı aynı havuzdan seçer, böylece iki bölüm
- * arasında renk/metin/ipucu ayrışması olamaz.
+ * BİRİNCİL eylemler. L5'ten beri YALNIZ kapanış kartı (FinalCtaSection) bu havuzu
+ * kullanır; hero kendi kataloğunu taşır (hero-cta-data.ts). Aşağıdaki "hero" geçen
+ * tarihçe notları 20 Eylül kararlarını anlatır.
  *
  * KAYIT DÜĞMESİ TEKTİR (`signup`). Eskiden `join` ("Ağa Katıl", hero) ve
  * `signup` ("Ücretsiz Kayıt Ol", kapanış) diye İKİ giriş vardı; ikisi de aynı
@@ -79,7 +81,7 @@ export const PRIMARY_ACTIONS = {
 } satisfies Record<string, ActionButtonSpec>;
 
 /**
- * Hero ve CTA kartının PAYLAŞTIĞI kısayollar. Renkler logonun kollarından seçildi;
+ * Kapanış kartının kısayolları (L5'e kadar hero ile PAYLAŞILIYORDU). Renkler logonun kollarından seçildi;
  * birincil düğmeler teal/turuncu/yeşil/lacivert kullandığı için hiçbiri karışmaz.
  *
  * ⚠️ Kampanyalar ve Yarışmalar TEK düğmedir (`campaigns`, "Kampanya & Yarışmalar")
@@ -131,7 +133,7 @@ export const SECONDARY_ACTIONS = {
 } satisfies Record<string, ActionButtonSpec>;
 
 /**
- * İKİ SATIRLIK DÜZENİN BİRİNCİ SATIRI — hero ve kapanış kartı AYNI beşliyi çizer.
+ * İKİ SATIRLIK DÜZENİN BİRİNCİ SATIRI — kapanış kartı çizer (hero L5'te ayrıldı).
  *
  * 2026-09-20'ye kadar iki bölüm bu satırı KENDİ içinde ayrı ayrı yazıyordu ve tek
  * farkı ilk düğmenin etiketiydi ("Ağa Katıl" / "Ücretsiz Kayıt Ol"). Etiketler
@@ -147,17 +149,17 @@ export const ACTION_ROW_ONE: ActionButtonSpec[] = [
 ];
 
 /**
- * İKİ SATIRLIK DÜZENİN İKİNCİ SATIRI — hero ve kapanış kartı AYNI beşliyi çizer.
+ * İKİ SATIRLIK DÜZENİN İKİNCİ SATIRI — kapanış kartı çizer (hero L5'te ayrıldı).
  *
  * Birinci satır `PRIMARY_ACTIONS` dörtlüsü + `SECONDARY_ACTIONS.campaigns` olur;
- * 2026-09-20'de kayıt düğmesi tekleştirildikten sonra hero ile kapanış kartının
- * birinci satırı BİREBİR AYNIDIR. 2026-09-25'te Kampanyalar ve Yarışmalar tek
+ * 2026-09-20'de kayıt düğmesi tekleştirildikten sonra (o tarihte hero ile) kapanış
+ * kartının birinci satırı BİREBİR AYNIYDI. 2026-09-25'te Kampanyalar ve Yarışmalar tek
  * düğmeye indiği için düzen 5 + 5'ten 5 + 4'e döndü (kullanıcı kararı).
  *
- * ⚠️ Buraya altıncı bir düğme eklemek İKİ bölümü birden üçüncü satıra taşırır.
- * Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 840px; hero
- * `max-w-4xl` (896px), kapanış kartı `max-w-5xl` bölüm içinde ~880px taşır.
- * Eklemeden önce iki sarmalayıcının da genişliğini yeniden hesapla.
+ * ⚠️ Buraya altıncı bir düğme eklemek kapanış kartını üçüncü satıra taşır.
+ * Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 840px; kapanış kartı
+ * `max-w-5xl` bölüm içinde ~880px taşır. Eklemeden önce sarmalayıcının genişliğini
+ * yeniden hesapla.
  */
 export const ACTION_ROW_TWO: ActionButtonSpec[] = [
   SECONDARY_ACTIONS.radar,

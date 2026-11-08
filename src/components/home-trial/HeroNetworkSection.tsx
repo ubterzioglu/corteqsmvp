@@ -114,10 +114,8 @@ const HeroNetworkSection = () => {
           </p>
 
           <h1 className="mt-5 font-display text-4xl font-bold leading-[1.02] tracking-[-0.02em] text-slate-900 sm:text-6xl lg:text-[4.5rem]">
-            Gittiğin ülkede
-            <br />
-            <span className="text-gradient-logo">organize bir ağ</span>
-            <br />
+            Gittiğin ülkede <br />
+            <span className="text-gradient-logo">organize bir ağ</span> <br />
             seni bekliyor
           </h1>
 

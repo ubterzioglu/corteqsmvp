@@ -4,6 +4,10 @@
  *
  * Demo sayfaya giden her öğe `isDemoRoute()` ile `DemoBadge` alır — rozeti elle
  * yazma (bkz. `src/lib/demo-pages.ts`, "DEMO içerik deseni").
+ *
+ * Birincil CTA zemini #00838F: beyaz metinle ≈4,5:1 kontrast (#00ACC1→#0097A7
+ * gradyanı 2,7–3,2:1 verip WCAG AA'yı geçemiyordu). Yalnız bu düğme ve arama
+ * bölümündeki "Ara" için; sitenin kalanı yeniden boyanmadı.
  */
 
 import type { ReactNode } from "react";
@@ -45,6 +49,7 @@ function SecondaryButton({ button }: { button: HeroSecondaryButton }) {
     return (
       <a href={button.href} target="_blank" rel="noopener noreferrer" className={SECONDARY_CLASS}>
         {content}
+        <span className="sr-only"> (yeni sekmede açılır)</span>
       </a>
     );
   }
@@ -83,7 +88,7 @@ export function HeroActions() {
     <div className="mt-8 max-w-3xl">
       <Link
         to={HERO_PRIMARY_CTA.to}
-        className="inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-6 py-4 text-center text-sm font-semibold leading-tight text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 sm:text-base"
+        className="inline-flex min-h-[3.5rem] w-full items-center justify-center gap-2 rounded-2xl bg-[#00838F] px-6 py-4 text-center text-sm font-semibold leading-tight text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#006F7A] sm:text-base"
       >
         <UserPlus className="h-5 w-5 shrink-0" aria-hidden="true" />
         {HERO_PRIMARY_CTA.label}

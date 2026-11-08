@@ -33,11 +33,11 @@ const LandingTrialPage = () => {
 
       <main id="main" className="relative isolate overflow-hidden">
         <HeroNetworkSection />
-        {/* L5: arama, Lovable düzenindeki gibi hero'nun HEMEN altında. */}
+        {/* L5: arama, Lovable düzenindeki gibi hero'nun HEMEN altında. `Reveal` ile
+            SARILMAZ: eşik %20 / rootMargin -%10 olduğu için ilk ekranda (1440×900)
+            bölüm boş görünüyordu. `landing-trial-page.test.tsx` sırayı kilitler. */}
+        <DiasporaSearchSection />
         <Reveal>
-          <DiasporaSearchSection />
-        </Reveal>
-        <Reveal delay={0.05}>
           <ManifestoSection />
         </Reveal>
         <Reveal delay={0.05}>

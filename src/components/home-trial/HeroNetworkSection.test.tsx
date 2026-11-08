@@ -26,7 +26,8 @@ describe("ana sayfa hero", () => {
 
     const headings = screen.getAllByRole("heading", { level: 1 });
     expect(headings).toHaveLength(1);
-    expect(headings[0]).toHaveTextContent(/Gittiğin ülkede\s*organize bir ağ\s*seni bekliyor/);
+    // Satırlar arasında GERÇEK boşluk olmalı: "ülkedeorganize" diye okunmasın.
+    expect(headings[0].textContent).toMatch(/Gittiğin ülkede\s+organize bir ağ\s+seni bekliyor/);
     expect(headings[0].querySelectorAll("br")).toHaveLength(2);
   });
 
@@ -43,7 +44,7 @@ describe("ana sayfa hero", () => {
 
     const nav = screen.getByRole("navigation", { name: "Hızlı erişim" });
     expect(Array.from(nav.querySelectorAll("a")).map((anchor) => anchor.textContent?.replace("DEMO", ""))).toEqual([
-      "WhatsApp",
+      "WhatsApp (yeni sekmede açılır)",
       "Kurucu 1000",
       "Blogger Yarışması",
       "Vlogger Yarışması",
@@ -62,6 +63,16 @@ describe("ana sayfa hero", () => {
     const link = screen.getByRole("link", { name: /WhatsApp/ });
     expect(link).toHaveAttribute("target", "_blank");
     expect(link.getAttribute("rel")).toContain("noopener");
+  });
+
+  it("WhatsApp bağlantısı ekran okuyucuya yeni sekmede açıldığını söyler", () => {
+    renderHero();
+    expect(screen.getByRole("link", { name: /WhatsApp\s*\(yeni sekmede açılır\)/ })).toBeInTheDocument();
+  });
+
+  it("birincil CTA AA kontrastlı zemin kullanır (#00838F)", () => {
+    renderHero();
+    expect(screen.getByRole("link", { name: /Kaydol/ }).className).toContain("bg-[#00838F]");
   });
 
   it("iki kampanya kartı doğru sayfalara gider", () => {

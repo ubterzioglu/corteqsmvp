@@ -3,21 +3,24 @@
  *
  * Katalog rota yollarını elle taşır; `App.tsx`'ten kopan bir hedef build'i ve
  * diğer testleri patlatmadan ziyaretçiyi 404'e götürür. Bu test hedefleri
- * `App.tsx`'in rota tablosuna karşı doğrular.
+ * `App.tsx`'in YORUMLARDAN ARINDIRILMIŞ rota tablosuna karşı doğrular — yorumlanmış
+ * bir `<Route>` satırı rotayı "var" göstermemeli.
  */
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
 import { PUBLIC_WHATSAPP_COMMUNITY } from "@/lib/contact-links";
+import { stripSourceComments } from "@/test/strip-source-comments";
 
 import { HERO_CAMPAIGN_CARDS, HERO_PRIMARY_CTA, HERO_SECONDARY_BUTTONS } from "./hero-cta-data";
 
-const appSource = readFileSync("src/App.tsx", "utf8");
+const appSource = stripSourceComments(readFileSync("src/App.tsx", "utf8"));
 const pathOf = (to: string) => to.split("?")[0];
-const routeExists = (to: string) => appSource.includes(`path="${pathOf(to)}"`);
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const routeExists = (to: string) => new RegExp(`<Route\\s+path="${escapeRegExp(pathOf(to))}"`).test(appSource);
 
 describe("hero CTA kataloğu", () => {
-  it("uygulama içi her hedef App.tsx'te tanımlı bir rotadır", () => {
+  it("uygulama içi her hedef App.tsx'te tanımlı (yorum olmayan) bir rotadır", () => {
     const targets = [
       HERO_PRIMARY_CTA.to,
       ...HERO_SECONDARY_BUTTONS.flatMap((button) => (button.to ? [button.to] : [])),
@@ -26,8 +29,15 @@ describe("hero CTA kataloğu", () => {
 
     expect(targets.length).toBeGreaterThanOrEqual(6);
     for (const target of targets) {
-      expect(routeExists(target), `${target} App.tsx'te yok`).toBe(true);
+      expect(routeExists(target), `${target} App.tsx'te yok (ya da yalnız yorumda)`).toBe(true);
     }
+  });
+
+  it("yorum ayıklayıcı yorumlanmış rotayı yok sayar", () => {
+    expect(stripSourceComments('// <Route path="/x" element={<X />} />')).not.toContain('path="/x"');
+    expect(stripSourceComments('{/* <Route path="/y" /> */}')).not.toContain('path="/y"');
+    expect(stripSourceComments('/* <Route path="/z" /> */')).not.toContain('path="/z"');
+    expect(stripSourceComments('<Route path="/ok" />')).toContain('path="/ok"');
   });
 
   it("Lovable'daki olmayan adresler (/founders-1000 vb.) geri girmez", () => {
