@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-l10b-ana-dalda-ve-migrationlar-canlida",
+    date: "9 Kasım 2026",
+    title: "Profil hatırlatma e-postası ana dalda; iki veritabanı güncellemesi canlıya uygulandı",
+    items: [
+      "KISACA: Profil tamamlama hatırlatma e-postası (L10b) üç ayrı denetimden geçti, bulunan sorunlar düzeltildi ve ana dala alındı. Geri Bildirim (L10a) ve hatırlatma (L10b) için iki veritabanı güncellemesi canlıya uygulandı ve doğrulandı. Hatırlatma ayarı KAPALI; kimseye mail gitmiyor (denendi: kapalıyken kuyruğa 0 kayıt).",
+      "DENETİMİN BULDUKLARI VE DÜZELTİLENLER: (1) Ayar satırı silinirse mailler açık kalıyordu — artık kapalı kalıyor. (2) Hatırlatma günleri değiştirilince bazı üyeler adım atlıyordu — düzeltildi. (3) Mail, profil yüzdesini etkilemeyen alanları öneriyordu — artık üyenin gerçekten eksik olan alanlarını listeliyor. (4) Silinmiş, engellenmiş ve WhatsApp bot kayıtlı hesaplar listeden çıkarıldı. Testler bilerek bozularak 38 kez denendi, hepsinde hata yakalandı.",
+      "AÇMADAN ÖNCE KARAR GEREKEN (önemli): Denetçi, bu hatırlatmanın hukuken 'bilgilendirme' değil 'tanıtım' sayılabileceğini belirtti (Almanya/AB ve Türkiye kuralları). Ayar açılmadan önce: maile 'bu hatırlatmaları kapat' bağlantısı ve tercih ayarı, gizlilik politikasına bu amacın eklenmesi, metnin Burak tarafından onaylanması ('fırsatlarla' gibi tanıtım dili çıkarılabilir) ve 0. gün mailinin hoş geldin maili ile aynı güne düşüp düşmeyeceği kararı.",
+      "AÇILIŞ SIRASI (karar sonrası): bildirim fonksiyonu yeniden yayınlanır → kontrol edilir → ayar açılır.",
+      "SİZDEN BEKLENEN: (1) Coolify'dan yeniden yayınlama — profildeki Geri Bildirim, yeni ana sayfa ve dünkü düzeltmeler ancak o zaman üyelere görünür. (2) Yukarıdaki hukuk ve metin kararları. (3) 🔴 Anahtar yenileme (GB1). (4) 14:00 kararları.",
+    ],
+  },
+  {
     id: "20261109-lansman-l10b-profil-hatirlatma-hazir",
     date: "9 Kasım 2026",
     title: "Profil tamamlama hatırlatma e-postası hazırlandı — ayarı kapalı, kimseye mail gitmiyor",

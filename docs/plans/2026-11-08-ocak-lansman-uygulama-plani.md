@@ -21,7 +21,8 @@ son_dogrulama: 2026-11-08
 | L3 | ✅ tamam | 2026-11-09 | `b41683e6` | `20261109-lansman-l3-l10a-l5-ana-dalda` |
 | L5 | ✅ tamam (küre animasyonu alınmadı; arama kapsamı genişletmesi açık) | 2026-11-09 | `92138ed8` (merge) | aynı kayıt |
 | L10a | ✅ tamam — migration `20261108120000` canlıya UYGULANMADI | 2026-11-09 | `b41683e6` | aynı kayıt |
-| L2, L4, L6–L9, L10b, L11–L21 | ⏳ bekliyor | — | — | — |
+| L10b | ✅ kod + mig `20261109100000` CANLIDA · ayar KAPALI (açmadan önce hukuk/opt-out + metin onayı) | 2026-11-09 | `c9f0bb75` | `20261109-lansman-l10b-ana-dalda-ve-migrationlar-canlida` |
+| L2, L4, L6–L9, L11–L21 | ⏳ bekliyor | — | — | — |
 
 > **Süreç kuralı (Barış, 9 Kasım):** batch başına TEK bağımsız inceleme. İncelemenin istediği düzeltme
 > ikinci incelemeye girmez; yalnız kapılardan geçer.

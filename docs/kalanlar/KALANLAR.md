@@ -205,7 +205,7 @@ planın §4'ünde; L1 onları K bölümüne işler.
 | **L7** | `plans.ts` tek kaynak + yeni /pricing (ödemesiz, "ön kayıt") | C | karar 1, 2 | ⏳ |
 | **L8** | staging + vision nginx blokları (noindex, admin yolları 404) | C taslak, B DNS/deploy | karar 12 | ⏳ |
 | **L9** | Diaspora Pasaportu (rozet + kapı) | C, B Meta/kanca/deploy | karar 4, Meta doğrulaması | ⏳ |
-| **L10** | Profil doluluk e-postası (0/3/10. gün) · profilde Geri Bildirim sekmesi + "REV'e taşı" | C, E metin | — | a ✅ 09.11 `b41683e6` (Geri Bildirim; mig `20261108120000` canlıda DEĞİL) · b ⏳ doluluk e-postası |
+| **L10** | Profil doluluk e-postası (0/3/10. gün) · profilde Geri Bildirim sekmesi + "REV'e taşı" | C, E metin | — | a ✅ 09.11 `b41683e6` (Geri Bildirim; mig `20261108120000` CANLIDA) · b ✅ 09.11 `c9f0bb75` (mig `20261109100000` CANLIDA, ayar KAPALI — açmadan önce opt-out/hukuk + Burak metin onayı + edge deploy) |
 | **L11** | Cadde üç sütun · cafe kapasite + ad listesi SQL'e | C | karar 7 (K9) | ⏳ |
 | **L12** | Çarşı: 14 kategori, son dakika, açılış | C, B, E hukuk | karar 8 | ⏳ |
 | **L13** | Evim-Evin anketi | C | karar 9 | ⏳ |

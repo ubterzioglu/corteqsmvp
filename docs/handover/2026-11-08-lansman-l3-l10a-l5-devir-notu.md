@@ -15,7 +15,10 @@ Barış'ın okuyacağı sürüm (Claude Docs): https://claude.ai/artifact/UpF7j4
 | L3 güvence kapıları (regresyon testleri, ilk JS gzip bütçesi 271 KB, Lovable yasak listesi, Playwright smoke) | ✅ | `b41683e6` |
 | L10a profilde Geri Bildirim + admin "REV'e taşı" | ✅ kod · ✅ migration `20261108120000` **CANLIDA** (9 Kasım; Claude uyguladı, `schema_migrations` kaydı var, doğrulandı) | `b41683e6` |
 | L5 Lovable hero + arama çubuğu | ✅ (küre animasyonu alınmadı) | `92138ed8` (merge) |
-| L10b profil doluluk e-postası (0/3/10. gün) | 🟡 bir ajan ANA çalışma ağacında yazıyordu; **commit yok**; ayar **KAPALI** tasarlandı | tag `lansman-l10b-oncesi-2026-11-09` |
+| L10b profil doluluk e-postası (0/3/10. gün) | ✅ kod + mig `20261109100000` **CANLIDA** (Claude uyguladı, doğrulandı: ayar false, cron var, kapalıyken 0 kayıt) · ayar **KAPALI** | `c9f0bb75` |
+
+> **L10b'yi açmadan önce:** opt-out/abonelikten çıkma + tercih ayarı + gizlilik politikası (inceleme: HIGH, tanıtım sayılabilir) · Burak metin onayı · 0. gün kararı · `send-notification-emails` deploy → `check:functions` → ayar `true`. Kuyruk sıralama (claim ordering) düzeltmesi ayrı migration ister (F13, yapılmadı).
+> **Not:** §3'teki "0. Önce L10b'yi bitir" maddesi TAMAMLANDI.
 
 **Gönderilen mailler (9 Kasım gecesi, toplam 5):**
 - L0
