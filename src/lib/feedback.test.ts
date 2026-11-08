@@ -2,22 +2,28 @@
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { fromMock, getUserMock } = vi.hoisted(() => ({
+const { fromMock, getUserMock, rpcMock } = vi.hoisted(() => ({
   fromMock: vi.fn(),
   getUserMock: vi.fn(),
+  rpcMock: vi.fn(),
 }));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
     from: fromMock,
+    rpc: rpcMock,
     auth: { getUser: getUserMock },
   },
 }));
 
 import {
   FEEDBACK_STATUS_LABELS,
+  FEEDBACK_ERROR_MESSAGES,
   deleteFeedback,
+  feedbackErrorMessage,
   fetchFeedbackList,
+  fetchMyFeedback,
+  promoteFeedbackToRevision,
   getFeedbackStatusLabel,
   submitFeedback,
   updateFeedbackStatus,
@@ -131,6 +137,7 @@ describe("fetchFeedbackList", () => {
       createdBy: "member-1",
       createdAt: "2026-07-07T10:00:00.000Z",
       updatedAt: "2026-07-07T10:00:00.000Z",
+      promotedRevisionId: null,
     });
   });
 
@@ -172,5 +179,129 @@ describe("deleteFeedback", () => {
     const updateMock = builder.update as ReturnType<typeof vi.fn>;
     const payload = updateMock.mock.calls[0][0] as Record<string, unknown>;
     expect(typeof payload.deleted_at).toBe("string");
+  });
+});
+
+describe("feedbackErrorMessage", () => {
+  it("bilinmeyen feedback_* kodundan sonra gelen bilinen kodu bulur", () => {
+    expect(feedbackErrorMessage({ message: "feedback_unknown_x", details: "feedback_not_found" }, "genel")).toBe(
+      FEEDBACK_ERROR_MESSAGES.feedback_not_found,
+    );
+  });
+});
+
+describe("fetchFeedbackList — migration henüz uygulanmadıysa", () => {
+  it("42703 (undefined_column) olursa promoted_revision_id'siz select ile yeniden dener", async () => {
+    const failing = chainable({ resolved: { data: null, error: { code: "42703", message: "column does not exist" } } });
+    const ok = chainable({
+      resolved: {
+        data: [
+          {
+            id: "f-1",
+            body: "x",
+            page_path: "/",
+            status: "yeni",
+            created_by: null,
+            created_at: "2026-11-01T00:00:00.000Z",
+            updated_at: "2026-11-01T00:00:00.000Z",
+          },
+        ],
+        error: null,
+      },
+    });
+    fromMock.mockReturnValueOnce(failing).mockReturnValueOnce(ok);
+
+    const list = await fetchFeedbackList();
+
+    expect((failing.select as ReturnType<typeof vi.fn>).mock.calls[0][0]).toContain("promoted_revision_id");
+    expect((ok.select as ReturnType<typeof vi.fn>).mock.calls[0][0]).not.toContain("promoted_revision_id");
+    expect(list[0].promotedRevisionId).toBeNull();
+  });
+});
+
+describe("fetchFeedbackList — 42703 dışı hata", () => {
+  it("PGRST301 gibi başka hatada yeniden DENEMEZ: tek sorgu, red", async () => {
+    fromMock.mockReturnValue(chainable({ resolved: { data: null, error: { code: "PGRST301", message: "jwt" } } }));
+
+    await expect(fetchFeedbackList()).rejects.toThrow("Geri bildirimler yüklenemedi.");
+    expect(fromMock).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("fetchMyFeedback (list_my_feedback_v1)", () => {
+  it("RPC'yi parametresiz çağırır ve satırları camelCase'e mapler", async () => {
+    rpcMock.mockResolvedValue({
+      data: [
+        {
+          id: "f-9",
+          body: "Profil sayfası güzel.",
+          page_path: "/profile",
+          status: "okundu",
+          created_at: "2026-11-01T09:00:00.000Z",
+        },
+      ],
+      error: null,
+    });
+
+    const list = await fetchMyFeedback();
+
+    expect(rpcMock).toHaveBeenCalledTimes(1);
+    expect(rpcMock.mock.calls[0][0]).toBe("list_my_feedback_v1");
+    expect(fromMock).not.toHaveBeenCalled();
+    expect(list).toEqual([
+      {
+        id: "f-9",
+        body: "Profil sayfası güzel.",
+        pagePath: "/profile",
+        status: "okundu",
+        createdAt: "2026-11-01T09:00:00.000Z",
+      },
+    ]);
+  });
+
+  it("boş/null veride boş liste döner", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: null });
+    await expect(fetchMyFeedback()).resolves.toEqual([]);
+  });
+
+  it("düz nesne hatada bilinen kodu Türkçeye çevirir", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "feedback_not_found", code: "P0001" } });
+    await expect(fetchMyFeedback()).rejects.toThrow("bulunamadı");
+  });
+
+  it("bilinmeyen hatada genel mesaj fırlatır (ham metin sızmaz)", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "PGRST202 nope" } });
+    await expect(fetchMyFeedback()).rejects.toThrow("Geri bildirimleriniz yüklenemedi.");
+  });
+});
+
+describe("promoteFeedbackToRevision (admin_promote_feedback_to_revision_v1)", () => {
+  it("boş kimlikte RPC'ye gitmez", async () => {
+    await expect(promoteFeedbackToRevision("")).rejects.toThrow();
+    expect(rpcMock).not.toHaveBeenCalled();
+  });
+
+  it("p_feedback_id ile çağırır ve revizyon numarasını döndürür", async () => {
+    rpcMock.mockResolvedValue({ data: { revision_id: "r-1", revision_number: 91 }, error: null });
+
+    const result = await promoteFeedbackToRevision("f-1");
+
+    expect(rpcMock).toHaveBeenCalledWith("admin_promote_feedback_to_revision_v1", { p_feedback_id: "f-1" });
+    expect(result).toEqual({ revisionId: "r-1", revisionNumber: 91 });
+  });
+
+  it("ikinci terfide Türkçe 'zaten taşındı' mesajı fırlatır", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "feedback_already_promoted", code: "P0001" } });
+    await expect(promoteFeedbackToRevision("f-1")).rejects.toThrow("zaten");
+  });
+
+  it("admin olmayan çağrıda Türkçe yetki mesajı fırlatır", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: { message: "feedback_admin_required", code: "42501" } });
+    await expect(promoteFeedbackToRevision("f-1")).rejects.toThrow("yetki");
+  });
+
+  it("veri dönmezse genel hata fırlatır", async () => {
+    rpcMock.mockResolvedValue({ data: null, error: null });
+    await expect(promoteFeedbackToRevision("f-1")).rejects.toThrow("REV'e taşınamadı.");
   });
 });

@@ -4147,6 +4147,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/feedback-migration.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/feedback.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4618,6 +4623,11 @@ export const toolCatalog = {
     },
     {
       "path": "src/lib/kadro/roles/urun-teknoloji.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/lansman-regression-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },

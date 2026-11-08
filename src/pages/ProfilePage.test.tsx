@@ -1270,6 +1270,7 @@ describe("ProfilePage", () => {
         "Belgeler",
         "Rol Detayları",
         "Rol Talepleri",
+        "Geri Bildirim",
         "Yardım",
       ]);
     });

@@ -10,6 +10,7 @@ import {
   Home,
   KeyRound,
   Link2,
+  MessageSquareHeart,
   Share2,
   Signpost,
   User,
@@ -17,6 +18,7 @@ import {
 } from "lucide-react";
 
 import MyEventsPanel from "@/components/events/MyEventsPanel";
+import ProfileFeedbackPanel from "@/components/profile/ProfileFeedbackPanel";
 import type { SidebarMenuItem } from "@/components/profile/ProfileSidebarLayout";
 
 /**
@@ -172,6 +174,14 @@ export function buildProfileSidebarMenu(sections: ProfileSidebarSections): Sideb
           } as SidebarMenuItem,
         ]
       : []),
+    {
+      // L10a: /feedback sayfasının profil içi karşılığı. "Yardım" SON kalır
+      // (lansman-regression-contract.test.ts) — bu yüzden ondan hemen önce.
+      id: "feedback",
+      label: "Geri Bildirim",
+      icon: <MessageSquareHeart className="h-4 w-4" />,
+      content: <ProfileFeedbackPanel />,
+    },
     {
       id: "help",
       label: "Yardım",

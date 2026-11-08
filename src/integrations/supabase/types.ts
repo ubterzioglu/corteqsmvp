@@ -7263,6 +7263,7 @@ export type Database = {
           deleted_at: string | null
           id: string
           page_path: string
+          promoted_revision_id: string | null
           status: string
           updated_at: string
         }
@@ -7273,6 +7274,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           page_path?: string
+          promoted_revision_id?: string | null
           status?: string
           updated_at?: string
         }
@@ -7283,10 +7285,19 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           page_path?: string
+          promoted_revision_id?: string | null
           status?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "member_feedback_promoted_revision_id_fkey"
+            columns: ["promoted_revision_id"]
+            isOneToOne: false
+            referencedRelation: "revision_requests"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       merge_history: {
         Row: {
@@ -14766,6 +14777,10 @@ export type Database = {
           template_name: string
         }[]
       }
+      admin_promote_feedback_to_revision_v1: {
+        Args: { p_feedback_id: string }
+        Returns: Json
+      }
       admin_promote_relocation_model: {
         Args: { p_model_version: string }
         Returns: undefined
@@ -16072,6 +16087,16 @@ export type Database = {
         Returns: {
           full_name: string
           user_id: string
+        }[]
+      }
+      list_my_feedback_v1: {
+        Args: never
+        Returns: {
+          body: string
+          created_at: string
+          id: string
+          page_path: string
+          status: string
         }[]
       }
       list_public_directory_profiles: {

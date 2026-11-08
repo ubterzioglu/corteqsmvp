@@ -3,9 +3,9 @@
 // DB katmanı: src/lib/feedback.ts (RLS: SELECT/UPDATE admin-only).
 // Desen kaynağı: AdminRevisionRequestsPage.tsx.
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Inbox, Trash2 } from "lucide-react";
+import { ArrowRightCircle, Inbox, Trash2 } from "lucide-react";
 
 import {
   AdminEmptyState,
@@ -18,18 +18,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { fetchUserEmails } from "@/lib/admin-shell/revision-requests";
+import { fetchUserEmails, formatRevisionNumber } from "@/lib/admin-shell/revision-requests";
 import { formatLongDateTimeTR } from "@/lib/format-date";
 import {
   FEEDBACK_STATUSES,
   deleteFeedback,
   fetchFeedbackList,
   getFeedbackStatusLabel,
+  promoteFeedbackToRevision,
   updateFeedbackStatus,
   type FeedbackStatus,
 } from "@/lib/feedback";
 
 const FEEDBACK_KEY = ["member-feedback"] as const;
+const REVISION_REQUESTS_KEY = ["revision-requests"] as const;
 
 const STATUS_TONES: Record<FeedbackStatus, AdminStatusTone> = {
   yeni: "info",
@@ -63,6 +65,32 @@ const AdminFeedbackPage = () => {
     onError: (error: unknown) => {
       toast({
         title: "Durum güncellenemedi",
+        description: error instanceof Error ? error.message : "Bilinmeyen hata",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Bu oturumda taşınan satırların #REV numarası (liste yalnız promoted_revision_id taşır).
+  const [promotedNumbers, setPromotedNumbers] = useState<Record<string, string>>({});
+
+  const promoteMutation = useMutation({
+    mutationFn: (id: string) => promoteFeedbackToRevision(id),
+    onSuccess: async (result, id) => {
+      setPromotedNumbers((previous) => ({ ...previous, [id]: formatRevisionNumber(result.revisionNumber) }));
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: FEEDBACK_KEY }),
+        // Yeni #REV satırı revizyon listesinde de görünmeli (bayat önbellek yok).
+        queryClient.invalidateQueries({ queryKey: REVISION_REQUESTS_KEY }),
+      ]);
+      toast({
+        title: "REV'e taşındı",
+        description: formatRevisionNumber(result.revisionNumber) || "Revizyon isteği oluşturuldu.",
+      });
+    },
+    onError: (error: unknown) => {
+      toast({
+        title: "REV'e taşınamadı",
         description: error instanceof Error ? error.message : "Bilinmeyen hata",
         variant: "destructive",
       });
@@ -146,6 +174,31 @@ const AdminFeedbackPage = () => {
                     ))}
                   </SelectContent>
                 </Select>
+                {feedback.promotedRevisionId ? (
+                  <span className="whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
+                    {promotedNumbers[feedback.id] ? `REV'e taşındı · ${promotedNumbers[feedback.id]}` : "REV'e taşındı"}
+                  </span>
+                ) : (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      // Geri alınamaz: revizyon satırı açılır ve abone adminlere bildirim maili gider.
+                      if (
+                        !window.confirm(
+                          "Bu geri bildirim yeni bir REV olarak açılacak ve abone adminlere bildirim gidecek. Devam edilsin mi?",
+                        )
+                      ) {
+                        return;
+                      }
+                      promoteMutation.mutate(feedback.id);
+                    }}
+                    disabled={promoteMutation.isPending}
+                  >
+                    <ArrowRightCircle className="mr-1.5 h-4 w-4" />
+                    REV'e taşı
+                  </Button>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
