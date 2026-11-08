@@ -5,6 +5,18 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-l10b-profil-hatirlatma-hazir",
+    date: "9 Kasım 2026",
+    title: "Profil tamamlama hatırlatma e-postası hazırlandı — ayarı kapalı, kimseye mail gitmiyor",
+    items: [
+      "KISACA: Planın L10 adımının ikinci yarısı (L10b) yazıldı: profili eksik üyelere kayıttan sonraki 0., 3. ve 10. günde kısa bir hatırlatma e-postası. Ayarı KAPALI geliyor; açılana kadar hiçbir üyeye mail gitmez. Şu an üç ayrı bakış açısından bağımsız denetimde; onay gelince ana dala alınacak.",
+      "NASIL ÇALIŞIR: Her sabah bir kez, son günlerde kaydolan ve profili %60'ın altında olan üyeler seçilir; her üyeye her adım için en fazla bir mail gider, toplam en fazla 3. Profil doluluk oranı sitedeki 'profil tamamlama' göstergesiyle aynı hesaplanır. Eşik, günler ve günlük üst sınır kodda değil ayar tablosunda durur; değiştirmek için yazılımcı gerekmez.",
+      "DENETİMDEN GEÇENLER: Tüm otomatik kontroller yeşil (4.679 test). Mevcut bildirim türlerinden hiçbiri silinmedi (dün bir kez yaşanmıştı, artık test kilitli). Testler bilerek bozularak denendi.",
+      "KARAR GEREKEN ÜÇ NOKTA: (1) Bu mailde 'abonelikten çık' bağlantısı yok — ayar açılmadan önce hukuken uygun mu, bakılmalı. (2) 0. gün hatırlatması hoş geldin mailiyle aynı gün gidiyor; fazla gelirse 0. gün listeden çıkarılır. (3) Mail metni taslak; Burak'ın onayı gerekiyor.",
+      "SİZDEN BEKLENEN (ana dala alındıktan sonra): veritabanı güncellemesini (20261109100000) uygulamak, bildirim fonksiyonunu yeniden yayınlamak, Burak metni onaylayınca ayarı açmak. Önceki bekleyenler aynen duruyor: Geri Bildirim güncellemesi (20261108120000), Coolify yayını, 🔴 anahtar yenileme (GB1), 14:00 kararları.",
+    ],
+  },
+  {
     id: "20261109-lansman-plan-ozeti-yapilanlar-listesi",
     date: "9 Kasım 2026",
     title: "1 Ocak planı — adım adım durum listesi: ne yapıldı, ne bekliyor",
