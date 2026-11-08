@@ -11,34 +11,41 @@ import { readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
+import { sliceBetween } from "@/test/source-slice";
+import { stripSourceComments } from "@/test/strip-source-comments";
+
 import { buildWeeklyCityDigestEmail } from "./weekly-city-digest";
 
 // Bildirim hattı BEŞ parçalı (biri eksikse hata vermez, mail gitmez) — edge
 // kablolaması kaynak kilidiyle kilitlenir (KR09/Radar dersi).
 const edgeSource = readFileSync("supabase/functions/send-notification-emails/index.ts", "utf8");
+// Pozitif iddialar YORUMSUZ kaynakta aranır: `// "x",` biçiminde yoruma alınmış bir
+// kayıt "var" sayılmasın (L10b mutasyon turu: knownEventTypes/directEvents yorumu yeşil kalıyordu).
+// Negatif iddialar (ör. getUserById yasağı) HAM kaynakta kalır — yorumda bile yasak.
+const edgeCode = stripSourceComments(edgeSource);
 
 describe("weekly_city_digest · edge kablolaması (5 parça)", () => {
   it("SETTING_KEY_BY_EVENT'te weekly_city_digest → global anahtar", () => {
-    expect(edgeSource).toContain('weekly_city_digest: "email.weekly_city_digest.enabled"');
+    const settings = sliceBetween(edgeCode, "const SETTING_KEY_BY_EVENT", "};", "SETTING_KEY_BY_EVENT");
+    expect(settings).toContain('weekly_city_digest: "email.weekly_city_digest.enabled"');
   });
 
   it("buildEmail kolu şablonu çağırır", () => {
-    expect(edgeSource).toContain('case "weekly_city_digest":');
-    expect(edgeSource).toContain("buildWeeklyCityDigestEmail(row.payload, resolveSiteUrl())");
+    expect(edgeCode).toMatch(
+      /case "weekly_city_digest":\s*return buildWeeklyCityDigestEmail\(row\.payload, resolveSiteUrl\(\)\);/,
+    );
   });
 
   it("alıcı payload.email'den (directEvents — SQL'de enqueue anında çözülür, M27)", () => {
     // M27 ölçümü: getUserById dalı CANLIDA düştü (sb_secret anahtarı GoTrue
     // admin API'sinde 401) — G23 desenine geçildi: email payload'da gelir.
-    const idx = edgeSource.indexOf("const directEvents = new Set<string>([");
-    const slice = edgeSource.slice(idx, idx + 500);
+    const slice = sliceBetween(edgeCode, "const directEvents = new Set<string>([", "]);", "directEvents");
     expect(slice).toContain('"weekly_city_digest"');
     expect(edgeSource).not.toContain("getUserById");
   });
 
   it("skip sebebi directRecipient dalında (no_recipient_email, no_subscribers DEĞİL)", () => {
-    const idx = edgeSource.indexOf("const directRecipient =");
-    const slice = edgeSource.slice(idx, idx + 400);
+    const slice = sliceBetween(edgeCode, "const directRecipient =", ";", "directRecipient");
     expect(slice).toContain('row.event_type === "weekly_city_digest"');
   });
 });
@@ -64,15 +71,12 @@ describe("edge · F13 knownEventTypes ↔ outbox CHECK aynası", () => {
   const checkSql = readFileSync(`${MIGRATION_DIR}/${latestCheckMigration}`, "utf8");
 
   const checkValues = (): string[] => {
-    const start = checkSql.indexOf("add constraint notification_email_outbox_event_type_check");
-    const block = checkSql.slice(start, checkSql.indexOf("));", start));
+    const block = sliceBetween(checkSql, CHECK_MARKER, "));", "outbox CHECK");
     return [...block.matchAll(/'([a-z_]+)'/g)].map((m) => m[1]);
   };
 
   const knownValues = (): string[] => {
-    const start = edgeSource.indexOf("const knownEventTypes = new Set<string>([");
-    expect(start, "knownEventTypes bloğu bulunamadı").toBeGreaterThan(-1);
-    const block = edgeSource.slice(start, edgeSource.indexOf("]);", start));
+    const block = sliceBetween(edgeCode, "const knownEventTypes = new Set<string>([", "]);", "knownEventTypes");
     return [...block.matchAll(/"([a-z_]+)"/g)].map((m) => m[1]);
   };
 
@@ -85,12 +89,9 @@ describe("edge · F13 knownEventTypes ↔ outbox CHECK aynası", () => {
   });
 
   it("bilinmeyen tip TERMINAL düşmez — claim geri bırakılır (attempts iade)", () => {
-    const idx = edgeSource.indexOf("if (!knownEventTypes.has(row.event_type))");
-    expect(idx, "deferral dalı yok").toBeGreaterThan(-1);
     // Dilim YALNIZ deferral dalı: ilk `continue;` sınırına kadar (sonrasındaki
     // skip/fail blokları bu dalın parçası değil — geniş dilim yanlış pozitif üretir).
-    const end = edgeSource.indexOf("continue;", idx);
-    const slice = edgeSource.slice(idx, end);
+    const slice = sliceBetween(edgeCode, "if (!knownEventTypes.has(row.event_type))", "continue;", "deferral dalı");
     expect(slice).toContain("claimed_at: null");
     expect(slice).toContain("attempts");
     expect(slice).not.toContain('"skipped"');

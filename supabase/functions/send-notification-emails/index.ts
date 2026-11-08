@@ -7,6 +7,7 @@
 //   revision_request → yeni revizyon isteği açıldığında      → alıcı: abone admin/moderator'lar
 //   relocation_tool_report → kullanıcının istediği araç raporu → alıcı: ÜYENİN KENDİSİ
 //   relocation_tool_abandonment → yarım kalan araç hatırlatması → alıcı: ÜYENİN KENDİSİ
+//   profile_completion_reminder → profil doluluk hatırlatması (0/3/10. gün) → alıcı: ÜYENİN KENDİSİ
 //
 // member_welcome'ın alıcısı payload'dan gelir; abone listesine hiç bakılmaz. Bu ayrım
 // resolveRecipients() içinde tek yerde yapılır.
@@ -34,6 +35,7 @@ import { buildAdminUpdateEmail } from "../_shared/emails/admin-update-digest.ts"
 import { buildRadarScanDigestEmail } from "../_shared/emails/radar-scan-digest.ts";
 import { escapeHtml } from "../_shared/emails/html.ts";
 import { MEMBER_SUPPORT_EMAIL, buildMemberWelcomeEmail } from "../_shared/emails/member-welcome.ts";
+import { buildProfileCompletionReminderEmail } from "../_shared/emails/profile-completion-reminder.ts";
 import { buildRelocationToolAbandonmentEmail } from "../_shared/emails/relocation-tool-abandonment.ts";
 import { buildRelocationToolReportEmail } from "../_shared/emails/relocation-tool-report.ts";
 import { buildRevisionCompletedEmail } from "../_shared/emails/revision-request-completed.ts";
@@ -87,6 +89,9 @@ const SETTING_KEY_BY_EVENT: Record<string, string> = {
   // M24–M27 · haftalık şehir özeti — kill switch M24'te KAPALI doğdu; M27
   // kanıtından sonra İNSAN kararıyla açılır (G22/G17 dersi).
   weekly_city_digest: "email.weekly_city_digest.enabled",
+  // L10b · profil doluluk hatırlatması — üyenin KENDİSİNE; kill switch KAPALI doğdu
+  // (mig 20261109100000), metin onayı + hukuk değerlendirmesinden sonra İNSAN açar.
+  profile_completion_reminder: "email.profile_completion_reminder.enabled",
 };
 
 type EventType =
@@ -102,6 +107,7 @@ type EventType =
   | "recommendation_match"
   | "event_published"
   | "weekly_city_digest"
+  | "profile_completion_reminder"
   | GroupNotificationEventType;
 
 type OutboxRow = {
@@ -252,6 +258,9 @@ async function buildEmail(row: OutboxRow, admin: ReturnType<typeof createClient>
     // M26 · haftalık şehir özeti — üyenin KENDİSİNE (payload.user_id'den çözülür).
     case "weekly_city_digest":
       return buildWeeklyCityDigestEmail(row.payload, resolveSiteUrl());
+    // L10b · profil doluluk hatırlatması — üyenin KENDİSİNE (payload.email).
+    case "profile_completion_reminder":
+      return buildProfileCompletionReminderEmail(row.payload, resolveSiteUrl());
     // G23 · tasarım §9 — 8 grup bildirimi tek şablonda (metinler §9'dan birebir).
     case "group_submission_received":
     case "group_published":
@@ -454,6 +463,7 @@ Deno.serve(async (request) => {
         "recommendation_match",
         "event_published",
         "weekly_city_digest",
+        "profile_completion_reminder",
         "group_submission_received",
         "group_published",
         "group_rejected",
@@ -495,6 +505,7 @@ Deno.serve(async (request) => {
       "recommendation_match",
       "event_published",
       "weekly_city_digest",
+      "profile_completion_reminder",
       "group_submission_received",
       "group_published",
       "group_rejected",
@@ -549,6 +560,7 @@ Deno.serve(async (request) => {
             row.event_type === "relocation_tool_abandonment" ||
             row.event_type === "recommendation_match" ||
             row.event_type === "weekly_city_digest" ||
+            row.event_type === "profile_completion_reminder" ||
             row.event_type.startsWith("group_");
           const reason = directRecipient ? "no_recipient_email" : "no_subscribers";
           await admin

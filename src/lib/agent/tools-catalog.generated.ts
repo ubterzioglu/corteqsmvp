@@ -4872,6 +4872,11 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
+      "path": "src/lib/profile-completion-reminder-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
       "path": "src/lib/profile-documents.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -5798,6 +5803,16 @@ export const toolCatalog = {
     },
     {
       "path": "supabase/functions/_shared/emails/member-welcome.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/profile-completion-reminder.test.ts",
+      "kind": "ts",
+      "module_family": "edge"
+    },
+    {
+      "path": "supabase/functions/_shared/emails/profile-completion-reminder.ts",
       "kind": "ts",
       "module_family": "edge"
     },
