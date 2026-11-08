@@ -15,6 +15,16 @@ Barış'ın okuyacağı sürüm (Claude Docs): https://claude.ai/artifact/UpF7j4
 | L3 güvence kapıları (regresyon testleri, ilk JS gzip bütçesi 271 KB, Lovable yasak listesi, Playwright smoke) | ✅ | `b41683e6` |
 | L10a profilde Geri Bildirim + admin "REV'e taşı" | ✅ kod · ⚠️ migration `20261108120000` canlıda **değil** | `b41683e6` |
 | L5 Lovable hero + arama çubuğu | ✅ (küre animasyonu alınmadı) | `92138ed8` (merge) |
+| L10b profil doluluk e-postası (0/3/10. gün) | 🟡 bir ajan ANA çalışma ağacında yazıyordu; **commit yok**; ayar **KAPALI** tasarlandı | tag `lansman-l10b-oncesi-2026-11-09` |
+
+**Gönderilen mailler (9 Kasım gecesi, toplam 5):**
+- L0
+- ara durum
+- "ana dala alındı"
+- gün sonu + 14 karar (`a18c6360`)
+- adım adım durum listesi (`6a21fdd9`)
+
+Hepsi `sent`, hiçbiri hata vermedi.
 
 - **Kapılar (birleşik hâl):** 4.657 test · Playwright smoke 5/5 · lint · typecheck · build · check:bundle (ilk JS **250,6 KB** gzip) · check:dead · check:docs · ingest:tools hepsi yeşil.
 - **Mailler:** L0 ve ara durum gönderildi (`processed 2 / sent 2`). Son kayıt `20261109-lansman-l3-l10a-l5-ana-dalda` gönderilmek üzere kuyrukta; bu notun commit'iyle gider.
@@ -27,6 +37,29 @@ Barış'ın okuyacağı sürüm (Claude Docs): https://claude.ai/artifact/UpF7j4
 
 ## 3. Sıradaki iş
 
+> **Ultracode AÇIK (Barış, 9 Kasım).** Her batch'i Workflow aracıyla yürüt:
+> 1. **Anla:** paralel okuyucular.
+> 2. **Uygula:** çakışma varsa worktree'de.
+> 3. **İncele:** 3 farklı bakış açısıyla çürütmeye çalış: doğruluk · güvenlik/gizlilik · test dişi (mutasyon).
+> 4. **Düzelt.** Düzeltme yalnız kapılardan geçer, ikinci inceleme turu yok.
+>
+> Hız öncelikli.
+
+0. **Önce L10b'yi bitir.**
+   - **Ajan bitti mi?** `git status`'a bak. Beklenen dosyalar:
+     - `supabase/migrations/applied/20261109100000_profile_completion_reminder.sql`
+     - `supabase/functions/send-notification-emails/index.ts`'teki değişiklik
+     - yeni sözleşme testleri
+     Dosyalar hâlâ değişiyorsa ajan çalışıyordur; bekle.
+   - **İnceleme (workflow):**
+     - Outbox CHECK listesinden hiçbir değer düşmedi mi? `20261005100500` bir kez düşürmüştü.
+     - Beş parçalı bildirim hattının beşi de var mı?
+     - `email.profile_completion_reminder.enabled` varsayılanı **false** mı?
+     - dedupe idempotent mi?
+     - Sorgu küçük RAM'li DB'yi yormuyor mu?
+     - Taslak metin "TASLAK — Burak onaylayacak" diye işaretli mi?
+   - **Ardından:** kapılar → Güncellemeler kaydı → commit (pathspec) → push.
+   - **Barış'a kalanlar:** migration'ı uygula, edge function'ı deploy et, Burak metni onaylayınca ayarı aç.
 1. **L1:** bugün 14:00'teki toplantının 14 kararını kaydet (planın §4'ü). Kararlar rapora, plana, Docs'a ve KALANLAR'ın K bölümüne işlenir. Kapanmayan karar önerilen varsayımla ilerler.
 2. **Karar bekleyen batch'ler:** L2, L4, L6, L7, L8, L11–L13, L17.
 3. **Kararsız ilerleyebilenler:**
