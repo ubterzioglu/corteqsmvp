@@ -198,14 +198,14 @@ planın §4'ünde; L1 onları K bölümüne işler.
 | **L0** | Tutarsızlık raporu + uygulama planı + Barış'ın Claude Docs sürümü + bu bölüm | C | — | ✅ 08.11 — rapor 12 yeni bulgu (H1–H12) ekledi; L2/L3/L6/L7 düzeltmeleri planın başında |
 | **L1** | 9 Kasım kararlarının kaydı; REV listesi (097/099 yapıldı, 103, 107, 110, 111) | C+B+E | 9 Kasım toplantısı | ⏳ |
 | **L2** | Etkinlik metinleri karar 5'e uyar · iş ilanı demo seed'i (6 kayıt) · `/founders-1000` → `/founding-1000` 301 | C, B deploy | karar 5, 10, 11 | ⏳ |
-| **L3** | Regresyon 12 madde → test eşlemesi · bundle bütçesi · "Lovable'dan gelmesin" sözleşme testi · Playwright smoke | C | — | ⏳ |
+| **L3** | Regresyon 12 madde → test eşlemesi · bundle bütçesi · "Lovable'dan gelmesin" sözleşme testi · Playwright smoke | C | — | ✅ 09.11 `b41683e6` |
 | **L4** | 7 başlıklı menü (tek config + ölü link testi) · `/venture-hub` `/transfer` `/creator` "Yakında" kabukları | C | karar 13, 14 | ⏳ |
-| **L5** | Lovable hero (LCP posteri korunur) · arama çubuğu + kapsam (etkinlik/grup/Çarşı) | C | — | ⏳ |
+| **L5** | Lovable hero (LCP posteri korunur) · arama çubuğu + kapsam (etkinlik/grup/Çarşı) | C | — | ✅ 09.11 `92138ed8` — açık: arama kapsamı genişletmesi (backend ister), küre animasyonu alınmadı, Lighthouse mobil ölçümü |
 | **L6** | Rol Talepleri = **RT01** (RoleSelector bağlanır, 19 öneri satırı) | C, B mig | karar 6, K15 | ⏳ |
 | **L7** | `plans.ts` tek kaynak + yeni /pricing (ödemesiz, "ön kayıt") | C | karar 1, 2 | ⏳ |
 | **L8** | staging + vision nginx blokları (noindex, admin yolları 404) | C taslak, B DNS/deploy | karar 12 | ⏳ |
 | **L9** | Diaspora Pasaportu (rozet + kapı) | C, B Meta/kanca/deploy | karar 4, Meta doğrulaması | ⏳ |
-| **L10** | Profil doluluk e-postası (0/3/10. gün) · profilde Geri Bildirim sekmesi + "REV'e taşı" | C, E metin | — | ⏳ |
+| **L10** | Profil doluluk e-postası (0/3/10. gün) · profilde Geri Bildirim sekmesi + "REV'e taşı" | C, E metin | — | a ✅ 09.11 `b41683e6` (Geri Bildirim; mig `20261108120000` canlıda DEĞİL) · b ⏳ doluluk e-postası |
 | **L11** | Cadde üç sütun · cafe kapasite + ad listesi SQL'e | C | karar 7 (K9) | ⏳ |
 | **L12** | Çarşı: 14 kategori, son dakika, açılış | C, B, E hukuk | karar 8 | ⏳ |
 | **L13** | Evim-Evin anketi | C | karar 9 | ⏳ |

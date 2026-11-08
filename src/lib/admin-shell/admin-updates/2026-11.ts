@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-l3-l10a-l5-ana-dalda",
+    date: "9 Kasım 2026",
+    title: "Lansman: güvence kontrolleri, profilde Geri Bildirim ve yeni ana sayfa ana dala alındı",
+    items: [
+      "KISACA: Dün gece 'denetimde' diye bildirdiğimiz üç iş bağımsız denetimden geçti, düzeltmeleri yapıldı ve ana dala alındı. Üyelere görünmeleri için yeniden yayınlama (Coolify) gerekiyor.",
+      "GÜVENCE KONTROLLERİ: Burak'ın 12 maddelik 'kaybedilmeyecekler' listesi otomatik testlere bağlandı. Denetçi üç testin bozulmayı yakalamadığını gösterdi; düzeltildi ve her biri bilerek bozularak denendi. Lovable'dan siteye girmemesi gereken parçaların yasak listesi artık site dosyalarının tamamını tarıyor. Sayfa ağırlığı için üst sınır kondu.",
+      "PROFİLDE GERİ BİLDİRİM: Üye profilinden geri bildirim gönderip geçmişini görebiliyor; yönetici bir geri bildirimi onay sorusundan sonra tek tıkla Revizyon İstekleri'ne taşıyabiliyor. Gizlilik: üye e-postası revizyon kayıtlarına ve bildirim maillerine girmiyor. Bir hesaptan çıkıp başka hesapla giren kişi öncekinin geçmişini göremiyor.",
+      "YENİ ANA SAYFA: Lovable düzenindeki üst bölüm ve hemen altında arama çubuğu. Yanıltıcı '251 ülke' sayacı kaldırıldı (ağımızı değil ülke listesinin boyutunu gösteriyordu). Düğme renkleri okunabilirlik için koyulaştırıldı. Sayfa ilk açılışta öncekinden hafif: 258 KB → 251 KB.",
+      "SİZDEN BEKLENEN: (1) Geri Bildirim için veritabanı güncellemesinin (20261108120000) canlıya uygulanması — sıra önemli değil, uygulanmadan site çökmez ama 'REV'e taşı' ve üyenin geçmiş listesi çalışmaz. (2) Coolify'dan yeniden yayınlama. (3) 🔴 Anahtar yenileme (GB1). (4) Bugün 14:00: 14 karar.",
+      "BİLMENİZ GEREKEN: Tüm otomatik kontroller yeşil (4.657 test, tarayıcıda 5 akış). Kararsız kalan diğer işler bugünkü toplantının kararlarını bekliyor.",
+    ],
+  },
+  {
     id: "20261108-lansman-ara-durum-l3-l10a-l5",
     date: "8 Kasım 2026",
     title:
