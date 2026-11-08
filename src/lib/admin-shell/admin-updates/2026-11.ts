@@ -5,6 +5,23 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-plan-ozeti-yapilanlar-listesi",
+    date: "9 Kasım 2026",
+    title: "1 Ocak planı — adım adım durum listesi: ne yapıldı, ne bekliyor",
+    items: [
+      "KISACA: 1 Ocak lansmanı 22 adıma (L0–L21) bölünmüştü. Bugün itibarıyla 4 adım tamamlandı, 1 adım hazırlanıyor, kalanların çoğu 14:00 kararlarını bekliyor. Aşağıda her adımın durumu var.",
+      "✅ YAPILDI — L0 Plan ve tutarsızlık raporu: Burak'ın 4 Kasım planı canlı sistemle karşılaştırıldı, 57 tutarsızlık kanıtlarıyla raporlandı, Barış için okunur plan dokümanı hazırlandı.",
+      "✅ YAPILDI — L3 Güvence kontrolleri: 12 maddelik 'kaybedilmeyecekler' listesi otomatik testlere bağlandı; Lovable'dan girmemesi gereken parçalar için yasak listesi kuruldu; ana sayfa ağırlığına üst sınır kondu; tarayıcıda 5 temel akış testi yazıldı.",
+      "✅ YAPILDI — L5 Yeni ana sayfa üst bölümü: Lovable düzeni, 'Kaydol — Diaspora Pasaportun Çıksın' düğmesi, Kurucu 1000 / Blogger / Vlogger / WhatsApp düğmeleri, hemen altta arama. Yanıltıcı sayaç kaldırıldı, sayfa hafifledi. Dönen dünya animasyonu ağır olduğu için alınmadı; aramaya etkinlik ve grup eklenmesi ayrı iş olarak bekliyor.",
+      "✅ YAPILDI — L10a Profilde Geri Bildirim: üye profilinden geri bildirim gönderip geçmişini görüyor; yönetici tek tıkla Revizyon İstekleri'ne taşıyor. Veritabanı güncellemesi canlıya uygulanmayı bekliyor.",
+      "✅ AYRICA KAPANDI: sahte ödeme ekranı kaldırıldı (7 Kasım); rol tablosu dosyası canlıyla eşitlendi; kod temizliği planıyla çakışan 4 nokta çözüldü (rol seçici ve fiyat dosyası korundu); Kurucu 1000 referans kodu ve yeni ana sayfa başlığı kararları verildi.",
+      "🟡 HAZIRLANIYOR — L10b Profil tamamlama hatırlatma e-postası (0., 3. ve 10. gün): altyapı yazılıyor, ayarı kapalı; metni Burak onaylayınca açılacak.",
+      "⏳ 14:00 KARARLARINI BEKLİYOR — L1 kararların kaydı · L2 örnek iş ilanları, etkinlik metinleri, Kurucu 1000 adresi · L4 7 başlıklı yeni menü · L6 Rol Talepleri (yeni rol yapısı) · L7 yeni fiyat sayfası · L8 staging ve vision.corteqs.net · L11 Cadde ve cafe · L12 Çarşı · L13 Evim-Evin · L17 Venture Hub / Transfer / Creator 'Yakında' sayfaları.",
+      "⏳ DIŞ ADIM BEKLİYOR — L9 Diaspora Pasaportu (Meta işletme onayı) · L14 Stripe abonelik ve L15 reklam (Stripe hesabı ve vergi kaydı).",
+      "⏳ TAKVİMDE SONRA — L16 sitede rehber bot · L18 menü taşımaları ve dizin düzenleri · L19 araştırma kayıtlarının içe aktarılması · L20 21 Aralık kod dondurma, 30 Aralık son karar, 1 Ocak yayın · L21 Ocak'a ertelenenler.",
+    ],
+  },
+  {
     id: "20261109-lansman-gun-sonu-ve-14-karar",
     date: "9 Kasım 2026",
     title: "Bugünlük iş bitti — 14:00 toplantısında kapanması gereken 14 karar",
