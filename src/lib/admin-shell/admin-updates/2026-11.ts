@@ -5,6 +5,21 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-son-durum-ozeti",
+    date: "9 Kasım 2026",
+    title: "1 Ocak lansmanı — son durum: 22 adımın 5'i bitti, kalanlar ve sizden beklenenler",
+    items: [
+      "BİTTİ (5 adım): ✅ L0 — plan ve tutarsızlık raporu. ✅ L3 — 12 maddelik 'kaybedilmeyecekler' listesi otomatik testlere bağlandı. ✅ L5 — Lovable düzeninde yeni ana sayfa üst bölümü ve arama çubuğu. ✅ L10a — profilde Geri Bildirim sekmesi ve 'REV'e taşı' (veritabanı güncellemesi canlıda). ✅ L10b — profil tamamlama hatırlatma e-postası (veritabanı güncellemesi canlıda, ayarı KAPALI).",
+      "DURUM: Tüm otomatik kontroller yeşil (4.686 test). Yapılan her şey ana dalda. Açık kalan yarım iş yok.",
+      "ÜYELER HENÜZ GÖRMÜYOR: Yeni ana sayfa, Geri Bildirim sekmesi ve 7 Kasım düzeltmeleri, Coolify'dan yeniden yayınlanınca görünür.",
+      "14:00 KARARLARINI BEKLEYEN (10 adım): L1 kararların kaydı · L2 örnek ilanlar, etkinlik metni, Kurucu 1000 adresi · L4 yeni menü · L6 Rol Talepleri · L7 yeni fiyat sayfası · L8 staging ve vision.corteqs.net · L11 Cadde ve cafe · L12 Çarşı · L13 Evim-Evin · L17 Venture Hub / Transfer / Creator sayfaları.",
+      "DIŞ ADIM BEKLEYEN (3 adım): L9 Diaspora Pasaportu → Meta işletme onayı. L14 Stripe abonelik ve L15 reklam → Stripe hesabı ve vergi kaydı. Bu ikisi takvimin en büyük riski; erken başlatılmalı.",
+      "TAKVİMDE SONRA (4 adım): L16 sitede rehber bot · L18 menü taşımaları ve dizinler · L19 araştırma kayıtlarının içe aktarılması · L20 21 Aralık kod dondurma → 30 Aralık son karar → 1 Ocak yayın. (L21: Ocak'a ertelenenler.)",
+      "SİZDEN BEKLENEN — 1) Coolify'dan yeniden yayınlama. 2) 🔴 Anahtar yenileme (GB1). 3) Yerel yedek klasörünün silinmesi (içinde gizli anahtar dosyaları var). 4) 14:00'te 14 karar. 5) Stripe hesabı ve Meta işletme doğrulamasının başlatılması.",
+      "HATIRLATMA E-POSTASINI AÇMADAN ÖNCE: 'bu hatırlatmaları kapat' bağlantısı ve tercih ayarı · gizlilik politikasına ekleme · hukuk görüşü · Burak'ın metin onayı · 0. gün mailinin hoş geldin maili ile aynı güne düşüp düşmeyeceği kararı.",
+    ],
+  },
+  {
     id: "20261109-lansman-l10b-ana-dalda-ve-migrationlar-canlida",
     date: "9 Kasım 2026",
     title: "Profil hatırlatma e-postası ana dalda; iki veritabanı güncellemesi canlıya uygulandı",
