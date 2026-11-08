@@ -5,6 +5,19 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-gun-sonu-ve-14-karar",
+    date: "9 Kasım 2026",
+    title: "Bugünlük iş bitti — 14:00 toplantısında kapanması gereken 14 karar",
+    items: [
+      "KISACA: Kararsız ilerleyebilen işler tamamlandı ve ana dala alındı (güvence kontrolleri, profilde Geri Bildirim, yeni ana sayfa üst bölümü). Kalan işlerin çoğu aşağıdaki kararları bekliyor. Gece son olarak profil tamamlama hatırlatma e-postasının altyapısı hazırlanıyor; ayarı KAPALI, kimseye mail gitmez — metni Burak onaylayınca açılacak.",
+      "KARARLAR 1–5: (1) Fiyat modeli — öneri: 4 Kasım önizlemesi (Standart €1 / Premium €9,50 / Kurucu 1000 €99), fiyatlar tek ayar dosyasından okunur. (2) 'İlk 12 ay' ne zaman başlar — öneri: 1 Ocak 2027. (3) Kilitler ne zaman — öneri: ödeme 1 Ocak'ta açılır, mesaj ve CV/ilan kilitleri 1 Şubat'ta. (4) Diaspora Pasaportu ve '+90 alamaz' kuralı — öneri: telefon koduyla doğrulama, +90 kuralı kalkar (Berlin'de yaşayan +90'lı üye dışarıda kalmasın). (5) Etkinlik onayı — öneri: 6 Ekim kararı kalır, etkinlikler otomatik yayınlanır.",
+      "KARARLAR 6–10: (6) Yeni rol yapısı — öneri: toplu göç yok, 19 'öneri' satırı onaylı sayılır. (7) Cafe süresi ve kapasitesi — öneri: 19 Mayıs'a kadar herkese 24 saat; kapasite 100 / 1.000. (8) Çarşı açılışı — öneri: hukuk metni, ilan sınırı ve şikâyet akışı hazır olunca açılır; ücretli öne çıkarma lansmanda kapalı. (9) Evim-Evin'e depo/garaj — öneri: ankete tek ek adım. (10) İş İlanları'ndaki 6 örnek ilan — öneri: silinir, sekme 'Yakında' olur.",
+      "KARARLAR 11–14: (11) Kurucu 1000 adresi — öneri: /founding-1000 kalır, Lovable'daki /founders-1000 oraya yönlenir. (12) vision.corteqs.net hangi Lovable projesi — öneri: CORTEQS+; prototipteki korumasız admin sayfaları kapatılır. (13) Adresler — öneri: mevcut corteqs.net adresleri korunur, yeni sayfalar Lovable adını alır. (14) Venture Hub ve Creator — öneri: lansmanda yalnız 'Yakında' sayfası + bekleme listesi.",
+      "KARAR KAPANMAZSA: O maddede önerilen varsayımla ilerlenir. Ayrıntılı gerekçeler Barış'ın plan dokümanında (Claude Docs) ve depodaki tutarsızlık raporunda.",
+      "SİZDEN BEKLENEN: (1) 14:00'te kararlar. (2) Geri Bildirim veritabanı güncellemesinin (20261108120000) canlıya uygulanması. (3) Coolify'dan yeniden yayınlama — dünkü ve bu geceki işler ancak o zaman üyelere görünür. (4) 🔴 Anahtar yenileme (GB1).",
+    ],
+  },
+  {
     id: "20261109-lansman-l3-l10a-l5-ana-dalda",
     date: "9 Kasım 2026",
     title: "Lansman: güvence kontrolleri, profilde Geri Bildirim ve yeni ana sayfa ana dala alındı",
