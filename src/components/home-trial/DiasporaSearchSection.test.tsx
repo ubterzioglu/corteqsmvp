@@ -26,7 +26,10 @@ import { sliceBetween } from "@/test/source-slice";
 
 import DiasporaSearchSection from "@/components/home-trial/DiasporaSearchSection";
 
-const mockNavigate = vi.fn();
+const { mockNavigate, mockTotalCount } = vi.hoisted(() => ({
+  mockNavigate: vi.fn(),
+  mockTotalCount: vi.fn<() => Promise<number>>(),
+}));
 const mockAuth = { user: null as { id: string } | null, isLoading: false };
 
 vi.mock("react-router-dom", async () => {
@@ -37,10 +40,8 @@ vi.mock("react-router-dom", async () => {
 // CLAUDE.md uyarısı: mock yolu bileşenin GERÇEKTEN import ettiği yol olmalı.
 vi.mock("@/components/auth/useAuth", () => ({ useAuth: () => mockAuth }));
 
-vi.mock("@/hooks/useGeo", () => ({ useGeoCountries: () => ({ data: [] }) }));
-
 vi.mock("@/lib/catalog-directory", () => ({
-  getTotalDirectoryCount: () => Promise.resolve(248),
+  getTotalDirectoryCount: () => mockTotalCount(),
 }));
 
 const renderSection = () =>
@@ -58,6 +59,8 @@ const submitSearch = (value: string) => {
 describe("DiasporaSearchSection", () => {
   beforeEach(() => {
     mockNavigate.mockClear();
+    mockTotalCount.mockReset();
+    mockTotalCount.mockResolvedValue(248);
     mockAuth.user = null;
     mockAuth.isLoading = false;
   });
@@ -103,6 +106,62 @@ describe("DiasporaSearchSection", () => {
     expect(screen.queryByText(/Arama herkese açık/)).toBeNull();
   });
 
+  // L5: "Ara" yazısı mobilde de görünür olmalı (eskiden `hidden sm:inline` idi).
+  it("Ara düğmesinin metni her ekranda görünür", () => {
+    renderSection();
+
+    const button = screen.getByRole("button", { name: "Ara" });
+    expect(button).toHaveAttribute("type", "submit");
+    expect(button.querySelector(".hidden")).toBeNull();
+    expect(button).toHaveTextContent("Ara");
+  });
+
+  // Sabit "80+ kategori" / "7/24" kaldırıldı; şerit yalnız gerçek sayaçlardan beslenir.
+  it("sabit istatistik göstermez", async () => {
+    renderSection();
+    await waitFor(() => {
+      expect(screen.getByText("248+")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("80+")).toBeNull();
+    expect(screen.queryByText("7/24")).toBeNull();
+  });
+
+  // Katalog boyutu (251 `geo_countries`) "ülke" diye gösterilmemeli: ağın ulaştığı
+  // ülke sayısı değil. Dizin kayıtlarından ayrık ülke sayısı veren RPC gelene dek yok.
+  it("katalog boyutunu 'ülke' sayacı olarak göstermez", async () => {
+    renderSection();
+    await waitFor(() => {
+      expect(screen.getByText("248+")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("ülke")).toBeNull();
+  });
+
+  it("sayaç hata/0 dönerse şerit tamamen kaybolur", async () => {
+    mockTotalCount.mockResolvedValue(0);
+    const { container } = renderSection();
+
+    await waitFor(() => {
+      expect(container.querySelector("ul")).toBeNull();
+    });
+    expect(screen.queryByText("dizinde görünen kayıt")).toBeNull();
+  });
+
+  it("sayaç yüklenirken şerit YER TUTAR (CLS yok) ama görünmez", () => {
+    mockTotalCount.mockReturnValue(new Promise<number>(() => {}));
+    const { container } = renderSection();
+
+    const strip = container.querySelector("ul");
+    expect(strip).not.toBeNull();
+    expect(strip).toHaveClass("invisible");
+    expect(strip?.className).toContain("min-h-");
+    expect(strip).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("Ara düğmesi AA kontrastlı zemin kullanır (#00838F)", () => {
+    renderSection();
+    expect(screen.getByRole("button", { name: "Ara" }).className).toContain("bg-[#00838F]");
+  });
+
   it("sayaç etiketi dizinde görünen kayıt sayısını anlatır", async () => {
     renderSection();
     await waitFor(() => {
@@ -115,6 +174,7 @@ describe("DiasporaSearchSection", () => {
 describe("DiasporaSearchSection arama örnekleri", () => {
   beforeEach(() => {
     mockNavigate.mockClear();
+    mockTotalCount.mockResolvedValue(248);
     mockAuth.user = { id: "u1" };
     mockAuth.isLoading = false;
   });

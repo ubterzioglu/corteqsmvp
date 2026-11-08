@@ -1,6 +1,6 @@
 /**
- * Ana sayfanın iki satırlık eylem şeridi — hero ve kapanış kartı AYNI bileşeni
- * kullanır.
+ * Ana sayfanın iki satırlık eylem şeridi — L5'ten (2026-11-08) beri YALNIZ kapanış
+ * kartı (FinalCtaSection) kullanır; hero kendi düzenini çizer (HeroActions.tsx).
  *
  * NEDEN VAR: masaüstünde düğmeler 5 + 4 iki satır çizer ve bu sözleşme
  * korunur (bkz. action-buttons-data.ts ölçü notu). Dar ekranda ise düğme
@@ -33,7 +33,7 @@ interface HomeActionStackProps {
   align?: "start" | "center";
   /** `state.from` değeri — Geri Bildirim kaydının `page_path` alanını doldurur. */
   originPath?: string;
-  /** Şeridin üstündeki boşluk; hero `mt-7`, kapanış kartı `mt-9` ister. */
+  /** Şeridin üstündeki boşluk; kapanış kartı `mt-9` ister (varsayılan `mt-7`). */
   topSpacingClassName?: string;
 }
 
@@ -47,7 +47,7 @@ export function HomeActionStack({
   topSpacingClassName = "mt-7",
 }: HomeActionStackProps) {
   const [expanded, setExpanded] = useState(false);
-  // useId: aynı sayfada iki şerit var (hero + kapanış), id'ler çakışamaz.
+  // useId: şerit birden çok yerde çizilirse id'ler çakışamaz.
   const stackId = useId();
   const rowOneId = `${stackId}-row-one`;
   const rowTwoId = `${stackId}-row-two`;

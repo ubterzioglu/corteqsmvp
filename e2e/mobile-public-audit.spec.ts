@@ -7,7 +7,7 @@ const PAGE_EXPECTATIONS = [
     description:
       "CorteQS, dünyadaki Türkleri şehir bazlı bağlantılar, topluluklar ve fırsatlar etrafında buluşturan diaspora platformudur.",
     canonical: "https://corteqs.net/",
-    heading: /Dünyanın\s*Her Yerindeki\s*Türkler İçin\s*Tek Ağ/i,
+    heading: /Gittiğin ülkede\s*organize bir ağ\s*seni bekliyor/i,
   },
   {
     path: "/founders",
@@ -95,6 +95,11 @@ test("public mobile routes keep route-specific Turkish SEO metadata", async ({ p
     await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", route.description);
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", route.canonical);
     await expect(page.locator("body")).toContainText(route.heading);
+    // Ana sayfada başlık gerçekten <h1> olmalı ("body" aramasına başka bir bölümün
+    // metni de takılabilir). Satırlar arası boşluk: "ülkedeorganize" okunmamalı.
+    if (route.path === "/") {
+      await expect(page.locator("h1")).toHaveText(route.heading);
+    }
   }
 });
 

@@ -2,12 +2,17 @@
  * "Diasporada Ara" — aksiyon-odaklı arama hero'su (eski WorldAtlasMap'in yerine).
  *
  * Google sadeliğinde: büyük başlık + kocaman arama çubuğu + dönen örnek aramalar +
- * CANLI istatistik şeridi (catalog_items kayıt sayısı + geo ülke sayısı, gerçek veriden).
+ * CANLI sayaç (dizinde görünen kayıt sayısı, gerçek veriden).
  * Arama gönderildiğinde /directory?q=... adresine gider; oradaki sayfa giriş kapısını
  * (login gate) zaten kendi yönetir, bu yüzden giriş yapmamış kullanıcı da güvenle yönlenir.
  *
- * Sayaçlar gerçek veriden gelir ama yüklenene kadar (veya hata) sade düşer — yanıltıcı
- * "0" göstermek yerine etiket gizlenir.
+ * ⚠️ "Ülke sayısı" sayacı L5 incelemesinde KALDIRILDI: `useGeoCountries` 251'lik
+ * `geo_countries` KATALOĞUNUN boyutunu döner, ağın ulaştığı ülke sayısını değil —
+ * hero'nun hemen altında yanıltıcıydı. Dizin kayıtlarındaki ayrık ülke sayısını
+ * veren hazır bir RPC yok (yeni backend işi); o gelene kadar sayaç geri konmaz.
+ *
+ * Sayaç yüklenirken şerit yer AYIRIR (`invisible` + sabit yükseklik → CLS yok);
+ * hata/0 durumunda şerit tamamen kaybolur — yanıltıcı "0" gösterilmez.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +21,6 @@ import { Search, ArrowRight, Info } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { getTotalDirectoryCount } from "@/lib/catalog-directory";
-import { useGeoCountries } from "@/hooks/useGeo";
 
 /**
  * Arama çubuğunda sırayla beliren örnek aramalar (placeholder döngüsü).
@@ -59,10 +63,7 @@ const DiasporaSearchSection = () => {
   const [exampleIndex, setExampleIndex] = useState(0);
   const [totalCount, setTotalCount] = useState<number | null>(null);
 
-  const countriesQuery = useGeoCountries();
-  const countryCount = countriesQuery.data?.length ?? null;
-
-  // Gerçek kayıt sayısını çek — hata/0 durumunda etiket gizlenir.
+  // Gerçek kayıt sayısını çek — null = yükleniyor, 0 = hata/boş (şerit kaybolur).
   useEffect(() => {
     let isMounted = true;
     void getTotalDirectoryCount().then((count) => {
@@ -106,7 +107,7 @@ const DiasporaSearchSection = () => {
   };
 
   return (
-    <section id="landingtrial-atlas" className="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
+    <section id="landingtrial-atlas" className="relative mx-auto max-w-5xl px-6 py-14 sm:py-20">
       <div className="mx-auto max-w-2xl text-center">
         <span className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-teal" aria-hidden="true" />
@@ -119,7 +120,7 @@ const DiasporaSearchSection = () => {
           <span className="text-gradient-logo">tek aramada</span> bul
         </h2>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Şehir, meslek ya da isim — 80+ kategoride dünyaya yayılmış diaspora ağında ara, bağlan, keşfet.
+          Şehir, meslek ya da isim — dünyaya yayılmış diaspora ağında ara, bağlan, keşfet.
         </p>
       </div>
 
@@ -139,14 +140,15 @@ const DiasporaSearchSection = () => {
           aria-label="Diasporada ara"
           className="min-w-0 flex-1 bg-transparent text-base text-slate-900 placeholder:text-slate-400 focus:outline-none"
         />
+        {/* L5: "Ara" yazısı her ekranda GÖRÜNÜR (eskiden mobilde yalnız ok vardı;
+            ikonla yetinmek aramanın nasıl gönderileceğini belli etmiyordu). Erişilebilir
+            ad artık görünen metinden gelir (Lighthouse `button-name`). Zemin #00838F:
+            beyaz metinle ≈4,5:1 (eski #00ACC1→#0097A7 gradyanı 2,7–3,2:1 idi). */}
         <button
           type="submit"
-          // Mobilde "Ara" yazısı gizli, yalnız ok ikonu kalır → erişilebilir ad buradan
-          // gelir (Lighthouse 2026-10-12 `button-name`).
-          aria-label="Ara"
-          className="group inline-flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ACC1] to-[#0097A7] px-5 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-glow-teal sm:px-6"
+          className="group inline-flex min-h-[48px] shrink-0 items-center justify-center gap-2 rounded-full bg-[#00838F] px-5 text-sm font-semibold text-white shadow-[0_16px_34px_-12px_hsl(var(--glow-teal)/0.6)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#006F7A] hover:shadow-glow-teal sm:px-6"
         >
-          <span className="hidden sm:inline">Ara</span>
+          <span>Ara</span>
           <ArrowRight
             className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5"
             aria-hidden="true"
@@ -178,33 +180,27 @@ const DiasporaSearchSection = () => {
         </p>
       ) : null}
 
-      {/* Canlı istatistik şeridi — gerçek veriden. */}
-      <ul className="mx-auto mt-12 flex max-w-3xl flex-wrap items-center justify-center gap-x-12 gap-y-6">
-        {totalCount && totalCount > 0 ? (
-          <li className="text-center">
-            <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
-              {totalCount.toLocaleString("tr-TR")}+
-            </div>
-            <div className="mt-1 text-sm text-muted-foreground">dizinde görünen kayıt</div>
-          </li>
-        ) : null}
-        {countryCount && countryCount > 0 ? (
-          <li className="text-center">
-            <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
-              {countryCount.toLocaleString("tr-TR")}
-            </div>
-            <div className="mt-1 text-sm text-muted-foreground">ülke</div>
-          </li>
-        ) : null}
-        <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">80+</div>
-          <div className="mt-1 text-sm text-muted-foreground">kategori</div>
-        </li>
-        <li className="text-center">
-          <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">7/24</div>
-          <div className="mt-1 text-sm text-muted-foreground">yaşayan ağ</div>
-        </li>
-      </ul>
+      {/* Canlı sayaç — YALNIZ gerçek veriden (L5: sabit "80+ kategori", "7/24" ve
+          katalog boyutunu "ülke" diye gösteren sayaç kaldırıldı). Yüklenirken
+          şerit görünmez ama YER TUTAR (min-h ≈ bir sayaç satırı) → sayı gelince
+          sayfa aşağı kaymaz; hata/0'da hiç çizilmez. */}
+      {totalCount === 0 ? null : (
+        <ul
+          aria-hidden={totalCount === null ? true : undefined}
+          className={`mx-auto mt-12 flex min-h-[4rem] max-w-3xl flex-wrap items-center justify-center gap-x-12 gap-y-6 ${
+            totalCount === null ? "invisible" : ""
+          }`}
+        >
+          {totalCount && totalCount > 0 ? (
+            <li className="text-center">
+              <div className="font-display text-3xl font-bold text-glow-teal sm:text-4xl">
+                {totalCount.toLocaleString("tr-TR")}+
+              </div>
+              <div className="mt-1 text-sm text-muted-foreground">dizinde görünen kayıt</div>
+            </li>
+          ) : null}
+        </ul>
+      )}
     </section>
   );
 };

@@ -1,26 +1,19 @@
 /**
  * 1. Tam-viewport ağ hero (deneme landing) — Vodafone "everyone.connected" tarzı.
  * Kart YOK: tam ekran soyut "geometrik ağ" videosu (açık/beyaz zemin) + soldan başlayan
- * büyük başlık, dikey vurgu çizgili kısa açıklama ve dolu birincil CTA + sessiz ikincil CTA.
+ * büyük başlık, dikey vurgu çizgili kısa açıklama, birincil CTA ve ikincil eylemler.
  * Video açık renkli olduğu için metin KOYU, okunabilirlik örtüsü de soldan BEYAZ.
  */
 
 import { useEffect, useState } from "react";
 
-import { HomeActionStack } from "./HomeActionStack";
-import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
+import { HeroActions } from "./HeroActions";
 
-// Hero'da düğmeler TAM İKİ SATIR çizilir (kullanıcı kararı, 2026-09-20). Onuncu
-// düğme eklenince kendiliğinden üçüncü satıra taşardı; bu yüzden bölme elle
-// yapılır: 5 + 4 (2026-09-25'te Kampanyalar ve Yarışmalar tek düğmeye indi).
-//
-// Ölçü: düğme 10rem (160px) + gap 0.625rem (10px) → 5 düğme = 5×160 + 4×10 = 840px.
-// Sarmalayıcı bu yüzden `max-w-4xl` (896px); `max-w-xl` (576px) ile satır başına
-// yalnız 3 düğme sığıyordu. Yeni düğme eklersen bu aritmetiği tekrar yap, yoksa
-// "iki satır" sözleşmesi sessizce bozulur.
-//
-// İKİ SATIR DA kapanış kartıyla PAYLAŞILIR — burada tekrar yazılmaz, yoksa iki
-// bölüm ayrışır (bkz. action-buttons-data.ts).
+// L5 (2026-11-08): hero düzeni Lovable CORTEQS+ ile hizalandı — eyebrow, üç satırlık
+// başlık, açıklama, birincil CTA, dört ikincil düğme ve iki kampanya kartı
+// (bkz. HeroActions.tsx / hero-cta-data.ts). Eski 5 + 4 eylem şeridi artık YALNIZ
+// kapanış kartında (FinalCtaSection) durur. Arka plan (poster + video) DEĞİŞMEDİ:
+// LCP öğesi poster kalır, bkz. aşağıdaki Lighthouse notları.
 
 // Telifsiz soyut "beyaz geometrik ağ" hero videosu (Pexels #29718114, telifsiz).
 // Açık zemin → metin koyu, gradyan örtü beyaz tarafta. Yeni videoyu aynı isimle
@@ -66,12 +59,9 @@ const HeroNetworkSection = () => {
   const videoEnabled = useHeroVideoEnabled();
 
   return (
-    // İçerik dikeyde ortalıdır; üst boşluğu azaltmak için `py-8` yerine ASİMETRİK
-    // dolgu kullanılır. Alt dolgunun fazlası, ortalama kutusunu yukarı taşır —
-    // içerik ~36px (sm+ ~48px) yukarı çıkar, `min-h` DEĞİŞMEDİĞİ için hero'nun
-    // yüksekliği aynı kalır. `items-start`'a geçmek yüksekliği korurdu ama içeriği
-    // ekran boyundan bağımsız olarak tepeye yapıştırırdı; uzun ekranlarda kötü durur.
-    <section className="relative flex min-h-[calc(100vh-8rem)] items-center overflow-hidden bg-white pb-24 pt-6 sm:min-h-[calc(100vh-6rem)] sm:pb-32 sm:pt-8">
+    // `min-h-[75vh]` (Lovable'daki gibi): arama çubuğu hero'nun hemen altında,
+    // ilk ekranın yakınında görünür. İçerik uzadığında (mobilde) bölüm kendiliğinden büyür.
+    <section className="relative flex min-h-[75vh] items-center overflow-hidden bg-white pb-14 pt-8 sm:pb-16 sm:pt-10">
       {/* Poster her ekranda çizilir ve LCP öğesidir; video (yalnız geniş ekranda)
           aynı karede başladığı için üstüne geçiş görünmez. Dekoratif → alt="". */}
       <img
@@ -115,41 +105,28 @@ const HeroNetworkSection = () => {
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 sm:px-10">
         <div className="max-w-2xl text-left">
-          <span className="inline-flex items-center gap-2 rounded-full border border-slate-900/10 bg-white/70 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-glow-orange" aria-hidden="true" />
-            Küresel Türk Diaspora Ağı
-          </span>
+          {/* Eyebrow satırı: kısa marka çizgisi + tek satır etiket (Lovable düzeni). */}
+          <p className="flex items-center gap-3">
+            <span className="h-0.5 w-8 shrink-0 bg-glow-teal" aria-hidden="true" />
+            <span className="text-xs font-semibold leading-relaxed text-slate-700 sm:text-sm">
+              CORTEQS — Yurt Dışında Yaşayan Türklerin Sistemi
+            </span>
+          </p>
 
-          <h1 className="mt-4 font-display text-4xl font-bold leading-[0.98] tracking-[-0.02em] text-slate-900 sm:text-6xl lg:text-[4.5rem]">
-            Dünyanın
-            <br />
-            Her Yerindeki
-            <br />
-            <span className="text-gradient-logo">Türkler İçin</span>
-            <br />
-            <span className="text-gradient-logo">Tek Ağ</span>
+          <h1 className="mt-5 font-display text-4xl font-bold leading-[1.02] tracking-[-0.02em] text-slate-900 sm:text-6xl lg:text-[4.5rem]">
+            Gittiğin ülkede <br />
+            <span className="text-gradient-logo">organize bir ağ</span> <br />
+            seni bekliyor
           </h1>
 
           {/* Vodafone tarzı sol dikey vurgu çizgili açıklama. */}
           <p className="mt-6 max-w-xl border-l-2 border-glow-teal pl-5 text-sm leading-relaxed text-slate-700 sm:text-base">
-            Berlin'den Sidney'e, Toronto'dan Dubai'ye insanları, toplulukları ve işletmeleri tek bir güven ağında
-            buluşturuyoruz. Bir dizin değil, yaşayan bir ağ.
+            Danışmanlar, dernekler, etkinlikler ve ücretsiz araçlarla diasporadaki yaşamını kolaylaştır. Bir dizin
+            değil, yaşayan bir ağ.
           </p>
         </div>
 
-        {/* Düğmeler metin kolonunun DIŞINDA durur. İçeride kalsalardı ebeveynin
-            `max-w-2xl` (672px) sınırı `max-w-4xl`'i yutar ve beş düğmelik satır
-            yine üçe bölünürdü — "iki satır" sözleşmesi sessizce bozulurdu. */}
-        <div className="max-w-4xl text-left">
-          {/* İki satır, her biri 5 düğme — bkz. dosya başındaki ölçü notu.
-              Mobilde ilk üçü açık, kalanlar aç/kapa arkasında (HomeActionStack). */}
-          <HomeActionStack
-            rowOne={ACTION_ROW_ONE}
-            rowTwo={ACTION_ROW_TWO}
-            rowOneLabel="Ana eylemler"
-            rowTwoLabel="Hızlı erişim"
-          />
-        </div>
+        <HeroActions />
       </div>
     </section>
   );

@@ -5,11 +5,10 @@
 import { HomeActionStack } from "./HomeActionStack";
 import { ACTION_ROW_ONE, ACTION_ROW_TWO } from "./action-buttons-data";
 
-// Kapanış kartı da hero gibi TAM İKİ SATIR, 5 + 4 (kullanıcı kararı, 2026-09-20;
-// 2026-09-25'te Kampanyalar ve Yarışmalar tek düğmeye indi).
-// Eskiden birinci satırın ilk düğmesi ayrışıyordu (hero "Ağa Katıl", burada
-// "Ücretsiz Kayıt Ol"); 20 Eylül'de etiketler eşitlendi ve iki satır da artık
-// action-buttons-data.ts'ten PAYLAŞILIYOR — tek fark hizalama (burada ortalı).
+// Kapanış kartı TAM İKİ SATIR, 5 + 4 (kullanıcı kararı, 2026-09-20; 2026-09-25'te
+// Kampanyalar ve Yarışmalar tek düğmeye indi). İki satır action-buttons-data.ts'ten
+// gelir. L5'ten (2026-11-08) beri hero BU şeridi KULLANMAZ — kendi kataloğu
+// hero-cta-data.ts'tedir; şerit yalnız burada çizilir.
 
 const FinalCtaSection = () => {
   return (
@@ -43,8 +42,7 @@ const FinalCtaSection = () => {
           <p className="mx-auto mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg md:whitespace-nowrap">
             Ücretsiz kayıt ol, kendi şehrindeki ağını keşfet ve büyümenin parçası ol.
           </p>
-          {/* İki satır, her biri 5 düğme — hero ile AYNI ölçüde, ortalı hizalı
-              (hero'da sola dayalıdır). İkinci satır hero ile PAYLAŞILIR.
+          {/* İki satır (5 + 4), ortalı hizalı.
               Mobilde ilk üçü açık, kalanlar aç/kapa arkasında (HomeActionStack). */}
           <HomeActionStack
             rowOne={ACTION_ROW_ONE}

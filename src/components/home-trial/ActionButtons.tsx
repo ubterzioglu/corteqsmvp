@@ -1,5 +1,5 @@
 /**
- * Ana sayfanın eylem düğmeleri — hero ve final CTA kartı AYNI bileşeni kullanır.
+ * Ana sayfanın eylem düğmeleri — L5'ten beri yalnız final CTA kartı kullanır (hero HeroActions.tsx).
  *
  * ÜÇ KURAL (kullanıcı kararı, 2026-09-20):
  *
@@ -53,7 +53,7 @@ interface ActionButtonsProps {
   className?: string;
   /** `state.from` değeri — Geri Bildirim kaydının `page_path` alanını doldurur. */
   originPath?: string;
-  /** Düğmelerin yatay hizası; CTA kartında ortalı, hero'da sola dayalı. */
+  /** Düğmelerin yatay hizası; CTA kartında ortalı (varsayılan sola dayalı). */
   align?: "start" | "center";
   /**
    * Verilirse satır `<nav aria-label>` olarak çizilir. Bağlantı grubunu adlandırmak
