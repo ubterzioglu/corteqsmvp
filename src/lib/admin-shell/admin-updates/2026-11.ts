@@ -5,6 +5,26 @@ import type { AdminUpdateEntry } from "./types.ts";
 
 export const ADMIN_UPDATES_2026_11: AdminUpdateEntry[] = [
   {
+    id: "20261109-lansman-barisa-sorular",
+    date: "9 Kasım 2026",
+    title: "1 Ocak lansmanı — Barış'a 12 soru (çalışma biçimi, altyapı, bekleyen kararlar)",
+    items: [
+      "BU KAYIT NEDİR: Burak'a sorulan 14 ürün sorusundan ayrı olarak, işin nasıl yürüyeceğine ve altyapıya dair Barış'ın cevaplaması gereken sorular. Her soruda seçenekler ve önerimiz var; cevap gelmeyen soruda önerilen seçenekle ilerlenir.",
+      "SORU 1 — BİLDİRİM VE DİĞER SUNUCU FONKSİYONLARININ YAYINI: Veritabanı güncellemelerini artık biz uyguluyoruz. Sunucu fonksiyonlarını (ör. profil hatırlatması için 'send-notification-emails') da biz yayınlayalım mı? (a) Evet, her seferinde ayrıca sormadan. (b) Evet ama her yayından önce sor. (c) Hayır, sen yayınla. Önerimiz: (b). Fonksiyon yayını canlı mail gönderimini etkilediği için tek satırlık bir onay yeterli.",
+      "SORU 2 — COOLIFY YAYINI: Site yayınını şu an yalnız sen yapabiliyorsun ve işler bu adımda birikiyor (şu an 3 iş + 7 Kasım düzeltmeleri bekliyor). (a) Coolify'ın 'yayınla' bağlantısını (deploy webhook) bize ver, her iş bitince biz tetikleyelim. (b) Sen yapmaya devam et. Önerimiz: (a). Her yayından sonra sitenin açıldığını ve güvenlik başlıklarını otomatik kontrol ederiz.",
+      "SORU 3 — PUSH İZNİ: Her iş bitince değişiklikleri ana dala gönderiyoruz (push). Bu genel bir izin mi? (a) Evet, her iş sonunda push. (b) Her seferinde sor. Önerimiz: (a). Her push'tan önce bütün kontroller yeşil olmak zorunda; geri dönüş için her iş öncesi etiket atılıyor.",
+      "SORU 4 — MAİL SIKLIĞI: Bu gece 9 güncelleme maili gitti. (a) Her iş bitince hemen mail. (b) Gün içinde biriksin, 18:00'de tek özet mail (sistemin varsayılanı). (c) Yalnız önemli dönüm noktalarında hemen, gerisi 18:00 özetinde. Önerimiz: (c).",
+      "SORU 5 — HIZ VE MALİYET: Hızlı ilerlemek için birden fazla işi aynı anda ayrı çalışma kopyalarında yürütüyor ve her işi ayrı denetçilere inceletiyoruz; bu, yapay zekâ kullanım maliyetini artırıyor. (a) Hız öncelikli, böyle devam. (b) Maliyet öncelikli, işler sırayla. Önerimiz: (a), 21 Aralık kod dondurmasına kadar.",
+      "SORU 6 — DENETİM KURALI: 'Her işe tek denetim' kuralını koyduk. Veritabanı ve güvenlik değişikliklerinde istisna yapalım mı? (a) Evet: veritabanı, ödeme ve kişisel veri içeren işlerde üç açılı denetim, diğerlerinde tek denetim. (b) Her işte tek denetim. Önerimiz: (a). Bu gece üç açılı denetim, hatırlatma e-postasında gizli kalacak iki ciddi hatayı yakaladı.",
+      "SORU 7 — HATIRLATMA E-POSTASI İÇİN 'ABONELİKTEN ÇIK': Hukuk görüşü ne çıkarsa çıksın bu bağlantının gerekmesi çok olası. (a) Şimdiden yapalım (tercih ayarı + maildeki bağlantı + bildirim ayarları sayfası), hukuk görüşü gelince yalnız metni ayarlarız. (b) Hukuk görüşünü bekleyelim. Önerimiz: (a). Sitede aynı desen 'taşınma aracı hatırlatmalarında' zaten var, tekrar kullanılabilir.",
+      "SORU 8 — STAGING VERİTABANI: Deneme ortamı (staging.corteqs.net) hangi veritabanını kullansın? (a) Ayrı bir Supabase projesi (ek maliyet; üye verisinin kopyası, kişisel veri açısından dikkat gerektirir). (b) Ayrı proje ama kişisel veriler silinmiş/maskelenmiş kopya. (c) Staging olmasın, işler doğrudan canlıya ve otomatik testlere güvenilsin. Önerimiz: (b).",
+      "SORU 9 — VİSİON.CORTEQS.NET ALTYAPISI: Lovable prototipini kendi alan adımız altında göstermenin iki yolu var. (a) Bizim sunucumuz Lovable'a aracılık eder (adres çubuğunda Lovable görünmez, arama motorlarına kapalı, korumasız admin sayfalarını biz kapatırız). (b) Lovable'ın kendi 'özel alan adı' özelliği (daha kolay ama admin sayfalarını kapatamayız). Önerimiz: (a).",
+      "SORU 10 — ROL EŞLEMESİ (REV-100): Yeni rol tablosundaki 'eski rol' sütunu sitedeki gerçek rol kodlarını tutmuyor. Rol Talepleri'nin çalışması için yeni rol → sitedeki rol eşleme tablosu gerekiyor. (a) Eşleme tablosunu biz mevcut veriden çıkaralım, sen/Burak onaylayın. (b) Burak Excel'de doldursun. Önerimiz: (a); ~250 satırın çoğu otomatik eşleşir, yalnız belirsiz olanlar size gelir.",
+      "SORU 11 — ESKİ BEKLEYEN 10 KARAR: KALANLAR'da cevap bekleyen HA01, DM02, K15, K17, G10c, W02b, K18, PS01, SF01, CO01 maddeleri birikti. Bunlar için de 14 soruluk karar kartı gibi seçenekli ve önerili bir kart hazırlayalım mı? Önerimiz: evet.",
+      "SORU 12 — KÜÇÜK TOPARLAMALAR: (a) Proje kök klasöründeki 2 Word ve 1 PDF dosyası (lansman planı, paket şartnamesi, teknik mimari) proje belgeleri klasörüne mi taşınsın, silinsin mi? Önerimiz: belgeler klasörüne taşınsın. (b) Proje kurallar dosyasında (CLAUDE.md) bayatlamış sayılar var (ör. eski test ve dosya sayıları); temizleyelim mi? Önerimiz: evet, sayılar silinsin, yerine 'ölç' komutları yazılsın.",
+    ],
+  },
+  {
     id: "20261109-lansman-baris-ve-burak-yapilacaklar-ve-sorular",
     date: "9 Kasım 2026",
     title: "1 Ocak lansmanı — Barış'ın ve Burak'ın yapacakları, Burak'a sorularımız",
