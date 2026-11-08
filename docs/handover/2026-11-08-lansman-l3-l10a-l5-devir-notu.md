@@ -13,7 +13,7 @@ Barış'ın okuyacağı sürüm (Claude Docs): https://claude.ai/artifact/UpF7j4
 |---|---|---|
 | L0 plan + rapor + Docs | ✅ | `4d838900` |
 | L3 güvence kapıları (regresyon testleri, ilk JS gzip bütçesi 271 KB, Lovable yasak listesi, Playwright smoke) | ✅ | `b41683e6` |
-| L10a profilde Geri Bildirim + admin "REV'e taşı" | ✅ kod · ⚠️ migration `20261108120000` canlıda **değil** | `b41683e6` |
+| L10a profilde Geri Bildirim + admin "REV'e taşı" | ✅ kod · ✅ migration `20261108120000` **CANLIDA** (9 Kasım; Claude uyguladı, `schema_migrations` kaydı var, doğrulandı) | `b41683e6` |
 | L5 Lovable hero + arama çubuğu | ✅ (küre animasyonu alınmadı) | `92138ed8` (merge) |
 | L10b profil doluluk e-postası (0/3/10. gün) | 🟡 bir ajan ANA çalışma ağacında yazıyordu; **commit yok**; ayar **KAPALI** tasarlandı | tag `lansman-l10b-oncesi-2026-11-09` |
 
@@ -58,8 +58,27 @@ Hepsi `sent`, hiçbiri hata vermedi.
      - dedupe idempotent mi?
      - Sorgu küçük RAM'li DB'yi yormuyor mu?
      - Taslak metin "TASLAK — Burak onaylayacak" diye işaretli mi?
-   - **Ardından:** kapılar → Güncellemeler kaydı → commit (pathspec) → push.
-   - **Barış'a kalanlar:** migration'ı uygula, edge function'ı deploy et, Burak metni onaylayınca ayarı aç.
+   - **Durum (9 Kasım):** L10b ajanı bitirdi: 4.679 test yeşil, ayar kapalı. Workflow `wf_a9af7be7-71d` başlatıldı (3 bakış açısıyla inceleme → düzeltme → kapılar). Raporu bu oturuma gelir; yeni oturumda gelmez, o yüzden `git status` + kapılarla doğrula.
+   - **Ardından:**
+     1. Kapılar.
+     2. Güncellemeler kaydı.
+     3. Commit (pathspec) ve push.
+     4. **Migration'ı `20261109100000` CLAUDE uygular** (aşağıdaki tarif).
+     5. `send-notification-emails` deploy'u: Barış yapar ya da açıkça isterse Claude.
+     6. Burak metni onaylayınca ayar açılır.
+   - **Karar bekleyenler:**
+     - Abonelikten çıkma bağlantısı yok; hukuk görüşü gerekiyor.
+     - 0. gün hatırlatması hoş geldin maili ile aynı güne düşüyor.
+     - Taslak metin Burak'ın onayını bekliyor.
+
+> **Migration'ları Claude uygular (Barış kararı, 9 Kasım).** Tarif:
+> 1. Ön durumu ölç: sürüm kaydı var mı, nesne var mı, etkilenen tablonun satır sayısı.
+> 2. Dosyada `begin;`/`commit;` sarmalı olduğunu doğrula.
+> 3. Dosyayı UTF-8 olarak oku ve Management API `POST /v1/projects/injprdrsklkxgnaiixzh/database/query` ile tek istekte gönder.
+> 4. Sürüm kaydını düş: `insert into supabase_migrations.schema_migrations(version,name) values (...) on conflict do nothing`.
+> 5. Nesneleri ve yetkileri doğrula: `has_function_privilege` ile anon kapalı mı, ilgili rolde açık mı.
+>
+> Yalnız incelenmiş ve commit'lenmiş migration uygulanır. psql bu makinede yok.
 1. **L1:** bugün 14:00'teki toplantının 14 kararını kaydet (planın §4'ü). Kararlar rapora, plana, Docs'a ve KALANLAR'ın K bölümüne işlenir. Kapanmayan karar önerilen varsayımla ilerler.
 2. **Karar bekleyen batch'ler:** L2, L4, L6, L7, L8, L11–L13, L17.
 3. **Kararsız ilerleyebilenler:**
