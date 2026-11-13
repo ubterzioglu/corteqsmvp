@@ -1,8 +1,8 @@
-# Devir: Repo düzenleme turu (Faz 1 + Faz 2 tamam, Faz 3–4 bekliyor) — 13.11.2026
+# Devir: Repo düzenleme turu (Faz 1–3 tamam, Faz 4 bekliyor) — 13.11.2026
 
 > **Kaynak plan:** `C:/Users/baris-terzioglu/.claude/plans/repoda-klas-r-ve-dosya-enchanted-treasure.md`
 > **Çalışma şekli (kullanıcı onaylı):** stacked dallar — her faz bir öncekinin üstünde; merge'leri kullanıcı sırayla yapacak.
-> **Güncelleme 13.11 gece (Claude devraldı):** Dalga 4 commit'lendi (`76a793eb`), hook yeni yoldan koştu ("304 kayıt tarandı"). Faz 2 kapanış kapıları ve grep kanıtı §1.2–1.3'te sonuçlarıyla. Faz 3–4 BAŞLAMADI — sonraki oturum §1.5 + §7'den devam eder.
+> **Güncelleme 13.11 gece (Claude devraldı):** Dalga 4 commit'lendi (`76a793eb`), hook yeni yoldan koştu ("304 kayıt tarandı"). Faz 2 kapanış kapıları ve grep kanıtı §1.2–1.3'te sonuçlarıyla. Faz 3 (admin sayfaları) aynı gece tamamlandı — bkz §2b. Faz 4 (src/lib) BAŞLAMADI — §7'den devam.
 
 ---
 
@@ -13,10 +13,10 @@
 | Faz 0 (hazırlık) | — | ✅ Taban yeşil ölçüldü: **test 526 dosya / 4686** · lint ✅ · verify:quality ✅ · check:dead (0 yeni/5 borç/1064) · knip ✅ · format ✅ · docs:strict 0 hata/10 uyarı |
 | Faz 1 (kök + docs) | `refactor/duzen-faz1-docs` | ✅ **Tamam, commit `0434a9ec`** (43 dosya). Tüm kapanış kapıları yeşil. |
 | Faz 2 (scripts/) | `refactor/duzen-faz2-scripts` (faz1 üstünde) | ✅ Dalga 1–4 **commit'li** (`72196ccd`, `7748b25b`, `a3fbd390`, `76a793eb`). Kapanış kapıları: bkz §1.2 (sonuçlar işlendi). |
-| Faz 3 (admin pages) | — | ⬜ Başlamadı |
+| Faz 3 (admin pages) | `refactor/duzen-faz3-admin-pages` (faz2 üstünde) | ✅ 9 modül dalgası + docs commit'li; kapanış kapıları §2b |
 | Faz 4 (src/lib) | — | ⬜ Başlamadı |
 
-**Şu an:** dal `refactor/duzen-faz2-scripts` · çalışma ağacı temiz (bu doküman commit'li). Push ve PR YAPILMADI — kullanıcı kararı.
+**Şu an:** dal `refactor/duzen-faz3-admin-pages` (stack: faz1 → faz2 → faz3) · çalışma ağacı temiz. Push ve PR YAPILMADI — kullanıcı kararı; merge sırası faz1 → faz2 → faz3.
 
 ---
 
@@ -122,6 +122,32 @@ Dosya haritası §5'te. Yapılan düzeltmeler:
 - Doğrulamalar: **node --check 35/35 ✅ · vitest scripts 42 dosya/345 test ✅ · py_compile ✅**. DB-yazan seed/import'lar ve ağ scriptleri (warm-prerender, ai-visibility-track, apply-migration, sync-admin-updates) plan gereği ÇALIŞTIRILMADI.
 - `.pyc` kazası: py_compile `__pycache__` üretti, `git add scripts` ile stage'lendi → **index'ten çıkarıldı** (`git reset -- scripts/seed/__pycache__`), diskten silindi. Staged durumda YOK.
 
+
+### Faz 3 — `refactor/duzen-faz3-admin-pages` (13.11 gece, Claude) — §2b
+
+Dalga sırası planla aynı; her modül bir commit, her commit öncesi tsc + hedefli vitest (App.admin-route + regresyon sözleşmesi + modül testleri) + eslint + prettier yeşil:
+
+| Dalga | Commit | Klasör | Taşınan | Not |
+| --- | --- | --- | --- | --- |
+| 1 | `d41f8436` | `cadde/` | 6 sayfa + 2 test | mevcut routes.tsx import yolları; vi.mock + 2 readFileSync literal'i |
+| 2 | `c7849792` | `radar/` | 4 sayfa | routes.tsx `../AdminRadarX` → `./AdminRadarX` |
+| 3 | `2b845d06` | `referral/` | 4 sayfa | YENİ routes (fragment); `lansman-regression-contract.test.ts:410` artık referral/routes.tsx okur |
+| 4 | `e34cb25b` | `gruplar/` | 4 sayfa + 1 test | YENİ routes; `AdminGruplarPage.test` G24 üçlüsü gruplar/routes.tsx + kökte mount iddiası |
+| 5 | `fca94f57` | `roles/` | 4 sayfa + 1 test | YENİ routes; new-member/* Navigate satırları KÖKTE (sözleşme testi orada arar) |
+| 6 | `022a2b1c` | `may19/` | 2 sayfa | YENİ routes |
+| 7 | `bce43402` | `social/` | 5 sayfa | YENİ routes; `advisors` iç içe bloğu (index Navigate + :profile) aynen taşındı; AdminResourceLinksPage route'suz ortak bileşen |
+| 8 | `ba093f25` | `rehber/` | 4 sayfa + 3 test | YENİ routes (whatsapp-landings/guide dahil) |
+| 9 | `4597f2d2` | `sistem/` | 8 sayfa + 3 test | YENİ routes; AdminToolRegistryPage buraya (plan tablosu) |
+| docs | `fd290042` | — | 25 doküman + check-docs.test | `src/pages/admin/AdminX` atıfları yeni yola (archive/history hariç) |
+
+- **Mekanizma:** iki geçici script (`move-admin-pages.mjs`: git mv + `@/pages/admin/X` ve `src/pages/admin/X.tsx` literal yeniden yazma src/e2e/scripts/eslint-suppressions.json'da; `extract-routes.py`: kök routes.tsx'ten lazy + tek satırlı `<Route>`'ları modül dosyasına çıkarıp yerine `{adminXRoutes}` koyar). ⚠️ İlk sürümde taşınan dosyanın KENDİ importu atlanıyordu (liste taşıma öncesinden alınmıştı) — düzeltildi; iki kez kontrol: `git grep "pages/admin/AdminX"` her dalgada 0.
+- **URL'ler değişmedi:** tüm modül routes'ları düz path'lerde fragment döner; yalnız cadde/radar (zaten sarmalı) ve advisors (zaten iç içe) sarmalı. `admin-route-meta.ts` / navigasyon kaydına dokunulmadı.
+- **eslint-suppressions.json:** 8 anahtar yeniden yazıldı (prune değil); kökte kalan 2 anahtar (AdminCustomerRequestsPage, AdminEventsPage) kökte kalan sayfalara ait. `npx eslint . --prune-suppressions` koşulmadı — lint zaten yeşil, "kullanılmayan bastırma" uyarısı yok.
+- **Kök sayım:** 73 → **22** (14 sayfa + 7 test + routes.tsx) — plan §3.1 "kökte KALIR" listesiyle birebir. `git grep -o "pages/admin/Admin[A-Za-z]+" src | sort -u` → tam o 14 sayfa.
+- **Kapsam dışı bırakılan:** tarayıcı kontrolü (`npm run dev` 8080 çakışması — B09) YAPILMADI; kök `routes.tsx` render eden `App.admin-route.test` + `App.admin-cadde-route.test` ve regresyon sözleşmesi (101 test) her dalgada yeşildi.
+- **Faz 3 kapanış kapıları (plan §3.3):** verify:quality ✅ · lint ✅ (0 hata/10 uyarı) · check:dead ✅ · check:knip ✅ · ingest:tools:check ✅ "Katalog güncel" · format:check ✅ · build ✅ (1 dk 2 sn; `public/` drifti 1 dosya, geri alındı) · npm run test: __TEST_RESULT_F3__
+  ⚠️ İlk tam koşu üç ağır işle (zincir + test + build) PARALEL yapıldı: 4 dosya `Failed to start forks worker` (kaynak), `lovable-forbidden-strings` "untracked taranır" testi 83 sn'de düştü — beşi izole koşuda 52/52 ✅. Ders: tam testi build ile aynı anda koşturma.
+
 ---
 
 ## 3. KARARLAR / BULGULAR (devralan mutlaka okusun)
@@ -175,6 +201,8 @@ Dalga 3'te generate:sitemap canlı kataloğu çekti → `public/sitemap.xml`'de 
 | F2 D3 | vitest hedefli · ai:faq:check · ai:full:check · sitemap+rss koşusu · node --check role-struct | 11/203 ✅ · ✅ güncel · ✅ güncel · rss aynı/sitemap drift ayrıştırıldı · ✅ |
 | F2 D4 | node --check 35 · vitest scripts · ingest:tools+:check · preview:emails · py_compile | ✅ · 42/345 ✅ · ✅ 94 tool "güncel" · ✅ 2 şablon · ✅ |
 | **F2 kapanış** | **§2.4 seti** | ✅ hepsi yeşil (format:check tek dosya düzeltmesiyle `3c08857e`) — ayrıntı §1.2 |
+| F3 D1–D9 | tsc · hedefli vitest · eslint · prettier | her dalga ✅ (§2b tablosu) |
+| **F3 kapanış** | **§3.3 seti** | __F3_GATES_SHORT__ |
 
 ---
 
