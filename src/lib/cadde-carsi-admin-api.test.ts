@@ -63,7 +63,7 @@ describe("listAllCarsiItemsForAdmin", () => {
 });
 
 describe("AdminCaddeCarsiPage veri katmanı sözleşmesi", () => {
-  const page = readFileSync("src/pages/admin/AdminCaddeCarsiPage.tsx", "utf8");
+  const page = readFileSync("src/pages/admin/cadde/AdminCaddeCarsiPage.tsx", "utf8");
 
   it("tabloya doğrudan dokunmaz; liste API modülünden gelir", () => {
     expect(page).not.toMatch(/\bdb\s*\.\s*from\(/);

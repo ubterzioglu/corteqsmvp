@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 describe("Cadde Tanıtım uçtan uca sözleşmesi (workshop m100)", () => {
   it("keeps create, admin review and placement consumption wired", () => {
     const api = readFileSync("src/lib/cadde-tanitim-api.ts", "utf8");
-    const admin = readFileSync("src/pages/admin/AdminCaddePromotionsPage.tsx", "utf8");
+    const admin = readFileSync("src/pages/admin/cadde/AdminCaddePromotionsPage.tsx", "utf8");
     const caddeData = readFileSync("src/hooks/cadde/useCaddePageData.ts", "utf8");
     const rail = readFileSync("src/components/cadde/PromotionRail.tsx", "utf8");
     const sql = readFileSync("supabase/migrations/archive/20260611120000_cadde300_010_tanitim.sql", "utf8");
