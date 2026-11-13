@@ -1,4 +1,4 @@
-// scripts/seed-fallback-image-pool.mjs
+// scripts/seed/seed-fallback-image-pool.mjs
 // docs/fallback-images/news-diaspora/ altındaki dosyaları fallback-image-pool
 // bucket'ına yükler ve fallback_image_pool tablosuna idempotent şekilde satır
 // ekler (aynı dosya tekrar çalıştırıldığında atlanır). Yalnızca Radar News
@@ -11,7 +11,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 const BUCKET = "fallback-image-pool";
 const CATEGORY_DIRS = [

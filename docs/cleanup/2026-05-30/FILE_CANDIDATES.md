@@ -5,7 +5,7 @@ Bu liste, otomatik silinmeyen veya sadece dusuk riskte arşivlenen dosya adaylar
 | ID | Dosya | Kategori | Durum | Onerilen islem | Gerekce | Referans kontrolu | Risk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | FC-001 | `check-existing.ts` | obsolete-script | confirmed | archive | Root'ta duran tek amacli sayim scripti; package script veya dokuman referansi yok | Repo aramasinda aktif referans bulunmadi | Low |
-| FC-002 | `truncate-and-import.ts` | obsolete-script | confirmed | archive | Root'ta duran yikici import yardimcisi; `scripts/replace-resource-entries-from-csv.mjs` tarafindan fiilen superseded | Repo aramasinda aktif referans bulunmadi | Low |
+| FC-002 | `truncate-and-import.ts` | obsolete-script | confirmed | archive | Root'ta duran yikici import yardimcisi; `scripts/seed/replace-resource-entries-from-csv.mjs` tarafindan fiilen superseded | Repo aramasinda aktif referans bulunmadi | Low |
 | FC-003 | `import-resources.ts` | script | uncertain | manual-review | Root seviyede kalmis manuel import scripti; package scripti yok ama Supabase import akisiyla iliskili olabilir | Yalniz lint ve kendi console cikislari goruldu | Medium |
 | FC-004 | `src/test/example.test.ts` | old-test | uncertain | manual-review | Ornek test dosyasi; zararsiz ama gercek davranis kapsamiyor | Teknik dokumanda referanslandi, uygulama kodundan cagrilmiyor | Low |
 | FC-005 | `docu/info-influencer-partner.html/**` | legacy-doc-bundle | uncertain | manual-review | HTML, PNG ve DOCX paketi bir arada; yayin/distribution akisi net degil | Aktif runtime referansi tespit edilmedi | Medium |

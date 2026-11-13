@@ -16,8 +16,8 @@
 // "dispatcher'ı dürt" adımı bilinçli olarak kaldırıldı.
 //
 // Kullanım:
-//   node --experimental-strip-types scripts/sync-admin-updates.mjs
-//   node --experimental-strip-types scripts/sync-admin-updates.mjs --seed-only
+//   node --experimental-strip-types scripts/ops/sync-admin-updates.mjs
+//   node --experimental-strip-types scripts/ops/sync-admin-updates.mjs --seed-only
 //
 // --seed-only: mevcut TÜM kayıtları 'skipped' olarak yazar (mail göndermez). Sistem ilk
 // kez devreye alınırken ZORUNLUDUR — atlanırsa yüzlerce tarihsel kayıt maillenir.
@@ -28,8 +28,8 @@ import path from "node:path";
 
 import { buildOutboxRows } from "./admin-update-outbox.mjs";
 
-const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
-const ADMIN_UPDATES_MODULE = "../src/lib/admin-shell/admin-updates.ts";
+const REPO_ROOT = path.resolve(fileURLToPath(new URL("../..", import.meta.url)));
+const ADMIN_UPDATES_MODULE = "../../src/lib/admin-shell/admin-updates.ts";
 
 function loadDotEnv(relPath) {
   let text;

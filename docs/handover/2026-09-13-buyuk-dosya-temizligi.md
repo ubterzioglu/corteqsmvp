@@ -70,10 +70,10 @@ gerçekten yaşandı:
    uzantısız; `social-share-vault.ts` hâlâ uzantılı **ve bu doğru** (o klasöre bölünmedi).
    Doğrulama: `npm run build` sonrası `dist/assets/social-vault-*` her biri **tek** dosya olmalı.
 2. **`scripts/` altındaki doğrudan kaynak okuyucular.** İki tanesi var:
-   - `scripts/sync-admin-updates.mjs` → `admin-updates.ts`'i Node tip-sıyırma kipiyle
+   - `scripts/ops/sync-admin-updates.mjs` → `admin-updates.ts`'i Node tip-sıyırma kipiyle
      **import eder**; ESM uzantısız göreli yol çözemez → o barrel'ın alt modül import'ları
      **bilinçli olarak `.ts` uzantısı taşır**, kaldırma.
-   - `scripts/reseed-social-share-outputs.mjs` → `burak-share-tools` kaynağını **regex'le
+   - `scripts/seed/reseed-social-share-outputs.mjs` → `burak-share-tools` kaynağını **regex'le
      okuyup** 12 eşleme çıkarır, bulamazsa fırlatır. Bölünme sonrası parça dosyaların
      birleşimini okuyacak şekilde güncellendi.
 3. **`npm run ingest:tools:check`.** `src/lib/**` altına eklenen her dosya ajan araç
@@ -171,7 +171,7 @@ npm run lint                              # 0 hata
 npm run test                              # 278/1.958 yeşil
 npm run build                             # exit 0
 node scripts/check/check-dead-code.mjs          # 0 erişilemez  (İŞ BİTTİKTEN SONRA)
-node scripts/ingest-tools.mjs --check     # temiz  (src/lib'e dosya eklediysen)
+node scripts/ops/ingest-tools.mjs --check     # temiz  (src/lib'e dosya eklediysen)
 ```
 
 Satır sayarken `(Get-Content $f).Count` kullan, `Measure-Object -Line` **kullanma**.

@@ -273,7 +273,7 @@ npm run ingest:tools:check</code></pre>
       <pre><code><span class="cmt"># Migration: supabase/migrations/20260624100000_agent_ingest_schema.sql</span>
 <span class="cmt"># (ingest.repo_files · ingest.repo_symbols · ingest.tools + RLS)</span>
 
-node scripts/ingest-tools.mjs --push</code></pre>
+node scripts/ops/ingest-tools.mjs --push</code></pre>
       <p><code>--push</code>, <code>.env.local</code>'dan (veya ortam değişkenlerinden)
         <code>SUPABASE_URL</code> + <code>SUPABASE_SERVICE_ROLE_KEY</code> okur ve service-role ile yazar.</p>
       <div class="callout warn">
@@ -352,7 +352,7 @@ node scripts/ingest-tools.mjs --push</code></pre>
       <table>
         <thead><tr><th>Yol</th><th>Rol</th></tr></thead>
         <tbody>
-          <tr><td><code>scripts/ingest-tools.mjs</code></td><td>Ana ingestion script'i (<code>--check</code>, <code>--push</code>)</td></tr>
+          <tr><td><code>scripts/ops/ingest-tools.mjs</code></td><td>Ana ingestion script'i (<code>--check</code>, <code>--push</code>)</td></tr>
           <tr><td><code>scripts/check/check-drift.mjs</code></td><td>Drift runner (<code>--warn</code>)</td></tr>
           <tr><td><code>scripts/agent/walk.mjs</code></td><td>Dosya-yürüme + sınıflandırma (<code>moduleFamilyOf</code>, <code>kindOf</code>)</td></tr>
           <tr><td><code>scripts/agent/extract.mjs</code></td><td>Tool-yüzeyi çıkarıcıları (edge/worker/lib/script)</td></tr>

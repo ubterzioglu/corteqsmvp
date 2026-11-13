@@ -65,7 +65,7 @@ durumunu imkânsız kılar. `claim_notification_emails` RPC'si `for update skip 
 | `supabase/migrations/20260729100000_notification_emails.sql` | YENİ — 3 tablo, 7 fonksiyon, auth.users trigger'ı |
 | `supabase/functions/send-notification-emails/index.ts` | YENİ — kuyruk drenajı + Resend |
 | `supabase/config.toml` | `verify_jwt = false` (fonksiyon kendi yetkisini yapar) |
-| `scripts/sync-admin-updates.mjs` + `scripts/admin-update-outbox.mjs` | YENİ — regex parse yerine doğrudan TS import |
+| `scripts/ops/sync-admin-updates.mjs` + `scripts/ops/admin-update-outbox.mjs` | YENİ — regex parse yerine doğrudan TS import |
 | `scripts/notify-admin-updates.mjs` | **SİLİNDİ** (nodemailer bağımlılığı da kaldırıldı) |
 | `.git/hooks/post-commit` | Artık `sync-admin-updates.mjs` çağırıyor |
 | `src/lib/admin-shell/notification-settings-api.ts` | YENİ — RPC sarmalayıcıları |
@@ -165,7 +165,7 @@ Supabase Auth'un standart doğrulama maili değişmedi; bu ondan SONRA gelen ayr
 | `supabase/functions/_shared/emails/member-welcome.ts` | YENİ — şablonun TEK kaynağı (subject + html + text) |
 | `supabase/functions/_shared/emails/html.ts` | YENİ — ortak `escapeHtml` |
 | `supabase/functions/send-notification-emails/index.ts` | `member_welcome` dallanması, `reply_to`, `text`, örnek mail uçları |
-| `scripts/preview-emails.mjs` + `npm run preview:emails` | YENİ — tarayıcı önizlemesi |
+| `scripts/ops/preview-emails.mjs` + `npm run preview:emails` | YENİ — tarayıcı önizlemesi |
 | `notification-settings-api.ts` · `useNotificationSettings.ts` · `AdminNotificationSettingsPage.tsx` | 3. anahtar + "Bana örnek hoş geldin maili gönder" |
 | `vitest.config.ts` · `scripts/verify/verify-text-encoding.mjs` | `supabase/` artık test ve encoding denetimine dahil |
 

@@ -1,4 +1,4 @@
-// scripts/warm-prerender.mjs
+// scripts/ops/warm-prerender.mjs
 // Prerender cache'ini sitemap.xml'deki tüm URL'leri bot User-Agent'ı ile bir kez
 // çağırarak önceden ısıtır. Böylece bir sayfa İLK kez paylaşıldığında (WhatsApp/
 // LinkedIn/X/Google) prerender soğuk-render gecikmesi (~3 sn) yaşanmaz; herkes
@@ -8,17 +8,17 @@
 // URL hataları toplam akışı kırmaz, yalnızca raporlanır. CI/postdeploy'da güvenle koşar.
 //
 // Usage:
-//   node scripts/warm-prerender.mjs                      # public/sitemap.xml'i ısıt
-//   SITE_ORIGIN=https://corteqs.net node scripts/warm-prerender.mjs
-//   node scripts/warm-prerender.mjs --concurrency=4 --timeout=30000
-//   node scripts/warm-prerender.mjs --sitemap=https://corteqs.net/sitemap.xml
+//   node scripts/ops/warm-prerender.mjs                      # public/sitemap.xml'i ısıt
+//   SITE_ORIGIN=https://corteqs.net node scripts/ops/warm-prerender.mjs
+//   node scripts/ops/warm-prerender.mjs --concurrency=4 --timeout=30000
+//   node scripts/ops/warm-prerender.mjs --sitemap=https://corteqs.net/sitemap.xml
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 
 // --- CLI argümanları ---------------------------------------------------------
 const args = new Map(

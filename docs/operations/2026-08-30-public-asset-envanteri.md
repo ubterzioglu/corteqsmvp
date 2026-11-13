@@ -27,7 +27,7 @@ akışını görsel onay olmadan değiştirmemek için bu batch'te korunmuştur.
 
 ## Doğrulama kapısı
 
-- `scripts/public-asset-boundary.test.mjs` public/arşiv sınırını ve tutulan varlıkların kod
+- `scripts/guards/public-asset-boundary.test.mjs` public/arşiv sınırını ve tutulan varlıkların kod
   referansını kilitler.
 - Build sonrasında `dist/burak-stripe-rehberi.html` ve arşivlenen videolar bulunmamalıdır.
 - Nginx ve Node statik sunucuları dosya uzantılı eksik isteklerde SPA fallback yerine 404 döner.

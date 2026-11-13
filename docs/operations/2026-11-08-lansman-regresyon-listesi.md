@@ -11,7 +11,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
 
 **Yeni statik sözleşme dosyası:** `src/lib/lansman-regression-contract.test.ts` (aşağıda "YENİ"). İçindeki listeler 8 Kasım 2026'nın anlık görüntüsüdür: listeye öğe eklemek serbest, çıkarmak bilinçli karar ister.
 **Tarayıcı katmanı:** `e2e/lansman-smoke.spec.ts` (5 akış, girişsiz, port 8099).
-**Diğer L3 kapıları:** `scripts/check/check-bundle-size.mjs` (ilk yük JS gzip bütçesi) · `scripts/lovable-forbidden-strings.test.mjs` ("Lovable'dan gelmesin").
+**Diğer L3 kapıları:** `scripts/check/check-bundle-size.mjs` (ilk yük JS gzip bütçesi) · `scripts/guards/lovable-forbidden-strings.test.mjs` ("Lovable'dan gelmesin").
 
 ## Özet
 
@@ -149,7 +149,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
 | Kapı | Dosya | Ne korur |
 |---|---|---|
 | İlk yük JS bütçesi | `scripts/check/check-bundle-size.mjs` (`npm run check:bundle`) | `dist/index.html`'in eager yüklediği JS'in gzip toplamı: 258,2 KB ölçüldü (8 Kasım), bütçe 271 KB. Parça başına 500 KB ham tavan aynen duruyor |
-| Lovable'dan gelmesin | `scripts/lovable-forbidden-strings.test.mjs` | 12 yasak dizge; `src/`, `supabase/functions/`, `public/**` ve kök yapılandırma dosyaları (izlenmeyen dosyalar dahil) taranır; `MockStripeCheckout` kod dizinlerinde, test dosyasındaki olumsuz iddia serbest. `GGVBLA-` listede yok: Barış 08.11 kararı, bizim gerçek kampanya kodumuz. Çıplak `lovable.app` de yok (yatırımcı sayfası bilerek kullanır) |
+| Lovable'dan gelmesin | `scripts/guards/lovable-forbidden-strings.test.mjs` | 12 yasak dizge; `src/`, `supabase/functions/`, `public/**` ve kök yapılandırma dosyaları (izlenmeyen dosyalar dahil) taranır; `MockStripeCheckout` kod dizinlerinde, test dosyasındaki olumsuz iddia serbest. `GGVBLA-` listede yok: Barış 08.11 kararı, bizim gerçek kampanya kodumuz. Çıplak `lovable.app` de yok (yatırımcı sayfası bilerek kullanır) |
 | Tarayıcı smoke | `e2e/lansman-smoke.spec.ts` | Ana sayfa, dizin araması, giriş, fiyat, Cadde kapısı |
 
 ## Lighthouse (elle protokol)

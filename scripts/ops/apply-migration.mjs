@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const scriptPath = fileURLToPath(import.meta.url);
-const projectRoot = path.resolve(path.dirname(scriptPath), "..");
+const projectRoot = path.resolve(path.dirname(scriptPath), "../..");
 const pendingDir = path.join(projectRoot, "supabase", "migrations");
 const appliedDir = path.join(pendingDir, "applied");
 const archiveDir = path.join(pendingDir, "archive");

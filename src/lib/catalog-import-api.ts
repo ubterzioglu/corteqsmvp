@@ -3,7 +3,7 @@
 // İki sorumluluk:
 //   1. parseImportText: yapıştırılan/yüklenen CSV veya JSON metnini ImportRecord[]'a
 //      çevirir + Zod ile doğrular. (papaparse bağımlılığı YOK — küçük, tırnak-bilinçli
-//      CSV parser; mevcut scripts/catalog-role-importer.mjs parseDelimitedLine deseni.)
+//      CSV parser; mevcut scripts/seed/catalog-role-importer.mjs parseDelimitedLine deseni.)
 //   2. RPC sarmalayıcıları: admin_bulk_import_catalog_items, admin_review_catalog_import.
 
 import { supabase } from "@/integrations/supabase/client";

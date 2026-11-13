@@ -1,5 +1,5 @@
 // Agent Tool Registry — admin görünümü.
-// İçerik tek kaynaktan gelir: docs/agent/tools.json (scripts/ingest-tools.mjs üretir).
+// İçerik tek kaynaktan gelir: docs/agent/tools.json (scripts/ops/ingest-tools.mjs üretir).
 // Bir ajan/geliştirici hangi tool'un aktif/deprecated olduğunu, girdi şemasını,
 // kullandığı tabloları ve versiyon pin'lerini buradan kaynak kod okumadan görür.
 // Salt-okuma; düzenleme yoktur. Güncellemek için: `npm run ingest:tools`.

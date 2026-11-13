@@ -3,7 +3,7 @@
 // Bu dosya BİLEREK bağımlılıksızdır (Deno API'si, npm paketi, import yok): aynı kaynağı
 // üç tüketici birden okur —
 //   1. Edge Function (Deno)         → supabase/functions/send-notification-emails/index.ts
-//   2. Yerel önizleme (Node)        → scripts/preview-emails.mjs
+//   2. Yerel önizleme (Node)        → scripts/ops/preview-emails.mjs
 //   3. Testler (Vitest)             → *.test.ts
 // Buraya Deno'ya özgü bir şey eklenirse önizleme ve testler kırılır.
 

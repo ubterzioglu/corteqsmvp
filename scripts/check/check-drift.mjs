@@ -7,7 +7,7 @@
 //
 // scripts/agent/drift-rules.mjs içindeki kuralları çalıştırır. Tool kataloğu
 // (docs/agent/tools.json) varsa kurallara bağlam olarak verilir; önce
-// `node scripts/ingest-tools.mjs` çalıştırmak güncel sonuç verir.
+// `node scripts/ops/ingest-tools.mjs` çalıştırmak güncel sonuç verir.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import { driftRules } from "../agent/drift-rules.mjs";

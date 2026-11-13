@@ -10,7 +10,7 @@ npm run migrate:apply -- supabase/migrations/20260831120000_ornek.sql
 
 Not: npm `--dry-run` bayrağını kendi ayarı olarak tüketir; runner bunu
 `npm_config_dry_run=true` üzerinden ayrıca algılar. Doğrudan
-`node scripts/apply-migration.mjs <dosya> --dry-run` çağrısı da desteklenir.
+`node scripts/ops/apply-migration.mjs <dosya> --dry-run` çağrısı da desteklenir.
 
 çalıştırılır.
 

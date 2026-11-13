@@ -14,9 +14,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const REPO_ROOT = path.resolve(fileURLToPath(new URL("..", import.meta.url)));
+const REPO_ROOT = path.resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const OUTPUT_DIR = path.join(REPO_ROOT, ".preview-emails");
-const TEMPLATE_MODULE = "../supabase/functions/_shared/emails/member-welcome.ts";
+const TEMPLATE_MODULE = "../../supabase/functions/_shared/emails/member-welcome.ts";
 
 /** Önizleme senaryoları: gerçekte karşılaşılan iki uç (adı olan / olmayan üye). */
 function buildVariants(buildMemberWelcomeEmail) {

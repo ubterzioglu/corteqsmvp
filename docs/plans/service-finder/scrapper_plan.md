@@ -57,8 +57,8 @@ Recommended read order for Claude Code before changing anything:
 | `src/lib/admin-shell/admin-route-meta.ts` | Required route snapshot registry. citeturn18view0 |
 | `src/lib/admin-shell/admin-navigation-registry.ts` | Where the admin menu and command-search discoverability live. citeturn18view2turn18view3 |
 | `src/lib/admin-catalog.ts` | Existing admin data-access style and catalog primitives. citeturn17view0turn17view1turn17view3 |
-| `scripts/import-profiles-csv.mjs` and `scripts/catalog-role-importer.mjs` | Current normalized import target shape and catalog upsert behavior. citeturn32view2turn32view0turn33view0 |
-| `scripts/catalog-role-import-map.json` | Existing profession taxonomy and the doctor baseline. citeturn19view0turn19view7 |
+| `scripts/seed/import-profiles-csv.mjs` and `scripts/seed/catalog-role-importer.mjs` | Current normalized import target shape and catalog upsert behavior. citeturn32view2turn32view0turn33view0 |
+| `scripts/seed/catalog-role-import-map.json` | Existing profession taxonomy and the doctor baseline. citeturn19view0turn19view7 |
 | `supabase/functions/find-matches/index.ts` | Existing Gemini/server-side AI precedent. citeturn13view1turn17view8 |
 | `server.mjs`, `Dockerfile`, `nixpacks.toml`, `.env.example` | Current deployment/runtime/env conventions. citeturn16view0turn16view1turn16view2turn16view6 |
 
@@ -1238,9 +1238,9 @@ Claude Code should proceed in phases and must **report after each phase** in a s
 - `src/lib/admin-shell/admin-route-meta.ts`
 - `src/lib/admin-shell/admin-navigation-registry.ts`
 - `src/lib/admin-catalog.ts`
-- `scripts/import-profiles-csv.mjs`
-- `scripts/catalog-role-importer.mjs`
-- `scripts/catalog-role-import-map.json`
+- `scripts/seed/import-profiles-csv.mjs`
+- `scripts/seed/catalog-role-importer.mjs`
+- `scripts/seed/catalog-role-import-map.json`
 - `supabase/functions/find-matches/index.ts`
 - `server.mjs`
 - `.env.example` citeturn25view1turn26view7turn18view4turn18view0turn18view2turn32view2turn32view0turn19view0turn17view8turn16view6

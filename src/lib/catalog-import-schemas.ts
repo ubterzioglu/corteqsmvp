@@ -43,7 +43,7 @@ export type ReviewDecision = "approved" | "rejected";
 
 /**
  * CSV başlık -> ImportRecord alanı eşlemesi. Türkçe + İngilizce başlıkları kabul eder.
- * scripts/catalog-role-import-map.json commonColumns ile uyumlu tutulur.
+ * scripts/seed/catalog-role-import-map.json commonColumns ile uyumlu tutulur.
  */
 export const CSV_HEADER_ALIASES: Record<keyof ImportRecord, string[]> = {
   name: ["name", "ad", "isim", "ad soyad", "adsoyad", "title", "başlık", "baslik", "firma", "kurum"],

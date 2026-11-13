@@ -1,12 +1,12 @@
-// scripts/export-blog-md.mjs
+// scripts/seed/export-blog-md.mjs
 // blog_posts tablosundaki TÜM makaleleri (taslaklar dahil) markdown dosyalarına export eder.
 // Her dosya: YAML frontmatter (metadata) + content_markdown gövdesi.
 // Amaç: yeni makale yazarken referans/şablon olarak kullanmak.
 //
 // Kullanım:
-//   node scripts/export-blog-md.mjs
-//   node scripts/export-blog-md.mjs --env-file=.env.local --out=docs/exports/blog-md
-//   node scripts/export-blog-md.mjs --published-only
+//   node scripts/seed/export-blog-md.mjs
+//   node scripts/seed/export-blog-md.mjs --env-file=.env.local --out=docs/exports/blog-md
+//   node scripts/seed/export-blog-md.mjs --published-only
 //
 // Gerekli: SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (taslakları da çekmek için service role).
 // --published-only verilirse anon anahtarla (VITE_SUPABASE_ANON_KEY) da çalışabilir.
@@ -19,7 +19,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 const args = process.argv.slice(2);
 const envArg = args.find((arg) => arg.startsWith("--env-file="));

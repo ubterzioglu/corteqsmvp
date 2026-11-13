@@ -114,7 +114,7 @@ frontend paketine gömülür ve herkese görünür.
 ⚠️ **Birden fazla uygulama kopyası aynı migration'ı eşzamanlı çalıştırmamalı.**
 
 Bu yığında migration'lar konteyner açılışında ÇALIŞTIRILMAZ. Şema `applied/`
-altındaki dosyalarla ve `scripts/apply-migration.mjs` ile **elle** uygulanır —
+altındaki dosyalarla ve `scripts/ops/apply-migration.mjs` ile **elle** uygulanır —
 mevcut iş akışı zaten böyle ve bu, eşzamanlılık sorununu baştan ortadan kaldırır.
 
 GoTrue ve storage-api kendi iç migration'larını açılışta çalıştırır; ikisi de tek

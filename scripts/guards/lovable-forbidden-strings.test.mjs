@@ -146,7 +146,7 @@ function scannedTextFiles() {
       .filter((f) => TEXT_EXTENSIONS.test(f))
       .filter((f) => scopes.some((prefix) => f.startsWith(prefix)))
       // Bu dosya yasak dizgeleri tanımı gereği yazar.
-      .filter((f) => f !== "scripts/lovable-forbidden-strings.test.mjs")
+      .filter((f) => f !== "scripts/guards/lovable-forbidden-strings.test.mjs")
       .map((f) => ({ path: f, content: readFileSync(path.join(ROOT, f), "utf8") }))
   );
 }
@@ -191,7 +191,7 @@ describe("Lovable'dan gelmesin — yasak dizgeler", () => {
     );
     const scanned = new Set(scannedTextFiles().map((f) => f.path));
     for (const f of untracked) {
-      if (f === "scripts/lovable-forbidden-strings.test.mjs") continue;
+      if (f === "scripts/guards/lovable-forbidden-strings.test.mjs") continue;
       expect(scanned.has(f), `${f} izlenmiyor ve taranmıyor`).toBe(true);
     }
   });

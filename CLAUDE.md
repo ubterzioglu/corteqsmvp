@@ -1026,7 +1026,7 @@ Claude Code loads it from the root) and `README.md` (GitHub landing page). Backl
 - `docs/guides/` — user/admin guides
 - `docs/operations/` — deployment, database, security runbooks
 - `docs/history/` — archived plans, cleanup reports, `SONDURUM.md`
-- `docs/exports/blog-md/` — generated blog markdown (default output of `scripts/export-blog-md.mjs`)
+- `docs/exports/blog-md/` — generated blog markdown (default output of `scripts/seed/export-blog-md.mjs`)
 
 **Do not add new files to the repo root.** Only build/tooling config, `CLAUDE.md` and `README.md`
 belong there; documentation goes under `docs/`.

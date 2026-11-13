@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_by": "scripts/ingest-tools.mjs",
+  "generated_by": "scripts/ops/ingest-tools.mjs",
   "counts": {
     "total": 94,
     "edge_functions": 19,

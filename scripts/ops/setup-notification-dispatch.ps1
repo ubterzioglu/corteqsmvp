@@ -1,7 +1,7 @@
 # Bildirim dispatcher kurulumu — tek komutla calisir:
 #
-#   .\scripts\setup-notification-dispatch.ps1                  # mevcut sirri kullanir
-#   .\scripts\setup-notification-dispatch.ps1 -GenerateSecret  # yeni guclu sir uretip 3 yere yazar
+#   .\scripts\ops\setup-notification-dispatch.ps1                  # mevcut sirri kullanir
+#   .\scripts\ops\setup-notification-dispatch.ps1 -GenerateSecret  # yeni guclu sir uretip 3 yere yazar
 #
 # Yaptiklari:
 #   1. .env.local'i yukler (Supabase anahtarlari orada yasar)
@@ -21,7 +21,7 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = Split-Path -Parent $PSScriptRoot
+$repoRoot = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 Set-Location $repoRoot
 
 $projectRef = "injprdrsklkxgnaiixzh"
@@ -72,12 +72,12 @@ if ($GenerateSecret) {
 
   if ([string]::IsNullOrWhiteSpace($secret)) {
     Write-Host "HATA: .env.local icinde NOTIFY_DISPATCH_SECRET bos ya da yok." -ForegroundColor Red
-    Write-Host "Yeni bir sir uretmek icin: .\scripts\setup-notification-dispatch.ps1 -GenerateSecret" -ForegroundColor Yellow
+    Write-Host "Yeni bir sir uretmek icin: .\scripts\ops\setup-notification-dispatch.ps1 -GenerateSecret" -ForegroundColor Yellow
     exit 1
   }
   if ($secret.Trim().Length -lt 12) {
     Write-Host "HATA: NOTIFY_DISPATCH_SECRET yalnizca $($secret.Trim().Length) karakter - kaba kuvvete acik." -ForegroundColor Red
-    Write-Host "Yeni bir sir uretmek icin: .\scripts\setup-notification-dispatch.ps1 -GenerateSecret" -ForegroundColor Yellow
+    Write-Host "Yeni bir sir uretmek icin: .\scripts\ops\setup-notification-dispatch.ps1 -GenerateSecret" -ForegroundColor Yellow
     exit 1
   }
   if ($secret -match '(?i)(placeholder|change.?me|secret_here|buraya_?yaz|xxxx)') {

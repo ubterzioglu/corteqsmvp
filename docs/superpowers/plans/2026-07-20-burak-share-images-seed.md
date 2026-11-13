@@ -4,7 +4,7 @@
 
 **Goal:** `docs/social-share-outputs/` altındaki 32 sayısal isimli PNG'yi, dosya adından çözümlenen `(toolOrder, variant, promptNo)` bilgisiyle Supabase Storage `burak-share` bucket'ına yükleyip `social_share_assets` (kapak) / `social_share_asset_images` (ek görsel) tablolarına kaydeden, idempotent, tek seferlik bir Node script'i yazmak.
 
-**Architecture:** Tek dosyalık `scripts/seed-burak-share-images.mjs`, projede zaten kullanılan desene uyar (`@supabase/supabase-js` + `.env.local`'den manuel env parse + service-role client). Dosya adı çözümleme saf bir fonksiyon olarak ayrılır, böylece Vitest ile birim testi yazılabilir. Script iki fazda çalışır: (1) mevcut DB durumunu oku (hangi slotlar zaten dolu), (2) her dosya için upload + upsert/insert, zaten dolu olanları atla.
+**Architecture:** Tek dosyalık `scripts/seed/seed-burak-share-images.mjs`, projede zaten kullanılan desene uyar (`@supabase/supabase-js` + `.env.local`'den manuel env parse + service-role client). Dosya adı çözümleme saf bir fonksiyon olarak ayrılır, böylece Vitest ile birim testi yazılabilir. Script iki fazda çalışır: (1) mevcut DB durumunu oku (hangi slotlar zaten dolu), (2) her dosya için upload + upsert/insert, zaten dolu olanları atla.
 
 **Tech Stack:** Node.js (ESM, `.mjs`), `@supabase/supabase-js` (zaten bağımlılık), Vitest (mevcut test altyapısı).
 
@@ -24,8 +24,8 @@
 ### Task 1: Dosya adı çözümleme fonksiyonu (saf fonksiyon + test)
 
 **Files:**
-- Create: `scripts/burak-share-image-filename.mjs`
-- Test: `scripts/burak-share-image-filename.test.mjs`
+- Create: `scripts/seed/burak-share-image-filename.mjs`
+- Test: `scripts/seed/burak-share-image-filename.test.mjs`
 
 **Interfaces:**
 - Produces: `parseBurakImageFilename(filename: string): { toolOrder: number, variant: number, promptNo: number } | null` — sonraki task'lar bu fonksiyonu import edip kullanır. `null` döner eğer dosya adı `.png` ile bitmiyorsa veya sayısal gövde çözümlenemiyorsa.
@@ -33,7 +33,7 @@
 - [ ] **Step 1: Write the failing test**
 
 ```javascript
-// scripts/burak-share-image-filename.test.mjs
+// scripts/seed/burak-share-image-filename.test.mjs
 import { describe, expect, it } from "vitest";
 
 import { parseBurakImageFilename } from "./burak-share-image-filename.mjs";
@@ -90,13 +90,13 @@ describe("parseBurakImageFilename", () => {
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `npx vitest run scripts/burak-share-image-filename.test.mjs`
+Run: `npx vitest run scripts/seed/burak-share-image-filename.test.mjs`
 Expected: FAIL — `Cannot find module './burak-share-image-filename.mjs'`
 
 - [ ] **Step 3: Write minimal implementation**
 
 ```javascript
-// scripts/burak-share-image-filename.mjs
+// scripts/seed/burak-share-image-filename.mjs
 
 /**
  * Dosya adı kodu: <toolOrder><variant><promptNo>.
@@ -142,13 +142,13 @@ export function parseBurakImageFilename(filename) {
 
 - [ ] **Step 4: Run test to verify it passes**
 
-Run: `npx vitest run scripts/burak-share-image-filename.test.mjs`
+Run: `npx vitest run scripts/seed/burak-share-image-filename.test.mjs`
 Expected: PASS (10 tests)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add scripts/burak-share-image-filename.mjs scripts/burak-share-image-filename.test.mjs
+git add scripts/seed/burak-share-image-filename.mjs scripts/seed/burak-share-image-filename.test.mjs
 git commit -m "feat: add burak share image filename decoder"
 ```
 
@@ -157,7 +157,7 @@ git commit -m "feat: add burak share image filename decoder"
 ### Task 2: Seed script — dosya listesi + DB durumu okuma + upload/kaydetme + rapor
 
 **Files:**
-- Create: `scripts/seed-burak-share-images.mjs`
+- Create: `scripts/seed/seed-burak-share-images.mjs`
 
 **Interfaces:**
 - Consumes: `parseBurakImageFilename(filename: string): { toolOrder: number, variant: number, promptNo: number } | null` (Task 1).
@@ -168,7 +168,7 @@ Bu script test edilmez (I/O ağırlıklı, tek seferlik operasyon) — mevcut `i
 - [ ] **Step 1: Script iskeletini ve env/client kurulumunu yaz**
 
 ```javascript
-// scripts/seed-burak-share-images.mjs
+// scripts/seed/seed-burak-share-images.mjs
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -374,18 +374,18 @@ run().catch((error) => {
 
 Bu adımda script henüz DB'ye bağlanmadan önce, sadece 32 dosyanın hepsinin `unparsed` listesine düşmediğini terminal çıktısından gözle kontrol et:
 
-Run: `node -e "import('./scripts/burak-share-image-filename.mjs').then(async (m) => { const { readdir } = await import('node:fs/promises'); const files = await readdir('docs/social-share-outputs'); const unparsed = files.filter(f => !m.parseBurakImageFilename(f)); console.log('unparsed:', unparsed); console.log('parsed count:', files.length - unparsed.length); })"`
+Run: `node -e "import('./scripts/seed/burak-share-image-filename.mjs').then(async (m) => { const { readdir } = await import('node:fs/promises'); const files = await readdir('docs/social-share-outputs'); const unparsed = files.filter(f => !m.parseBurakImageFilename(f)); console.log('unparsed:', unparsed); console.log('parsed count:', files.length - unparsed.length); })"`
 Expected: `unparsed: []` ve `parsed count: 32`
 
 - [ ] **Step 3: Gerçek script'i çalıştır**
 
-Run: `node scripts/seed-burak-share-images.mjs`
+Run: `node scripts/seed/seed-burak-share-images.mjs`
 Expected: Konsolda 32 dosya için "Kapak yüklendi" veya "Ek görsel yüklendi" satırları, özet bölümünde `Hata: 0`. (Eğer script daha önce kısmen çalıştırılmışsa bazı satırlar "Atlandı" olabilir — bu da beklenen idempotent davranış.)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-git add scripts/seed-burak-share-images.mjs
+git add scripts/seed/seed-burak-share-images.mjs
 git commit -m "feat: seed burak share images from docs/social-share-outputs"
 ```
 

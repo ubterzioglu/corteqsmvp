@@ -1,7 +1,7 @@
 /**
  * Command Center items'ı veritabanından çekip 100'er maddelik MD dosyalarına böler.
  * Sıralama: en eskiden yeniye (created_at ASC).
- * Kullanım: node scripts/export-command-center-md.mjs
+ * Kullanım: node scripts/seed/export-command-center-md.mjs
  *
  * Gerekli: SUPABASE_SERVICE_ROLE_KEY (ortam değişkeni veya `.env.local`).
  * Anahtar ASLA bu dosyaya gömülmez — service role anahtarı RLS'i tamamen
@@ -13,7 +13,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, "..");
+const ROOT = join(__dirname, "../..");
 
 function parseEnvFile(filePath) {
   if (!existsSync(filePath)) return {};

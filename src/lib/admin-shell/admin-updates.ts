@@ -8,7 +8,7 @@
 // EN ÜSTÜNE eklenir; yeni bir ay başlarsa yeni ay dosyası açılıp aşağıdaki listeye
 // EN ÜSTE eklenir (sıra = görünen sıra).
 //
-// DİKKAT — içe aktarımlardaki `.ts` uzantısı bilinçlidir: scripts/sync-admin-updates.mjs
+// DİKKAT — içe aktarımlardaki `.ts` uzantısı bilinçlidir: scripts/ops/sync-admin-updates.mjs
 // bu modülü Node'un tip-sıyırma kipiyle (--experimental-strip-types) DOĞRUDAN import
 // eder ve Node ESM uzantısız göreli yol çözmez. Uzantıyı kaldırmak bildirim e-postası
 // senkronunu sessizce kırar. (tsconfig.app.json: allowImportingTsExtensions)

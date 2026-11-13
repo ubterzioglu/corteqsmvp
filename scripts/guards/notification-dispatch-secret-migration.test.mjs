@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { describe, expect, it } from "vitest";
 
-const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const migrationPath = path.join(
   projectRoot,
   "supabase/migrations/applied/20260907103000_move_notification_dispatch_secret_to_vault.sql",
@@ -26,7 +26,7 @@ describe("notification dispatch secret storage", () => {
 
   it("keeps future setup runs from restoring the plaintext DB row", async () => {
     const [setupScript, configSql] = await Promise.all([
-      readFile(path.join(projectRoot, "scripts/setup-notification-dispatch.ps1"), "utf8"),
+      readFile(path.join(projectRoot, "scripts/ops/setup-notification-dispatch.ps1"), "utf8"),
       readFile(path.join(projectRoot, "supabase/manual/2026-07-29_notification_dispatch_config.sql"), "utf8"),
     ]);
 

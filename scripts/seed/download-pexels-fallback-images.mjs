@@ -1,18 +1,18 @@
-// scripts/download-pexels-fallback-images.mjs
+// scripts/seed/download-pexels-fallback-images.mjs
 // Pexels API üzerinden diaspora temalı serbest lisanslı görselleri indirip
 // docs/fallback-images/news-diaspora/ altına kaydeder. Bu script sadece
-// dosyaları indirir — DB'ye yükleme adımı scripts/seed-fallback-image-pool.mjs'de.
+// dosyaları indirir — DB'ye yükleme adımı scripts/seed/seed-fallback-image-pool.mjs'de.
 // Yalnızca Radar News (haber) akışı için — service-finder/mekan bu havuzu kullanmaz.
 //
 // Kullanım: PEXELS_API_KEY .env.local'da tanımlı olmalı.
-//   node scripts/download-pexels-fallback-images.mjs
+//   node scripts/seed/download-pexels-fallback-images.mjs
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 const PEXELS_SEARCH_URL = "https://api.pexels.com/v1/search";
 const PER_CATEGORY_TARGET = 50;

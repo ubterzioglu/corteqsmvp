@@ -1,4 +1,4 @@
-// scripts/ai-visibility-track.mjs testleri.
+// scripts/ops/ai-visibility-track.mjs testleri.
 //
 // Prompt setinin bütünlüğünü ve rapor üretiminin doğruluğunu test eder.
 

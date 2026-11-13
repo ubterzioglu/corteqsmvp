@@ -34,7 +34,7 @@ durumda. Aynı işi m11 bitmiş, m8 bitmemiş gösteriyor.
 
 `src`, `supabase/functions` ve `scripts` altında Gmail geçiş akışı aranınca **2 eşleşme**
 çıktı, ikisi de alakasız yorum satırı (`send-notification-emails/index.ts:27` ve
-`scripts/preview-emails.mjs:9` — Gmail'in HTML'i nasıl işlediğine dair uyarılar).
+`scripts/ops/preview-emails.mjs:9` — Gmail'in HTML'i nasıl işlediğine dair uyarılar).
 **Böyle bir e-posta akışı yok.**
 
 ### m14 · "Rol bazlı etiketleme: tek profil, aynı anda birden fazla unvan" — YANLIŞ

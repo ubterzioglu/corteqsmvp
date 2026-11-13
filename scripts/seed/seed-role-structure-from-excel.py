@@ -3,7 +3,7 @@
 B4 · role_structure tablosunu Excel'den seed et.
 
 Kullanım:
-  python scripts/seed-role-structure-from-excel.py
+  python scripts/seed/seed-role-structure-from-excel.py
 
 Bağımlılıklar:
   pip install openpyxl
@@ -19,8 +19,8 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 # Excel'den oku
-excel_path = Path(__file__).parent.parent / "docs/assets/CorteQS_Rol_Tablosu_v2.xlsx"
-output_path = Path(__file__).parent.parent / "supabase/migrations/applied/20261007130000_role_structure_seed.sql"
+excel_path = Path(__file__).parent.parent.parent / "docs/assets/CorteQS_Rol_Tablosu_v2.xlsx"
+output_path = Path(__file__).parent.parent.parent / "supabase/migrations/applied/20261007130000_role_structure_seed.sql"
 
 print(f"📖 Excel okunuyor: {excel_path}")
 wb = load_workbook(excel_path, data_only=True)
@@ -59,7 +59,7 @@ def escape_sql(s: str) -> str:
 
 sql_lines = [
     "-- B4 · role_structure seed (Excel'den üretildi)",
-    "-- Bu dosya otomatik üretildi: python scripts/seed-role-structure-from-excel.py",
+    "-- Bu dosya otomatik üretildi: python scripts/seed/seed-role-structure-from-excel.py",
     "",
     "begin;",
     "",

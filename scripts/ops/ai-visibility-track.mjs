@@ -1,13 +1,13 @@
-// scripts/ai-visibility-track.mjs
+// scripts/ops/ai-visibility-track.mjs
 // AI visibility tracking — aylık marka görünürlüğünü ölçen manuel/yardımcı script.
 //
 // AI arama motorlarında (ChatGPT, Perplexity, Google AI Overviews, Gemini)
 // CorteQS'in ne sıklıkta önerildiğini/alıntlandığını takip eder.
 //
 // Kullanım:
-//   node scripts/ai-visibility-track.mjs                    # rapor oluştur
-//   node scripts/ai-visibility-track.mjs --export-prompts   # prompt listesini yazdır
-//   node scripts/ai-visibility-track.mjs --record <platform> <prompt-index> <found> [url] [sentiment]
+//   node scripts/ops/ai-visibility-track.mjs                    # rapor oluştur
+//   node scripts/ops/ai-visibility-track.mjs --export-prompts   # prompt listesini yazdır
+//   node scripts/ops/ai-visibility-track.mjs --record <platform> <prompt-index> <found> [url] [sentiment]
 //
 // Kayıt formatı (JSONL): scripts/data/ai-visibility/<YYYY-MM>.jsonl
 // Her satır: { "date", "platform", "promptIndex", "prompt", "found", "url", "sentiment", "notes" }
@@ -20,7 +20,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 const DATA_DIR = path.join(rootDir, "scripts", "data", "ai-visibility");
 
 // ── Prompt seti ─────────────────────────────────────────────────────────────

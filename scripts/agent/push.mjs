@@ -1,7 +1,7 @@
 // Tool kataloğunu Supabase ingest.tools tablosuna upsert eder (opsiyonel DB projeksiyonu).
 // PostgREST `ingest` şemasını expose etmediği için yazma, Supabase Management API
 // /database/query üzerinden INSERT ... ON CONFLICT ile yapılır (PostgREST bypass).
-// scripts/import-command-center-may13.mjs env-yükleme desenini izler.
+// scripts/seed/import-command-center-may13.mjs env-yükleme desenini izler.
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 

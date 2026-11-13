@@ -315,7 +315,7 @@ Kapanmayan karar "önerilen varsayım" ile ilerler.
    - `src/lib/admin-shell/admin-updates/2026-11.ts`'in **en üstüne** yeni kayıt eklenir. Aralık'ta `2026-12.ts` açılır ve barrel'a `.ts` uzantısıyla en üste import edilir.
    - id: `YYYYMMDD-lansman-l<N>-<slug>`.
    - Dil sade, kalıp şu: **KISACA · NE YAPILDI · SİZDEN BEKLENEN · BİLMENİZ GEREKEN**. Teknik terim yerine açık cümle; 2026-10.ts ve 2026-11.ts örnek alınır.
-   - Commit sonrası kanca (`scripts/sync-admin-updates.mjs`) kaydı kuyruğa alır; 18:00'de (Berlin) Barış'a ve Burak'a özet mail gider. Doğru çıktı: "1 yeni kayıt kuyruğa alındı".
+   - Commit sonrası kanca (`scripts/ops/sync-admin-updates.mjs`) kaydı kuyruğa alır; 18:00'de (Berlin) Barış'a ve Burak'a özet mail gider. Doğru çıktı: "1 yeni kayıt kuyruğa alındı".
    - Mevcut kaydı düzenlemek mail üretmez.
 7. **Commit at.** Yalnız pathspec ile (`git commit -- <dosyalar>`). Mesaj Türkçe ve conventional önekli. Push Barış'ın onayıyla.
 8. **Durumu işle.** Ajan planındaki batch durum tablosunu ve KALANLAR'daki L satırını güncelle.

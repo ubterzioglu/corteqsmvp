@@ -53,7 +53,7 @@ Bu ayrım admin panelin "Görsel" butonundaki kapak+ek görsel gösterimiyle bir
 
 ## Uygulama
 
-Tek seferlik Node/tsx script (`scripts/seed-burak-share-images.mjs`):
+Tek seferlik Node/tsx script (`scripts/seed/seed-burak-share-images.mjs`):
 
 1. `.env.local`'den `VITE_SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` oku (RLS admin-only
    olduğu için service role gerekli — bkz. `supabase/migrations/20260708120000_burak_share_assets.sql`).

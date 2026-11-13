@@ -1,4 +1,4 @@
-// scripts/seed-burak-share-images.mjs
+// scripts/seed/seed-burak-share-images.mjs
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,7 +9,7 @@ import { parseBurakImageFilename } from "./burak-share-image-filename.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 const SOURCE_DIR = path.join(projectRoot, "docs", "social-share-outputs");
 const BUCKET = "burak-share";

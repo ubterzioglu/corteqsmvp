@@ -1,4 +1,4 @@
-// scripts/reseed-social-share-outputs.mjs
+// scripts/seed/reseed-social-share-outputs.mjs
 // docs/social-share-outputs klasöründeki dosyalar iki kez yanlış şemayla DB'ye
 // işlenmişti:
 //   - İlk seferinde tek şema (burak/burak-tool-N) varsayılmıştı.
@@ -24,7 +24,7 @@ import { parseBurakImageFilename } from "./burak-share-image-filename.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 const SOURCE_DIR = path.join(projectRoot, "docs", "social-share-outputs");
 const BUCKET = "burak-share";
