@@ -397,7 +397,7 @@
       "count": 1
     }
   },
-  "src/pages/admin/AdminRoleManagementPage.tsx": {
+  "src/pages/admin/roles/AdminRoleManagementPage.tsx": {
     "complexity": {
       "count": 1
     }

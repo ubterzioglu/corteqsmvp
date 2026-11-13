@@ -23,6 +23,7 @@ import { relocationAdminRoutes } from "./relocation/routes";
 import { adminWorkshopRoutes } from "./workshop/routes";
 import { adminReferralRoutes } from "./referral/routes";
 import { adminGruplarRoutes } from "./gruplar/routes";
+import { adminRolesRoutes } from "./roles/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -45,7 +46,6 @@ const AdminContributorResourcesPage = lazyWithReload(() => import("@/pages/admin
 const AdminRevisionRequestsPage = lazyWithReload(() => import("@/pages/admin/AdminRevisionRequestsPage"));
 const AdminBrainstormingPage = lazyWithReload(() => import("@/pages/admin/AdminBrainstormingPage"));
 const AdminFeedbackPage = lazyWithReload(() => import("@/pages/admin/AdminFeedbackPage"));
-const AdminRolesDraftPage = lazyWithReload(() => import("@/pages/admin/AdminRolesDraftPage"));
 const AdminWorkspaceHomePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceHomePage"));
 const AdminCommandCenterPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminCommandCenterPage"));
 const AdminResourcesPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminResourcesPage"));
@@ -62,14 +62,11 @@ const AdminSurveysPage = lazyWithReload(() => import("@/pages/admin/surveys/Admi
 const AdminSurveyCreatePage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyCreatePage"));
 const AdminSurveyEditPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyEditPage"));
 const AdminSurveyResponsesPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyResponsesPage"));
-const AdminUserOverridesPage = lazyWithReload(() => import("@/pages/admin/AdminUserOverridesPage"));
 const AdminApprovalsPage = lazyWithReload(() => import("@/pages/admin/AdminApprovalsPage"));
 const AdminAuditLogsPage = lazyWithReload(() => import("@/pages/admin/AdminAuditLogsPage"));
 const AdminClientErrorsPage = lazyWithReload(() => import("@/pages/admin/AdminClientErrorsPage"));
 const AdminNewMemberGuidePage = lazyWithReload(() => import("@/pages/admin/AdminNewMemberGuidePage"));
 const AdminDurumRaporuPage = lazyWithReload(() => import("@/pages/admin/AdminDurumRaporuPage"));
-const AdminRoleManagementPage = lazyWithReload(() => import("@/pages/admin/AdminRoleManagementPage"));
-const AdminRolesOverviewPage = lazyWithReload(() => import("@/pages/admin/AdminRolesOverviewPage"));
 import { adminCaddeRoutes } from "@/pages/admin/cadde/routes";
 import { radarRoutes } from "@/pages/admin/radar/routes";
 import { adminKadroRoutes } from "@/pages/admin/kadro/routes";
@@ -105,8 +102,7 @@ export const adminRoutes = (
     <Route path="surveys/:id/edit" element={<AdminSurveyEditPage />} />
     <Route path="surveys/:id/responses" element={<AdminSurveyResponsesPage />} />
     <Route path="new-member/profile-role-assignment" element={<AdminCatalogPage />} />
-    <Route path="new-member/role-matrix" element={<AdminRoleManagementPage />} />
-    <Route path="new-member/roles-overview" element={<AdminRolesOverviewPage />} />
+    {adminRolesRoutes}
     <Route path="brainstorming" element={<AdminBrainstormingPage />} />
     <Route
       path="new-member/users-roles"
@@ -134,14 +130,12 @@ export const adminRoutes = (
       path="new-member/taxonomy"
       element={<Navigate to="/admin/new-member/guide?notice=taxonomy-retired" replace />}
     />
-    <Route path="new-member/overrides" element={<AdminUserOverridesPage />} />
     <Route path="new-member/role-management" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="new-member/roles-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="new-member/entity-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="approvals" element={<AdminApprovalsPage />} />
     <Route path="audit-logs" element={<AdminAuditLogsPage />} />
     <Route path="client-errors" element={<AdminClientErrorsPage />} />
-    <Route path="roller-taslak" element={<AdminRolesDraftPage />} />
     <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
     {adminGruplarRoutes}
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
