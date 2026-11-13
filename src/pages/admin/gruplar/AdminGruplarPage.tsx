@@ -63,7 +63,7 @@ import {
 } from "@/lib/group-reports-api";
 import { getCategoryMeta } from "@/lib/whatsapp-landing-presentation";
 import { getErrorMessage } from "@/lib/whatsapp-landing-form";
-import { AdminGruplarPageReportsTab } from "@/pages/admin/AdminGruplarPageReportsTab";
+import { AdminGruplarPageReportsTab } from "@/pages/admin/gruplar/AdminGruplarPageReportsTab";
 
 type QueueTab = "groups" | "claims" | "reports" | "posts";
 

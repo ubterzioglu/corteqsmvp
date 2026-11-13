@@ -387,7 +387,7 @@
       "count": 1
     }
   },
-  "src/pages/admin/AdminGruplarPage.tsx": {
+  "src/pages/admin/gruplar/AdminGruplarPage.tsx": {
     "complexity": {
       "count": 1
     }

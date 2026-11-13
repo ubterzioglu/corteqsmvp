@@ -22,6 +22,7 @@ import { serviceFinderRoutes } from "./service-finder/routes";
 import { relocationAdminRoutes } from "./relocation/routes";
 import { adminWorkshopRoutes } from "./workshop/routes";
 import { adminReferralRoutes } from "./referral/routes";
+import { adminGruplarRoutes } from "./gruplar/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -54,10 +55,6 @@ const AdminMeetingNotesWorkspacePage = lazyWithReload(
 );
 const AdminMvpWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMvpWorkspacePage"));
 const AdminWorkspaceDocPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceDocPage"));
-const AdminWhatsAppLandingsPage = lazyWithReload(() => import("@/pages/admin/AdminWhatsAppLandingsPage"));
-// G24 · M5 moderatör paneli (tasarım §10 — dört kuyruk tek ekran)
-const AdminGruplarPage = lazyWithReload(() => import("@/pages/admin/AdminGruplarPage"));
-const AdminWhatsAppLandingEditorsPage = lazyWithReload(() => import("@/pages/admin/AdminWhatsAppLandingEditorsPage"));
 const AdminCommunityGuidePage = lazyWithReload(() => import("@/pages/admin/AdminCommunityGuidePage"));
 const AdminMay19IdeaPage = lazyWithReload(() => import("@/pages/admin/AdminMay19IdeaPage"));
 const AdminMay19MomentPage = lazyWithReload(() => import("@/pages/admin/AdminMay19MomentPage"));
@@ -145,10 +142,8 @@ export const adminRoutes = (
     <Route path="audit-logs" element={<AdminAuditLogsPage />} />
     <Route path="client-errors" element={<AdminClientErrorsPage />} />
     <Route path="roller-taslak" element={<AdminRolesDraftPage />} />
-    <Route path="whatsapp-landings" element={<AdminWhatsAppLandingsPage />} />
-    <Route path="whatsapp-landings/editors" element={<AdminWhatsAppLandingEditorsPage />} />
     <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
-    <Route path="gruplar" element={<AdminGruplarPage />} />
+    {adminGruplarRoutes}
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
     <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />

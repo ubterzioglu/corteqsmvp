@@ -149,7 +149,7 @@ const reportItem = {
 };
 
 const renderPage = async () => {
-  const page = await import("@/pages/admin/AdminGruplarPage");
+  const page = await import("@/pages/admin/gruplar/AdminGruplarPage");
   const AdminGruplarPage = page.default;
   return render(<AdminGruplarPage />);
 };
@@ -179,8 +179,9 @@ beforeEach(() => {
 
 describe("G24 · kayıt üçlüsü (rota · navigasyon · route-meta)", () => {
   it("üçü birden kayıtlı (KR08 deseni)", () => {
-    expect(read("src/pages/admin/routes.tsx")).toContain('path="gruplar"');
-    expect(read("src/pages/admin/routes.tsx")).toContain('import("@/pages/admin/AdminGruplarPage")');
+    expect(read("src/pages/admin/gruplar/routes.tsx")).toContain('path="gruplar"');
+    expect(read("src/pages/admin/gruplar/routes.tsx")).toContain('import("@/pages/admin/gruplar/AdminGruplarPage")');
+    expect(read("src/pages/admin/routes.tsx")).toContain("{adminGruplarRoutes}");
     expect(communitiesNavGroup.items.some((item) => item.to === ROUTE)).toBe(true);
     expect(read("src/lib/admin-shell/admin-route-meta.ts")).toContain(`"${ROUTE}"`);
   });
