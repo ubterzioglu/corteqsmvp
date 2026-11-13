@@ -145,7 +145,7 @@ Dalga sırası planla aynı; her modül bir commit, her commit öncesi tsc + hed
 - **eslint-suppressions.json:** 8 anahtar yeniden yazıldı (prune değil); kökte kalan 2 anahtar (AdminCustomerRequestsPage, AdminEventsPage) kökte kalan sayfalara ait. `npx eslint . --prune-suppressions` koşulmadı — lint zaten yeşil, "kullanılmayan bastırma" uyarısı yok.
 - **Kök sayım:** 73 → **22** (14 sayfa + 7 test + routes.tsx) — plan §3.1 "kökte KALIR" listesiyle birebir. `git grep -o "pages/admin/Admin[A-Za-z]+" src | sort -u` → tam o 14 sayfa.
 - **Kapsam dışı bırakılan:** tarayıcı kontrolü (`npm run dev` 8080 çakışması — B09) YAPILMADI; kök `routes.tsx` render eden `App.admin-route.test` + `App.admin-cadde-route.test` ve regresyon sözleşmesi (101 test) her dalgada yeşildi.
-- **Faz 3 kapanış kapıları (plan §3.3):** verify:quality ✅ · lint ✅ (0 hata/10 uyarı) · check:dead ✅ · check:knip ✅ · ingest:tools:check ✅ "Katalog güncel" · format:check ✅ · build ✅ (1 dk 2 sn; `public/` drifti 1 dosya, geri alındı) · npm run test: __TEST_RESULT_F3__
+- **Faz 3 kapanış kapıları (plan §3.3):** verify:quality ✅ · lint ✅ (0 hata/10 uyarı) · check:dead ✅ · check:knip ✅ · ingest:tools:check ✅ "Katalog güncel" · format:check ✅ · build ✅ (1 dk 2 sn; `public/` drifti 1 dosya, geri alındı) · npm run test: ✅ **526 dosya / 4686 test** (445 s, tek başına koşuda) — tabanla birebir
   ⚠️ İlk tam koşu üç ağır işle (zincir + test + build) PARALEL yapıldı: 4 dosya `Failed to start forks worker` (kaynak), `lovable-forbidden-strings` "untracked taranır" testi 83 sn'de düştü — beşi izole koşuda 52/52 ✅. Ders: tam testi build ile aynı anda koşturma.
 
 ---
@@ -202,7 +202,7 @@ Dalga 3'te generate:sitemap canlı kataloğu çekti → `public/sitemap.xml`'de 
 | F2 D4 | node --check 35 · vitest scripts · ingest:tools+:check · preview:emails · py_compile | ✅ · 42/345 ✅ · ✅ 94 tool "güncel" · ✅ 2 şablon · ✅ |
 | **F2 kapanış** | **§2.4 seti** | ✅ hepsi yeşil (format:check tek dosya düzeltmesiyle `3c08857e`) — ayrıntı §1.2 |
 | F3 D1–D9 | tsc · hedefli vitest · eslint · prettier | her dalga ✅ (§2b tablosu) |
-| **F3 kapanış** | **§3.3 seti** | __F3_GATES_SHORT__ |
+| **F3 kapanış** | **§3.3 seti** | ✅ verify:quality · lint · dead · knip · ingest:check · format · build · test 526/4686 (ayrıntı §2b) |
 
 ---
 
