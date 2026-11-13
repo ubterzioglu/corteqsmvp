@@ -1,4 +1,4 @@
-# Devir: Repo düzenleme turu (Faz 1–3 tamam, Faz 4 bekliyor) — 13.11.2026
+# Devir: Repo düzenleme turu (Faz 1–3 tamam ve main'de, Faz 4 bekliyor) — 13–14.11.2026
 
 > **Kaynak plan:** `C:/Users/baris-terzioglu/.claude/plans/repoda-klas-r-ve-dosya-enchanted-treasure.md`
 > **Çalışma şekli (kullanıcı onaylı):** stacked dallar — her faz bir öncekinin üstünde; merge'leri kullanıcı sırayla yapacak.
@@ -16,7 +16,7 @@
 | Faz 3 (admin pages) | `refactor/duzen-faz3-admin-pages` (faz2 üstünde) | ✅ 9 modül dalgası + docs commit'li; kapanış kapıları §2b |
 | Faz 4 (src/lib) | — | ⬜ Başlamadı |
 
-**Şu an:** dal `refactor/duzen-faz3-admin-pages` (stack: faz1 → faz2 → faz3) · çalışma ağacı temiz. Push ve PR YAPILMADI — kullanıcı kararı; merge sırası faz1 → faz2 → faz3.
+**Şu an (14.11):** Faz 1–3 **main'e fast-forward alındı ve push edildi** (`1485b2ce`, CI Quality yeşil). Tag'ler: `kokten-degisiklik-oncesi-2026-11-14`, `repo-duzen-bitti-2026-11-14` (ikisi de `1485b2ce`, origin'de). DB + storage yedeği alındı: `C:\temp_private\corteqs\yedekler\2026-11-14-kokten-oncesi` (ayrıntı: `docs/plans/2026-11-14-kokten-degisiklik-oncesi-yedek-ve-tag-plani.md` → Uygulama sonucu). **Canlı deploy YAPILMADI** (Coolify elle). Geri yükleme provası + ikinci kopya açık: KALANLAR BK01. Üç refactor dalı main'de birleşik; yerelde duruyor, silinmedi.
 
 ---
 

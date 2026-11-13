@@ -1,6 +1,6 @@
 # Köklü değişiklik öncesi güvenlik noktası: veritabanı yedeği + git tag (plan)
 
-Tarih: 2026-11-14 · Durum: **PLAN — hiçbir adım çalıştırılmadı** · Önceki iş: repo düzen turu Faz 1–3
+Tarih: 2026-11-14 · Durum: **UYGULANDI 14.11 (geri yükleme provası ve ikinci kopya hariç — bkz. Uygulama sonucu)** · Önceki iş: repo düzen turu Faz 1–3
 (devir: `docs/handover/2026-11-13-repo-duzen-faz1-2-durum-devri.md`)
 
 ## Amaç
@@ -124,3 +124,20 @@ Hafızaya aynı özet.
 - **Yarım yedek:** script kısmi başarıyı gizlemez, ilk hatada durur ve dizini `.FAILED` ile işaretler; işaretli dizin yedek sayılmaz.
 - **Yedek ile tag arasında canlı veri değişir:** yedek anı ile köklü değişiklik başlangıcı arasındaki yazmalar yedekte
   yoktur; bu aralığı kısa tut, gerekirse değişiklikten hemen önce ikinci bir hafif yedek (yalnız `public` verisi) al.
+
+## Uygulama sonucu (14.11.2026, gece)
+
+| Adım | Sonuç |
+|---|---|
+| Faz 1–3 → main | ✅ fast-forward, 20 commit, push edildi: main `1485b2ce`. CI Quality: success. |
+| Deploy doğrulaması | ⚠️ **Canlı deploy yapılmadı**: Coolify deploy elle, `git push` canlıya çıkarmaz. Yerel `dist` için `npm run verify:release` ✅. Canlı kontrol (`curl -I`, `/admin`, `/admin/cadde`) deploy sonrasına kaldı. |
+| İstemci araçları | ✅ kurulum gerekmedi: scoop ile PostgreSQL 18.3 zaten kuruluydu (PATH'te değil; yalnız çalışan işlem için PATH'e eklendi). 18 istemcisi 17.x sunucuyu dump'layabilir. |
+| DB yedeği | ✅ 7 adım ~75 sn, 0 hata. Dosyalar: roller 6 KB · şema 2,1 MB (531 RLS politikası) · auth verisi 0,25 MB (~181 kullanıcı) · public verisi 126 MB · storage metadata 0,13 MB · migrations 8,9 MB (528 kayıt, son sürüm `20261109100000`) · cron 15 iş. |
+| Storage | ✅ 27 bucket, 248 nesne, 267,5 MB, 248/248 indirildi, 0 hata. |
+| Bütünlük | ✅ `manifest.json` her DB dosyası için sha256; `.FAILED` işareti yok; storage dosya sayısı/boyutu envanterle eşit. |
+| Tag | ✅ `kokten-degisiklik-oncesi-2026-11-14` (ve aynı commit'e `repo-duzen-bitti-2026-11-14`), ikisi açıklamalı, ikisi origin'e itildi, ikisi `1485b2ce`'yi gösterir. |
+| Geri yükleme provası | ❌ **Yapılmadı**: Docker servisi kapalı. Kayıt: KALANLAR **BK01**. |
+| İkinci kopya | ❌ Yapılmadı (karar bekliyor). |
+
+**20.09 ölçümleriyle fark (beklenen büyüme):** cron işi 6 → 15, bucket 22 → 27, nesne 242 → 248, `auth.users` 170 → ~181.
+**Yedek konumu:** `C:\temp_private\corteqs\yedekler\2026-11-14-kokten-oncesi` (repo dışı, kişisel veri içerir).
