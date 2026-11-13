@@ -669,14 +669,14 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
    `$corteqs_csp` bilinçli olarak dar seçildi: nginx imajının
    `20-envsubst-on-templates.sh` scripti template'i envsubst'tan geçirir, genel adlar çakışır.
 
-4. **Sitemap'e rota eklemeden önce 3 kriteri de doğrula** (`scripts/generate-sitemap.mjs`
+4. **Sitemap'e rota eklemeden önce 3 kriteri de doğrula** (`scripts/generate/generate-sitemap.mjs`
    `STATIC_ROUTES`): (a) gerçekten public mi — `RequireAuth` / `RequireFeature` arkasında
    OLMAMALI, (b) sayfa `useSeo` + `canonicalPath` tanımlıyor mu, (c) thin content değil mi.
-   Üçünden biri tutmuyorsa ekleme. `scripts/generate-sitemap.test.mjs` `App.tsx`'i parse
+   Üçünden biri tutmuyorsa ekleme. `scripts/generate/generate-sitemap.test.mjs` `App.tsx`'i parse
    ederek auth arkasındaki rotaları ve redirect kaynaklarını yakalar.
 
 5. **PostgREST 1000 satırda sessizce keser.** Hata dönmez, eksik veri döner. Toplu veri
-   çeken her sorgu `Range` başlıklı sayfalama kullanmalıdır — `scripts/generate-sitemap.mjs`
+   çeken her sorgu `Range` başlıklı sayfalama kullanmalıdır — `scripts/generate/generate-sitemap.mjs`
    içindeki `fetchAllRows()` deseni referanstır. Ayrıca filtre mantığını çoğaltıyorsan
    (ör. anket `starts_at`/`ends_at` penceresi) kaynak modülle (`src/lib/surveys.ts`) birebir
    aynı olmalı — yarım kopyalanan filtre sitemap'e süresi dolmuş kayıt sızdırır.
@@ -802,7 +802,7 @@ config **text** and route tables, so they fail loudly when someone edits one sid
   hosts can never leak into `<link rel="canonical">`.
 - `src/App.notfound-seo.test.tsx` (4 tests) — 404 shell writes `robots: "noindex, follow"`,
   stopping soft-404 pages from being indexed.
-- `scripts/generate-sitemap.test.mjs` (9 tests) — parses `App.tsx` to prove no `STATIC_ROUTES`
+- `scripts/generate/generate-sitemap.test.mjs` (9 tests) — parses `App.tsx` to prove no `STATIC_ROUTES`
   entry sits behind `RequireAuth`/`RequireFeature` or is a redirect source.
 
 **2026-09-19'da eklenen iki sözleşme testi** (aynı gün canlıya çıkmak üzereyken yakalanan

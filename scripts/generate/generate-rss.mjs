@@ -1,4 +1,4 @@
-// scripts/generate-rss.mjs
+// scripts/generate/generate-rss.mjs
 // public/rss.xml'i yayınlanmış blog yazılarından üretir (RSS 2.0). prebuild zincirinde
 // çalışır.
 //
@@ -11,7 +11,7 @@
 //
 // Filtre kaynak modülle aynıdır: blog sayfaları yalnız `published=true` yazıları gösterir.
 //
-// Usage: node scripts/generate-rss.mjs
+// Usage: node scripts/generate/generate-rss.mjs
 
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 import { escapeXml, fetchAllRows, loadEnvLocal, supabaseEnv } from "./generate-sitemap.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 const SITE_ORIGIN = process.env.SITE_ORIGIN ?? "https://corteqs.net";
 const OUTPUT = path.join(rootDir, "public", "rss.xml");
 
@@ -125,5 +125,5 @@ if (calistirilanDosya === buDosya) {
   });
 }
 
-// Test yüzeyi — bkz. scripts/generate-rss.test.mjs
+// Test yüzeyi — bkz. scripts/generate/generate-rss.test.mjs
 export { buildRss, toRfc822, CHANNEL };

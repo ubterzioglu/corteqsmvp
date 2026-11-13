@@ -2,7 +2,7 @@
 
 **Tarih:** 2026-07-28
 **Durum:** Karar verildi — mevcut davranış korunuyor, kod değişikliği yok
-**İlgili:** `scripts/generate-sitemap.mjs`, `src/App.tsx`, `src/components/auth/RequireAuth.tsx`,
+**İlgili:** `scripts/generate/generate-sitemap.mjs`, `src/App.tsx`, `src/components/auth/RequireAuth.tsx`,
 `src/pages/LoginPage.tsx`, `docs/10tool/00-ortak-mimari-ve-agent-talimatlari.md`
 
 ---
@@ -113,7 +113,7 @@ Sayfalar bilinçli olarak noindex kaldığı için doğrulama **başarısız olu
 
 ## 7. Önceki ilgili kayıtlar
 
-- `scripts/generate-sitemap.mjs` (satır ~309) — 2026-07-14 denetiminde slug'lar sitemap'ten
+- `scripts/generate/generate-sitemap.mjs` (satır ~309) — 2026-07-14 denetiminde slug'lar sitemap'ten
   çıkarıldı; gerekçe aynı.
 - `supabase/migrations/applied/20260714100000_relocation_tools_hub_anon_read.sql` — hub anon'a
   açılırken alt sayfaların korumalı kaldığı not edilmiş.

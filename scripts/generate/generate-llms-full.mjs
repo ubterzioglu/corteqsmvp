@@ -1,4 +1,4 @@
-// scripts/generate-llms-full.mjs
+// scripts/generate/generate-llms-full.mjs
 // public/llms-full.txt'u üretir — AI agent'lar için genişletilmiş referans dosyası.
 //
 // llms.txt (64 satır) site haritası düzeyindeyken llms-full.txt her sayfa için
@@ -6,8 +6,8 @@
 // çalışır; Supabase erişilemezse blog bölümü atlanır (build kırılmaz).
 //
 // Kullanım:
-//   node scripts/generate-llms-full.mjs          # yaz
-//   node scripts/generate-llms-full.mjs --check  # bayatsa exit 1 (CI)
+//   node scripts/generate/generate-llms-full.mjs          # yaz
+//   node scripts/generate/generate-llms-full.mjs --check  # bayatsa exit 1 (CI)
 //
 // Kaynaklar:
 //   - public/llms.txt (temel yapı)
@@ -20,7 +20,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 const OUTPUT = path.join(rootDir, "public", "llms-full.txt");
 const LLMS_TXT = path.join(rootDir, "public", "llms.txt");
 const FAQ_JSON = path.join(rootDir, "public", "ai", "faq.json");
@@ -212,7 +212,7 @@ async function main() {
       console.log("[llms-full] llms-full.txt güncel.");
       return;
     }
-    console.error("[llms-full] llms-full.txt bayat — `node scripts/generate-llms-full.mjs` çalıştırın.");
+    console.error("[llms-full] llms-full.txt bayat — `node scripts/generate/generate-llms-full.mjs` çalıştırın.");
     process.exit(1);
   }
 

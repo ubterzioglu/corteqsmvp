@@ -43,7 +43,7 @@ aşağıya bak) + F (4) toplamıdır. D ve G ters yön bulgusudur, orphan listes
 
 ## A. Public orphan — sitemap'te var, iç link 0
 
-İkisi de `public/sitemap.xml`'de kayıtlı ve `scripts/generate-sitemap.mjs` `STATIC_ROUTES`
+İkisi de `public/sitemap.xml`'de kayıtlı ve `scripts/generate/generate-sitemap.mjs` `STATIC_ROUTES`
 listesinde. **Sitemap keşif sağlar ama iç link ağırlığı taşımaz** — klasik orphan page tablosu.
 2026-09-20 SEO çalışması (bkz. `docs/audits/2026-08-04-seo-geo-audit.md` ve o günün commit'leri)
 canonical/prerender tarafını kapattı, **bu sınıfa dokunmadı**.

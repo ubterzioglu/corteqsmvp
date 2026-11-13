@@ -101,7 +101,7 @@ son_dogrulama: 2026-11-07
 | `docs/security/SECURITY_AUDIT.md` | A2.1 | ✓ | Güvenlik denetimi |
 | `docs/plans/2026-10-05-rol-talepleri-olcum.md` | A3.1 | ✓ | Rol ölçümü (A3.1 girdisi) |
 | `docs/plans/qwen-sirali/03-seo-geo-qwen-gorev.md` | A10 | ✓ | SEO/GEO görev tanımı |
-| `scripts/generate-role-structure.mjs` | A3 | ✓ | Rol üretim betiği |
+| `scripts/generate/generate-role-structure.mjs` | A3 | ✓ | Rol üretim betiği |
 | `CorteQS_Rol_Tablosu_v2.xlsx` | A3 | ✓ | Excel kaynak (rol yapısı) |
 | `maillogo.png` | A15 | ✓ | Mail logo varlığı |
 | `public/mail/corteqs-logo.png` | A15 | ✓ | Mail logo |

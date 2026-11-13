@@ -34,7 +34,7 @@ describe("yatırımcı rotası", () => {
     expect(page).toContain('robots: "noindex, nofollow"');
     // Aynı parola kapısı: kapı açılmadan içerik çizilmez.
     expect(page).toContain("<InvestorGate verifier={verifier}");
-    expect(read("scripts/generate-sitemap.mjs")).not.toContain("/mimari");
+    expect(read("scripts/generate/generate-sitemap.mjs")).not.toContain("/mimari");
   });
 
   it("ekosistem kısa yolları: sabit tablo, yalnız https, kartlarla birebir", () => {
@@ -79,7 +79,7 @@ describe("yatırımcı rotası", () => {
   });
 
   it("sitemap üreticisinde ve robots.txt'te yolu ifşa edilmez", () => {
-    expect(read("scripts/generate-sitemap.mjs")).not.toContain(INVESTOR_PATH);
+    expect(read("scripts/generate/generate-sitemap.mjs")).not.toContain(INVESTOR_PATH);
     if (existsSync(path.join(ROOT, "public/robots.txt"))) {
       expect(read("public/robots.txt")).not.toContain(INVESTOR_PATH);
     }

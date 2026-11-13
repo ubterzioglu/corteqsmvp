@@ -16,7 +16,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const OUTPUT_PATH = path.join(projectRoot, "src", "lib", "investor", "investor-stats.generated.ts");
 
 const STACK_PACKAGES = [
@@ -115,7 +115,7 @@ export function collectInvestorStats() {
 export function renderStatsModule(stats, measuredAt) {
   const body = JSON.stringify({ measuredAt, ...stats }, null, 2);
   return (
-    "// BU DOSYA ÜRETİLİR — elle düzenleme. Kaynak: scripts/generate-investor-stats.mjs\n" +
+    "// BU DOSYA ÜRETİLİR — elle düzenleme. Kaynak: scripts/generate/generate-investor-stats.mjs\n" +
     "// Güncellemek için: npm run investor:stats\n\n" +
     `export const INVESTOR_REPO_STATS = ${body} as const;\n`
   );

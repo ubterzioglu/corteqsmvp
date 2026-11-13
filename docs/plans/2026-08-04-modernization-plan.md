@@ -180,11 +180,11 @@ düzeltilir.
 
 ### Batch 4 — P1: sitemap doğruluğu ve drift koruması
 
-**Dosyalar:** [scripts/generate-sitemap.mjs](../../scripts/generate-sitemap.mjs), yeni
-`scripts/generate-sitemap.test.mjs`
+**Dosyalar:** [scripts/generate/generate-sitemap.mjs](../../scripts/generate/generate-sitemap.mjs), yeni
+`scripts/generate/generate-sitemap.test.mjs`
 
 1. **`/cadde`'yi `STATIC_ROUTES`'tan çıkar**
-   ([generate-sitemap.mjs:51](../../scripts/generate-sitemap.mjs#L51)) — `RequireAuth` +
+   ([generate-sitemap.mjs:51](../../scripts/generate/generate-sitemap.mjs#L51)) — `RequireAuth` +
    `RequireFeature(caddeAccess)` arkasında. Neden'i yorumla (script'te `/tools/:slug` için aynı
    gerekçe zaten yazılı).
 2. **PostgREST 1000 satır kesmesi.** Beş dinamik fetcher (`blog_posts`, `surveys`,
@@ -336,7 +336,7 @@ npm run build
   `/`, `/robots.txt`, `/assets/*.js`, `/hakkimizda`, `/blog?utm=x` kontrol et. Tarayıcıda
   `http://localhost` aç, **konsolda CSP ihlali olmamalı**, fontlar yüklenmeli.
 - **Batch 3:** `npm run test -- src/lib/seo.test.ts src/App.notfound-seo.test.tsx`
-- **Batch 4:** `npm run test -- scripts/generate-sitemap.test.mjs` ve
+- **Batch 4:** `npm run test -- scripts/generate/generate-sitemap.test.mjs` ve
   `SITE_DATE=2026-08-04 npm run generate:sitemap` → üretilen `public/sitemap.xml`'i mevcut
   canlı sürümle (107 URL) diff'le; `/cadde` gitmiş olmalı.
 - **Batch 4b:** `public/llms.txt` içindeki her URL/çapa için hedefin gerçekten var olduğunu

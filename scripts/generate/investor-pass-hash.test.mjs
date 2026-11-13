@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { buildInvestorVerifier, DEFAULT_ITERATIONS } from "./investor-pass-hash.mjs";
-import { derivePbkdf2Hex, parseInvestorVerifier } from "../src/lib/investor/investor-access";
+import { derivePbkdf2Hex, parseInvestorVerifier } from "../../src/lib/investor/investor-access";
 
 describe("investor-pass-hash", () => {
   it("varsayılan iterasyon yüksektir (açık doğrulayıcıya kaba kuvvet pahalı kalsın)", () => {

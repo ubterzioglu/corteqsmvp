@@ -264,7 +264,7 @@ for (const file of codeFiles) {
 }
 
 // sitemap STATIC_ROUTES
-const sitemapSrc = readFileSync(join(ROOT, "scripts/generate-sitemap.mjs"), "utf8");
+const sitemapSrc = readFileSync(join(ROOT, "scripts/generate/generate-sitemap.mjs"), "utf8");
 const sitemapRoutes = [...sitemapSrc.matchAll(/"(\/[^"]*)"/g)].map((m) => m[1]);
 
 // ---------- 4) EŞLEŞTİRME ----------

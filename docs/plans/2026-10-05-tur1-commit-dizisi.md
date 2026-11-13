@@ -33,7 +33,7 @@ git commit -- \
   src/components/common/PremiumLockCard.test.tsx \
   src/components/profile/profile-sidebar-menu.tsx \
   src/lib/role-structure.ts \
-  scripts/generate-role-structure.mjs \
+  scripts/generate/generate-role-structure.mjs \
   CorteQS_Rol_Tablosu_v2.xlsx
 ```
 **Mesaj:** `A2+A3: /pricing CV/ilan satırları + PremiumLockCard + rol yapısı veri modülü`

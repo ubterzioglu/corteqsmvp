@@ -1,4 +1,4 @@
-// BU DOSYA ÜRETİLİR — elle düzenleme. Kaynak: scripts/generate-investor-stats.mjs
+// BU DOSYA ÜRETİLİR — elle düzenleme. Kaynak: scripts/generate/generate-investor-stats.mjs
 // Güncellemek için: npm run investor:stats
 
 export const INVESTOR_REPO_STATS = {

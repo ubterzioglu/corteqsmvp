@@ -26,7 +26,7 @@ Dışarıdan üç dosya geldi (`EKİP WEB SAYFASI 28 EYLÜL VERS/`, depo kökün
 - `src/pages/Career.tsx` — 4 pozisyon, `InterestForm` ile başvuru
 - `src/App.tsx:311` rota · `src/lib/page-seo.ts:63` `PAGE_SEO.career`
 - `src/components/footerLinks.ts:22` menü bağlantısı
-- `scripts/generate-sitemap.mjs` `STATIC_ROUTES` içinde `priority 0.4`
+- `scripts/generate/generate-sitemap.mjs` `STATIC_ROUTES` içinde `priority 0.4`
 
 Bugünkü başvurular `interest_registrations` tablosuna + `interest-uploads` kovasına
 gidiyor — ve **bu tablonun özel bir admin ekranı yok**, yalnız genel DB tablo

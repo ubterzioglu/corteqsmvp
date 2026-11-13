@@ -31,7 +31,7 @@ Amaç: "tamamlandı" iddiasını **kanıta** çevirmek. Kod yazdığın kişi de
 `git status` + `git diff --stat` ile her dosyayı bir batch'e eşle; `docs/plans/2026-10-05-tur1-envanter.md` olarak yaz
 (tablo: batch → dosyalar → migration → test → kabul SQL var/yok). Eşleşmeyen dosya = "plansız" (Cadde reactors gibi).
 Beklenen eşleme (doğrula): A1 `profile-sidebar-menu.tsx`+`ProfilePage.test.tsx` · A2 `Pricing.tsx`+`plans.ts`+testler · A3 `PremiumLockCard*` ·
-A4 `features.ts`+`AdminUserOverridesPage.tsx`+`20261005600000` · A5 `role-structure.ts`+`scripts/generate-role-structure.mjs`+`xlsx` ·
+A4 `features.ts`+`AdminUserOverridesPage.tsx`+`20261005600000` · A5 `role-structure.ts`+`scripts/generate/generate-role-structure.mjs`+`xlsx` ·
 A6 (`flat-roles-api*`? **dosya değişmemiş görünüyor → yapılmamış olabilir**) · A7 `20261005700000`+`job-listings-api*` ·
 A8 `JobListings*Page.tsx`+`App.tsx` · A9 `Footer*` · A10 `AssistantBubble*` · A11 `useAdminAccess*` ·
 A12 `security.ts`+`useProfileDocuments.ts`+`profile-attribute-keys.ts`+`20261005800000` · A13 `20261005900000`+`CreateEventFormSection.tsx` ·

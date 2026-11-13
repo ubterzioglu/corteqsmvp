@@ -381,7 +381,7 @@ devrede olmadığı yollarda (dev server, nixpacks, client-side gezinme) çalı�
 > `STATIC_ROUTES` içine bir rota eklenirse, o rota (1) public olmalı,
 > (2) `useSeo`/`canonicalPath` tanımlamalı, (3) thin content olmamalı.
 
-Koruyucu: `scripts/generate-sitemap.test.mjs` (9 test) — `src/App.tsx`'i parse ederek
+Koruyucu: `scripts/generate/generate-sitemap.test.mjs` (9 test) — `src/App.tsx`'i parse ederek
 `STATIC_ROUTES`'ta auth arkasında rota veya redirect kaynağı olmadığını doğrular.
 
 Bu sözleşme uygulandığında `/cadde` sitemap'ten düştü (`RequireAuth` +
@@ -453,7 +453,7 @@ npm run test                             # sözleşme testleri dahil
 npm run build                            # exit 0 olmalı
 
 # --- Sitemap ---
-node scripts/generate-sitemap.mjs
+node scripts/generate/generate-sitemap.mjs
 grep -c "<loc>" public/sitemap.xml
 ```
 

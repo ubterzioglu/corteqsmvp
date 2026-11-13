@@ -1,7 +1,7 @@
 # SEO / GEO Denetimi — 2026-08-04
 
 Kapsam: `corteqs.net` üretim yayını, `nginx.conf.template`, `src/lib/seo.ts`,
-`src/lib/redirects.ts`, `scripts/generate-sitemap.mjs`, `public/llms.txt`,
+`src/lib/redirects.ts`, `scripts/generate/generate-sitemap.mjs`, `public/llms.txt`,
 `public/robots.txt` ve `index.html` JSON-LD bloğu.
 
 Bu belge bir denetim raporudur: her madde **SORUN → KANIT → DÜZELTME** yapısındadır.
@@ -202,7 +202,7 @@ bilinçlidir: sayfadaki iç bağlantıların taranması sürsün. `applySeo`
 `render-complete` event'ini dispatch ettiği için bu, prerender çıktısına da yansır.
 Gereksiz `console.error` kaldırıldı.
 
-Sitemap tarafında `scripts/generate-sitemap.test.mjs` (9 test) eklendi: `App.tsx`'i
+Sitemap tarafında `scripts/generate/generate-sitemap.test.mjs` (9 test) eklendi: `App.tsx`'i
 parse edip `STATIC_ROUTES` içinde auth arkası rota veya redirect kaynağı olmadığını
 doğrular.
 
@@ -286,8 +286,8 @@ crawl bütçesini asıl indekslenmesini istediğiniz sayfalardan çalar. Sitemap
 **Ölçülen sonuç:** 107 → 108 URL. Çıkan: `/cadde`. Eklenen: `/campaign/vlogger`,
 `/campaign/blogger`.
 
-Kriterler artık `scripts/generate-sitemap.mjs` başında yazılıdır ve (a) şıkkı
-`scripts/generate-sitemap.test.mjs` tarafından otomatik denetlenir.
+Kriterler artık `scripts/generate/generate-sitemap.mjs` başında yazılıdır ve (a) şıkkı
+`scripts/generate/generate-sitemap.test.mjs` tarafından otomatik denetlenir.
 
 ---
 
@@ -332,7 +332,7 @@ Aynı iş kuralı iki yerde farklı uygulanıyordu:
 | Kaynak | `status=published` | `starts_at` penceresi | `ends_at` penceresi |
 |--------|--------------------|-----------------------|---------------------|
 | `src/lib/surveys.ts` | evet | evet | **evet** |
-| `scripts/generate-sitemap.mjs` | evet | evet | **hayır** |
+| `scripts/generate/generate-sitemap.mjs` | evet | evet | **hayır** |
 
 Sonuç: süresi dolmuş anketler sitemap'te kalıyordu. Arama sonucundan tıklayan
 kullanıcı kapalı bir ankete düşüyordu — hem kötü kullanıcı sinyali hem de
@@ -516,7 +516,7 @@ ediliyor; `robots.txt` yalnız `/admin`'i engellediği için taranabilir durumda
 | `src/lib/redirects.test.ts` | 10 test |
 | `src/lib/seo.test.ts` | 17 test |
 | `src/App.notfound-seo.test.tsx` | 4 test |
-| `scripts/generate-sitemap.test.mjs` | 9 test |
+| `scripts/generate/generate-sitemap.test.mjs` | 9 test |
 | Sitemap URL sayısı | 107 → 108 (ölçüldü) |
 
 ### YAPILMAYAN doğrulama

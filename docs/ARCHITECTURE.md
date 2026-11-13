@@ -313,7 +313,7 @@ gerçek HTTP 404 dönemediği için soft-404'lerin indekslenmesini bu durdurur. 
 `console.error` basan davranış kaldırıldı. Testler: `src/App.notfound-seo.test.tsx` (4 test).
 *(Gerçek sunucu tarafı 404 backlog'dadır — route bilgisi nginx'te yok.)*
 
-**Sitemap (`scripts/generate-sitemap.mjs`, `prebuild` ile otomatik koşar → `public/sitemap.xml`).**
+**Sitemap (`scripts/generate/generate-sitemap.mjs`, `prebuild` ile otomatik koşar → `public/sitemap.xml`).**
 `STATIC_ROUTES`'a bir rota **ancak üç kriteri birden geçerse** girer:
 1. gerçekten public (auth/`RequireAuth`/`RequireFeature` arkasında değil),
 2. `useSeo` + `canonicalPath` tanımlıyor,
@@ -326,7 +326,7 @@ Dinamik fetcher'lar (blog_posts, surveys, marquee_items, catalog_items, independ
 ortak `fetchAllRows()` üzerinden **Range başlıklı sayfalama** yapar — PostgREST'in 1000 satır
 sessiz kesmesi buradaydı. Anket penceresi `src/lib/surveys.ts` ile aynı: hem `starts_at` hem
 `ends_at` uygulanır (iki ayrı `or` parametresi; PostgREST bunları AND'ler).
-`scripts/generate-sitemap.test.mjs` (9 test) `App.tsx`'i parse ederek `STATIC_ROUTES`'ta auth
+`scripts/generate/generate-sitemap.test.mjs` (9 test) `App.tsx`'i parse ederek `STATIC_ROUTES`'ta auth
 arkasında rota veya redirect kaynağı bulunmadığını doğrular.
 
 **`public/llms.txt` (GEO).** LLM/AI crawler'lara yönelik insan okunur site haritası — sitemap.xml'in
@@ -362,7 +362,7 @@ Pre-hook: `verify:text` (encoding bekçisi) `src/public/docs/scripts` tarar — 
   Tek dosya: `npm run test -- <path>`.
 - **Drift kilitleri** (bunlar bilerek "test" değil "sözleşme bekçisi"dir; kırılırsa iki tarafı da
   güncelle): `src/lib/redirects.test.ts` (redirects.ts ↔ nginx.conf.template + CSP kuralları),
-  `scripts/generate-sitemap.test.mjs` (STATIC_ROUTES ↔ App.tsx route tablosu),
+  `scripts/generate/generate-sitemap.test.mjs` (STATIC_ROUTES ↔ App.tsx route tablosu),
   `src/lib/cadde-rules` ayna testleri (SQL ↔ TS).
 - **Playwright** yapılandırılmış (`e2e/*.spec.ts`); persona matrisi (spec §22.4) açık kalem.
 - Tam `npm run lint` **0 problem** döner (eski "1280 problem" iddiası bayattı, 2026-09-05'te

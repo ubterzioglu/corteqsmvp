@@ -1,10 +1,10 @@
 // A5 · Rol yapısı veri modülü (Excel'den üretildi — ELLE DEĞİŞTİRİLMEZ)
 //
 // Kaynak: CorteQS_Rol_Tablosu_v2.xlsx → "Yeni Rol Yapısı" sayfası
-// Üretim betiği: scripts/generate-role-structure.mjs
+// Üretim betiği: scripts/generate/generate-role-structure.mjs
 //
 // ⚠️ Bu dosyayı ELLE düzenleme. Excel değiştiğinde betiği yeniden çalıştır:
-//   node scripts/generate-role-structure.mjs
+//   node scripts/generate/generate-role-structure.mjs
 
 export type RoleDurum = "onaylandi" | "oneri";
 

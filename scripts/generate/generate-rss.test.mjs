@@ -1,11 +1,11 @@
-// scripts/generate-rss.mjs testleri.
+// scripts/generate/generate-rss.mjs testleri.
 //
 // ASIL DEĞER: beslemenin geçerli XML olması (kaçış, Türkçe karakter), tarih biçimi
 // (RFC-822) ve kanal linkinin bir 301 kaynağına işaret etmemesi.
 
 import { describe, expect, it } from "vitest";
 
-import { LEGACY_REDIRECTS } from "../src/lib/redirects.ts";
+import { LEGACY_REDIRECTS } from "../../src/lib/redirects.ts";
 import { buildRss, CHANNEL, toRfc822 } from "./generate-rss.mjs";
 
 const posts = [

@@ -1,4 +1,4 @@
-// scripts/generate-sitemap.mjs testleri.
+// scripts/generate/generate-sitemap.mjs testleri.
 //
 // ASIL DEĞER: STATIC_ROUTES ↔ App.tsx drift denetimi. Sitemap'e auth arkasındaki veya
 // redirect olan bir rota girdiğinde Google onu "Discovered/Crawled - currently not
@@ -14,7 +14,7 @@ import { resolve } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
-import { sliceFrom } from "../src/test/source-slice";
+import { sliceFrom } from "../../src/test/source-slice";
 import {
   MIN_KEEP_RATIO,
   STATIC_ROUTES,
@@ -236,7 +236,7 @@ describe("sitemap küçülme koruması", () => {
 
   it("main() yazmadan ÖNCE korumayı çağırır (yalnız fonksiyonun varlığı yetmez)", () => {
     // Fonksiyon testleri, main() ona hiç bağlanmasa da yeşil kalırdı.
-    const source = readFileSync(resolve(process.cwd(), "scripts/generate-sitemap.mjs"), "utf8");
+    const source = readFileSync(resolve(process.cwd(), "scripts/generate/generate-sitemap.mjs"), "utf8");
     const main = sliceFrom(source, "async function main()", "generate-sitemap main()");
     const koruma = main.indexOf("evaluateSitemapWrite(");
     const yazma = main.indexOf("writeFile(OUTPUT");

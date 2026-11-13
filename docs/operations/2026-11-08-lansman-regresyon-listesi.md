@@ -46,7 +46,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
   Beklenen: batch öncesi ölçülenle aynı (CLAUDE.md'deki 82/78 bayat olabilir; ölç).
 
 ### (3) Katalog + uzmanlar (konsolosluk/büyükelçilik dahil) dizinlerde görünür
-- **Mevcut:** `src/lib/catalog-directory.test.ts` · `src/lib/directory-role-groups.test.ts` · `src/pages/DirectoryCatalogItemPage.test.tsx` · `src/pages/CityAmbassadorsPage.test.tsx` · `scripts/generate-sitemap.test.mjs`.
+- **Mevcut:** `src/lib/catalog-directory.test.ts` · `src/lib/directory-role-groups.test.ts` · `src/pages/DirectoryCatalogItemPage.test.tsx` · `src/pages/CityAmbassadorsPage.test.tsx` · `scripts/generate/generate-sitemap.test.mjs`.
 - **Boşluk:** `/directory`, `/consultants`, `/associations`, `/city-ambassadors`, `/businesses`, `/directory/profile/:userId` rotalarının varlığı ve konsolosluk yönetim sayfasının admin ağacında durması kilitli değildi.
 - **YENİ:** "(3)": 7 rota, `consulates` admin rotası, dizin adreslerinin sitemap'te kalması. `e2e/lansman-smoke.spec.ts` › `/directory?q=avukat` en az bir sonuç kartı çiziliyor (boş sonuç ve hata başarısızlıktır).
 - **Yalnız canlıda:** kayıtların kendisi (rota durması veri göründüğünü kanıtlamaz). Salt okunur SQL:
@@ -115,7 +115,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
 - **Yalnız canlıda:** yönetici yetkisi ve açık revizyon kayıtları. Salt okunur SQL: `select count(*) from public.revision_requests;`. Elle: yönetici hesabıyla `/admin/revision-requests` açılıyor ve ek görseller yükleniyor.
 
 ### (10) SEO: indeksli adres aynı kalır ya da 301 ile gider; sitemap güncel; staging/prototip noindex
-- **Mevcut:** `src/lib/redirects.test.ts` (nginx ↔ tablo) · `scripts/generate-sitemap.test.mjs` · `src/lib/route-seo-contract.test.ts` · `src/App.notfound-seo.test.tsx` · `src/lib/seo.test.ts` · `src/lib/index-html-csp.test.ts`.
+- **Mevcut:** `src/lib/redirects.test.ts` (nginx ↔ tablo) · `scripts/generate/generate-sitemap.test.mjs` · `src/lib/route-seo-contract.test.ts` · `src/App.notfound-seo.test.tsx` · `src/lib/seo.test.ts` · `src/lib/index-html-csp.test.ts`.
 - **Boşluk:** sitemap'in statik listesinden bir adres çıkarılırsa (ya da rotası kalkıp 301'i yazılmazsa) hiçbir test düşmüyordu; `STATIC_ROUTES` sayısı sabit değildi.
 - **YENİ:** "(10)": bugünkü 30 indeksli adres sitemap'te kalır; sitemap'teki her statik adres bir rota ya da 301 kaynağıdır (ölü adres yok); hiçbiri 301 kaynağı değildir; 5 bilinen eski adres 301 tablosunda; `/landingtrial` noindex ve sitemap dışı.
 - **AÇIK BOŞLUK:** staging/prototip için sunucu tarafı `noindex` mekanizması YOK. `nginx.conf.template` yalnız `mvp.` ve `www.` adreslerini apex'e 301'ler; ayrı bir staging host'u tanımlı değil. Staging açılırsa `X-Robots-Tag: noindex` o host'a eklenmeli ve test yazılmalı (L4/L8 kararı).

@@ -37,7 +37,7 @@ npm run build
 npm audit
 ```
 **Sonuç:** 9 yüksek / 0 kritik
-- `xlsx` (düzeltme yok; yalnız `scripts/generate-role-structure.mjs`, tarayıcıya girmez)
+- `xlsx` (düzeltme yok; yalnız `scripts/generate/generate-role-structure.mjs`, tarayıcıya girmez)
 - `undici`, `brace-expansion` (düzeltme var)
 - `tailwindcss@3` zinciri (build-time ReDoS)
 - `lovable-tagger`

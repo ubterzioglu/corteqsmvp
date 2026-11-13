@@ -171,7 +171,7 @@ Mühendislik tek başına karar veremez.
 **Yapılacaklar (karar verilirse):**
 1. FAQ bloğuna gerçek çapa id'leri ver (`id="sss-1"` …) veya FAQPage'i kaldır.
 2. `Offer`/`price` alanını tek kaynağa bağla (fiyat sabiti) veya statik JSON-LD'den çıkar.
-3. `dateModified`'ı build zamanında üret (`scripts/generate-sitemap.mjs` yanında bir
+3. `dateModified`'ı build zamanında üret (`scripts/generate/generate-sitemap.mjs` yanında bir
    adım) veya alanı kaldır.
 4. BreadcrumbList'i `index.html`'den **çıkar**, `useSeo({ jsonLd })` ile sayfa başına
    ver — altyapı zaten hazır (`src/lib/seo.ts` `jsonLd` alanını destekliyor ve unmount'ta
@@ -663,7 +663,7 @@ aynı veri iki bileşende iki kez çekiliyor, test için mock yüzeyi component'
    Fayda: invalidation hedeflenebilir olur (`publicContentKeys.radar()` tüm radar
    sorgularını düşürür), key yazım hatası tip hatasına dönüşür.
 
-3. **PostgREST 1000 satır tuzağı:** Batch 4'te `scripts/generate-sitemap.mjs` için
+3. **PostgREST 1000 satır tuzağı:** Batch 4'te `scripts/generate/generate-sitemap.mjs` için
    `fetchAllRows()` helper'ı yazıldı. Liste döndüren her yeni API fonksiyonu **aynı
    tuzağa** açıktır. Ya sayfalama uygula ya da `.limit()` ile bilinçli sınır koy —
    sessiz kesme yapma. (Bu tuzak bu projede daha önce de vurdu: "son WA 6 Temmuz"

@@ -13,7 +13,7 @@ kalmadı, **karardan** kalıyor.
 | `relocation_locations` | 32 şehir / 12 ülke |
 
 **Risk bağlamı (ölçüldü):** `/relocation` `App.tsx`'te **`RequireAuth` arkasındadır**
-ve `scripts/generate-sitemap.mjs`'te **yoktur**. Yani demo içerik ziyaretçiye ve
+ve `scripts/generate/generate-sitemap.mjs`'te **yoktur**. Yani demo içerik ziyaretçiye ve
 arama motoruna hiç görünmez, yalnız giriş yapmış üye görür. Aşağıdaki kararlar
 bu yüzden acil değildir — ama sayfa bir gün herkese açılırsa **K3 (feragat) önce
 kapatılmalıdır.**

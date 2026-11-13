@@ -5,7 +5,7 @@
  * Kaynak: docs/assets/CorteQS_Rol_Tablosu_v2.xlsx
  * Çıktı: src/lib/role-structure.ts
  *
- * Kullanım: node scripts/generate-role-structure.mjs
+ * Kullanım: node scripts/generate/generate-role-structure.mjs
  */
 
 import { writeFileSync } from "fs";
@@ -14,7 +14,7 @@ import { fileURLToPath } from "url";
 import { read, utils } from "xlsx";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const repoRoot = resolve(__dirname, "..");
+const repoRoot = resolve(__dirname, "../..");
 const excelPath = resolve(repoRoot, "docs/assets/CorteQS_Rol_Tablosu_v2.xlsx");
 const outputPath = resolve(repoRoot, "src/lib/role-structure.ts");
 
@@ -64,10 +64,10 @@ for (const row of rows) {
 const output = `// A5 · Rol yapısı veri modülü (Excel'den üretildi — ELLE DEĞİŞTİRİLMEZ)
 //
 // Kaynak: CorteQS_Rol_Tablosu_v2.xlsx → "Yeni Rol Yapısı" sayfası
-// Üretim betiği: scripts/generate-role-structure.mjs
+// Üretim betiği: scripts/generate/generate-role-structure.mjs
 //
 // ⚠️ Bu dosyayı ELLE düzenleme. Excel değiştiğinde betiği yeniden çalıştır:
-//   node scripts/generate-role-structure.mjs
+//   node scripts/generate/generate-role-structure.mjs
 
 export type RoleDurum = "onaylandi" | "oneri";
 

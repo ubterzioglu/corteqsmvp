@@ -19,7 +19,7 @@ import { describe, expect, it } from "vitest";
 
 import { sliceBetween } from "@/test/source-slice";
 
-import { STATIC_ROUTES } from "../../scripts/generate-sitemap.mjs";
+import { STATIC_ROUTES } from "../../scripts/generate/generate-sitemap.mjs";
 
 const ROOT = process.cwd();
 const read = (rel: string) => readFileSync(resolve(ROOT, rel), "utf8");

@@ -1,4 +1,4 @@
-// scripts/generate-llms-full.mjs testleri.
+// scripts/generate/generate-llms-full.mjs testleri.
 //
 // ASIL DEĞER: llms-full.txt'in kaynak dosyalarla tutarlılığı — faq.json, service.json
 // ve llms.txt'den üretildiğinden emin ol. Kaynak dosyalardan biri değiştiğinde test

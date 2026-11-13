@@ -378,7 +378,7 @@ başka bir dosyada karşılığı yoksa test kırılır.
 | `src/lib/redirects.test.ts` | 10 | `redirects.ts` ↔ `nginx.conf.template` drift'i; CSP tekrar sayısı; `unsafe-inline` yokluğu; `X-Robots-Tag`'in geri gelmemesi |
 | `src/lib/seo.test.ts` | 17 | SEO helper davranışı — **bu modülün ilk testleri** |
 | `src/App.notfound-seo.test.tsx` | 4 | 404 sayfasının `noindex` yazması |
-| `scripts/generate-sitemap.test.mjs` | 9 | `App.tsx`'i parse ederek `STATIC_ROUTES`'ta auth arkasında rota veya redirect kaynağı olmamasını |
+| `scripts/generate/generate-sitemap.test.mjs` | 9 | `App.tsx`'i parse ederek `STATIC_ROUTES`'ta auth arkasında rota veya redirect kaynağı olmamasını |
 | **Toplam** | **40** | |
 
 `src/lib/seo.ts` bu çalışmadan önce **tamamen testsizdi**; canonical hatası (Bulgu 6) bu yüzden
@@ -457,8 +457,8 @@ C:/temp_private/corteqs/corteqs_fin/src/lib/surveys.ts
 C:/temp_private/corteqs/corteqs_fin/src/App.notfound-seo.test.tsx
 C:/temp_private/corteqs/corteqs_fin/src/pages/NotFound.tsx
 C:/temp_private/corteqs/corteqs_fin/src/lib/dashboard/workspace-doc-pages.tsx
-C:/temp_private/corteqs/corteqs_fin/scripts/generate-sitemap.mjs
-C:/temp_private/corteqs/corteqs_fin/scripts/generate-sitemap.test.mjs
+C:/temp_private/corteqs/corteqs_fin/scripts/generate/generate-sitemap.mjs
+C:/temp_private/corteqs/corteqs_fin/scripts/generate/generate-sitemap.test.mjs
 C:/temp_private/corteqs/corteqs_fin/public/llms.txt
 C:/temp_private/corteqs/corteqs_fin/public/analytics.js
 ```

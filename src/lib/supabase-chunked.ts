@@ -58,7 +58,7 @@ const PAGE_SIZE = POSTGREST_ROW_CAP;
  *     *bilinçli* yapar ama yine veri kaybettirir; yönetici eksik toplam görür.
  *   • Liste doğası gereği "son N" ise (akış sayfası, öneri listesi) → `.limit()`.
  *
- * ⚠️ Referans desen `scripts/generate-sitemap.mjs` içindeki `fetchAllRows()`'tur;
+ * ⚠️ Referans desen `scripts/generate/generate-sitemap.mjs` içindeki `fetchAllRows()`'tur;
  * bu, aynı sözleşmenin supabase-js karşılığıdır.
  *
  * Güvenlik freni: `maxPages` sonsuz döngüyü keser. Tavana dayanılırsa fırlatır —

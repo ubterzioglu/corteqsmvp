@@ -1,4 +1,4 @@
-// scripts/generate-ai-faq.mjs
+// scripts/generate/generate-ai-faq.mjs
 // public/ai/faq.json'u index.html'deki FAQPage JSON-LD'sinden ÜRETİR.
 //
 // Neden: faq.json eskiden elle yazılmış 3 soruydu; index.html'de 12 soru vardı ve elle yazılan
@@ -6,8 +6,8 @@
 // YALNIZ OKUR (JSON-LD'ye dokunmak yasak — CLAUDE.md), çıktıyı public/ai/faq.json'a yazar.
 //
 // Kullanım:
-//   node scripts/generate-ai-faq.mjs          # yaz
-//   node scripts/generate-ai-faq.mjs --check  # bayatsa exit 1 (CI/doğrulama)
+//   node scripts/generate/generate-ai-faq.mjs          # yaz
+//   node scripts/generate/generate-ai-faq.mjs --check  # bayatsa exit 1 (CI/doğrulama)
 //
 // Çıktı ham UTF-8'dir (\uXXXX kaçışı yok): Türkçe karakterler korunur.
 
@@ -16,7 +16,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 const INDEX_HTML = path.join(rootDir, "index.html");
 const OUTPUT = path.join(rootDir, "public", "ai", "faq.json");
 
@@ -89,7 +89,7 @@ async function main() {
       console.log("[ai-faq] faq.json güncel.");
       return;
     }
-    console.error("[ai-faq] faq.json bayat — `node scripts/generate-ai-faq.mjs` çalıştırın.");
+    console.error("[ai-faq] faq.json bayat — `node scripts/generate/generate-ai-faq.mjs` çalıştırın.");
     process.exit(1);
   }
 

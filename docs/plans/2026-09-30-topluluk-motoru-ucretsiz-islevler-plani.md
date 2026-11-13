@@ -236,7 +236,7 @@ src/components/invites/InviteCard.tsx (link + kopyala + QR)
    ⚠️ **"cron yeşil" kanıt değildir** (Radar dersi, 2026-09-28) — doğrulama gerçek outbox satırı
    ve dolu `sent_at` ile yapılır.
 5. ⚠️ **PostgREST 1000 satır tavanı**: toplu veri çeken sorgu `fetchAllRows()` desenini
-   (`scripts/generate-sitemap.mjs`) kullanır.
+   (`scripts/generate/generate-sitemap.mjs`) kullanır.
 6. ⚠️ **1 GB RAM**: `geo_cities` 76.990 satır. Satır başına fonksiyon uygulama YASAK; önce
    `select distinct` ile küçült, sonra join et.
 

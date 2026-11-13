@@ -52,7 +52,7 @@ export function createServiceClient() {
  *
  * ⚠️ PostgREST 1000 satırda SESSİZCE keser — hata dönmez, EKSİK veri döner. Bugün
  * katalog 647 satır olduğu için tek sayfa yetiyor, ama korpus büyüdüğünde bu fonksiyon
- * olmadan içe aktarma sessizce yarım kalırdı. `scripts/generate-sitemap.mjs`
+ * olmadan içe aktarma sessizce yarım kalırdı. `scripts/generate/generate-sitemap.mjs`
  * içindeki `fetchAllRows()` deseniyle aynı.
  */
 export async function fetchAllRows(buildQuery, { pageSize = 500 } = {}) {

@@ -139,7 +139,7 @@ Trigger'lar SECURITY DEFINER olduğundan etkilenmez; yine de **uygulamadan önce
 - `_shared/emails/event-published.ts` git'te takipsiz ama `send-notification-emails/index.ts:47` import ediyor → temiz checkout'tan deploy kırılır.
 
 ## Bağımlılıklar (`npm audit`)
-9 yüksek / 0 kritik. `xlsx` (düzeltme yok; yalnız `scripts/generate-role-structure.mjs`, tarayıcıya girmez) · `undici`, `brace-expansion` (düzeltme var) · `tailwindcss@3` zinciri (`braces`/`micromatch`/`chokidar`/`fast-glob`, build-time ReDoS) · `lovable-tagger`. `--omit=dev` ile 5 yüksek, hepsi tailwind zinciri.
+9 yüksek / 0 kritik. `xlsx` (düzeltme yok; yalnız `scripts/generate/generate-role-structure.mjs`, tarayıcıya girmez) · `undici`, `brace-expansion` (düzeltme var) · `tailwindcss@3` zinciri (`braces`/`micromatch`/`chokidar`/`fast-glob`, build-time ReDoS) · `lovable-tagger`. `--omit=dev` ile 5 yüksek, hepsi tailwind zinciri.
 
 ## Doğrulanan sağlam alanlar (yeniden açma)
 WhatsApp webhook HMAC (ham gövde, sabit-zamanlı) · `send-phone-otp-hook` imza+zaman tolerans · `is_admin` kapılı dispatch/admin fonksiyonları · `command_center_items` ve 15 legacy tablo kilitleri · `cv-files`/`cv`/`arge-files` bucket'ları private · events status self-publish kapatılmış · `admin_*` anon EXECUTE kaldırılmış · tüm SECURITY DEFINER fonksiyonlarda `SET search_path` · `dangerouslySetInnerHTML` yalnız build-time bundled içerik · CSP'de `'unsafe-inline'` yok, güvenlik başlıkları her `add_header` location'ında tekrarlı · `.dockerignore` `.env*` hariç.

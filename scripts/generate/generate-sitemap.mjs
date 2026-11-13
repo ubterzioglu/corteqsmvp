@@ -1,4 +1,4 @@
-// scripts/generate-sitemap.mjs
+// scripts/generate/generate-sitemap.mjs
 // public/sitemap.xml'i statik route'lar + dinamik blog yazıları + commercial
 // dokümanlarıyla üretir. prebuild zincirinde çalışır.
 //
@@ -6,14 +6,14 @@
 // (env yok / ağ yok / hata) yalnızca statik + commercial route'larla devam eder —
 // build ASLA bu yüzden kırılmaz. Türkçe içerik yok (yalnızca URL'ler), BOM gereksiz.
 //
-// Usage: node scripts/generate-sitemap.mjs
+// Usage: node scripts/generate/generate-sitemap.mjs
 
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.join(__dirname, "..");
+const rootDir = path.join(__dirname, "../..");
 const SITE_ORIGIN = process.env.SITE_ORIGIN ?? "https://corteqs.net";
 const OUTPUT = path.join(rootDir, "public", "sitemap.xml");
 const OG_IMAGE = `${SITE_ORIGIN}/og-image-new.jpg`;
@@ -106,7 +106,7 @@ async function fetchAllRows(baseEndpoint, key, label) {
 // EKLEMEDEN ÖNCE: rota (a) gerçekten public mi (RequireAuth/RequireFeature YOK),
 // (b) useSeo ile canonicalPath set ediyor mu, (c) thin content değil mi?
 // Üçünü de geçmeyen rota GSC'de "Crawled - currently not indexed" üretir ve crawl
-// bütçesini gerçek içerikten çalar. scripts/generate-sitemap.test.mjs (a) şıkkını
+// bütçesini gerçek içerikten çalar. scripts/generate/generate-sitemap.test.mjs (a) şıkkını
 // App.tsx'i okuyarak otomatik denetler.
 const STATIC_ROUTES = [
   { path: "/", priority: "1.0", changefreq: "weekly" },
@@ -539,7 +539,7 @@ if (calistirilanDosya === buDosya) {
   });
 }
 
-// Test yüzeyi — bkz. scripts/generate-sitemap.test.mjs
+// Test yüzeyi — bkz. scripts/generate/generate-sitemap.test.mjs
 export {
   STATIC_ROUTES,
   escapeXml,

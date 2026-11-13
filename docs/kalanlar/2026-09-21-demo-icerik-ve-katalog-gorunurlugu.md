@@ -173,12 +173,12 @@ Sıra önemli, üçü birlikte yapılır:
 1. `src/lib/demo-pages.ts` → `/businesses` satırını **sil** (bant ve rozet kendiliğinden kalkar).
 2. `src/lib/business-demo-rows.ts` → `BUSINESS_DEMO_ROWS`'u boşalt veya dosyayı sil,
    `BusinessesPage.tsx`'teki `demoRows` prop'unu kaldır.
-3. `scripts/generate-sitemap.mjs` → `STATIC_ROUTES`'a `/businesses` ekle. **Önce üç
+3. `scripts/generate/generate-sitemap.mjs` → `STATIC_ROUTES`'a `/businesses` ekle. **Önce üç
    kriteri doğrula** (public mi · `useSeo` + `canonicalPath` var mı · thin content değil mi
    — CLAUDE.md "Değişmez sözleşmeler" md.4). (a) ve (b) bugün zaten sağlanıyor;
    bekleyen tek kriter (c), yani **gerçek içerik**.
 4. `/isletme/:slug`'ı `mock`/demo satırlardan katalog verisine bağla, `DemoPageBanner`'ı kaldır.
-5. `src/lib/demo-pages.test.ts` ve `scripts/generate-sitemap.test.mjs` yeşil kalmalı.
+5. `src/lib/demo-pages.test.ts` ve `scripts/generate/generate-sitemap.test.mjs` yeşil kalmalı.
 
 ⚠️ **Kayıt sayısı sıfırken sitemap'e ekleme.** Boş/ince sayfa GSC'de
 "Crawled – currently not indexed" üretir ve crawl bütçesini gerçek içerikten çalar —
