@@ -32,7 +32,7 @@
 - **Create** `src/components/admin/social-share/BurakMediaPanel.tsx` — tek yuva medya paneli.
 - **Create** `src/components/admin/social-share/BurakShareTab.tsx` — 12 araç akordeon + panel.
 - **Create** `supabase/migrations/20260708120000_burak_share_assets.sql` — tablo + RLS + bucket.
-- **Modify** `src/pages/admin/AdminSocialShareVaultPage.tsx` — 4. sekme + bulk buton girdisi.
+- **Modify** `src/pages/admin/social/AdminSocialShareVaultPage.tsx` — 4. sekme + bulk buton girdisi.
 - **Modify** `src/lib/admin-shell/admin-updates.ts` — duyuru girdisi.
 
 ---
@@ -1011,7 +1011,7 @@ git commit -m "feat(burak-share): BurakShareTab (12 araç akordeon + medya panel
 ## Task 6: Sayfaya 4. sekmeyi bağla
 
 **Files:**
-- Modify: `src/pages/admin/AdminSocialShareVaultPage.tsx`
+- Modify: `src/pages/admin/social/AdminSocialShareVaultPage.tsx`
 
 **Interfaces:**
 - Consumes: `BurakShareTab` (Task 5), `BURAK_SHARE_TOOLS` (Task 1).
@@ -1086,7 +1086,7 @@ Run: `npm run build` → başarılı (production bundle kırılmıyor).
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/pages/admin/AdminSocialShareVaultPage.tsx
+git add src/pages/admin/social/AdminSocialShareVaultPage.tsx
 git commit -m "feat(burak-share): 4. sekme 'BURAK BURAYA BAK' + bulk kopyala butonları"
 ```
 

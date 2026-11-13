@@ -662,8 +662,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 ### m42 · Featured etkinlik manuel admin seçimi nereye — **S (<1 saat)**
 
-- `src/pages/admin/AdminCaddePage.tsx:514`
-- `src/pages/admin/AdminCaddePage.tsx:209`
+- `src/pages/admin/cadde/AdminCaddePage.tsx:514`
+- `src/pages/admin/cadde/AdminCaddePage.tsx:209`
 - `src/lib/cadde-admin-api.ts:77`
 - `src/lib/cadde-api.ts:503`
 - `src/pages/admin/cadde/routes.tsx:17`
@@ -689,7 +689,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:778`
 - `src/pages/cadde/CaddePage.tsx:788`
 - `src/lib/cadde-api.ts:501`
-- `src/pages/admin/AdminCaddePage.tsx:507`
+- `src/pages/admin/cadde/AdminCaddePage.tsx:507`
 - `src/App.tsx:236`
 - `src/lib/cadde-types.ts:141`
 

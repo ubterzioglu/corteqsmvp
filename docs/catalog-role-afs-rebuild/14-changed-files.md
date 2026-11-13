@@ -36,8 +36,8 @@
 - `src/lib/role-catalog.ts`, `src/lib/admin-catalog.ts`, `src/lib/profile-helpers.ts`, `src/lib/cadde.ts`
 - `src/components/auth/AuthProvider.tsx`, `src/components/messaging/MessagesInbox.tsx`
 - `src/pages/admin/AdminAttributesPage.tsx`, `AdminProfileSectionsPage.tsx`, `AdminRolesFeaturesPage.tsx`, `AdminRolesOverviewPage.tsx`, `AdminUserOverridesPage.tsx`, `AdminApprovalsPage.tsx`, `AdminAuditLogsPage.tsx`, `AdminWhatsAppLandingEditorsPage.tsx`
-- `src/pages/admin/AdminNewMemberGuidePage.tsx` (flat roles, family logic removed)
-- `src/pages/admin/AdminDatabaseTablesPage.tsx` (new table cards)
+- `src/pages/admin/rehber/AdminNewMemberGuidePage.tsx` (flat roles, family logic removed)
+- `src/pages/admin/sistem/AdminDatabaseTablesPage.tsx` (new table cards)
 - Tests: `MessagesInbox.test.tsx`, `AdminAttributesPage.test.tsx`
 
 ## Static assets

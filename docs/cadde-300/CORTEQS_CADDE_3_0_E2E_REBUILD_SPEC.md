@@ -2002,7 +2002,7 @@ Loglarda:
 ```text
 src/App.tsx
 src/pages/CaddePage.tsx                  → yeni src/pages/cadde/CaddePage.tsx
-src/pages/admin/AdminCaddePage.tsx       → admin/cadde alt rotalarına böl
+src/pages/admin/cadde/AdminCaddePage.tsx       → admin/cadde alt rotalarına böl
 src/lib/cadde.ts                         → modüllere böl
 src/lib/features.ts                      → yeni Cadde feature keyleri
 src/hooks/useFeatureFlags.ts             → yeni keyleri doğal olarak resolve edecek

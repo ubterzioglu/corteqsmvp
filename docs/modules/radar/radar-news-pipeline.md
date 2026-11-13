@@ -90,9 +90,9 @@ lib/types.ts              # Ortak tipler
 | Dosya | Açıklama |
 |-------|----------|
 | `src/lib/radarNewsPipeline.ts` | API katmanı (list/approve/reject/dupe/scan/sources/runs) |
-| `src/pages/admin/AdminRadarQueuePage.tsx` | Moderasyon kuyruğu + Şimdi Tara |
-| `src/pages/admin/AdminRadarSourcesPage.tsx` | Kaynak yönetimi + terms check |
-| `src/pages/admin/AdminRadarRunsPage.tsx` | Tarama geçmişi + metrikler |
+| `src/pages/admin/radar/AdminRadarQueuePage.tsx` | Moderasyon kuyruğu + Şimdi Tara |
+| `src/pages/admin/radar/AdminRadarSourcesPage.tsx` | Kaynak yönetimi + terms check |
+| `src/pages/admin/radar/AdminRadarRunsPage.tsx` | Tarama geçmişi + metrikler |
 | `src/components/admin/radar/RadarCandidateCard.tsx` | Aday haber kartı + aksiyonlar |
 | `src/components/admin/radar/RadarSourceForm.tsx` | Kaynak ayar formu |
 | `src/components/admin/radar/RadarScanRunTable.tsx` | Tarama geçmiş tablosu |

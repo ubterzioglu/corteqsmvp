@@ -31,7 +31,7 @@ Profil tarafında alan var ama işlevsiz — canlı DB'den doğrulanmış iki re
    **0 politika** var ve `authenticated` rolüne **hiç grant yok** (eski politika düşürülmüş
    `public.admin_users` tablosuna bakıyordu; `20260615120000_referral_admin_rls_policies.sql` diğer 4
    referral tablosunu onardı, bu tabloyu atladı). PostgREST 403 dönüyor,
-   `src/pages/admin/AdminReferralPage.tsx` hatayı sessizce yutuyor.
+   `src/pages/admin/referral/AdminReferralPage.tsx` hatayı sessizce yutuyor.
 
 Canlı durum (2026-07-29): 36 profilde referral kodu değeri var (35'i gerçek bir koda karşılık geliyor,
 1'i serbest metin), `referral_code_usages`'ta 41 kayıt / 11 farklı kod — tamamı ön kayıt trigger'ından,
@@ -148,7 +148,7 @@ akışının aynısı).
 
 ## 6. Admin panel — kullanım listesi
 
-**`src/pages/admin/AdminReferralPage.tsx`:**
+**`src/pages/admin/referral/AdminReferralPage.tsx`:**
 
 - `ReferralUsageRow` tipine `source` ve `user_id` ekle, select'i güncelle.
 - Hata yutmayı bitir: `if (error)` → `toast(...)` (sessiz boş liste bir daha görünmesin).

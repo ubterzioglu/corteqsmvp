@@ -1426,7 +1426,7 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 - **`src/lib/admin/admin-traction-api.ts`:** `fetchTractionMetrics` (5 M14 view'ını paralel okur,
   `maybeSingle` — non-admin 0 satır→null, hata değil) · `totalContentCreated` (5 tür toplamı) ·
   `formatRatePercent` (null→"—", uydurma sayı YOK) · `as never` (regen borcu G12) · düz-nesne hata.
-- **`src/pages/admin/AdminTractionPage.tsx`:** KpiCard muhasebe deseni (shadcn Card + büyük değer +
+- **`src/pages/admin/sistem/AdminTractionPage.tsx`:** KpiCard muhasebe deseni (shadcn Card + büyük değer +
   alt başlık), 5 kart — WAU · Üretilen İçerik (toplam + tür kırılımı alt başlık) · Tavsiye Yanıt Oranı
   (**available=false → "—" + "M17 ... boş (normal)"**) · Davetle Kayıt (toplam + 30g/7g) · 30 Gün Geri
   Dönüş (oran + cohort/dönen alt başlık). `useQuery` + hata durumu görünür (sessiz boş panel YOK).

@@ -269,7 +269,7 @@ aç/kapa anahtarı. Mail HTML kuralları: hoş geldin maili deseni.
 verme. ⚠️ **Materialized view kullanma** — 1 GB RAM'de refresh riski; sorgular küçük tablolara
 vuruyor, normal view yeterli.
 
-**Kod:** `src/lib/admin/admin-traction-api.ts`, `src/pages/admin/AdminTractionPage.tsx`
+**Kod:** `src/lib/admin/admin-traction-api.ts`, `src/pages/admin/sistem/AdminTractionPage.tsx`
 (`KpiCard` muhasebe deseni), navigasyon satırı
 [admin-navigation-registry/overview.ts](../../src/lib/admin-shell/admin-navigation-registry/overview.ts)'e eklenir.
 

@@ -1658,11 +1658,11 @@ src/pages/admin/routes.tsx
 
 ```text
 src/pages/admin/AdminApprovalsPage.tsx
-src/pages/admin/AdminAuditLogsPage.tsx
-src/pages/admin/AdminUserOverridesPage.tsx
-src/pages/admin/AdminRoleManagementPage.tsx
+src/pages/admin/sistem/AdminAuditLogsPage.tsx
+src/pages/admin/roles/AdminUserOverridesPage.tsx
+src/pages/admin/roles/AdminRoleManagementPage.tsx
 src/pages/admin/AdminCatalogPage.tsx
-src/pages/admin/AdminDurumRaporuPage.tsx
+src/pages/admin/sistem/AdminDurumRaporuPage.tsx
 ```
 
 ## 18.4 Korunacak mevcut iyi örnek

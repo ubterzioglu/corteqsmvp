@@ -1,7 +1,7 @@
 # "BURAK BURAYA BAK" Paylaşım Bölümü — Tasarım
 
 **Tarih:** 2026-07-08
-**Sayfa:** `/admin/social-share-vault` (`src/pages/admin/AdminSocialShareVaultPage.tsx`)
+**Sayfa:** `/admin/social-share-vault` (`src/pages/admin/social/AdminSocialShareVaultPage.tsx`)
 **Durum:** Onaylandı, implementasyon planı bekleniyor
 
 ## 1. Amaç

@@ -127,7 +127,7 @@ Dosya: `src/pages/admin/AdminRolesFeaturesPage.tsx`
 
 ## 5.3 Compatibility Route
 
-Dosya: `src/pages/admin/AdminRolesDraftPage.tsx`
+Dosya: `src/pages/admin/roles/AdminRolesDraftPage.tsx`
 
 - Artık yalnızca redirect görevi yapar:
   - `/admin/roller-taslak` -> `/admin/new-member/users-roles`
@@ -173,7 +173,7 @@ Form üyeleri tarafına değişiklik yapılmamıştır.
 - `src/components/admin/admin-navigation.ts`
 - `src/pages/admin/AdminLoginUsersRolesPage.tsx`
 - `src/pages/admin/AdminRolesFeaturesPage.tsx`
-- `src/pages/admin/AdminRolesDraftPage.tsx`
+- `src/pages/admin/roles/AdminRolesDraftPage.tsx`
 - `src/lib/admin.ts`
 - `src/integrations/supabase/types.ts`
 - `supabase/migrations/20260524162000_split_new_member_system_roles_and_features.sql`

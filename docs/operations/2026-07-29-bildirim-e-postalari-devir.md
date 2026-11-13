@@ -69,7 +69,7 @@ durumunu imkânsız kılar. `claim_notification_emails` RPC'si `for update skip 
 | `scripts/notify-admin-updates.mjs` | **SİLİNDİ** (nodemailer bağımlılığı da kaldırıldı) |
 | `.git/hooks/post-commit` | Artık `sync-admin-updates.mjs` çağırıyor |
 | `src/lib/admin-shell/notification-settings-api.ts` | YENİ — RPC sarmalayıcıları |
-| `src/pages/admin/AdminNotificationSettingsPage.tsx` | YENİ — `/admin/notifications` |
+| `src/pages/admin/sistem/AdminNotificationSettingsPage.tsx` | YENİ — `/admin/notifications` |
 | `routes.tsx` · `admin-route-meta.ts` · `admin-navigation-registry.ts` | Route üç yere de kaydedildi |
 
 ## Canlıya alma adımları (SIRAYLA)

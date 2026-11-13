@@ -125,7 +125,7 @@ build başarılı, tsc temiz, eslint temiz (relocation-tools dosyaları). `verif
 
 #### (Orijinal adımlar — referans)
 1. **git commit/push** — **DİKKAT:** çalışan dizinde benim YAZMADIĞIM değişiklikler de var (paralel iş):
-   `src/lib/admin-shell/*`, `src/pages/admin/AdminSocialShareVaultPage.tsx`, `social-share-vault.ts`,
+   `src/lib/admin-shell/*`, `src/pages/admin/social/AdminSocialShareVaultPage.tsx`, `social-share-vault.ts`,
    `public/sitemap.xml`, `src/pages/admin/routes.tsx`, `admin-navigation-registry/route-meta`, kökte 2 `.html`
    + `_files/` dizini. **`src/App.tsx` HEM benim (relocation/tools route) HEM onların (admin route) değişikliğini içeriyor.**
    Commit'i ayrıştır: relocation-tools işini ayrı commit/branch'te topla. Yeni branch öner (main'desin).

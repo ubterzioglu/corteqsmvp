@@ -26,7 +26,7 @@ a5888025) · G04+G05 · G11 · W03 · Komuta Merkezi arşivi.
 ## 1 · KOORDİNASYON (iki ajan, bir çalışma ağacı)
 
 - **G14 ajanı (dokunma):** `group_reports` migration'ı, `group-*` SQL/TS,
-  `src/components/whatsapp/*`, `src/pages/admin/AdminGruplarPage*`,
+  `src/components/whatsapp/*`, `src/pages/admin/gruplar/AdminGruplarPage*`,
   `src/lib/admin-shell/group-moderation-api*`, `supabase/qa/group-*`,
   `docs/handover/2026-10-05-g14-*`.
 - **Ortak dosyalar** (`KALANLAR.md`, `admin-updates/2026-10.ts`, `…yan-ajan-ilerleme.md`):

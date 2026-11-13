@@ -154,7 +154,7 @@ git commit -m "docs(rebuild): current-system audit report (01)"
 ## PHASE 6 — Admin Database menu + guide + infogram  ⟶ CHECKPOINT
 
 - [ ] **Task 6.1** — Rebuild admin **Veritabanı** menu cards (plan §14): the ~18 new entities, counts/active/placeholder/last-updated. Remove legacy cards. Write report 09.
-- [ ] **Task 6.2** — Rewrite `/admin/new-member/guide#rol-listesi` (`src/pages/admin/AdminNewMemberGuidePage.tsx`): flat roles only, AFS catalogs, per-role AFS counts, placeholder count, last migration date (plan §15).
+- [ ] **Task 6.2** — Rewrite `/admin/new-member/guide#rol-listesi` (`src/pages/admin/rehber/AdminNewMemberGuidePage.tsx`): flat roles only, AFS catalogs, per-role AFS counts, placeholder count, last migration date (plan §15).
 - [ ] **Task 6.3** — Rebuild `docs/guides/roles-infogram.html` (the plan's `rosel-infogram.html`; real path confirmed = `docs/guides/roles-infogram.html`): CATALOG ITEMS → FLAT ROLES → A/F/S, owner/admin vs public views, remove all family/legacy visuals (plan §16).
 
 > **CHECKPOINT 6:** UI reviewed. STOP.

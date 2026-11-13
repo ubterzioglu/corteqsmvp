@@ -24,7 +24,7 @@
 ## 1 · KOORDİNASYON (iki ajan, bir çalışma ağacı)
 
 - **Sen:** `group_reports` migration'ı, `group-*` SQL/TS, `src/components/whatsapp/*` (arayüz),
-  `src/pages/admin/AdminGruplarPage*`, `src/lib/admin-shell/group-moderation-api*`,
+  `src/pages/admin/gruplar/AdminGruplarPage*`, `src/lib/admin-shell/group-moderation-api*`,
   `src/lib/group-moderator-panel-schema.test.ts`, `supabase/qa/group-*`.
 - **W ajanı (dokunma):** `supabase/functions/whatsapp-*`, `_shared/whatsapp-*`,
   `_shared/assistant-usage*`, `supabase/qa/whatsapp-bot-*`.
@@ -47,7 +47,7 @@
 | Telefon doğrulama | `is_phone_verified(uid)` canlı; G04 aynalama trigger'ı canlı (`auth.users.phone_confirmed_at` → `user_verifications`). **Gerçek SMS YOK** (U06: Twilio kimliklerinin üçü de boş) → bugün **hiçbir gerçek üye telefon doğrulayamaz**. |
 | Durum kapısı | `set_group_status_v1(p_landing_id, p_to_status, p_reason, p_note)` — `p_reason` yalnız {`link_dead`,`reports`,`owner_request`} (hidden için). Çağıran **`service_role` veya `is_admin`** olmalı; yoksa `group_forbidden`. |
 | Strike kapısı | `admin_record_group_strike(p_landing_id, p_reason, p_redline_number int default null, p_note)` — `is_admin` ister; `p_redline_number` 1..7 ya da NULL. Eşikler `group_settings`'te. |
-| 🔴 **4 "yokluk kilidi" testi** | Bunlar G14 gelene kadar şikayetin YOKLUĞUNU kilitliyor; **gevşetme, bilinçli ÇEVİR (yok→var):** `src/components/whatsapp/GroupOwnershipClaim.test.tsx:93` · `src/components/whatsapp/LandingDetailView.g20.test.tsx:103` · `src/lib/group-moderator-panel-schema.test.ts:111` (`'pending_reports', 0` sabit) · `src/pages/admin/AdminGruplarPage.test.tsx:162` ("şikayet kuyruğu BİLİNÇLİ boş"). |
+| 🔴 **4 "yokluk kilidi" testi** | Bunlar G14 gelene kadar şikayetin YOKLUĞUNU kilitliyor; **gevşetme, bilinçli ÇEVİR (yok→var):** `src/components/whatsapp/GroupOwnershipClaim.test.tsx:93` · `src/components/whatsapp/LandingDetailView.g20.test.tsx:103` · `src/lib/group-moderator-panel-schema.test.ts:111` (`'pending_reports', 0` sabit) · `src/pages/admin/gruplar/AdminGruplarPage.test.tsx:162` ("şikayet kuyruğu BİLİNÇLİ boş"). |
 | Kabul tripwire'ı | `supabase/qa/group-motor-acceptance.sql` #6: `group_reports` ortaya çıkınca QA kızarır → **gerçek senaryoya çevir**. |
 | Fixture kuralı | G04 `auth.users` BEFORE INSERT guard'ı **phone-only kayıtları reddeder.** Test kullanıcısı: `insert into auth.users (id, email) …`, sonra `update … set phone_confirmed_at = now(), created_at = now() - interval '10 days'`. Hesap yaşı için `created_at` geriye çekilir. |
 | Canlı | 10 grup: 8 yayında + 2 gizli (HCD-Bilinç, SHAMAN). `group_moderation_log` var; `corteqs.skip_group_notify` bayrağı var. |

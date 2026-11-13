@@ -74,10 +74,10 @@ YENİ src/components/admin/page/AdminPageShell.tsx        (+ Header, FilterBar, 
      Empty/Loading/ErrorState, DetailDrawer, StatusBadge, index.ts, AdminPageShell.test.tsx)
 DEĞ  src/components/admin/shell/admin-accent.ts          (accentSoftBadgeClasses)
 DEĞ  src/pages/admin/AdminApprovalsPage.tsx              (+ duplicate import fix)
-DEĞ  src/pages/admin/AdminAuditLogsPage.tsx
-DEĞ  src/pages/admin/AdminUserOverridesPage.tsx
-DEĞ  src/pages/admin/AdminDurumRaporuPage.tsx
-DEĞ  src/pages/admin/AdminRoleManagementPage.tsx
+DEĞ  src/pages/admin/sistem/AdminAuditLogsPage.tsx
+DEĞ  src/pages/admin/roles/AdminUserOverridesPage.tsx
+DEĞ  src/pages/admin/sistem/AdminDurumRaporuPage.tsx
+DEĞ  src/pages/admin/roles/AdminRoleManagementPage.tsx
 DEĞ  src/pages/admin/AdminCatalogPage.tsx
 ```
 
@@ -100,7 +100,7 @@ YENİ src/hooks/admin/useAdminUserOverrides.ts
 YENİ src/hooks/admin/useAdminRoleMatrix.ts
 DEĞ  src/lib/admin-shell/admin-query-keys.ts             (6 yeni key)
 DEĞ  src/pages/admin/{AdminApprovals,AdminAuditLogs,AdminUserOverrides,AdminRoleManagement}Page.tsx
-DEĞ  src/pages/admin/AdminRoleManagementPage.test.tsx    (QueryClientProvider + RQ uyarlaması)
+DEĞ  src/pages/admin/roles/AdminRoleManagementPage.test.tsx    (QueryClientProvider + RQ uyarlaması)
 ```
 
 ### Faz 9 — E2E + QA + temizlik

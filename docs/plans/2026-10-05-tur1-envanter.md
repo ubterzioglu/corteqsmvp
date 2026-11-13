@@ -40,7 +40,7 @@ son_dogrulama: 2026-11-07
 | `src/pages/Pricing.tsx` | A2 | ✓ kod | CV/ilan satırları (Free: 5 ilan, Premium: sınırsız) |
 | `src/pages/ProfilePage.tsx` | A5 + A12 | ✓ kod | CV paylaşım Switch (A5); ruhsat kartı (A12). **833 satır → A1.6'da ≤ 800 hedefi** |
 | `src/pages/ProfilePage.test.tsx` | A1 | ✓ kod | Test güncellemesi |
-| `src/pages/admin/AdminUserOverridesPage.tsx` | A1 | ✓ kod | `scope_role='*'` düzeltme |
+| `src/pages/admin/roles/AdminUserOverridesPage.tsx` | A1 | ✓ kod | `scope_role='*'` düzeltme |
 | `supabase/functions/send-notification-emails/index.ts` | A15 | ✓ kod | `event_published` case + `buildEmail` async |
 
 ---

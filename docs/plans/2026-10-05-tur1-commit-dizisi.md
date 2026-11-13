@@ -58,7 +58,7 @@ git commit -- \
 ```
 git commit -- \
   src/pages/ProfilePage.test.tsx \
-  src/pages/admin/AdminUserOverridesPage.tsx
+  src/pages/admin/roles/AdminUserOverridesPage.tsx
 ```
 **Mesaj:** `A1: ProfilePage test güncellemesi + AdminUserOverrides scope_role='*' düzeltme`
 

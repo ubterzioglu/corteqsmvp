@@ -73,7 +73,7 @@ describe("isScannedForRefs", () => {
 
   it("yaşayan doküman ve kod taranır", () => {
     expect(isScannedForRefs("docs/plans/2026-11-07-x.md")).toBe(true);
-    expect(isScannedForRefs("src/pages/admin/AdminDurumRaporuPage.tsx")).toBe(true);
+    expect(isScannedForRefs("src/pages/admin/sistem/AdminDurumRaporuPage.tsx")).toBe(true);
     expect(isScannedForRefs("CLAUDE.md")).toBe(true);
   });
 });

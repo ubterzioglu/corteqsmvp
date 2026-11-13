@@ -14,7 +14,7 @@
 | Rota | Kanıt | Guard | Sayfa |
 |---|---|---|---|
 | `/cadde` | `src/App.tsx:173-177` | `RequireAuth` + `RequireFeature(GENERIC_FEATURE_KEYS.caddeAccess)`, fallback `Navigate to="/"` | `src/pages/CaddePage.tsx` (lazy, App.tsx:55) |
-| `/admin/cadde` | `src/App.tsx:233` | AdminLayout (`RequireAuth` + `userIsAdmin()` → `is_admin()` RPC) | `src/pages/admin/AdminCaddePage.tsx` (lazy, App.tsx:96) |
+| `/admin/cadde` | `src/App.tsx:233` | AdminLayout (`RequireAuth` + `userIsAdmin()` → `is_admin()` RPC) | `src/pages/admin/cadde/AdminCaddePage.tsx` (lazy, App.tsx:96) |
 
 ### 1.2 Var OLMAYAN rotalar
 
@@ -49,7 +49,7 @@ Yardımcı: `parseCaddeFilters`, `serializeCaddeFilters`, `injectSponsoredPlacem
 - **Sessiz catch blokları (6 adet):** satır 498, 517, 589, 705, 773, 809 — hata yutulup demo/boş veri dönüyor. Telemetry yok, kullanıcı hatayı görmüyor.
 - **Sıralama:** `pinned desc, created_at desc` — CKS-7 band/skor sistemi yok.
 
-### 2.3 `src/pages/admin/AdminCaddePage.tsx` — 736 satır
+### 2.3 `src/pages/admin/cadde/AdminCaddePage.tsx` — 736 satır
 
 Tek dosyada posts/cafes/billboards/sponsored CRUD; `cadde.ts` içindeki admin fonksiyonlarını çağırıyor (RLS `is_admin_user()`'a dayanıyor). Spec'in `/admin/cadde/*` alt rota modülerleştirmesi yok.
 
@@ -234,7 +234,7 @@ Oluşturulma: `20260513000003` (feed_posts+feed_likes), `20260513000004` (user_f
 
 > **Sonuç:** Backfill **GEREKMİYOR**. Spec §20.2 "veri yok" dalı geçerli: yazmayı kapat → COMMENT → canary → ayrı drop kararı.
 
-`src/pages/admin/AdminDatabaseTablesPage.tsx:118,139-140` bu tabloları statik dokümantasyon listesinde gösteriyor (kozmetik; decommission'da güncellenecek). `src/integrations/supabase/types.ts` bu tabloları hâlâ içeriyor (types zaten güncel değil — refactor backlog B1).
+`src/pages/admin/sistem/AdminDatabaseTablesPage.tsx:118,139-140` bu tabloları statik dokümantasyon listesinde gösteriyor (kozmetik; decommission'da güncellenecek). `src/integrations/supabase/types.ts` bu tabloları hâlâ içeriyor (types zaten güncel değil — refactor backlog B1).
 
 ---
 

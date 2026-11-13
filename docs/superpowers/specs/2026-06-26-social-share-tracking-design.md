@@ -1,7 +1,7 @@
 # Sosyal Paylaşım Takip Sistemi — Tasarım
 
 **Tarih:** 2026-06-26
-**Sayfa:** `/admin/social-share-vault` (`src/pages/admin/AdminSocialShareVaultPage.tsx`)
+**Sayfa:** `/admin/social-share-vault` (`src/pages/admin/social/AdminSocialShareVaultPage.tsx`)
 **Durum:** Onaylandı, implementasyona hazır
 
 ## Amaç
