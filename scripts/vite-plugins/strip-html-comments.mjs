@@ -1,4 +1,4 @@
-// scripts/strip-html-comments.mjs
+// scripts/vite-plugins/strip-html-comments.mjs
 // Derlenen index.html'den HTML yorumlarını söker (vite.config.ts → transformIndexHtml).
 //
 // Neden: index.html'deki geliştirici uyarıları ("BURAYA SABİT canonical EKLEME",

@@ -1,4 +1,4 @@
-// scripts/route-modulepreload.mjs
+// scripts/vite-plugins/route-modulepreload.mjs
 // Ana sayfa parçasını (LandingTrialPage) index.html'de `modulepreload` ile önceden yükler
 // (vite.config.ts → transformIndexHtml).
 //

@@ -1,4 +1,4 @@
-// scripts/strip-html-comments.mjs testleri.
+// scripts/vite-plugins/strip-html-comments.mjs testleri.
 //
 // ASIL DEĞER: derlenen index.html'e geliştirici yorumu sızmaması (GEO denetimi
 // 2026-10-11: emir kipindeki yorumlar "prompt injection" olarak işaretlendi) ve

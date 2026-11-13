@@ -3,9 +3,9 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { ViteImageOptimizer } from "vite-plugin-image-optimizer";
-import { stripHtmlCommentsPlugin } from "./scripts/strip-html-comments.mjs";
-import { routeModulePreloadPlugin } from "./scripts/route-modulepreload.mjs";
-import { envConfigOrderPlugin } from "./scripts/env-config-order.mjs";
+import { stripHtmlCommentsPlugin } from "./scripts/vite-plugins/strip-html-comments.mjs";
+import { routeModulePreloadPlugin } from "./scripts/vite-plugins/route-modulepreload.mjs";
+import { envConfigOrderPlugin } from "./scripts/vite-plugins/env-config-order.mjs";
 
 // Commercial documents are rendered by the SPA at /commercial/<slug>
 // (CommercialDocumentPage + src/content/commercial/*.html fragments).

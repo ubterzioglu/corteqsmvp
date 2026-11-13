@@ -1,4 +1,4 @@
-// scripts/env-config-order.mjs
+// scripts/vite-plugins/env-config-order.mjs
 // `/env-config.js` (window.__APP_CONFIG__) TÜM modül script'lerinden ÖNCE çalışmalıdır:
 // src/integrations/supabase/client.ts onu modül değerlendirmesinde okur. Geç kalırsa
 // istemci `placeholder.supabase.co` ile kurulur ve canlıda giriş + tüm veri çağrıları düşer.
