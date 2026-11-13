@@ -20,7 +20,7 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 | Cadde 3.0 | [`cadde-300/change-report.md`](cadde-300/change-report.md) |
 | Ölçülmüş depo/SEO gerçeği | [`audits/`](audits/) — `CLAUDE.md` ile çelişirse ölçüm geçerli |
 
-> ⚠️ `AGENT_CONTEXT.md` ve `ARCHITECTURE.md` yollarını `scripts/check-drift.mjs` ile
+> ⚠️ `AGENT_CONTEXT.md` ve `ARCHITECTURE.md` yollarını `scripts/check/check-drift.mjs` ile
 > `scripts/agent/drift-rules.mjs` sabit yazar. Taşırsan ikisini de güncelle; yoksa drift
 > kuralı sessizce hiç bulgu üretmez.
 

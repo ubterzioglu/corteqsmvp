@@ -1,4 +1,4 @@
-// scripts/check-functions.mjs
+// scripts/check/check-functions.mjs
 // Canlı Supabase Edge Function listesi ile deploy edilebilir repo fonksiyonlarını
 // karşılaştırır. Frontend deploy'u Edge Function deploy'u YAPMADIĞI için bu kontrol
 // ayrışmayı CI/yerel doğrulamada görünür kılar.
@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 const FUNCTIONS_DIR = "supabase/functions";
 
 export function repoFunctionNames(entryNames) {

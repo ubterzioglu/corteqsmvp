@@ -25,7 +25,7 @@ logu, aç/kapa anahtarı) olduğu gibi kullanıldı. Tek fark alıcının payloa
 | `supabase/functions/send-notification-emails/index.ts` | değişti — deploy edilmedi |
 | `scripts/preview-emails.mjs` + `npm run preview:emails` | YENİ |
 | `notification-settings-api.ts` · `useNotificationSettings.ts` · `AdminNotificationSettingsPage.tsx` | 3. anahtar + örnek mail butonu |
-| `vitest.config.ts` · `scripts/verify-text-encoding.mjs` | `supabase/` test + encoding denetimine dahil edildi |
+| `vitest.config.ts` · `scripts/verify/verify-text-encoding.mjs` | `supabase/` test + encoding denetimine dahil edildi |
 | `docs/operations/2026-07-29-bildirim-e-postalari-devir.md` | hoş geldin eki eklendi |
 
 ---

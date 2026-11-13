@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_by": "scripts/check-drift.mjs",
+  "generated_by": "scripts/check/check-drift.mjs",
   "catalog_present": true,
   "total": 0,
   "by_severity": {},

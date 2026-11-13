@@ -27,7 +27,7 @@ sayıları ve tarihçeleri) ile "Recent major changes" listesi 2026-11-07'de
 > (`npm run check:docs` denetler). Tek ana mimari: `docs/ARCHITECTURE.md`.
 >
 > ⚠️ `docs/AGENT_CONTEXT.md` ve `docs/ARCHITECTURE.md` yollarını **iki script sabit yazar**:
-> `scripts/check-drift.mjs` (preload listesi) ve `scripts/agent/drift-rules.mjs` (`docs` dizisi).
+> `scripts/check/check-drift.mjs` (preload listesi) ve `scripts/agent/drift-rules.mjs` (`docs` dizisi).
 > İkisi birebir eşleşmezse drift kuralı **sessizce hiç bulgu üretmez** — taşırsan iki script de güncellenir.
 
 ## Quick Commands
@@ -853,7 +853,7 @@ değildir** (`MIGRATION_DIRS`). Akış: yaz → uygula → `applied/` altına **
 kaydı yoktu ve `check:migrations` yine de **"sapma yok"** dedi — dosyayı hiç görmemişti.
 Kontrol artık bunu ayrı bir sinyal olarak yakalar (`findStrayParentMigrations`, strict
 modda exit 1) ve bu tarama DB bağlantısından **önce** çalışır, böylece "bağlanamadım"
-hatasının arkasında kaybolmaz. Testi: `scripts/check-migrations.test.mjs` — gevşetme.
+hatasının arkasında kaybolmaz. Testi: `scripts/check/check-migrations.test.mjs` — gevşetme.
 
 ⚠️ **Two timestamps carry two files each** — this is real, not a bug:
 `20260718120000` (`brainstorming_tables` + `revision_requests_mvp_seed`) and `20260718130000`
@@ -894,7 +894,7 @@ Rules that follow from this:
    "instance unhealthy" in one call.
 
 - **RLS active** — submissions require specific conditions
-- **Edge Functions — sayı ezberlenmez:** repo ↔ canlı `npm run check:functions` (`scripts/check-functions.mjs`)
+- **Edge Functions — sayı ezberlenmez:** repo ↔ canlı `npm run check:functions` (`scripts/check/check-functions.mjs`)
   ile karşılaştırılır. ⚠️ **Coolify edge function deploy ETMEZ** (`Dockerfile` yalnız frontend'i kurar):
   commit canlıya çıkarmaz, elle deploy edilen sürüm de repoda görünmez. `_shared/` fonksiyon değil, ortak
   modüllerdir. ⚠️ **"Deploy edildi" ≠ "çalışıyor":** WhatsApp fonksiyonları canlıda olabilir ama `WHATSAPP_*`

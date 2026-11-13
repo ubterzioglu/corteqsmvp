@@ -2,15 +2,15 @@
 // Drift detector — doküman/versiyon/endpoint çelişkilerini deklaratif kurallarla yakalar.
 // Çıktı: docs/agent/drift-report.json + insan-okunur stdout özeti.
 // Kullanım:
-//   node scripts/check-drift.mjs           → raporla (drift varsa exit 1)
-//   node scripts/check-drift.mjs --warn     → raporla ama her zaman exit 0 (uyarı modu / CI rampası)
+//   node scripts/check/check-drift.mjs           → raporla (drift varsa exit 1)
+//   node scripts/check/check-drift.mjs --warn     → raporla ama her zaman exit 0 (uyarı modu / CI rampası)
 //
 // scripts/agent/drift-rules.mjs içindeki kuralları çalıştırır. Tool kataloğu
 // (docs/agent/tools.json) varsa kurallara bağlam olarak verilir; önce
 // `node scripts/ingest-tools.mjs` çalıştırmak güncel sonuç verir.
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { driftRules } from "./agent/drift-rules.mjs";
+import { driftRules } from "../agent/drift-rules.mjs";
 
 const rootDir = process.cwd();
 const OUT_DIR = path.join(rootDir, "docs", "agent");
@@ -88,7 +88,7 @@ async function main() {
 
   const report = {
     schema_version: 1,
-    generated_by: "scripts/check-drift.mjs",
+    generated_by: "scripts/check/check-drift.mjs",
     catalog_present: Boolean(catalog),
     total: findings.length,
     by_severity: findings.reduce((acc, f) => {

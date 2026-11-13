@@ -2,11 +2,11 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { findEnvConfigOrderProblem } from "./vite-plugins/env-config-order.mjs";
+import { findEnvConfigOrderProblem } from "../vite-plugins/env-config-order.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 const distDir = path.join(projectRoot, "dist");
 const distAssetsDir = path.join(distDir, "assets");
 const args = process.argv.slice(2);

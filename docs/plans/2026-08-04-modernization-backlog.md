@@ -281,7 +281,7 @@ düzeltilmeli — şu an yanlış.
 > **Taşınmayanlar ve nedeni:** `lansman/index.html` (`vite.config.ts` rollup entry point'i),
 > `CLAUDE.md` (harness kökten okur), `README.md` (GitHub), build/config dosyaları.
 >
-> ⚠️ `scripts/check-drift.mjs` ve `scripts/agent/drift-rules.mjs` bu iki doküman yolunu sabit
+> ⚠️ `scripts/check/check-drift.mjs` ve `scripts/agent/drift-rules.mjs` bu iki doküman yolunu sabit
 > yazar; eşleşmezse `ctx.read()` boş döner ve kural **sessizce hiç bulgu üretmez**. Taşımadan
 > sonra mutasyon testiyle doğrulandı (kasten yanlış sürüm verildiğinde kural 2 bulgu üretti).
 

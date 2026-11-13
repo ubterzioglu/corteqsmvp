@@ -50,7 +50,7 @@ describe("yapılandırmadaki sabit yollar var", () => {
   });
 
   it("check-drift preload listesindeki her dosya izleniyor", () => {
-    const src = readFileSync("scripts/check-drift.mjs", "utf8");
+    const src = readFileSync("scripts/check/check-drift.mjs", "utf8");
     const list = /const preload = \[([^\]]*)\]/.exec(src);
     expect(list, "preload listesi bulunamadı").not.toBeNull();
     const paths = [...list[1].matchAll(/"([^"]+)"/g)].map((m) => m[1]);

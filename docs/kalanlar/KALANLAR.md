@@ -385,7 +385,7 @@ traction ölçülecek.
   Aylık değişiklik günlüğü verisi (`src/lib/admin-shell/admin-updates/*.ts`, kaynak ~564 KB)
   tek JS parçasında 526 KB'a ulaştı ve 500 KB `check:bundle` sınırını aştı. Parça topbar zil
   menüsü (`useAdminUpdates`) yüzünden HER admin sayfasında yüklenir. Geçici çözüm:
-  `scripts/check-bundle-size.mjs` → `CHUNK_LIMIT_EXCEPTIONS` (yalnız bu önek, 1 MB tavan;
+  `scripts/check/check-bundle-size.mjs` → `CHUNK_LIMIT_EXCEPTIONS` (yalnız bu önek, 1 MB tavan;
   ~100 KB/ay büyümeyle ~5 ay pay). Kalıcı çözüm: "son N ay" eşzamanlı + "arşiv" isteğe bağlı
   (`import()`) — ama zil menüsü okunmamış sayısını TÜM kayıtlar üzerinden hesaplıyor ve
   "hepsi okundu" tüm id'leri saklıyor (`useAdminUpdates.ts`); bölünce rozet anlamı değişir →
@@ -2942,7 +2942,7 @@ gidiyor ve **o tablonun özel admin ekranı yok** — başvurular düzenli okunm
 - Veri kaynak HTML'den **makineyle** çıkarıldı (25 KB Türkçe metin elle kopyalanmaz).
 - ⚠️ **`check:dead` iki dosyayı erişilemez sayar** — ölü değiller, **tüketicilerinden
   öndeler** (sayfa KR04'te). Denetleyicinin kendi baseline'ına yazıldı.
-  🔴 **KR04 o iki satırı `scripts/check-dead-code.mjs`'ten SİLMELİDİR**; silinmezse
+  🔴 **KR04 o iki satırı `scripts/check/check-dead-code.mjs`'ten SİLMELİDİR**; silinmezse
   bayat baseline kaydı olarak rapor edilir ve `check:dead` yine kırmızıya döner.
 - *(özgün kapsam)* küçük, UI ve migration yok
 

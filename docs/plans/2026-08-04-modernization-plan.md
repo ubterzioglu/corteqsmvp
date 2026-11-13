@@ -343,7 +343,7 @@ npm run build
   doğrula (rota tablosu + `LandingTrialPage` DOM'u).
 - **Batch 5:** `npx tsc -p tsconfig.app.json --noEmit` hata sayısı düşmeli.
 - **`verify:release` uyumu (kontrol edildi):**
-  [verify-release.mjs](../../scripts/verify-release.mjs) yalnız HTTP status + content-type
+  [verify-release.mjs](../../scripts/verify/verify-release.mjs) yalnız HTTP status + content-type
   doğruluyor ve `redirect: "follow"` kullanıyor; asset yollarını `/admin/muhasebe` HTML'inden
   `<script type="module" crossorigin>` regex'iyle çıkarıyor. Batch 1'in eklediği
   `<script src="/analytics.js" defer>` bu regex'i bozmaz ve `/admin/*` yeni 301'lerin kapsamında

@@ -54,7 +54,7 @@ karşılaştırır (session pooler üzerinden psql; `.env.local` içinde `SUPABA
 - **Bağlanamazsa exit 2** ve bunu açıkça yazar. Başarısız bir kontrol asla "temiz" diye
   raporlanmaz — sessiz yeşil, bu işin en tehlikeli sonucu olurdu.
 - Saf karşılaştırma mantığı (`diffMigrations`) DB'siz test edilir:
-  `scripts/check-migrations.test.mjs` (11 test).
+  `scripts/check/check-migrations.test.mjs` (11 test).
 
 ### Çakışan zaman damgaları (yanlış alarm kaynağı)
 

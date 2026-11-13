@@ -1,4 +1,4 @@
-// scripts/check-migrations.mjs
+// scripts/check/check-migrations.mjs
 // Yerel migration dosyaları ile CANLI `supabase_migrations.schema_migrations` tablosunu
 // karşılaştırır. Amaç: "migration commit edildi ama canlıya uygulanmadı" sapmasını elle
 // kontrol etmek zorunda kalmadan yakalamak.
@@ -19,7 +19,7 @@
 // ÇÖZÜLMÜYOR, bkz. docs/operations/.
 //
 // NEDEN saf fonksiyon ayrı: `diffMigrations` DB'siz test edilebilsin diye
-// (scripts/check-migrations.test.mjs). Ağ gerektiren kısım yalnız `main`.
+// (scripts/check/check-migrations.test.mjs). Ağ gerektiren kısım yalnız `main`.
 
 import { readdir } from "node:fs/promises";
 import { readFileSync } from "node:fs";
@@ -28,7 +28,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const projectRoot = path.resolve(__dirname, "..");
+const projectRoot = path.resolve(__dirname, "../..");
 
 /** Migration dosyalarının yaşadığı dizinler. `archive/` = taban çizgisi öncesi (2026-08-04). */
 const MIGRATION_DIRS = ["supabase/migrations/applied", "supabase/migrations/archive"];

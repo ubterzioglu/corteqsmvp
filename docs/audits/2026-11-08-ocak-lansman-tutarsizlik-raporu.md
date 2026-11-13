@@ -32,7 +32,7 @@ Bu rapor, 1 Ocak planının (`C:\Users\baris-terzioglu\.claude\plans\2026-11-08-
 | `src/App.tsx` | **408** satır · **74** `lazyWithReload(() =>` | `wc -l` · `grep -c` |
 | `CLAUDE.md` | **1.068** satır | `wc -l` |
 | `src/lib/role-structure.ts` | 259 kayıt = 240 `onaylandi` + 19 `oneri` · 7 ana rol | node sayımı |
-| `KNOWN_DEAD_FILES` | 5 dosya (`plans.ts`, `role-structure.ts`, `CaddeReactionActorsPopover.tsx`, `RoleSelector.tsx`, `useRoleStructure.ts`) | `scripts/check-dead-code.mjs:60-66` |
+| `KNOWN_DEAD_FILES` | 5 dosya (`plans.ts`, `role-structure.ts`, `CaddeReactionActorsPopover.tsx`, `RoleSelector.tsx`, `useRoleStructure.ts`) | `scripts/check/check-dead-code.mjs:60-66` |
 
 ### Canlı (canlı ölçüm 7–8 Kasım, Management API, salt okunur)
 
@@ -140,10 +140,10 @@ Depo kontrolü: `git grep` ile `src/**` ve `supabase/functions/**` tarandı.
 | ID | İddia | Kanıt | Durum | Batch | Karar |
 |---|---|---|---|---|---|
 | G1 | Otomatik yayın (6 Ekim) ↔ REV-103 "ilk etkinlik onaya düşer". | Karar: `applied/20261006100000_events_auto_publish_final.sql:3-5, 9-12, 15-16`. Kod hâlâ eski kuralı anlatıyor: `src/lib/events-api.ts:129` ve `:138-139` · `src/components/events/CreateEventFormSection.tsx:221-222, 247, 256`. 🔴 **Her zaman görünen kopya:** `CreateEventFormSection.tsx:317` "İlk etkinliğin admin onayından sonra listede görünecek." | açık | L2 | 5 |
-| G2 | `plans.ts` bağlı değil. `Pricing.tsx` sabit fiyat kullanıyor. | `scripts/check-dead-code.mjs:45-47, 61` · `src/pages/Pricing.tsx:39-40, 90-91, 141-142`. `src/lib/plans.ts` içinde **hiç fiyat yok** (bkz. H1). | açık | L7 | 1 |
+| G2 | `plans.ts` bağlı değil. `Pricing.tsx` sabit fiyat kullanıyor. | `scripts/check/check-dead-code.mjs:45-47, 61` · `src/pages/Pricing.tsx:39-40, 90-91, 141-142`. `src/lib/plans.ts` içinde **hiç fiyat yok** (bkz. H1). | açık | L7 | 1 |
 | G3 | `MockStripeCheckout` kalktı (ST00). | `git grep MockStripeCheckout -- src` → yalnız `src/components/ServiceRequestForm.test.tsx:62` (yasak iddiası). Bileşen dosyası `git ls-files`'ta yok. ⚠️ Yasak testi yalnız `ServiceRequestForm.tsx`'i tarar; L2.4'teki depo geneli test henüz yok. | ✅ kapandı | L2 | — |
 | G4 | REV-097 ve REV-099 kodda var ama kayıtları açık. | REV-097: `src/lib/admin-shell/admin-menu-numbering.ts:136` (`adminMenuNumberById`), kullanım `src/components/admin/shell/AdminCommandPalette.tsx:19, 76`. REV-099: `src/components/AssistantBubble.tsx:22-24` (A10, commit `8ddfd0dd`). Canlı REV durumu: 097 açık, 099 inceleniyor. | açık | L1 | — |
-| G5 | `RoleSelector.tsx` bağlı değil (RT01). | `RoleSelector`/`useRoleStructure` için üretim importu 0 · `scripts/check-dead-code.mjs:55-59, 64-65`. | açık | L6 | 6 |
+| G5 | `RoleSelector.tsx` bağlı değil (RT01). | `RoleSelector`/`useRoleStructure` için üretim importu 0 · `scripts/check/check-dead-code.mjs:55-59, 64-65`. | açık | L6 | 6 |
 | G6 | `role_structure` dosyası canlıyla aynı. | `applied/20261007130000_role_structure_table.sql:35` (`eski_roles_key text`, FK yok). Bu rapor canlı şemayı yeniden ölçmedi; plan §1.2'ye dayanır. ⚠️ Yeniden kurulum riski için bkz. H4. | ✅ kapandı | L6 | — |
 | G7 | Lansman v2 1 Kasım'a göre yazıldı. Venture Hub ve /creator orada kapsam dışı. | `lansman-hazirlik-plani-v2.md:64` ("Lansman 1 Kasım 2026"), `:279-280`, `:309` (K10). | açık | L4, L17 | 14 |
 
@@ -155,7 +155,7 @@ Depo kontrolü: `git grep` ile `src/**` ve `supabase/functions/**` tarandı.
 | H2 | `role_structure.eski_roles_key` gerçek bir `roles.key` değil. L6.3'teki "onay → `eski_roles_key` → `admin_set_user_role`" akışı bu veriyle çalışmaz. | Seed değerleri `consultant.ambassador.networking_etkinlik`, `consultant.doktor (chip)` (`applied/20261007130000_role_structure_seed.sql:7, 84-85`). `roles.key` biçimi `User_CityAmbassador` (`archive/20260605090000_seed_platform_roles.sql:15`). `role_structure_table.sql:18` "yeni_kod → roles.key eşlemesi" diyor; o da tutmuyor. | L6 | 6 |
 | H3 | Lovable'ın sabit referans kodu zaten canlı sayfada. L3.3 sözleşme testi bugünkü ağaçta ilk koşuda kırmızı olur. | `src/components/Founding1000Section.tsx:172-176` ("kod otomatik tanımlanır"). Kod 19 Eylül'de geldi (`74ecb4c0`). Bu dosyada kodu kayda taşıyan bağlantı görünmüyor; DB'de var mı ölçülmedi. | L2, L3 | 11 |
 | H4 | `role_structure` iki migration'da tanımlı. Sıfırdan kurulumda ilk tanım kazanır ve seed FK'ye takılır. Aynı zaman damgası iki dosyada. | `applied/20261005170000_role_structure.sql:16-23` (`references roles(key)`, varsayılan `'oneri'`) ↔ `applied/20261007130000_role_structure_table.sql:29-36` (FK yok). İkisi de `create table if not exists`. `20261007130000` → `_table` + `_seed` (CLAUDE.md "timestamp yeniden kullanma" kuralı). | L6, L20 | — |
-| H5 | `check:bundle` 229 KB gzip tabanını ölçmüyor. L3.2'deki "eşik tabana ayarlı mı" teyidinin cevabı hayır. | `scripts/check-bundle-size.mjs:5` (`MAX_JS_BYTES = 500 * 1024`), `:34` parça başına ham `stat().size`. Toplam ilk JS veya gzip ölçümü yok. | L3, L5 | — |
+| H5 | `check:bundle` 229 KB gzip tabanını ölçmüyor. L3.2'deki "eşik tabana ayarlı mı" teyidinin cevabı hayır. | `scripts/check/check-bundle-size.mjs:5` (`MAX_JS_BYTES = 500 * 1024`), `:34` parça başına ham `stat().size`. Toplam ilk JS veya gzip ölçümü yok. | L3, L5 | — |
 | H6 | Rol üretici betiği ile üretilmiş dosya ayrışmış. | `scripts/generate-role-structure.mjs:84` "52 alt rol (Bireysel dahil)" ↔ `src/lib/role-structure.ts:21` "49 alt rol" ↔ `role_structure_table.sql:5` "49 alt rol". Dosya betik güncellendikten sonra yeniden üretilmemiş. | L6 | 6 |
 | H7 | Stripe planında S04 açık görünüyor ama karar 10 onu cevapladı. | `stripe-odeme-altyapisi-plani.md:80` (S04 "yalnız EUR mu?", işaretsiz) ↔ `:32` ("Karar 10: yalnız EUR, AB + Türkiye"). | L14 | 1 |
 | H8 | `/pricing`'de dördüncü bir fiyat iddiası var. | `src/pages/Pricing.tsx:302` "3 ay süreyle Premium Pro fiyatlarda %50 indirim". `:391, 397` `€` ön ekini elle yazıyor (`format-money.ts` değil). | L7 | 1 |

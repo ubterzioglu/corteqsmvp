@@ -167,7 +167,7 @@ Supabase Auth'un standart doğrulama maili değişmedi; bu ondan SONRA gelen ayr
 | `supabase/functions/send-notification-emails/index.ts` | `member_welcome` dallanması, `reply_to`, `text`, örnek mail uçları |
 | `scripts/preview-emails.mjs` + `npm run preview:emails` | YENİ — tarayıcı önizlemesi |
 | `notification-settings-api.ts` · `useNotificationSettings.ts` · `AdminNotificationSettingsPage.tsx` | 3. anahtar + "Bana örnek hoş geldin maili gönder" |
-| `vitest.config.ts` · `scripts/verify-text-encoding.mjs` | `supabase/` artık test ve encoding denetimine dahil |
+| `vitest.config.ts` · `scripts/verify/verify-text-encoding.mjs` | `supabase/` artık test ve encoding denetimine dahil |
 
 ## Canlıya alma (SIRAYLA)
 

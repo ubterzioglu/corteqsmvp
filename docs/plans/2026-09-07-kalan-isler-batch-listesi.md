@@ -236,7 +236,7 @@ Hepsini birden silme; sil → `npm run build` → kırılırsa o dosyayı geri a
 6 Eylül'de 134 erişilemez dosya bir **oturumluk scratchpad script'iyle** bulundu; script
 depoya alınmadı, yani bir dahaki sefere sıfırdan yazılacak.
 
-**Yeni dosya:** `scripts/check-dead-code.mjs` + `package.json`'a `check:dead` script'i.
+**Yeni dosya:** `scripts/check/check-dead-code.mjs` + `package.json`'a `check:dead` script'i.
 **Yöntem:** `src/main.tsx` kökünden BFS, `@/` → `src/` çözümlemesi, test dosyaları hariç.
 
 ⚠️ **Belgelenmesi zorunlu kör nokta:** config **dizeleriyle** anılan dosyalar yanlış

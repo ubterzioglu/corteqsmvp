@@ -170,7 +170,7 @@ npx tsc -p tsconfig.app.json --noEmit     # 0 hata
 npm run lint                              # 0 hata
 npm run test                              # 278/1.958 yeşil
 npm run build                             # exit 0
-node scripts/check-dead-code.mjs          # 0 erişilemez  (İŞ BİTTİKTEN SONRA)
+node scripts/check/check-dead-code.mjs          # 0 erişilemez  (İŞ BİTTİKTEN SONRA)
 node scripts/ingest-tools.mjs --check     # temiz  (src/lib'e dosya eklediysen)
 ```
 
