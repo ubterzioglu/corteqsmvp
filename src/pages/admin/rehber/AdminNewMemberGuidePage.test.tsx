@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 
-import AdminNewMemberGuidePage from "@/pages/admin/AdminNewMemberGuidePage";
+import AdminNewMemberGuidePage from "@/pages/admin/rehber/AdminNewMemberGuidePage";
 
 const fromMock = vi.fn();
 const selectMock = vi.fn();

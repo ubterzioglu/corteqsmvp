@@ -26,6 +26,7 @@ import { adminGruplarRoutes } from "./gruplar/routes";
 import { adminRolesRoutes } from "./roles/routes";
 import { adminMay19Routes } from "./may19/routes";
 import { adminSocialRoutes } from "./social/routes";
+import { adminRehberRoutes } from "./rehber/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -35,12 +36,10 @@ const AdminAboutPage = lazyWithReload(() => import("@/pages/admin/AdminAboutPage
 const AdminNotificationSettingsPage = lazyWithReload(() => import("@/pages/admin/AdminNotificationSettingsPage"));
 const AdminToolRegistryPage = lazyWithReload(() => import("@/pages/admin/AdminToolRegistryPage"));
 const AdminAgentAnalyticsPage = lazyWithReload(() => import("@/pages/admin/AdminAgentAnalyticsPage"));
-const AdminGuidePage = lazyWithReload(() => import("@/pages/admin/AdminGuidePage"));
 const AdminMarqueePage = lazyWithReload(() => import("@/pages/admin/AdminMarqueePage"));
 const AdminBlogPage = lazyWithReload(() => import("@/pages/admin/blog/AdminBlogPage"));
 const AdminVipInvitationsPage = lazyWithReload(() => import("@/pages/admin/AdminVipInvitationsPage"));
 const AdminCustomerRequestsPage = lazyWithReload(() => import("@/pages/admin/AdminCustomerRequestsPage"));
-const AdminYenilikRehberiPage = lazyWithReload(() => import("@/pages/admin/AdminYenilikRehberiPage"));
 const AdminContributorResourcesPage = lazyWithReload(() => import("@/pages/admin/AdminContributorResourcesPage"));
 const AdminRevisionRequestsPage = lazyWithReload(() => import("@/pages/admin/AdminRevisionRequestsPage"));
 const AdminBrainstormingPage = lazyWithReload(() => import("@/pages/admin/AdminBrainstormingPage"));
@@ -54,7 +53,6 @@ const AdminMeetingNotesWorkspacePage = lazyWithReload(
 );
 const AdminMvpWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMvpWorkspacePage"));
 const AdminWorkspaceDocPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceDocPage"));
-const AdminCommunityGuidePage = lazyWithReload(() => import("@/pages/admin/AdminCommunityGuidePage"));
 const AdminSurveysPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveysPage"));
 const AdminSurveyCreatePage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyCreatePage"));
 const AdminSurveyEditPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyEditPage"));
@@ -62,7 +60,6 @@ const AdminSurveyResponsesPage = lazyWithReload(() => import("@/pages/admin/surv
 const AdminApprovalsPage = lazyWithReload(() => import("@/pages/admin/AdminApprovalsPage"));
 const AdminAuditLogsPage = lazyWithReload(() => import("@/pages/admin/AdminAuditLogsPage"));
 const AdminClientErrorsPage = lazyWithReload(() => import("@/pages/admin/AdminClientErrorsPage"));
-const AdminNewMemberGuidePage = lazyWithReload(() => import("@/pages/admin/AdminNewMemberGuidePage"));
 const AdminDurumRaporuPage = lazyWithReload(() => import("@/pages/admin/AdminDurumRaporuPage"));
 import { adminCaddeRoutes } from "@/pages/admin/cadde/routes";
 import { radarRoutes } from "@/pages/admin/radar/routes";
@@ -86,7 +83,7 @@ export const adminRoutes = (
     {adminSocialRoutes}
     <Route path="vip-invitations" element={<AdminVipInvitationsPage />} />
     <Route path="customer-requests" element={<AdminCustomerRequestsPage />} />
-    <Route path="yenilik-rehberi" element={<AdminYenilikRehberiPage />} />
+    {adminRehberRoutes}
     <Route path="contributor-resources" element={<AdminContributorResourcesPage />} />
     <Route path="surveys" element={<AdminSurveysPage />} />
     <Route path="surveys/new" element={<AdminSurveyCreatePage />} />
@@ -102,7 +99,6 @@ export const adminRoutes = (
     <Route path="data" element={<AdminCatalogPage />} />
     <Route path="bulk-import" element={<AdminBulkImportPage />} />
     <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
-    <Route path="new-member/guide" element={<AdminNewMemberGuidePage />} />
     <Route path="new-member/durum-raporu" element={<AdminDurumRaporuPage />} />
     <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
     <Route
@@ -127,7 +123,6 @@ export const adminRoutes = (
     <Route path="approvals" element={<AdminApprovalsPage />} />
     <Route path="audit-logs" element={<AdminAuditLogsPage />} />
     <Route path="client-errors" element={<AdminClientErrorsPage />} />
-    <Route path="whatsapp-landings/guide" element={<AdminCommunityGuidePage />} />
     {adminGruplarRoutes}
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
@@ -139,7 +134,6 @@ export const adminRoutes = (
     <Route path="events" element={<AdminEventsPage />} />
     <Route path="traction" element={<AdminTractionPage />} />
     <Route path="org-verification" element={<AdminOrgVerificationPage />} />
-    <Route path="guide" element={<AdminGuidePage />} />
     <Route path="workspace" element={<AdminWorkspaceHomePage />} />
     <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />
     <Route path="workspace/resources" element={<AdminResourcesPage />} />
