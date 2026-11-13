@@ -40,9 +40,10 @@ describe("public/ai/faq.json ↔ index.html senkronu", () => {
   it("faq.json, index.html'deki FAQPage'den üretilmiş olanla BİREBİR aynıdır", () => {
     const beklenen = buildFaqJson(extractFaqPage(html));
 
-    expect(faqFile, "faq.json bayat/elle düzenlenmiş — `node scripts/generate/generate-ai-faq.mjs` ile yeniden üret").toBe(
-      beklenen,
-    );
+    expect(
+      faqFile,
+      "faq.json bayat/elle düzenlenmiş — `node scripts/generate/generate-ai-faq.mjs` ile yeniden üret",
+    ).toBe(beklenen);
   });
 
   it("soru sayısı ve soru metinleri index.html ile eşittir", () => {
