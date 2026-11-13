@@ -24,6 +24,7 @@ import { adminWorkshopRoutes } from "./workshop/routes";
 import { adminReferralRoutes } from "./referral/routes";
 import { adminGruplarRoutes } from "./gruplar/routes";
 import { adminRolesRoutes } from "./roles/routes";
+import { adminMay19Routes } from "./may19/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -56,8 +57,6 @@ const AdminMeetingNotesWorkspacePage = lazyWithReload(
 const AdminMvpWorkspacePage = lazyWithReload(() => import("@/pages/admin/workspace/AdminMvpWorkspacePage"));
 const AdminWorkspaceDocPage = lazyWithReload(() => import("@/pages/admin/workspace/AdminWorkspaceDocPage"));
 const AdminCommunityGuidePage = lazyWithReload(() => import("@/pages/admin/AdminCommunityGuidePage"));
-const AdminMay19IdeaPage = lazyWithReload(() => import("@/pages/admin/AdminMay19IdeaPage"));
-const AdminMay19MomentPage = lazyWithReload(() => import("@/pages/admin/AdminMay19MomentPage"));
 const AdminSurveysPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveysPage"));
 const AdminSurveyCreatePage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyCreatePage"));
 const AdminSurveyEditPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyEditPage"));
@@ -140,8 +139,7 @@ export const adminRoutes = (
     {adminGruplarRoutes}
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
-    <Route path="may19/kelime" element={<AdminMay19IdeaPage />} />
-    <Route path="may19/ani" element={<AdminMay19MomentPage />} />
+    {adminMay19Routes}
     <Route path="about" element={<AdminAboutPage />} />
     <Route path="notifications" element={<AdminNotificationSettingsPage />} />
     <Route path="tools" element={<AdminToolRegistryPage />} />
