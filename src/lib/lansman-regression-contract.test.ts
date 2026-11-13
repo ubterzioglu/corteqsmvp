@@ -407,7 +407,7 @@ describe("(8) referans kodları ve elçi indirimleri", () => {
   it("admin referans ekranı menüde ve rota ağacında durur", () => {
     const item = flattenAdminNav(adminNavGroups).find((e) => e.item.id === "referral")?.item;
     expect(item?.to).toBe("/admin/referral");
-    const adminRoutes = read("src/pages/admin/routes.tsx");
+    const adminRoutes = read("src/pages/admin/referral/routes.tsx");
     expect(adminRoutes).toMatch(/path="referral"\s+element=\{<AdminReferralPage/);
   });
 

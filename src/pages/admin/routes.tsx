@@ -21,15 +21,12 @@ import { muhasebeRoutes } from "./muhasebe/routes";
 import { serviceFinderRoutes } from "./service-finder/routes";
 import { relocationAdminRoutes } from "./relocation/routes";
 import { adminWorkshopRoutes } from "./workshop/routes";
+import { adminReferralRoutes } from "./referral/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
 const AdminLayout = lazyWithReload(() => import("@/components/admin/AdminLayout"));
 const AdminDashboardPage = lazyWithReload(() => import("@/pages/admin/dashboard/AdminDashboardPage"));
-const AdminReferralPage = lazyWithReload(() => import("@/pages/admin/AdminReferralPage"));
-const AdminReferralSourcesPage = lazyWithReload(() => import("@/pages/admin/AdminReferralSourcesPage"));
-const AdminReferralGroupsPage = lazyWithReload(() => import("@/pages/admin/AdminReferralGroupsPage"));
-const AdminReferralTypesPage = lazyWithReload(() => import("@/pages/admin/AdminReferralTypesPage"));
 const AdminAboutPage = lazyWithReload(() => import("@/pages/admin/AdminAboutPage"));
 const AdminNotificationSettingsPage = lazyWithReload(() => import("@/pages/admin/AdminNotificationSettingsPage"));
 const AdminToolRegistryPage = lazyWithReload(() => import("@/pages/admin/AdminToolRegistryPage"));
@@ -92,10 +89,7 @@ const AdminOrgVerificationPage = lazyWithReload(() => import("@/pages/admin/Admi
 export const adminRoutes = (
   <Route path="/admin" element={<AdminLayout />}>
     <Route index element={<AdminDashboardPage />} />
-    <Route path="referral" element={<AdminReferralPage />} />
-    <Route path="referral/sources" element={<AdminReferralSourcesPage />} />
-    <Route path="referral/groups" element={<AdminReferralGroupsPage />} />
-    <Route path="referral/types" element={<AdminReferralTypesPage />} />
+    {adminReferralRoutes}
     <Route path="marquee" element={<AdminMarqueePage />} />
     <Route path="blog" element={<AdminBlogPage />} />
     {adminCaddeRoutes}
