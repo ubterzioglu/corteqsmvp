@@ -1,4 +1,4 @@
-import AdminResourceLinksPage from "@/pages/admin/AdminResourceLinksPage";
+import AdminResourceLinksPage from "@/pages/admin/social/AdminResourceLinksPage";
 
 const AdminSocialMediaLinksPage = () => (
   <AdminResourceLinksPage

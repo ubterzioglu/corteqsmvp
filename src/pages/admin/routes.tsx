@@ -25,6 +25,7 @@ import { adminReferralRoutes } from "./referral/routes";
 import { adminGruplarRoutes } from "./gruplar/routes";
 import { adminRolesRoutes } from "./roles/routes";
 import { adminMay19Routes } from "./may19/routes";
+import { adminSocialRoutes } from "./social/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
@@ -37,9 +38,6 @@ const AdminAgentAnalyticsPage = lazyWithReload(() => import("@/pages/admin/Admin
 const AdminGuidePage = lazyWithReload(() => import("@/pages/admin/AdminGuidePage"));
 const AdminMarqueePage = lazyWithReload(() => import("@/pages/admin/AdminMarqueePage"));
 const AdminBlogPage = lazyWithReload(() => import("@/pages/admin/blog/AdminBlogPage"));
-const AdminAdvisorLinksPage = lazyWithReload(() => import("@/pages/admin/AdminAdvisorLinksPage"));
-const AdminSocialMediaLinksPage = lazyWithReload(() => import("@/pages/admin/AdminSocialMediaLinksPage"));
-const AdminSocialShareVaultPage = lazyWithReload(() => import("@/pages/admin/AdminSocialShareVaultPage"));
 const AdminVipInvitationsPage = lazyWithReload(() => import("@/pages/admin/AdminVipInvitationsPage"));
 const AdminCustomerRequestsPage = lazyWithReload(() => import("@/pages/admin/AdminCustomerRequestsPage"));
 const AdminYenilikRehberiPage = lazyWithReload(() => import("@/pages/admin/AdminYenilikRehberiPage"));
@@ -73,7 +71,6 @@ const AdminConsulateProfilesPage = lazyWithReload(() => import("@/pages/admin/Ad
 const AdminCatalogPage = lazyWithReload(() => import("@/pages/admin/AdminCatalogPage"));
 const AdminDatabaseTablesPage = lazyWithReload(() => import("@/pages/admin/AdminDatabaseTablesPage"));
 const AdminBulkImportPage = lazyWithReload(() => import("@/pages/admin/AdminBulkImportPage"));
-const AdminLinksPage = lazyWithReload(() => import("@/pages/admin/AdminLinksPage"));
 const AdminEventsPage = lazyWithReload(() => import("@/pages/admin/AdminEventsPage"));
 const AdminTractionPage = lazyWithReload(() => import("@/pages/admin/AdminTractionPage"));
 const AdminOrgVerificationPage = lazyWithReload(() => import("@/pages/admin/AdminOrgVerificationPage"));
@@ -86,12 +83,7 @@ export const adminRoutes = (
     <Route path="marquee" element={<AdminMarqueePage />} />
     <Route path="blog" element={<AdminBlogPage />} />
     {adminCaddeRoutes}
-    <Route path="advisors">
-      <Route index element={<Navigate to="/admin/advisors/consultant" replace />} />
-      <Route path=":profile" element={<AdminAdvisorLinksPage />} />
-    </Route>
-    <Route path="social-media" element={<AdminSocialMediaLinksPage />} />
-    <Route path="social-share-vault" element={<AdminSocialShareVaultPage />} />
+    {adminSocialRoutes}
     <Route path="vip-invitations" element={<AdminVipInvitationsPage />} />
     <Route path="customer-requests" element={<AdminCustomerRequestsPage />} />
     <Route path="yenilik-rehberi" element={<AdminYenilikRehberiPage />} />
@@ -144,7 +136,6 @@ export const adminRoutes = (
     <Route path="notifications" element={<AdminNotificationSettingsPage />} />
     <Route path="tools" element={<AdminToolRegistryPage />} />
     <Route path="agent-analytics" element={<AdminAgentAnalyticsPage />} />
-    <Route path="links" element={<AdminLinksPage />} />
     <Route path="events" element={<AdminEventsPage />} />
     <Route path="traction" element={<AdminTractionPage />} />
     <Route path="org-verification" element={<AdminOrgVerificationPage />} />
