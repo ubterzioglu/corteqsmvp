@@ -517,7 +517,7 @@ tablosu, büyük dosya ayrıştırması (800+ satır kuralı ESLint `max-lines`'
 - **239 catalog item** (163 gerçek + 76 placeholder)
 - 44+ DB fonksiyonu yeni tablo adlarına rewire edildi
 - Runtime kodda eski tablo adı / aile konsepti **0 referans** (`13-post-cleanup-grep-report.md`)
-- **Durum Raporu:** `src/pages/admin/AdminDurumRaporuPage.tsx` (`/admin/new-member/durum-raporu`) → `rebuild_status_report` RPC ile canlı metrik gösterir
+- **Durum Raporu:** `src/pages/admin/sistem/AdminDurumRaporuPage.tsx` (`/admin/new-member/durum-raporu`) → `rebuild_status_report` RPC ile canlı metrik gösterir
 
 **Önceki 2026-06-09 legacy-auth temizliği:** `profiles`/`user_profiles`/`admin_users`/`role_feature_defaults` DROP; tüm RPC'ler `auth.users` + `user_profile_attributes` + `user_role_assignments` üzerinden; `is_admin()`/`is_moderator()` güncellendi; yeni-kullanıcı trigger'ı otomatik `bireysel` rolü atar.
 

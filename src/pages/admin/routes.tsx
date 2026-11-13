@@ -27,15 +27,13 @@ import { adminRolesRoutes } from "./roles/routes";
 import { adminMay19Routes } from "./may19/routes";
 import { adminSocialRoutes } from "./social/routes";
 import { adminRehberRoutes } from "./rehber/routes";
+import { adminSistemRoutes } from "./sistem/routes";
 
 // Code-splitting: admin sayfaları ihtiyaç anında yüklenir. Suspense sınırı
 // App.tsx'teki kök <Suspense> — muhasebe alt ağacı kendi fallback'ini taşır.
 const AdminLayout = lazyWithReload(() => import("@/components/admin/AdminLayout"));
 const AdminDashboardPage = lazyWithReload(() => import("@/pages/admin/dashboard/AdminDashboardPage"));
 const AdminAboutPage = lazyWithReload(() => import("@/pages/admin/AdminAboutPage"));
-const AdminNotificationSettingsPage = lazyWithReload(() => import("@/pages/admin/AdminNotificationSettingsPage"));
-const AdminToolRegistryPage = lazyWithReload(() => import("@/pages/admin/AdminToolRegistryPage"));
-const AdminAgentAnalyticsPage = lazyWithReload(() => import("@/pages/admin/AdminAgentAnalyticsPage"));
 const AdminMarqueePage = lazyWithReload(() => import("@/pages/admin/AdminMarqueePage"));
 const AdminBlogPage = lazyWithReload(() => import("@/pages/admin/blog/AdminBlogPage"));
 const AdminVipInvitationsPage = lazyWithReload(() => import("@/pages/admin/AdminVipInvitationsPage"));
@@ -58,18 +56,13 @@ const AdminSurveyCreatePage = lazyWithReload(() => import("@/pages/admin/surveys
 const AdminSurveyEditPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyEditPage"));
 const AdminSurveyResponsesPage = lazyWithReload(() => import("@/pages/admin/surveys/AdminSurveyResponsesPage"));
 const AdminApprovalsPage = lazyWithReload(() => import("@/pages/admin/AdminApprovalsPage"));
-const AdminAuditLogsPage = lazyWithReload(() => import("@/pages/admin/AdminAuditLogsPage"));
-const AdminClientErrorsPage = lazyWithReload(() => import("@/pages/admin/AdminClientErrorsPage"));
-const AdminDurumRaporuPage = lazyWithReload(() => import("@/pages/admin/AdminDurumRaporuPage"));
 import { adminCaddeRoutes } from "@/pages/admin/cadde/routes";
 import { radarRoutes } from "@/pages/admin/radar/routes";
 import { adminKadroRoutes } from "@/pages/admin/kadro/routes";
 const AdminConsulateProfilesPage = lazyWithReload(() => import("@/pages/admin/AdminConsulateProfilesPage"));
 const AdminCatalogPage = lazyWithReload(() => import("@/pages/admin/AdminCatalogPage"));
-const AdminDatabaseTablesPage = lazyWithReload(() => import("@/pages/admin/AdminDatabaseTablesPage"));
 const AdminBulkImportPage = lazyWithReload(() => import("@/pages/admin/AdminBulkImportPage"));
 const AdminEventsPage = lazyWithReload(() => import("@/pages/admin/AdminEventsPage"));
-const AdminTractionPage = lazyWithReload(() => import("@/pages/admin/AdminTractionPage"));
 const AdminOrgVerificationPage = lazyWithReload(() => import("@/pages/admin/AdminOrgVerificationPage"));
 
 // /admin alt ağacı — App.tsx'teki <Routes> içine {adminRoutes} olarak eklenir.
@@ -98,8 +91,7 @@ export const adminRoutes = (
     />
     <Route path="data" element={<AdminCatalogPage />} />
     <Route path="bulk-import" element={<AdminBulkImportPage />} />
-    <Route path="veritabani-tablolari" element={<AdminDatabaseTablesPage />} />
-    <Route path="new-member/durum-raporu" element={<AdminDurumRaporuPage />} />
+    {adminSistemRoutes}
     <Route path="new-member/roles-list" element={<Navigate to="/admin/new-member/guide#rol-listesi" replace />} />
     <Route
       path="new-member/roles-features"
@@ -121,18 +113,12 @@ export const adminRoutes = (
     <Route path="new-member/roles-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="new-member/entity-preview" element={<Navigate to="/admin/new-member/role-matrix" replace />} />
     <Route path="approvals" element={<AdminApprovalsPage />} />
-    <Route path="audit-logs" element={<AdminAuditLogsPage />} />
-    <Route path="client-errors" element={<AdminClientErrorsPage />} />
     {adminGruplarRoutes}
     <Route path="consulates" element={<AdminConsulateProfilesPage />} />
     <Route path="data/:category" element={<Navigate to="/admin/data" replace />} />
     {adminMay19Routes}
     <Route path="about" element={<AdminAboutPage />} />
-    <Route path="notifications" element={<AdminNotificationSettingsPage />} />
-    <Route path="tools" element={<AdminToolRegistryPage />} />
-    <Route path="agent-analytics" element={<AdminAgentAnalyticsPage />} />
     <Route path="events" element={<AdminEventsPage />} />
-    <Route path="traction" element={<AdminTractionPage />} />
     <Route path="org-verification" element={<AdminOrgVerificationPage />} />
     <Route path="workspace" element={<AdminWorkspaceHomePage />} />
     <Route path="workspace/command-center" element={<AdminCommandCenterPage />} />

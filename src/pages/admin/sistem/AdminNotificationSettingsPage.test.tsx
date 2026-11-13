@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import AdminNotificationSettingsPage from "@/pages/admin/AdminNotificationSettingsPage";
+import AdminNotificationSettingsPage from "@/pages/admin/sistem/AdminNotificationSettingsPage";
 import type { AdminNotificationState } from "@/lib/admin-shell/notification-settings-api";
 
 const fetchStateMock = vi.fn();
