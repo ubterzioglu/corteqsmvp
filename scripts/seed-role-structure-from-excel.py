@@ -19,7 +19,7 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 # Excel'den oku
-excel_path = Path(__file__).parent.parent / "CorteQS_Rol_Tablosu_v2.xlsx"
+excel_path = Path(__file__).parent.parent / "docs/assets/CorteQS_Rol_Tablosu_v2.xlsx"
 output_path = Path(__file__).parent.parent / "supabase/migrations/applied/20261007130000_role_structure_seed.sql"
 
 print(f"📖 Excel okunuyor: {excel_path}")

@@ -56,4 +56,4 @@ create schema if not exists afs_backup;  -- 2026-06-11 rol yedeği (0 satır)
 -- ⚠️ supabase_vault (canlı: 0.3.1, `vault` şemasında) BİLEREK burada kurulmuyor.
 --    Vault sırları kök şifreleme anahtarına bağlıdır ve anahtar taşınamaz.
 --    Doğru yol: hedefte sırrı YENİDEN OLUŞTURMAK.
---    Bkz. docs/migration-runbook.md §4.3 — atlanırsa bildirim mailleri sessizce durur.
+--    Bkz. docs/operations/migration-runbook.md §4.3 — atlanırsa bildirim mailleri sessizce durur.

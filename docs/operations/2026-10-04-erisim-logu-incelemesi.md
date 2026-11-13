@@ -43,7 +43,7 @@ Saldırgan olmadığının üç kanıtı:
    5× `400`. `service_role` olsaydı hepsi `200` olurdu. Yani tarama "neye
    erişilebiliyor" diye bakıyordu — bir güvenlik/envanter denetiminin profili.
 3. **Zamanlama:** repo'nun kendi envanter çalışmasıyla aynı döneme düşüyor
-   (`docs/supabase-exit-plan.md`, ölçüm 2026-09-20; aynı dosya bucket envanteri
+   (`docs/operations/supabase-exit-plan.md`, ölçüm 2026-09-20; aynı dosya bucket envanteri
    çıkarılırken `cv-files`'ın public olduğunu da o sırada fark etmiş).
 
 ## ⚠️ Bu incelemenin SINIRLARI — abartma, eksiltme

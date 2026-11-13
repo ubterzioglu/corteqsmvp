@@ -1,7 +1,7 @@
 # CorteQS — kendi altyapımızda çalışan veri katmanı (Supabase Cloud'a alternatif)
 #
 # Tasarım kararı: bu, "Supabase self-host" dağıtımı DEĞİLDİR. Yalnız uygulamanın
-# GERÇEKTEN kullandığı açık kaynak bileşenler kurulur. Ölçüm: docs/supabase-exit-plan.md
+# GERÇEKTEN kullandığı açık kaynak bileşenler kurulur. Ölçüm: docs/operations/supabase-exit-plan.md
 #
 # KURULMAYANLAR ve nedenleri:
 #   kong / envoy  -> yol yönlendirmeyi kendi nginx geçidimiz yapar (gateway servisi)

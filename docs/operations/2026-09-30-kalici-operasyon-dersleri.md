@@ -25,7 +25,7 @@
   `verify_jwt` üçlüsünü doğrula. "Deploy ettim" kanıt değildir.
 - Gateway uzun süren çağrılarda **504 IDLE_TIMEOUT** döndürebilir ama fonksiyon
   arka planda tamamlar — DB satırı/çıktı ile doğrula, 504'yü başarısızlık sayma.
-- Prerender/nginx ayrıntısı: `docs/coolify-deployment.md`,
+- Prerender/nginx ayrıntısı: `docs/operations/coolify-deployment.md`,
   `docs/operations/prerender-setup.md`, DB portu kapatma:
   `docs/operations/2026-08-06-coolify-db-portu-kapatma.md`.
 
@@ -37,7 +37,7 @@
   (**aws-0 tanımıyor**).
 - Migration akışı: dosya `supabase/migrations/applied/` altına → `psql -f` ile
   canlıya uygula → `schema_migrations` kaydını at. Ayrıntı:
-  `docs/migration-runbook.md` + `docs/operations/database/guvenli-migration-runner.md`
+  `docs/operations/migration-runbook.md` + `docs/operations/database/guvenli-migration-runner.md`
   + `migration-baseline-ve-kontrol.md`. Sapma kontrolü: `npm run check:migrations`.
 
 ## 3 · Secret yönetimi
@@ -96,13 +96,13 @@ gh run list --limit 1         # push sonrası CI yeşil mi
 
 | Konu | Dosya |
 |---|---|
-| Coolify / frontend deploy | `docs/coolify-deployment.md` |
-| Migration | `docs/migration-runbook.md` · `docs/operations/database/*` |
+| Coolify / frontend deploy | `docs/operations/coolify-deployment.md` |
+| Migration | `docs/operations/migration-runbook.md` · `docs/operations/database/*` |
 | WhatsApp Cloud API | `docs/operations/whatsapp-cloud-api-runbook.md` (⚠️ Meta secret'ları yer tutucu — bot konusu KAPALI) |
 | Bildirim e-postaları | `docs/operations/2026-07-29-bildirim-e-postalari-devir.md` · `onaymailifonksiyonu.md` |
 | Google OAuth / custom domain | `docs/operations/2026-08-02-supabase-custom-domain-google-oauth.md` · `2026-09-25-google-auth-admin-yetkilendirme-rehberi.md` |
 | Auth doğrulama yol haritası | `docs/operations/2026-09-04-auth-dogrulama-yol-haritasi.md` |
-| Supabase'den çıkış | `docs/supabase-exit-plan.md` |
+| Supabase'den çıkış | `docs/operations/supabase-exit-plan.md` |
 | Radar operasyonu | `docs/modules/radar/*` |
 | Katalog / roller | `docs/guides/katalog-items-roller-features-iliskisi.md` ve kardeşleri |
 | SMTP kimliği | Gönderen `info@corteqs.net`, SMTP kimliği `update@corteqs.net` — Zoho alias değilse 553; kurtarma `PATCH /config/auth` (ayrıntı KALANLAR U03) |

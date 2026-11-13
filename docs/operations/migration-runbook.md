@@ -1,8 +1,8 @@
 # Geçiş Runbook'u — Supabase Cloud → kendi altyapımız
 
 > **Durum:** Faz 1–2 kodu yazıldı, HİÇBİRİ CANLIDA ÇALIŞTIRILMADI.
-> Envanter: `docs/supabase-exit-plan.md` · İlerleme: `docs/migration-status.md`
-> Coolify ayrıntıları: `docs/coolify-deployment.md`
+> Envanter: `docs/operations/supabase-exit-plan.md` · İlerleme: `docs/operations/migration-status.md`
+> Coolify ayrıntıları: `docs/operations/coolify-deployment.md`
 
 Bu belge **çalıştırılmak üzere** yazıldı. Her adımın bir doğrulaması ve bir geri
 dönüşü vardır. Doğrulaması geçmeyen adımdan sonraki adıma GEÇME.

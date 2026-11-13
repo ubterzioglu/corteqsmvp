@@ -2,8 +2,8 @@
 
 > **Durum:** Faz 0 (envanter) TAMAM · mimari kararı ONAY BEKLİYOR
 > **Ölçüm tarihi:** 2026-09-20 · **Ölçen:** repo taraması (canlı DB'ye yazma YOK)
-> **İlerleme takibi:** `docs/migration-status.md`
-> **Runbook:** `docs/migration-runbook.md` (mimari onaylandıktan sonra yazılacak)
+> **İlerleme takibi:** `docs/operations/migration-status.md`
+> **Runbook:** `docs/operations/migration-runbook.md` (mimari onaylandıktan sonra yazılacak)
 
 Bu belgedeki her sayı repodan **ölçülmüştür**, tahmin değildir. Ezberleme —
 değiştirmeden önce ilgili komutu tekrar çalıştır.

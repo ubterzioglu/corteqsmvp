@@ -3,10 +3,10 @@
 Supabase Cloud'un yerine geçen, **yalnız gerçekten kullandığımız** açık kaynak
 bileşenlerden oluşan yığın.
 
-- Neden bu mimari: `docs/supabase-exit-plan.md` §4
-- Nasıl geçilir: `docs/migration-runbook.md`
-- Coolify tarafı: `docs/coolify-deployment.md`
-- Nerede kaldık: `docs/migration-status.md`
+- Neden bu mimari: `docs/operations/supabase-exit-plan.md` §4
+- Nasıl geçilir: `docs/operations/migration-runbook.md`
+- Coolify tarafı: `docs/operations/coolify-deployment.md`
+- Nerede kaldık: `docs/operations/migration-status.md`
 
 ---
 

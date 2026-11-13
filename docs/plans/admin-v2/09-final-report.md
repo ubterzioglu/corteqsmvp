@@ -7,7 +7,7 @@ son_dogrulama: 2026-11-07
 
 **Tarih:** 2026-06-10
 **Kapsam:** Faz 6–9 (page shell, route modülerizasyonu, veri erişim standardizasyonu, E2E + QA + temizlik)
-**Masterplan:** `docs/plans/2026-06-10-admin-panel-v2-masterplan.md` · Handoff: `00000 ADMIN V2 01-progress-handoff.md`
+**Masterplan:** `docs/plans/2026-06-10-admin-panel-v2-masterplan.md` · Handoff: `00-admin-v2-01-progress-handoff.md`
 
 ---
 
@@ -108,7 +108,7 @@ DEĞ  src/pages/admin/AdminRoleManagementPage.test.tsx    (QueryClientProvider +
 YENİ e2e/admin-smoke.spec.ts        (16 test: §19.2 E2E-ADMIN-001…014 + 2 QA; Supabase
                                      auth/REST network-mock — canlı fixture gerekmez)
 YENİ docs/plans/admin-v2/09-final-report.md (bu doküman)
-DEĞ  00000 ADMIN V2 01-progress-handoff.md
+DEĞ  00-admin-v2-01-progress-handoff.md
 ```
 
 ## 4. Kalan İşler / Sonraki Adımlar

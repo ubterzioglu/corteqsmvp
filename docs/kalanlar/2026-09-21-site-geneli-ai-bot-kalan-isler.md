@@ -147,7 +147,7 @@ engel değil.
 `site-assistant` bilinçli olarak ince tutuldu (getirme + model çağrısı); ağır iş
 SQL tarafında. Taşıma maliyeti bu yüzden düşük, sıfır değil.
 
-İlgili: `docs/supabase-exit-plan.md` (varsa) ve oturum notları.
+İlgili: `docs/operations/supabase-exit-plan.md` (varsa) ve oturum notları.
 
 ---
 

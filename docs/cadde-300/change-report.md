@@ -1,7 +1,7 @@
 # Cadde 3.0 E2E Rebuild — Değişiklik Raporu
 
 **Dönem:** 2026-06-10 → 2026-06-11 · **Durum:** Faz 0-9 TAMAMLANDI
-**Spec:** `CORTEQS_CADDE_3_0_E2E_REBUILD_SPEC.md` · **Devir notu:** `00000 CADDE_3_0_HANDOFF_DEVIR_NOTU.md`
+**Spec:** `CORTEQS_CADDE_3_0_E2E_REBUILD_SPEC.md` · **Devir notu:** `00-cadde-3-0-handoff-devir-notu.md`
 
 ## Faz / commit haritası
 

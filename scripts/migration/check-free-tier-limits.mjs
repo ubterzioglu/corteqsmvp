@@ -3,7 +3,7 @@
  * Supabase Free katman sınırlarına ne kadar yaklaşıldığını ölçer — ERKEN UYARI.
  *
  * Amaç: Free'de sınıra çarpıp sürpriz yaşamak yerine, çarpmadan ÖNCE haber almak
- * ve geçiş planını (docs/migration-runbook.md) zamanında tetiklemek.
+ * ve geçiş planını (docs/operations/migration-runbook.md) zamanında tetiklemek.
  *
  * SALT OKUNUR. Katalog sorguları kullanır — 500 MB RAM'lik bir instance'ı yormaz.
  *
@@ -188,7 +188,7 @@ Supabase Free katman sınırı erken uyarı
   if (anyCritical) {
     console.error(`🔴 En az bir sınır kritik seviyede ya da aşıldı.`);
     console.error(`
-   YAPILACAK: geçiş planını tetikle → docs/migration-runbook.md
+   YAPILACAK: geçiş planını tetikle → docs/operations/migration-runbook.md
    Plan hazır ve test edilmiş durumda; Faz 1'den başlanır.`);
     process.exit(1);
   }

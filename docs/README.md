@@ -28,12 +28,7 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 
 | Dosya | Konu |
 |-------|------|
-| `AGENT_CONTEXT.md`, `ARCHITECTURE.md` | Yukarıda |
-| `PROJECT_OVERVIEW.md` | Proje tanıtımı |
-| `AS_ANY_POLICY.md` | `as any` kullanım politikası |
-| `coolify-deployment.md` | Coolify deploy notları |
-| `migration-runbook.md`, `migration-status.md` | Migration uygulama rehberi ve durumu |
-| `supabase-exit-plan.md`, `supabase-plan-decision.md` | Supabase çıkış planı ve karar kaydı |
+| `AGENT_CONTEXT.md`, `ARCHITECTURE.md` | Yukarıda — bu dizinin kökünde kalan tek dokümanlar (`README.md` dizinin kendisi) |
 
 ## Klasör sözlüğü
 
@@ -44,8 +39,8 @@ Diğer her doküman burada, aşağıdaki klasörlerden birindedir.
 | `plans/` | Uygulama planları (`plans/admin-v2/`, `plans/service-finder/` alt klasörleri dahil) |
 | `kalanlar/` | Biten işlerden artan, **karar bekleyen** maddeler. Karar verilip iş bitince silinir. Kendi `README.md`'si açık maddeleri tutar |
 | `handover/` | Oturumlar arası devir notları ve ajan promptları |
-| `operations/` | Deploy, veritabanı, güvenlik, release rehberleri |
-| `guides/` | Kullanıcı ve admin/developer rehberleri |
+| `operations/` | Deploy, veritabanı, güvenlik, release rehberleri · Coolify dağıtımı, migration runbook ve durumu, Supabase çıkış planı ile karar kaydı |
+| `guides/` | Kullanıcı ve admin/developer rehberleri · proje tanıtımı ve `as any` kullanım politikası |
 | `modules/` | Modül belgeleri (Türkçe domain adları) |
 | `audits/` | Kanıta dayalı denetim raporları (+ `orphan-route-scan.mjs` tarayıcısı) |
 | `security/` | Güvenlik denetimi, kullanım envanteri |

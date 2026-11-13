@@ -2,7 +2,7 @@
 /**
  * A5 · Excel'den rol yapısı veri modülü üretici.
  *
- * Kaynak: CorteQS_Rol_Tablosu_v2.xlsx (repo kökü)
+ * Kaynak: docs/assets/CorteQS_Rol_Tablosu_v2.xlsx
  * Çıktı: src/lib/role-structure.ts
  *
  * Kullanım: node scripts/generate-role-structure.mjs
@@ -15,7 +15,7 @@ import { read, utils } from "xlsx";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, "..");
-const excelPath = resolve(repoRoot, "CorteQS_Rol_Tablosu_v2.xlsx");
+const excelPath = resolve(repoRoot, "docs/assets/CorteQS_Rol_Tablosu_v2.xlsx");
 const outputPath = resolve(repoRoot, "src/lib/role-structure.ts");
 
 // Excel'i oku

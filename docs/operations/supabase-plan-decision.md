@@ -2,7 +2,7 @@
 
 > **Durum:** karar açık — egress ölçümü bekleniyor.
 > Geçiş planı yazıldı ve test edildi, **uykuda ama hemen uygulanabilir**:
-> `docs/migration-runbook.md`. Envanter: `docs/supabase-exit-plan.md`.
+> `docs/operations/migration-runbook.md`. Envanter: `docs/operations/supabase-exit-plan.md`.
 
 ---
 
@@ -149,7 +149,7 @@ panelde görünür. Ayda bir elle bak.
 ## 5. Geçişi TETİKLEYECEK eşikler
 
 Plan hazır ve test edilmiş. Aşağıdakilerden **herhangi biri** olursa
-`docs/migration-runbook.md` Faz 1'den başlatılır:
+`docs/operations/migration-runbook.md` Faz 1'den başlatılır:
 
 | # | Tetikleyici | Nasıl fark edilir |
 |---|---|---|
@@ -176,7 +176,7 @@ Bu riski küçük kılan şey ölçülen yükün düşüklüğü: **5 MAU, 1 eş
 bağlantı, günde 10–20 MB egress.** 2026-08-05'teki 50 dakikalık çöküş normal
 trafikten DEĞİL, `geo_cities` (76.990 satır) üzerinde satır başına fonksiyon
 çalıştıran **kötü bir ad-hoc sorgudan** geldi. O kural zaten belgeli
-(`CLAUDE.md` + `docs/supabase-exit-plan.md` §6).
+(`CLAUDE.md` + `docs/operations/supabase-exit-plan.md` §6).
 
 ### Koşul 1 — yedek (pazarlık konusu değil)
 Free'de otomatik yedek **yoktur**; Pro'daki 8 günlük yedek downgrade ile silinir.

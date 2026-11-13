@@ -1,7 +1,7 @@
 # CorteQS - AI Clean Code, Refactoring ve Debugging Talimatları
 
 **Senin Rolün:** Sen kıdemli bir React (v18), TypeScript (v5), Supabase ve Clean Code mimarısın. 
-**Görevin:** Ekteki/referans olarak verilen `PROJECT_OVERVIEW.md` dosyasındaki kısıtlamalara, mimari desenlere ve alan (domain) terminolojisine **%100 sadık kalarak** projede kapsamlı bir temizlik, refactoring ve dokümantasyon güncellemesi yapmaktır.
+**Görevin:** Ekteki/referans olarak verilen `project-overview.md` dosyasındaki kısıtlamalara, mimari desenlere ve alan (domain) terminolojisine **%100 sadık kalarak** projede kapsamlı bir temizlik, refactoring ve dokümantasyon güncellemesi yapmaktır.
 
 Aşağıdaki fazları sırasıyla ve her adımda bana detaylı bilgi/kod blokları vererek ilerletmelisin. Bir fazı bitirmeden diğerine geçme.
 
@@ -24,7 +24,7 @@ Aşağıdaki fazları sırasıyla ve her adımda bana detaylı bilgi/kod bloklar
 ### Görev 1.1: `cadde-api.ts` (986 satır) Ayrıştırması
 Bu dosyanın 25 importer'ı (bağımlılığı) var ancak testi yok.
 1. **Önce Test:** Bana `cadde-api.test.ts` için mevcut fonksiyonların davranışını kilitleyecek (characterization test) Vitest ve Testing Library tabanlı test blokları yaz. Testleri yazmadan refactor işlemine başlama.
-2. **Ayrıştırma Stratejisi:** Dosyayı `Muhasebe` modülündeki referans mimariye (bkz: `PROJECT_OVERVIEW.md` Madde 5.1) uygun olarak şu alt parçalara bölmek için kodları hazırla:
+2. **Ayrıştırma Stratejisi:** Dosyayı `Muhasebe` modülündeki referans mimariye (bkz: `project-overview.md` Madde 5.1) uygun olarak şu alt parçalara bölmek için kodları hazırla:
    - `cadde-feed-api.ts`
    - `cadde-cafe-api.ts`
    - `cadde-carsi-api.ts`
@@ -57,7 +57,7 @@ Projede kalan 3 kritik `as any` kullanımını düzelt:
 ## 📝 FAZ 3: Kalite Kontrol ve Dokümantasyon
 
 ### Görev 3.1: Doğrulama Adımları (Verification)
-Yaptığın değişikliklerin mevcut sistemi bozmadığını doğrulamak için benim terminalde sırasıyla hangi komutları çalıştırmam gerektiğini yaz. (Örn: `npm run verify:quality`, `npm run test` vs. - `PROJECT_OVERVIEW.md` Madde 13'ü baz al). Özellikle sözleşme testlerinin (redirects, seo, sitemap) bozulmadığından emin olmak için kontrol listesi ver.
+Yaptığın değişikliklerin mevcut sistemi bozmadığını doğrulamak için benim terminalde sırasıyla hangi komutları çalıştırmam gerektiğini yaz. (Örn: `npm run verify:quality`, `npm run test` vs. - `project-overview.md` Madde 13'ü baz al). Özellikle sözleşme testlerinin (redirects, seo, sitemap) bozulmadığından emin olmak için kontrol listesi ver.
 
 ### Görev 3.2: Mimari Dokümantasyon Güncellemesi
 Yaptığın bu refactoring işlemleri sonucunda `docs/ARCHITECTURE.md` veya ilgili tasarım belgesine eklenecek kısa, net ve markdown formatında bir "Cadde Modülü Yeni Mimari Özeti" metni hazırla.

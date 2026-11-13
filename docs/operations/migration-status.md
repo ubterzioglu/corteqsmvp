@@ -1,13 +1,13 @@
 # Supabase → Kendi Altyapı Geçişi — Durum
 
 > Bu dosya **her oturumda güncellenir**. Yeni bir konuşma buradan devam edebilmeli.
-> Envanter: `docs/supabase-exit-plan.md` · Runbook: `docs/migration-runbook.md`
-> Coolify: `docs/coolify-deployment.md` · Kod: `infra/selfhost/`, `scripts/migration/`
+> Envanter: `docs/operations/supabase-exit-plan.md` · Runbook: `docs/operations/migration-runbook.md`
+> Coolify: `docs/operations/coolify-deployment.md` · Kod: `infra/selfhost/`, `scripts/migration/`
 
 **Son güncelleme:** 2026-09-20
 **Genel durum:** 🟢 **TAM YEDEK ALINDI.** Geçiş kodu yazıldı ve test edildi;
 plan **uykuda ama hemen uygulanabilir**. Plan kararı (Pro / Free / VPS) açık —
-egress ölçümü bekleniyor → `docs/supabase-plan-decision.md`
+egress ölçümü bekleniyor → `docs/operations/supabase-plan-decision.md`
 **Canlıya yazıldı mı:** ❌ **HAYIR.** Deploy, DNS, şema veya veri değişikliği YOK.
 Canlı erişimlerin tamamı **salt okunur**: katalog sorguları, sağlık uç noktaları,
 `pg_dump` ve storage indirme.
@@ -41,7 +41,7 @@ Superuser parolası bir süre düz metin dosyalarda durdu → "bilinen" sayılma
 Runbook 2026-08-06'da yazılmış ama **uygulanmamış: 46 gündür açık.**
 
 Ajan kapatamaz (Coolify paneli işi). Adımlar:
-`docs/coolify-deployment.md` §3.0.
+`docs/operations/coolify-deployment.md` §3.0.
 
 ---
 
@@ -50,7 +50,7 @@ Ajan kapatamaz (Coolify paneli işi). Adımlar:
 | # | İş | Çıktı / kanıt |
 |---|---|---|
 | 1 | Taban ölçümü | `npm run test` **280 dosya / 1.990 test yeşil** · `tsc` **0 hata** · `lint` 0 problem |
-| 2 | Supabase bağımlılık envanteri | `docs/supabase-exit-plan.md` §2 (19 bileşen) |
+| 2 | Supabase bağımlılık envanteri | `docs/operations/supabase-exit-plan.md` §2 (19 bileşen) |
 | 3 | Mimari kararı + gerekçe | §4 → **Seçenek C (yalın OSS bileşen seti)** |
 | 4 | Lisans/maliyet doğrulaması | PostgREST MIT · GoTrue MIT · storage Apache-2.0 · realtime Apache-2.0 → **VPS dışı ücret yok** |
 | 5 | **2026-08-05 çöküşünün kök nedeni bulundu** | `supabase db dump` `auth`/`storage`/roller/grant'leri dışarıda bırakıyor → §5b.1 |
@@ -63,8 +63,8 @@ Ajan kapatamaz (Coolify paneli işi). Adımlar:
 | 12 | Storage export script'i | `scripts/migration/export-storage.mjs` — sayfalamalı, devam ettirilebilir, sha256 |
 | 13 | Restore script'i | `scripts/migration/restore-selfhost.mjs` — Supabase hedefini reddeder, rol doğrular |
 | 14 | Denklik doğrulama script'i | `scripts/migration/verify-parity.mjs` — 18 ölçüm + tablo + sequence |
-| 15 | Runbook (cutover + rollback) | `docs/migration-runbook.md` — 15 sessiz kırılma sınıfı |
-| 16 | Coolify rehberi | `docs/coolify-deployment.md` — senin kontrol listen |
+| 15 | Runbook (cutover + rollback) | `docs/operations/migration-runbook.md` — 15 sessiz kırılma sınıfı |
+| 16 | Coolify rehberi | `docs/operations/coolify-deployment.md` — senin kontrol listen |
 | 17 | `.gitignore` sertleştirildi | dump çıktıları + `infra/selfhost/.env` |
 
 ### Script korumaları — fiilen test edildi
@@ -121,7 +121,7 @@ Ajan kapatamaz (Coolify paneli işi). Adımlar:
 
 ### ⚠️ Canlı ölçüm, dört tahminimi çürüttü
 
-Ayrıntı: `docs/supabase-exit-plan.md` §5b.6. Özet: pgvector gerekli çıktı,
+Ayrıntı: `docs/operations/supabase-exit-plan.md` §5b.6. Özet: pgvector gerekli çıktı,
 2 şema kaçmıştı, 5 cron işi kaçmıştı, eklenti şema yerleşimi tahminden farklıydı.
 **Ders: 2026-08-04 tarihli baseline dump'ı güncel gerçeğin kanıtı değildir.**
 
@@ -145,13 +145,13 @@ Panel kullanım okuması (fatura dönemi 10 Eyl – 10 Eki, ~10 gün geçmiş, �
 kredi içinde). En dar eksen egress, %19 — yaklaşık 5 kat büyüme payı var.
 
 **Geçiş planı VPS'e taşınmaz, UYKUDA bekler.** Tetikleyiciler:
-`docs/supabase-plan-decision.md` §5. Tetiklenince yarım gün + 30–60 dk pencere.
+`docs/operations/supabase-plan-decision.md` §5. Tetiklenince yarım gün + 30–60 dk pencere.
 
 ### Free'nin iki koşulu
 1. **Günlük yedek** — Free'de otomatik yedek YOK ve downgrade mevcut 8 yedeği
    **siler**. Araç hazır: `scripts/migration/backup-rotate.mjs` (rotasyonlu,
    kısmi başarıyı gizlemez, çıkış kodu izlenebilir). Zamanlayıcı komutları:
-   `docs/supabase-plan-decision.md` §4.2.
+   `docs/operations/supabase-plan-decision.md` §4.2.
 2. **500 MB RAM'de ağır ad-hoc sorgu çalıştırmamak** — 2026-08-05'teki 50 dk'lık
    çöküş normal trafikten değil, `geo_cities` (76.990 satır) üzerinde satır
    başına fonksiyon çalıştıran bir keşif sorgusundan gelmişti.
@@ -160,7 +160,7 @@ kredi içinde). En dar eksen egress, %19 — yaklaşık 5 kat büyüme payı var
 
 ### Senin yapacakların
 1. **`87.106.222.106:5432` portunu kapat** — 46+ gündür açık, 158 kullanıcılık
-   üretim kopyası üstünde (`docs/coolify-deployment.md` §3.0)
+   üretim kopyası üstünde (`docs/operations/coolify-deployment.md` §3.0)
 2. **`cv-files` bucket'ı public** — içinde 3 özgeçmiş var; `onepagers` de public
 3. **Pro → Free downgrade** (yedek alındı, güvenli)
 4. **Yedek zamanlayıcısını kur** — Task Scheduler ya da VPS cron

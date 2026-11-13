@@ -1,6 +1,6 @@
 # Coolify Dağıtımı — kendi veri katmanımız
 
-> Runbook: `docs/migration-runbook.md` · Envanter: `docs/supabase-exit-plan.md`
+> Runbook: `docs/operations/migration-runbook.md` · Envanter: `docs/operations/supabase-exit-plan.md`
 > Compose: `infra/selfhost/docker-compose.yml`
 
 VPS: **8 çekirdek / 32 GB RAM / 480 GB disk** (kullanıcı bildirdi, 2026-09-20).

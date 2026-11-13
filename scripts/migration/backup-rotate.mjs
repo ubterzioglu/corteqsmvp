@@ -24,7 +24,7 @@
  *   node scripts/migration/backup-rotate.mjs --root <DIZIN>
  *   node scripts/migration/backup-rotate.mjs --root <DIZIN> --keep 14 --confirm
  *
- * Zamanlayıcı kurulumu: docs/supabase-plan-decision.md §4.2
+ * Zamanlayıcı kurulumu: docs/operations/supabase-plan-decision.md §4.2
  */
 
 import { spawnSync } from "node:child_process";
