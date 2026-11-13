@@ -6,10 +6,10 @@ import { Suspense } from "react";
 import { lazyWithReload } from "@/lib/lazy-with-reload";
 import { AdminLoadingState } from "@/components/admin/page/AdminLoadingState";
 
-const AdminRadarQueuePage = lazyWithReload(() => import("../AdminRadarQueuePage"));
-const AdminRadarSourcesPage = lazyWithReload(() => import("../AdminRadarSourcesPage"));
-const AdminRadarRunsPage = lazyWithReload(() => import("../AdminRadarRunsPage"));
-const AdminRadarGuidePage = lazyWithReload(() => import("../AdminRadarGuidePage"));
+const AdminRadarQueuePage = lazyWithReload(() => import("./AdminRadarQueuePage"));
+const AdminRadarSourcesPage = lazyWithReload(() => import("./AdminRadarSourcesPage"));
+const AdminRadarRunsPage = lazyWithReload(() => import("./AdminRadarRunsPage"));
+const AdminRadarGuidePage = lazyWithReload(() => import("./AdminRadarGuidePage"));
 
 export const radarRoutes = (
   <Route path="radar">
