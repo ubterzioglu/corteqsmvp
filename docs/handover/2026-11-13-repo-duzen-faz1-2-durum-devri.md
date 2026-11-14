@@ -1,4 +1,4 @@
-# Devir: Repo düzenleme turu (Faz 1–3 tamam ve main'de, Faz 4 bekliyor) — 13–14.11.2026
+# Devir: Repo düzenleme turu (Faz 1–4 tamam; Faz 1–3 main'de, Faz 4 `refactor/duzen-faz4-lib` dalında) — 13–14.11.2026
 
 > **Kaynak plan:** `C:/Users/baris-terzioglu/.claude/plans/repoda-klas-r-ve-dosya-enchanted-treasure.md`
 > **Çalışma şekli (kullanıcı onaylı):** stacked dallar — her faz bir öncekinin üstünde; merge'leri kullanıcı sırayla yapacak.
@@ -14,9 +14,11 @@
 | Faz 1 (kök + docs) | `refactor/duzen-faz1-docs` | ✅ **Tamam, commit `0434a9ec`** (43 dosya). Tüm kapanış kapıları yeşil. |
 | Faz 2 (scripts/) | `refactor/duzen-faz2-scripts` (faz1 üstünde) | ✅ Dalga 1–4 **commit'li** (`72196ccd`, `7748b25b`, `a3fbd390`, `76a793eb`). Kapanış kapıları: bkz §1.2 (sonuçlar işlendi). |
 | Faz 3 (admin pages) | `refactor/duzen-faz3-admin-pages` (faz2 üstünde) | ✅ 9 modül dalgası + docs commit'li; kapanış kapıları §2b |
-| Faz 4 (src/lib) | — | ⬜ Başlamadı |
+| Faz 4 (src/lib) | `refactor/duzen-faz4-lib` (main üstünde) | ✅ 5 dalga commit'li (12 domain klasörü, 263 dosya); kapanış kapıları §2c. Push/merge YAPILMADI |
 
-**Şu an (14.11):** Faz 1–3 **main'e fast-forward alındı ve push edildi** (`1485b2ce`, CI Quality yeşil). Tag'ler: `kokten-degisiklik-oncesi-2026-11-14`, `repo-duzen-bitti-2026-11-14` (ikisi de `1485b2ce`, origin'de). DB + storage yedeği alındı: `C:\temp_private\corteqs\yedekler\2026-11-14-kokten-oncesi` (ayrıntı: `docs/plans/2026-11-14-kokten-degisiklik-oncesi-yedek-ve-tag-plani.md` → Uygulama sonucu). **Canlı deploy YAPILMADI** (Coolify elle). Geri yükleme provası + ikinci kopya açık: KALANLAR BK01. Üç refactor dalı main'de birleşik; yerelde duruyor, silinmedi.
+**Faz 4 (14.11, sonradan):** `refactor/duzen-faz4-lib` dalında 5 dalga commit'li, main'e ALINMADI, push edilmedi — bkz §2c. Aşağıdaki paragraf Faz 1–3 anına aittir. ⚠️ `repo-duzen-bitti-2026-11-14` tag'ı Faz 3 sonunu gösterir (Faz 4 o gün bitmemişti); Faz 4 merge edilince yeni bir tag (örn. `repo-duzen-faz4-bitti-<tarih>`) atılması önerilir, eski tag silinmedi.
+
+**Şu an (14.11, Faz 3 sonu):** Faz 1–3 **main'e fast-forward alındı ve push edildi** (`1485b2ce`, CI Quality yeşil). Tag'ler: `kokten-degisiklik-oncesi-2026-11-14`, `repo-duzen-bitti-2026-11-14` (ikisi de `1485b2ce`, origin'de). DB + storage yedeği alındı: `C:\temp_private\corteqs\yedekler\2026-11-14-kokten-oncesi` (ayrıntı: `docs/plans/2026-11-14-kokten-degisiklik-oncesi-yedek-ve-tag-plani.md` → Uygulama sonucu). **Canlı deploy YAPILMADI** (Coolify elle). Geri yükleme provası + ikinci kopya açık: KALANLAR BK01. Üç refactor dalı main'de birleşik; yerelde duruyor, silinmedi.
 
 ---
 
@@ -147,6 +149,36 @@ Dalga sırası planla aynı; her modül bir commit, her commit öncesi tsc + hed
 - **Kapsam dışı bırakılan:** tarayıcı kontrolü (`npm run dev` 8080 çakışması — B09) YAPILMADI; kök `routes.tsx` render eden `App.admin-route.test` + `App.admin-cadde-route.test` ve regresyon sözleşmesi (101 test) her dalgada yeşildi.
 - **Faz 3 kapanış kapıları (plan §3.3):** verify:quality ✅ · lint ✅ (0 hata/10 uyarı) · check:dead ✅ · check:knip ✅ · ingest:tools:check ✅ "Katalog güncel" · format:check ✅ · build ✅ (1 dk 2 sn; `public/` drifti 1 dosya, geri alındı) · npm run test: ✅ **526 dosya / 4686 test** (445 s, tek başına koşuda) — tabanla birebir
   ⚠️ İlk tam koşu üç ağır işle (zincir + test + build) PARALEL yapıldı: 4 dosya `Failed to start forks worker` (kaynak), `lovable-forbidden-strings` "untracked taranır" testi 83 sn'de düştü — beşi izole koşuda 52/52 ✅. Ders: tam testi build ile aynı anda koşturma.
+
+
+### Faz 4 — `refactor/duzen-faz4-lib` (14.11, Claude) — §2c
+
+Plan §4 birebir izlendi: küçükten büyüğe, cadde en son. Her dalga: git mv → AST tabanlı yeniden yazma → tsc → `ingest:tools` → test → statik kapılar → commit.
+
+| Dalga | Commit | Klasörler | Dosya | AST specifier / dosya |
+| --- | --- | --- | --- | --- |
+| 1 | `1ad598b3` | surveys (3) · radar (4) · service-finder (4) · referral (5) | 16 | 60 / 57 |
+| 2 | `a48a748c` | germany (10) · muhasebe (14) · catalog (15) · events (17) | 56 | 170 / 146 |
+| 3 | `53d78d5a` | profile (23) · group (34: group-* + whatsapp-landing*) | 57 | 144 / 117 |
+| 4 | `e4dccecb` | relocation (58, relocation-tools-* dahil) | 58 | 159 / 113 |
+| 5 | `5b9c83be` | cadde (76, cadde.ts barrel dahil) | 76 | 253 / 141 |
+
+`src/lib` kök dosya sayısı **423 → 160**. Dosya sayıları plan §4.1 tablosuyla birebir (16/56/57/58/76 = 263).
+
+**Mekanizma (geçici, commit'lenmedi):** `move-lib.mjs` — TypeScript derleyici API'siyle her import/export/dinamik import/`vi.mock`/`import()` tipini çözer; taşınan hedefe giden alias'ı `@/lib/<klasör>/<ad>` yapar, taşınan importer'ın göreli yollarını yeniden hesaplar (`../x` → `@/x`), ardından `src/lib/<ad>.ts` ve `@/lib/<ad>` sabit literal'lerini metin geçişiyle düzeltir (eslint-suppressions.json, tsconfig.strict-pilot.json, eslint.config.js, dokümanlar dahil). Plan §4.2'nin regex'li tarifinden bilerek sapıldı: göreli importlar, `vi.mock` ve dinamik importlar regex'le güvenilir çözülmez. Shim BIRAKILMADI.
+
+**AST'nin göremediği, test/uyarıyla yakalanıp ELLE düzeltilenler (sonraki taşımalar için ders):**
+1. **Konumdan repo kökü hesaplayan testler** (`resolve(__dirname, "../..")`): bir seviye derine inince `src/src/...` oluşur → 3 grup testi `"../../.."` yapıldı. Araç artık taşınan dosyalarda `__dirname`/`import.meta` kullanımını uyarı olarak basar (Dalga 4–5'te 0).
+2. **Parçalı yol kuran test** (`path.join(SRC_ROOT, "lib", "profile-phone.ts")`): `phone-country-derivation.test.ts` → `"lib", "profile", ...`. Araç artık `"lib", "<taşınan ad>"` kalıbını da uyarır.
+3. **`src/lib` kökünü düz tarayan test:** `cadde-write-diagnostics.test.ts` → `src/lib/cadde`. Testin kendi "bayat/sabit liste kapanı" (`>= 11 dosya`) bunu YAKALADI — korumalar çalışıyor.
+4. **Regex literal içinde kaçışlı yol:** `@\/lib\/cadde-carsi-api` (`cadde-carsi-admin-api.test.ts`) — metin geçişi `@/lib/...` arar, kaçışlıyı görmez. Tüm repoda `@\/lib\/` arandı: başka taşınan-ad hit'i yok.
+5. **Planın uyardığı ama sorunsuz çıkanlar:** `group-settings.test.ts` (özyinelemeli, `allowed` listesi metin geçişiyle güncellendi), `profile-text-health.test.ts` (`src/lib`'i taramıyor), `walk.mjs` cadde/muhasebe öneki (alt klasörde de eşleşir), `ingest-tools` seçicisi (zaten özyinelemeli; 72 modül aracı sabit, `tool_key` dosya adından türer).
+6. **commit'e girmeyen kalıntı:** `supabase/functions/relocation-assistant/index.ts` yorum satırı yol güncellemesi ilk `git add` kapsamının dışında kaldı → Dalga 4 commit'ine amend. Sonraki `git add` kapsamına `supabase e2e` eklendi.
+
+**Cadde karakterizasyonu (plan §4 kuralı):** `vitest run cadde` taşımadan önce **75 dosya / 645 test**, sonra **75 dosya / 645 test**.
+
+**Faz 4 kapanış kapıları:** tam test: ✅ **526 dosya / 4686 test** (346 s, tek başına koşuda — tabanla birebir) · build: ✅ vite 14,5 sn + `verify:release` tutarlı (`public/` driftı 1 dosya, geri alındı) · verify:quality ✅ · lint ✅ · check:dead ✅ · knip ✅ · ingest:tools:check ✅ · format:check ✅ · `git grep "@/lib/cadde-" src` → 0.
+**Dokunulmayanlar (bilinçli):** tarihli devir/denetim/durum dokümanlarındaki `src/lib/cadde-*.ts` glob atıfları (o günün kaydı); `docs/archive|history|reference`; migration içindeki yol yorumları.
 
 ---
 

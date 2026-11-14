@@ -221,7 +221,9 @@ muhasebe/
         └── DialogForms.tsx
 ```
 
-**Follow this structure for surveys, may19, lansman, referral modules.** (Cadde already follows it — `src/lib/cadde-*.ts` is the most complete example.)
+**Follow this structure for surveys, may19, lansman, referral modules.** (Cadde already follows it — `src/lib/cadde/cadde-*.ts` is the most complete example.)
+
+**`src/lib/` domain klasörleri (2026-11-14, düzen turu Faz 4):** cadde/ relocation/ profile/ group/ events/ muhasebe/ catalog/ germany/ referral/ service-finder/ radar/ surveys/ — dosya ADLARI korunarak (`cadde-api.ts` → `cadde/cadde-api.ts`), testler yanında. Yeni bir cadde/relocation/… dosyası ilgili klasöre girer ve `@/lib/<klasör>/<ad>` ile import edilir; kökte yalnız tekil yardımcılar ve kaynağı olmayan sözleşme testleri kalır (~160 dosya). ⚠️ Konumdan repo kökü hesaplayan test (`resolve(__dirname, "../..")`) bir seviye derine inince SESSİZCE yanlış dizine bakar — `process.cwd()` tabanlı yol kullan. Dizin tarayan sözleşme testi kök `src/lib`'i düz okuyorsa taşınan klasörü de taramalı (`cadde-write-diagnostics.test.ts` bu yüzden `src/lib/cadde`'yi okur).
 
 ### Cadde 3.0 Rules (live 2026-06-11 — full detail: `docs/ARCHITECTURE.md` §4)
 - **RPC-only mutations:** cadde content tables have NO user INSERT policies. All writes go through
@@ -324,7 +326,7 @@ This is intentional to avoid massive refactor burden. When adding new code, writ
 | `src/App.tsx` | Master route table (329 lines, 61 `lazy()` code-split) |
 | `src/main.tsx` | Hydrate/Render switch (future SSR entry) |
 | `src/components/auth/AuthProvider.tsx` | Supabase session + context root |
-| `src/lib/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
+| `src/lib/muhasebe/muhasebe-*.ts` | Reference architecture (apis, schemas, aggregations) |
 | `src/lib/admin.ts` + `src/lib/admin/*.ts` | `admin.ts` is a 57-line barrel; real impl in `admin/` (7 domain APIs) — pattern for new admin APIs |
 | `src/integrations/supabase/client.ts` | Lovable-generated, risky to modify |
 | `vite.config.ts` | Legacy `*.html` redirect stubs for commercial docs (SPA renders the content) |
@@ -753,7 +755,7 @@ npm run test -- --coverage   # Coverage report (experimental)
 - **Coverage target:** 80%+ for new code
 
 ### Good Test Examples
-- `src/lib/muhasebe-*.test.ts` — integration tests with aggregations
+- `src/lib/muhasebe/muhasebe-*.test.ts` — integration tests with aggregations
 - `src/lib/lansman.test.ts` — domain logic testing
 - `src/components/AdminLansmanTable.test.tsx` — component testing
 

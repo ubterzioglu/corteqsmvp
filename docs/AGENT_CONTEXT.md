@@ -397,7 +397,7 @@ supabase functions deploy whatsapp-reply
 | `src/components/auth/AuthProvider.tsx` | Session yönetiminin kalbi |
 | `src/components/auth/useAuth.ts` | Canonical auth hook — buradan import et |
 | `src/integrations/supabase/client.ts` | Lovable-generated — değiştirme (tek client) |
-| `src/lib/muhasebe-*.ts` | Referans mimari pattern |
+| `src/lib/muhasebe/muhasebe-*.ts` | Referans mimari pattern |
 | `src/lib/admin.ts` + `src/lib/admin/` | `admin.ts` = barrel; `admin/` = 7 domain API (yeni admin API'leri için pattern) |
 | `src/lib/features.ts` | Feature flag yardımcıları |
 | `src/lib/member-profile-api.ts` | Üye profil API katmanı (tercih edilen) |

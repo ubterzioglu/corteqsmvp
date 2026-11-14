@@ -265,7 +265,7 @@ Coolify deploy → corteqs.net
 |-------|-------------|
 | `src/App.tsx` | Ana route tablosu (329 satır, 61 lazy code-split) |
 | `src/components/auth/AuthProvider.tsx` | Supabase session + context kökü |
-| `src/lib/muhasebe-*.ts` | Referans mimari (API, şema, formatlama, agregasyon) |
+| `src/lib/muhasebe/muhasebe-*.ts` | Referans mimari (API, şema, formatlama, agregasyon) |
 | `src/integrations/supabase/client.ts` | Tek Supabase client (Lovable-generated) |
 | `nginx.conf.template` | Üretim runtime yapılandırması |
 | `src/lib/redirects.ts` | Tek yönlendirme kaynağı |
@@ -446,7 +446,7 @@ Bu kurallar sessizce bozulabilen (test/build patlamayan ama canlıda zarar veren
 - Sözleşme testleri (redirects, seo, notfound-seo, sitemap) **gevşetilemez**
 
 ### İyi Test Örnekleri
-- `src/lib/muhasebe-*.test.ts` — agregasyonlu integration test
+- `src/lib/muhasebe/muhasebe-*.test.ts` — agregasyonlu integration test
 - `src/lib/lansman.test.ts` — domain logic
 - `src/components/AdminLansmanTable.test.tsx` — component test
 
@@ -518,7 +518,7 @@ npm run migrate:apply           # Migration uygulama
 ### Gemini'ye Talimatlar
 
 1. **Önce `CLAUDE.md`'yi oku** — projenin tüm kuralları, kısıtları ve bağlamı orada
-2. **Muhasebe modülünü referans al** — `src/lib/muhasebe-*.ts` en temiz kalıp
+2. **Muhasebe modülünü referans al** — `src/lib/muhasebe/muhasebe-*.ts` en temiz kalıp
 3. **Cadde modülünü dikkatli değiştir** — sessizce kırılan bir alan, test olmadan dokunma
 4. **800+ satırlık 5 dosyaya odaklan** — özellikle `cadde-api.ts` ve `CaddePage.tsx`
 5. **TypeScript strict mode'a kademeli geçiş** — yeni dosyalar strict, eskilere dokunma
