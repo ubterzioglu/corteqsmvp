@@ -13,7 +13,7 @@ import CaddePostMenu from "@/components/cadde/CaddePostMenu";
 
 const deleteCaddePostMock = vi.fn();
 
-vi.mock("@/lib/cadde-api", () => ({
+vi.mock("@/lib/cadde/cadde-api", () => ({
   deleteCaddePost: (...args: unknown[]) => deleteCaddePostMock(...args),
 }));
 

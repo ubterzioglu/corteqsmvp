@@ -7,12 +7,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
 import CaddeComposer from "@/components/cadde/CaddeComposer";
-import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde-composer";
-import { uploadCaddeMedia } from "@/lib/cadde-media";
+import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde/cadde-composer";
+import { uploadCaddeMedia } from "@/lib/cadde/cadde-media";
 
 // Yükleme yolu ayrı test edilir; burada composer'ın kendi davranışı doğrulanır.
-vi.mock("@/lib/cadde-media", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-media")>("@/lib/cadde-media");
+vi.mock("@/lib/cadde/cadde-media", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-media")>("@/lib/cadde/cadde-media");
   return {
     ...actual,
     uploadCaddeMedia: vi.fn(),

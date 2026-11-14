@@ -10,11 +10,11 @@ import { ArrowRight, ShoppingBag } from "lucide-react";
 
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import CaddeInfoPopover from "@/components/cadde/CaddeInfoPopover";
-import { carsiCategoryHref, formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde-carsi-api";
+import { carsiCategoryHref, formatCarsiPrice, getCarsiVisible, listCarsiItems } from "@/lib/cadde/cadde-carsi-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
-import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeFilterState } from "@/lib/cadde-types";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde/cadde-query-cache";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddeFilterState } from "@/lib/cadde/cadde-types";
 
 interface CarsiGlobalTickerProps {
   filters: CaddeFilterState;

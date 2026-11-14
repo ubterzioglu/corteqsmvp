@@ -20,8 +20,8 @@ import {
   getCarsiItem,
   recordCarsiContact,
   updateCarsiItem,
-} from "@/lib/cadde-carsi-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+} from "@/lib/cadde/cadde-carsi-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import { formatPaddedLongDateTR } from "@/lib/format-date";
 
 const CaddeCarsiItemPage = () => {

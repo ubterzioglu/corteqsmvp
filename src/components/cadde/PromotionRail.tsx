@@ -7,10 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 import SponsoredFeedCard from "@/components/cadde/SponsoredFeedCard";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
-import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeFilterState } from "@/lib/cadde-types";
+import { listCaddePromotions } from "@/lib/cadde/cadde-tanitim-api";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde/cadde-query-cache";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddeFilterState } from "@/lib/cadde/cadde-types";
 
 interface PromotionRailProps {
   filters: CaddeFilterState;

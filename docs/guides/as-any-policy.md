@@ -3,7 +3,7 @@
 `as any`, uygulama modeli olarak değil yalnız Supabase istemcisinin henüz üretilmemiş
 tablo/RPC tipleri için dar adapter sınırında kullanılabilir.
 
-İzinli konumlar: `src/lib/**/*-api.ts`, `src/lib/cadde-internal.ts` ve bu dosyalara
+İzinli konumlar: `src/lib/**/*-api.ts`, `src/lib/cadde/cadde-internal.ts` ve bu dosyalara
 eşdeğer, veritabanı çağrısını uygulama kodundan ayıran adapter modülleri. Her kullanım,
 eksik generated tip veya istemci sınırlamasını açıklayan yan satır yorumuna sahip olmalı.
 

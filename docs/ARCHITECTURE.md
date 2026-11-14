@@ -131,7 +131,7 @@ canlı son sürüm `20260611160000`). Kapanış raporu: `docs/cadde-300/change-r
 
 1. **RPC-only mutation** — cadde içerik tablolarında kullanıcıya açık INSERT policy yok.
 2. **SQL↔TS aynaları** (testli; birini değiştiren diğerini günceller):
-   `can_post_kopru` ↔ `src/lib/cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
+   `can_post_kopru` ↔ `src/lib/cadde/cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
    `can_join_cadde_cafe` ↔ `canJoinCafeRule`. Otomatik tarama regex'i ↔ `CAFE_NAME_BLOCKLIST`.
 3. **Ban kill-switch** `has_cadde_feature` içinde — yeni yazma RPC'leri otomatik kapsanır.
 4. **`cadde_settings`** — tüm limit/flag'ler (telefon zorunluluğu D-03, cafe 3/gün–10/gün–6saat,

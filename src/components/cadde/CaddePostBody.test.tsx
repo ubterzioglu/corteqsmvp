@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import CaddePostBody from "@/components/cadde/CaddePostBody";
-import type { CaddePostMention } from "@/lib/cadde-types";
+import type { CaddePostMention } from "@/lib/cadde/cadde-types";
 
 const renderBody = (body: string, mentions: CaddePostMention[] = []) =>
   render(

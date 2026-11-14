@@ -29,14 +29,14 @@
 ### 2.1 `src/pages/CaddePage.tsx` — 599 satır
 
 - **Auth:** canonical `@/components/auth/useAuth` (satır 6) — shim DEĞİL. ✅
-- **Veri:** React Query (`useInfiniteQuery`/`useQuery`/`useMutation`, satır 2) → tüm çağrılar `src/lib/cadde.ts` üzerinden.
+- **Veri:** React Query (`useInfiniteQuery`/`useQuery`/`useMutation`, satır 2) → tüm çağrılar `src/lib/cadde/cadde.ts` üzerinden.
 - **Demo/real:** URL `?mode=` parametresi; **default `demo`** (`cadde.ts:463` `parseCaddeFilters`). UI'da "Gerçek / Demo" switch (CaddePage.tsx:278). Post atınca real moda zorlanıyor (satır 158).
 - **Filtre:** tek ülke + tek şehir (CKS'in çoklu filtresi yok).
 - **Köprü:** basit `filters.bridge` switch (CaddePage.tsx:321) — sadece feed filtresi; paylaşım entitlement'ı YOK.
 - **Billboard / sponsor:** sağ kolon billboard kartları + `injectSponsoredPlacement` ile feed içi sponsor kartı (CaddePage.tsx:224).
 - **Profil kapısı YOK:** profil eksik / telefon doğrulanmamış kullanıcı için hiçbir gate yok.
 
-### 2.2 `src/lib/cadde.ts` — 877 satır, 25 export
+### 2.2 `src/lib/cadde/cadde.ts` — 877 satır, 25 export
 
 Public okuma: `listCaddeCountries`, `listCaddeCities`, `listCaddeFeed`, `listCaddeCafes`, `listCaddeBillboardCards`, `getCaddeSponsoredPlacement`.
 Mutation: `createCaddePost`, `toggleCaddeReaction`, `createCaddeComment`, `joinCaddeCafe`.
@@ -206,7 +206,7 @@ Ayrıca: canonical auth'un onboarding kriteri yalnız `full_name` (AuthProvider.
 
 | CKS referansı | Repo durumu |
 |---|---|
-| `src/lib/caddeRules.ts` | Yok → canonical `src/lib/cadde-rules.ts` olarak yazılacak |
+| `src/lib/caddeRules.ts` | Yok → canonical `src/lib/cadde/cadde-rules.ts` olarak yazılacak |
 | `src/components/feed/CarsiGrid.tsx`, `CarsiGlobalTicker.tsx`, `CarsiItemsManager.tsx` | Yok (repo genelinde `carsi`/`çıfıt` geçen kaynak dosya yok) → `components/cadde/` altında yeni |
 | `src/lib/interestTargeting.ts` | Yok → `cadde-targeting.ts` |
 | `src/components/NotificationsBell.tsx` | Yok; en yakın mevcutlar `NotificationsList.tsx` / `NotificationsPanel.tsx` (dead) → yeni `components/cadde/NotificationsBell.tsx` |

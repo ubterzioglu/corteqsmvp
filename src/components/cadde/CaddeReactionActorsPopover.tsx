@@ -13,8 +13,8 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { listCaddePostReactors } from "@/lib/cadde-api";
-import type { CaddePostReactor, CaddeReactionType } from "@/lib/cadde-types";
+import { listCaddePostReactors } from "@/lib/cadde/cadde-api";
+import type { CaddePostReactor, CaddeReactionType } from "@/lib/cadde/cadde-types";
 
 interface CaddeReactionActorsPopoverProps {
   postId: string;

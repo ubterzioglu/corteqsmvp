@@ -40,8 +40,8 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { formatCafeOccupancy } from "@/lib/cadde-cafe-occupancy";
-import { uploadCaddeMedia } from "@/lib/cadde-media";
+import { formatCafeOccupancy } from "@/lib/cadde/cadde-cafe-occupancy";
+import { uploadCaddeMedia } from "@/lib/cadde/cadde-media";
 import {
   approveCaddeCafeMember,
   archiveCaddeCafe,
@@ -50,10 +50,10 @@ import {
   joinCaddeCafe,
   listCaddeCafeFeed,
   listCaddeCafeMembers,
-} from "@/lib/cadde-api";
-import { listCaddeCafeThemes, updateCaddeCafeLogo } from "@/lib/cadde-cafe-api";
-import { emptyCaddeComposer } from "@/lib/cadde-composer";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+} from "@/lib/cadde/cadde-api";
+import { listCaddeCafeThemes, updateCaddeCafeLogo } from "@/lib/cadde/cadde-cafe-api";
+import { emptyCaddeComposer } from "@/lib/cadde/cadde-composer";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const remainingLabel = (endsAt: string): string => {

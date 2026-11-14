@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
-import { countCaddePostsSince, listCaddeFeed } from "@/lib/cadde-api";
-import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde-feed-polling";
-import { injectSponsoredPlacement, interleavePromotions } from "@/lib/cadde-format";
-import { widenCaddeFilters } from "@/lib/cadde-feed-widen";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { countCaddePostsSince, listCaddeFeed } from "@/lib/cadde/cadde-api";
+import { caddeNewPostPollInterval, newestCaddeCreatedAt, nextCaddeZeroStreak } from "@/lib/cadde/cadde-feed-polling";
+import { injectSponsoredPlacement, interleavePromotions } from "@/lib/cadde/cadde-format";
+import { widenCaddeFilters } from "@/lib/cadde/cadde-feed-widen";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import type {
   CaddeCity,
   CaddeCountry,
@@ -14,7 +14,7 @@ import type {
   CaddeFilterState,
   CaddePromotionCard,
   CaddeSponsoredPlacement,
-} from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-types";
 
 type UseCaddeFeedStateInput = {
   filters: CaddeFilterState;

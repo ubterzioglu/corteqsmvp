@@ -201,7 +201,7 @@ sütunu 30 Haziran'da canlı kodda teyit edildi.</p>
   <tr>
     <td><strong>B1 — types.ts regen</strong></td>
     <td><span class="badge b-red">🔴 AÇIK</span></td>
-    <td><code>src/lib/cadde-internal.ts</code> içinde hâlâ 1 izole <code>db as any</code> cast var; Management API token (<code>SUPABASE_ACCESS_TOKEN</code>) "Unauthorized" verdiği için regen yapılamadı</td>
+    <td><code>src/lib/cadde/cadde-internal.ts</code> içinde hâlâ 1 izole <code>db as any</code> cast var; Management API token (<code>SUPABASE_ACCESS_TOKEN</code>) "Unauthorized" verdiği için regen yapılamadı</td>
     <td>Yeni RPC'ler tip-güvensiz yazılır, <code>as any</code> borcu büyür (B7 geriler). <strong>Karar:</strong> geçerli access token sağla → <code>npx supabase gen types … &gt; types.ts</code> → cast'i kaldır. Operasyonel, ürün kararı değil</td>
   </tr>
   <tr>

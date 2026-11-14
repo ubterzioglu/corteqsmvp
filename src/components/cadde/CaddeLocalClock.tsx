@@ -1,11 +1,11 @@
 // Workshop m133 — kapsam şeridindeki yerel saat rozeti.
 // Saf mantık (şehir çözümü, saat okuma, gün/gece eşiği) ayrı dosyada ve testli:
-// src/lib/cadde-local-clock.ts. Burada yalnız tik ve çizim var.
+// src/lib/cadde/cadde-local-clock.ts. Burada yalnız tik ve çizim var.
 
 import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
-import { readCaddeClock, type CaddeClockTarget } from "@/lib/cadde-local-clock";
+import { readCaddeClock, type CaddeClockTarget } from "@/lib/cadde/cadde-local-clock";
 
 /** Saniye gösterilmiyor; dakika hassasiyeti için 30 sn yeterli (en fazla 30 sn bayat). */
 const TICK_MS = 30_000;

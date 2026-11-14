@@ -122,7 +122,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:430`
 - `src/pages/cadde/CaddePage.tsx:383`
 - `src/pages/cadde/CaddeCafePage.tsx:163`
-- `src/lib/cadde-types.ts:308`
+- `src/lib/cadde/cadde-types.ts:308`
 - `src/components/cadde/CreateCafeForm.tsx:159`
 
 **Mevcut:** Kartlarda tek satır var: cafe.title bold (CaddePage:430 ve :383 'font-semibold'); oda/tema adı kartlarda HİÇ gösterilmiyor. Tema yalnız CaddeCafePage:163'te başlığın ÜSTÜNDE ayrı bir outline Badge olarak ve HAM anahtar halinde basılıyor (cafe.themeKey, ör. 'Genel'/'IT' — cadde-api.ts:356 row.theme_key'i aynen geçirir). Türkçe tema etiketi (labelTr) sadece CreateCafeForm:159-160'taki listCaddeCafeThemes seçiminde kullanılıyor.
@@ -139,7 +139,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/components/cadde/CaddeComposer.tsx:56`
 - `src/components/cadde/CaddeComposer.tsx:152-161`
 - `src/components/cadde/CaddeComposer.tsx:215-269`
-- `src/lib/cadde-composer.ts:11-16`
+- `src/lib/cadde/cadde-composer.ts:11-16`
 - `src/components/cadde/CaddeComposer.test.tsx:57-66`
 - `src/pages/cadde/CaddePage.tsx:548`
 
@@ -166,9 +166,9 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/components/cadde/CaddeComposer.tsx:64-87`
 - `src/components/cadde/CaddeComposer.tsx:121-138`
-- `src/lib/cadde-media.ts:21-26`
-- `src/lib/cadde-media.ts:79-104`
-- `src/lib/cadde-media.ts:118-145`
+- `src/lib/cadde/cadde-media.ts:21-26`
+- `src/lib/cadde/cadde-media.ts:79-104`
+- `src/lib/cadde/cadde-media.ts:118-145`
 - `e2e/cadde-mobile-audit.spec.ts:1`
 
 **Mevcut:** Yükleme zinciri tam: handleFiles sıralı validate+upload yapıyor (CaddeComposer.tsx:64-87), gizli file input'lar + Fotoğraf/Video çipleri (121-138), limitler SQL cadde_validate_media ile ayna sözleşmesi (cadde-media.ts:21-26, max 4 görsel/1 video, 5MB/50MB), upload cadde-media bucket'ına {uid}/{scope}/{uuid} yoluyla (118-145). ANCAK cadde-media.ts:8'in referans verdiği cadde-media.test.ts dosyası YOK ve mevcut e2e/cadde-mobile-audit.spec.ts hiç upload/composer senaryosu içermiyor (grep 0 sonuç).
@@ -181,7 +181,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/components/cadde/CaddeComposer.tsx:177-213`
 - `src/pages/cadde/CaddePage.tsx:161-167`
 - `src/pages/cadde/CaddePage.tsx:478`
-- `src/lib/cadde-rules.ts:14-15`
+- `src/lib/cadde/cadde-rules.ts:14-15`
 - `src/pages/cadde/CaddePage.tsx:93`
 
 **Mevcut:** Çip etiketi 'Konum' (CaddeComposer.tsx:141). Hedef boş bırakılırsa AKTİF FİLTRE kullanılıyor: panelde 'boş = {filterCountryLabel}' seçeneği (satır 181-189), submit'te fallback 'composer.country || filters.countries[0] || ""' (CaddePage.tsx:166-167). Kullanıcının kayıtlı konumu hiç devrede değil — oysa get_cadde_actor_context zaten country/city döndürüyor (cadde-rules.ts:14-15) ve CaddePage.tsx:93'te yükleniyor (line 406'da viewerCity olarak kullanılıyor).
@@ -192,12 +192,12 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 ### m9 · Konum drill-down: +1 ülke VEYA +1 şehir — **L (1+ gün)**
 
-- `src/lib/cadde-composer.ts:24-25`
+- `src/lib/cadde/cadde-composer.ts:24-25`
 - `src/components/cadde/CaddeComposer.tsx:177-213`
-- `src/lib/cadde-api.ts:575-588`
+- `src/lib/cadde/cadde-api.ts:575-588`
 - `supabase/migrations/applied/20260730120000_cadde_v1_002_hashtags_mentions.sql:378`
 - `supabase/migrations/applied/20260730170000_cadde_v1_007_geo_matching.sql:394-395`
-- `src/lib/cadde-ranking.ts:56-63`
+- `src/lib/cadde/cadde-ranking.ts:56-63`
 
 **Mevcut:** Veri modeli TEK hedef: CaddeComposerValue'da tekil country/city string (cadde-composer.ts:24-25), panelde tek Ülke+Şehir select çifti (CaddeComposer.tsx:177-213), RPC tekil p_country/p_city alıyor (cadde-api.ts:579-580; SQL create_cadde_post_v1 20260730120000:378), feed eşleşmesi post başına tek country_id/city_id üzerinden (geo_matching:394-395 same_city/same_country).
 
@@ -208,8 +208,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 ### m10 · Çoklu ülke/şehir premium'a kilitli (kapalı) — **S (<1 saat)**
 
 - `src/components/cadde/CaddeComposer.tsx:177-213`
-- `src/lib/cadde-carsi-api.ts:38`
-- `src/lib/cadde-rules.ts:117-128`
+- `src/lib/cadde/cadde-carsi-api.ts:38`
+- `src/lib/cadde/cadde-rules.ts:117-128`
 
 **Mevcut:** Premium kavramı cadde'de yok; birden fazla hedef zaten teknik olarak mümkün değil (m9'daki tekil model). Ürün limitleri cadde_settings'te tutuluyor (örnek okuma: cadde-carsi-api.ts:38; CLAUDE.md kuralı: product limits/flags = cadde_settings).
 
@@ -223,8 +223,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:478`
 - `src/components/cadde/CaddeComposer.tsx:180-189`
 - `supabase/migrations/applied/20260730170000_cadde_v1_007_geo_matching.sql:365-371`
-- `src/lib/cadde-ranking.ts:56-63`
-- `src/lib/cadde-ranking.test.ts:1`
+- `src/lib/cadde/cadde-ranking.ts:56-63`
+- `src/lib/cadde/cadde-ranking.test.ts:1`
 
 **Mevcut:** Bugün serbest global FİİLEN VAR: hedef ve filtre boşsa countryId '' gidiyor (CaddePage.tsx:166-167) ve panel 'boş = Global' gösteriyor (filterCountryLabel='Global', CaddePage.tsx:478 + CaddeComposer.tsx:181). Feed'de geo-dışı postlar eşiksiz herkese görünüyor: band case'inde F (else 6) tüm global postları kapsıyor (geo_matching:365-371; TS aynası computeCaddeBand cadde-ranking.ts:56-63) — D/E bandları yalnız sıralamayı etkiliyor, görünürlüğü kısıtlamıyor.
 
@@ -238,7 +238,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/components/directory/public-profile/PublicProfileQuickActions.tsx:16-23`
 - `src/components/MapShareButtons.tsx:35-42`
 - `src/App.tsx:197-231`
-- `src/lib/cadde-api.ts:571-591`
+- `src/lib/cadde/cadde-api.ts:571-591`
 
 **Mevcut:** Feed kartı aksiyon satırında yalnız 3 aksiyon var: Tepki Ver popover'ı (CaddePage.tsx:590-631), yorum toggle (633-645), şikayet bayrağı (646-657). Cadde dosyalarında hiç navigator.share/clipboard kullanımı yok (grep 0 sonuç); mevcut paylaşım desenleri başka modüllerde (PublicProfileQuickActions.tsx:16-23 share+clipboard fallback, MapShareButtons.tsx:35-42). Post detay route'u da yok — cadde route'ları yalnız /cadde, /cadde/cafe/:cafeId, /cadde/carsi[/:itemId] (App.tsx:197-231).
 
@@ -250,9 +250,9 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/components/cadde/CaddeComposer.tsx:241-267`
 - `src/components/cadde/CaddeComposer.tsx:27`
-- `src/lib/cadde-targeting.ts:35`
-- `src/lib/cadde-api.ts:573-574`
-- `src/lib/cadde-ranking.ts:27-29`
+- `src/lib/cadde/cadde-targeting.ts:35`
+- `src/lib/cadde/cadde-api.ts:573-574`
+- `src/lib/cadde/cadde-ranking.ts:27-29`
 - `src/pages/cadde/CaddePage.tsx:563-580`
 
 **Mevcut:** Etiket seçimi Detaylar panelinin içinde: interestCatalog chip'leri max 3 seçim, ilki birincil ihtiyaç (CaddeComposer.tsx:241-267, toggleInterestSelection cadde-targeting.ts:35). createCaddePost interests'i doğrulayıp needCategory türetiyor (cadde-api.ts:573-574), ranking perInterest/interestCap/needMatch ağırlıkları kullanıyor (cadde-ranking.ts:27-29), feed kartı interest rozetlerini basıyor (CaddePage.tsx:563-580 — serbest #hashtag'ler AYRI sistem, veto kapsamı dışında).
@@ -279,8 +279,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/components/cadde/CaddeFeedScopeBar.tsx:27`
 - `src/components/cadde/CaddeFeedScopeBar.tsx:28`
-- `src/lib/cadde-format.ts:26`
-- `src/lib/cadde-types.ts:220`
+- `src/lib/cadde/cadde-format.ts:26`
+- `src/lib/cadde/cadde-types.ts:220`
 
 **Mevcut:** SCOPES dizisinde `{ key: "following", label: "Takip Ettiklerim", comingSoon: true }` (satır 27) ve `{ key: "jobs", label: "İş Fırsatları", comingSoon: true }` (satır 28) var; comingSoon olduğu için disabled + "Yakında" rozetiyle görünüyorlar (satır 47, 58). URL parse whitelist'i cadde-format.ts:26 FEED_SCOPES ve tip birliği cadde-types.ts:220 CaddeFeedScope bu iki anahtarı içeriyor.
 
@@ -291,7 +291,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:240`
 - `src/pages/cadde/CaddePage.tsx:241`
 - `src/pages/cadde/CaddePage.tsx:508`
-- `src/lib/cadde-api.ts:713`
+- `src/lib/cadde/cadde-api.ts:713`
 
 **Mevcut:** Baseline `newestLoadedAt = feedQuery.data?.pages[0]?.items[0]?.createdAt` (satır 240) — ama feed CKS skoruyla sıralı (pinned/yüksek skorlu eski post en üstte kalabilir), yani items[0] EN YENİ post değil. countCaddePostsSince (cadde-api.ts:713-730) bu tarihten yenileri `gt(created_at)` ile sayar; yenileme sonrası üstteki post değişmezse sayı >0 kalır. Ayrıca butonun onClick'i (satır 508-511) invalidate sonrası `newPostsQuery.refetch()` ile ESKİ queryKey'i (eski timestamp) tekrar çalıştırıp bayat sayıyı yeniden üretiyor.
 
@@ -301,7 +301,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/pages/cadde/CaddePage.tsx:548`
 - `src/pages/cadde/CaddePage.tsx:47`
-- `src/lib/cadde-composer.ts:11`
+- `src/lib/cadde/cadde-composer.ts:11`
 
 **Mevcut:** Feed kartı başlık satırında isim + rol rozetinin yanında `<Badge variant="outline">{POST_TYPE_LABELS[item.post.type] ?? item.post.type}</Badge>` (satır 548) tip etiketi ("Soru", "Paylaşım", "İlan / Teklif", "Etkinlik" — kaynak: cadde-composer.ts:11-16) gösteriliyor.
 
@@ -341,14 +341,14 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 ### m20 · Negatifsiz 5'li emoji seti: +kalp/gülme/emin-olamadım — **M (~yarım gün)**
 
 - `c:/temp_private/corteqs/corteqs_fin/src/pages/cadde/CaddePage.tsx:56-60`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-types.ts:6`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-schemas.ts:211`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-api.ts:72`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-api.ts:272`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-types.ts:6`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-schemas.ts:211`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-api.ts:72`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-api.ts:272`
 - `c:/temp_private/corteqs/corteqs_fin/supabase/migrations/applied/20260529213000_create_cadde_mvp.sql:58`
 - `c:/temp_private/corteqs/corteqs_fin/supabase/migrations/applied/20260611130000_cadde300_011_bildirim_moderasyon.sql:294`
 - `c:/temp_private/corteqs/corteqs_fin/supabase/migrations/applied/20260611130000_cadde300_011_bildirim_moderasyon.sql:327`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-schemas.test.ts:96-98`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-schemas.test.ts:96-98`
 
 **Mevcut:** Set 3'lü: like/support/idea (Beğendim/Destek/Fikir, lucide ikonlu — REACTION_META satır 56-60); 'beğenmedim' zaten yok. Kısıt 4 katmanda kilitli: CaddeReactionType union (types:6), zod enum (schemas:211), emptyReactions+totalReactionCount toplamı (api:72,272), DB CHECK constraint (mvp.sql:58) ve toggle_cadde_reaction_v1 içi validasyon+bildirim etiketi CASE'i (011.sql:294,327).
 
@@ -360,10 +360,10 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `c:/temp_private/corteqs/corteqs_fin/src/pages/cadde/CaddePage.tsx:644`
 - `c:/temp_private/corteqs/corteqs_fin/src/pages/cadde/CaddePage.tsx:667-678`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-api.ts:160-166`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-api.ts:204-211`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-api.ts:273-281`
-- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde-query-keys.ts:11`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-api.ts:160-166`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-api.ts:204-211`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-api.ts:273-281`
+- `c:/temp_private/corteqs/corteqs_fin/src/lib/cadde/cadde-query-keys.ts:11`
 
 **Mevcut:** 'N yorum' etiketi butonda ZATEN var (satır 644). Asıl sorun DB yükü: feed yüklenirken TÜM yorumlar eager çekiliyor — fetchPostComments sayfadaki her postun bütün yorumlarını limitsiz select ediyor (api:204-211), commentCount istemcide length ile türetiliyor (273), ilk 2 yorum hep render (667), 'aç' yalnız istemci tarafında kalanını gösteriyor; sunucu taraflı load-more yok.
 
@@ -537,11 +537,11 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `supabase/migrations/applied/20260610182000_cadde300_003_actor_context.sql:63-72`
 - `supabase/migrations/applied/20260610183000_cadde300_004_post_rpc_rls.sql:80-87`
 - `supabase/migrations/applied/20260611100000_cadde300_008_cafe.sql:167-171`
-- `src/lib/cadde-rules.ts:70-78`
-- `src/lib/cadde-rules.ts:306-325`
+- `src/lib/cadde/cadde-rules.ts:70-78`
+- `src/lib/cadde/cadde-rules.ts:306-325`
 - `src/pages/cadde/CaddePage.tsx:120-130`
 - `src/pages/cadde/CaddePage.tsx:326-349`
-- `src/lib/cadde-api.ts:133-155`
+- `src/lib/cadde/cadde-api.ts:133-155`
 - `src/hooks/cadde/useCaddeActorContext.ts:11-22`
 
 **Mevcut:** 'TR kullanıcı' kimliği bugün TELEFONDAN DEĞİL profil ülke attribute'undan geliyor (is_tr_resident: country ∈ türkiye/turkiye/tr — actor_context.sql:63-72). TR yerleşik kullanıcı caddede HER ülke/şehir akışını serbestçe görüyor; kısıt yalnız yazmada (bridge dışı postta cadde_tr_scope_restricted, 004_post_rpc_rls.sql:80-87) ve TR-cafe katılımında (+90 kontrolü sadece can_join_cadde_cafe'de, 008_cafe.sql:167-171). Actor context'te hasTRPhone alanı yok (cadde-rules.ts:306-325).
@@ -554,8 +554,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `supabase/migrations/applied/20260610182000_cadde300_003_actor_context.sql:74-83`
 - `supabase/migrations/applied/20260610182000_cadde300_003_actor_context.sql:55-59`
-- `src/lib/cadde-rules.ts:50-56`
-- `src/lib/cadde-rules.ts:74`
+- `src/lib/cadde/cadde-rules.ts:50-56`
+- `src/lib/cadde/cadde-rules.ts:74`
 - `src/components/cadde/CaddeGeoFilter.tsx:31-206`
 - `src/components/cadde/CaddeProfileGate.tsx:21-57`
 
@@ -578,8 +578,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 ### m36 · Geo filtre kafe+paylaşım süzme — doğrulandı — **S (<1 saat)**
 
 - `src/pages/cadde/CaddePage.tsx:120-130`
-- `src/lib/cadde-api.ts:144-152`
-- `src/lib/cadde-api.ts:295-307`
+- `src/lib/cadde/cadde-api.ts:144-152`
+- `src/lib/cadde/cadde-api.ts:295-307`
 - `src/pages/cadde/CaddePage.tsx:235-237`
 - `src/pages/cadde/CaddePage.tsx:329-335`
 
@@ -652,7 +652,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:746`
 - `src/pages/cadde/CaddePage.tsx:747`
 - `src/pages/cadde/CaddePage.tsx:758`
-- `src/lib/cadde-api.ts:493`
+- `src/lib/cadde/cadde-api.ts:493`
 
 **Mevcut:** Sağ kolondaki kart 'CorteQS Panosu' başlığı + 'Bugün Caddede öne çıkanlar' açıklaması taşır (CaddePage.tsx:746-747) ama içeriği tamamen statik: maskot görseli + sabit metin + /feedback?kaynak=cadde linki (satır 758-764). Hiçbir 'öne çıkan' kayıt gösterilmez.
 
@@ -664,10 +664,10 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/pages/admin/cadde/AdminCaddePage.tsx:514`
 - `src/pages/admin/cadde/AdminCaddePage.tsx:209`
-- `src/lib/cadde-admin-api.ts:77`
-- `src/lib/cadde-api.ts:503`
+- `src/lib/cadde/cadde-admin-api.ts:77`
+- `src/lib/cadde/cadde-api.ts:503`
 - `src/pages/admin/cadde/routes.tsx:17`
-- `src/lib/cadde-types.ts:155`
+- `src/lib/cadde/cadde-types.ts:155`
 
 **Mevcut:** Mekanizmanın yarısı zaten var: /admin/cadde (routes.tsx:17) billboard sekmesinde 'Featured' switch'i mevcut (AdminCaddePage.tsx:514), is_featured payload ile DB'ye yazılıyor (satır 209, saveAdminCaddeBillboardCard cadde-admin-api.ts:77). Ancak public taraf is_featured'ı select edip (cadde-api.ts:503) HİÇ filtre/kullanım yapmıyor — alan bugün ölü.
 
@@ -688,10 +688,10 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 - `src/pages/cadde/CaddePage.tsx:774`
 - `src/pages/cadde/CaddePage.tsx:778`
 - `src/pages/cadde/CaddePage.tsx:788`
-- `src/lib/cadde-api.ts:501`
+- `src/lib/cadde/cadde-api.ts:501`
 - `src/pages/admin/cadde/AdminCaddePage.tsx:507`
 - `src/App.tsx:236`
-- `src/lib/cadde-types.ts:141`
+- `src/lib/cadde/cadde-types.ts:141`
 
 **Mevcut:** 'Şehrinden Öne Çıkanlar' kartı (CaddePage.tsx:774) TÜM published billboard'ları listeler — listCaddeBillboardCards is_featured filtresi uygulamaz (cadde-api.ts:501-508, yalnız content_mode/status/geo). Tıklama card.ctaUrl'e gider (satır 788); bu URL admin'in serbest metin girdiği alan (AdminCaddePage.tsx:507), profil garantisi yok (demo'da /anket'e bile gidiyor).
 
@@ -703,8 +703,8 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/pages/cadde/CaddePage.tsx:812`
 - `src/pages/cadde/CaddePage.tsx:821`
-- `src/lib/cadde-demo-data.ts:209`
-- `src/lib/cadde-demo-data.ts:210`
+- `src/lib/cadde/cadde-demo-data.ts:209`
+- `src/lib/cadde/cadde-demo-data.ts:210`
 - `src/pages/ProfilePage.tsx:1683`
 - `src/components/cadde/CaddeTanitimPanel.tsx:75`
 

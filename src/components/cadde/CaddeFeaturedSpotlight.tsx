@@ -17,8 +17,8 @@ import { ArrowUpRight, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { isInternalCaddeLink } from "@/lib/cadde-links";
-import type { CaddeBillboardCard } from "@/lib/cadde-types";
+import { isInternalCaddeLink } from "@/lib/cadde/cadde-links";
+import type { CaddeBillboardCard } from "@/lib/cadde/cadde-types";
 
 export interface CaddeFeaturedSpotlightProps {
   card: CaddeBillboardCard | null;

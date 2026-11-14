@@ -4,13 +4,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CaddeReachCard from "@/components/cadde/CaddeReachCard";
-import type { CaddeFeedReach } from "@/lib/cadde-reach";
+import type { CaddeFeedReach } from "@/lib/cadde/cadde-reach";
 
 const useAuthMock = vi.fn();
 const getCaddeFeedReachMock = vi.fn();
 
 vi.mock("@/components/auth/useAuth", () => ({ useAuth: () => useAuthMock() }));
-vi.mock("@/lib/cadde-api", () => ({ getCaddeFeedReach: () => getCaddeFeedReachMock() }));
+vi.mock("@/lib/cadde/cadde-api", () => ({ getCaddeFeedReach: () => getCaddeFeedReachMock() }));
 
 /** 06.08.2026 canlı ölçümü — Antalya/Türkiye izleyici, 158 hesap. */
 const RESOLVED: CaddeFeedReach = {

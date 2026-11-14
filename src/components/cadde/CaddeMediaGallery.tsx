@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Play, X } from "lucide-react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import type { CaddeMediaAsset } from "@/lib/cadde-types";
+import type { CaddeMediaAsset } from "@/lib/cadde/cadde-types";
 
 export interface CaddeMediaGalleryProps {
   media: readonly CaddeMediaAsset[];

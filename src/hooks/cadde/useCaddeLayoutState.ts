@@ -1,9 +1,15 @@
 import { useMemo, useState } from "react";
 
-import type { CaddeCafeTheme } from "@/lib/cadde-cafe-api";
-import type { CaddeWidenTarget } from "@/lib/cadde-feed-widen";
-import { resolveCaddeClockTarget } from "@/lib/cadde-local-clock";
-import type { CaddeBillboardCard, CaddeCafe, CaddeCity, CaddeFilterState, CaddeInterest } from "@/lib/cadde-types";
+import type { CaddeCafeTheme } from "@/lib/cadde/cadde-cafe-api";
+import type { CaddeWidenTarget } from "@/lib/cadde/cadde-feed-widen";
+import { resolveCaddeClockTarget } from "@/lib/cadde/cadde-local-clock";
+import type {
+  CaddeBillboardCard,
+  CaddeCafe,
+  CaddeCity,
+  CaddeFilterState,
+  CaddeInterest,
+} from "@/lib/cadde/cadde-types";
 
 type UseCaddeLayoutStateInput = {
   filters: CaddeFilterState;

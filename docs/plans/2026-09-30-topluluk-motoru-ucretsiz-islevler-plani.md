@@ -151,7 +151,7 @@ Amaç: bugün ücretsiz olanın *kaza ile* kapanmasını imkânsız kılmak.
   **kilitli** kart + ilgi kaydı (Faz 5).
 
 **Sözleşme testi** `src/lib/events/events-first-approval.test.ts` — SQL↔TS ayna sözleşmesi
-([cadde-rules.ts](../../src/lib/cadde-rules.ts) deseni): migration metnindeki limit sabiti ile
+([cadde-rules.ts](../../src/lib/cadde/cadde-rules.ts) deseni): migration metnindeki limit sabiti ile
 `events-rules.ts`'teki sabitin birebir aynı olduğunu ve hata kodlarının iki yönlü eşleştiğini kilitler.
 
 ### Faz 2 — Tavsiye İste

@@ -442,7 +442,7 @@ gh run list --limit 1         # push sonrası CI yeşil mi
   `applied/` altına **TAŞI** → `schema_migrations` kaydını at. Zaman damgası tekrar kullanılmaz.
 - Edge function değiştiyse: `supabase functions deploy <ad> --project-ref injprdrsklkxgnaiixzh`
   + `npm run check:functions` — **Coolify deploy ETMEZ.**
-- Yeni `cadde_*` hata kodu eklediysen `src/lib/cadde-rules.ts` haritasına Türkçesini yaz
+- Yeni `cadde_*` hata kodu eklediysen `src/lib/cadde/cadde-rules.ts` haritasına Türkçesini yaz
   (`cadde-error-map.test.ts` kilitler).
 - Kapanışta: `src/lib/admin-shell/admin-updates/2026-10.ts`'e kayıt (18:00 Berlin özet maili
   buradan beslenir).

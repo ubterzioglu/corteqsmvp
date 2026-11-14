@@ -19,8 +19,8 @@ import {
   type CaddeModerationAction,
   type CaddeModerationEntityType,
   type CaddeModerationQueueItem,
-} from "@/lib/cadde-moderation-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+} from "@/lib/cadde/cadde-moderation-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 
 const ACTION_BUTTONS: Array<{
   action: CaddeModerationAction;

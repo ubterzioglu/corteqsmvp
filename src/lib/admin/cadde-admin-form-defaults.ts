@@ -13,7 +13,7 @@ import type {
   CaddeAdminCafeInput,
   CaddeAdminPostInput,
   CaddeAdminSponsoredInput,
-} from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-types";
 
 export type PostFormState = Omit<CaddeAdminPostInput, "country_id" | "city_id"> & {
   countryName: string;

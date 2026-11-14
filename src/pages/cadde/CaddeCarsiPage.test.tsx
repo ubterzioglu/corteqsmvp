@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CaddeCarsiPage from "@/pages/cadde/CaddeCarsiPage";
-import type { CarsiItem } from "@/lib/cadde-types";
+import type { CarsiItem } from "@/lib/cadde/cadde-types";
 
 const useAuthMock = vi.fn();
 const listCarsiItemsMock = vi.fn();
@@ -19,8 +19,8 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: vi.fn() }),
 }));
 
-vi.mock("@/lib/cadde-carsi-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-carsi-api")>("@/lib/cadde-carsi-api");
+vi.mock("@/lib/cadde/cadde-carsi-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-carsi-api")>("@/lib/cadde/cadde-carsi-api");
   return {
     ...actual,
     listCarsiItems: (...args: unknown[]) => listCarsiItemsMock(...args),

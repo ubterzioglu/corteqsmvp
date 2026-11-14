@@ -16,7 +16,7 @@ vi.mock("@/lib/member-profile-api", () => ({
   updateProfileAttribute: vi.fn().mockResolvedValue({ status: "approved" }),
 }));
 
-vi.mock("@/lib/cadde-api", () => ({
+vi.mock("@/lib/cadde/cadde-api", () => ({
   listCaddeInterestCatalog: vi.fn().mockResolvedValue([
     { key: "kariyer", labelTr: "Kariyer", sortOrder: 1 },
     { key: "mentorluk", labelTr: "Mentörlük", sortOrder: 2 },

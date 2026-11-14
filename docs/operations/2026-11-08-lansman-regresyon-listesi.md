@@ -78,7 +78,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
   Elle: eski bir `/tools/<slug>/result/<id>` bağlantısı hâlâ açılıyor.
 
 ### (6) Cadde içeriği (gönderi, yorum, tavsiye, cafe)
-- **Mevcut:** `src/App.cadde-routes.test.tsx` · `src/pages/cadde/CaddePage.test.tsx` · `src/lib/cadde-rules.test.ts` · `src/lib/cadde-ranking.test.ts` · `src/lib/community-free-features.test.ts` (Cadde'nin `cadde.access` arkasında kalması).
+- **Mevcut:** `src/App.cadde-routes.test.tsx` · `src/pages/cadde/CaddePage.test.tsx` · `src/lib/cadde/cadde-rules.test.ts` · `src/lib/cadde/cadde-ranking.test.ts` · `src/lib/community-free-features.test.ts` (Cadde'nin `cadde.access` arkasında kalması).
 - **Boşluk:** yazma/okuma RPC'lerinin istemci kodunda çağrılmaya devam ettiği kilitli değildi; ekran sökülürse çağrı da gider, kullanıcı içerik yazamaz, test patlamazdı.
 - **YENİ:** "(6)": 4 Cadde rotası; HER rotanın kendi bloğunda `RequireAuth` + `cadde.access` kapısı (pencere bir sonraki rotanın çıpasında biter); RPC'ler yorum satırları atılarak `.rpc("ad")` ÇAĞRI NOKTASI olarak aranır: gönderi (`create_cadde_post_v1/v2` seçimi + `.rpc(rpcName`), `update/delete_cadde_post_v1`, `create_cadde_comment_v1`, `toggle_cadde_reaction_v1`, `list_cadde_feed_v1`, `create_cadde_cafe_v1`, `join_cadde_cafe_v1` ve tavsiye (`create_recommendation_request_v1`, `answer_recommendation_v1`). `e2e/lansman-smoke.spec.ts` › `/cadde` ziyaretçiyi `/login?next=%2Fcadde`'e yönlendiriyor.
 - **Yalnız canlıda:** içerik satırları ve eşikler. Salt okunur SQL:

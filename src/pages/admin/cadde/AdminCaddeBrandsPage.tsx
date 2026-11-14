@@ -21,8 +21,8 @@ import {
   deleteCaddeProtectedBrand,
   listCaddeProtectedBrandsForAdmin,
   setCaddeProtectedBrandActive,
-} from "@/lib/cadde-cafe-api";
-import { checkBrandConflict } from "@/lib/cadde-rules";
+} from "@/lib/cadde/cadde-cafe-api";
+import { checkBrandConflict } from "@/lib/cadde/cadde-rules";
 import { trIncludes } from "@/lib/text-normalization";
 
 const BRANDS_QUERY_KEY = ["cadde", "protected-brands", "admin"] as const;

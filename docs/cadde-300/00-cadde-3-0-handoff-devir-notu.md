@@ -91,21 +91,21 @@ Doğrulama durumu (son koşum): **487/487 test geçti**, `npm run build` OK, yen
 
 ### Frontend — canonical Cadde katmanı
 ```text
-src/lib/cadde-types.ts        → tüm domain + Row tipleri
-src/lib/cadde-api.ts          → public read + kullanıcı mutation'ları (createCaddePost artık RPC çağırır)
-src/lib/cadde-admin-api.ts    → admin CRUD (bilinçli ayrı)
-src/lib/cadde-schemas.ts      → Zod sınır validasyonları (Türkçe mesajlı) + parseWithUserError
-src/lib/cadde-rules.ts        → SQL truth table'ın TS AYNASI + RPC hata kodu→Türkçe mesaj haritası + mapActorContext
-src/lib/cadde-format.ts       → parseCaddeFilters (DEFAULT=REAL!) / serializeCaddeFilters / injectSponsoredPlacement
-src/lib/cadde-query-keys.ts   → caddeQueryKeys (actorContext, countries, cities, feed, cafes, billboards, sponsor)
-src/lib/cadde-demo-data.ts    → demo sabitleri (yalnız mode=demo veya Supabase yapılandırılmamışken)
-src/lib/cadde-internal.ts     → db cast (tek izole `as any`, B1 çözülünce kalkacak), resolveCountry/CityIdByName,
+src/lib/cadde/cadde-types.ts        → tüm domain + Row tipleri
+src/lib/cadde/cadde-api.ts          → public read + kullanıcı mutation'ları (createCaddePost artık RPC çağırır)
+src/lib/cadde/cadde-admin-api.ts    → admin CRUD (bilinçli ayrı)
+src/lib/cadde/cadde-schemas.ts      → Zod sınır validasyonları (Türkçe mesajlı) + parseWithUserError
+src/lib/cadde/cadde-rules.ts        → SQL truth table'ın TS AYNASI + RPC hata kodu→Türkçe mesaj haritası + mapActorContext
+src/lib/cadde/cadde-format.ts       → parseCaddeFilters (DEFAULT=REAL!) / serializeCaddeFilters / injectSponsoredPlacement
+src/lib/cadde/cadde-query-keys.ts   → caddeQueryKeys (actorContext, countries, cities, feed, cafes, billboards, sponsor)
+src/lib/cadde/cadde-demo-data.ts    → demo sabitleri (yalnız mode=demo veya Supabase yapılandırılmamışken)
+src/lib/cadde/cadde-internal.ts     → db cast (tek izole `as any`, B1 çözülünce kalkacak), resolveCountry/CityIdByName,
                                 reportCaddeApiError (console.error + 10sn throttle'lı sonner toast)
-src/lib/cadde.ts              → GEÇİCİ re-export barrel (yalnız AdminCaddePage kullanıyor; Faz 2 sonunda silinebilir
+src/lib/cadde/cadde.ts              → GEÇİCİ re-export barrel (yalnız AdminCaddePage kullanıyor; Faz 2 sonunda silinebilir
                                 — AdminCaddePage importunu modüllere çevirip barrel'ı sil)
-src/lib/cadde-ranking.ts      → list_cadde_feed_v1'in TS AYNASI: band A-F + skor ağırlıkları + compare/cursor
+src/lib/cadde/cadde-ranking.ts      → list_cadde_feed_v1'in TS AYNASI: band A-F + skor ağırlıkları + compare/cursor
                                 (SQL ile senkron sözleşmesi — birini değiştiren diğerini günceller!)
-src/lib/cadde-targeting.ts    → ilgi alanı yardımcıları: 1-3 etiket validasyonu, toggle, overlap/need eşleşmesi
+src/lib/cadde/cadde-targeting.ts    → ilgi alanı yardımcıları: 1-3 etiket validasyonu, toggle, overlap/need eşleşmesi
 src/hooks/cadde/useCaddeActorContext.ts → get_cadde_actor_context RPC; hata → fail-open + telemetri
 src/components/cadde/CaddeProfileGate.tsx → blur + eksik alan listesi + /profile?tab=settings CTA
 src/components/cadde/CaddeGeoFilter.tsx → Faz 3 çoklu ülke/şehir filtresi (legacy UX portu; premium/kıta YOK;
@@ -122,11 +122,11 @@ hedef seçici Faz 4'te). `engagement_score` reaksiyon(+1)/yorum(+2) trigger'lar�
 
 ### Testler
 ```text
-src/lib/cadde-format.test.ts   → real-default parse, çoklu geo round-trip, summarize, sponsor injection
-src/lib/cadde-schemas.test.ts  → Zod şema sınırları (çoklu filtre + interests max 3)
-src/lib/cadde-rules.test.ts    → CKS §7.2 Köprü truth table (10 senaryo) + hata haritası + mapActorContext
-src/lib/cadde-ranking.test.ts  → band truth table + skor ağırlıkları + deterministik rand + cursor tekrar/kayıp
-src/lib/cadde-targeting.test.ts → 1-3 etiket validasyonu + toggle + overlap/need eşleşmesi
+src/lib/cadde/cadde-format.test.ts   → real-default parse, çoklu geo round-trip, summarize, sponsor injection
+src/lib/cadde/cadde-schemas.test.ts  → Zod şema sınırları (çoklu filtre + interests max 3)
+src/lib/cadde/cadde-rules.test.ts    → CKS §7.2 Köprü truth table (10 senaryo) + hata haritası + mapActorContext
+src/lib/cadde/cadde-ranking.test.ts  → band truth table + skor ağırlıkları + deterministik rand + cursor tekrar/kayıp
+src/lib/cadde/cadde-targeting.test.ts → 1-3 etiket validasyonu + toggle + overlap/need eşleşmesi
 src/pages/cadde/CaddePage.test.tsx → 5 test (gate eksik alan, fail-open, ziyaretçi, real default, mode switch)
 src/App.cadde-routes.test.tsx  → /cadde route smoke (mock yolu: @/pages/cadde/CaddePage)
 ```
@@ -225,10 +225,10 @@ Plan: `docs/cadde-300/03-implementation-plan.md` "Faz 8" + spec §16.
 
 1. ⚠️ **EŞZAMANLI OTURUMLAR:** Bu repoda aynı anda başka Claude oturumları çalışıyor ve "clean code" mesajıyla `git add -A` commit atıyorlar (örn. `8c4c998`, `9706932`). **Commit'lenmemiş iş bırakma; her mantıksal adımda KENDİ dosyalarını hedefli `git add <dosyalar>` ile commit'le.** Push'a karışma.
 2. **Spec kısıtları (değişmez):** Legacy `Feed.tsx` hattına feature ekleme; yeni rol ailesi/ikinci permission sistemi yok (flat AFS + `role_features` + `user_feature_overrides`); yeni component'te direct Supabase mutation yok (lib/*-api + React Query + RPC); kalıcı dual-write yok; eski migration silme/sıralama yok; `/cadde` SEO rotası ve Türkçe domain terimleri (muhasebe, cadde, çarşı, köprü...) değişmez; `src/components/ui/*` ve `src/integrations/supabase/client.ts` elle düzenlenmez; yeni kodda auth importu `@/components/auth/useAuth` (shim `@/contexts/AuthContext` KULLANMA).
-3. **Senkron sözleşmesi:** `public.can_post_kopru` (SQL) ↔ `canPostKopruRule` (`src/lib/cadde-rules.ts`) birebir aynı kalmalı — birini değiştiren diğerini de günceller.
+3. **Senkron sözleşmesi:** `public.can_post_kopru` (SQL) ↔ `canPostKopruRule` (`src/lib/cadde/cadde-rules.ts`) birebir aynı kalmalı — birini değiştiren diğerini de günceller.
 4. **Hata politikası:** Sessiz catch YOK. Okumalarda `reportCaddeApiError(context, error)` + boş sonuç (real modda ASLA demo'ya düşme); RPC hatalarında `resolveCaddeRpcErrorMessage` ile Türkçe mesaj. Yeni RPC hata kodları eklersen `cadde-rules.ts` haritasına da ekle.
 5. **Çarşı ≠ Çıfıt/Tanıtım:** marketplace (`carsi_*`) ile sponsorlu görünürlük (`cadde_promotion_*`) asla aynı tablo/panel altında birleşmez (D-01).
-6. **Doğrulama komutları:** `npm run test` (446+ geçmeli), `npm run build`, `npx eslint <değişen dosyalar>` (tam lint'in 451 eski hatası bilinen durum). Tek test: `npm run test -- src/lib/cadde-rules.test.ts`.
+6. **Doğrulama komutları:** `npm run test` (446+ geçmeli), `npm run build`, `npx eslint <değişen dosyalar>` (tam lint'in 451 eski hatası bilinen durum). Tek test: `npm run test -- src/lib/cadde/cadde-rules.test.ts`.
 7. **Her faz sonunda:** `docs/cadde-300/02-current-gap-matrix.md` ilgili satırlarını ve `01-decisions.md`'deki karar durumlarını güncelle; conventional commit + trailer'larla (Constraint/Rejected/Confidence/Scope-risk/Directive/Not-tested) commit at.
 
 ## 7. AÇIK KARARLAR (ürün sahibine sorulabilir)

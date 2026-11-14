@@ -109,7 +109,7 @@ describe("CaddeRecommendationCard · KARAR 2 kilidi (bant/skor sıralamasına BU
 
   it("ranking ve kompozisyon dosyaları bu batch'te DEĞİŞMEDİ (kaynak kilidi)", () => {
     // Sıralama mantığının kalbi olan dosyalar kartı TANIMAZ — kart onlara bağlanamaz.
-    const ranking = readFileSync("src/lib/cadde-ranking.ts", "utf8");
+    const ranking = readFileSync("src/lib/cadde/cadde-ranking.ts", "utf8");
     const feedState = readFileSync("src/hooks/cadde/useCaddeFeedState.ts", "utf8");
     expect(ranking).not.toContain("recommendation");
     expect(feedState).not.toContain("recommendation");

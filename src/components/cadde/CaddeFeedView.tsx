@@ -40,10 +40,10 @@ import type { useCaddeLayoutState } from "@/hooks/cadde/useCaddeLayoutState";
 import type { useCaddePageData } from "@/hooks/cadde/useCaddePageData";
 import { CADDE_REACTION_CLOSE_DELAY_MS } from "@/hooks/cadde/useCaddePostEngagement";
 import type { useCaddePostEngagement } from "@/hooks/cadde/useCaddePostEngagement";
-import { describeCaddeWidenCount } from "@/lib/cadde-feed-widen";
-import { serializeCaddeFilters } from "@/lib/cadde-format";
-import type { CaddeFilterState, CaddeReactionType } from "@/lib/cadde-types";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { describeCaddeWidenCount } from "@/lib/cadde/cadde-feed-widen";
+import { serializeCaddeFilters } from "@/lib/cadde/cadde-format";
+import type { CaddeFilterState, CaddeReactionType } from "@/lib/cadde/cadde-types";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const REACTION_META: Array<{ key: CaddeReactionType; label: string; icon: typeof ThumbsUp }> = [

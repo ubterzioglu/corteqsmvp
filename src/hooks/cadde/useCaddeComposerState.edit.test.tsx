@@ -17,8 +17,8 @@ import type { ReactNode } from "react";
 const updateCaddePostSpy = vi.fn();
 const toastSpy = vi.fn();
 
-vi.mock("@/lib/cadde-api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/cadde-api")>();
+vi.mock("@/lib/cadde/cadde-api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/cadde/cadde-api")>();
   return { ...actual, updateCaddePost: (...args: unknown[]) => updateCaddePostSpy(...args) };
 });
 

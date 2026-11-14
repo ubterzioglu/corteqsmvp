@@ -10,14 +10,14 @@ const { getCarsiVisibleMock, listCarsiItemsMock } = vi.hoisted(() => ({
   listCarsiItemsMock: vi.fn(),
 }));
 
-vi.mock("@/lib/cadde-carsi-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-carsi-api")>("@/lib/cadde-carsi-api");
+vi.mock("@/lib/cadde/cadde-carsi-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-carsi-api")>("@/lib/cadde/cadde-carsi-api");
   return { ...actual, getCarsiVisible: getCarsiVisibleMock, listCarsiItems: listCarsiItemsMock };
 });
 vi.mock("@/hooks/cadde/useCaddeDiasporaKey", () => ({ useCaddeDiasporaKey: () => "tr" }));
 
 import CarsiGlobalTicker from "@/components/cadde/CarsiGlobalTicker";
-import type { CarsiItem } from "@/lib/cadde-types";
+import type { CarsiItem } from "@/lib/cadde/cadde-types";
 
 const FILTERS = { countries: [], cities: [], bridge: false, scope: "all", hashtag: "", mode: "real" } as never;
 

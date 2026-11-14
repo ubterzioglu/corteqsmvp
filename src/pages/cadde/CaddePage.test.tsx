@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CaddePage from "@/pages/cadde/CaddePage";
-import type { CaddeActorContext } from "@/lib/cadde-rules";
+import type { CaddeActorContext } from "@/lib/cadde/cadde-rules";
 
 const useAuthMock = vi.fn();
 const actorContextMock = vi.fn();
@@ -93,8 +93,8 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: toastMock }),
 }));
 
-vi.mock("@/lib/cadde-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-api")>("@/lib/cadde-api");
+vi.mock("@/lib/cadde/cadde-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-api")>("@/lib/cadde/cadde-api");
   return {
     ...actual,
     listCaddeCountries: (...args: unknown[]) => listCaddeCountriesMock(...args),
@@ -113,8 +113,10 @@ vi.mock("@/lib/cadde-api", async () => {
   };
 });
 
-vi.mock("@/lib/cadde-notifications-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-notifications-api")>("@/lib/cadde-notifications-api");
+vi.mock("@/lib/cadde/cadde-notifications-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-notifications-api")>(
+    "@/lib/cadde/cadde-notifications-api",
+  );
   return {
     ...actual,
     listMyNotifications: (...args: unknown[]) => listMyNotificationsMock(...args),
@@ -124,12 +126,14 @@ vi.mock("@/lib/cadde-notifications-api", async () => {
   };
 });
 
-vi.mock("@/lib/cadde-tanitim-api", () => ({
+vi.mock("@/lib/cadde/cadde-tanitim-api", () => ({
   listCaddePromotions: (...args: unknown[]) => listCaddePromotionsMock(...args),
 }));
 
-vi.mock("@/lib/cadde-feed-polling", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-feed-polling")>("@/lib/cadde-feed-polling");
+vi.mock("@/lib/cadde/cadde-feed-polling", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-feed-polling")>(
+    "@/lib/cadde/cadde-feed-polling",
+  );
   return {
     ...actual,
     caddeOpenCommentsPollInterval: () => 100,

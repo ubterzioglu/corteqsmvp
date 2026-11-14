@@ -22,8 +22,8 @@ import { Link } from "react-router-dom";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMyEvents } from "@/hooks/use-events";
-import { listMyCarsiItems } from "@/lib/cadde-carsi-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { listMyCarsiItems } from "@/lib/cadde/cadde-carsi-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import { GOOGLE_SOFT_CARD_BLUE_SECTION } from "./profile-card-styles";
 
 export interface GettingStartedCardProps {

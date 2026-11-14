@@ -31,11 +31,11 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { useCaddeCommentsRealtime } from "@/hooks/cadde/useCaddeCommentsRealtime";
-import { createCaddeComment, listCaddePostComments } from "@/lib/cadde-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
-import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
-import type { CaddeCommentCursor } from "@/lib/cadde-types";
+import { createCaddeComment, listCaddePostComments } from "@/lib/cadde/cadde-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde/cadde-rules";
+import { insertTextAtSelection, type TextSelection } from "@/lib/cadde/cadde-text-insert";
+import type { CaddeCommentCursor } from "@/lib/cadde/cadde-types";
 
 const PAGE_SIZE = 5;
 

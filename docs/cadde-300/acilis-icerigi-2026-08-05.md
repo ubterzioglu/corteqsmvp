@@ -113,7 +113,7 @@ değeri seçen her üye ülke düzeyinde kör kalıyordu.
    Bu mekanizma yeni kayıtlar için `trg_cadde_profile_city_sync` trigger'ıyla zaten
    çalışıyordu; kör hesaplar trigger'dan önce yazılmış eski satırlardı.
 
-Ayna sözleşmesi gereği `src/lib/cadde-ranking.ts` → `isCaddeGlobalEligible`
+Ayna sözleşmesi gereği `src/lib/cadde/cadde-ranking.ts` → `isCaddeGlobalEligible`
 (`viewerLocationResolved`) aynı commit'te güncellendi, 3 test eklendi.
 
 **B1 ile etkileşimi:** konumu çözülemeyen üyede `isColdStart` true oluyordu ve konum

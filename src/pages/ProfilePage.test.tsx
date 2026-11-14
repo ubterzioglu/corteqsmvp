@@ -70,8 +70,8 @@ vi.mock("@/lib/member-profile-api", () => ({
 
 // İlgi alanı kartı katalog boşken hiç çizilmez; konum testleri için küçük bir katalog
 // verilir. Cafe listesi boş döner (Cadde bölümünde yalnız tanıtım paneli kalır).
-vi.mock("@/lib/cadde-api", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("@/lib/cadde-api")>()),
+vi.mock("@/lib/cadde/cadde-api", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/lib/cadde/cadde-api")>()),
   listCaddeInterestCatalog: () => Promise.resolve([{ key: "kariyer", labelTr: "Kariyer", sortOrder: 1 }]),
   listMyCaddeInterests: () => Promise.resolve(["kariyer"]),
   listMyCaddeCafes: () => Promise.resolve([]),
@@ -93,7 +93,7 @@ vi.mock("@/hooks/use-events", () => ({
   useMyEvents: () => ({ data: [], isLoading: false, error: null }),
 }));
 
-vi.mock("@/lib/cadde-carsi-api", () => ({
+vi.mock("@/lib/cadde/cadde-carsi-api", () => ({
   listMyCarsiItems: () => Promise.resolve([]),
 }));
 

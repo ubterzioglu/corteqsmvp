@@ -45,7 +45,7 @@ import {
   type CaddeBillboardType,
   type CaddeContentMode,
   type CaddePostType,
-} from "@/lib/cadde";
+} from "@/lib/cadde/cadde";
 
 type DraftStatus = "draft" | "published" | "hidden";
 

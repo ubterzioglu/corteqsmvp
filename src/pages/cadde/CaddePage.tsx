@@ -12,10 +12,10 @@ import { useCaddeFeedRealtime } from "@/hooks/cadde/useCaddeFeedRealtime";
 import { useCaddeComposerState } from "@/hooks/cadde/useCaddeComposerState";
 import { useCaddePostEngagement } from "@/hooks/cadde/useCaddePostEngagement";
 import { useCaddeLayoutState } from "@/hooks/cadde/useCaddeLayoutState";
-import { parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde-format";
+import { parseCaddeFilters, serializeCaddeFilters } from "@/lib/cadde/cadde-format";
 import { useCompactHeaderOnScroll } from "@/hooks/useCompactHeaderOnScroll";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeFilterState } from "@/lib/cadde-types";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddeFilterState } from "@/lib/cadde/cadde-types";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 

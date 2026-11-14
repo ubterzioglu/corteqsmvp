@@ -257,7 +257,7 @@ değer okunamıyorsa **bandı göster** (varsayılan açık). Prerender bu proje
 > Yani elle şehir seçen üye **%83** ihtimalle boş akış görüyordu.
 >
 > **Plandaki B1 reçetesi iki yerden yanlıştı, ölçülerek düzeltildi** — aşağıda.
-> Yeni modül: `src/lib/cadde-feed-widen.ts` (+16 birim testi, +5 davranış testi).
+> Yeni modül: `src/lib/cadde/cadde-feed-widen.ts` (+16 birim testi, +5 davranış testi).
 
 ### B1 — Boş şehirde otomatik olarak ülke akışına düş · ~25 dk · `m157`
 
@@ -388,7 +388,7 @@ DOĞRUDAN çeliştiği bulundu ve "Açık" olarak düzeltildi (`5f88232`).
 
 ## T — Tasarım sistemi *(T1 deseni kurar; sonraki 7 batch onun uygulaması)*
 
-⚠️ **Bu grubun tamamı `src/lib/cadde-style-contract.test.ts` ile çevrili.** Test, 7 Cadde
+⚠️ **Bu grubun tamamı `src/lib/cadde/cadde-style-contract.test.ts` ile çevrili.** Test, 7 Cadde
 yüzey dosyasında `bg-[#...]`, `text-[#...]`, `border-[#...]`, `bg-[linear-gradient...]` ve
 `shadow-[...rgba...]` kullanımını **yasaklıyor** — renkler CSS yardımcılarından/token'dan
 gelmek zorunda. **Testi gevşetme, token ekle.** (`SiteHeader.tsx` bu listede *değil*, ama

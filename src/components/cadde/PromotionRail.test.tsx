@@ -10,14 +10,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import PromotionRail from "@/components/cadde/PromotionRail";
-import type { CaddeFilterState, CaddePromotionCard } from "@/lib/cadde-types";
+import type { CaddeFilterState, CaddePromotionCard } from "@/lib/cadde/cadde-types";
 
 const listCaddePromotionsMock = vi.fn();
 
 // KISMİ mock: SponsoredFeedCard aynı modülden `isExternalPromotionUrl` de okuyor.
 // Tam mock yazılırsa kampanya dolu senaryosu "No export is defined" ile patlar.
-vi.mock("@/lib/cadde-tanitim-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-tanitim-api")>("@/lib/cadde-tanitim-api");
+vi.mock("@/lib/cadde/cadde-tanitim-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-tanitim-api")>("@/lib/cadde/cadde-tanitim-api");
   return {
     ...actual,
     listCaddePromotions: (...args: unknown[]) => listCaddePromotionsMock(...args),

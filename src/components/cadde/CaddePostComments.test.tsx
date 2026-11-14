@@ -16,7 +16,7 @@ import CaddePostComments from "@/components/cadde/CaddePostComments";
 
 const listCaddePostComments = vi.fn();
 
-vi.mock("@/lib/cadde-api", () => ({
+vi.mock("@/lib/cadde/cadde-api", () => ({
   listCaddePostComments: (...args: unknown[]) => listCaddePostComments(...args),
   createCaddeComment: vi.fn(),
 }));

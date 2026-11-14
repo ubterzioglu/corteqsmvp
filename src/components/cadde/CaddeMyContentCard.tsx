@@ -14,8 +14,8 @@ import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { listMyCaddeCafes } from "@/lib/cadde-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { listMyCaddeCafes } from "@/lib/cadde/cadde-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 const CaddeMyContentCard = () => {

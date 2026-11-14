@@ -32,9 +32,9 @@ src/components/directory/DirectoryFilters.tsx
 src/lib/catalog/catalog-directory.ts
 src/pages/cadde/CaddePage.tsx
 src/components/cadde/CaddeGeoFilter.tsx
-src/lib/cadde-api.ts
-src/lib/cadde-types.ts
-src/lib/cadde-demo-data.ts
+src/lib/cadde/cadde-api.ts
+src/lib/cadde/cadde-types.ts
+src/lib/cadde/cadde-demo-data.ts
 src/pages/RadarPage.tsx
 src/components/MarqueeItemCard.tsx
 src/lib/marquee.ts
@@ -472,7 +472,7 @@ Hedef dosyalar:
 src/components/directory/DirectoryFilters.tsx
 src/components/SearchableCitySelect.tsx
 src/components/cadde/CaddeGeoFilter.tsx
-src/lib/cadde-api.ts
+src/lib/cadde/cadde-api.ts
 src/data/countryCities.ts
 ```
 
@@ -713,8 +713,8 @@ Hedef dosyalar:
 
 ```txt
 src/pages/cadde/CaddePage.tsx
-src/lib/cadde-types.ts
-src/lib/cadde-demo-data.ts
+src/lib/cadde/cadde-types.ts
+src/lib/cadde/cadde-demo-data.ts
 src/components/cadde/*
 supabase/migrations/* gerekirse
 ```
@@ -846,7 +846,7 @@ Hedef dosyalar:
 
 ```txt
 src/pages/cadde/CaddePage.tsx
-src/lib/cadde-demo-data.ts
+src/lib/cadde/cadde-demo-data.ts
 ```
 
 Mevcut empty state:
@@ -1176,7 +1176,7 @@ src/lib/catalog/catalog-directory.ts
 src/components/SearchableCitySelect.tsx
 src/components/cadde/CaddeGeoFilter.tsx
 src/pages/cadde/CaddePage.tsx
-src/lib/cadde-demo-data.ts
+src/lib/cadde/cadde-demo-data.ts
 src/pages/RadarPage.tsx
 src/components/MarqueeItemCard.tsx
 src/lib/marquee.ts

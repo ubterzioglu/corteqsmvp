@@ -5,7 +5,7 @@ import { ArrowRight, Lock, Settings } from "lucide-react";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { CaddeLoadErrorCard } from "@/components/cadde/CaddeLoadErrorCard";
 import { Button } from "@/components/ui/button";
-import { missingGateFieldLabel, type CaddeActorContext } from "@/lib/cadde-rules";
+import { missingGateFieldLabel, type CaddeActorContext } from "@/lib/cadde/cadde-rules";
 
 interface CaddeProfileGateProps {
   context: CaddeActorContext | null | undefined;

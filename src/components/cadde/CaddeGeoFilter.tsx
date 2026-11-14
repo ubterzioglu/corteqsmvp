@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import type { CaddeCity, CaddeCountry } from "@/lib/cadde-types";
+import type { CaddeCity, CaddeCountry } from "@/lib/cadde/cadde-types";
 
 interface CaddeGeoFilterProps {
   countries: CaddeCountry[];

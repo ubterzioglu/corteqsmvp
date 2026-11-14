@@ -25,7 +25,7 @@ vi.mock("@/hooks/use-events", () => ({
   useMyEvents: (...args: unknown[]) => useMyEventsMock(...args),
 }));
 
-vi.mock("@/lib/cadde-carsi-api", () => ({
+vi.mock("@/lib/cadde/cadde-carsi-api", () => ({
   listMyCarsiItems: (...args: unknown[]) => listMyCarsiItemsMock(...args),
 }));
 

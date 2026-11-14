@@ -13,8 +13,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { CADDE_PROMOTION_TYPE_LABELS, adminListPendingPromotions, adminReviewPromotion } from "@/lib/cadde-tanitim-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import {
+  CADDE_PROMOTION_TYPE_LABELS,
+  adminListPendingPromotions,
+  adminReviewPromotion,
+} from "@/lib/cadde/cadde-tanitim-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 
 const AdminCaddePromotionsPage = () => {
   const { toast } = useToast();

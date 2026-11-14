@@ -12,7 +12,7 @@ Envanter araştırması bu planlama oturumunda **tamamlandı** (repo taraması +
 - `/cadde` rotası: [src/App.tsx:173-177](src/App.tsx#L173) — `RequireAuth` + `RequireFeature(GENERIC_FEATURE_KEYS.caddeAccess)` + lazy `CaddePage` (App.tsx:55).
 - `/admin/cadde`: [src/App.tsx:233](src/App.tsx#L233) — AdminLayout altında `AdminCaddePage` (736 satır, CRUD).
 - [src/pages/CaddePage.tsx](src/pages/CaddePage.tsx) (599 satır): **canonical auth kullanıyor** (`@/components/auth/useAuth`), React Query, `filters.bridge` toggle, tek ülke/şehir filtresi.
-- [src/lib/cadde.ts](src/lib/cadde.ts) (877 satır): 25 export; **hepsi direkt tablo erişimi, hiç RPC yok**. Tablolar: 9 `cadde_*` + `user_profile_attributes` (yazar adı/avatar). Admin CRUD fonksiyonları da aynı dosyada (spec: `cadde-api` / `cadde-admin-api` ayrımı ister).
+- [src/lib/cadde/cadde.ts](src/lib/cadde/cadde.ts) (877 satır): 25 export; **hepsi direkt tablo erişimi, hiç RPC yok**. Tablolar: 9 `cadde_*` + `user_profile_attributes` (yazar adı/avatar). Admin CRUD fonksiyonları da aynı dosyada (spec: `cadde-api` / `cadde-admin-api` ayrımı ister).
 - Feature: yalnız `cadde.access` var ([src/lib/features.ts:25](src/lib/features.ts#L25)); `useFeatureFlags` → `get_current_user_features()` RPC. **`cadde.access` 2026-06-03 seed'inde TÜM aktif rollere `true` verilmiş** (`20260603170000`) — fiilen "rolü olan her login kullanıcı girer".
 
 ### DB durumu (canlı, 2026-06-10 psql sorguları)

@@ -74,7 +74,7 @@
 | Vitest cwd | Testleri büyük harfli `C:\...` cwd ile çalıştır — küçük harfli `c:\...` cwd'de test dosyaları SAHTE kırılır |
 | Paylaşılan git index | Index başka oturumlarla paylaşılıyor → `git commit -m "..." -- <dosyalar>` **pathspec ŞART** |
 | Untracked `corteqs-ekstre-motoru/` | Başka oturumun klasörü; `npm run lint` oradan ~29 hata verir — ana repo lint'i yeşil sayılırken bu klasör hariç tutulur |
-| Yeni `cadde_*` hata kodu | `src/lib/cadde-rules.ts` haritasına Türkçesini yaz — `cadde-error-map.test.ts` kilitler |
+| Yeni `cadde_*` hata kodu | `src/lib/cadde/cadde-rules.ts` haritasına Türkçesini yaz — `cadde-error-map.test.ts` kilitler |
 | `src/lib/**` değiştiyse | `npm run ingest:tools:check`; bayatsa `npm run ingest:tools` + `openapi.yaml`'ı da commit'le |
 | Bayat kilitler | Radar taramasında takılı `running` kilidi otomatik kapanır (`f6b5c6f`) — elle SQL müdahalesi gerekmez |
 | Kök dizine yeni doküman | EKLENMEZ — `docs/` altında ilgili aktif klasöre (bkz. `docs/README.md` klasör sözlüğü) |

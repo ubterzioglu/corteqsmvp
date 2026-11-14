@@ -184,7 +184,7 @@
   <div class="grid2">
     <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
       <ul>
-        <li><code>src/lib/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code> kullanıcının ilanlarını döndürür</li>
+        <li><code>src/lib/cadde/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code> kullanıcının ilanlarını döndürür</li>
         <li><code>src/components/cadde/CaddeMyContentCard.tsx</code> — kullanıcının açık cafe + Çarşı ilanlarını listeleyen <strong>hazır</strong> kart (bugün Profil Ayarları içinde gösteriliyor)</li>
         <li>Yönetim sayfası: <code>/cadde/carsi</code></li>
       </ul>
@@ -242,7 +242,7 @@
       <ul>
         <li><code>events</code> tablosu mevcut (migration <code>20260502174058…</code>, <code>20260513000019_add_events_registration_url</code>)</li>
         <li><code>src/pages/Events.tsx</code> gerçek <code>events</code> tablosuna bağlı; <code>src/components/PublicEventsList.tsx</code>, <code>CreateEventForm.tsx</code></li>
-        <li>Ayrıca Cadde tarafında <strong>Tanıtım/kampanya</strong>: <code>src/lib/cadde-tanitim-api.ts</code> → <code>listMyPromotionCampaigns</code></li>
+        <li>Ayrıca Cadde tarafında <strong>Tanıtım/kampanya</strong>: <code>src/lib/cadde/cadde-tanitim-api.ts</code> → <code>listMyPromotionCampaigns</code></li>
       </ul>
     </div>
     <div class="ref mini"><div class="lbl">ref karşılığı</div>
@@ -296,7 +296,7 @@
     <div class="now mini"><div class="lbl">Ana projede (mevcut)</div>
       <ul>
         <li><code>notifications</code> tablosu mevcut</li>
-        <li><code>src/lib/cadde-notifications-api.ts</code> → <code>listMyNotifications(userId, limit)</code></li>
+        <li><code>src/lib/cadde/cadde-notifications-api.ts</code> → <code>listMyNotifications(userId, limit)</code></li>
         <li>Bir tetikleyici bileşen var: <code>NotificationsTabTrigger.tsx</code> (panel hero'daki "Bildirimler" butonu bu sekmeyi açıyor)</li>
       </ul>
     </div>

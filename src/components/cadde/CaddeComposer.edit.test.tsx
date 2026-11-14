@@ -11,7 +11,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import CaddeComposer from "@/components/cadde/CaddeComposer";
-import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde-composer";
+import { emptyCaddeComposer, type CaddeComposerValue } from "@/lib/cadde/cadde-composer";
 
 vi.mock("@/components/cadde/CaddeEmojiPickerContent", () => ({
   default: ({ onSelect }: { onSelect: (emoji: string) => void }) => (

@@ -3,8 +3,8 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import CaddeFeaturedSpotlight from "./CaddeFeaturedSpotlight";
-import { isInternalCaddeLink } from "@/lib/cadde-links";
-import type { CaddeBillboardCard } from "@/lib/cadde-types";
+import { isInternalCaddeLink } from "@/lib/cadde/cadde-links";
+import type { CaddeBillboardCard } from "@/lib/cadde/cadde-types";
 
 const card = (overrides: Partial<CaddeBillboardCard> = {}): CaddeBillboardCard => ({
   id: "card-1",

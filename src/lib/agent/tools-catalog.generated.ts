@@ -1185,7 +1185,7 @@ export const toolCatalog = {
       "tool_name": "cadde-admin-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-admin-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-admin-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "deleteAdminCaddeBillboardCard",
@@ -1208,14 +1208,14 @@ export const toolCatalog = {
         "cadde_sponsored_placements"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/cadde-admin-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-admin-api.ts"
     },
     {
       "tool_key": "module.cadde_api",
       "tool_name": "cadde-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "createCaddePost",
@@ -1236,14 +1236,14 @@ export const toolCatalog = {
         "list_cadde_post_reactors_v1",
         "update_cadde_post_v1"
       ],
-      "evidence_path": "src/lib/cadde-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-api.ts"
     },
     {
       "tool_key": "module.cadde_cafe_api",
       "tool_name": "cadde-cafe-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-cafe-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-cafe-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "approveCaddeCafeMember",
@@ -1282,14 +1282,14 @@ export const toolCatalog = {
         "list_cadde_cafe_join_requests_v1",
         "update_cadde_cafe_logo_v1"
       ],
-      "evidence_path": "src/lib/cadde-cafe-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-cafe-api.ts"
     },
     {
       "tool_key": "module.cadde_carsi_api",
       "tool_name": "cadde-carsi-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-carsi-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-carsi-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "CARSI_CATEGORY_PARAM",
@@ -1321,14 +1321,14 @@ export const toolCatalog = {
         "record_carsi_contact_v1",
         "update_carsi_item_v1"
       ],
-      "evidence_path": "src/lib/cadde-carsi-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-carsi-api.ts"
     },
     {
       "tool_key": "module.cadde_engagement_api",
       "tool_name": "cadde-engagement-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-engagement-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-engagement-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "countCaddePostsSince",
@@ -1347,14 +1347,14 @@ export const toolCatalog = {
         "report_cadde_entity_v1",
         "toggle_cadde_reaction_v1"
       ],
-      "evidence_path": "src/lib/cadde-engagement-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-engagement-api.ts"
     },
     {
       "tool_key": "module.cadde_feed_location_api",
       "tool_name": "cadde-feed-location-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-feed-location-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-feed-location-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listCaddeCities",
@@ -1373,14 +1373,14 @@ export const toolCatalog = {
       "rpcs": [
         "list_cadde_feed_v1"
       ],
-      "evidence_path": "src/lib/cadde-feed-location-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-feed-location-api.ts"
     },
     {
       "tool_key": "module.cadde_moderation_api",
       "tool_name": "cadde-moderation-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-moderation-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-moderation-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listModerationQueue",
@@ -1392,14 +1392,14 @@ export const toolCatalog = {
       "rpcs": [
         "admin_moderate_cadde_entity_v1"
       ],
-      "evidence_path": "src/lib/cadde-moderation-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-moderation-api.ts"
     },
     {
       "tool_key": "module.cadde_notifications_api",
       "tool_name": "cadde-notifications-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-notifications-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-notifications-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "CADDE_CAFE_OPENED_NOTIFICATION_TYPE",
@@ -1414,14 +1414,14 @@ export const toolCatalog = {
         "notifications"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/cadde-notifications-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-notifications-api.ts"
     },
     {
       "tool_key": "module.cadde_promotion_api",
       "tool_name": "cadde-promotion-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-promotion-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-promotion-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "getCaddeSponsoredPlacement",
@@ -1434,14 +1434,14 @@ export const toolCatalog = {
         "cadde_sponsored_placements"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/cadde-promotion-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-promotion-api.ts"
     },
     {
       "tool_key": "module.cadde_search_interests_api",
       "tool_name": "cadde-search-interests-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-search-interests-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-search-interests-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listCaddeInterestCatalog",
@@ -1462,14 +1462,14 @@ export const toolCatalog = {
         "search_cadde_mentions_v1",
         "search_cadde_people_v1"
       ],
-      "evidence_path": "src/lib/cadde-search-interests-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-search-interests-api.ts"
     },
     {
       "tool_key": "module.cadde_tanitim_api",
       "tool_name": "cadde-tanitim-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/cadde-tanitim-api.ts",
+      "entrypoint": "src/lib/cadde/cadde-tanitim-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "adminListPendingPromotions",
@@ -1493,7 +1493,7 @@ export const toolCatalog = {
         "list_cadde_promotions_v1",
         "record_cadde_promotion_event_v1"
       ],
-      "evidence_path": "src/lib/cadde-tanitim-api.ts"
+      "evidence_path": "src/lib/cadde/cadde-tanitim-api.ts"
     },
     {
       "tool_key": "module.careers_admin_api",
@@ -3242,382 +3242,382 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/cadde-admin-api.ts",
+      "path": "src/lib/cadde/cadde-admin-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api-facade.test.ts",
+      "path": "src/lib/cadde/cadde-api-facade.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api-modules.test.ts",
+      "path": "src/lib/cadde/cadde-api-modules.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api-support.test.ts",
+      "path": "src/lib/cadde/cadde-api-support.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api-support.ts",
+      "path": "src/lib/cadde/cadde-api-support.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api-update.test.ts",
+      "path": "src/lib/cadde/cadde-api-update.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-api.ts",
+      "path": "src/lib/cadde/cadde-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-badge-contract.test.ts",
+      "path": "src/lib/cadde/cadde-badge-contract.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-brand-token.test.ts",
+      "path": "src/lib/cadde/cadde-brand-token.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-brands.test.ts",
+      "path": "src/lib/cadde/cadde-brands.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-api.ts",
+      "path": "src/lib/cadde/cadde-cafe-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-async-contract.test.ts",
+      "path": "src/lib/cadde/cadde-cafe-async-contract.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-join-requests.test.ts",
+      "path": "src/lib/cadde/cadde-cafe-join-requests.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-logo.ts",
+      "path": "src/lib/cadde/cadde-cafe-logo.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-occupancy.test.ts",
+      "path": "src/lib/cadde/cadde-cafe-occupancy.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-occupancy.ts",
+      "path": "src/lib/cadde/cadde-cafe-occupancy.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-opened-notification-contract.test.ts",
+      "path": "src/lib/cadde/cadde-cafe-opened-notification-contract.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-cafe-themes.test.ts",
+      "path": "src/lib/cadde/cadde-cafe-themes.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-carsi-admin-api.test.ts",
+      "path": "src/lib/cadde/cadde-carsi-admin-api.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-carsi-api.test.ts",
+      "path": "src/lib/cadde/cadde-carsi-api.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-carsi-api.ts",
+      "path": "src/lib/cadde/cadde-carsi-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-composer.ts",
+      "path": "src/lib/cadde/cadde-composer.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-demo-data.ts",
+      "path": "src/lib/cadde/cadde-demo-data.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-engagement-api.ts",
+      "path": "src/lib/cadde/cadde-engagement-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-error-map.test.ts",
+      "path": "src/lib/cadde/cadde-error-map.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-error-visibility.test.ts",
+      "path": "src/lib/cadde/cadde-feed-error-visibility.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-location-api.ts",
+      "path": "src/lib/cadde/cadde-feed-location-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-polling.test.ts",
+      "path": "src/lib/cadde/cadde-feed-polling.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-polling.ts",
+      "path": "src/lib/cadde/cadde-feed-polling.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-widen.test.ts",
+      "path": "src/lib/cadde/cadde-feed-widen.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-feed-widen.ts",
+      "path": "src/lib/cadde/cadde-feed-widen.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-format.test.ts",
+      "path": "src/lib/cadde/cadde-format.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-format.ts",
+      "path": "src/lib/cadde/cadde-format.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-global-threshold-migration.test.ts",
+      "path": "src/lib/cadde/cadde-global-threshold-migration.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-internal.ts",
+      "path": "src/lib/cadde/cadde-internal.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-links.ts",
+      "path": "src/lib/cadde/cadde-links.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-local-clock.test.ts",
+      "path": "src/lib/cadde/cadde-local-clock.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-local-clock.ts",
+      "path": "src/lib/cadde/cadde-local-clock.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-media.test.ts",
+      "path": "src/lib/cadde/cadde-media.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-media.ts",
+      "path": "src/lib/cadde/cadde-media.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-moderation-api.ts",
+      "path": "src/lib/cadde/cadde-moderation-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-multi-target-migration.test.ts",
+      "path": "src/lib/cadde/cadde-multi-target-migration.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-notifications-api.test.ts",
+      "path": "src/lib/cadde/cadde-notifications-api.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-notifications-api.ts",
+      "path": "src/lib/cadde/cadde-notifications-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-people-search-schema.test.ts",
+      "path": "src/lib/cadde/cadde-people-search-schema.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-post-target-fold.test.ts",
+      "path": "src/lib/cadde/cadde-post-target-fold.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-promotion-api.ts",
+      "path": "src/lib/cadde/cadde-promotion-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-promotion-flow.test.ts",
+      "path": "src/lib/cadde/cadde-promotion-flow.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-query-cache.test.ts",
+      "path": "src/lib/cadde/cadde-query-cache.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-query-cache.ts",
+      "path": "src/lib/cadde/cadde-query-cache.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-query-keys.ts",
+      "path": "src/lib/cadde/cadde-query-keys.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-query-limits.test.ts",
+      "path": "src/lib/cadde/cadde-query-limits.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-ranking.test.ts",
+      "path": "src/lib/cadde/cadde-ranking.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-ranking.ts",
+      "path": "src/lib/cadde/cadde-ranking.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-reach.test.ts",
+      "path": "src/lib/cadde/cadde-reach.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-reach.ts",
+      "path": "src/lib/cadde/cadde-reach.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-reactions.test.ts",
+      "path": "src/lib/cadde/cadde-reactions.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-reactions.ts",
+      "path": "src/lib/cadde/cadde-reactions.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-rules.test.ts",
+      "path": "src/lib/cadde/cadde-rules.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-rules.ts",
+      "path": "src/lib/cadde/cadde-rules.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-schemas.test.ts",
+      "path": "src/lib/cadde/cadde-schemas.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-schemas.ts",
+      "path": "src/lib/cadde/cadde-schemas.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-search-interests-api.ts",
+      "path": "src/lib/cadde/cadde-search-interests-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-share-migration.test.ts",
+      "path": "src/lib/cadde/cadde-share-migration.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-style-contract.test.ts",
+      "path": "src/lib/cadde/cadde-style-contract.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-surface-contract.test.ts",
+      "path": "src/lib/cadde/cadde-surface-contract.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-tanitim-api.ts",
+      "path": "src/lib/cadde/cadde-tanitim-api.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-targeting.test.ts",
+      "path": "src/lib/cadde/cadde-targeting.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-targeting.ts",
+      "path": "src/lib/cadde/cadde-targeting.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-text-insert.test.ts",
+      "path": "src/lib/cadde/cadde-text-insert.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-text-insert.ts",
+      "path": "src/lib/cadde/cadde-text-insert.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-text.test.ts",
+      "path": "src/lib/cadde/cadde-text.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-text.ts",
+      "path": "src/lib/cadde/cadde-text.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-types.ts",
+      "path": "src/lib/cadde/cadde-types.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde-write-diagnostics.test.ts",
+      "path": "src/lib/cadde/cadde-write-diagnostics.test.ts",
       "kind": "ts",
       "module_family": "cadde"
     },
     {
-      "path": "src/lib/cadde.ts",
+      "path": "src/lib/cadde/cadde.ts",
       "kind": "ts",
       "module_family": "cadde"
     },

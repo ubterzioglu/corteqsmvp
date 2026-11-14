@@ -227,7 +227,7 @@ muhasebe/
 - **RPC-only mutations:** cadde content tables have NO user INSERT policies. All writes go through
   security-definer RPCs (`create_cadde_post_v1`, cafe/carsi/promotion/report RPC families).
 - **SQL↔TS mirror contracts** (tested; changing one side requires updating the other):
-  `can_post_kopru` ↔ `src/lib/cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
+  `can_post_kopru` ↔ `src/lib/cadde/cadde-rules.ts` · `list_cadde_feed_v1` ↔ `cadde-ranking.ts` ·
   `can_join_cadde_cafe` ↔ `canJoinCafeRule` · auto-scan regex ↔ `CAFE_NAME_BLOCKLIST`.
 - **`cadde_settings`** holds ALL product limits/flags (phone requirement D-03, cafe/carsi limits,
   rate limits) — product decisions are SQL updates, not code changes.
@@ -239,12 +239,12 @@ muhasebe/
   10/5/10 içinde). Sıralama bantları (aynı şehir → aynı ülke → etkileşim) **aynen duruyor**;
   kalkan yalnız FİLTRE. Şüphelenirsen ezberleme, teyit et:
   `select key, value from cadde_settings where key like 'cadde.global%'`.
-  ⚠️ `src/lib/cadde-ranking.ts` içindeki `CADDE_GLOBAL_THRESHOLD_SETTINGS` **hâlâ 10/5/10'dur
+  ⚠️ `src/lib/cadde/cadde-ranking.ts` içindeki `CADDE_GLOBAL_THRESHOLD_SETTINGS` **hâlâ 10/5/10'dur
   ve öyle kalmalıdır** — o sabit SEED varsayılanını tanımlar ve
   `cadde-global-threshold-migration.test.ts` onu değişmez seed migration'ının metnine kilitler.
   Canlı değerle ayrışması BEKLENEN durumdur; sabite bakıp "canlı eşik 10" sanma.
   ⚠️ Eşik sıfırlanınca **erişim kartı iki yerden birden yanlışa düştü** ve düzeltildi
-  (`src/lib/cadde-reach.ts`): (1) `caddeGlobalThresholdText` "0 reaksiyon · 0 yorum ·
+  (`src/lib/cadde/cadde-reach.ts`): (1) `caddeGlobalThresholdText` "0 reaksiyon · 0 yorum ·
   0 paylaşım" diye saçmalıyordu → `isCaddeGlobalGateOpen` ile ayrı metin; (2)
   `get_cadde_feed_reach_v1` yalnız KONUM dallarını sayar, global katmanı saymaz — kapı
   açıkken ham `reach.total` gerçeği EKSİK gösterir, `caddeEffectiveReach` bunu tüm üyelere
@@ -259,7 +259,7 @@ muhasebe/
   by **exact name** (`c.name = country_name`) while the profile supplies the raw attribute
   (`get_cadde_actor_context` → `cadde_attr_text`), so `Türkiye` never matched the stored `Turkiye`.
   Migration `20260805130000_cadde_post_target_fold.sql` aligns both joins; contract test
-  `src/lib/cadde-post-target-fold.test.ts` locks it. **Do not reintroduce a bare `c.name = ...` join
+  `src/lib/cadde/cadde-post-target-fold.test.ts` locks it. **Do not reintroduce a bare `c.name = ...` join
   on a user-supplied location name** — profile location is free text.
   Folding alone did not close the gap: the remaining values were not spelling variants but
   **different words** (`Qatar`/`Katar`, `Deutschland`/`Almanya`, `ABD`/`Amerika Birlesik Devletleri`).

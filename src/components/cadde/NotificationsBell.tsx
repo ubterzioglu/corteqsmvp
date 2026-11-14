@@ -17,10 +17,10 @@ import {
   notificationDeepLink,
   notificationUsesCafeIcon,
   subscribeToMyNotifications,
-} from "@/lib/cadde-notifications-api";
+} from "@/lib/cadde/cadde-notifications-api";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
-import { CADDE_LIST_STALE_MS } from "@/lib/cadde-query-cache";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { CADDE_LIST_STALE_MS } from "@/lib/cadde/cadde-query-cache";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 
 const formatRelative = (value: string): string => {
   const diffMinutes = Math.max(0, Math.floor((Date.now() - new Date(value).getTime()) / 60_000));

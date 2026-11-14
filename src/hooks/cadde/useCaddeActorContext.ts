@@ -3,10 +3,10 @@
 
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-import { getCaddeActorContext } from "@/lib/cadde-api";
-import { caddeReadError } from "@/lib/cadde-internal";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeActorContext } from "@/lib/cadde-rules";
+import { getCaddeActorContext } from "@/lib/cadde/cadde-api";
+import { caddeReadError } from "@/lib/cadde/cadde-internal";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddeActorContext } from "@/lib/cadde/cadde-rules";
 
 /**
  * ⚠️ FAIL-OPEN KAPATILDI (S06c). Eskiden okuma hatası `null` dönüyordu ve

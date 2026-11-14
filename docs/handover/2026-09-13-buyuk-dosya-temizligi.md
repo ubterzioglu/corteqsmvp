@@ -134,7 +134,7 @@ aylarca ölüydü).
 
 | Dosya | Satır | Importer | Test |
 |---|---|---|---|
-| `src/lib/cadde-api.ts` | 986 | **25** | **YOK** |
+| `src/lib/cadde/cadde-api.ts` | 986 | **25** | **YOK** |
 | `src/pages/cadde/CaddePage.tsx` | 1716 | 19 | var (1845 satır) |
 
 CLAUDE.md'nin Cadde bölümü bu alanın *sessizce* kırıldığı üç ayrı olayı belgeliyor

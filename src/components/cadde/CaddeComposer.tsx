@@ -30,10 +30,10 @@ import {
   uploadCaddeMedia,
   validateCaddeMediaFile,
   validateCaddeVideoDuration,
-} from "@/lib/cadde-media";
-import type { CaddeComposerValue } from "@/lib/cadde-composer";
-import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
-import type { CaddeCity, CaddeCountry, CaddeMediaAsset } from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-media";
+import type { CaddeComposerValue } from "@/lib/cadde/cadde-composer";
+import { insertTextAtSelection, type TextSelection } from "@/lib/cadde/cadde-text-insert";
+import type { CaddeCity, CaddeCountry, CaddeMediaAsset } from "@/lib/cadde/cadde-types";
 
 const PLACEHOLDER = "Ne düşünüyorsun? Şehrindeki bir haberi, deneyimini veya sorunu paylaş…";
 

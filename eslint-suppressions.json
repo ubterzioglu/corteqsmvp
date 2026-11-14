@@ -204,7 +204,7 @@
       "count": 1
     }
   },
-  "src/lib/cadde-api.ts": {
+  "src/lib/cadde/cadde-api.ts": {
     "complexity": {
       "count": 2
     }

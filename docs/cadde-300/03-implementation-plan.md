@@ -25,7 +25,7 @@ Faz 0 (bu dokümanlar) ✅
 **Migration: YOK. Davranış değişikliği: yalnız R-01 (real default + hata görünürlüğü).**
 
 Todo:
-- [ ] `src/lib/cadde.ts` → böl: `cadde-types.ts`, `cadde-schemas.ts` (Zod: post/comment/cafe-join/filter), `cadde-api.ts` (public read + mutation), `cadde-admin-api.ts` (admin CRUD), `cadde-query-keys.ts`, `cadde-format.ts`. Eski `cadde.ts` geçici re-export barrel olarak kalır (import kırılmasın), Faz 2 sonunda silinir.
+- [ ] `src/lib/cadde/cadde.ts` → böl: `cadde-types.ts`, `cadde-schemas.ts` (Zod: post/comment/cafe-join/filter), `cadde-api.ts` (public read + mutation), `cadde-admin-api.ts` (admin CRUD), `cadde-query-keys.ts`, `cadde-format.ts`. Eski `cadde.ts` geçici re-export barrel olarak kalır (import kırılmasın), Faz 2 sonunda silinir.
 - [ ] 6 sessiz catch (eski cadde.ts:498,517,589,705,773,809) → telemetri (`cadde_api_error` console.error + Sonner toast) + **etiketli** fallback; hata sessizce demo veriye düşmez.
 - [ ] `parseCaddeFilters` default'u `real` (R-01); demo yalnız `?mode=demo`.
 - [ ] `CaddePage.tsx` → `src/pages/cadde/CaddePage.tsx` taşı; App.tsx lazy import güncelle (route path `/cadde` DEĞİŞMEZ).

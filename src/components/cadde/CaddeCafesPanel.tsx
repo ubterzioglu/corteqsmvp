@@ -28,7 +28,7 @@ import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import type { CaddeCafe } from "@/lib/cadde-types";
+import type { CaddeCafe } from "@/lib/cadde/cadde-types";
 import { formatShortDayMonthTimeTR } from "@/lib/format-date";
 
 /** m69: akordeon açıkken ilk anda çizilen kafe satırı sayısı; gerisi tek tıkla açılır. */

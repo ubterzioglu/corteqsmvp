@@ -76,7 +76,7 @@ const nameRows = [
   { user_id: "host-1", value_text: "Seda Yalçın", afs_attributes: { key: "full_name" } },
 ];
 
-/** cadde_cafes CAFE_SELECT_COLUMNS ile birebir — bkz. src/lib/cadde-api.ts:328. */
+/** cadde_cafes CAFE_SELECT_COLUMNS ile birebir — bkz. src/lib/cadde/cadde-api.ts:328. */
 const CAFE_ROW = {
   id: "cafe-1",
   host_user_id: "cadde-user-1",
@@ -186,7 +186,7 @@ const mockCaddeNetwork = async (page: Page, feedItems: ReturnType<typeof feedIte
  * Şehir seçiliyken boş, ülke genelinde dolu bir akış kurar (B1/B2, m157-158).
  * `list_cadde_feed_v1` isteğinin gövdesine bakarak DARALTILMIŞ (şehir filtreli)
  * çağrıyı boş, GENİŞLETİLMİŞ (ülke filtreli) çağrıyı dolu döndürür — widenCaddeFilters
- * tam olarak bu iki isteği bu sırayla üretir (bkz. src/lib/cadde-feed-widen.ts).
+ * tam olarak bu iki isteği bu sırayla üretir (bkz. src/lib/cadde/cadde-feed-widen.ts).
  */
 const mockCaddeNetworkColdCity = async (page: Page) => {
   await mockCaddeNetwork(page, []);

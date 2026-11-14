@@ -44,8 +44,8 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import type { useCaddeLayoutState } from "@/hooks/cadde/useCaddeLayoutState";
 import type { useCaddePageData } from "@/hooks/cadde/useCaddePageData";
-import { isInternalCaddeLink } from "@/lib/cadde-links";
-import type { CaddeFilterState } from "@/lib/cadde-types";
+import { isInternalCaddeLink } from "@/lib/cadde/cadde-links";
+import type { CaddeFilterState } from "@/lib/cadde/cadde-types";
 
 export type CaddeRightRailProps = {
   /** useCaddeLayoutState sonuç nesnesinin TAMAMI (A06b dersi — gruplu geçir). */

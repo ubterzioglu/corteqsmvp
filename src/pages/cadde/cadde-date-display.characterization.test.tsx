@@ -20,8 +20,8 @@ import CaddeCafePage from "@/pages/cadde/CaddeCafePage";
 import CaddeCarsiItemPage from "@/pages/cadde/CaddeCarsiItemPage";
 import CaddeCarsiPage from "@/pages/cadde/CaddeCarsiPage";
 import CaddePage from "@/pages/cadde/CaddePage";
-import type { CaddeActorContext } from "@/lib/cadde-rules";
-import type { CaddeCafe, CarsiItem } from "@/lib/cadde-types";
+import type { CaddeActorContext } from "@/lib/cadde/cadde-rules";
+import type { CaddeCafe, CarsiItem } from "@/lib/cadde/cadde-types";
 
 const SHORT_MONTHS = ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"];
 const LONG_MONTHS = [
@@ -97,23 +97,25 @@ vi.mock("@/components/auth/useAuth", () => ({ useAuth: () => useAuthMock() }));
 vi.mock("@/hooks/cadde/useCaddeActorContext", () => ({ useCaddeActorContext: () => actorContextMock() }));
 vi.mock("@/hooks/use-toast", () => ({ useToast: () => ({ toast: toastMock }) }));
 
-vi.mock("@/lib/cadde-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-api")>("@/lib/cadde-api");
+vi.mock("@/lib/cadde/cadde-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-api")>("@/lib/cadde/cadde-api");
   return { ...actual, ...api };
 });
 
-vi.mock("@/lib/cadde-carsi-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-carsi-api")>("@/lib/cadde-carsi-api");
+vi.mock("@/lib/cadde/cadde-carsi-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-carsi-api")>("@/lib/cadde/cadde-carsi-api");
   return { ...actual, ...carsi };
 });
 
-vi.mock("@/lib/cadde-cafe-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-cafe-api")>("@/lib/cadde-cafe-api");
+vi.mock("@/lib/cadde/cadde-cafe-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-cafe-api")>("@/lib/cadde/cadde-cafe-api");
   return { ...actual, listCaddeCafeThemes: vi.fn().mockResolvedValue([]) };
 });
 
-vi.mock("@/lib/cadde-notifications-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-notifications-api")>("@/lib/cadde-notifications-api");
+vi.mock("@/lib/cadde/cadde-notifications-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-notifications-api")>(
+    "@/lib/cadde/cadde-notifications-api",
+  );
   return {
     ...actual,
     listMyNotifications: vi.fn().mockResolvedValue([]),
@@ -123,7 +125,7 @@ vi.mock("@/lib/cadde-notifications-api", async () => {
   };
 });
 
-vi.mock("@/lib/cadde-tanitim-api", () => ({ listCaddePromotions: listCaddePromotionsMock }));
+vi.mock("@/lib/cadde/cadde-tanitim-api", () => ({ listCaddePromotions: listCaddePromotionsMock }));
 
 vi.mock("@/components/cadde/CaddeEmojiPickerContent", () => ({ default: () => null }));
 

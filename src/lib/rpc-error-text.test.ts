@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde/cadde-rules";
 import { extractRpcErrorText } from "@/lib/rpc-error-text";
 import { SF_ERROR_MESSAGES, sfErrorMessage } from "@/lib/service-finder/service-finder-format";
 
@@ -62,7 +62,7 @@ describe("kopya geri gelmesin", () => {
   it("iki çözümleyici de KENDİ çıkarıcısını tanımlamaz", () => {
     // ⚠️ Asıl risk bu: düzeltme kopyalanmadığı için ikinci modül aylarca bozuk kaldı.
     // Kendi `extract...` fonksiyonunu tanımlayan modül tek kaynaktan ayrışır.
-    for (const file of ["src/lib/cadde-rules.ts", "src/lib/service-finder/service-finder-format.ts"]) {
+    for (const file of ["src/lib/cadde/cadde-rules.ts", "src/lib/service-finder/service-finder-format.ts"]) {
       const source = readFileSync(file, "utf8");
 
       expect(source, `${file} tek kaynağı kullanmalı`).toContain("extractRpcErrorText");

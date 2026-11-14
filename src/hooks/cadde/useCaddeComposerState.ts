@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
 import { useToast } from "@/hooks/use-toast";
-import { createCaddePost, updateCaddePost } from "@/lib/cadde-api";
-import { emptyCaddeComposer } from "@/lib/cadde-composer";
-import type { CaddeMediaAsset } from "@/lib/cadde-types";
+import { createCaddePost, updateCaddePost } from "@/lib/cadde/cadde-api";
+import { emptyCaddeComposer } from "@/lib/cadde/cadde-composer";
+import type { CaddeMediaAsset } from "@/lib/cadde/cadde-types";
 
 type UseCaddeComposerStateInput = {
   canPost: boolean;

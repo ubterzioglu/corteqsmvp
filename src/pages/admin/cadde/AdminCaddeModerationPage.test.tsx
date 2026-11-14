@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import AdminCaddeModerationPage from "@/pages/admin/cadde/AdminCaddeModerationPage";
-import type { CaddeModerationQueueItem } from "@/lib/cadde-moderation-api";
+import type { CaddeModerationQueueItem } from "@/lib/cadde/cadde-moderation-api";
 
 const listModerationQueueMock = vi.fn();
 
@@ -13,8 +13,10 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: vi.fn() }),
 }));
 
-vi.mock("@/lib/cadde-moderation-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-moderation-api")>("@/lib/cadde-moderation-api");
+vi.mock("@/lib/cadde/cadde-moderation-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-moderation-api")>(
+    "@/lib/cadde/cadde-moderation-api",
+  );
   return {
     ...actual,
     listModerationQueue: (...args: unknown[]) => listModerationQueueMock(...args),

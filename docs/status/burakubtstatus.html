@@ -215,7 +215,7 @@ bekleyen işler.</p>
   <tr>
     <td><strong>B1 — types.ts regen</strong></td>
     <td><span class="badge b-red">🔴 AÇIK</span></td>
-    <td><code>src/lib/cadde-internal.ts</code>'te hâlâ 1 izole <code>db as any</code> cast; Management API token "Unauthorized" verdiği için regen yapılamadı</td>
+    <td><code>src/lib/cadde/cadde-internal.ts</code>'te hâlâ 1 izole <code>db as any</code> cast; Management API token "Unauthorized" verdiği için regen yapılamadı</td>
     <td>Yeni RPC'ler tip-güvensiz yazılır, <code>as any</code> borcu büyür. <strong>Karar:</strong> geçerli access token → <code>supabase gen types</code> → cast'i kaldır. Operasyonel</td>
   </tr>
   <tr>
@@ -399,7 +399,7 @@ bekleyen işler.</p>
   <div class="tab-head"><span class="num">4</span><h3>Çarşı</h3><span class="badge b-green">🟢 Backend hazır</span><span class="effort">İş: S</span></div>
   <div class="quad">
     <div class="now mini"><div class="lbl">Ana projede (mevcut)</div><ul>
-      <li><code>src/lib/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code></li>
+      <li><code>src/lib/cadde/cadde-carsi-api.ts</code> → <code>listMyCarsiItems(userId)</code></li>
       <li><code>CaddeMyContentCard.tsx</code> — açık cafe + Çarşı ilanlarını listeleyen <strong>hazır</strong> kart (bugün Profil Ayarları'nda)</li>
       <li>Yönetim: <code>/cadde/carsi</code></li>
     </ul></div>

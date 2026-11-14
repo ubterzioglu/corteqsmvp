@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CaddeCafePage from "@/pages/cadde/CaddeCafePage";
-import type { CaddeCafe } from "@/lib/cadde-types";
+import type { CaddeCafe } from "@/lib/cadde/cadde-types";
 
 const useAuthMock = vi.fn();
 const getCaddeCafeMock = vi.fn();
@@ -23,8 +23,8 @@ vi.mock("@/hooks/use-toast", () => ({
   useToast: () => ({ toast: toastMock }),
 }));
 
-vi.mock("@/lib/cadde-api", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/cadde-api")>("@/lib/cadde-api");
+vi.mock("@/lib/cadde/cadde-api", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/cadde/cadde-api")>("@/lib/cadde/cadde-api");
   return {
     ...actual,
     getCaddeCafe: (...args: unknown[]) => getCaddeCafeMock(...args),
@@ -35,7 +35,7 @@ vi.mock("@/lib/cadde-api", async () => {
   };
 });
 
-vi.mock("@/lib/cadde-cafe-api", () => ({ listCaddeCafeThemes: vi.fn().mockResolvedValue([]) }));
+vi.mock("@/lib/cadde/cadde-cafe-api", () => ({ listCaddeCafeThemes: vi.fn().mockResolvedValue([]) }));
 
 const makeCafe = (overrides: Partial<CaddeCafe> = {}): CaddeCafe => ({
   id: "cafe-1",

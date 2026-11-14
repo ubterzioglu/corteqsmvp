@@ -18,7 +18,7 @@ Bugünkü aktif `/cadde` rotası:
 ```text
 src/App.tsx
 → src/pages/CaddePage.tsx
-→ src/lib/cadde.ts
+→ src/lib/cadde/cadde.ts
 → cadde_* tabloları
 ```
 
@@ -114,7 +114,7 @@ Yeni paralel rol sistemi veya ikinci bir profil tablosu oluşturulmayacaktır.
 Aktif sayfa `src/pages/CaddePage.tsx` dosyasıdır. Bu ekran:
 
 - React Query kullanır.
-- `src/lib/cadde.ts` üzerinden veri çeker.
+- `src/lib/cadde/cadde.ts` üzerinden veri çeker.
 - Demo / real modu taşır.
 - Tek ülke ve tek şehir filtresi taşır.
 - Köprü toggle gösterir.
@@ -129,7 +129,7 @@ Bu yapı iyi bir başlangıçtır ancak CKS kapsamının yalnızca bir bölümü
 
 ## 2.2 Aktif Cadde Veri Katmanı
 
-`src/lib/cadde.ts` içinde aşağıdaki tablolar kullanılır:
+`src/lib/cadde/cadde.ts` içinde aşağıdaki tablolar kullanılır:
 
 ```text
 cadde_countries
@@ -233,7 +233,7 @@ Rol aileleri tekrar oluşturulmayacaktır. Cadde yetkileri, flat rollerin her bi
 | Konu | Mevcut durum | Hedef durum | Öncelik |
 |---|---|---|---|
 | Canonical frontend | `CaddePage.tsx` aktif | Aynı hat modülerize edilecek | P0 |
-| Canonical API | Tek büyük `src/lib/cadde.ts` | `cadde-api`, `cadde-rules`, `cadde-ranking`, `cadde-schemas` olarak ayrılacak | P0 |
+| Canonical API | Tek büyük `src/lib/cadde/cadde.ts` | `cadde-api`, `cadde-rules`, `cadde-ranking`, `cadde-schemas` olarak ayrılacak | P0 |
 | Legacy hat | Paralel olarak duruyor | Freeze → backfill gerekiyorsa yap → soft-decommission | P0 |
 | Profil kapısı | Legacy component var, aktif sayfada yok | Aktif Cadde’ye entegre edilecek | P0 |
 | Profil tamamlanma kriteri | Canonical auth sadece `full_name` üzerinden onboarding tamam sayıyor | Cadde için ülke + şehir + telefon doğrulama ayrı hesaplanacak | P0 |
@@ -537,7 +537,7 @@ aynı anda uygulanmalıdır.
 
 ## 8.1 Dosya Yapısı
 
-Mevcut tek parça `src/lib/cadde.ts` bölünmelidir:
+Mevcut tek parça `src/lib/cadde/cadde.ts` bölünmelidir:
 
 ```text
 src/
@@ -601,7 +601,7 @@ src/
 
 ## 8.2 Uyum Katmanı
 
-CKS’de `src/lib/caddeRules.ts` adı geçmektedir. Repo standardına uygun canonical dosya `src/lib/cadde-rules.ts` olabilir.
+CKS’de `src/lib/caddeRules.ts` adı geçmektedir. Repo standardına uygun canonical dosya `src/lib/cadde/cadde-rules.ts` olabilir.
 
 Geçici uyum gerekiyorsa:
 
@@ -1682,7 +1682,7 @@ docs/cadde-300/01-decisions.md
 Todo:
 
 ```text
-[ ] src/lib/cadde.ts modülerleştirme planı
+[ ] src/lib/cadde/cadde.ts modülerleştirme planı
 [ ] cadde-types.ts
 [ ] cadde-schemas.ts
 [ ] cadde-api.ts
@@ -2003,7 +2003,7 @@ Loglarda:
 src/App.tsx
 src/pages/CaddePage.tsx                  → yeni src/pages/cadde/CaddePage.tsx
 src/pages/admin/cadde/AdminCaddePage.tsx       → admin/cadde alt rotalarına böl
-src/lib/cadde.ts                         → modüllere böl
+src/lib/cadde/cadde.ts                         → modüllere böl
 src/lib/features.ts                      → yeni Cadde feature keyleri
 src/hooks/useFeatureFlags.ts             → yeni keyleri doğal olarak resolve edecek
 src/contexts/DiasporaContext.tsx         → Cadde entegrasyonu için kullanılacak
@@ -2012,14 +2012,14 @@ src/contexts/DiasporaContext.tsx         → Cadde entegrasyonu için kullanıla
 ## Yeni Dosyalar
 
 ```text
-src/lib/cadde-api.ts
-src/lib/cadde-admin-api.ts
-src/lib/cadde-rules.ts
-src/lib/cadde-ranking.ts
-src/lib/cadde-targeting.ts
-src/lib/cadde-schemas.ts
-src/lib/cadde-types.ts
-src/lib/cadde-query-keys.ts
+src/lib/cadde/cadde-api.ts
+src/lib/cadde/cadde-admin-api.ts
+src/lib/cadde/cadde-rules.ts
+src/lib/cadde/cadde-ranking.ts
+src/lib/cadde/cadde-targeting.ts
+src/lib/cadde/cadde-schemas.ts
+src/lib/cadde/cadde-types.ts
+src/lib/cadde/cadde-query-keys.ts
 src/hooks/cadde/*
 src/components/cadde/*
 src/pages/cadde/*
@@ -2147,7 +2147,7 @@ Zorunlu kaynak sırası:
 Çelişkide ürün davranışında CKS, şema ve tablo isimlerinde güncel migration + AI_TECHNICAL_REFERENCE önceliklidir.
 
 Kritik mimari karar:
-- Canonical Cadde hattı src/pages/CaddePage.tsx + src/lib/cadde.ts + cadde_* tablolarıdır.
+- Canonical Cadde hattı src/pages/CaddePage.tsx + src/lib/cadde/cadde.ts + cadde_* tablolarıdır.
 - src/pages/Feed.tsx ve src/components/feed/* legacy hattına yeni feature ekleme.
 - Gerekli UX parçalarını legacy hattan canonical modüle taşı.
 - Kalıcı dual-write oluşturma.
@@ -2173,7 +2173,7 @@ Inventory kapsamında:
 - /cadde route
 - /admin/cadde route
 - src/pages/CaddePage.tsx
-- src/lib/cadde.ts
+- src/lib/cadde/cadde.ts
 - src/pages/Feed.tsx
 - src/components/feed/*
 - src/hooks/useCafes.ts

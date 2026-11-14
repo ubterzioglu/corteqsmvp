@@ -11,7 +11,7 @@
 // (`event-media-contract.test.ts` kilitler). Gerçek enforce DB'dedir; bu katman
 // kullanıcıya hızlı ve Türkçe geri bildirim verir.
 //
-// Desen kaynağı: `src/lib/cadde-media.ts`.
+// Desen kaynağı: `src/lib/cadde/cadde-media.ts`.
 
 import { supabase } from "@/integrations/supabase/client";
 

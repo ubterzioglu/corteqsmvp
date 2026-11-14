@@ -7,9 +7,9 @@
 
 import { Link } from "react-router-dom";
 
-import { splitCaddeBody } from "@/lib/cadde-text";
+import { splitCaddeBody } from "@/lib/cadde/cadde-text";
 import { trFold } from "@/lib/text-normalization";
-import type { CaddePostMention } from "@/lib/cadde-types";
+import type { CaddePostMention } from "@/lib/cadde/cadde-types";
 
 const mentionHref = (mention: CaddePostMention): string | null => {
   switch (mention.type) {

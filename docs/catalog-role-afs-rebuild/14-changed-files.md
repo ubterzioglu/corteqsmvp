@@ -33,7 +33,7 @@
 
 ## Frontend (src) — rewired for renamed tables
 - `src/integrations/supabase/types.ts` (regenerated, 2386→8861 lines)
-- `src/lib/role-catalog.ts`, `src/lib/admin-catalog.ts`, `src/lib/profile/profile-helpers.ts`, `src/lib/cadde.ts`
+- `src/lib/role-catalog.ts`, `src/lib/admin-catalog.ts`, `src/lib/profile/profile-helpers.ts`, `src/lib/cadde/cadde.ts`
 - `src/components/auth/AuthProvider.tsx`, `src/components/messaging/MessagesInbox.tsx`
 - `src/pages/admin/AdminAttributesPage.tsx`, `AdminProfileSectionsPage.tsx`, `AdminRolesFeaturesPage.tsx`, `AdminRolesOverviewPage.tsx`, `AdminUserOverridesPage.tsx`, `AdminApprovalsPage.tsx`, `AdminAuditLogsPage.tsx`, `AdminWhatsAppLandingEditorsPage.tsx`
 - `src/pages/admin/rehber/AdminNewMemberGuidePage.tsx` (flat roles, family logic removed)

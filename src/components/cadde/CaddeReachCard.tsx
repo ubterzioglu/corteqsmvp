@@ -9,7 +9,7 @@
 // Etiketler bunu açıkça söyler; aksi halde okunma metriği sanılır.
 //
 // Veri: get_cadde_feed_reach_v1 (migration 20260806140000). Kural burada TEKRAR EDİLMEZ;
-// saf dönüşümler `src/lib/cadde-reach.ts` içindedir.
+// saf dönüşümler `src/lib/cadde/cadde-reach.ts` içindedir.
 
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -17,14 +17,14 @@ import { AlertTriangle, Globe2, MapPin } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCaddeFeedReach } from "@/lib/cadde-api";
+import { getCaddeFeedReach } from "@/lib/cadde/cadde-api";
 import {
   buildCaddeReachRows,
   caddeEffectiveReach,
   caddeGlobalThresholdText,
   resolveCaddeReachState,
-} from "@/lib/cadde-reach";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+} from "@/lib/cadde/cadde-reach";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 
 /** Sayım 158 üyeyi tarar; dakikada bir tazelemenin değeri yok. */
 const REACH_STALE_MS = 1000 * 60 * 15;

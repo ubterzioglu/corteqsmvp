@@ -13,9 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { listCaddeInterestCatalog, listMyCaddeInterests, saveMyCaddeInterests } from "@/lib/cadde-api";
-import { buildCaddeInterestsMirrorText } from "@/lib/cadde-format";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
+import { listCaddeInterestCatalog, listMyCaddeInterests, saveMyCaddeInterests } from "@/lib/cadde/cadde-api";
+import { buildCaddeInterestsMirrorText } from "@/lib/cadde/cadde-format";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
 import type { AttributeVisibility } from "@/lib/member-profile";
 import { updateProfileAttribute } from "@/lib/member-profile-api";
 

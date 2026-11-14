@@ -26,7 +26,7 @@ Mevcut iddialar:
 - Demo bandını SiteHeader rotadan türetir
 
 ### 2. Cadde Demo Verileri
-**Dosya:** `src/lib/cadde-demo-data.ts`
+**Dosya:** `src/lib/cadde/cadde-demo-data.ts`
 **Durum:** ✅ DOĞRU KULLANILIYOR
 
 Dosya başındaki yorum:

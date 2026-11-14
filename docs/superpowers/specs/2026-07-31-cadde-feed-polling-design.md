@@ -31,7 +31,7 @@ Seçilen: **frontend-only adaptif polling** —
 
 ## Bileşenler
 
-- `src/lib/cadde-feed-polling.ts` — saf aralık/streak fonksiyonları + sabitler (birim testli)
+- `src/lib/cadde/cadde-feed-polling.ts` — saf aralık/streak fonksiyonları + sabitler (birim testli)
 - `src/pages/cadde/CaddePage.tsx` — `useQuery` entegrasyonu (ref tabanlı streak)
 
 ## Etki

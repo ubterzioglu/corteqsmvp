@@ -1,4 +1,4 @@
-// m133 — yerel saat rozetinin çizimi. Saf mantığın testi: src/lib/cadde-local-clock.test.ts
+// m133 — yerel saat rozetinin çizimi. Saf mantığın testi: src/lib/cadde/cadde-local-clock.test.ts
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 

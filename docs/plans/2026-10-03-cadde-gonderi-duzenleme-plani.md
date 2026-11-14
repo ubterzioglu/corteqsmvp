@@ -58,11 +58,11 @@ son_dogrulama: 2026-11-07
 
 ### CD01 — API sarmalayıcı + şema (küçük, migration yok)
 
-- `src/lib/cadde-schemas.ts`: `caddePostUpdateSchema` (Çarşı `carsiItemUpdateSchema` deseni):
+- `src/lib/cadde/cadde-schemas.ts`: `caddePostUpdateSchema` (Çarşı `carsiItemUpdateSchema` deseni):
   `postId` + opsiyonel `title?` (≤160), `body?` (≤4000), `media?` (≤5/≤4 img/≤1 vid — create
   şemasıyla aynı medya kuralı), `needCategory?`, `targets?` (max **1** — T3), `mentions YOK` (T1).
   `superRefine`: en az bir alan verilmeli (boş update = no-op çağrısı atılmasın).
-- `src/lib/cadde-api.ts`: `updateCaddePost(input)` — Zod parse (`parseWithUserError`),
+- `src/lib/cadde/cadde-api.ts`: `updateCaddePost(input)` — Zod parse (`parseWithUserError`),
   `db.rpc("update_cadde_post_v1", { p_post_id, p_title?, p_body?, p_media?, p_need_category?, p_targets? })`
   (verilmeyen alan **hiç gönderilmez** = null = dokunma), hata → `caddeWriteError("updateCaddePost", error)`.
 - Facade export listesi güncellenir (T4).

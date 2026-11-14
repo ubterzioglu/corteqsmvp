@@ -9,13 +9,13 @@ import {
   recordCaddeShare,
   reportCaddeEntity,
   toggleCaddeReaction,
-} from "@/lib/cadde-api";
-import { caddeOpenCommentsPollInterval } from "@/lib/cadde-feed-polling";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { applyReactionToFeedPages } from "@/lib/cadde-reactions";
-import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
-import { insertTextAtSelection, type TextSelection } from "@/lib/cadde-text-insert";
-import type { CaddeCommentCursor, CaddeReactionType } from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-api";
+import { caddeOpenCommentsPollInterval } from "@/lib/cadde/cadde-feed-polling";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import { applyReactionToFeedPages } from "@/lib/cadde/cadde-reactions";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde/cadde-rules";
+import { insertTextAtSelection, type TextSelection } from "@/lib/cadde/cadde-text-insert";
+import type { CaddeCommentCursor, CaddeReactionType } from "@/lib/cadde/cadde-types";
 
 const COMMENT_PAGE_SIZE = 5;
 export const CADDE_REACTION_CLOSE_DELAY_MS = 180;

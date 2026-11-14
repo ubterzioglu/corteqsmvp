@@ -10,8 +10,8 @@ import { ExternalLink } from "lucide-react";
 import CaddeBadge from "@/components/cadde/CaddeBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { isExternalPromotionUrl, recordPromotionEvent } from "@/lib/cadde-tanitim-api";
-import type { CaddePromotionCard } from "@/lib/cadde-types";
+import { isExternalPromotionUrl, recordPromotionEvent } from "@/lib/cadde/cadde-tanitim-api";
+import type { CaddePromotionCard } from "@/lib/cadde/cadde-types";
 
 interface SponsoredFeedCardProps {
   promotion: CaddePromotionCard;

@@ -12,9 +12,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { moderateCaddeEntity } from "@/lib/cadde-moderation-api";
-import { formatCarsiPrice, listAllCarsiItemsForAdmin } from "@/lib/cadde-carsi-api";
-import type { CarsiItemStatus } from "@/lib/cadde-types";
+import { moderateCaddeEntity } from "@/lib/cadde/cadde-moderation-api";
+import { formatCarsiPrice, listAllCarsiItemsForAdmin } from "@/lib/cadde/cadde-carsi-api";
+import type { CarsiItemStatus } from "@/lib/cadde/cadde-types";
 
 const STATUS_LABELS: Record<CarsiItemStatus, string> = {
   draft: "Taslak",

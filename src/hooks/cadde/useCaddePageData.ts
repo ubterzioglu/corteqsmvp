@@ -12,12 +12,12 @@ import {
   listCaddeFeed,
   listCaddeInterestCatalog,
   searchCaddePeople,
-} from "@/lib/cadde-api";
-import { listCaddeCafeThemes } from "@/lib/cadde-cafe-api";
-import { listCaddePromotions } from "@/lib/cadde-tanitim-api";
-import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde-query-cache";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddeFeedPageParam, CaddeFilterState } from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-api";
+import { listCaddeCafeThemes } from "@/lib/cadde/cadde-cafe-api";
+import { listCaddePromotions } from "@/lib/cadde/cadde-tanitim-api";
+import { CADDE_LIST_STALE_MS, CADDE_PROMO_STALE_MS, CADDE_REFERENCE_STALE_MS } from "@/lib/cadde/cadde-query-cache";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddeFeedPageParam, CaddeFilterState } from "@/lib/cadde/cadde-types";
 
 type UseCaddePageDataInput = {
   filters: CaddeFilterState;

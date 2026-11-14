@@ -13,7 +13,7 @@ son_dogrulama: 2026-11-07
 ## Mevcut Rol Yapısı
 
 ### Bireysel Roller (INDIVIDUAL_ROLE_KEYS)
-**Kaynak:** `src/lib/cadde-rules.ts` satır 34-38
+**Kaynak:** `src/lib/cadde/cadde-rules.ts` satır 34-38
 
 | Rol Anahtarı | Açıklama |
 |--------------|----------|

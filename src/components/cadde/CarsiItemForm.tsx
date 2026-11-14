@@ -21,9 +21,15 @@ import {
   uploadCaddeMedia,
   validateCaddeMediaFile,
   validateCaddeVideoDuration,
-} from "@/lib/cadde-media";
-import type { CarsiFormValue } from "@/lib/cadde-composer";
-import type { CaddeCity, CaddeCountry, CaddeMediaAsset, CarsiCategory, CarsiContactMode } from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-media";
+import type { CarsiFormValue } from "@/lib/cadde/cadde-composer";
+import type {
+  CaddeCity,
+  CaddeCountry,
+  CaddeMediaAsset,
+  CarsiCategory,
+  CarsiContactMode,
+} from "@/lib/cadde/cadde-types";
 
 const CONTACT_MODE_LABELS: Record<CarsiContactMode, string> = {
   platform: "Platform üzerinden",

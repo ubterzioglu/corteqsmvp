@@ -26,9 +26,9 @@ import {
   createPromotionCampaign,
   listMyPromotionCampaigns,
   listPromotionPlacementOptions,
-} from "@/lib/cadde-tanitim-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import type { CaddePromotionStatus, CaddePromotionType } from "@/lib/cadde-types";
+} from "@/lib/cadde/cadde-tanitim-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import type { CaddePromotionStatus, CaddePromotionType } from "@/lib/cadde/cadde-types";
 
 const STATUS_BADGE_VARIANTS: Record<CaddePromotionStatus, "default" | "secondary" | "outline" | "destructive"> = {
   draft: "outline",

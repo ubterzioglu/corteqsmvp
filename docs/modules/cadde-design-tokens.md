@@ -110,7 +110,7 @@ Büyük/küçük harf dönüşümü gerekiyorsa `src/lib/text-normalization.ts`
 
 ## Uygulama kuralı — sözleşme testi
 
-`src/lib/cadde-style-contract.test.ts` 7 Cadde yüzey dosyasında şunları **yasaklar**:
+`src/lib/cadde/cadde-style-contract.test.ts` 7 Cadde yüzey dosyasında şunları **yasaklar**:
 `bg-[#...]`, `text-[#...]`, `border-[#...]`, `bg-[linear-gradient...]`,
 `shadow-[...rgba...]`.
 

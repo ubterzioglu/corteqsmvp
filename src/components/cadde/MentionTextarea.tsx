@@ -12,10 +12,10 @@ import { Building2, ShoppingBag, User } from "lucide-react";
 import CaddeCafeIcon from "@/components/cadde/CaddeCafeIcon";
 
 import { Textarea } from "@/components/ui/textarea";
-import { searchCaddeMentions } from "@/lib/cadde-api";
-import type { TextSelection } from "@/lib/cadde-text-insert";
-import { activeMentionToken } from "@/lib/cadde-text";
-import type { CaddeMentionSuggestion, CaddeMentionTargetType, CaddePostMention } from "@/lib/cadde-types";
+import { searchCaddeMentions } from "@/lib/cadde/cadde-api";
+import type { TextSelection } from "@/lib/cadde/cadde-text-insert";
+import { activeMentionToken } from "@/lib/cadde/cadde-text";
+import type { CaddeMentionSuggestion, CaddeMentionTargetType, CaddePostMention } from "@/lib/cadde/cadde-types";
 
 // Not: harita tipi lucide'a bağlanmaz (`typeof User` olurdu) — CaddeCafeIcon düz bir
 // fonksiyon bileşeni ve lucide'ın ForwardRefExoticComponent imzasını karşılamıyor.

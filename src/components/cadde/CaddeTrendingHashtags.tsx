@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { Hash } from "lucide-react";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { listTrendingCaddeHashtags } from "@/lib/cadde-api";
-import { CADDE_PROMO_STALE_MS } from "@/lib/cadde-query-cache";
+import { listTrendingCaddeHashtags } from "@/lib/cadde/cadde-api";
+import { CADDE_PROMO_STALE_MS } from "@/lib/cadde/cadde-query-cache";
 
 const CaddeTrendingHashtags = () => {
   const trendingQuery = useQuery({

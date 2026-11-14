@@ -318,7 +318,7 @@ Bu terimler kod genelinde Türkçe kalır — İngilizce'ye çevirme:
 | `src/pages/cadde/CaddePage.test.tsx` | 1845 | Test dosyası |
 | `src/pages/cadde/CaddePage.tsx` | 1716 | **ÖNCELİK — üretim dosyası** |
 | `src/pages/ProfilePage.test.tsx` | 1028 | Test dosyası |
-| `src/lib/cadde-api.ts` | 986 | **ÖNCELİK — 25 importer, test YOK** |
+| `src/lib/cadde/cadde-api.ts` | 986 | **ÖNCELİK — 25 importer, test YOK** |
 | `src/lib/zgen/zgen-data.ts` | 980 | Veri dosyası |
 
 **Sıradaki gerçek iş = Cadde çifti** (`cadde-api.ts` + `CaddePage.tsx`).
@@ -333,7 +333,7 @@ Savunulabilir (oturum kurulumu) ama kalıp dışı.
 
 | Dosya | Cast | Neden |
 |-------|------|-------|
-| `src/lib/cadde-internal.ts` | `const db = supabase as any` | Query builder özyinelemesi |
+| `src/lib/cadde/cadde-internal.ts` | `const db = supabase as any` | Query builder özyinelemesi |
 | `src/lib/relocation/relocation-api.ts` | `const db = supabase as any` | Aynı |
 | `src/lib/relocation/relocation-tools-api.ts` | `const db = supabase as any` | Aynı |
 

@@ -31,9 +31,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { deleteCaddePost } from "@/lib/cadde-api";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { resolveCaddeRpcErrorMessage } from "@/lib/cadde-rules";
+import { deleteCaddePost } from "@/lib/cadde/cadde-api";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import { resolveCaddeRpcErrorMessage } from "@/lib/cadde/cadde-rules";
 
 export type CaddePostMenuProps = {
   postId: string;

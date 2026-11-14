@@ -17,13 +17,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { createCaddeCafe, listCaddeCities, listCaddeCountries } from "@/lib/cadde-api";
-import { listCaddeCafeThemes, listCaddeProtectedBrands } from "@/lib/cadde-cafe-api";
+import { createCaddeCafe, listCaddeCities, listCaddeCountries } from "@/lib/cadde/cadde-api";
+import { listCaddeCafeThemes, listCaddeProtectedBrands } from "@/lib/cadde/cadde-cafe-api";
 import { useCaddeDiasporaKey } from "@/hooks/cadde/useCaddeDiasporaKey";
-import { caddeQueryKeys } from "@/lib/cadde-query-keys";
-import { checkBrandConflict, moderateCaddeCafeName, suggestParodyCafeName } from "@/lib/cadde-rules";
-import { CADDE_CAFE_CAPACITY_OPTIONS } from "@/lib/cadde-schemas";
-import type { CaddeCafeEntryMode } from "@/lib/cadde-types";
+import { caddeQueryKeys } from "@/lib/cadde/cadde-query-keys";
+import { checkBrandConflict, moderateCaddeCafeName, suggestParodyCafeName } from "@/lib/cadde/cadde-rules";
+import { CADDE_CAFE_CAPACITY_OPTIONS } from "@/lib/cadde/cadde-schemas";
+import type { CaddeCafeEntryMode } from "@/lib/cadde/cadde-types";
 
 // C0 (m159): küçük kullanıcı tabanında aynı iki saate denk gelme ihtimali düşük.
 // Geçici async-first model odanın içerik biriktirmesine zaman tanır; canlı etkinlik

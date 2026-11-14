@@ -21,7 +21,7 @@ vi.mock("@tanstack/react-query", () => ({
 }));
 vi.mock("react-router-dom", () => ({ useNavigate: () => vi.fn() }));
 vi.mock("@/hooks/use-toast", () => ({ useToast: () => ({ toast: vi.fn() }) }));
-vi.mock("@/lib/cadde-api", () => ({
+vi.mock("@/lib/cadde/cadde-api", () => ({
   createCaddeComment: vi.fn(),
   listCaddePostComments: vi.fn(),
   recordCaddeShare: vi.fn(),

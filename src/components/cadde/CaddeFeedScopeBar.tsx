@@ -22,8 +22,8 @@ import { X } from "lucide-react";
 
 import CaddeLocalClock from "@/components/cadde/CaddeLocalClock";
 import { Badge } from "@/components/ui/badge";
-import type { CaddeClockTarget } from "@/lib/cadde-local-clock";
-import type { CaddeFeedScope } from "@/lib/cadde-types";
+import type { CaddeClockTarget } from "@/lib/cadde/cadde-local-clock";
+import type { CaddeFeedScope } from "@/lib/cadde/cadde-types";
 
 type ScopeOption = {
   key: CaddeFeedScope;

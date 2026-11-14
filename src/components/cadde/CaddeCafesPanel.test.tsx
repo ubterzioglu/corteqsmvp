@@ -12,7 +12,7 @@ import { MemoryRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import CaddeCafesPanel from "@/components/cadde/CaddeCafesPanel";
-import type { CaddeCafe } from "@/lib/cadde-types";
+import type { CaddeCafe } from "@/lib/cadde/cadde-types";
 
 const cafe = (overrides: Partial<CaddeCafe> = {}): CaddeCafe => ({
   id: "cafe-1",

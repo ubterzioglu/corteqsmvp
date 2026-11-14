@@ -41,7 +41,7 @@ Kanıtların **tamamı doğrulandı** (canlı DB + kod okuması):
 
 | # | Madde (area ▸ başlık) | Kanıt |
 |---|---|---|
-| 1 | Kafe Açış ▸ Kapasite 50–999 | [cadde-schemas.ts:8](../../src/lib/cadde-schemas.ts#L8) — istenen 5 değerin birebiri · `1d86d10` |
+| 1 | Kafe Açış ▸ Kapasite 50–999 | [cadde-schemas.ts:8](../../src/lib/cadde/cadde-schemas.ts#L8) — istenen 5 değerin birebiri · `1d86d10` |
 | 2 | Kafe Açış ▸ Temalar (spor/sağlık/gusto/hobi/girişim/party/meslek/ik/müzik/gündem) | canlı `cadde_cafe_themes` = 16 tema · `1d86d10` |
 | 3 | Kafe Açış ▸ "Tema'lar tema değil kategori olmuş" | aynı — kod gömülü 7 kategori kalktı, temalar DB'de |
 | 4 | Kafe Açış ▸ Marka blue tik + Parodi | canlı `cadde_protected_brands` = **96 marka** + `AdminCaddeBrandsPage` · `1d86d10` |

@@ -8,7 +8,7 @@
 > "Promosyonlar" sekmesi ve "Yeni Promosyon" düğmesi · "Emin Değil" reaksiyon adı.
 >
 > **Yanlış sayılar:** Gönderi başlığı en çok **160**, metni **4000** karakterdir
-> (`src/lib/cadde-schemas.ts`); taslaktaki 100/2000, Çarşı **ilanı** sınırlarıdır. Bir paylaşıma en
+> (`src/lib/cadde/cadde-schemas.ts`); taslaktaki 100/2000, Çarşı **ilanı** sınırlarıdır. Bir paylaşıma en
 > fazla 4 görsel ve 1 video eklenir; en fazla 3 etiket seçilir.
 >
 > **Doğrulanan:** gönderi menüsünde **"Düzenle"** vardır (`CaddePostMenu.tsx`); Cadde'ye erişim
