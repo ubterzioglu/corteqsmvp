@@ -18,15 +18,15 @@ import {
   reviewCandidate,
   upsertProvider,
   upsertTemplate,
-} from "@/lib/service-finder-api";
-import { sfErrorMessage } from "@/lib/service-finder-format";
+} from "@/lib/service-finder/service-finder-api";
+import { sfErrorMessage } from "@/lib/service-finder/service-finder-format";
 import type {
   CandidatePatch,
   JobCreateInput,
   ServiceFinderJobDetail,
   ServiceFinderProviderConfigRow,
   ServiceFinderTemplateRow,
-} from "@/lib/service-finder-schemas";
+} from "@/lib/service-finder/service-finder-schemas";
 
 const ACTIVE_POLL_MS = 4000;
 

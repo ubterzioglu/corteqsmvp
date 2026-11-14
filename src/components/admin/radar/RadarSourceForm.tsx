@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { RadarNewsSource } from "@/lib/radarNewsPipeline";
+import type { RadarNewsSource } from "@/lib/radar/radarNewsPipeline";
 
 type Props = {
   source: RadarNewsSource;

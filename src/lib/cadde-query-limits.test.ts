@@ -102,7 +102,7 @@ describe("tam olması gereken listeler sayfalanır", () => {
     { file: "src/lib/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },
     { file: "src/lib/muhasebe-api.ts", fn: "fetchIncomes", why: "gelir toplamı" },
     { file: "src/lib/lansman.ts", fn: "getAllRegistrations", why: "başvuru sayısı" },
-    { file: "src/lib/survey-responses.ts", fn: "getSurveyResponses", why: "anket yüzdeleri" },
+    { file: "src/lib/surveys/survey-responses.ts", fn: "getSurveyResponses", why: "anket yüzdeleri" },
     {
       file: "src/lib/admin-shell/revision-requests.ts",
       fn: "fetchRevisionRequests",

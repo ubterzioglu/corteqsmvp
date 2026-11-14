@@ -215,7 +215,7 @@ Commit-geçmişi temizliği H1'de insanındır; bu batch yalnız HEAD'i temizler
    non-prod'da Burak doğrulasın.
 2. **O4** `send-submission-email`: `x-dispatch-secret` veya DB outbox; doğrulanmamış adrese onay maili YOK.
 3. **O5** `submit-survey-response`: yinelenen `questionId` → 400; ekleme yalnız doğrulanmış `answerMap`'ten;
-   `"default-salt"` yedeğini kaldır (salt yoksa fail-closed). `src/lib/surveys.ts` filtresiyle uyumu bozma.
+   `"default-salt"` yedeğini kaldır (salt yoksa fail-closed). `src/lib/surveys/surveys.ts` filtresiyle uyumu bozma.
 4. **O6** `whatsapp-autoreply`: kurallar `systemInstruction`'a, kullanıcı metni ayrı "veri" parçası (`site-assistant`'taki
    desen); çıktıda corteqs.net dışı URL ve uzunluk sınırı; alıcıyı `waIdCiphertext` yerine thread kaydından oku;
    yanıtta ham `prepareError.message` yok, sabit kod.

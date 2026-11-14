@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-import { fetchAllRows } from "./supabase-chunked";
+import { fetchAllRows } from "@/lib/supabase-chunked";
 
 export type SubmitSurveyResponsePayload = {
   surveySlug: string;

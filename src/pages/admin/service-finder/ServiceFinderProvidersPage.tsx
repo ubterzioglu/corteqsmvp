@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useServiceFinderProviders, useUpsertServiceFinderProvider } from "@/hooks/useServiceFinder";
-import type { ServiceFinderProviderConfigRow } from "@/lib/service-finder-schemas";
+import type { ServiceFinderProviderConfigRow } from "@/lib/service-finder/service-finder-schemas";
 
 function ProviderCard({ provider }: { provider: ServiceFinderProviderConfigRow }) {
   const upsert = useUpsertServiceFinderProvider();

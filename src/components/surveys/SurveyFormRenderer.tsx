@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { SurveyWithQuestions } from "@/lib/surveys";
-import { submitSurveyResponse } from "@/lib/survey-responses";
+import type { SurveyWithQuestions } from "@/lib/surveys/surveys";
+import { submitSurveyResponse } from "@/lib/surveys/survey-responses";
 import SurveyQuestionRenderer from "@/components/surveys/SurveyQuestionRenderer";
 
 interface SurveyFormRendererProps {

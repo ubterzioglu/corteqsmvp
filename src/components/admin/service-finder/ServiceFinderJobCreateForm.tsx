@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useCreateServiceFinderJob, useServiceFinderTemplates } from "@/hooks/useServiceFinder";
-import { jobCreateSchema, type JobCreateInput } from "@/lib/service-finder-schemas";
+import { jobCreateSchema, type JobCreateInput } from "@/lib/service-finder/service-finder-schemas";
 
 interface ServiceFinderJobCreateFormProps {
   onCreated?: (jobId: string) => void;

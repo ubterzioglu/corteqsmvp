@@ -102,7 +102,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
   Elle: `/events` listesi, `/liderlik` sıralaması dolu.
 
 ### (8) Referans kodları ve elçi indirimleri
-- **Mevcut:** `src/lib/referral-codes.test.ts` · `src/lib/admin/admin-referral-api.test.ts` · `src/lib/admin/referral-page-logic.test.ts` · `src/lib/welcome-pack-orders-api.test.ts`.
+- **Mevcut:** `src/lib/referral/referral-codes.test.ts` · `src/lib/admin/admin-referral-api.test.ts` · `src/lib/admin/referral-page-logic.test.ts` · `src/lib/welcome-pack-orders-api.test.ts`.
 - **Boşluk:** kod üretim yüzeyi, davet bağlantısı karşılama bileşeni (`InviteRedemption`) ve admin referans ekranı kilitli değildi.
 - **YENİ:** "(8)": referans kodu üretim/doğrulama fonksiyonları; admin `referral` menü öğesi + rotası; `<InviteRedemption />` ağaçta; elçi başvuru formu ve `submitWelcomePackOrder`.
 - **AÇIK BOŞLUK:** "elçi indirimi" için istemci kodunda ayrı bir yüzey YOK (yalnız `referral_codes` tablosu ve karşılama paketinin `needs_flight_discount` alanı). İndirimin nerede uygulandığı (Stripe/L7 kapsamı) netleşmeden kilitlenecek bir şey yok.
@@ -134,7 +134,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
 - **Yalnız canlıda:** etiketin gerçekten veri göndermesi. Elle: canlı sayfada tarayıcı ağ sekmesinde `google-analytics.com/g/collect`, `clarity.ms/collect`, `analytics.ahrefs.com` istekleri; konsolda CSP ihlali yok. GA4 gerçek zamanlı raporda ziyaret görünüyor.
 
 ### (12) Rehber Motoru ve Radar içerikleri aynı adreslerle açılır
-- **Mevcut:** `src/lib/radar-guides.test.ts` · `src/components/radar/RadarRehberlerSection.test.tsx` · `src/pages/BlogPostPage.test.tsx` · `src/lib/blog-seo.test.ts` · `src/lib/radar-pipeline.test.ts` · `src/lib/redirects.test.ts` (`/blog` 301).
+- **Mevcut:** `src/lib/radar/radar-guides.test.ts` · `src/components/radar/RadarRehberlerSection.test.tsx` · `src/pages/BlogPostPage.test.tsx` · `src/lib/blog-seo.test.ts` · `src/lib/radar/radar-pipeline.test.ts` · `src/lib/redirects.test.ts` (`/blog` 301).
 - **Boşluk:** `/radar` ve `/radar/rehberler` rotalarının aynı sayfaya çıktığı, `/blog/:slug` ve `/diaspora/:slug` rotalarının durduğu kilitli değildi.
 - **YENİ:** "(12)": 4 rota; `/radar` ve `/radar/rehberler` ikisi de `RadarHubPage`; `/blog` → `/radar/rehberler` 301; rehber bölümü ve `radar-guides.ts` yerinde.
 - **Yalnız canlıda:** yayınlanmış rehber ve haber içeriği. Salt okunur SQL:

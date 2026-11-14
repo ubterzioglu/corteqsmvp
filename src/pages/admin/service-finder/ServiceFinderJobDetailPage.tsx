@@ -19,8 +19,8 @@ import {
   useRetryServiceFinderJob,
   useServiceFinderJobDetail,
 } from "@/hooks/useServiceFinder";
-import { formatConfidence, formatDateTime, formatUsd } from "@/lib/service-finder-format";
-import type { ServiceFinderCandidateRow } from "@/lib/service-finder-schemas";
+import { formatConfidence, formatDateTime, formatUsd } from "@/lib/service-finder/service-finder-format";
+import type { ServiceFinderCandidateRow } from "@/lib/service-finder/service-finder-schemas";
 
 export default function ServiceFinderJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();

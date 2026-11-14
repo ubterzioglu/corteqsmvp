@@ -11,7 +11,7 @@ import {
   formatConfidence,
   formatUsd,
   sfErrorMessage,
-} from "@/lib/service-finder-format";
+} from "@/lib/service-finder/service-finder-format";
 
 describe("sfErrorMessage", () => {
   it("RPC hata kodunu Türkçe mesaja çevirir", () => {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SurveyCard from "@/components/surveys/SurveyCard";
 import SurveyEmptyState from "@/components/surveys/SurveyEmptyState";
-import { getPublishedSurveys, type Survey } from "@/lib/surveys";
+import { getPublishedSurveys, type Survey } from "@/lib/surveys/surveys";
 import { PAGE_SEO } from "@/lib/page-seo";
 import { useSeo } from "@/lib/seo";
 

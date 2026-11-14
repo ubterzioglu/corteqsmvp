@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useServiceFinderTemplates, useUpsertServiceFinderTemplate } from "@/hooks/useServiceFinder";
-import type { ServiceFinderTemplateRow } from "@/lib/service-finder-schemas";
+import type { ServiceFinderTemplateRow } from "@/lib/service-finder/service-finder-schemas";
 
 interface TemplateFormState {
   template_key: string;

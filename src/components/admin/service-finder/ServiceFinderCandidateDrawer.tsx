@@ -12,8 +12,8 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { usePublishServiceFinderCandidate, useReviewServiceFinderCandidate } from "@/hooks/useServiceFinder";
-import { formatConfidence, formatUsd } from "@/lib/service-finder-format";
-import type { CandidatePatch, ServiceFinderCandidateRow } from "@/lib/service-finder-schemas";
+import { formatConfidence, formatUsd } from "@/lib/service-finder/service-finder-format";
+import type { CandidatePatch, ServiceFinderCandidateRow } from "@/lib/service-finder/service-finder-schemas";
 import { ServiceFinderReviewStatusBadge } from "./ServiceFinderBadges";
 
 interface ServiceFinderCandidateDrawerProps {

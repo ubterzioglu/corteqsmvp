@@ -6,7 +6,7 @@ import {
   type ReferralSourceRow,
   type ReferralTypeRow,
   validateReferralCodeToken,
-} from "@/lib/referral-codes";
+} from "@/lib/referral/referral-codes";
 import { normalizeTurkishText } from "@/lib/text-normalization";
 import { fetchInChunks } from "@/lib/supabase-chunked";
 

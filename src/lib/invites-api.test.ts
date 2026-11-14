@@ -65,7 +65,7 @@ describe("M12 · davet taşıyıcısı (?davet=) — M13 köprüsü", () => {
 
   it("alfabe ikinci kez UYDURULMAZ — normalizasyon referral-code'dan", () => {
     const api = readFileSync("src/lib/invites-api.ts", "utf8");
-    expect(api).toContain('import { normalizeReferralCode } from "@/lib/referral-code"');
+    expect(api).toContain('import { normalizeReferralCode } from "@/lib/referral/referral-code"');
   });
 
   // Lighthouse 2026-10-12: invites-api başlangıç zincirinde (use-invite-redemption)
@@ -73,8 +73,8 @@ describe("M12 · davet taşıyıcısı (?davet=) — M13 köprüsü", () => {
   // Normalizasyon qrcode'suz modülde durur; invites-api referral-qr'ı import etmez.
   it("başlangıç zinciri qrcode paketini çekmez", () => {
     const api = readFileSync("src/lib/invites-api.ts", "utf8");
-    const code = readFileSync("src/lib/referral-code.ts", "utf8");
-    expect(api).not.toContain("@/lib/referral-qr");
+    const code = readFileSync("src/lib/referral/referral-code.ts", "utf8");
+    expect(api).not.toContain("@/lib/referral/referral-qr");
     expect(code).not.toMatch(/from ["']qrcode["']/);
   });
 });

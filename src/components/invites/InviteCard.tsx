@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { buildInviteLink, getOrCreateMyInviteCode } from "@/lib/invites-api";
-import { generateReferralQrPngDataUrl } from "@/lib/referral-qr";
+import { generateReferralQrPngDataUrl } from "@/lib/referral/referral-qr";
 import { getErrorMessage } from "@/lib/whatsapp-landing-form";
 
 export function InviteCard() {

@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { formatShortDateTimeTR } from "@/lib/format-date";
-import { toRelevanceReasons } from "@/lib/radarNewsPipeline";
-import type { RadarCandidate, RelevanceReason } from "@/lib/radarNewsPipeline";
+import { toRelevanceReasons } from "@/lib/radar/radarNewsPipeline";
+import type { RadarCandidate, RelevanceReason } from "@/lib/radar/radarNewsPipeline";
 
 type Props = {
   candidate: RadarCandidate;

@@ -1,4 +1,4 @@
-import type { SurveyStatus } from "@/lib/surveys";
+import type { SurveyStatus } from "@/lib/surveys/surveys";
 
 const STATUS_CLASS: Record<string, string> = {
   draft: "bg-slate-200 text-slate-800",

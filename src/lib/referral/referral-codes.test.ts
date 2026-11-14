@@ -6,7 +6,7 @@ import {
   type ReferralCodeInsert,
   type ReferralCodeRow,
   validateReferralCodeToken,
-} from "@/lib/referral-codes";
+} from "@/lib/referral/referral-codes";
 
 function buildRowFromPayload(payload: ReferralCodeInsert): ReferralCodeRow {
   return {

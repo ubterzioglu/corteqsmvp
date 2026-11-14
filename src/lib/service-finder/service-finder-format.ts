@@ -1,9 +1,9 @@
-// src/lib/service-finder-format.ts
+// src/lib/service-finder/service-finder-format.ts
 // Durum/maliyet/güven formatlama + RPC hata kodlarının Türkçe mesaj haritası
 // (cadde-rules.ts deseni — yeni sf_* kodu eklenince buraya da eklenmelidir).
 
-import type { ServiceFinderJobStatus, ServiceFinderReviewStatus } from "@/lib/service-finder-schemas";
-import { extractRpcErrorText } from "./rpc-error-text";
+import type { ServiceFinderJobStatus, ServiceFinderReviewStatus } from "@/lib/service-finder/service-finder-schemas";
+import { extractRpcErrorText } from "@/lib/rpc-error-text";
 
 export const SF_ERROR_MESSAGES: Record<string, string> = {
   sf_auth_required: "Oturum gerekli. Lütfen yeniden giriş yapın.",

@@ -8,8 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ServiceFinderJobStatusBadge } from "@/components/admin/service-finder/ServiceFinderBadges";
 import { useCancelServiceFinderJob, useRetryServiceFinderJob, useServiceFinderJobs } from "@/hooks/useServiceFinder";
-import { JOB_STATUS_LABELS, formatDateTime, formatUsd } from "@/lib/service-finder-format";
-import type { ServiceFinderJobStatus } from "@/lib/service-finder-schemas";
+import { JOB_STATUS_LABELS, formatDateTime, formatUsd } from "@/lib/service-finder/service-finder-format";
+import type { ServiceFinderJobStatus } from "@/lib/service-finder/service-finder-schemas";
 
 const PAGE_SIZE = 25;
 

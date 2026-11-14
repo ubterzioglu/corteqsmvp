@@ -231,7 +231,7 @@ async function getEventRoutes() {
     }));
 }
 
-// Yayınlanmış anketleri Supabase REST üzerinden çek (graceful; src/lib/surveys.ts
+// Yayınlanmış anketleri Supabase REST üzerinden çek (graceful; src/lib/surveys/surveys.ts
 // getPublishedSurveys() ile aynı filtre: status=published + başlangıç/bitiş penceresi).
 async function getSurveyRoutes() {
   const env = supabaseEnv();
@@ -246,7 +246,7 @@ async function getSurveyRoutes() {
     status: "eq.published",
   });
   // İKİ AYRI `or` — PostgREST bunları AND'ler (supabase-js'te zincirlenmiş .or() ile
-  // aynı davranış). Bitiş penceresi 2026-08-04'e kadar YOKTU: src/lib/surveys.ts hem
+  // aynı davranış). Bitiş penceresi 2026-08-04'e kadar YOKTU: src/lib/surveys/surveys.ts hem
   // starts_at hem ends_at uyguluyordu, sitemap yalnız starts_at'i uyguluyordu →
   // süresi dolmuş anketler sitemap'te kalıyor, tıklayan kullanıcı kapalı ankete düşüyordu.
   //

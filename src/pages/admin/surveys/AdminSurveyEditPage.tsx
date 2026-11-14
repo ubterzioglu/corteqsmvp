@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SurveyBuilder from "@/components/admin/surveys/SurveyBuilder";
-import { getSurveyById, type SurveyWithQuestions } from "@/lib/surveys";
+import { getSurveyById, type SurveyWithQuestions } from "@/lib/surveys/surveys";
 
 export default function AdminSurveyEditPage() {
   const { id = "" } = useParams();

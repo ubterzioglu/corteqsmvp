@@ -14,7 +14,7 @@ import {
   triggerManualScan,
   type RadarCandidate,
   type RadarReviewStatus,
-} from "@/lib/radarNewsPipeline";
+} from "@/lib/radar/radarNewsPipeline";
 
 const STATUS_TABS: { value: RadarReviewStatus | "all"; label: string }[] = [
   { value: "pending", label: "Bekleyenler" },

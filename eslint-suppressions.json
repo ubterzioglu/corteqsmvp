@@ -294,7 +294,7 @@
       "count": 2
     }
   },
-  "src/lib/surveys.ts": {
+  "src/lib/surveys/surveys.ts": {
     "complexity": {
       "count": 1
     }

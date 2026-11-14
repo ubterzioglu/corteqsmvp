@@ -1,4 +1,4 @@
-// src/lib/service-finder-api.ts
+// src/lib/service-finder/service-finder-api.ts
 // Supabase RPC + okuma çağrıları — muhasebe-api deseni.
 // Mutasyonlar security-definer RPC'ler üzerinden; listeler RLS'li SELECT.
 
@@ -13,7 +13,7 @@ import type {
   ServiceFinderProviderConfigRow,
   ServiceFinderReviewStatus,
   ServiceFinderTemplateRow,
-} from "@/lib/service-finder-schemas";
+} from "@/lib/service-finder/service-finder-schemas";
 
 // ---------------------------------------------------------------------------
 // İşler

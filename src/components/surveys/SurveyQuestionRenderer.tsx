@@ -1,4 +1,4 @@
-import type { SurveyQuestion } from "@/lib/surveys";
+import type { SurveyQuestion } from "@/lib/surveys/surveys";
 
 type SurveyQuestionRendererProps = {
   question: SurveyQuestion;

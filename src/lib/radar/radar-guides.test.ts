@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import type { BlogPostRow } from "@/lib/blog";
-import { collectGuideCountries, filterGuidePosts } from "@/lib/radar-guides";
+import { collectGuideCountries, filterGuidePosts } from "@/lib/radar/radar-guides";
 
 function post(overrides: Partial<BlogPostRow> = {}): BlogPostRow {
   return {

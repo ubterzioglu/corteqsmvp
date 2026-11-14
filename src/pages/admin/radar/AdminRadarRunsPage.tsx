@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { RadarScanRunTable } from "@/components/admin/radar/RadarScanRunTable";
-import { listScanRuns, type RadarScanRun } from "@/lib/radarNewsPipeline";
+import { listScanRuns, type RadarScanRun } from "@/lib/radar/radarNewsPipeline";
 
 const AdminRadarRunsPage = () => {
   const { toast } = useToast();

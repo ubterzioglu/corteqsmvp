@@ -89,7 +89,7 @@ lib/types.ts              # Ortak tipler
 
 | Dosya | Açıklama |
 |-------|----------|
-| `src/lib/radarNewsPipeline.ts` | API katmanı (list/approve/reject/dupe/scan/sources/runs) |
+| `src/lib/radar/radarNewsPipeline.ts` | API katmanı (list/approve/reject/dupe/scan/sources/runs) |
 | `src/pages/admin/radar/AdminRadarQueuePage.tsx` | Moderasyon kuyruğu + Şimdi Tara |
 | `src/pages/admin/radar/AdminRadarSourcesPage.tsx` | Kaynak yönetimi + terms check |
 | `src/pages/admin/radar/AdminRadarRunsPage.tsx` | Tarama geçmişi + metrikler |
@@ -114,4 +114,4 @@ lib/types.ts              # Ortak tipler
 - 0–100 aralığına clamp.
 
 ## Test
-`src/lib/radar-pipeline.test.ts` — 25 test (canonicalize, hash/normalize, SSRF guard, relevance). `npx vitest run src/lib/radar-pipeline.test.ts`.
+`src/lib/radar/radar-pipeline.test.ts` — 25 test (canonicalize, hash/normalize, SSRF guard, relevance). `npx vitest run src/lib/radar/radar-pipeline.test.ts`.

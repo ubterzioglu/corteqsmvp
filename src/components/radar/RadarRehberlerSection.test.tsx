@@ -5,7 +5,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import RadarRehberlerSection from "@/components/radar/RadarRehberlerSection";
 import { blogCategoryLabels, type BlogPostRow } from "@/lib/blog";
 
-// Filtre MANTIĞI src/lib/radar-guides.test.ts'te test edilir (Radix Select jsdom'da
+// Filtre MANTIĞI src/lib/radar/radar-guides.test.ts'te test edilir (Radix Select jsdom'da
 // pointer API'si ister). Burada yalnız bileşenin filtreyi ne zaman ÇİZDİĞİ doğrulanır.
 const listPublishedBlogPostsMock = vi.fn();
 

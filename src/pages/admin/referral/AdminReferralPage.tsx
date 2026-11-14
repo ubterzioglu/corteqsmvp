@@ -28,9 +28,18 @@ import {
   updateReferralCodeEditableFields,
   type ReferralUsageRow,
 } from "@/lib/admin";
-import type { ReferralCodeRow, ReferralGroupRow, ReferralSourceRow, ReferralTypeRow } from "@/lib/referral-codes";
+import type {
+  ReferralCodeRow,
+  ReferralGroupRow,
+  ReferralSourceRow,
+  ReferralTypeRow,
+} from "@/lib/referral/referral-codes";
 import { useAdminOutletContext } from "@/components/admin/AdminLayout";
-import { buildReferralTargetUrl, generateReferralQrPngDataUrl, generateReferralQrSvg } from "@/lib/referral-qr";
+import {
+  buildReferralTargetUrl,
+  generateReferralQrPngDataUrl,
+  generateReferralQrSvg,
+} from "@/lib/referral/referral-qr";
 
 const AdminReferralPage = () => {
   const { session } = useAdminOutletContext();

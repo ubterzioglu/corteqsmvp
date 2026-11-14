@@ -35,8 +35,8 @@ vi.mock("@/lib/invites-api", async (importOriginal) => {
   };
 });
 
-vi.mock("@/lib/referral-qr", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/referral-qr")>();
+vi.mock("@/lib/referral/referral-qr", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/referral/referral-qr")>();
   return { ...actual, generateReferralQrPngDataUrl: (...args: unknown[]) => qrSpy(...args) };
 });
 

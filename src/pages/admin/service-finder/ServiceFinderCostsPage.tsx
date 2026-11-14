@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useServiceFinderCostSummary } from "@/hooks/useServiceFinder";
-import { formatUsd } from "@/lib/service-finder-format";
+import { formatUsd } from "@/lib/service-finder/service-finder-format";
 
 type RangeKey = "month" | "week" | "all";
 

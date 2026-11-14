@@ -9,7 +9,7 @@ import {
   collectGuideCountries,
   filterGuidePosts,
   type GuideCategoryFilter,
-} from "@/lib/radar-guides";
+} from "@/lib/radar/radar-guides";
 
 const CATEGORY_FILTERS: { key: GuideCategoryFilter; label: string }[] = [
   { key: "all", label: "Tümü" },

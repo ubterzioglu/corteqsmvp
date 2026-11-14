@@ -398,7 +398,7 @@ describe("(7) etkinlikler, dijital gruplar, kampanyalar, liderlik, 19 Mayıs", (
 
 describe("(8) referans kodları ve elçi indirimleri", () => {
   it("referans kodu üretim/doğrulama yüzeyi durur", async () => {
-    const mod = await import("@/lib/referral-codes");
+    const mod = await import("@/lib/referral/referral-codes");
     expect(typeof mod.generateReferralCodeFromParts).toBe("function");
     expect(typeof mod.createReferralCodeWithRetry).toBe("function");
     expect(typeof mod.validateReferralCodeToken).toBe("function");
@@ -574,6 +574,6 @@ describe("(12) Rehber Motoru ve Radar adresleri", () => {
 
   it("rehber bölümü ve rehber verisi modülü yerinde", () => {
     expect(existsSync(resolve(ROOT, "src/components/radar/RadarRehberlerSection.tsx"))).toBe(true);
-    expect(existsSync(resolve(ROOT, "src/lib/radar-guides.ts"))).toBe(true);
+    expect(existsSync(resolve(ROOT, "src/lib/radar/radar-guides.ts"))).toBe(true);
   });
 });

@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-import { SAFE_CHARS } from "@/lib/referral-codes";
+import { SAFE_CHARS } from "@/lib/referral/referral-codes";
 import { sliceBetween, compactSource } from "@/test/source-slice";
 
 const MIGRATION = "20261003050000_user_invites_and_leaderboard.sql";

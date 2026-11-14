@@ -1,4 +1,4 @@
-import type { SurveyQuestion, SurveyQuestionType } from "@/lib/surveys";
+import type { SurveyQuestion, SurveyQuestionType } from "@/lib/surveys/surveys";
 
 const QUESTION_TYPES: SurveyQuestionType[] = ["long_text", "single_choice"];
 

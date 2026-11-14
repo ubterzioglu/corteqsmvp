@@ -127,9 +127,9 @@ The repo should remain single-source, but the worker should be deployable indepe
 | `src/pages/admin/service-finder/ServiceFinderProvidersPage.tsx` | new | Provider settings and budget controls |
 | `src/pages/admin/service-finder/ServiceFinderTemplatesPage.tsx` | new | Profession/query template editor |
 | `src/components/admin/service-finder/*` | new | Tables, drawers, forms, cost widgets |
-| `src/lib/service-finder-api.ts` | new | Supabase reads/mutations in the muhasebe-style API layer |
-| `src/lib/service-finder-schemas.ts` | new | Zod request/response schemas |
-| `src/lib/service-finder-format.ts` | new | Cost, confidence, and status formatting |
+| `src/lib/service-finder/service-finder-api.ts` | new | Supabase reads/mutations in the muhasebe-style API layer |
+| `src/lib/service-finder/service-finder-schemas.ts` | new | Zod request/response schemas |
+| `src/lib/service-finder/service-finder-format.ts` | new | Cost, confidence, and status formatting |
 | `src/lib/service-finder-cost.ts` | new | Cost estimation and hard-stop helpers |
 | `src/hooks/use-service-finder.ts` | new | React Query hooks |
 | `src/pages/admin/routes.tsx` | modify | Import and mount `serviceFinderRoutes` |

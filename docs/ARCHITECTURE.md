@@ -324,7 +324,7 @@ Bu kural gereği `/cadde` çıkarıldı (`RequireAuth` + `RequireFeature(caddeAc
 `/190519idea`, `/addcom` **bilinçli olarak eklenmedi**. Ölçülen sonuç: 107 → **108 URL**.
 Dinamik fetcher'lar (blog_posts, surveys, marquee_items, catalog_items, independent_profiles)
 ortak `fetchAllRows()` üzerinden **Range başlıklı sayfalama** yapar — PostgREST'in 1000 satır
-sessiz kesmesi buradaydı. Anket penceresi `src/lib/surveys.ts` ile aynı: hem `starts_at` hem
+sessiz kesmesi buradaydı. Anket penceresi `src/lib/surveys/surveys.ts` ile aynı: hem `starts_at` hem
 `ends_at` uygulanır (iki ayrı `or` parametresi; PostgREST bunları AND'ler).
 `scripts/generate/generate-sitemap.test.mjs` (9 test) `App.tsx`'i parse ederek `STATIC_ROUTES`'ta auth
 arkasında rota veya redirect kaynağı bulunmadığını doğrular.

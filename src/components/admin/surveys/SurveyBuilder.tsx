@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import type { SurveyWithQuestions } from "@/lib/surveys";
-import { buildAutoDateSlug, createSurvey, updateSurvey, upsertSurveyQuestions } from "@/lib/surveys";
+import type { SurveyWithQuestions } from "@/lib/surveys/surveys";
+import { buildAutoDateSlug, createSurvey, updateSurvey, upsertSurveyQuestions } from "@/lib/surveys/surveys";
 import SurveyQuestionEditor, { type EditableQuestion } from "@/components/admin/surveys/SurveyQuestionEditor";
 import { trSlugify } from "@/lib/text-normalization";
 

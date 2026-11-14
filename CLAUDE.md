@@ -678,7 +678,7 @@ bozulabilen (test/build patlamayan ama canlıda zarar veren) bir sınıfı kapat
 5. **PostgREST 1000 satırda sessizce keser.** Hata dönmez, eksik veri döner. Toplu veri
    çeken her sorgu `Range` başlıklı sayfalama kullanmalıdır — `scripts/generate/generate-sitemap.mjs`
    içindeki `fetchAllRows()` deseni referanstır. Ayrıca filtre mantığını çoğaltıyorsan
-   (ör. anket `starts_at`/`ends_at` penceresi) kaynak modülle (`src/lib/surveys.ts`) birebir
+   (ör. anket `starts_at`/`ends_at` penceresi) kaynak modülle (`src/lib/surveys/surveys.ts`) birebir
    aynı olmalı — yarım kopyalanan filtre sitemap'e süresi dolmuş kayıt sızdırır.
 
 6. **nginx'te `server_name _` JOKER DEĞİLDİR — catch-all blok `default_server` olmalı.**

@@ -346,7 +346,7 @@ kırmızı hata basan `console.error` kaldırıldı.
 - **PostgREST 1000 satır sessiz kesmesi:** ortak `fetchAllRows()` helper'ı ile `Range` başlıklı
   sayfalama eklendi; 5 dinamik fetcher (`blog_posts`, `surveys`, `marquee_items`, `catalog_items`,
   `independent_profiles`) bunu kullanıyor.
-- **Anket filtresi drift'i:** `src/lib/surveys.ts` hem `starts_at` hem `ends_at` penceresini
+- **Anket filtresi drift'i:** `src/lib/surveys/surveys.ts` hem `starts_at` hem `ends_at` penceresini
   uyguluyordu, sitemap yalnız `starts_at`'i uyguluyordu → süresi dolmuş anketler sitemap'te
   kalıyordu. İki ayrı `or` parametresi append edildi (PostgREST bunları AND'ler).
 
@@ -453,7 +453,7 @@ C:/temp_private/corteqs/corteqs_fin/src/lib/redirects.ts
 C:/temp_private/corteqs/corteqs_fin/src/lib/redirects.test.ts
 C:/temp_private/corteqs/corteqs_fin/src/lib/seo.ts
 C:/temp_private/corteqs/corteqs_fin/src/lib/seo.test.ts
-C:/temp_private/corteqs/corteqs_fin/src/lib/surveys.ts
+C:/temp_private/corteqs/corteqs_fin/src/lib/surveys/surveys.ts
 C:/temp_private/corteqs/corteqs_fin/src/App.notfound-seo.test.tsx
 C:/temp_private/corteqs/corteqs_fin/src/pages/NotFound.tsx
 C:/temp_private/corteqs/corteqs_fin/src/lib/dashboard/workspace-doc-pages.tsx

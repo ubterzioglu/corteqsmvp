@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { Survey } from "@/lib/surveys";
+import type { Survey } from "@/lib/surveys/surveys";
 
 interface SurveyCardProps {
   survey: Survey;

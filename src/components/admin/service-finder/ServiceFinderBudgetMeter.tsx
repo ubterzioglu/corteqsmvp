@@ -1,6 +1,6 @@
 // Canlı bütçe göstergesi — cost_total / hard_cap oranı.
 import { Progress } from "@/components/ui/progress";
-import { budgetPercent, formatUsd } from "@/lib/service-finder-format";
+import { budgetPercent, formatUsd } from "@/lib/service-finder/service-finder-format";
 import { cn } from "@/lib/utils";
 
 interface ServiceFinderBudgetMeterProps {

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { createReferralType, listReferralTypes, updateReferralType } from "@/lib/admin";
-import { validateReferralCodeToken, type ReferralTypeRow } from "@/lib/referral-codes";
+import { validateReferralCodeToken, type ReferralTypeRow } from "@/lib/referral/referral-codes";
 import { normalizeTurkishText } from "@/lib/text-normalization";
 
 const AdminReferralTypesPage = () => {

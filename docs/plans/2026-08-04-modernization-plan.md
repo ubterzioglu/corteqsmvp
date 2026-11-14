@@ -193,7 +193,7 @@ düzeltilir.
    (`v_command_center_facets`, 2026-08-04). Ortak `fetchAllRows(endpoint, headers)` helper'ı ile
    `Range` başlıklı sayfalama ekle; kaç satır çekildiğini logla.
 3. **Anket filtresi drift'i — doğrulandı, hatalı olan taraf sitemap.**
-   [surveys.ts:24-25](../../src/lib/surveys.ts#L24-L25) hem `starts_at` hem `ends_at` penceresini
+   [surveys.ts:24-25](../../src/lib/surveys/surveys.ts#L24-L25) hem `starts_at` hem `ends_at` penceresini
    uyguluyor; sitemap yalnız `starts_at`'i uyguluyor → **süresi dolmuş anketler sitemap'te
    kalıyor.** Düzeltme: `params.append("or", "(ends_at.is.null,ends_at.gte.<now>)")` — iki ayrı
    `or` parametresi PostgREST tarafında AND'lenir (supabase-js zincirlenmiş `.or()` ile aynı

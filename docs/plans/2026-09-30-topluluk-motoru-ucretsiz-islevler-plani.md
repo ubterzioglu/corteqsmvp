@@ -143,7 +143,7 @@ Amaç: bugün ücretsiz olanın *kaza ile* kapanmasını imkânsız kılmak.
   `create_event_v1` RPC'sini çağırır; `joinEvent`/`leaveEvent`/`fetchEventAttendeeCount` eklenir.
 - `src/lib/events-rules.ts` (yeni): limit sabiti + hata kodu → Türkçe mesaj haritası.
   ⚠️ RPC hataları **düz nesnedir, `Error` örneği değil** — `instanceof Error` ile daraltma;
-  `code`/`details`/`hint` okunur ([service-finder-format.ts](../../src/lib/service-finder-format.ts) referans).
+  `code`/`details`/`hint` okunur ([service-finder-format.ts](../../src/lib/service-finder/service-finder-format.ts) referans).
 - `src/components/events/EventAttendeeButton.tsx` (yeni);
   [MyEventsPanel.tsx](../../src/components/events/MyEventsPanel.tsx) limit ve onay durumunu
   kullanıcıya açıkça anlatacak şekilde güncellenir.
@@ -195,7 +195,7 @@ src/components/cadde/CaddeRecommendationCard.tsx  (Cadde akışında görünürl
 
 **Migration `<ts>_user_invites_and_leaderboard.sql`**
 
-- `user_invites`: `code` (benzersiz; [referral-codes.ts](../../src/lib/referral-codes.ts)'teki
+- `user_invites`: `code` (benzersiz; [referral-codes.ts](../../src/lib/referral/referral-codes.ts)'teki
   `SAFE_CHARS` alfabesi yeniden kullanılır — karıştırılabilir harf yok), `owner_user_id`, `created_at`.
 - `user_invite_redemptions`: `code`, `invited_user_id` (benzersiz — bir üye bir kez sayılır), `redeemed_at`.
 - RPC: `get_or_create_my_invite_code()`, `redeem_invite_code(p_code)` (kayıt akışında çağrılır),
@@ -213,7 +213,7 @@ src/pages/LeaderboardPage.tsx         (/liderlik)
 src/components/invites/InviteCard.tsx (link + kopyala + QR)
 ```
 
-- QR için mevcut [referral-qr.ts](../../src/lib/referral-qr.ts) yeniden kullanılır.
+- QR için mevcut [referral-qr.ts](../../src/lib/referral/referral-qr.ts) yeniden kullanılır.
 - `/liderlik` anonime açılacaksa: dizin araması vakasındaki gibi RPC'nin `anon` EXECUTE grant'i
   **ve gövdede auth kontrolü olmadığı** ayrı ayrı doğrulanır.
 - Sitemap'e eklenmeden önce CLAUDE.md'deki **3 kriter** (auth arkasında değil · `useSeo` +

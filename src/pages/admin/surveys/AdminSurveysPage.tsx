@@ -8,7 +8,7 @@ import {
   getAdminSurveys,
   publishSurvey,
   type AdminSurveyWithResponseCount,
-} from "@/lib/surveys";
+} from "@/lib/surveys/surveys";
 
 export default function AdminSurveysPage() {
   const [surveys, setSurveys] = useState<AdminSurveyWithResponseCount[]>([]);

@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatShortDateTimeTR } from "@/lib/format-date";
-import type { RadarScanRun } from "@/lib/radarNewsPipeline";
+import type { RadarScanRun } from "@/lib/radar/radarNewsPipeline";
 
 type Props = {
   runs: RadarScanRun[];

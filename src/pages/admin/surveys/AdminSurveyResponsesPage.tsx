@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import SurveyResponseDetail from "@/components/admin/surveys/SurveyResponseDetail";
 import SurveyResponsesTable, { type ResponseRow } from "@/components/admin/surveys/SurveyResponsesTable";
-import { getSurveyById } from "@/lib/surveys";
-import { getSurveyResponses, updateResponseStatus } from "@/lib/survey-responses";
+import { getSurveyById } from "@/lib/surveys/surveys";
+import { getSurveyResponses, updateResponseStatus } from "@/lib/surveys/survey-responses";
 
 export default function AdminSurveyResponsesPage() {
   const { id = "" } = useParams();

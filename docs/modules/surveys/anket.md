@@ -934,7 +934,7 @@ Daha sonra Edge Function veya RPC ile daha sağlam export yapılabilir.
 
 ---
 
-## 21. `src/lib/surveys.ts`
+## 21. `src/lib/surveys/surveys.ts`
 
 Örnek fonksiyonlar:
 
@@ -1013,7 +1013,7 @@ export async function closeSurvey(id: string) {
 
 ---
 
-## 22. `src/lib/survey-responses.ts`
+## 22. `src/lib/surveys/survey-responses.ts`
 
 Örnek:
 
@@ -1226,7 +1226,7 @@ Eğer navbar kalabalıksa footer veya CTA section içinde gösterilebilir.
 ### Paket 3 – Lib fonksiyonları
 
 ```txt
-[ ] src/lib/surveys.ts oluştur
+[ ] src/lib/surveys/surveys.ts oluştur
 [ ] getPublishedSurveys fonksiyonunu yaz
 [ ] getPublishedSurveyBySlug fonksiyonunu yaz
 [ ] getAdminSurveys fonksiyonunu yaz
@@ -1441,8 +1441,8 @@ Admin tarafında:
 - `src/components/admin/surveys/SurveyBuilder.tsx`
 - `src/components/admin/surveys/SurveyQuestionEditor.tsx`
 - `src/components/admin/surveys/SurveyResponsesTable.tsx`
-- `src/lib/surveys.ts`
-- `src/lib/survey-responses.ts`
+- `src/lib/surveys/surveys.ts`
+- `src/lib/surveys/survey-responses.ts`
 
 ## Önemli
 

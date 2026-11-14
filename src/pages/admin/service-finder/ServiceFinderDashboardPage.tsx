@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ServiceFinderJobCreateForm } from "@/components/admin/service-finder/ServiceFinderJobCreateForm";
 import { ServiceFinderJobStatusBadge } from "@/components/admin/service-finder/ServiceFinderBadges";
 import { useServiceFinderCostSummary, useServiceFinderJobs } from "@/hooks/useServiceFinder";
-import { formatUsd } from "@/lib/service-finder-format";
+import { formatUsd } from "@/lib/service-finder/service-finder-format";
 
 export default function ServiceFinderDashboardPage() {
   const { data: jobsData, isLoading } = useServiceFinderJobs(null, 0, 10);

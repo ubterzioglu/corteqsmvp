@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SurveyFormRenderer from "@/components/surveys/SurveyFormRenderer";
-import { getPublishedSurveyBySlug, type SurveyWithQuestions } from "@/lib/surveys";
+import { getPublishedSurveyBySlug, type SurveyWithQuestions } from "@/lib/surveys/surveys";
 import { SEO_SITE_NAME, useSeo } from "@/lib/seo";
 
 /**

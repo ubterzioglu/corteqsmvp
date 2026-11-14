@@ -331,7 +331,7 @@ Aynı iş kuralı iki yerde farklı uygulanıyordu:
 
 | Kaynak | `status=published` | `starts_at` penceresi | `ends_at` penceresi |
 |--------|--------------------|-----------------------|---------------------|
-| `src/lib/surveys.ts` | evet | evet | **evet** |
+| `src/lib/surveys/surveys.ts` | evet | evet | **evet** |
 | `scripts/generate/generate-sitemap.mjs` | evet | evet | **hayır** |
 
 Sonuç: süresi dolmuş anketler sitemap'te kalıyordu. Arama sonucundan tıklayan
@@ -340,7 +340,7 @@ indekslenmemesi gereken URL'ler.
 
 ### KANIT
 
-Sitemap fetcher'ı yalnız `starts_at` koşulunu uyguluyordu; `src/lib/surveys.ts`
+Sitemap fetcher'ı yalnız `starts_at` koşulunu uyguluyordu; `src/lib/surveys/surveys.ts`
 `getPublishedSurveys()` ise iki pencereyi de uyguluyordu.
 
 ### DÜZELTME
