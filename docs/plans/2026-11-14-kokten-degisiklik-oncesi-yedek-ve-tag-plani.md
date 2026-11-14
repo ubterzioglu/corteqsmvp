@@ -136,7 +136,7 @@ Hafızaya aynı özet.
 | Storage | ✅ 27 bucket, 248 nesne, 267,5 MB, 248/248 indirildi, 0 hata. |
 | Bütünlük | ✅ `manifest.json` her DB dosyası için sha256; `.FAILED` işareti yok; storage dosya sayısı/boyutu envanterle eşit. |
 | Tag | ✅ `kokten-degisiklik-oncesi-2026-11-14` (ve aynı commit'e `repo-duzen-bitti-2026-11-14`), ikisi açıklamalı, ikisi origin'e itildi, ikisi `1485b2ce`'yi gösterir. |
-| Geri yükleme provası | ❌ **Hâlâ yapılmadı**: Rancher Desktop açıldı ama sanal makinesi başlamıyor; neden WSL servisinin takılması (`wsl -l -q` 11.11'den beri yanıtsız). Düzeltme `wsl --shutdown` ya da yeniden başlatma. Kayıt: KALANLAR **BK01**. |
+| Geri yükleme provası | ❌ **Hâlâ yapılmadı**: Rancher Desktop açıldı ama sanal makinesi başlamıyor; neden WSL servisinin takılması (`wsl -l -q` 11.11'den beri yanıtsız). `wsl --shutdown` denendi, o da takıldı (servis kilitli, yönetici yetkisi gerek). Düzeltme: yönetici PowerShell'de `Restart-Service WslService -Force` ya da bilgisayarı yeniden başlatma. Kayıt: KALANLAR **BK01**. |
 | İkinci kopya | ✅ 14.11: `D:\corteqs-yedek\2026-11-14-kokten-oncesi` (harici WD My Passport USB diski). 257/257 dosya, boyut toplamı eşit, 7 DB dosyası için sha256+boyut manifestle eşleşti. Uzak (bulut) kopya yapılmadı. |
 
 **20.09 ölçümleriyle fark (beklenen büyüme):** cron işi 6 → 15, bucket 22 → 27, nesne 242 → 248, `auth.users` 170 → ~181.
