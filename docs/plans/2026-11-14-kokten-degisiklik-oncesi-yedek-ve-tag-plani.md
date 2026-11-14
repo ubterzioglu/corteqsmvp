@@ -138,6 +138,39 @@ Hafızaya aynı özet.
 | Tag | ✅ `kokten-degisiklik-oncesi-2026-11-14` (ve aynı commit'e `repo-duzen-bitti-2026-11-14`), ikisi açıklamalı, ikisi origin'e itildi, ikisi `1485b2ce`'yi gösterir. |
 | Geri yükleme provası | ❌ **Hâlâ yapılmadı**: Rancher Desktop açıldı ama sanal makinesi başlamıyor; neden WSL servisinin takılması (`wsl -l -q` 11.11'den beri yanıtsız). `wsl --shutdown` denendi, o da takıldı (servis kilitli, yönetici yetkisi gerek). Düzeltme: yönetici PowerShell'de `Restart-Service WslService -Force` ya da bilgisayarı yeniden başlatma. Kayıt: KALANLAR **BK01**. |
 | İkinci kopya | ✅ 14.11: `D:\corteqs-yedek\2026-11-14-kokten-oncesi` (harici WD My Passport USB diski). 257/257 dosya, boyut toplamı eşit, 7 DB dosyası için sha256+boyut manifestle eşleşti. Uzak (bulut) kopya yapılmadı. |
+| **Son hal yedeği** (kapanış, 14.11 ~02:40 yerel) | ✅ `C:\temp_private\corteqs\yedekler\2026-11-14-son-hal` + ikinci kopya `D:\corteqs-yedek\2026-11-14-son-hal`. DB 7 dosya + storage 27 bucket/248 nesne/267,5 MB, 0 hata; manifest sha256 7/7, D: kopyası 257/257 dosya ve bayt toplamı eşit. **Önceki yedekle çapraz kontrol:** iki bağımsız döküm yalnız pg_dump'ın rastgele `\restrict` belirteçlerinde ayrışıyor, bu satırlar çıkarılınca 7/7 dosyanın içeriği birebir aynı (3 saatte veritabanı değişmemiş). |
 
 **20.09 ölçümleriyle fark (beklenen büyüme):** cron işi 6 → 15, bucket 22 → 27, nesne 242 → 248, `auth.users` 170 → ~181.
 **Yedek konumu:** `C:\temp_private\corteqs\yedekler\2026-11-14-kokten-oncesi` (repo dışı, kişisel veri içerir).
+
+## Devam planı (köklü değişikliğin başlangıcı ERTELENDİ — 14.11)
+
+Güvenlik noktası hazır: kod tag'i `repo-duzen-faz4-bitti-2026-11-14` (cc3001f2), DB + storage yedeği iki kopyada
+(`2026-11-14-son-hal`, birincil C:, ikinci D:). Dönüldüğünde sırayla:
+
+1. **Kapsamı yaz.** Köklü değişiklik tam olarak neyi değiştiriyor: yalnız kod mu, veritabanı/auth/storage/altyapı da mı?
+   Bu cevap 3. adımın zorunlu olup olmadığını belirler.
+2. **WSL'i düzelt** (yönetici PowerShell: `Restart-Service WslService -Force`, olmazsa bilgisayarı yeniden başlat), sonra
+   Rancher Desktop'ın dockerd'si ayağa kalksın (`docker info` sunucu sürümü dönmeli). Rancher VM'ine şu an 2 GB ayrılı;
+   prova için 4 GB önerilir (makinede 63,7 GB var).
+3. **Geri yükleme provası** (DB/auth/storage'a dokunuluyorsa ZORUNLU): `infra/selfhost` yığını BOŞ veritabanıyla bir kez
+   kaldırılır (`.env.example` → `.env`, `docker compose up -d`, hepsi healthy); sonra
+   `node scripts/migration/restore-selfhost.mjs --from <son-hal dizini> --target <PG_URL>` (+ `--confirm`) ve
+   `node scripts/migration/verify-parity.mjs --target <PG_URL>`. Rol, grant, RLS ve `auth.uid()` denkliği yeşil olmadan
+   köklü değişiklik başlamaz. Sonuç KALANLAR **BK01**'e yazılır, BK01 kapanır. Canlı Supabase'e karşı yıkıcı işlem YOK.
+4. **Başlamadan hemen önce taze yedek:** aynı iki komut (`export-supabase.mjs`, `export-storage.mjs`; pg_dump için scoop
+   PostgreSQL 18.3 yolu o işlemin PATH'ine eklenir), yeni dizin (`...-baslangic-<tarih>`), manifest sha256 doğrulaması,
+   D: kopyası. Tag'den sonra main'e giren commit'ler varsa (`git log repo-duzen-faz4-bitti-2026-11-14..main`) yeni tag at.
+5. **Dalda çalış:** `git switch -c <ad>` main'den; push/PR; main'e doğrudan değil.
+6. **Geri dönüş:** `git switch -c geri-donus repo-duzen-faz4-bitti-2026-11-14` + yedek (yeni örneğe restore). Canlı
+   Supabase'in üzerine geri yükleme ayrı, açık bir karar ister.
+
+**Bu başlangıçtan bağımsız açık işler:**
+- Canlı deploy (Coolify elle): Faz 1–4 canlıda değil. Deploy sonrası `BASE_URL=https://corteqs.net npm run verify:release`,
+  `curl -I https://corteqs.net/` güvenlik başlıkları, `/admin` ve `/admin/cadde`.
+- Supabase Dashboard → Backups: planın kendi yedek/PITR durumu doğrulanmadı.
+- Uzak (bulut) kopya: kişisel veri içerdiği için karar kullanıcıda; yapılacaksa önce şifrelenir.
+- Repo kökündeki izlenmeyen `00 - LANSMAN PLANI - tek dosya (13.11.2026).md`: kökte yalnız CLAUDE.md ve README.md olur;
+  `docs/plans/` veya `docs/notes/` altına taşınmalı (kullanıcının dosyası, dokunulmadı).
+- Main'e birleşmiş 4 yerel refactor dalı (faz1..faz4) silinmedi; silinecekse `git branch -d`.
+- INV01 (yatırımcı istatistikleri bayat) ve RT02 (rol yapısı üreticisi bozuk): KALANLAR'da, düzen turundan bağımsız.
