@@ -31,7 +31,7 @@
 - Create: `public/relocation-tools/vatandaslik-testi-almanya.jpg`
 - Create: `public/relocation-tools/para-transferi-almanya.jpg`
 - Create: `public/relocation-tools/stepstone-karsilastirma-almanya.jpg`
-- Modify: `src/lib/relocation-tools-images.ts`
+- Modify: `src/lib/relocation/relocation-tools-images.ts`
 
 **Interfaces:**
 - Consumes: nothing new — `toolHeroImage(slug)` signature is unchanged.
@@ -53,7 +53,7 @@ For each of the 7 slugs below, call `generate_image` with a prompt describing a 
 
 - [ ] **Step 2: Add the 7 new entries to `TOOL_HERO_BY_SLUG`**
 
-In `src/lib/relocation-tools-images.ts`, change:
+In `src/lib/relocation/relocation-tools-images.ts`, change:
 
 ```ts
 const TOOL_HERO_BY_SLUG: Record<string, string> = {
@@ -108,7 +108,7 @@ Expected: PASS (no existing test asserts on the old 10-entry map length, so this
 - [ ] **Step 5: Commit**
 
 ```bash
-git add public/relocation-tools/banka-secim-almanya.jpg public/relocation-tools/sigorta-secim-almanya.jpg public/relocation-tools/maas-hesaplama-almanya.jpg public/relocation-tools/vize-secim-almanya.jpg public/relocation-tools/vatandaslik-testi-almanya.jpg public/relocation-tools/para-transferi-almanya.jpg public/relocation-tools/stepstone-karsilastirma-almanya.jpg src/lib/relocation-tools-images.ts
+git add public/relocation-tools/banka-secim-almanya.jpg public/relocation-tools/sigorta-secim-almanya.jpg public/relocation-tools/maas-hesaplama-almanya.jpg public/relocation-tools/vize-secim-almanya.jpg public/relocation-tools/vatandaslik-testi-almanya.jpg public/relocation-tools/para-transferi-almanya.jpg public/relocation-tools/stepstone-karsilastirma-almanya.jpg src/lib/relocation/relocation-tools-images.ts
 git commit -m "fix(relocation-tools): add missing hero images for 7 Germany tools"
 ```
 
@@ -119,11 +119,11 @@ git commit -m "fix(relocation-tools): add missing hero images for 7 Germany tool
 ### Task 2: Add the admin API module with live count queries
 
 **Files:**
-- Create: `src/lib/relocation-tools-admin-api.ts`
-- Create: `src/lib/relocation-tools-admin-api.test.ts`
+- Create: `src/lib/relocation/relocation-tools-admin-api.ts`
+- Create: `src/lib/relocation/relocation-tools-admin-api.test.ts`
 
 **Interfaces:**
-- Consumes: `supabase` client from `@/integrations/supabase/client`; `RelocationToolRow` type from `@/lib/relocation-tools-types`.
+- Consumes: `supabase` client from `@/integrations/supabase/client`; `RelocationToolRow` type from `@/lib/relocation/relocation-tools-types`.
 - Produces:
   - `export type ToolCountKind = "question_bank" | "decision_tree" | "calculator";`
   - `export interface ToolQuestionCountRow { key: string; slug: string; title_tr: string; category: string; kind: ToolCountKind; quick_count: number; detailed_count: number; total_count: number; is_active: boolean; }`
@@ -131,7 +131,7 @@ git commit -m "fix(relocation-tools): add missing hero images for 7 Germany tool
 
 - [ ] **Step 1: Write the failing test for the merge/shape logic**
 
-Create `src/lib/relocation-tools-admin-api.test.ts`:
+Create `src/lib/relocation/relocation-tools-admin-api.test.ts`:
 
 ```ts
 import { describe, expect, it, vi } from "vitest";
@@ -144,7 +144,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-import { listToolQuestionCounts } from "@/lib/relocation-tools-admin-api";
+import { listToolQuestionCounts } from "@/lib/relocation/relocation-tools-admin-api";
 
 function buildQueryResult(data: unknown) {
   return {
@@ -334,8 +334,8 @@ describe("listToolQuestionCounts", () => {
 
 - [ ] **Step 2: Run the test to verify it fails**
 
-Run: `npm run test -- src/lib/relocation-tools-admin-api.test.ts`
-Expected: FAIL with "Cannot find module '@/lib/relocation-tools-admin-api'" (module doesn't exist yet).
+Run: `npm run test -- src/lib/relocation/relocation-tools-admin-api.test.ts`
+Expected: FAIL with "Cannot find module '@/lib/relocation/relocation-tools-admin-api'" (module doesn't exist yet).
 
 - [ ] **Step 3: Read the exact `VIZE_QUESTIONS` export to get the real node count**
 
@@ -344,17 +344,17 @@ Run (read-only, to confirm the array length at implementation time — do not ha
 
 Use the printed number as `VIZE_DECISION_TREE_NODE_COUNT` in Step 4 (do not import the `.ts` file at build-config time — this is just to determine the constant value once; the runtime code imports `VIZE_QUESTIONS` directly, see below).
 
-- [ ] **Step 4: Implement `src/lib/relocation-tools-admin-api.ts`**
+- [ ] **Step 4: Implement `src/lib/relocation/relocation-tools-admin-api.ts`**
 
 ```ts
-// src/lib/relocation-tools-admin-api.ts
+// src/lib/relocation/relocation-tools-admin-api.ts
 // Admin — "Araç Soru Sayıları" paneli için canlı sayım sorguları.
 // relocation_tool_questions (motor tabanlı 12 araç) + germany_citizenship_questions
 // (Vatandaşlık Testi) canlı sayılır; Vize Seçimi kod-kaynaklı düğüm sayısı (VIZE_QUESTIONS.length);
 // Maaş Hesaplama/Para Transferi/StepStone sabit form-alanı sayısıdır (bunların "soru" kavramı yok).
 
 import { supabase } from "@/integrations/supabase/client";
-import type { RelocationToolRow } from "@/lib/relocation-tools-types";
+import type { RelocationToolRow } from "@/lib/relocation/relocation-tools-types";
 import { VIZE_QUESTIONS } from "@/lib/germany/germany-vize-data";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -487,13 +487,13 @@ Note: the test mocks in Step 1 call `.select().order()` for `relocation_tools`, 
 
 - [ ] **Step 5: Run the test to verify it passes**
 
-Run: `npm run test -- src/lib/relocation-tools-admin-api.test.ts`
+Run: `npm run test -- src/lib/relocation/relocation-tools-admin-api.test.ts`
 Expected: PASS (4 tests).
 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/lib/relocation-tools-admin-api.ts src/lib/relocation-tools-admin-api.test.ts
+git add src/lib/relocation/relocation-tools-admin-api.ts src/lib/relocation/relocation-tools-admin-api.test.ts
 git commit -m "feat(admin): add live question-count query for relocation tools"
 ```
 
@@ -504,7 +504,7 @@ git commit -m "feat(admin): add live question-count query for relocation tools"
 - Create: `src/pages/admin/relocation/RelocationToolsQuestionCountsPage.test.tsx`
 
 **Interfaces:**
-- Consumes: `listToolQuestionCounts` + `ToolQuestionCountRow` + `ToolCountKind` from `@/lib/relocation-tools-admin-api` (Task 2); `AdminPageShell` from `@/components/admin/page`; `Badge` from `@/components/ui/badge`; standard shadcn `Table*` components from `@/components/ui/table` (already used elsewhere in admin — verify import path matches an existing usage before finalizing, e.g. `AdminAuditLogsPage.tsx`).
+- Consumes: `listToolQuestionCounts` + `ToolQuestionCountRow` + `ToolCountKind` from `@/lib/relocation/relocation-tools-admin-api` (Task 2); `AdminPageShell` from `@/components/admin/page`; `Badge` from `@/components/ui/badge`; standard shadcn `Table*` components from `@/components/ui/table` (already used elsewhere in admin — verify import path matches an existing usage before finalizing, e.g. `AdminAuditLogsPage.tsx`).
 - Produces: default export `RelocationToolsQuestionCountsPage` — a React component with no props, consumed by Task 4's route registration.
 
 - [ ] **Step 1: Write the failing render test**
@@ -518,7 +518,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const listSpy = vi.fn();
 
-vi.mock("@/lib/relocation-tools-admin-api", () => ({
+vi.mock("@/lib/relocation/relocation-tools-admin-api", () => ({
   listToolQuestionCounts: (...args: unknown[]) => listSpy(...args),
 }));
 
@@ -650,7 +650,7 @@ Create `src/pages/admin/relocation/RelocationToolsQuestionCountsPage.tsx`. Repla
 // src/pages/admin/relocation/RelocationToolsQuestionCountsPage.tsx
 // Admin — hangi relocation aracında kaç soru/düğüm/alan var, hızlı/normal mod kırılımıyla.
 // Veri canlı DB'den (relocation_tool_questions + germany_citizenship_questions) + kod-kaynaklı
-// standalone sayılardan gelir — bkz. src/lib/relocation-tools-admin-api.ts.
+// standalone sayılardan gelir — bkz. src/lib/relocation/relocation-tools-admin-api.ts.
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -671,7 +671,7 @@ import { trIncludes } from "@/lib/text-normalization";
 import {
   listToolQuestionCounts,
   type ToolCountKind,
-} from "@/lib/relocation-tools-admin-api";
+} from "@/lib/relocation/relocation-tools-admin-api";
 
 const KIND_LABEL: Record<ToolCountKind, string> = {
   question_bank: "Soru Bankası",

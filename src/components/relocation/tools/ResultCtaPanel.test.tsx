@@ -10,8 +10,8 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { ResultCtaPanel } from "@/components/relocation/tools/ResultCtaPanel";
-import { readToolResultReturn } from "@/lib/relocation-result-return";
-import type { ToolCta } from "@/lib/relocation-tools-types";
+import { readToolResultReturn } from "@/lib/relocation/relocation-result-return";
+import type { ToolCta } from "@/lib/relocation/relocation-tools-types";
 
 const CTAS: ToolCta[] = [
   { key: "start_related_tool", label: "Şehir Eşleştirmeyi Başlat", href: "/tools/sehir-eslestirme" },

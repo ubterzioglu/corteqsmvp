@@ -4,7 +4,10 @@ import { Bell, Loader2 } from "lucide-react";
 import CityFollowCard from "@/components/profile/CityFollowCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { getRelocationReminderPreference, setRelocationReminderOptOut } from "@/lib/relocation-reminders-api";
+import {
+  getRelocationReminderPreference,
+  setRelocationReminderOptOut,
+} from "@/lib/relocation/relocation-reminders-api";
 import { useSeo } from "@/lib/seo";
 
 const QUERY_KEY = ["notification-preferences", "relocation-tool-reminders"] as const;

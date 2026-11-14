@@ -122,7 +122,7 @@ bir söz verir.
 **Yol haritası bu kararı bir önkoşula bağlamıştı: "önce `pickRowForHousehold` okuma
 tarafı gözden geçirilmiş." Gözden geçirildi — ve sonuç kararı değiştiriyor.**
 
-`src/lib/relocation-content-format.ts` okuma zinciri **düzeltmeden önce** şöyleydi:
+`src/lib/relocation/relocation-content-format.ts` okuma zinciri **düzeltmeden önce** şöyleydi:
 `groupCostsByCountry` (ülke) → `groupCostsByItem` (kalem) → `pickRowForHousehold`
 (hane halkı). **Hiçbir aşamada `city_code` yoktu.**
 

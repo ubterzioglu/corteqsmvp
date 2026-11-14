@@ -48,8 +48,8 @@ Bu dosyanın 25 importer'ı (bağımlılığı) var ancak testi yok.
 ### Görev 2.2: TypeScript "as any" Cast Onarımı
 Projede kalan 3 kritik `as any` kullanımını düzelt:
 1. `src/lib/cadde-internal.ts`
-2. `src/lib/relocation-api.ts`
-3. `src/lib/relocation-tools-api.ts`
+2. `src/lib/relocation/relocation-api.ts`
+3. `src/lib/relocation/relocation-tools-api.ts`
 *Talimat:* Bu dosyalardaki query builder özyinelemesi kaynaklı type hatalarını, `as any` kullanmadan, Type Narrowing işlemleriyle veya projede var olan `supabase-json.ts` araçlarıyla çözecek type-safe kod bloklarını üret.
 
 ---

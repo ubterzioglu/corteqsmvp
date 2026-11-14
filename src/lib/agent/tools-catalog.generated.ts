@@ -2206,7 +2206,7 @@ export const toolCatalog = {
       "tool_name": "relocation-admin-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-admin-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-admin-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listCandidates",
@@ -2222,14 +2222,14 @@ export const toolCatalog = {
         "admin_publish_relocation_candidate",
         "admin_review_relocation_candidate"
       ],
-      "evidence_path": "src/lib/relocation-admin-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-admin-api.ts"
     },
     {
       "tool_key": "module.relocation_api",
       "tool_name": "relocation-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "createMove",
@@ -2258,14 +2258,14 @@ export const toolCatalog = {
         "relocation_save_wizard",
         "relocation_update_move"
       ],
-      "evidence_path": "src/lib/relocation-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-api.ts"
     },
     {
       "tool_key": "module.relocation_chat_api",
       "tool_name": "relocation-chat-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-chat-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-chat-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "MAX_CHAT_TURNS",
@@ -2275,14 +2275,14 @@ export const toolCatalog = {
       ],
       "tables_read_write": [],
       "rpcs": [],
-      "evidence_path": "src/lib/relocation-chat-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-chat-api.ts"
     },
     {
       "tool_key": "module.relocation_content_api",
       "tool_name": "relocation-content-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-content-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-content-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "deleteMoveDocument",
@@ -2302,14 +2302,14 @@ export const toolCatalog = {
         "relocation_required_documents"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/relocation-content-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-content-api.ts"
     },
     {
       "tool_key": "module.relocation_reminders_api",
       "tool_name": "relocation-reminders-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-reminders-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-reminders-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "getRelocationReminderPreference",
@@ -2320,14 +2320,14 @@ export const toolCatalog = {
         "get_relocation_tool_reminder_preference",
         "set_relocation_tool_reminder_opt_out"
       ],
-      "evidence_path": "src/lib/relocation-reminders-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-reminders-api.ts"
     },
     {
       "tool_key": "module.relocation_tools_admin_api",
       "tool_name": "relocation-tools-admin-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-tools-admin-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-tools-admin-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listToolQuestionCounts"
@@ -2338,14 +2338,14 @@ export const toolCatalog = {
         "relocation_tools"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/relocation-tools-admin-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-tools-admin-api.ts"
     },
     {
       "tool_key": "module.relocation_tools_api",
       "tool_name": "relocation-tools-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/relocation-tools-api.ts",
+      "entrypoint": "src/lib/relocation/relocation-tools-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "completeSession",
@@ -2374,7 +2374,7 @@ export const toolCatalog = {
         "relocation_tool_start_session",
         "request_relocation_tool_report"
       ],
-      "evidence_path": "src/lib/relocation-tools-api.ts"
+      "evidence_path": "src/lib/relocation/relocation-tools-api.ts"
     },
     {
       "tool_key": "module.resource_entries_api",
@@ -5177,292 +5177,292 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/relocation-admin-api.ts",
+      "path": "src/lib/relocation/relocation-admin-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-api.test.ts",
+      "path": "src/lib/relocation/relocation-api.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-api.ts",
+      "path": "src/lib/relocation/relocation-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-chat-api.ts",
+      "path": "src/lib/relocation/relocation-chat-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-chat-context.test.ts",
+      "path": "src/lib/relocation/relocation-chat-context.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-chat-context.ts",
+      "path": "src/lib/relocation/relocation-chat-context.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-city-scope.test.ts",
+      "path": "src/lib/relocation/relocation-city-scope.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-city-scope.ts",
+      "path": "src/lib/relocation/relocation-city-scope.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-content-api.ts",
+      "path": "src/lib/relocation/relocation-content-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-content-format.test.ts",
+      "path": "src/lib/relocation/relocation-content-format.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-content-format.ts",
+      "path": "src/lib/relocation/relocation-content-format.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-content-types.ts",
+      "path": "src/lib/relocation/relocation-content-types.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-country-options.ts",
+      "path": "src/lib/relocation/relocation-country-options.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-i18n.ts",
+      "path": "src/lib/relocation/relocation-i18n.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-normalize.test.ts",
+      "path": "src/lib/relocation/relocation-normalize.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-normalize.ts",
+      "path": "src/lib/relocation/relocation-normalize.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-query-keys.ts",
+      "path": "src/lib/relocation/relocation-query-keys.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-ranking.test.ts",
+      "path": "src/lib/relocation/relocation-ranking.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-ranking.ts",
+      "path": "src/lib/relocation/relocation-ranking.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-reminders-api.ts",
+      "path": "src/lib/relocation/relocation-reminders-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-result-return.test.ts",
+      "path": "src/lib/relocation/relocation-result-return.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-result-return.ts",
+      "path": "src/lib/relocation/relocation-result-return.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-schemas.ts",
+      "path": "src/lib/relocation/relocation-schemas.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-score-bands.test.ts",
+      "path": "src/lib/relocation/relocation-score-bands.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-score-bands.ts",
+      "path": "src/lib/relocation/relocation-score-bands.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tool-report-errors.ts",
+      "path": "src/lib/relocation/relocation-tool-report-errors.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-admin-api.test.ts",
+      "path": "src/lib/relocation/relocation-tools-admin-api.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-admin-api.ts",
+      "path": "src/lib/relocation/relocation-tools-admin-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-api.ts",
+      "path": "src/lib/relocation/relocation-tools-api.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-career.test.ts",
+      "path": "src/lib/relocation/relocation-tools-career.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-career.ts",
+      "path": "src/lib/relocation/relocation-tools-career.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-category.ts",
+      "path": "src/lib/relocation/relocation-tools-category.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-challenge.test.ts",
+      "path": "src/lib/relocation/relocation-tools-challenge.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-challenge.ts",
+      "path": "src/lib/relocation/relocation-tools-challenge.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-city.test.ts",
+      "path": "src/lib/relocation/relocation-tools-city.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-city.ts",
+      "path": "src/lib/relocation/relocation-tools-city.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-copy.ts",
+      "path": "src/lib/relocation/relocation-tools-copy.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-country.test.ts",
+      "path": "src/lib/relocation/relocation-tools-country.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-country.ts",
+      "path": "src/lib/relocation/relocation-tools-country.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-diaspora.test.ts",
+      "path": "src/lib/relocation/relocation-tools-diaspora.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-diaspora.ts",
+      "path": "src/lib/relocation/relocation-tools-diaspora.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-images.ts",
+      "path": "src/lib/relocation/relocation-tools-images.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-jobprob.test.ts",
+      "path": "src/lib/relocation/relocation-tools-jobprob.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-jobprob.ts",
+      "path": "src/lib/relocation/relocation-tools-jobprob.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-planner.test.ts",
+      "path": "src/lib/relocation/relocation-tools-planner.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-planner.ts",
+      "path": "src/lib/relocation/relocation-tools-planner.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-query-keys.ts",
+      "path": "src/lib/relocation/relocation-tools-query-keys.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-ranking.test.ts",
+      "path": "src/lib/relocation/relocation-tools-ranking.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-ranking.ts",
+      "path": "src/lib/relocation/relocation-tools-ranking.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-readiness.test.ts",
+      "path": "src/lib/relocation/relocation-tools-readiness.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-readiness.ts",
+      "path": "src/lib/relocation/relocation-tools-readiness.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-result-style.ts",
+      "path": "src/lib/relocation/relocation-tools-result-style.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-salary.test.ts",
+      "path": "src/lib/relocation/relocation-tools-salary.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-salary.ts",
+      "path": "src/lib/relocation/relocation-tools-salary.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-types.ts",
+      "path": "src/lib/relocation/relocation-tools-types.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-weakest.test.ts",
+      "path": "src/lib/relocation/relocation-tools-weakest.test.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-tools-weakest.ts",
+      "path": "src/lib/relocation/relocation-tools-weakest.ts",
       "kind": "ts",
       "module_family": "relocation"
     },
     {
-      "path": "src/lib/relocation-types.ts",
+      "path": "src/lib/relocation/relocation-types.ts",
       "kind": "ts",
       "module_family": "relocation"
     },

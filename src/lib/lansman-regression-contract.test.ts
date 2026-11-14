@@ -25,7 +25,7 @@ import { adminNavGroups } from "@/lib/admin-shell/admin-navigation-registry";
 import { flattenAdminNav } from "@/lib/admin-shell/admin-navigation-utils";
 import { GENERIC_FEATURE_KEYS } from "@/lib/features";
 import { LEGACY_REDIRECTS } from "@/lib/redirects";
-import { toolHeroImage } from "@/lib/relocation-tools-images";
+import { toolHeroImage } from "@/lib/relocation/relocation-tools-images";
 import { STANDALONE_TOOLS } from "@/lib/standalone-tools";
 import { sliceBetween } from "@/test/source-slice";
 

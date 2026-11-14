@@ -259,22 +259,22 @@
       "count": 1
     }
   },
-  "src/lib/relocation-tools-challenge.ts": {
+  "src/lib/relocation/relocation-tools-challenge.ts": {
     "complexity": {
       "count": 1
     }
   },
-  "src/lib/relocation-tools-country.ts": {
+  "src/lib/relocation/relocation-tools-country.ts": {
     "complexity": {
       "count": 1
     }
   },
-  "src/lib/relocation-tools-diaspora.ts": {
+  "src/lib/relocation/relocation-tools-diaspora.ts": {
     "complexity": {
       "count": 1
     }
   },
-  "src/lib/relocation-tools-jobprob.ts": {
+  "src/lib/relocation/relocation-tools-jobprob.ts": {
     "complexity": {
       "count": 1
     }

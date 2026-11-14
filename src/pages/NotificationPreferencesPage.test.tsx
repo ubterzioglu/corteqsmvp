@@ -4,9 +4,12 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import NotificationPreferencesPage from "@/pages/NotificationPreferencesPage";
-import { getRelocationReminderPreference, setRelocationReminderOptOut } from "@/lib/relocation-reminders-api";
+import {
+  getRelocationReminderPreference,
+  setRelocationReminderOptOut,
+} from "@/lib/relocation/relocation-reminders-api";
 
-vi.mock("@/lib/relocation-reminders-api", () => ({
+vi.mock("@/lib/relocation/relocation-reminders-api", () => ({
   getRelocationReminderPreference: vi.fn(),
   setRelocationReminderOptOut: vi.fn(),
 }));

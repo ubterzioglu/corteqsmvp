@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 
 const listSpy = vi.fn();
 
-vi.mock("@/lib/relocation-tools-admin-api", () => ({
+vi.mock("@/lib/relocation/relocation-tools-admin-api", () => ({
   listToolQuestionCounts: (...args: unknown[]) => listSpy(...args),
 }));
 

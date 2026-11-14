@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { listCandidates, publishCandidate, reviewCandidate } from "@/lib/relocation-admin-api";
+import { listCandidates, publishCandidate, reviewCandidate } from "@/lib/relocation/relocation-admin-api";
 
 const REVIEW_VARIANT: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
   pending: "secondary",

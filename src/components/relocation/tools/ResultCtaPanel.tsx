@@ -18,9 +18,9 @@
 // "Tekrar Çöz" bu kuralın dışında: her zaman aktif buton.
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { rememberToolResult } from "@/lib/relocation-result-return";
-import { resolveCta, TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import type { ToolCta } from "@/lib/relocation-tools-types";
+import { rememberToolResult } from "@/lib/relocation/relocation-result-return";
+import { resolveCta, TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
+import type { ToolCta } from "@/lib/relocation/relocation-tools-types";
 
 interface ResultCtaPanelProps {
   ctas: ToolCta[];

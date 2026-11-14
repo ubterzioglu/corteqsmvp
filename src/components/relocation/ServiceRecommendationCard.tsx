@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
-import type { RelocationServiceRow } from "@/lib/relocation-types";
+import type { RelocationServiceRow } from "@/lib/relocation/relocation-types";
 
 interface ServiceRecommendationCardProps {
   service: RelocationServiceRow;

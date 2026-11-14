@@ -111,7 +111,7 @@ Tek soruluk, sohbet geçmişi tutmaz, sistem promptu alanı yok.
 Aynı gün açılan `supabase/functions/relocation-assistant/index.ts` (henüz commit'siz)
 doğru şablonu kurmuş: Gemini 2.5 Flash, çok turlu, bağlam enjeksiyonlu, origin
 allowlist + `edge_rate_limits` + 32 KB gövde sınırı. Bağlam kurucusu
-`src/lib/relocation-chat-context.ts` PII göndermeme ilkesini de tanımlamış.
+`src/lib/relocation/relocation-chat-context.ts` PII göndermeme ilkesini de tanımlamış.
 
 ---
 

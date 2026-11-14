@@ -3,11 +3,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 
 import { ReportDeliveryCard } from "@/components/relocation/tools/ReportDeliveryCard";
-import { requestRelocationToolReport } from "@/lib/relocation-tools-api";
-import { reportErrorMessage } from "@/lib/relocation-tool-report-errors";
-import type { RelocationToolResultPayload } from "@/lib/relocation-tools-types";
+import { requestRelocationToolReport } from "@/lib/relocation/relocation-tools-api";
+import { reportErrorMessage } from "@/lib/relocation/relocation-tool-report-errors";
+import type { RelocationToolResultPayload } from "@/lib/relocation/relocation-tools-types";
 
-vi.mock("@/lib/relocation-tools-api", () => ({
+vi.mock("@/lib/relocation/relocation-tools-api", () => ({
   requestRelocationToolReport: vi.fn(),
 }));
 

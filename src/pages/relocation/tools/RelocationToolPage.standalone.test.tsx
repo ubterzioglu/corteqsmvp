@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 
 vi.mock("@/lib/seo", () => ({ useSeo: () => undefined }));
 vi.mock("@/hooks/use-toast", () => ({ useToast: () => ({ toast: vi.fn() }) }));
@@ -20,7 +20,7 @@ vi.mock("@/hooks/useRelocationToolSession", () => ({
     reset: vi.fn(),
   }),
 }));
-vi.mock("@/lib/relocation-tools-api", () => ({
+vi.mock("@/lib/relocation/relocation-tools-api", () => ({
   getToolBySlug: vi.fn(async () => null),
   requestDiasporaIntro: vi.fn(),
 }));

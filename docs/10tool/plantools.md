@@ -31,7 +31,7 @@ SQL↔TS ayna sözleşmesini korur, testlerle kilitlenir.
 |---|---|
 | **Soru metni / seçenek / sıra / yardım** | Yeni migration: `relocation_tool_questions` için DELETE+INSERT (idempotent), `tool_key=<araç>`. UI otomatik yansır (QuestionRenderer answer_type'ları). |
 | **Skor formülü / ağırlık / bucket eşiği** | ÜÇÜ BİRDEN: (1) yeni migration `create or replace function relocation_score_<tool>_v1`, (2) TS ayna `src/lib/relocation-tools-<x>.ts`, (3) `…-<x>.test.ts` fixture. **SQL↔TS BİREBİR** — test drift'i yakalar. |
-| **Sonuç ekranı / açıklama / etiket** | `src/lib/relocation-tools-copy.ts` (CTA_TARGETS, BUCKET_LABELS, dimensionLabelsForResult, X_LABELS) + gerekiyorsa `src/components/relocation/tools/ToolResultView.tsx` (6 result_kind dalı). |
+| **Sonuç ekranı / açıklama / etiket** | `src/lib/relocation/relocation-tools-copy.ts` (CTA_TARGETS, BUCKET_LABELS, dimensionLabelsForResult, X_LABELS) + gerekiyorsa `src/components/relocation/tools/ToolResultView.tsx` (6 result_kind dalı). |
 | **CTA hedefi** | `relocation-tools-copy.ts → CTA_TARGETS` (key→href+label) + skor RPC'sinin yazdığı `ctas` jsonb. |
 | **Seed referans verisi** | Yeni migration: ilgili tabloya idempotent UPSERT (`relocation_country_metrics` / `relocation_professions` / `relocation_salary_benchmarks` / `relocation_job_market_signals`). |
 

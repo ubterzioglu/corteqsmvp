@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 
 import { ToolResultReturnBar } from "@/components/relocation/tools/ToolResultReturnBar";
-import { rememberToolResult } from "@/lib/relocation-result-return";
+import { rememberToolResult } from "@/lib/relocation/relocation-result-return";
 
 const RESULT_HREF = "/tools/city_match/result/abc-123";
 

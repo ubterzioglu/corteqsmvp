@@ -15,7 +15,7 @@ import { Search, Wrench, X } from "lucide-react";
 
 import { PageHero } from "@/components/common/PageHero";
 import { Input } from "@/components/ui/input";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 
 interface ToolsHubHeroProps {
   query: string;

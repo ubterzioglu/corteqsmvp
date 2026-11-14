@@ -2,7 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ExternalLink } from "lucide-react";
-import type { RelocationStepRow, RelocationStepTrigger } from "@/lib/relocation-types";
+import type { RelocationStepRow, RelocationStepTrigger } from "@/lib/relocation/relocation-types";
 
 const TRIGGER_ORDER: RelocationStepTrigger[] = ["before_departure", "after_arrival", "ongoing"];
 

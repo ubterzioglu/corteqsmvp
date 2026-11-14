@@ -11,11 +11,15 @@ import { ToolLandingCard } from "@/components/relocation/tools/ToolLandingCard";
 import { ToolCardSkeleton } from "@/components/relocation/tools/ToolCardSkeleton";
 import { ToolsHubHero } from "@/components/relocation/tools/ToolsHubHero";
 import { ToolsHubCategoryFilter } from "@/components/relocation/tools/ToolsHubCategoryFilter";
-import { ALL_TOOL_CATEGORIES, buildCategoryFilters, toolCategoryMeta } from "@/lib/relocation-tools-category";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import {
+  ALL_TOOL_CATEGORIES,
+  buildCategoryFilters,
+  toolCategoryMeta,
+} from "@/lib/relocation/relocation-tools-category";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 import { trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
-import type { RelocationToolRow } from "@/lib/relocation-tools-types";
+import type { RelocationToolRow } from "@/lib/relocation/relocation-tools-types";
 
 /** Yüklenirken gösterilen iskelet kart sayısı — ilk ekranı dolduracak kadar. */
 const SKELETON_COUNT = 6;

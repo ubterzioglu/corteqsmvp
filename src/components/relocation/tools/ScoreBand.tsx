@@ -15,7 +15,7 @@ import {
   SCORE_BAND_STYLES,
   scoreBand,
   type ScoreBand as ScoreBandKey,
-} from "@/lib/relocation-score-bands";
+} from "@/lib/relocation/relocation-score-bands";
 import { cn } from "@/lib/utils";
 
 /** Bant → ikon. Sıra anlam taşır: ✓ güçlü, ↗ iyi, – orta, ⚠ zayıf. */

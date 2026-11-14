@@ -2,8 +2,8 @@
 // /tools/:toolSlug RequireAuth'a takılır ve next parametresiyle login'e yönlenir.
 import { useQuery } from "@tanstack/react-query";
 import { RelocationToolsHub } from "@/components/relocation/tools/RelocationToolsHub";
-import { listTools } from "@/lib/relocation-tools-api";
-import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
+import { listTools } from "@/lib/relocation/relocation-tools-api";
+import { relocationToolsKeys } from "@/lib/relocation/relocation-tools-query-keys";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";
 

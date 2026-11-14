@@ -24,7 +24,7 @@ const MAX_BODY_BYTES = 32_000;
 const RATE_LIMIT_MAX = 20;
 const RATE_LIMIT_WINDOW_SECONDS = 600;
 
-/** Bağlam üst sınırı — istemci src/lib/relocation-chat-context.ts ile 6000'e kırpar;
+/** Bağlam üst sınırı — istemci src/lib/relocation/relocation-chat-context.ts ile 6000'e kırpar;
  *  burada pay bırakarak yeniden dayatıyoruz (istemciye güvenilmez). */
 const MAX_CONTEXT_CHARS = 8_000;
 

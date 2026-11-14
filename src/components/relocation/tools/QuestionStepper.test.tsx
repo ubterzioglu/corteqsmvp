@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
-import type { RelocationToolQuestionRow } from "@/lib/relocation-tools-types";
+import type { RelocationToolQuestionRow } from "@/lib/relocation/relocation-tools-types";
 
 // Test soru fabrikası — yalnız stepper'ın kullandığı alanları doldurur.
 function q(

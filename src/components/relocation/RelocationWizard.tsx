@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
-import { moveCreateSchema, type MoveCreateInput } from "@/lib/relocation-schemas";
+import { moveCreateSchema, type MoveCreateInput } from "@/lib/relocation/relocation-schemas";
 import { useToast } from "@/hooks/use-toast";
 
 export interface CountryOption {

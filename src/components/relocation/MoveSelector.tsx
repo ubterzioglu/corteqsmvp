@@ -7,7 +7,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { RelocationMoveRow } from "@/lib/relocation-types";
+import type { RelocationMoveRow } from "@/lib/relocation/relocation-types";
 
 interface MoveSelectorProps {
   moves: RelocationMoveRow[];

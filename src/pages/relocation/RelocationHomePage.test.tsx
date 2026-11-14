@@ -4,7 +4,7 @@
 
 import { describe, expect, it } from "vitest";
 
-import { buildCountryOptions } from "@/lib/relocation-country-options";
+import { buildCountryOptions } from "@/lib/relocation/relocation-country-options";
 import type { GeoCountry } from "@/lib/geo";
 
 const COUNTRIES: GeoCountry[] = [

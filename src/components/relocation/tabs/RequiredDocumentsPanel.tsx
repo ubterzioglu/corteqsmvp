@@ -6,8 +6,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import { completionPercent, groupDocumentsByCategory } from "@/lib/relocation-content-format";
-import type { RelocationRequiredDocumentRow } from "@/lib/relocation-content-types";
+import { completionPercent, groupDocumentsByCategory } from "@/lib/relocation/relocation-content-format";
+import type { RelocationRequiredDocumentRow } from "@/lib/relocation/relocation-content-types";
 
 interface RequiredDocumentsPanelProps {
   documents: RelocationRequiredDocumentRow[];

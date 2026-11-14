@@ -5,7 +5,7 @@
 // araç için copy tanımlı değilse ilgili parça hiç çizilmez, kart eski haline döner.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreBandBar, ScoreBandChip } from "@/components/relocation/tools/ScoreBand";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 
 interface ScoreBreakdownCardProps {
   subScores: Record<string, number>;

@@ -13,7 +13,7 @@ Ayrıca kullanıcı, hangi relocation aracında kaç soru olduğunu (hızlı/nor
 
 ### Kök neden
 
-`src/lib/relocation-tools-images.ts` içindeki `TOOL_HERO_BY_SLUG` sabit haritası yalnızca ilk 10 relocation aracının slug'larını içeriyor. `ToolLandingCard.tsx` şu şekilde çalışıyor:
+`src/lib/relocation/relocation-tools-images.ts` içindeki `TOOL_HERO_BY_SLUG` sabit haritası yalnızca ilk 10 relocation aracının slug'larını içeriyor. `ToolLandingCard.tsx` şu şekilde çalışıyor:
 
 ```ts
 const heroImage = toolHeroImage(tool.slug); // haritada yoksa undefined
@@ -36,7 +36,7 @@ const heroImage = toolHeroImage(tool.slug); // haritada yoksa undefined
 
 2. Üretilen 7 görsel `public/relocation-tools/<slug>.jpg` yoluna kaydedilir (dosya adları yukarıdaki slug'larla birebir).
 
-3. `src/lib/relocation-tools-images.ts` → `TOOL_HERO_BY_SLUG` haritasına 7 yeni satır eklenir. Fonksiyon mantığı değişmez (yeni satır eklemek yeterli).
+3. `src/lib/relocation/relocation-tools-images.ts` → `TOOL_HERO_BY_SLUG` haritasına 7 yeni satır eklenir. Fonksiyon mantığı değişmez (yeni satır eklemek yeterli).
 
 **Etki alanı:** sadece 1 dosya kod değişikliği (`relocation-tools-images.ts`) + 7 yeni statik asset. Component/API/DB değişikliği yok.
 
@@ -63,7 +63,7 @@ Bu nedenle panel, her aracı **gerçek tipine göre** ve **gerçek veri kaynağ�
 
 **Dosyalar:**
 - `src/pages/admin/relocation/RelocationToolsQuestionCountsPage.tsx` — yeni sayfa, `AdminPageShell` deseni (`AdminToolRegistryPage.tsx` referans alınır: arama kutusu + tablo, ama veri DB'den React Query ile)
-- `src/lib/relocation-tools-admin-api.ts` — yeni, `relocation-tools-api.ts` deseniyle tutarlı: `relocation_tool_questions` üzerinden `group by tool_key, mode` sorgusu + `germany_citizenship_questions` count'u tek fonksiyonda birleştirip normalize eder; Vize/Hesaplayıcı satırları için sabit kod-kaynaklı sayılar bir `const` map ile eklenir
+- `src/lib/relocation/relocation-tools-admin-api.ts` — yeni, `relocation-tools-api.ts` deseniyle tutarlı: `relocation_tool_questions` üzerinden `group by tool_key, mode` sorgusu + `germany_citizenship_questions` count'u tek fonksiyonda birleştirip normalize eder; Vize/Hesaplayıcı satırları için sabit kod-kaynaklı sayılar bir `const` map ile eklenir
 - `src/pages/admin/relocation/routes.tsx` — yeni `<Route path="soru-sayilari" element=.../>` eklenir
 - `src/lib/admin-shell/admin-route-meta.ts` ve `admin-navigation-registry.ts` — yeni path + menü girdisi eklenir (mevcut `relocation-ingestion` girdilerinin yanına, "Taşınma Veri Toplama" grubuna veya yeni bir "Relocation Araçları" grubuna)
 

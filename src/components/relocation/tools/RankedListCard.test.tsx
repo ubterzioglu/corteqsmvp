@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { RankedListCard } from "@/components/relocation/tools/RankedListCard";
-import { SCORE_BAND_LABELS, SCORE_BAND_STYLES } from "@/lib/relocation-score-bands";
+import { SCORE_BAND_LABELS, SCORE_BAND_STYLES } from "@/lib/relocation/relocation-score-bands";
 
 const items = [
   {

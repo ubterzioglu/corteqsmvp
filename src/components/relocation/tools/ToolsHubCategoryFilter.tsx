@@ -1,7 +1,7 @@
 // Araç hub kategori filtresi — "Tümü / Taşınma / Almanya / Nesil" çipleri.
 // Sekmeler gelen veriden üretilir (buildCategoryFilters); burada yalnızca sunum var.
-import type { ToolCategoryFilter } from "@/lib/relocation-tools-category";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import type { ToolCategoryFilter } from "@/lib/relocation/relocation-tools-category";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 import { cn } from "@/lib/utils";
 
 interface ToolsHubCategoryFilterProps {

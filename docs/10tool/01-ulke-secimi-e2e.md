@@ -138,9 +138,9 @@ Eklenecek/güncellenecek ana parçalar:
 
 ```text
 src/lib/relocation-tools-config.ts          # Bu aracın config ve soru seed'i
-src/lib/relocation-tools-api.ts             # generic RPC wrapper'ları
+src/lib/relocation/relocation-tools-api.ts             # generic RPC wrapper'ları
 src/lib/relocation-tools-schemas.ts         # Zod sınırları
-src/lib/relocation-tools-query-keys.ts      # React Query key factory
+src/lib/relocation/relocation-tools-query-keys.ts      # React Query key factory
 src/components/relocation/tools/*           # ortak tool UI
 src/pages/relocation/tools/RelocationToolPage.tsx
 src/pages/relocation/tools/RelocationToolResultPage.tsx

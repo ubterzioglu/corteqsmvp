@@ -8,8 +8,8 @@
 // Bu yüzden önce copy katmanındaki somut aksiyon metni denenir, yoksa `detail`e düşülür.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { TOOLS_UI_COPY, dimensionBandLabel } from "@/lib/relocation-tools-copy";
-import type { WeakestArea } from "@/lib/relocation-tools-weakest";
+import { TOOLS_UI_COPY, dimensionBandLabel } from "@/lib/relocation/relocation-tools-copy";
+import type { WeakestArea } from "@/lib/relocation/relocation-tools-weakest";
 
 interface WeakestAreasCardProps {
   areas: WeakestArea[];

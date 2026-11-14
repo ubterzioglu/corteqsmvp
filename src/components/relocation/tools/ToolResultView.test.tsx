@@ -5,9 +5,12 @@ import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
-import { BUCKET_DESCRIPTIONS, TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import { READINESS_DIMENSION_ACTIONS, READINESS_DIMENSION_DESCRIPTIONS } from "@/lib/relocation-tools-readiness";
-import type { RelocationToolResultPayload } from "@/lib/relocation-tools-types";
+import { BUCKET_DESCRIPTIONS, TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
+import {
+  READINESS_DIMENSION_ACTIONS,
+  READINESS_DIMENSION_DESCRIPTIONS,
+} from "@/lib/relocation/relocation-tools-readiness";
+import type { RelocationToolResultPayload } from "@/lib/relocation/relocation-tools-types";
 
 // Canlı bir sonuç kaydından alındı (relocation_tool_results, 2026-08-07).
 // `detail` alanı DB'nin ürettiği şablon cümledir — copy metni onu ezmelidir.

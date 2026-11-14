@@ -1,6 +1,6 @@
 // AI asistan sekmesi — çok turlu sohbet, taşınma dosyası bağlamlı.
 //
-// Bağlam src/lib/relocation-chat-context.ts ile kurulur ve her istekte gönderilir;
+// Bağlam src/lib/relocation/relocation-chat-context.ts ile kurulur ve her istekte gönderilir;
 // edge function (relocation-assistant) sistem prompt'una ekler. Platform verisi
 // yoksa bağlam bunu modele AÇIKÇA söyler, böylece model rakam uydurmaz.
 
@@ -9,7 +9,7 @@ import { Loader2, Send, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { MAX_MESSAGE_CHARS, type RelocationChatMessage } from "@/lib/relocation-chat-api";
+import { MAX_MESSAGE_CHARS, type RelocationChatMessage } from "@/lib/relocation/relocation-chat-api";
 
 interface RelocationChatPanelProps {
   messages: RelocationChatMessage[];

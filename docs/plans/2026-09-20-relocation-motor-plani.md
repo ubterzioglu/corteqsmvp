@@ -162,10 +162,10 @@ servisi değiştirmeyi gerektiriyor ve çok turluluğu yine getirmiyor.
       (anonim çağrı 401 — asistan para harcıyor).
 - [x] **`GEMINI_API_KEY` canlı fonksiyon ortamında ZATEN VAR** — Management API ile
       doğrulandı, yeni secret gerekmiyor. (`find-matches` aynı anahtarı kullanıyor.)
-- [x] `src/lib/relocation-chat-context.ts` — DB içeriğini modele bağlam olarak verir.
+- [x] `src/lib/relocation/relocation-chat-context.ts` — DB içeriğini modele bağlam olarak verir.
       Veri yoksa modele bunu AÇIKÇA söyler ("kesin rakam verme"), böylece uydurmaz.
       Gizlilik: yalnız kullanıcının kendi taşınma tercihleri gider; kimlik verisi gitmez.
-- [x] `src/lib/relocation-chat-api.ts` + `RelocationChatPanel` + "Asistan" sekmesi.
+- [x] `src/lib/relocation/relocation-chat-api.ts` + `RelocationChatPanel` + "Asistan" sekmesi.
 - [x] Sohbet `relocation_move_documents`'a kaydedilebiliyor.
 - [x] Referansa özgü hata metinleri ("Lovable workspace'inize kredi ekleyin") taşınmadı.
 - [ ] **KALAN: fonksiyonu deploy et** — `supabase functions deploy relocation-assistant`.

@@ -19,7 +19,7 @@
 // DEĞİŞMEDİ — buradan yalnız `className` geçilir, bileşenin kendisine dokunulmaz.
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScoreBandBar } from "@/components/relocation/tools/ScoreBand";
-import { SCORE_BAND_LABELS, SCORE_BAND_STYLES, scoreBand } from "@/lib/relocation-score-bands";
+import { SCORE_BAND_LABELS, SCORE_BAND_STYLES, scoreBand } from "@/lib/relocation/relocation-score-bands";
 import { cn } from "@/lib/utils";
 
 interface RankedItem {

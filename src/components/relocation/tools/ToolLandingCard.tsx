@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import { ArrowUpRight } from "lucide-react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { toolHeroImage } from "@/lib/relocation-tools-images";
-import { resultKindStyle } from "@/lib/relocation-tools-result-style";
+import { toolHeroImage } from "@/lib/relocation/relocation-tools-images";
+import { resultKindStyle } from "@/lib/relocation/relocation-tools-result-style";
 import { cn } from "@/lib/utils";
-import type { RelocationToolRow } from "@/lib/relocation-tools-types";
+import type { RelocationToolRow } from "@/lib/relocation/relocation-tools-types";
 
 /** Bu indeksten öncekiler eager yüklenir — ilk ekrandaki kartlar LCP'yi geciktirmesin. */
 const EAGER_IMAGE_COUNT = 3;

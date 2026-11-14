@@ -4,9 +4,9 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
-import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation-tools-api";
+import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation/relocation-tools-api";
 
-vi.mock("@/lib/relocation-tools-api", () => ({
+vi.mock("@/lib/relocation/relocation-tools-api", () => ({
   completeSession: vi.fn(),
   recordEvent: vi.fn(),
   saveAnswer: vi.fn(),

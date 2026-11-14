@@ -9,7 +9,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 
 export function BackToToolsButton() {
   return (

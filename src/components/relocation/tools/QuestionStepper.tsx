@@ -8,9 +8,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { QuestionRenderer, SCALE_DEFAULT_VALUE } from "@/components/relocation/tools/QuestionRenderer";
-import { cityScopeFromAnswers } from "@/lib/relocation-city-scope";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
+import { cityScopeFromAnswers } from "@/lib/relocation/relocation-city-scope";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
+import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation/relocation-tools-types";
 
 interface QuestionStepperProps {
   questions: RelocationToolQuestionRow[];

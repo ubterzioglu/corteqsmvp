@@ -11,10 +11,14 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useGeoCitiesForCountries, useGeoCountries } from "@/hooks/useGeo";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 import { trCompare, trFold, trIncludes } from "@/lib/text-normalization";
 import { cn } from "@/lib/utils";
-import type { RelocationToolQuestionRow, ToolQuestionOption, ToolAnswerValue } from "@/lib/relocation-tools-types";
+import type {
+  RelocationToolQuestionRow,
+  ToolQuestionOption,
+  ToolAnswerValue,
+} from "@/lib/relocation/relocation-tools-types";
 
 interface QuestionRendererProps {
   question: RelocationToolQuestionRow;

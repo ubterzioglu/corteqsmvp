@@ -1,7 +1,7 @@
 // src/pages/admin/relocation/RelocationToolsQuestionCountsPage.tsx
 // Admin — hangi relocation aracında kaç soru/düğüm/alan var.
 // Veri canlı DB'den (relocation_tool_questions + germany_citizenship_questions) + kod-kaynaklı
-// standalone sayılardan gelir — bkz. src/lib/relocation-tools-admin-api.ts.
+// standalone sayılardan gelir — bkz. src/lib/relocation/relocation-tools-admin-api.ts.
 
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { trIncludes } from "@/lib/text-normalization";
-import { listToolQuestionCounts, type ToolCountKind } from "@/lib/relocation-tools-admin-api";
+import { listToolQuestionCounts, type ToolCountKind } from "@/lib/relocation/relocation-tools-admin-api";
 
 const KIND_LABEL: Record<ToolCountKind, string> = {
   question_bank: "Soru Bankası",

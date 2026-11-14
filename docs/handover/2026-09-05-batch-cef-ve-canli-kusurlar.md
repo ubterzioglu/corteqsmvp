@@ -126,7 +126,7 @@ kart görünümü.
 4. WS1-7 (SMTP → e-posta doğrulaması) ve WS1-8/11 (OTP sağlayıcı) hâlâ dış karar bekliyor.
 5. ~~Takip işi: araçlardaki şehir drill-down'ın 1. adımı, kullanıcının 4. soruda verdiği
    `target_countries` cevabını okumuyor~~ → **KAPANDI** (`dea913c`). Kapsam
-   `src/lib/relocation-city-scope.ts` ile türetilip `QuestionRenderer`'a dar bir
+   `src/lib/relocation/relocation-city-scope.ts` ile türetilip `QuestionRenderer`'a dar bir
    `scopeCountryCodes` prop'u olarak geçiyor. Kapsam dışı ülkeler **gizlenmez**, yalnız
    başa alınır — ülke bir kapı değil daraltmadır; kapsam boşsa eski davranış korunur.
 

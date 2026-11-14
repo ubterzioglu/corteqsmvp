@@ -13,11 +13,11 @@ import {
   getRequiredDocuments,
   saveMoveDocument,
   setMoveProgress,
-} from "@/lib/relocation-content-api";
-import { relocationKeys } from "@/lib/relocation-query-keys";
-import { askRelocationAssistant, type RelocationChatMessage } from "@/lib/relocation-chat-api";
-import { buildRelocationChatContext, type RelocationChatProfile } from "@/lib/relocation-chat-context";
-import type { RelocationMoveDocumentType, RelocationProgressItemType } from "@/lib/relocation-content-types";
+} from "@/lib/relocation/relocation-content-api";
+import { relocationKeys } from "@/lib/relocation/relocation-query-keys";
+import { askRelocationAssistant, type RelocationChatMessage } from "@/lib/relocation/relocation-chat-api";
+import { buildRelocationChatContext, type RelocationChatProfile } from "@/lib/relocation/relocation-chat-context";
+import type { RelocationMoveDocumentType, RelocationProgressItemType } from "@/lib/relocation/relocation-content-types";
 
 interface UseRelocationMoveContentInput {
   moveId: string | null;

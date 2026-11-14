@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getFxRates } from "@/lib/relocation-content-api";
-import { relocationKeys } from "@/lib/relocation-query-keys";
+import { getFxRates } from "@/lib/relocation/relocation-content-api";
+import { relocationKeys } from "@/lib/relocation/relocation-query-keys";
 
 /**
  * Saklanan döviz kurları (B30).

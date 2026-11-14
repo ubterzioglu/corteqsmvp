@@ -6,7 +6,7 @@ import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { RelocationToolsHub } from "@/components/relocation/tools/RelocationToolsHub";
-import type { RelocationToolRow } from "@/lib/relocation-tools-types";
+import type { RelocationToolRow } from "@/lib/relocation/relocation-tools-types";
 
 function tool(overrides: Partial<RelocationToolRow> & Pick<RelocationToolRow, "key">): RelocationToolRow {
   return {

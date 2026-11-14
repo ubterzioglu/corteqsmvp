@@ -4,8 +4,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation-tools-api";
-import type { RelocationToolResultPayload, ToolAnswerValue, ToolMode } from "@/lib/relocation-tools-types";
+import { completeSession, recordEvent, saveAnswer, startSession } from "@/lib/relocation/relocation-tools-api";
+import type { RelocationToolResultPayload, ToolAnswerValue, ToolMode } from "@/lib/relocation/relocation-tools-types";
 
 interface UseRelocationToolSessionArgs {
   toolKey: string;

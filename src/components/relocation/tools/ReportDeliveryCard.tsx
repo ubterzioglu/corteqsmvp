@@ -4,9 +4,9 @@ import { Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { requestRelocationToolReport } from "@/lib/relocation-tools-api";
-import { reportErrorMessage } from "@/lib/relocation-tool-report-errors";
-import type { RelocationToolResultPayload } from "@/lib/relocation-tools-types";
+import { requestRelocationToolReport } from "@/lib/relocation/relocation-tools-api";
+import { reportErrorMessage } from "@/lib/relocation/relocation-tool-report-errors";
+import type { RelocationToolResultPayload } from "@/lib/relocation/relocation-tools-types";
 
 type Props = { result: RelocationToolResultPayload };
 

@@ -14,11 +14,11 @@ import { useToast } from "@/hooks/use-toast";
 import { QuestionStepper } from "@/components/relocation/tools/QuestionStepper";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
 import { BackToToolsButton } from "@/components/relocation/tools/BackToToolsButton";
-import { getSessionForResume, getToolBySlug, requestDiasporaIntro } from "@/lib/relocation-tools-api";
-import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
+import { getSessionForResume, getToolBySlug, requestDiasporaIntro } from "@/lib/relocation/relocation-tools-api";
+import { relocationToolsKeys } from "@/lib/relocation/relocation-tools-query-keys";
 import { useRelocationToolSession } from "@/hooks/useRelocationToolSession";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
-import { toolHeroImage } from "@/lib/relocation-tools-images";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
+import { toolHeroImage } from "@/lib/relocation/relocation-tools-images";
 import { getStandaloneTool } from "@/lib/standalone-tools";
 import { useSeo } from "@/lib/seo";
 

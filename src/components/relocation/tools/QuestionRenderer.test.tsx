@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
 import { QuestionRenderer } from "@/components/relocation/tools/QuestionRenderer";
-import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation-tools-types";
+import type { RelocationToolQuestionRow, ToolAnswerValue } from "@/lib/relocation/relocation-tools-types";
 
 // geo_cities canlıda 76.990 satır; kanca ülkeye göre daraltır, mock da öyle davranır.
 // Ülke seçilmeden çağrılırsa boş liste döner (kanca enabled=false).

@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { ScoreBandBar, ScoreBandChip } from "@/components/relocation/tools/ScoreBand";
-import { SCORE_BAND_STYLES } from "@/lib/relocation-score-bands";
+import { SCORE_BAND_STYLES } from "@/lib/relocation/relocation-score-bands";
 
 describe("ScoreBandBar", () => {
   it("puanı erişilebilir bir ölçü olarak duyurur", () => {

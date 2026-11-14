@@ -12,7 +12,7 @@ import { MatchList } from "@/components/relocation/tools/MatchList";
 import { ResultCtaPanel } from "@/components/relocation/tools/ResultCtaPanel";
 import { WeakestAreasCard } from "@/components/relocation/tools/WeakestAreasCard";
 import { ReportDeliveryCard } from "@/components/relocation/tools/ReportDeliveryCard";
-import { parseWeakestAreas } from "@/lib/relocation-tools-weakest";
+import { parseWeakestAreas } from "@/lib/relocation/relocation-tools-weakest";
 import {
   TOOLS_UI_COPY,
   bucketDescription,
@@ -21,8 +21,12 @@ import {
   dimensionDescriptionsForResult,
   dimensionLabelsForResult,
   dimensionWeightsForResult,
-} from "@/lib/relocation-tools-copy";
-import { hasNoTargetMatchFallback, type RelocationToolResultPayload, type ToolCta } from "@/lib/relocation-tools-types";
+} from "@/lib/relocation/relocation-tools-copy";
+import {
+  hasNoTargetMatchFallback,
+  type RelocationToolResultPayload,
+  type ToolCta,
+} from "@/lib/relocation/relocation-tools-types";
 
 /**
  * "Hedef ülkede veri yok" şeridinin metni. TOOLS_UI_COPY'de DEĞİL çünkü yalnız bu

@@ -2,8 +2,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import type { RelocationLocationRecommendation } from "@/lib/relocation-types";
-import type { RelocationScoreKey } from "@/lib/relocation-ranking";
+import type { RelocationLocationRecommendation } from "@/lib/relocation/relocation-types";
+import type { RelocationScoreKey } from "@/lib/relocation/relocation-ranking";
 
 const SCORE_LABELS: Record<RelocationScoreKey, string> = {
   budget_fit: "Bütçe",

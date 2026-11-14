@@ -14,9 +14,9 @@ import {
   oldestRateAt,
   pickRowForHousehold,
   sumMonthlyCosts,
-} from "@/lib/relocation-content-format";
-import { COST_ITEM_LABELS } from "@/lib/relocation-chat-context";
-import type { RelocationFxRateRow, RelocationLivingCostRow } from "@/lib/relocation-content-types";
+} from "@/lib/relocation/relocation-content-format";
+import { COST_ITEM_LABELS } from "@/lib/relocation/relocation-chat-context";
+import type { RelocationFxRateRow, RelocationLivingCostRow } from "@/lib/relocation/relocation-content-types";
 
 const ITEM_ICONS: Record<string, string> = {
   rent: "🏠",

@@ -3,9 +3,9 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { ToolResultView } from "@/components/relocation/tools/ToolResultView";
-import { getResult } from "@/lib/relocation-tools-api";
-import { relocationToolsKeys } from "@/lib/relocation-tools-query-keys";
-import { TOOLS_UI_COPY } from "@/lib/relocation-tools-copy";
+import { getResult } from "@/lib/relocation/relocation-tools-api";
+import { relocationToolsKeys } from "@/lib/relocation/relocation-tools-query-keys";
+import { TOOLS_UI_COPY } from "@/lib/relocation/relocation-tools-copy";
 
 export default function RelocationToolResultPage() {
   const { toolSlug = "", resultId = "" } = useParams<{ toolSlug: string; resultId: string }>();

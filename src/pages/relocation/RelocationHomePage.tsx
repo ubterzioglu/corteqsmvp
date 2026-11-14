@@ -15,7 +15,7 @@ import {
   listActiveRelocationCountryCodes,
   listMoves,
   recordInteraction,
-} from "@/lib/relocation-api";
+} from "@/lib/relocation/relocation-api";
 import { MoveSelector } from "@/components/relocation/MoveSelector";
 import { useRelocationMoveContent } from "@/hooks/useRelocationMoveContent";
 import { LivingCostsPanel } from "@/components/relocation/tabs/LivingCostsPanel";
@@ -23,14 +23,14 @@ import { useRelocationFxRates } from "@/hooks/useRelocationFxRates";
 import { RequiredDocumentsPanel } from "@/components/relocation/tabs/RequiredDocumentsPanel";
 import { RelocationChatPanel } from "@/components/relocation/tabs/RelocationChatPanel";
 import { SavedDocumentsPanel } from "@/components/relocation/tabs/SavedDocumentsPanel";
-import { relocationKeys } from "@/lib/relocation-query-keys";
-import { getRelocationDict } from "@/lib/relocation-i18n";
+import { relocationKeys } from "@/lib/relocation/relocation-query-keys";
+import { getRelocationDict } from "@/lib/relocation/relocation-i18n";
 import { useGeoCountries } from "@/hooks/useGeo";
 import { trCompare } from "@/lib/text-normalization";
-import type { MoveCreateInput } from "@/lib/relocation-schemas";
-import type { RelocationServiceCategory, RelocationStepTrigger } from "@/lib/relocation-types";
+import type { MoveCreateInput } from "@/lib/relocation/relocation-schemas";
+import type { RelocationServiceCategory, RelocationStepTrigger } from "@/lib/relocation/relocation-types";
 import { RelocationWizard } from "@/components/relocation/RelocationWizard";
-import { buildCountryOptions } from "@/lib/relocation-country-options";
+import { buildCountryOptions } from "@/lib/relocation/relocation-country-options";
 import { CityComparisonTable } from "@/components/relocation/CityComparisonTable";
 import { ServiceRecommendationCard } from "@/components/relocation/ServiceRecommendationCard";
 import { BureaucracyTimeline } from "@/components/relocation/BureaucracyTimeline";

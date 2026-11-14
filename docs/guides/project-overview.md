@@ -334,8 +334,8 @@ Savunulabilir (oturum kurulumu) ama kalıp dışı.
 | Dosya | Cast | Neden |
 |-------|------|-------|
 | `src/lib/cadde-internal.ts` | `const db = supabase as any` | Query builder özyinelemesi |
-| `src/lib/relocation-api.ts` | `const db = supabase as any` | Aynı |
-| `src/lib/relocation-tools-api.ts` | `const db = supabase as any` | Aynı |
+| `src/lib/relocation/relocation-api.ts` | `const db = supabase as any` | Aynı |
+| `src/lib/relocation/relocation-tools-api.ts` | `const db = supabase as any` | Aynı |
 
 Bunları kaldırmak `tsc` hatalarını yeniden artırır — dikkatli yaklaşılmalı.
 

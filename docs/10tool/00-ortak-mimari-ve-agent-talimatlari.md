@@ -25,12 +25,12 @@ Lead-gen amacıyla ileride bazı araçlar anonymous açılabilir. MVP'de authent
 Claude Code aşağıdaki dosyaları eklemeli veya genişletmeli:
 
 ```text
-src/lib/relocation-tools-types.ts
+src/lib/relocation/relocation-tools-types.ts
 src/lib/relocation-tools-schemas.ts
-src/lib/relocation-tools-api.ts
-src/lib/relocation-tools-query-keys.ts
-src/lib/relocation-tools-ranking.ts
-src/lib/relocation-tools-copy.ts
+src/lib/relocation/relocation-tools-api.ts
+src/lib/relocation/relocation-tools-query-keys.ts
+src/lib/relocation/relocation-tools-ranking.ts
+src/lib/relocation/relocation-tools-copy.ts
 src/lib/relocation-tools-config.ts
 src/hooks/useRelocationToolSession.ts
 src/components/relocation/tools/RelocationToolsHub.tsx

@@ -2,7 +2,7 @@
 // primary_result.tasks öğelerini faza göre gruplar; her görev başlık + öncelik rozeti.
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PHASE_LABELS, PHASE_ORDER, type PlannerPhase } from "@/lib/relocation-tools-planner";
+import { PHASE_LABELS, PHASE_ORDER, type PlannerPhase } from "@/lib/relocation/relocation-tools-planner";
 
 interface ChecklistTask {
   key?: string;

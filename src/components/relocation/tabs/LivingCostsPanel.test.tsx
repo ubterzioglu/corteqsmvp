@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { LivingCostsPanel } from "./LivingCostsPanel";
-import type { RelocationLivingCostRow } from "@/lib/relocation-content-types";
+import type { RelocationLivingCostRow } from "@/lib/relocation/relocation-content-types";
 
 const costRow = (patch: Partial<RelocationLivingCostRow> = {}): RelocationLivingCostRow => ({
   id: patch.id ?? "c1",

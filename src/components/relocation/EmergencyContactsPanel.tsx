@@ -1,7 +1,7 @@
 // Acil iletişim paneli — ülke/şehir bazlı acil numara ve kurumlar.
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, ExternalLink } from "lucide-react";
-import type { RelocationEmergencyContactRow } from "@/lib/relocation-types";
+import type { RelocationEmergencyContactRow } from "@/lib/relocation/relocation-types";
 
 interface EmergencyContactsPanelProps {
   contacts: RelocationEmergencyContactRow[];
