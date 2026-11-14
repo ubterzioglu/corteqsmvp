@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import type { ProfileHeroVariant } from "@/lib/profile-presentation";
+import type { ProfileHeroVariant } from "@/lib/profile/profile-presentation";
 import type {
   PublicProfileBadgeViewModel,
   PublicProfileHeroViewModel,

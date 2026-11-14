@@ -4,7 +4,7 @@
 // yazılıp unutulmasın diye kaynak ağacı taranır: telefon önekinden ülke çıkaran
 // bir yardımcı ya da libphonenumber bağımlılığı `src/` altına girerse test kırılır.
 //
-// Tek geçerli telefon işlemi biçim doğrulamadır (src/lib/profile-phone.ts) —
+// Tek geçerli telefon işlemi biçim doğrulamadır (src/lib/profile/profile-phone.ts) —
 // o dosya ülke bilgisi ÜRETMEZ, yalnız E.164'e indirger.
 
 import { readdirSync, readFileSync } from "node:fs";
@@ -69,7 +69,7 @@ describe("telefon alan kodundan ülke türetme yasağı (WS1-10)", () => {
   }, 60_000);
 
   it("profile-phone yalnız biçim doğrular; ülke/diaspora üretmez", () => {
-    const text = readFileSync(path.join(SRC_ROOT, "lib", "profile-phone.ts"), "utf8");
+    const text = readFileSync(path.join(SRC_ROOT, "lib", "profile", "profile-phone.ts"), "utf8");
     expect(text).not.toMatch(/country|diaspora_key|geo_countries/i);
   });
 });

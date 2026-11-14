@@ -13,7 +13,7 @@ import { describe, expect, it } from "vitest";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LandingApprovalBadges } from "@/components/whatsapp/LandingApprovalBadges";
 import { LandingCard } from "@/components/whatsapp/LandingCard";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const landing = (overrides: Partial<WhatsAppLanding> = {}): WhatsAppLanding =>
   ({

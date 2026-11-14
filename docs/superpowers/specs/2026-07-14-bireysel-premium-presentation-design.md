@@ -6,7 +6,7 @@
 ## Problem
 
 `/profile` (editör) ve `/directory/catalog/:slug` (public profil) sayfaları, profilin görsel
-sunumunu `src/lib/profile-presentation.ts` içindeki `resolveProfilePresentation(roleKey)`
+sunumunu `src/lib/profile/profile-presentation.ts` içindeki `resolveProfilePresentation(roleKey)`
 fonksiyonundan çözer. Bugün yalnızca `Experimental_2` / `Experimental_3` test rolleri
 "premium" (zengin hero, purple accent, öncelikli quick action'lar, özel section sırası,
 mobile action bar) sunumu alıyor. "Bireysel" UI kategorisine düşen ~76 flat rolün tamamı
@@ -34,7 +34,7 @@ kullanıcılara (gerçek üyeler dahil) doğrudan canlıya yansıt.
 
 ## Değişecek Dosya
 
-`src/lib/profile-presentation.ts` — tek dosya.
+`src/lib/profile/profile-presentation.ts` — tek dosya.
 
 ### Yeni config
 
@@ -80,7 +80,7 @@ kategori sınıflandırması zaten oradaki tek kaynak, ikinci bir bakım noktas�
 
 ## Test Etkisi
 
-`src/lib/profile-presentation.test.ts` içindeki **"production rolleri generic fallback
+`src/lib/profile/profile-presentation.test.ts` içindeki **"production rolleri generic fallback
 alır"** testi artık yanlış olur (`User_DiasporaMember`, `Admin_Platform` gibi roller artık
 generic değil, `INDIVIDUAL_PRESENTATION` alır). Bu test güncellenir:
 - Bireysel kategorideki roller (`User_DiasporaMember`, `Admin_Platform`,
@@ -103,7 +103,7 @@ generic değil, `INDIVIDUAL_PRESENTATION` alır). Bu test güncellenir:
 
 ## Doğrulama
 
-1. `npm run test -- src/lib/profile-presentation.test.ts` — güncellenen testler yeşil.
+1. `npm run test -- src/lib/profile/profile-presentation.test.ts` — güncellenen testler yeşil.
 2. `npm run test` — tam suite (regresyon kontrolü, özellikle `ProfilePage.test.tsx`,
    `profile-view-model.test.ts`, `EditableProfilesSelector` ile ilgili varsa).
 3. `npm run lint` + `tsc` (build) — tip hatası yok.

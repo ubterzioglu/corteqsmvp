@@ -3,7 +3,7 @@ import { BadgeCheck, MapPin, Sparkles, UserCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PROFILE_TYPE_TIP } from "@/lib/profile-attribute-keys";
+import { PROFILE_TYPE_TIP } from "@/lib/profile/profile-attribute-keys";
 
 import { ProfileInfoTip } from "./ProfileInfoTip";
 import {

@@ -8,7 +8,7 @@ import {
   type GroupReportInput,
   type GroupReportState,
   type SubmitGroupReportResult,
-} from "@/lib/group-reports-api";
+} from "@/lib/group/group-reports-api";
 
 export const groupReportKeys = {
   all: ["group-reports"] as const,

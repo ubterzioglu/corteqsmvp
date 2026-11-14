@@ -14,7 +14,7 @@ import {
   type IndividualProfileDetailsRow,
   type MyReferralCodeUsage,
 } from "@/lib/member-profile-api";
-import { mapAttributeDraftValue, readDraftText } from "@/lib/profile-attribute-drafts";
+import { mapAttributeDraftValue, readDraftText } from "@/lib/profile/profile-attribute-drafts";
 import {
   JOB_SEEKING_OPT_IN_ATTRIBUTE_KEY,
   LINKEDIN_ATTRIBUTE_KEY,
@@ -24,9 +24,9 @@ import {
   WEBSITE_ATTRIBUTE_KEY,
   type DraftValueMap,
   type DraftVisibilityMap,
-} from "@/lib/profile-attribute-keys";
-import { PHONE_ATTRIBUTE_KEY, PHONE_INVALID_MESSAGE, normalizePhoneE164 } from "@/lib/profile-phone";
-import { SOCIAL_ATTRIBUTE_KEYS, ensureHttpsUrl, normalizeSocialMediaValue } from "@/lib/profile-social-links";
+} from "@/lib/profile/profile-attribute-keys";
+import { PHONE_ATTRIBUTE_KEY, PHONE_INVALID_MESSAGE, normalizePhoneE164 } from "@/lib/profile/profile-phone";
+import { SOCIAL_ATTRIBUTE_KEYS, ensureHttpsUrl, normalizeSocialMediaValue } from "@/lib/profile/profile-social-links";
 
 export type GroupedProfileAttributes = {
   common: ProfileAttributeState[];

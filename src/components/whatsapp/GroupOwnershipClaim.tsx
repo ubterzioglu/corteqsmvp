@@ -13,9 +13,9 @@ import {
   verifyClaimCode,
   type ClaimVerifyOutcome,
   type PendingClaimRow,
-} from "@/lib/group-claims";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+} from "@/lib/group/group-claims";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 interface GroupOwnershipClaimProps {
   landing: WhatsAppLanding;

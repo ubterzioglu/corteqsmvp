@@ -115,7 +115,7 @@ sadece "ödeme tetikleyicisi" gerçek Stripe ile değiştirilecek.
 | Sahte Stripe ekranı | `src/components/payments/MockStripeCheckout.tsx` |
 | Ödeme adımı + talep oluşturma | `src/components/ServiceRequestForm.tsx` |
 | "Hizmet Talepleri" sekmesi | `src/components/profile/premium/PremiumProfileTabs.tsx` |
-| Premium panel rol eşlemesi | `src/lib/profile-presentation.ts` (Experimental_2 / Experimental_3) |
+| Premium panel rol eşlemesi | `src/lib/profile/profile-presentation.ts` (Experimental_2 / Experimental_3) |
 
 > Premium panel (ve dolayısıyla bu sekme) yalnızca `Experimental_2` / `Experimental_3`
 > rollerinde açılır. Demo kullanıcı `experimental3@corteqs.net` bu rol ile hazırlandı.

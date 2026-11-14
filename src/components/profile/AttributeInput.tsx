@@ -7,7 +7,7 @@ import {
   EDUCATION_LAST_SCHOOL_ATTRIBUTE_KEY,
   EDUCATION_LAST_SCHOOL_MAX_LENGTH,
   getAttributeSelectOptions,
-} from "@/lib/profile-education";
+} from "@/lib/profile/profile-education";
 
 import { GOOGLE_SOFT_CARD_SUBTLE } from "./profile-card-styles";
 
@@ -32,7 +32,7 @@ export const AttributeInput = ({ attribute, value, onChange, compact = false }: 
   }
 
   // `select` alanlar seçenekleri TS tek kaynağından alır (ör. öğrenim durumu —
-  // src/lib/profile-education.ts). Seçeneği tanımsız bir select serbest metne düşer.
+  // src/lib/profile/profile-education.ts). Seçeneği tanımsız bir select serbest metne düşer.
   const selectOptions = attribute.dataType === "select" ? getAttributeSelectOptions(attribute.attributeKey) : null;
   if (selectOptions) {
     const selectedValue = typeof value === "string" ? value : "";

@@ -58,7 +58,7 @@ describe("cadde liste sorgularında açık satır tavanı", () => {
 // AÇIK bir `.limit()` taşıyacak. Çıplak `.in(...)` bırakmak yasak.
 describe("toplu profil sorgularında satır tavanı", () => {
   const SITES = [
-    { file: "src/lib/profile-helpers.ts", fn: "getProfilesBasicBatch" },
+    { file: "src/lib/profile/profile-helpers.ts", fn: "getProfilesBasicBatch" },
     { file: "src/lib/cadde-api-support.ts", fn: "fetchCaddeUserNameMap" },
     { file: "src/lib/cadde-feed-location-api.ts", fn: "fetchUserNameMap" },
   ];
@@ -95,8 +95,8 @@ describe("toplu profil sorgularında satır tavanı", () => {
 // işlenmemiş talep sayısı eksik çıkarsa kimse fark etmez — kesme sessizdir.
 describe("tam olması gereken listeler sayfalanır", () => {
   const SITES = [
-    { file: "src/lib/whatsapp-landings.ts", fn: "listLandings", why: "onaylı gruplar" },
-    { file: "src/lib/whatsapp-landings.ts", fn: "listAllSubmissions", why: "moderasyon kuyruğu" },
+    { file: "src/lib/group/whatsapp-landings.ts", fn: "listLandings", why: "onaylı gruplar" },
+    { file: "src/lib/group/whatsapp-landings.ts", fn: "listAllSubmissions", why: "moderasyon kuyruğu" },
     { file: "src/lib/feedback.ts", fn: "fetchFeedbackList", why: "okunmamış geri bildirim" },
     { file: "src/lib/may19-campaign.ts", fn: "listMay19CampaignEntries", why: "katılım sayısı" },
     { file: "src/lib/muhasebe/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },

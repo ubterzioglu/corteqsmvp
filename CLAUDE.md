@@ -132,7 +132,7 @@ Migration: `20260904200000_profil_ws1_form_alanlari.sql`.
    'private_storage'`tan gelir (public sayfa RPC'si bu stratejiyi baştan eler).
 3. **Ülke telefon alan kodundan TÜRETİLMEZ** (+90 numaralı üye Berlin'de yaşıyor olabilir).
    `src/lib/phone-country-derivation.test.ts` `src/` ağacını tarar: `countryFromPhone`,
-   `dialCode`, `callingCode`, `libphonenumber` girerse test düşer. `src/lib/profile-phone.ts`
+   `dialCode`, `callingCode`, `libphonenumber` girerse test düşer. `src/lib/profile/profile-phone.ts`
    yalnız E.164 biçim doğrular, ülke üretmez.
 4. **İlgi alanları (`interests`) herkese açıktır ve gizlenemez** (T19 kararı) — 82 rolde
    `user_can_hide=false`. `CaddeInterestsCard` bu durumda anahtar yerine rozet çizer.
@@ -811,7 +811,7 @@ iki sessiz kusur için — ayrıntı "Türkçe Metin Kuralları" md.6 ve aşağ�
   yazımlarına kilitler ve etkinlik dosyalarının kendi rakip seçenek listesini tanımlamadığını
   kaynak metinden denetler. `events.type` üzerinde CHECK kısıtı YOKTUR; yanlış değer hata
   vermeden kaydedilir ve etkinlik kendi filtresine düşmez.
-- `src/lib/whatsapp-landings-insert-contract.test.ts` (4 test) — `submitLanding` insert yükünün
+- `src/lib/group/whatsapp-landings-insert-contract.test.ts` (4 test) — `submitLanding` insert yükünün
   her anahtarının `types.ts`'teki gerçek `whatsapp_landings` Insert sözleşmesinde bulunduğunu
   doğrular ve yükün `as TablesInsert<...>` ile CAST edilmesini yasaklar (`satisfies` zorunlu).
   Cast, olmayan bir sütuna yazmayı tsc'den gizlemişti.

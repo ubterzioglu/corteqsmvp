@@ -21,7 +21,7 @@
 
 **Migrations (supabase/migrations/, prefix `20260609NNNNNN_`):** per design §7, `001_preflight_inventory` … `017_post_cleanup_verification`.
 
-**Frontend (src/):** admin pages under `src/pages/admin/*`, `src/lib/role-catalog.ts`, `src/lib/admin-catalog.ts`, `src/lib/profile-helpers.ts`, `src/pages/Directory*`, new-member form, `src/integrations/supabase/types.ts`, `docs/guides/roles-infogram.html`.
+**Frontend (src/):** admin pages under `src/pages/admin/*`, `src/lib/role-catalog.ts`, `src/lib/admin-catalog.ts`, `src/lib/profile/profile-helpers.ts`, `src/pages/Directory*`, new-member form, `src/integrations/supabase/types.ts`, `docs/guides/roles-infogram.html`.
 
 ---
 

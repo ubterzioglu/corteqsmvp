@@ -12,7 +12,7 @@ import {
   resolveProfilePresentation,
   type ProfilePresentationConfig,
   type ProfileQuickActionKey,
-} from "@/lib/profile-presentation";
+} from "@/lib/profile/profile-presentation";
 import type {
   PublicCatalogProfilePagePayload,
   PublicProfileAttribute,

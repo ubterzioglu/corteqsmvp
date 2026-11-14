@@ -6,7 +6,7 @@
 // ⚠️ Buraya yalnız SAF şey girer: sözlük, biçimlendirici, kural. State ve Supabase
 // çağrısı bileşende kalır.
 
-import type { LandingCategoryInput, LandingStatus } from "@/lib/whatsapp-landings";
+import type { LandingCategoryInput, LandingStatus } from "@/lib/group/whatsapp-landings";
 
 export const LANDING_STATUS_BADGE_CLASS: Record<LandingStatus, string> = {
   pending: "border-amber-200 bg-amber-100 text-amber-800",

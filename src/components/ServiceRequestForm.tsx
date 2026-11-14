@@ -260,7 +260,7 @@ const ServiceRequestForm = ({ onSuccess, onCancel }: ServiceRequestFormProps) =>
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-      const { getAttributesBatch } = await import("@/lib/profile-helpers");
+      const { getAttributesBatch } = await import("@/lib/profile/profile-helpers");
       const attrs = await getAttributesBatch(user.id, ["city", "country"]);
       setForm((p) => ({
         ...p,

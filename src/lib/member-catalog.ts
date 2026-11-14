@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { getUiProfileType, type ProfileType } from "@/lib/profile-types";
+import { getUiProfileType, type ProfileType } from "@/lib/profile/profile-types";
 
 type QueryError = { message: string };
 

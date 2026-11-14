@@ -9,7 +9,7 @@ import {
   REFERRAL_CODE_ATTRIBUTE_KEY,
   type DraftValueMap,
   type DraftVisibilityMap,
-} from "@/lib/profile-attribute-keys";
+} from "@/lib/profile/profile-attribute-keys";
 
 import { ProfileAttributeEditor } from "./ProfileAttributeEditor";
 import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_GREEN_SECTION, GOOGLE_SOFT_CARD_SUBTLE } from "./profile-card-styles";

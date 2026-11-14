@@ -2,8 +2,8 @@ import { Search } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { categoryOptions } from "@/lib/whatsapp-landing-options";
-import type { LandingCategory } from "@/lib/whatsapp-landings";
+import { categoryOptions } from "@/lib/group/whatsapp-landing-options";
+import type { LandingCategory } from "@/lib/group/whatsapp-landings";
 
 /** G19: "admin" → "verified" — filtre artık sahiplik doğrulamasına bakar. */
 export type ApprovalFilter = "verified" | "";

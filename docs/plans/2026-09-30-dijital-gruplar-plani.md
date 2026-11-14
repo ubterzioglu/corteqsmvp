@@ -63,7 +63,7 @@ whatsapp landings` de aynı. 11 politikanın 2'si gereksiz.
 
 | Sorun | Ölçüm |
 | --- | --- |
-| `platform` kolonu yok | 10 grubun hepsi `chat.whatsapp.com`. UI'da Telegram seçeneği var ([whatsapp-landing-options.ts](../../src/lib/whatsapp-landing-options.ts)) ama DB'de kaydedilecek kolon yok. |
+| `platform` kolonu yok | 10 grubun hepsi `chat.whatsapp.com`. UI'da Telegram seçeneği var ([whatsapp-landing-options.ts](../../src/lib/group/whatsapp-landing-options.ts)) ama DB'de kaydedilecek kolon yok. |
 | **2 grubun linki BOŞ** | `hcd-bilinc-...` ve `shaman-kocluk-...` → link kontrolü bunları hemen `link_dead` yapar. |
 | Kategoriler uyuşmuyor | Canlı: `is` · `dayanisma` · `yatirim` · `akademik` · `alumni` · **`diger` (3 grup)**. Politika §5: *"'Diğer' kategorisi yoktur."* |
 | Konum serbest metin | `country='Global'`, `city='Genel'` (6 grup). `is_global` kolonu yok. |
@@ -176,7 +176,7 @@ Her batch **ayrı oturumda**; kabul kriterleri yeşil olmadan sonrakine geçilme
   [phone-country-derivation.test.ts](../../src/lib/phone-country-derivation.test.ts) `src/`
   ağacını tarar — `countryFromPhone`, `dialCode`, `callingCode`, `libphonenumber` girerse
   **test DÜŞER.** E.164 biçim doğrulaması zaten
-  [profile-phone.ts](../../src/lib/profile-phone.ts)'de var, yeniden yazma.
+  [profile-phone.ts](../../src/lib/profile/profile-phone.ts)'de var, yeniden yazma.
 - ⚠️ `phone` attribute canlıda `storage_strategy='private_storage'` ve aktif — bu sözleşme bozulmaz.
 - **Kabul:** `user_verifications` ≥ 1 gerçek satır; `is_phone_verified()` o kullanıcı için `true`;
   telefonla giriş denemesi **reddediliyor**.

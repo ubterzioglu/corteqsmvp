@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { CurrentUserDashboardFeature } from "@/hooks/useCurrentUserDashboard";
 import type { FlatRoleOption } from "@/lib/flat-roles-api";
 import type { PendingApprovalSummary, ProfileFeatureState } from "@/lib/member-profile";
-import { REQUESTABLE_FEATURES } from "@/lib/profile-requestable-features";
+import { REQUESTABLE_FEATURES } from "@/lib/profile/profile-requestable-features";
 
 import {
   AMBER_BUTTON_OUTLINE,

@@ -18,7 +18,7 @@ Plan (ve dosyadaki yorum) 739–811 arasını **"premium pilot"** diye anlatıyo
 Bu adlandırma yanıltıcı: ölçüm, dalın **üyelerin neredeyse tamamının gördüğü
 ana yol** olduğunu gösteriyor.
 
-Zincir, `src/lib/profile-presentation.ts:134` ve `src/lib/profile-types.ts:191`:
+Zincir, `src/lib/profile/profile-presentation.ts:134` ve `src/lib/profile/profile-types.ts:191`:
 
 ```text
 roleKey "User_*"  →  getUiProfileType() = "bireysel"
@@ -81,7 +81,7 @@ hiçbir test okumuyor.
 
 ## 6. A07b için taşınan bulgu
 
-`src/lib/profile-text-health.test.ts:12` `ProfilePage.tsx`'i `readFileSync` ile
+`src/lib/profile/profile-text-health.test.ts:12` `ProfilePage.tsx`'i `readFileSync` ile
 okuyup mojibake deseni arıyor, **ama doğrulama negatif**
 (`expect(suspiciousPatterns.some(...)).toBe(false)`). JSX dışarı taşınınca test
 **kırılmaz — sessizce daha azını denetler.** A06b'deki `cadde-brand-token`

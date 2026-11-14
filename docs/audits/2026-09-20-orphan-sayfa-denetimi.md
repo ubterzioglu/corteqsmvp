@@ -165,7 +165,7 @@ Statik analiz bunları orphan sandı; **elle doğrulandı, linkli çıktılar.**
 
 | Rota | Neden kaçtı |
 |---|---|
-| `/profile/catalog/:itemId` | Link bir **fonksiyon dönüşünden** üretiliyor: `src/lib/profile-routing.ts:12` `profileEditorPathFor()`. Statik tarama dönüş değerini izleyemez. |
+| `/profile/catalog/:itemId` | Link bir **fonksiyon dönüşünden** üretiliyor: `src/lib/profile/profile-routing.ts:12` `profileEditorPathFor()`. Statik tarama dönüş değerini izleyemez. |
 | `/tools/:toolSlug/session/:sessionId` | `window.history.replaceState` ile yazılıyor — `src/pages/relocation/tools/RelocationToolPage.tsx:130`. `<Link>`/`navigate()` değil. |
 | `/tools/:toolSlug/result/:resultId` | Aynı — `RelocationToolPage.tsx:137`. Derin bağlantı kasıtlı. |
 | `/isletme/:slug` | Fonksiyon dönüşü: `src/lib/business-demo-rows.ts:57` `businessDemoHref()`. **Ayrıca `src/lib/demo-pages.ts:47` yorumu bunu açıkça belgeliyor:** *"⚠️ `/isletme/:slug` buraya EKLENMEZ: `findDemoRoute` literal yol eşitliği arar, dinamik yol asla eşleşmez. O sayfa `DemoPageBanner` kullanır."* Bilinçli tasarım. |

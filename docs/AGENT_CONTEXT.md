@@ -405,7 +405,7 @@ supabase functions deploy whatsapp-reply
 | `src/lib/catalog/catalog-entity-api.ts` | Katalog entity profil işlemleri |
 | `src/lib/admin-catalog.ts` | Admin unified records / catalog data layer |
 | `src/lib/role-catalog.ts` | Rol tanımları veri katmanı |
-| `src/lib/profile-helpers.ts` | Profil yardımcı fonksiyonları (yeni eklendi) |
+| `src/lib/profile/profile-helpers.ts` | Profil yardımcı fonksiyonları (yeni eklendi) |
 | `src/components/admin/roles-overview/` | RolesOverview modül bileşenleri |
 | `src/components/directory/` | Dizin arama/filtreleme/sonuç bileşenleri |
 | `vite.config.ts` | Legacy `*.html` redirect stub'ları — ticari doküman içeriği SPA rotasında |

@@ -8,7 +8,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import type { AttributeVisibility, ProfileAttributeState } from "@/lib/member-profile";
-import { VISIBILITY_OPTIONS } from "@/lib/profile-attribute-keys";
+import { VISIBILITY_OPTIONS } from "@/lib/profile/profile-attribute-keys";
 
 import { AttributeInput } from "./AttributeInput";
 import {

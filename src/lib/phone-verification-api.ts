@@ -14,7 +14,7 @@
 //    phone_country_code dolsa bile profil ülkesi olmaz.
 
 import { supabase } from "@/integrations/supabase/client";
-import { normalizePhoneE164, PHONE_INVALID_MESSAGE } from "@/lib/profile-phone";
+import { normalizePhoneE164, PHONE_INVALID_MESSAGE } from "@/lib/profile/profile-phone";
 
 export const PHONE_VERIFICATION_ERROR_MESSAGES = {
   auth_required: "Telefon doğrulama için giriş yapmalısın.",

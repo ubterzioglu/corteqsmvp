@@ -4,15 +4,15 @@ import { MapPin, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LandingApprovalBadges } from "@/components/whatsapp/LandingApprovalBadges";
 import { PlatformLogo } from "@/components/whatsapp/PlatformLogo";
-import { languageOptions, originOptions } from "@/lib/whatsapp-landing-options";
+import { languageOptions, originOptions } from "@/lib/group/whatsapp-landing-options";
 import {
   buildLandingCardSummary,
   formatGroupScore,
   getCategoryMeta,
   getLandingHeroImage,
   waPlaceholderImage,
-} from "@/lib/whatsapp-landing-presentation";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landing-presentation";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 interface LandingCardProps {
   landing: WhatsAppLanding;

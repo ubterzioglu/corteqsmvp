@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditableCatalogItemSummary } from "@/lib/member-catalog";
-import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
-import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile/profile-presentation";
+import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile/profile-types";
 
 type EditableProfilesSelectorProps = {
   items: EditableCatalogItemSummary[];

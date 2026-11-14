@@ -103,7 +103,7 @@ CLAUDE.md
 AGENT_CONTEXT.md
 ARCHITECTURE.md
 src/App.tsx
-src/lib/profile-types.ts
+src/lib/profile/profile-types.ts
 src/pages/ProfileResolverPage.tsx
 src/pages/ProfilePage.tsx
 src/pages/DirectoryCatalogItemPage.tsx
@@ -397,7 +397,7 @@ Yeni bir presentation config katmanı oluştur.
 Örnek dosya:
 
 ```text
-src/lib/profile-presentation.ts
+src/lib/profile/profile-presentation.ts
 ```
 
 Örnek yaklaşım:
@@ -1042,8 +1042,8 @@ Responsive overflow
 Bu bir öneridir. Repo gerçekliğine göre uyarlayabilirsin.
 
 ```text
-src/lib/profile-presentation.ts
-src/lib/profile-presentation.test.ts
+src/lib/profile/profile-presentation.ts
+src/lib/profile/profile-presentation.test.ts
 
 src/components/profile/premium/
   PremiumProfileHero.tsx
@@ -1123,14 +1123,14 @@ Windows PowerShell kullan:
 ```powershell
 npm run verify:text
 npm run test -- src/lib/catalog/public-catalog-profile-view-model.test.ts
-npm run test -- src/lib/profile-presentation.test.ts
+npm run test -- src/lib/profile/profile-presentation.test.ts
 npm run build
 ```
 
 Yeni dosyalar için hedefli ESLint:
 
 ```powershell
-npx eslint src/lib/profile-presentation.ts src/components/profile/premium src/components/directory/public-profile
+npx eslint src/lib/profile/profile-presentation.ts src/components/profile/premium src/components/directory/public-profile
 ```
 
 Repo genel lint sonucu legacy hatalar nedeniyle başarısız olabilir.

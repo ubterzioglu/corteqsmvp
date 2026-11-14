@@ -44,7 +44,7 @@ Canlı ölçüm (`user_role_assignments`): **171 satır, 171 benzersiz kullanıc
 birden fazla rolü olan kullanıcı sayısı **0**. Şema kullanıcı başına **tek rol**
 tutuyor (PK `user_id`). Çoklu rol yol haritasında 1–2 ay ertelenmiş durumda (X bölümü).
 
-Rol başvurusu akışı (`src/lib/profile-requestable-features.ts`) kullanıcıya **ek unvan
+Rol başvurusu akışı (`src/lib/profile/profile-requestable-features.ts`) kullanıcıya **ek unvan
 değil, ÖZELLİK (feature)** veriyor — Rehber Görünürlüğü, WhatsApp Yayınlama, Etkinlik
 Oluşturma gibi. Bu m15'in istediği şey değil.
 

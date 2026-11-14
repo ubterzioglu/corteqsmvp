@@ -18,7 +18,7 @@ import {
   type LandingOrigin,
   type WhatsAppLanding,
   updateCurrentUserEditableLanding,
-} from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landings";
 
 const categoryOptions: Array<{ value: LandingCategory; label: string }> = [
   { value: "alumni", label: "Alumni" },

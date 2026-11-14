@@ -11,8 +11,8 @@ import {
   getPlatformCtaMeta,
   stripCommunityPrefix,
   waPlaceholderImage,
-} from "@/lib/whatsapp-landing-presentation";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landing-presentation";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 /**
  * G03b · "Katıl" düğmesinin durumu.

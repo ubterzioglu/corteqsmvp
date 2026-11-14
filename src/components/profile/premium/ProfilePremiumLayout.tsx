@@ -5,7 +5,7 @@ import PremiumProfileTabs, { PREMIUM_TAB_KEYS } from "@/components/profile/premi
 import ProfileCompletionCard from "@/components/profile/premium/ProfileCompletionCard";
 import ProfilePublicPreviewCard from "@/components/profile/premium/ProfilePublicPreviewCard";
 import ProfileSwitcherMenu from "@/components/profile/ProfileSwitcherMenu";
-import { PROFILE_TYPE_TIP } from "@/lib/profile-attribute-keys";
+import { PROFILE_TYPE_TIP } from "@/lib/profile/profile-attribute-keys";
 
 /**
  * Premium düzenin gövdesini oluşturan hazır kartlar. Hepsi `ProfilePage`'de

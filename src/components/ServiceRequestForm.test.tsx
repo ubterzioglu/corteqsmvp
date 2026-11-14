@@ -20,7 +20,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: { auth: { getUser: mocks.getUser } },
 }));
-vi.mock("@/lib/profile-helpers", () => ({ getAttributesBatch: mocks.getAttributesBatch }));
+vi.mock("@/lib/profile/profile-helpers", () => ({ getAttributesBatch: mocks.getAttributesBatch }));
 vi.mock("@/lib/service-requests-api", () => ({ createServiceRequest: mocks.createServiceRequest }));
 vi.mock("@/hooks/use-toast", () => ({ useToast: () => ({ toast: mocks.toast }), toast: mocks.toast }));
 

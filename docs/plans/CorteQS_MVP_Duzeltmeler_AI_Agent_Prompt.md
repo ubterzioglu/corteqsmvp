@@ -940,7 +940,7 @@ Hedef dosyalar:
 src/pages/ProfilePage.tsx
 src/components/profile/*
 src/components/directory/public-profile/*
-src/lib/profile-presentation.ts
+src/lib/profile/profile-presentation.ts
 src/lib/catalog/public-catalog-profile-view-model.ts
 ```
 

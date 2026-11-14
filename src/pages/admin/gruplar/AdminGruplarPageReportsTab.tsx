@@ -12,7 +12,7 @@ import {
   groupReportReasonLabel,
   type GroupReportQueueItem,
   type GroupReportQueueReport,
-} from "@/lib/group-reports-api";
+} from "@/lib/group/group-reports-api";
 
 interface AdminGruplarPageReportsTabProps {
   reports: GroupReportQueueItem[];

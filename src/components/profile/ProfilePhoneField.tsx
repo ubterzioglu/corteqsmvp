@@ -1,7 +1,7 @@
 // Profil Workshop WS1 madde 1 (T19): telefon numarası profil formunun EN ÜSTÜNDE,
 // ilk kutuda durur. Görünürlük anahtarı yoktur — numara her zaman private'tır
 // (afs_attributes.phone.storage_strategy = private_storage; public sayfa RPC'si
-// bu stratejiyi baştan eler). Biçim doğrulaması src/lib/profile-phone.ts'te.
+// bu stratejiyi baştan eler). Biçim doğrulaması src/lib/profile/profile-phone.ts'te.
 
 import { Lock, Phone } from "lucide-react";
 
@@ -9,7 +9,7 @@ import { ProfileInfoTip } from "@/components/profile/ProfileInfoTip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PHONE_FORMAT_HINT } from "@/lib/profile-phone";
+import { PHONE_FORMAT_HINT } from "@/lib/profile/profile-phone";
 
 export const PHONE_PRIVACY_TIP =
   "Numaran herkese açık profilde hiçbir zaman gösterilmez. Doğrulama, güvenlik ve yalnız senin onayladığın iletişim için kullanılır; ülke bilgin numarandan türetilmez.";

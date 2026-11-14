@@ -16,9 +16,9 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { AddCommunityFormSection } from "@/components/whatsapp/AddCommunityFormSection";
-import { GROUP_PLEDGE_TEXT, previewBlocksSubmit } from "@/lib/group-submit";
-import { initialGroupForm, type GroupFormState } from "@/lib/whatsapp-landing-form";
-import type { GroupPreviewState } from "@/lib/group-submit";
+import { GROUP_PLEDGE_TEXT, previewBlocksSubmit } from "@/lib/group/group-submit";
+import { initialGroupForm, type GroupFormState } from "@/lib/group/whatsapp-landing-form";
+import type { GroupPreviewState } from "@/lib/group/group-submit";
 
 // Geo autocomplete'ler react-query + popover zinciri kuruyor; form sözleşmesi
 // için prop'ları (value/onChange/disabled) taklit eden basit input yeterli.

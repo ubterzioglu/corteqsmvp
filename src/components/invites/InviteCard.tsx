@@ -14,7 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { buildInviteLink, getOrCreateMyInviteCode } from "@/lib/invites-api";
 import { generateReferralQrPngDataUrl } from "@/lib/referral/referral-qr";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
 
 export function InviteCard() {
   const { toast } = useToast();

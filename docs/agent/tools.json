@@ -1766,7 +1766,7 @@
       "tool_name": "group-reports-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/group-reports-api.ts",
+      "entrypoint": "src/lib/group/group-reports-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "GROUP_REPORT_NOTE_MAX",
@@ -1786,7 +1786,7 @@
         "review_group_report_v1",
         "submit_group_report_v1"
       ],
-      "evidence_path": "src/lib/group-reports-api.ts"
+      "evidence_path": "src/lib/group/group-reports-api.ts"
     },
     {
       "tool_key": "module.interest_registrations_api",
@@ -4324,112 +4324,172 @@
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-claims-schema.test.ts",
+      "path": "src/lib/group/group-claims-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-claims.test.ts",
+      "path": "src/lib/group/group-claims.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-claims.ts",
+      "path": "src/lib/group/group-claims.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-health-score-schema.test.ts",
+      "path": "src/lib/group/group-health-score-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-index-view-schema.test.ts",
+      "path": "src/lib/group/group-index-view-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-moderator-panel-schema.test.ts",
+      "path": "src/lib/group/group-moderator-panel-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-notifications-schema.test.ts",
+      "path": "src/lib/group/group-notifications-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-owner-panel-schema.test.ts",
+      "path": "src/lib/group/group-owner-panel-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-owner-panel.test.ts",
+      "path": "src/lib/group/group-owner-panel.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-owner-panel.ts",
+      "path": "src/lib/group/group-owner-panel.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-posts-schema.test.ts",
+      "path": "src/lib/group/group-posts-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-reports-api.test.ts",
+      "path": "src/lib/group/group-reports-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-reports-api.ts",
+      "path": "src/lib/group/group-reports-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-reports-deadline-schema.test.ts",
+      "path": "src/lib/group/group-reports-deadline-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-reports-schema.test.ts",
+      "path": "src/lib/group/group-reports-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-scheduled-tasks-schema.test.ts",
+      "path": "src/lib/group/group-scheduled-tasks-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-settings.test.ts",
+      "path": "src/lib/group/group-settings.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-status-machine.test.ts",
+      "path": "src/lib/group/group-status-machine.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-strikes-schema.test.ts",
+      "path": "src/lib/group/group-strikes-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-submit-schema.test.ts",
+      "path": "src/lib/group/group-submit-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-submit.test.ts",
+      "path": "src/lib/group/group-submit.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/group-submit.ts",
+      "path": "src/lib/group/group-submit.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landing-badges.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landing-form.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landing-options.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landing-placeholders.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landing-presentation.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings-group-schema.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings-insert-auth-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings-insert-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings-public-source.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings-public-view-contract.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/group/whatsapp-landings.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4874,117 +4934,117 @@
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-attribute-drafts.test.ts",
+      "path": "src/lib/profile/profile-attribute-drafts.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-attribute-drafts.ts",
+      "path": "src/lib/profile/profile-attribute-drafts.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-attribute-grouping.test.ts",
+      "path": "src/lib/profile/profile-attribute-grouping.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-attribute-grouping.ts",
+      "path": "src/lib/profile/profile-attribute-grouping.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-attribute-keys.ts",
+      "path": "src/lib/profile/profile-attribute-keys.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-avatar-storage.ts",
+      "path": "src/lib/profile/profile-avatar-storage.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-completion-reminder-contract.test.ts",
+      "path": "src/lib/profile/profile-completion-reminder-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-documents.ts",
+      "path": "src/lib/profile/profile-documents.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-education.test.ts",
+      "path": "src/lib/profile/profile-education.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-education.ts",
+      "path": "src/lib/profile/profile-education.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-helpers.ts",
+      "path": "src/lib/profile/profile-helpers.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-onboarding-api.test.ts",
+      "path": "src/lib/profile/profile-onboarding-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-onboarding-normalize.test.ts",
+      "path": "src/lib/profile/profile-onboarding-normalize.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-phone.test.ts",
+      "path": "src/lib/profile/profile-phone.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-phone.ts",
+      "path": "src/lib/profile/profile-phone.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-presentation.test.ts",
+      "path": "src/lib/profile/profile-presentation.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-presentation.ts",
+      "path": "src/lib/profile/profile-presentation.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-requestable-features.ts",
+      "path": "src/lib/profile/profile-requestable-features.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-routing.ts",
+      "path": "src/lib/profile/profile-routing.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-social-links.ts",
+      "path": "src/lib/profile/profile-social-links.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-text-health.test.ts",
+      "path": "src/lib/profile/profile-text-health.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-types.test.ts",
+      "path": "src/lib/profile/profile-types.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/profile-types.ts",
+      "path": "src/lib/profile/profile-types.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -5630,66 +5690,6 @@
     },
     {
       "path": "src/lib/welcome-pack-orders-api.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landing-badges.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landing-form.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landing-options.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landing-placeholders.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landing-presentation.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings-group-schema.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings-insert-auth-contract.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings-insert-contract.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings-public-source.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings-public-view-contract.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/whatsapp-landings.ts",
       "kind": "ts",
       "module_family": "lib"
     },

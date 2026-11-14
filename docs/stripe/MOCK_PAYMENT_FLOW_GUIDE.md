@@ -56,7 +56,7 @@ Bu akışı denemek için hazır bir test kullanıcısı oluşturuldu:
 > Test bittiğinde kullanıcıyı silmek istersen: **Supabase Dashboard → Authentication → Users → `experimental3@corteqs.net` → Delete**.
 >
 > **Not:** Premium panel (ve "Hizmet Talepleri" sekmesi) yalnızca `Experimental_2`/`Experimental_3`
-> rollerinde açılır (bkz. `src/lib/profile-presentation.ts`). Daha önce açılan
+> rollerinde açılır (bkz. `src/lib/profile/profile-presentation.ts`). Daha önce açılan
 > `demo-musteri@corteqs.net` kullanıcısı `User_DiasporaMember` rolündedir ve premium paneli görmez.
 
 ---

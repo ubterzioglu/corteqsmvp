@@ -254,7 +254,7 @@
       "count": 1
     }
   },
-  "src/lib/profile-social-links.ts": {
+  "src/lib/profile/profile-social-links.ts": {
     "complexity": {
       "count": 1
     }
@@ -299,12 +299,12 @@
       "count": 1
     }
   },
-  "src/lib/whatsapp-landing-presentation.ts": {
+  "src/lib/group/whatsapp-landing-presentation.ts": {
     "complexity": {
       "count": 1
     }
   },
-  "src/lib/whatsapp-landings.ts": {
+  "src/lib/group/whatsapp-landings.ts": {
     "complexity": {
       "count": 2
     }

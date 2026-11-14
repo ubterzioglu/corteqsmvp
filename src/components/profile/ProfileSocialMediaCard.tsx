@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import type { ProfileAttributeState } from "@/lib/member-profile";
-import { readDraftText } from "@/lib/profile-attribute-drafts";
-import type { DraftValueMap } from "@/lib/profile-attribute-keys";
-import { SOCIAL_ATTRIBUTE_CONFIGS } from "@/lib/profile-social-links";
+import { readDraftText } from "@/lib/profile/profile-attribute-drafts";
+import type { DraftValueMap } from "@/lib/profile/profile-attribute-keys";
+import { SOCIAL_ATTRIBUTE_CONFIGS } from "@/lib/profile/profile-social-links";
 
 import { AMBER_BUTTON_PRIMARY, GOOGLE_SOFT_CARD_RED_SECTION, GOOGLE_SOFT_SWITCH_PANEL } from "./profile-card-styles";
 

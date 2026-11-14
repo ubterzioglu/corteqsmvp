@@ -28,7 +28,7 @@ User_DiasporaMember klonu). **Bu pilot için yeni migration eklenmedi.**
 
 ## Presentation config yaklaşımı
 
-Yeni katman: `src/lib/profile-presentation.ts`
+Yeni katman: `src/lib/profile/profile-presentation.ts`
 
 - `resolveProfilePresentation(roleKey)` flat rol anahtarından **yalnızca görsel** kararları
   çözer (accent, heroVariant, eyebrow, primary aksiyon önceliği, tercih edilen section

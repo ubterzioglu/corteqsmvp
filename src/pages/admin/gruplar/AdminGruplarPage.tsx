@@ -60,9 +60,9 @@ import {
   reviewGroupReport,
   type GroupReportQueueItem,
   type GroupReportQueueReport,
-} from "@/lib/group-reports-api";
-import { getCategoryMeta } from "@/lib/whatsapp-landing-presentation";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+} from "@/lib/group/group-reports-api";
+import { getCategoryMeta } from "@/lib/group/whatsapp-landing-presentation";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
 import { AdminGruplarPageReportsTab } from "@/pages/admin/gruplar/AdminGruplarPageReportsTab";
 
 type QueueTab = "groups" | "claims" | "reports" | "posts";

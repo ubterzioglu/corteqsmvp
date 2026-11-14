@@ -6,14 +6,14 @@ import { BookOpen, FileText } from "lucide-react";
 
 import { Switch } from "@/components/ui/switch";
 import { updateProfileAttribute } from "@/lib/member-profile-api";
-import { formatDocumentMeta } from "@/lib/profile-attribute-drafts";
-import type { ProfileDocumentRecord } from "@/lib/profile-documents";
+import { formatDocumentMeta } from "@/lib/profile/profile-attribute-drafts";
+import type { ProfileDocumentRecord } from "@/lib/profile/profile-documents";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
   CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY,
   LICENSE_DOCUMENT_ATTRIBUTE_KEY,
   PRESENTATION_DOCUMENT_ATTRIBUTE_KEY,
-} from "@/lib/profile-attribute-keys";
+} from "@/lib/profile/profile-attribute-keys";
 
 import { ProfileDocumentCard } from "@/components/profile/ProfileDocumentCard";
 

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { MOTOR_CATEGORIES } from "@/lib/group-submit";
+import { MOTOR_CATEGORIES } from "@/lib/group/group-submit";
 import {
   downloadBadgeSvg,
   fetchOwnerPanelState,
@@ -21,11 +21,11 @@ import {
   scoreHints,
   type OwnerPanelState,
   type OwnerScoreState,
-} from "@/lib/group-owner-panel";
-import { resolveMotorLocation } from "@/lib/group-submit";
-import { getCategoryMeta } from "@/lib/whatsapp-landing-presentation";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+} from "@/lib/group/group-owner-panel";
+import { resolveMotorLocation } from "@/lib/group/group-submit";
+import { getCategoryMeta } from "@/lib/group/whatsapp-landing-presentation";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const SCORE_ITEM_LABELS: Array<{
   key: keyof OwnerScoreState["components"];

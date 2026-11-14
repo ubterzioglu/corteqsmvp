@@ -1,8 +1,8 @@
 import { MapPin, ShieldCheck, Sparkles } from "lucide-react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { formatGroupScore, getCategoryMeta, getOwnershipStatusMeta } from "@/lib/whatsapp-landing-presentation";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import { formatGroupScore, getCategoryMeta, getOwnershipStatusMeta } from "@/lib/group/whatsapp-landing-presentation";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const detailMetaCardClass = "flex min-h-[76px] items-center gap-3 rounded-2xl border px-4 py-3 text-left shadow-sm";
 

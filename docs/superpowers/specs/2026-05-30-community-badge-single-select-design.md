@@ -43,7 +43,7 @@ ALTER TABLE whatsapp_landings
 
 ---
 
-## Layer 2: Data Layer (`src/lib/whatsapp-landings.ts`)
+## Layer 2: Data Layer (`src/lib/group/whatsapp-landings.ts`)
 
 ### Reading
 Replace `parseBooleanTag` calls with direct column reads:
@@ -119,7 +119,7 @@ No changes required. The card already reads `memberApproved` / `adminApproved` f
 | Layer | File | Change |
 |---|---|---|
 | DB | new migration | Add `member_approved`, `admin_approved` columns + mutual exclusivity constraint + backfill |
-| Lib | `src/lib/whatsapp-landings.ts` | Read from columns, write to columns, validate, strip old tags from description |
+| Lib | `src/lib/group/whatsapp-landings.ts` | Read from columns, write to columns, validate, strip old tags from description |
 | Admin UI | `src/components/admin/WhatsAppLandingsModeration.tsx` | Add "none" option to RadioGroup, pass new fields to lib |
 | Public UI | `src/pages/AddWhatsAppPage.tsx` | No change needed |
 

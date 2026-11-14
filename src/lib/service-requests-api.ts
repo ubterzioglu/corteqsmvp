@@ -89,7 +89,7 @@ export async function listMyServiceRequestsWithProposals(userId: string): Promis
 
   if (!reqData) return [];
 
-  const { getAttributeValue } = await import("@/lib/profile-helpers");
+  const { getAttributeValue } = await import("@/lib/profile/profile-helpers");
 
   return Promise.all(
     reqData.map(async (req) => {

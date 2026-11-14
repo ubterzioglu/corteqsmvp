@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { getProfilesBasicBatch } from "@/lib/profile-helpers";
+import { getProfilesBasicBatch } from "@/lib/profile/profile-helpers";
 import type {
   AdminProfileSearchResult,
   AttributeOverrideConfig,

@@ -1,7 +1,7 @@
 import { MessageSquare } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { messagingHeroImage } from "@/lib/whatsapp-landing-presentation";
+import { messagingHeroImage } from "@/lib/group/whatsapp-landing-presentation";
 
 export function AddCommunityHero() {
   return (

@@ -15,7 +15,7 @@
 | Action | File | What changes |
 |--------|------|-------------|
 | Create | `supabase/migrations/20260530120000_add_badge_columns_to_whatsapp_landings.sql` | Adds columns, backfills, adds CHECK constraint |
-| Modify | `src/lib/whatsapp-landings.ts` | `UpdateLandingInput` type, `rowToLanding`, `updateLanding` |
+| Modify | `src/lib/group/whatsapp-landings.ts` | `UpdateLandingInput` type, `rowToLanding`, `updateLanding` |
 | Modify | `src/components/admin/WhatsAppLandingsModeration.tsx` | `ApprovalSelection` type, `getApprovalSelection`, RadioGroup third option, `handleEditSave` |
 
 ---
@@ -73,11 +73,11 @@ git commit -m "feat: add member_approved and admin_approved columns to whatsapp_
 ## Task 2: Update data layer — types and reading
 
 **Files:**
-- Modify: `src/lib/whatsapp-landings.ts`
+- Modify: `src/lib/group/whatsapp-landings.ts`
 
 - [ ] **Step 1: Add `memberApproved` and `adminApproved` to `UpdateLandingInput`**
 
-In `src/lib/whatsapp-landings.ts`, find the `UpdateLandingInput` interface (lines 70-84) and replace it with:
+In `src/lib/group/whatsapp-landings.ts`, find the `UpdateLandingInput` interface (lines 70-84) and replace it with:
 
 ```typescript
 export interface UpdateLandingInput {
@@ -126,7 +126,7 @@ Expected: errors only about `updateLanding` not yet receiving the new fields (wi
 - [ ] **Step 4: Commit**
 
 ```bash
-git add src/lib/whatsapp-landings.ts
+git add src/lib/group/whatsapp-landings.ts
 git commit -m "feat: read badge flags from member_approved/admin_approved columns"
 ```
 
@@ -135,7 +135,7 @@ git commit -m "feat: read badge flags from member_approved/admin_approved column
 ## Task 3: Update data layer — writing
 
 **Files:**
-- Modify: `src/lib/whatsapp-landings.ts`
+- Modify: `src/lib/group/whatsapp-landings.ts`
 
 - [ ] **Step 1: Add mutual exclusivity guard and write new columns in `updateLanding`**
 
@@ -195,7 +195,7 @@ Expected: 0 errors (the `updateLanding` callers will be fixed in Task 4, but the
 - [ ] **Step 3: Commit**
 
 ```bash
-git add src/lib/whatsapp-landings.ts
+git add src/lib/group/whatsapp-landings.ts
 git commit -m "feat: write badge flags to member_approved/admin_approved columns"
 ```
 

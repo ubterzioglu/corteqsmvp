@@ -24,7 +24,7 @@ vi.mock("@/hooks/useMemberCatalogSlug", () => ({
   memberCatalogItemsKeys: { mine: ["member-catalog-items", "mine"] },
 }));
 
-vi.mock("@/lib/profile-routing", () => ({
+vi.mock("@/lib/profile/profile-routing", () => ({
   profileEditorPathFor: () => "/profile",
 }));
 

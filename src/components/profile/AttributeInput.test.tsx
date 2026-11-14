@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import type { ProfileAttributeState } from "@/lib/member-profile";
-import { EDUCATION_LEVEL_OPTIONS } from "@/lib/profile-education";
+import { EDUCATION_LEVEL_OPTIONS } from "@/lib/profile/profile-education";
 
 import { AttributeInput } from "./AttributeInput";
 

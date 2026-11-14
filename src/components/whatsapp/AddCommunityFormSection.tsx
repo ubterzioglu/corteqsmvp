@@ -17,8 +17,8 @@ import {
   detectMotorPlatform,
   previewBlocksSubmit,
   type GroupPreviewState,
-} from "@/lib/group-submit";
-import type { GroupFormState } from "@/lib/whatsapp-landing-form";
+} from "@/lib/group/group-submit";
+import type { GroupFormState } from "@/lib/group/whatsapp-landing-form";
 
 const formFieldInsetClass = "mx-0.5 w-[calc(100%-4px)]";
 

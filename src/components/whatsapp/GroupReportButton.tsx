@@ -8,8 +8,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useGroupReportState, useSubmitGroupReport } from "@/hooks/useGroupReports";
 import { formatLongDateTR } from "@/lib/format-date";
-import { GROUP_REPORT_NOTE_MAX, GROUP_REPORT_REASONS, type GroupReportReason } from "@/lib/group-reports-api";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import { GROUP_REPORT_NOTE_MAX, GROUP_REPORT_REASONS, type GroupReportReason } from "@/lib/group/group-reports-api";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 interface GroupReportButtonProps {
   landing: WhatsAppLanding;

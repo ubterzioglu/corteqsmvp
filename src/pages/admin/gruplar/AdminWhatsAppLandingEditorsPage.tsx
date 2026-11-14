@@ -15,7 +15,7 @@ import {
   type AssignableUser,
   type LandingEditorAssignment,
   type WhatsAppLanding,
-} from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landings";
 
 type UserOption = AssignableUser;
 

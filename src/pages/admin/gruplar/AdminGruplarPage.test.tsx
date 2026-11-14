@@ -48,8 +48,8 @@ vi.mock("@/lib/admin-shell/group-moderation-api", async (importOriginal) => {
 const reportQueueSpy = vi.fn();
 const reviewReportSpy = vi.fn();
 
-vi.mock("@/lib/group-reports-api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/group-reports-api")>();
+vi.mock("@/lib/group/group-reports-api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group/group-reports-api")>();
   return {
     ...actual,
     fetchGroupReportQueue: () => reportQueueSpy(),

@@ -9,7 +9,7 @@ import {
   buildAvatarStoragePath,
   getAvatarStoragePathFromUrl,
   getPublicAvatarUrl,
-} from "@/lib/profile-avatar-storage";
+} from "@/lib/profile/profile-avatar-storage";
 
 export type UseProfileAvatarParams = {
   userId: string | undefined;

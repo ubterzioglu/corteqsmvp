@@ -17,7 +17,7 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { fetchEventAttendeeCount, joinEvent, leaveEvent } from "@/lib/events/events-api";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
 
 const COUNT_KEY = "event-attendee-count";
 

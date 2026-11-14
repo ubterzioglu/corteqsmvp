@@ -9,13 +9,13 @@ import {
   PROFILE_CV_BUCKET,
   PROFILE_PRESENTATION_BUCKET,
   PROFILE_LICENSE_BUCKET,
-} from "@/lib/profile-attribute-keys";
+} from "@/lib/profile/profile-attribute-keys";
 import {
   getProfileDocumentAccessUrl,
   removeProfileDocument,
   uploadProfileDocument,
   type ProfileDocumentRecord,
-} from "@/lib/profile-documents";
+} from "@/lib/profile/profile-documents";
 import { validateCvFile, validatePresentationFile, validateLicenseFile } from "@/lib/security";
 
 export type UseProfileDocumentsParams = {

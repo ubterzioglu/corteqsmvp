@@ -11,8 +11,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GroupOwnerPanel } from "@/components/whatsapp/GroupOwnerPanel";
-import type { OwnerPanelState } from "@/lib/group-owner-panel";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import type { OwnerPanelState } from "@/lib/group/group-owner-panel";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const fetchOwnerPanelStateSpy = vi.fn();
 const ownerUpdateSpy = vi.fn();
@@ -20,8 +20,8 @@ const reviewGroupPostSpy = vi.fn();
 const requestGroupRemovalSpy = vi.fn();
 const downloadBadgeSvgSpy = vi.fn();
 
-vi.mock("@/lib/group-owner-panel", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/group-owner-panel")>();
+vi.mock("@/lib/group/group-owner-panel", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group/group-owner-panel")>();
   return {
     ...actual,
     fetchOwnerPanelState: (...args: unknown[]) => fetchOwnerPanelStateSpy(...args),

@@ -68,7 +68,7 @@ git commit -- \
   src/pages/ProfilePage.tsx \
   src/pages/ProfileDocumentsSection.tsx \
   src/hooks/profile/useProfileDocuments.ts \
-  src/lib/profile-attribute-keys.ts \
+  src/lib/profile/profile-attribute-keys.ts \
   src/lib/public-content-search.ts \
   src/pages/DirectoryPage.tsx \
   src/components/directory/PublicContentSearchResults.tsx \

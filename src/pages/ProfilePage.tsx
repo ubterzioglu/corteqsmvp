@@ -26,10 +26,10 @@ import { useProfileAvatar } from "@/hooks/profile/useProfileAvatar";
 import { useProfileDocuments } from "@/hooks/profile/useProfileDocuments";
 import { useProfileRoleRequests } from "@/hooks/profile/useProfileRoleRequests";
 import { GENERIC_FEATURE_KEYS, INDIVIDUAL_FEATURE_KEYS } from "@/lib/features";
-import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
+import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile/profile-phone";
 import { getMyReferralCodeUsage, type MyReferralCodeUsage } from "@/lib/member-profile-api";
 import { getAttributeStringValue } from "@/lib/member-profile";
-import { readBooleanAttributeValue } from "@/lib/profile-attribute-drafts";
+import { readBooleanAttributeValue } from "@/lib/profile/profile-attribute-drafts";
 import {
   CV_DOCUMENT_ATTRIBUTE_KEY,
   CV_SHARE_WITH_PREMIUM_ATTRIBUTE_KEY,
@@ -41,11 +41,11 @@ import {
   PROFILE_PHOTO_ATTRIBUTE_KEY,
   VOLUNTEER_MENTORSHIP_OPT_IN_ATTRIBUTE_KEY,
   WEBSITE_ATTRIBUTE_KEY,
-} from "@/lib/profile-attribute-keys";
-import { groupProfileAttributes } from "@/lib/profile-attribute-grouping";
-import { parseProfileDocumentRecord } from "@/lib/profile-documents";
-import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
-import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile-types";
+} from "@/lib/profile/profile-attribute-keys";
+import { groupProfileAttributes } from "@/lib/profile/profile-attribute-grouping";
+import { parseProfileDocumentRecord } from "@/lib/profile/profile-documents";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile/profile-presentation";
+import { getRoleMeta, getUiProfileType, isProfileType } from "@/lib/profile/profile-types";
 import { supabase } from "@/integrations/supabase/client";
 import ProfilePremiumLayout from "@/components/profile/premium/ProfilePremiumLayout";
 import { PREMIUM_TAB_KEYS } from "@/components/profile/premium/PremiumProfileTabs";

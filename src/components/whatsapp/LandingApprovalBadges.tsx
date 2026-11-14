@@ -1,7 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { approvedGroupBadgeMeta, getOwnershipStatusMeta, newBadgeMeta } from "@/lib/whatsapp-landing-presentation";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import {
+  approvedGroupBadgeMeta,
+  getOwnershipStatusMeta,
+  newBadgeMeta,
+} from "@/lib/group/whatsapp-landing-presentation";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 interface LandingBadgeProps {
   landing: WhatsAppLanding;

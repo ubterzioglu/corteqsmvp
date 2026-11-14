@@ -15,15 +15,15 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GroupOwnershipClaim } from "@/components/whatsapp/GroupOwnershipClaim";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const fetchMyPendingClaimSpy = vi.fn();
 const startClaimCodeSpy = vi.fn();
 const verifyClaimCodeSpy = vi.fn();
 const submitClaimScreenshotSpy = vi.fn();
 
-vi.mock("@/lib/group-claims", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/group-claims")>();
+vi.mock("@/lib/group/group-claims", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group/group-claims")>();
   return {
     ...actual,
     fetchMyPendingClaim: (...args: unknown[]) => fetchMyPendingClaimSpy(...args),

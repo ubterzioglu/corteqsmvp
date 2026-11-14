@@ -2,7 +2,7 @@ import type { ComponentType } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ProfileDocumentRecord } from "@/lib/profile-documents";
+import type { ProfileDocumentRecord } from "@/lib/profile/profile-documents";
 
 import {
   AMBER_BUTTON_OUTLINE,

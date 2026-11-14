@@ -10,8 +10,8 @@ import {
   getMyEditableCatalogItems,
   type EditableCatalogItemSummary,
 } from "@/lib/member-catalog";
-import { profileEditorPathFor } from "@/lib/profile-routing";
-import { defaultProfileType, getUiProfileType, type ProfileType } from "@/lib/profile-types";
+import { profileEditorPathFor } from "@/lib/profile/profile-routing";
+import { defaultProfileType, getUiProfileType, type ProfileType } from "@/lib/profile/profile-types";
 
 const ProfileResolverPage = () => {
   const { user, isLoading, signOut } = useAuth();

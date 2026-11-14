@@ -9,9 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import type { AttributeVisibility, ProfileAttributeState } from "@/lib/member-profile";
-import { readDraftText } from "@/lib/profile-attribute-drafts";
-import type { DraftValueMap, DraftVisibilityMap } from "@/lib/profile-attribute-keys";
-import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile-phone";
+import { readDraftText } from "@/lib/profile/profile-attribute-drafts";
+import type { DraftValueMap, DraftVisibilityMap } from "@/lib/profile/profile-attribute-keys";
+import { PHONE_ATTRIBUTE_KEY } from "@/lib/profile/profile-phone";
 
 import { ProfileAttributeEditor } from "./ProfileAttributeEditor";
 import { ProfilePhoneField } from "./ProfilePhoneField";

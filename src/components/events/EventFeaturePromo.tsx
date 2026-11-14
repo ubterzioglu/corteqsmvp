@@ -20,7 +20,7 @@ import {
   registerFeatureInterest,
   type FeatureInterestKey,
 } from "@/lib/feature-interest-api";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
 
 const PROMO_META: Record<
   FeatureInterestKey,

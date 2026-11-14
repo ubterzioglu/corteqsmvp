@@ -323,7 +323,7 @@ member profilleri
     <h2>3. Rol, Kategori ve Sunum Modeli</h2>
     <p>
       DB’nin rol kimliği <code>roles.key</code> ile taşınır. Frontend tarafında ise
-      <code>src/lib/profile-types.ts</code> flat rolü eski UI kategorilerinden birine map eder.
+      <code>src/lib/profile/profile-types.ts</code> flat rolü eski UI kategorilerinden birine map eder.
       Bu map, rota ve metin görünümü için kullanılır; veri yetkisi veya gerçek rol kimliği değildir.
     </p>
 
@@ -371,7 +371,7 @@ member profilleri
 
     <h3>Sunum/premium katmanı</h3>
     <p>
-      <code>src/lib/profile-presentation.ts</code> rolün görsel deneyimini çözer. Bireysel UI kategorisine
+      <code>src/lib/profile/profile-presentation.ts</code> rolün görsel deneyimini çözer. Bireysel UI kategorisine
       düşen roller, <code>Admin_SuperAdmin</code> hariç, premium bireysel sunumu alır. <code>Experimental_2</code>
       ve <code>Experimental_3</code> ayrı pilot anahtarları olarak aynı premium görünüme bağlanır.
     </p>
@@ -688,7 +688,7 @@ member profilleri
         </tr>
         <tr>
           <td>Profil çözümleme</td>
-          <td><code>src/pages/ProfileResolverPage.tsx</code>, <code>src/lib/profile-routing.ts</code>, <code>get_my_editable_catalog_items</code></td>
+          <td><code>src/pages/ProfileResolverPage.tsx</code>, <code>src/lib/profile/profile-routing.ts</code>, <code>get_my_editable_catalog_items</code></td>
         </tr>
         <tr>
           <td>Bireysel editör</td>
@@ -745,8 +745,8 @@ member profilleri
       <li><code>src/lib/member-catalog.ts</code></li>
       <li><code>src/lib/catalog/catalog-entity-api.ts</code></li>
       <li><code>src/lib/catalog/catalog-directory.ts</code></li>
-      <li><code>src/lib/profile-types.ts</code></li>
-      <li><code>src/lib/profile-presentation.ts</code></li>
+      <li><code>src/lib/profile/profile-types.ts</code></li>
+      <li><code>src/lib/profile/profile-presentation.ts</code></li>
       <li><code>src/lib/catalog/public-catalog-profile-api.ts</code></li>
       <li><code>src/lib/catalog/public-catalog-profile-schemas.ts</code></li>
       <li><code>src/lib/catalog/public-catalog-profile-view-model.ts</code></li>

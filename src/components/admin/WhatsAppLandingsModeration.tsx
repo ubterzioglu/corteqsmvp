@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { GROUP_PLATFORMS } from "@/lib/whatsapp-landing-form";
+import { GROUP_PLATFORMS } from "@/lib/group/whatsapp-landing-form";
 import {
   buildLandingDescription,
   deleteLanding,
@@ -24,7 +24,7 @@ import {
   type UpdateLandingInput,
   type WhatsAppLanding,
   updateLanding,
-} from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landings";
 import {
   LANDING_CATEGORY_OPTIONS,
   LANDING_STATUS_BADGE_CLASS,

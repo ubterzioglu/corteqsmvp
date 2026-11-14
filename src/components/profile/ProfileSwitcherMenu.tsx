@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { memberCatalogItemsKeys } from "@/hooks/useMemberCatalogSlug";
 import { getMyEditableCatalogItems, type EditableCatalogItemSummary } from "@/lib/member-catalog";
-import { profileEditorPathFor } from "@/lib/profile-routing";
-import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile-presentation";
-import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile-types";
+import { profileEditorPathFor } from "@/lib/profile/profile-routing";
+import { isPremiumPresentation, resolveProfilePresentation } from "@/lib/profile/profile-presentation";
+import { getUiProfileType, roleMetaByLegacyKey } from "@/lib/profile/profile-types";
 import RequestNewProfileDialog from "@/components/profile/RequestNewProfileDialog";
 
 type ProfileSwitcherMenuProps = {

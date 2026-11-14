@@ -13,7 +13,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { LandingDetailView, type LandingInviteState } from "@/components/whatsapp/LandingDetailView";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const landing = {
   id: "berlin-yazilimcilar",

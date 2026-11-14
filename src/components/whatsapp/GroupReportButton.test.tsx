@@ -12,14 +12,14 @@ import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { GroupReportButton } from "@/components/whatsapp/GroupReportButton";
-import { GroupReportError, type GroupReportState } from "@/lib/group-reports-api";
-import type { WhatsAppLanding } from "@/lib/whatsapp-landings";
+import { GroupReportError, type GroupReportState } from "@/lib/group/group-reports-api";
+import type { WhatsAppLanding } from "@/lib/group/whatsapp-landings";
 
 const stateSpy = vi.fn();
 const submitSpy = vi.fn();
 
-vi.mock("@/lib/group-reports-api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/group-reports-api")>();
+vi.mock("@/lib/group/group-reports-api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group/group-reports-api")>();
   return {
     ...actual,
     fetchGroupReportState: (...args: unknown[]) => stateSpy(...args),

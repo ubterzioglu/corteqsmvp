@@ -35,8 +35,8 @@ vi.mock("@/integrations/supabase/client", () => ({
 
 // G18: ağ/RPC dokunan yardımcılar mock; saf mantık (detectMotorPlatform,
 // kategoriler, Grup Sözü) GERÇEK modülden gelir — form onları render ediyor.
-vi.mock("@/lib/group-submit", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/group-submit")>();
+vi.mock("@/lib/group/group-submit", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/group/group-submit")>();
   return {
     ...actual,
     checkGroupSubmissionBanned: () => checkGroupSubmissionBannedSpy(),
@@ -70,7 +70,7 @@ vi.mock("@/components/SearchableCitySelect", () => ({
   ),
 }));
 
-vi.mock("@/lib/whatsapp-landings", () => ({
+vi.mock("@/lib/group/whatsapp-landings", () => ({
   listLandings: (...args: unknown[]) => listLandingsSpy(...args),
   getLanding: (...args: unknown[]) => getLandingSpy(...args),
   getEditableLandingForCurrentUser: (...args: unknown[]) => getEditableLandingForCurrentUserSpy(...args),

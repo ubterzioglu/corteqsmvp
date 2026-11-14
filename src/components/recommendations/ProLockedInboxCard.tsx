@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { fetchMyFeatureInterests, registerFeatureInterest, type FeatureInterestKey } from "@/lib/feature-interest-api";
-import { getErrorMessage } from "@/lib/whatsapp-landing-form";
+import { getErrorMessage } from "@/lib/group/whatsapp-landing-form";
 
 // EventFeaturePromo ile AYNI anahtar — ilgi listesi tek cache'ten okunur,
 // invalidation iki yüzeyi birden tazeler.

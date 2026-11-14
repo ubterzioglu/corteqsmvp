@@ -14,7 +14,7 @@ vi.mock("@/integrations/supabase/client", () => ({
   },
 }));
 
-vi.mock("@/lib/profile-helpers", () => ({
+vi.mock("@/lib/profile/profile-helpers", () => ({
   getAttributeValue: (...args: unknown[]) => getAttributeValueMock(...args),
 }));
 

@@ -22,15 +22,15 @@ import {
   resolveMotorLocation,
   submitGroupV1,
   type GroupPreviewState,
-} from "@/lib/group-submit";
+} from "@/lib/group/group-submit";
 import {
   getErrorMessage,
   initialGroupForm,
   initialJoinForm,
   type GroupFormState,
   type JoinFormState,
-} from "@/lib/whatsapp-landing-form";
-import { placeholderLandings } from "@/lib/whatsapp-landing-placeholders";
+} from "@/lib/group/whatsapp-landing-form";
+import { placeholderLandings } from "@/lib/group/whatsapp-landing-placeholders";
 import {
   canCurrentUserEditLanding,
   createJoinRequest,
@@ -41,7 +41,7 @@ import {
   listLandings,
   type LandingCategory,
   type WhatsAppLanding,
-} from "@/lib/whatsapp-landings";
+} from "@/lib/group/whatsapp-landings";
 
 export default function AddWhatsAppPage() {
   // 449 satırlık, gerçek içerikli public sayfa 2026-09-20'ye kadar SEO yazmıyordu.
