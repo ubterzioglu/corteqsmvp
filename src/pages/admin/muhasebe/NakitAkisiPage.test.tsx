@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { formatCurrency } from "@/lib/muhasebe-format";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
 import NakitAkisiPage from "@/pages/admin/muhasebe/NakitAkisiPage";
 
 vi.mock("recharts", async () => {

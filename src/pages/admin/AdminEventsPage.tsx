@@ -14,9 +14,9 @@ import {
   useUnpublishEvent,
 } from "@/hooks/use-events";
 import { useToast } from "@/hooks/use-toast";
-import type { EventRow } from "@/lib/events-api";
-import { EVENT_TYPE_OPTIONS, eventStatusLabel, eventStatusTone, eventTypeLabel } from "@/lib/events-vocabulary";
-import { formatEventDate } from "@/lib/events-timezone";
+import type { EventRow } from "@/lib/events/events-api";
+import { EVENT_TYPE_OPTIONS, eventStatusLabel, eventStatusTone, eventTypeLabel } from "@/lib/events/events-vocabulary";
+import { formatEventDate } from "@/lib/events/events-timezone";
 import { trIncludes } from "@/lib/text-normalization";
 
 const AdminEventsPage = () => {

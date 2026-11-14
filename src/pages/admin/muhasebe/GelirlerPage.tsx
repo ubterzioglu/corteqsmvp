@@ -25,8 +25,8 @@ import { IncomeFormDialog } from "@/components/admin/muhasebe/IncomeFormDialog";
 import { StatusBadge } from "@/components/admin/muhasebe/StatusBadge";
 
 import { useIncomes, useCreateIncome, useUpdateIncome, useDeleteIncome } from "@/hooks/useMuhasebe";
-import { aggregateCurrencyTotals } from "@/lib/muhasebe-aggregations";
-import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe-format";
+import { aggregateCurrencyTotals } from "@/lib/muhasebe/muhasebe-aggregations";
+import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe/muhasebe-format";
 import {
   INCOME_CATEGORY_LABELS,
   INCOME_STATUS_LABELS,

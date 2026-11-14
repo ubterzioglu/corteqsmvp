@@ -41,7 +41,7 @@ gösterir).
 **Kapsam:** 12 tam DB-driven araç (soru bankası `relocation_tool_questions`'ta: 10 genel araç + banka
 + sigorta), 1 şema-only migration (`20260626120000_relocation_tools_core.sql` — motorun kendisi,
 hiçbir araç seed'i içermez), ve 5 standalone (DB dışı) Almanya aracı
-(`src/lib/germany-standalone-tools.ts`) — bunlardan 4'ü hiç soru barındırmaz (deterministik
+(`src/lib/germany/germany-standalone-tools.ts`) — bunlardan 4'ü hiç soru barındırmaz (deterministik
 hesaplayıcı/karar ağacı), biri (`vatandaslik_testi_almanya`) ayrı bir BAMF soru havuzu tablosu
 kullanır (ortak motorun `relocation_tool_questions` şemasında DEĞİL).
 
@@ -512,7 +512,7 @@ Sigorta tipi kataloğu (RPC içinde gömülü, `title`/`base`/`mustAt`/`shouldAt
 
 Bu 4 araç `relocation_tools` tablosunda yalnızca **hub kartı** için bir satıra sahiptir; migration'ları
 soru seed'i veya skor RPC'si İÇERMEZ (`quick_question_count`/`detailed_question_count` = 0, 0).
-Sayfa gövdesi `src/lib/germany-standalone-tools.ts` registry'sinden yüklenen kendi React
+Sayfa gövdesi `src/lib/germany/germany-standalone-tools.ts` registry'sinden yüklenen kendi React
 bileşenleridir — deterministik hesaplayıcı veya dallanmalı karar ağacı, ortak oturum/cevap motoruna
 girmez. Bu nedenle "soru bankası" bu araçlar için DB'de yoktur (arayüz kendi iç mantığında sorular
 sorabilir, ancak bunlar `relocation_tool_questions` şemasında saklanmaz). **DEĞİŞMEDİ.**

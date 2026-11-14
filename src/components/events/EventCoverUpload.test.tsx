@@ -6,7 +6,7 @@ import { EventCoverUpload } from "./EventCoverUpload";
 const uploadEventCover = vi.fn();
 const removeEventCover = vi.fn();
 
-vi.mock("@/lib/event-media", () => ({
+vi.mock("@/lib/events/event-media", () => ({
   EVENT_COVER_ACCEPT: "image/jpeg,image/png,image/webp,image/avif",
   uploadEventCover: (...args: unknown[]) => uploadEventCover(...args),
   removeEventCover: (...args: unknown[]) => removeEventCover(...args),

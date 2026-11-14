@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 import { groupDirectoryResults } from "@/lib/directory-grouping";
 
 function row(overrides: Partial<UnifiedDirectoryRow> = {}): UnifiedDirectoryRow {

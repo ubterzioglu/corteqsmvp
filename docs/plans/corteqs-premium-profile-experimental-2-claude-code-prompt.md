@@ -114,9 +114,9 @@ src/hooks/usePublicCatalogProfile.ts
 src/lib/member-profile.ts
 src/lib/member-profile-api.ts
 src/lib/member-catalog.ts
-src/lib/public-catalog-profile-api.ts
-src/lib/public-catalog-profile-schemas.ts
-src/lib/public-catalog-profile-view-model.ts
+src/lib/catalog/public-catalog-profile-api.ts
+src/lib/catalog/public-catalog-profile-schemas.ts
+src/lib/catalog/public-catalog-profile-view-model.ts
 src/components/profile/EditableProfilesSelector.tsx
 src/components/directory/public-profile/PublicProfileShell.tsx
 src/components/directory/public-profile/PublicProfileHero.tsx
@@ -137,7 +137,7 @@ tailwind.config.ts
 Mevcut testleri de incele:
 
 ```text
-src/lib/public-catalog-profile-view-model.test.ts
+src/lib/catalog/public-catalog-profile-view-model.test.ts
 ```
 
 Repo içinde profil, catalog, AFS veya route davranışıyla ilgili ek testleri ara ve oku.
@@ -587,7 +587,7 @@ Kurallar:
 Gerekirse güncelle:
 
 ```text
-src/lib/public-catalog-profile-view-model.ts
+src/lib/catalog/public-catalog-profile-view-model.ts
 src/components/directory/public-profile/PublicProfileQuickActions.tsx
 ```
 
@@ -1078,7 +1078,7 @@ Körü körüne tamamını ekleme.
 Dikkatli değiştir:
 
 ```text
-src/lib/public-catalog-profile-view-model.ts
+src/lib/catalog/public-catalog-profile-view-model.ts
 ```
 
 Korunması gereken mevcut davranışlar:
@@ -1122,7 +1122,7 @@ Windows PowerShell kullan:
 
 ```powershell
 npm run verify:text
-npm run test -- src/lib/public-catalog-profile-view-model.test.ts
+npm run test -- src/lib/catalog/public-catalog-profile-view-model.test.ts
 npm run test -- src/lib/profile-presentation.test.ts
 npm run build
 ```

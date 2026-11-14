@@ -12,7 +12,7 @@ import {
   getVizeResult,
   isVizeResultRef,
   vizeResultIdFromRef,
-} from "@/lib/germany-vize-data";
+} from "@/lib/germany/germany-vize-data";
 
 const RESULT_BORDER: Record<VizeColor, string> = {
   blue: "border-blue-500",

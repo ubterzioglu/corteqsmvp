@@ -1120,17 +1120,17 @@ node scripts/ai-knowledge/embed.mjs                        # ⚠️ embed TÜM b
 
 **~~M05~~ — ✅ KAPANDI 03.10** · Kod: events-api + events-rules + ayna sözleşme testi
 
-- **`src/lib/events-api.ts`:** `createEvent` artık **`create_event_v1` RPC'si** — doğrudan
+- **`src/lib/events/events-api.ts`:** `createEvent` artık **`create_event_v1` RPC'si** — doğrudan
   `.from("events").insert` KALKTI (M05 kabulü); `CreateEventInput.userId` alanı SİLİNDİ
   (RPC `auth.uid()` kullanır — istemci kimlik yüzeyi kapandı, form çağrısı güncellendi).
   Dönüş tipi `CreateEventResult {eventId, status, approvalSource}` — form toast'u artık
   status'a göre DOĞRU söylüyor ("yayınlandı" vs "ilk etkinliğiniz onaydan sonra"). Yeni:
   `joinEvent` / `leaveEvent` / `fetchEventAttendeeCount` (M04 RPC'leri; sayaç İKİNCİL yüzey —
   hata fırlatmaz null döner, şerit çizilmez).
-- **`src/lib/events-rules.ts` (yeni):** `EVENTS_ACTIVE_LIMIT=2` (event_settings seed aynası) +
+- **`src/lib/events/events-rules.ts` (yeni):** `EVENTS_ACTIVE_LIMIT=2` (event_settings seed aynası) +
   `EVENT_RPC_ERROR_MESSAGES` (M02+M03+M04'ün 8 kodu) + `resolveEventRpcErrorMessage`
   (DÜZ NESNE çözümleyici — m75/cadde deseni, `instanceof Error` YOK).
-- **`src/lib/events-first-approval.test.ts`:** hata haritası ÜÇ migration'a karşı **çift yönlü** ·
+- **`src/lib/events/events-first-approval.test.ts`:** hata haritası ÜÇ migration'a karşı **çift yönlü** ·
   limit aynası seed'e karşı (`'events.active_limit', '2'`) · insert'e dönüş + userId sızması
   kilitli · sayaç ikincil-yüzey kilidi.
 - **Kabul:** ayna test yeşil (14/14) · `createEvent`'te doğrudan insert YOK (test kilitli) ·

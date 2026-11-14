@@ -201,7 +201,7 @@ async function getBlogRoutes() {
 
 // Yayınlanmış etkinlikleri Supabase REST üzerinden çek (graceful).
 //
-// ⚠️ FİLTRE KAYNAK MODÜLLE BİREBİR AYNI OLMALI: src/lib/events-api.ts
+// ⚠️ FİLTRE KAYNAK MODÜLLE BİREBİR AYNI OLMALI: src/lib/events/events-api.ts
 // `fetchPublishedEvents` yalnız `status = "published"` süzer (başka koşul YOK).
 // Buraya fazladan bir koşul eklemek sitemap'i listeden dar yapar; eksik bırakmak
 // ise onay bekleyen (`pending`) etkinlikleri sızdırır. CLAUDE.md "Değişmez
@@ -299,7 +299,7 @@ async function getDiasporaRoutes() {
 }
 
 // Herkese açık (RLS: catalog_item_is_publicly_visible) katalog profillerini çek —
-// src/lib/public-catalog-profile-api.ts'in kullandığı RPC değil, doğrudan tablo;
+// src/lib/catalog/public-catalog-profile-api.ts'in kullandığı RPC değil, doğrudan tablo;
 // catalog_items_public_or_manager_read policy'si zaten görünürlüğü filtreliyor.
 //
 // GSC "Discovered - currently not indexed" (2026-07-28 audit, 236 sayfa): sitemap'te

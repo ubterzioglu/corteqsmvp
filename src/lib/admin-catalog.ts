@@ -8,7 +8,7 @@ import type {
   CatalogItemRules,
   UnifiedRecord,
   UnifiedRecordPage,
-} from "@/lib/catalog-types";
+} from "@/lib/catalog/catalog-types";
 
 export type AdminCatalogFilters = {
   kind: "" | "catalog_item" | "profile";

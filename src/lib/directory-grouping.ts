@@ -3,7 +3,7 @@
 // Bileşenden AYRI: bir `.tsx` dosyasından bileşen dışı sembol export etmek
 // `react-refresh/only-export-components` uyarısı üretir (lint taban çizgisi 0 problem).
 
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 
 export interface DirectoryResultGroups {
   /** Kurum, işletme, dernek gibi katalog kayıtları — kart ızgarasında gösterilir. */

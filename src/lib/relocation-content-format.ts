@@ -1,5 +1,5 @@
 // Relocation içerik — sunum biçimlendirme + gruplama (saf fonksiyonlar).
-// Desen: src/lib/muhasebe-format.ts.
+// Desen: src/lib/muhasebe/muhasebe-format.ts.
 //
 // Referans Lovable uygulaması tutarları "€800 - €1,500/ay" gibi METİN olarak saklıyordu;
 // bu yüzden ne toplanabiliyor ne para birimi değiştirilebiliyordu. Bizde DB sayısal

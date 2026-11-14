@@ -3,14 +3,14 @@ import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/muhasebe-butce-api", () => ({
+vi.mock("@/lib/muhasebe/muhasebe-butce-api", () => ({
   fetchButceYear: vi.fn(),
   upsertButceYear: vi.fn(),
 }));
 
-import { fetchButceYear, upsertButceYear } from "@/lib/muhasebe-butce-api";
+import { fetchButceYear, upsertButceYear } from "@/lib/muhasebe/muhasebe-butce-api";
 import { useButceYear, useDebouncedButceSave, useSaveButceYear } from "@/hooks/useMuhasebeButce";
-import { seedYear } from "@/lib/muhasebe-butce-schemas";
+import { seedYear } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });

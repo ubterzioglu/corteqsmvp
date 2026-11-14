@@ -29,7 +29,7 @@ src/components/HeroSection.tsx
 src/components/DiasporaSearchBar.tsx
 src/pages/DirectoryPage.tsx
 src/components/directory/DirectoryFilters.tsx
-src/lib/catalog-directory.ts
+src/lib/catalog/catalog-directory.ts
 src/pages/cadde/CaddePage.tsx
 src/components/cadde/CaddeGeoFilter.tsx
 src/lib/cadde-api.ts
@@ -228,7 +228,7 @@ Acceptance:
 Hedef dosyalar:
 
 ```txt
-src/lib/catalog-directory.ts
+src/lib/catalog/catalog-directory.ts
 src/pages/DirectoryPage.tsx
 src/components/directory/DirectoryFilters.tsx
 supabase/migrations/* yeni migration
@@ -941,7 +941,7 @@ src/pages/ProfilePage.tsx
 src/components/profile/*
 src/components/directory/public-profile/*
 src/lib/profile-presentation.ts
-src/lib/public-catalog-profile-view-model.ts
+src/lib/catalog/public-catalog-profile-view-model.ts
 ```
 
 Yapılacak:
@@ -981,7 +981,7 @@ Hedef dosyalar:
 
 ```txt
 supabase/migrations/20260612120000_add_experimental_roles.sql
-src/lib/catalog-directory.ts
+src/lib/catalog/catalog-directory.ts
 src/pages/ProfilePage.tsx
 src/pages/admin/*
 ```
@@ -1172,7 +1172,7 @@ src/components/HeroSection.tsx
 src/components/DiasporaSearchBar.tsx
 src/pages/DirectoryPage.tsx
 src/components/directory/DirectoryFilters.tsx
-src/lib/catalog-directory.ts
+src/lib/catalog/catalog-directory.ts
 src/components/SearchableCitySelect.tsx
 src/components/cadde/CaddeGeoFilter.tsx
 src/pages/cadde/CaddePage.tsx

@@ -93,7 +93,7 @@ Her iş: **ne · neden böyle · bağımlılık · kabul ölçütü.**
 
 - Kural **SQL'de** olmalı: `create_event_v1` RPC + INSERT politikası/status trigger'ı (M02/M03). Aksi hâlde doğrudan `status='published'` POST'u mevcut kuralı atlar.
 - "Onay bekleyen" kural silinir; **bekleyen eski etkinlikler mail atılmadan yayınlanır** → yayınlama sırasında bildirim tetikleyicisi atlanmalı.
-- ⚠️ `events.type` üzerinde CHECK yok; değerler `src/lib/events-vocabulary.ts`'ten gelir, elle yazılmaz.
+- ⚠️ `events.type` üzerinde CHECK yok; değerler `src/lib/events/events-vocabulary.ts`'ten gelir, elle yazılmaz.
 - ⚠️ `events.create` flag'ine ve `RequireFeature`'a **dokunulmaz** (T2).
 - Taslak migration zaten çalışma ağacında: `20261005900000_events_auto_approval.sql` (uygulanmamış). **Uygulamadan önce** diğer bekleyen migration'larla çakışma kontrolü.
 - **Kabul:** (a) 2 etkinlik otomatik yayında, 3.'sü reddedilir; (b) doğrudan `published` POST'u bile limiti aşamaz; (c) bekleyenler yayınlandı ve 0 mail gitti.

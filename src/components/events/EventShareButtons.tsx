@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { EVENT_SHARE_TARGETS, type EventShareInput } from "@/lib/event-share";
+import { EVENT_SHARE_TARGETS, type EventShareInput } from "@/lib/events/event-share";
 
 type EventShareButtonsProps = {
   share: EventShareInput;
@@ -21,7 +21,7 @@ type EventShareButtonsProps = {
 };
 
 /**
- * Etkinlik paylaşım düğmeleri. Bağlantıları `@/lib/event-share` kurar; burada
+ * Etkinlik paylaşım düğmeleri. Bağlantıları `@/lib/events/event-share` kurar; burada
  * yalnız sunum ve kopyalama geri bildirimi vardır.
  *
  * `compact` varyantı bir bağlantının üstüne bindirilerek kullanılır (liste

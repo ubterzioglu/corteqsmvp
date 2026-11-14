@@ -2,7 +2,7 @@
 //
 // Bucket `revision-attachments` ile AYNA sözleşmesi: 11 MIME · 15 MB
 // (A09a: supabase/migrations/applied/20260929120000_revision_attachments_document_mimes.sql).
-// Desen: src/lib/event-media.ts · Kilit: revision-attachment-media-contract.test.ts.
+// Desen: src/lib/events/event-media.ts · Kilit: revision-attachment-media-contract.test.ts.
 //
 // ⚠️ `accept=` yalnız dosya seçiciye verilen bir TAVSİYEDİR ("Tüm dosyalar"
 // seçilerek atlanır); gerçek denetim `uploadAttachment` içindeki `validateFile`

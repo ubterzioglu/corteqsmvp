@@ -18,8 +18,8 @@ const joinSpy = vi.fn();
 const leaveSpy = vi.fn();
 const useAuthMock = vi.fn();
 
-vi.mock("@/lib/events-api", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("@/lib/events-api")>();
+vi.mock("@/lib/events/events-api", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/events/events-api")>();
   return {
     ...actual,
     fetchEventAttendeeCount: (...args: unknown[]) => fetchCountSpy(...args),
@@ -119,7 +119,7 @@ describe("MyEventsPanel · M06 kural notu (kaynak sözleşmesi)", () => {
   const source = readFileSync("src/components/events/MyEventsPanel.tsx", "utf8");
 
   it("limit + ilk-onay kuralı kullanıcıya AÇIKÇA anlatılır ve TEK kaynaktan gelir", () => {
-    expect(source).toContain('import { EVENTS_ACTIVE_LIMIT } from "@/lib/events-rules"');
+    expect(source).toContain('import { EVENTS_ACTIVE_LIMIT } from "@/lib/events/events-rules"');
     expect(source).toContain('data-testid="my-events-rule-note"');
     expect(source).toContain("ilk etkinliğin yönetici onayından geçer, sonrakiler otomatik yayınlanır");
     // Elle yazılmış ikinci bir "2" sabiti YOK — limit events-rules'tan:

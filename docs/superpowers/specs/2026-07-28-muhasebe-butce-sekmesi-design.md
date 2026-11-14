@@ -83,10 +83,10 @@ Departman/gelir seed'leri (`DEPTS`, `REV_SEEDS`) orijinal HTML'den birebir TS sa
 ```
 supabase/migrations/<timestamp>_muhasebe_butce_state.sql
 
-src/lib/muhasebe-butce-schemas.ts       # Zod şemaları + tip export'ları, DEPTS/REV_SEEDS sabitleri
-src/lib/muhasebe-butce-api.ts           # fetchButceYear / upsertButceYear
-src/lib/muhasebe-butce-aggregations.ts  # pure hesaplama fonksiyonları (deptPlanUSD, revNet, allocUSD, runway...)
-src/lib/muhasebe-butce-aggregations.test.ts
+src/lib/muhasebe/muhasebe-butce-schemas.ts       # Zod şemaları + tip export'ları, DEPTS/REV_SEEDS sabitleri
+src/lib/muhasebe/muhasebe-butce-api.ts           # fetchButceYear / upsertButceYear
+src/lib/muhasebe/muhasebe-butce-aggregations.ts  # pure hesaplama fonksiyonları (deptPlanUSD, revNet, allocUSD, runway...)
+src/lib/muhasebe/muhasebe-butce-aggregations.test.ts
 
 src/hooks/useMuhasebeButce.ts           # React Query: useButceYear(year), debounce'lu autosave mutation
 

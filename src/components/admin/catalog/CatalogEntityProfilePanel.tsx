@@ -6,7 +6,7 @@ import {
   getCatalogItemProfile,
   type CatalogEntityProfile,
   type CatalogEntityProfileAttribute,
-} from "@/lib/catalog-entity-api";
+} from "@/lib/catalog/catalog-entity-api";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

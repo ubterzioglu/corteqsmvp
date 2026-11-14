@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { CatalogAttributeDraftValue } from "@/lib/catalog-attribute-draft";
-import type { CatalogEntityProfileAttribute } from "@/lib/catalog-entity-api";
+import type { CatalogAttributeDraftValue } from "@/lib/catalog/catalog-attribute-draft";
+import type { CatalogEntityProfileAttribute } from "@/lib/catalog/catalog-entity-api";
 
 export type AttributeVisibilityDraft = "public" | "private" | "admin_only";
 

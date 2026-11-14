@@ -29,9 +29,9 @@ import {
 } from "@/lib/admin-catalog";
 import { DEFAULT_FILTERS, PAGE_SIZE } from "@/lib/admin-catalog-display";
 import { setUserRoleAsAdmin } from "@/lib/admin";
-import { reviewCatalogImport } from "@/lib/catalog-import-api";
-import type { ReviewDecision } from "@/lib/catalog-import-schemas";
-import type { UnifiedRecord } from "@/lib/catalog-types";
+import { reviewCatalogImport } from "@/lib/catalog/catalog-import-api";
+import type { ReviewDecision } from "@/lib/catalog/catalog-import-schemas";
+import type { UnifiedRecord } from "@/lib/catalog/catalog-types";
 
 const AdminCatalogPage = () => {
   const { toast } = useToast();

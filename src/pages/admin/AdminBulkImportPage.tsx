@@ -14,8 +14,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { listAdminCatalogRoles, type AdminCatalogRoleOption } from "@/lib/admin-catalog";
-import { bulkImportCatalogItems, parseImportText, type ImportFormat } from "@/lib/catalog-import-api";
-import type { BulkImportResult, ImportRecord } from "@/lib/catalog-import-schemas";
+import { bulkImportCatalogItems, parseImportText, type ImportFormat } from "@/lib/catalog/catalog-import-api";
+import type { BulkImportResult, ImportRecord } from "@/lib/catalog/catalog-import-schemas";
 
 const DEFAULT_ROLE = "User_DiasporaMember";
 

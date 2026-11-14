@@ -84,7 +84,7 @@ Gerekçe:
 | Alternatif | Neden reddedildi |
 |---|---|
 | Tüm araçları herkese açmak | `relocation_tool_questions` için anon read migration'ı gerekir; üyelik değeri kaybı |
-| Sadece 5 Almanya hesaplayıcısını açmak | Migration gerektirmez (tamamen client-side, `src/lib/germany-standalone-tools.ts`) — **ileride en düşük maliyetli SEO fırsatı olarak masada kalıyor**, ama şimdi kapsam dışı |
+| Sadece 5 Almanya hesaplayıcısını açmak | Migration gerektirmez (tamamen client-side, `src/lib/germany/germany-standalone-tools.ts`) — **ileride en düşük maliyetli SEO fırsatı olarak masada kalıyor**, ama şimdi kapsam dışı |
 | Yalnızca landing'i açmak (soru havuzu kapalı) | İnce içerik → "Crawled – currently not indexed" riski; SEO kazancı sınırlı |
 
 ## 5. GSC talimatı

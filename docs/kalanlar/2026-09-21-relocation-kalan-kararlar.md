@@ -173,7 +173,7 @@ ve alıntılayan dosyayı kırar. Bu tam olarak yaşandı: bu dosyanın ve
 birebir alıntılanmıştı; plan dosyası o hâliyle `7a25094` ile **push'landı** ve
 `prebuild` üzerinden deploy'u kıracaktı. Kusuru belgelemek, kusuru kopyalamaktı.
 
-Aynı şekilde `tsc` şu an `src/lib/catalog-directory.test.ts`'te 5 hata veriyor
+Aynı şekilde `tsc` şu an `src/lib/catalog/catalog-directory.test.ts`'te 5 hata veriyor
 (`DIRECTORY_PAGE_SIZE`, `getTotalDirectoryCount` kaynakta yok). `tsc` build'e
 dahil değildir, deploy'u kırmaz — ama `npm run test` ve `npm run lint`,
 `verify:text` kancasına takıldığı için **hiç koşamıyor**.

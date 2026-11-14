@@ -6,14 +6,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useEvent } from "@/hooks/use-events";
 import { useAuth } from "@/components/auth/useAuth";
 import { useSeo } from "@/lib/seo";
-import { eventTypeLabel, isOnlineEventType, isPhysicalEventType } from "@/lib/events-vocabulary";
+import { eventTypeLabel, isOnlineEventType, isPhysicalEventType } from "@/lib/events/events-vocabulary";
 import {
   describeEventSchedule,
   eventInstantRange,
   formatEventDate,
   resolveViewerTimezone,
-} from "@/lib/events-timezone";
-import { buildEventShareUrl } from "@/lib/event-share";
+} from "@/lib/events/events-timezone";
+import { buildEventShareUrl } from "@/lib/events/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
 import { EventAttendeeButton } from "@/components/events/EventAttendeeButton";
 

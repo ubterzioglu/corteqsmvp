@@ -3,7 +3,7 @@
 
 import { TableCell } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
-import { BUTCE_MONTHS } from "@/lib/muhasebe-butce-schemas";
+import { BUTCE_MONTHS } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 export interface MonthRowProps {
   values: number[];

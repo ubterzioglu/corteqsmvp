@@ -15,7 +15,7 @@ import {
   getStepstoneCities,
   getStepstoneJobGroups,
   type StepstoneSelection,
-} from "@/lib/germany-stepstone";
+} from "@/lib/germany/germany-stepstone";
 
 function eur(v: number): string {
   return new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(v);

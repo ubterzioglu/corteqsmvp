@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Layers, Network, Users } from "lucide-react";
-import { getTotalDirectoryCount } from "@/lib/catalog-directory";
+import { getTotalDirectoryCount } from "@/lib/catalog/catalog-directory";
 import Reveal from "@/components/motion/Reveal";
 import CountUp from "@/components/motion/CountUp";
 

@@ -2,7 +2,7 @@ import { ArrowUpRight, MapPin, Star, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 import { trUpper } from "@/lib/text-normalization";
 
 interface DirectoryResultRowProps {

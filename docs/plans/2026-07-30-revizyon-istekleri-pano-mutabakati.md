@@ -78,7 +78,7 @@ nokta bu: Araçlar modülünün soruları ve CTA'ları koda değil DB'ye gömül
 | **Bonus regresyon:** `yurtdisi-is-bulma-olasiligi` → `is-bulma-olasiligi` | aynı migration `:479, :2015, :2313` | Daha önce `20260626240000_relocation_tools_cta_fixes.sql` ile düzeltilmiş, `20q_normalize` geri getirmiş. Panoda yok — araştırmada bulunan ek kusur. |
 | `relocation_professions` seed genişletme | canlı tablo: **5 kayıt** | "Meslek seçeneği az" maddesi literal doğru. |
 | `relocation_locations` seed genişletme | canlı tablo: **2 kayıt** (1×DE, 1×NL) | "UK'de şehir bulunamadı" maddesinin **gerçek kök nedeni**. Araç dünyada 2 şehirle eşleşebiliyor; UK'de boş dönmesi kaçınılmaz. Fallback tek başına çözmez. |
-| `search_directory_catalog` RPC'sine admin/yönetici rol dışlaması | canlı fonksiyonda **admin filtresi YOK** | "Searchde super admin yönetici çıkıyor" maddesi. Dizin listesi TS'ten değil bu RPC'den geliyor ([catalog-directory.ts:191](../../src/lib/catalog-directory.ts#L191)) → düzeltme SQL tarafında. |
+| `search_directory_catalog` RPC'sine admin/yönetici rol dışlaması | canlı fonksiyonda **admin filtresi YOK** | "Searchde super admin yönetici çıkıyor" maddesi. Dizin listesi TS'ten değil bu RPC'den geliyor ([catalog-directory.ts:191](../../src/lib/catalog/catalog-directory.ts#L191)) → düzeltme SQL tarafında. |
 
 ### 2B — Frontend
 

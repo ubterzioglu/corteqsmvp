@@ -16,7 +16,7 @@ import {
   fetchPersonSummary,
   fetchCategorySummary,
   fetchCashflowMonthly,
-} from "@/lib/muhasebe-api";
+} from "@/lib/muhasebe/muhasebe-api";
 import type { ExpenseInput, IncomeInput } from "@/types/muhasebe";
 
 // Query keyleri tek yerde toplanır — ileride invalidate etmek kolay olur

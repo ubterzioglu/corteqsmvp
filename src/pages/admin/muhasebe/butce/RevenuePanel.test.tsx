@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { RevenuePanel } from "@/pages/admin/muhasebe/butce/RevenuePanel";
-import { seedYear } from "@/lib/muhasebe-butce-schemas";
+import { seedYear } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 describe("RevenuePanel", () => {
   it("renders the seeded revenue rows and add-item button", () => {

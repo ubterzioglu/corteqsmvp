@@ -1548,7 +1548,7 @@ export const toolCatalog = {
       "tool_name": "catalog-entity-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/catalog-entity-api.ts",
+      "entrypoint": "src/lib/catalog/catalog-entity-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "adminSetCatalogItemAttribute",
@@ -1565,14 +1565,14 @@ export const toolCatalog = {
         "get_catalog_item_profile",
         "update_catalog_item_attribute"
       ],
-      "evidence_path": "src/lib/catalog-entity-api.ts"
+      "evidence_path": "src/lib/catalog/catalog-entity-api.ts"
     },
     {
       "tool_key": "module.catalog_import_api",
       "tool_name": "catalog-import-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/catalog-import-api.ts",
+      "entrypoint": "src/lib/catalog/catalog-import-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "bulkImportCatalogItems",
@@ -1584,7 +1584,7 @@ export const toolCatalog = {
         "admin_bulk_import_catalog_items",
         "admin_review_catalog_import"
       ],
-      "evidence_path": "src/lib/catalog-import-api.ts"
+      "evidence_path": "src/lib/catalog/catalog-import-api.ts"
     },
     {
       "tool_key": "module.city_follows_api",
@@ -1647,7 +1647,7 @@ export const toolCatalog = {
       "tool_name": "events-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/events-api.ts",
+      "entrypoint": "src/lib/events/events-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "createEvent",
@@ -1674,7 +1674,7 @@ export const toolCatalog = {
         "join_event_v1",
         "leave_event_v1"
       ],
-      "evidence_path": "src/lib/events-api.ts"
+      "evidence_path": "src/lib/events/events-api.ts"
     },
     {
       "tool_key": "module.feature_interest_api",
@@ -1718,7 +1718,7 @@ export const toolCatalog = {
       "tool_name": "germany-citizenship-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/germany-citizenship-api.ts",
+      "entrypoint": "src/lib/germany/germany-citizenship-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "listGeneralQuestions",
@@ -1727,7 +1727,7 @@ export const toolCatalog = {
       ],
       "tables_read_write": [],
       "rpcs": [],
-      "evidence_path": "src/lib/germany-citizenship-api.ts"
+      "evidence_path": "src/lib/germany/germany-citizenship-api.ts"
     },
     {
       "tool_key": "module.group_moderation_api",
@@ -1943,7 +1943,7 @@ export const toolCatalog = {
       "tool_name": "muhasebe-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/muhasebe-api.ts",
+      "entrypoint": "src/lib/muhasebe/muhasebe-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "createExpense",
@@ -1968,14 +1968,14 @@ export const toolCatalog = {
         "v_muhasebe_kpi"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/muhasebe-api.ts"
+      "evidence_path": "src/lib/muhasebe/muhasebe-api.ts"
     },
     {
       "tool_key": "module.muhasebe_butce_api",
       "tool_name": "muhasebe-butce-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/muhasebe-butce-api.ts",
+      "entrypoint": "src/lib/muhasebe/muhasebe-butce-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "fetchButceYear",
@@ -1985,7 +1985,7 @@ export const toolCatalog = {
         "muhasebe_butce_state"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/muhasebe-butce-api.ts"
+      "evidence_path": "src/lib/muhasebe/muhasebe-butce-api.ts"
     },
     {
       "tool_key": "module.mvp_items_api",
@@ -2129,7 +2129,7 @@ export const toolCatalog = {
       "tool_name": "public-catalog-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/public-catalog-api.ts",
+      "entrypoint": "src/lib/catalog/public-catalog-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "countryNameOf",
@@ -2139,14 +2139,14 @@ export const toolCatalog = {
         "catalog_items"
       ],
       "rpcs": [],
-      "evidence_path": "src/lib/public-catalog-api.ts"
+      "evidence_path": "src/lib/catalog/public-catalog-api.ts"
     },
     {
       "tool_key": "module.public_catalog_claim_api",
       "tool_name": "public-catalog-claim-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/public-catalog-claim-api.ts",
+      "entrypoint": "src/lib/catalog/public-catalog-claim-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "submitCatalogClaim"
@@ -2155,14 +2155,14 @@ export const toolCatalog = {
       "rpcs": [
         "submit_catalog_claim_request"
       ],
-      "evidence_path": "src/lib/public-catalog-claim-api.ts"
+      "evidence_path": "src/lib/catalog/public-catalog-claim-api.ts"
     },
     {
       "tool_key": "module.public_catalog_profile_api",
       "tool_name": "public-catalog-profile-api",
       "family": "ui_module",
       "status": "active",
-      "entrypoint": "src/lib/public-catalog-profile-api.ts",
+      "entrypoint": "src/lib/catalog/public-catalog-profile-api.ts",
       "interface_kind": "internal_api",
       "exports": [
         "getPublicCatalogProfilePage",
@@ -2174,7 +2174,7 @@ export const toolCatalog = {
       "rpcs": [
         "get_catalog_item_public_page_v2"
       ],
-      "evidence_path": "src/lib/public-catalog-profile-api.ts"
+      "evidence_path": "src/lib/catalog/public-catalog-profile-api.ts"
     },
     {
       "tool_key": "module.recommendations_api",
@@ -3677,42 +3677,77 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/catalog-attribute-draft.ts",
+      "path": "src/lib/catalog/catalog-attribute-draft.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-directory.test.ts",
+      "path": "src/lib/catalog/catalog-directory.test.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-directory.ts",
+      "path": "src/lib/catalog/catalog-directory.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-entity-api.ts",
+      "path": "src/lib/catalog/catalog-entity-api.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-import-api.test.ts",
+      "path": "src/lib/catalog/catalog-import-api.test.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-import-api.ts",
+      "path": "src/lib/catalog/catalog-import-api.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-import-schemas.ts",
+      "path": "src/lib/catalog/catalog-import-schemas.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
     {
-      "path": "src/lib/catalog-types.ts",
+      "path": "src/lib/catalog/catalog-types.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-claim-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-profile-api.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-profile-schemas.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-profile-schemas.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-profile-view-model.test.ts",
+      "kind": "ts",
+      "module_family": "catalog"
+    },
+    {
+      "path": "src/lib/catalog/public-catalog-profile-view-model.ts",
       "kind": "ts",
       "module_family": "catalog"
     },
@@ -4042,87 +4077,87 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-attendees-schema.test.ts",
+      "path": "src/lib/events/event-attendees-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-form-draft.test.ts",
+      "path": "src/lib/events/event-form-draft.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-form-draft.ts",
+      "path": "src/lib/events/event-form-draft.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-media-contract.test.ts",
+      "path": "src/lib/events/event-media-contract.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-media.ts",
+      "path": "src/lib/events/event-media.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-share.test.ts",
+      "path": "src/lib/events/event-share.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/event-share.ts",
+      "path": "src/lib/events/event-share.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-api.test.ts",
+      "path": "src/lib/events/events-api.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-api.ts",
+      "path": "src/lib/events/events-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-first-approval-schema.test.ts",
+      "path": "src/lib/events/events-first-approval-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-first-approval.test.ts",
+      "path": "src/lib/events/events-first-approval.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-rules.ts",
+      "path": "src/lib/events/events-rules.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-status-guard-schema.test.ts",
+      "path": "src/lib/events/events-status-guard-schema.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-timezone.test.ts",
+      "path": "src/lib/events/events-timezone.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-timezone.ts",
+      "path": "src/lib/events/events-timezone.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-vocabulary.test.ts",
+      "path": "src/lib/events/events-vocabulary.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/events-vocabulary.ts",
+      "path": "src/lib/events/events-vocabulary.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4207,21 +4242,6 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-citizenship-api.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/germany-citizenship-exam.test.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
-      "path": "src/lib/germany-citizenship-exam.ts",
-      "kind": "ts",
-      "module_family": "lib"
-    },
-    {
       "path": "src/lib/germany-salary/calculator.test.ts",
       "kind": "ts",
       "module_family": "lib"
@@ -4257,37 +4277,52 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-standalone-tools.ts",
+      "path": "src/lib/germany/germany-citizenship-api.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-stepstone.test.ts",
+      "path": "src/lib/germany/germany-citizenship-exam.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-stepstone.ts",
+      "path": "src/lib/germany/germany-citizenship-exam.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-transfer.test.ts",
+      "path": "src/lib/germany/germany-standalone-tools.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-transfer.ts",
+      "path": "src/lib/germany/germany-stepstone.test.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-vize-data.test.ts",
+      "path": "src/lib/germany/germany-stepstone.ts",
       "kind": "ts",
       "module_family": "lib"
     },
     {
-      "path": "src/lib/germany-vize-data.ts",
+      "path": "src/lib/germany/germany-transfer.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany/germany-transfer.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany/germany-vize-data.test.ts",
+      "kind": "ts",
+      "module_family": "lib"
+    },
+    {
+      "path": "src/lib/germany/germany-vize-data.ts",
       "kind": "ts",
       "module_family": "lib"
     },
@@ -4702,72 +4737,72 @@ export const toolCatalog = {
       "module_family": "lib"
     },
     {
-      "path": "src/lib/muhasebe-aggregations.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-aggregations.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-aggregations.ts",
+      "path": "src/lib/muhasebe/muhasebe-aggregations.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-api.ts",
+      "path": "src/lib/muhasebe/muhasebe-api.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-aggregations.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-aggregations.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-aggregations.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-aggregations.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-api.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-api.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-csv.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-csv.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-csv.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-csv.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-schemas.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-schemas.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-butce-schemas.ts",
+      "path": "src/lib/muhasebe/muhasebe-butce-schemas.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-format.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-format.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-format.ts",
+      "path": "src/lib/muhasebe/muhasebe-format.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-schemas.test.ts",
+      "path": "src/lib/muhasebe/muhasebe-schemas.test.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
     {
-      "path": "src/lib/muhasebe-schemas.ts",
+      "path": "src/lib/muhasebe/muhasebe-schemas.ts",
       "kind": "ts",
       "module_family": "muhasebe"
     },
@@ -4955,41 +4990,6 @@ export const toolCatalog = {
       "path": "src/lib/profile-types.ts",
       "kind": "ts",
       "module_family": "lib"
-    },
-    {
-      "path": "src/lib/public-catalog-api.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-claim-api.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-profile-api.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-profile-schemas.test.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-profile-schemas.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-profile-view-model.test.ts",
-      "kind": "ts",
-      "module_family": "catalog"
-    },
-    {
-      "path": "src/lib/public-catalog-profile-view-model.ts",
-      "kind": "ts",
-      "module_family": "catalog"
     },
     {
       "path": "src/lib/public-content-search-migration.test.ts",

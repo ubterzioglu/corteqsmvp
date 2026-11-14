@@ -155,7 +155,7 @@ Plan: `docs/plans/2026-09-20-dizin-arama-plani.md`.
 2. **Fonksiyon 7 argümanlıdır** (`p_limit`, `p_offset` eklendi) ve 5 argümanlı
    sürüm DROP edildi. İkisini birden bırakma: PostgREST aşırı yükleme arasında
    karar veremez. Sayfa tavanı **100**; `DIRECTORY_MAX_PAGE_SIZE`
-   (`src/lib/catalog-directory.ts`) bu sayıyla BİREBİR aynı olmalıdır ve
+   (`src/lib/catalog/catalog-directory.ts`) bu sayıyla BİREBİR aynı olmalıdır ve
    `catalog-directory.test.ts` bunu kilitler.
 3. **Sayaç ayrı sorgu DEĞİLDİR.** `total_count` pencere fonksiyonuyla sonuç
    kümesinden döner; `getTotalDirectoryCount()` aynı RPC'yi `p_limit=1` ile
@@ -377,7 +377,7 @@ Tekrarlayan Türkçe karakter sorunlarının kök nedeni budur. Kurallar:
    idi; `events.type` üzerinde CHECK kısıtı olmadığı için yanlış değer hata vermeden kaydedildi
    ve formdan eklenen etkinlik "Fiziksel"/"Eğitim" filtresine düşmedi, detay sayfasında konumu
    görünmedi. Kural: `value`/`key` alanları kaynak modülden gelir, elle yazılmaz —
-   `src/lib/events-vocabulary.ts` tek kaynaktır, `events-vocabulary.test.ts` kilitler.
+   `src/lib/events/events-vocabulary.ts` tek kaynaktır, `events-vocabulary.test.ts` kilitler.
    Aynı gece yazılan kodda arayüz metinleri de ASCII'ye düşmüştü (459 satırda 5 Türkçe
    karakter). Yeni dosya yazarken `npm run verify:text` BUNU YAKALAMAZ — o yalnız kodlama
    ve mojibake denetler, eksik harfi değil. Gözle kontrol et.
@@ -807,7 +807,7 @@ config **text** and route tables, so they fail loudly when someone edits one sid
 
 **2026-09-19'da eklenen iki sözleşme testi** (aynı gün canlıya çıkmak üzereyken yakalanan
 iki sessiz kusur için — ayrıntı "Türkçe Metin Kuralları" md.6 ve aşağıdaki not):
-- `src/lib/events-vocabulary.test.ts` (12 test) — etkinlik kategori/tür DEĞERLERİNİ Türkçe
+- `src/lib/events/events-vocabulary.test.ts` (12 test) — etkinlik kategori/tür DEĞERLERİNİ Türkçe
   yazımlarına kilitler ve etkinlik dosyalarının kendi rakip seçenek listesini tanımlamadığını
   kaynak metinden denetler. `events.type` üzerinde CHECK kısıtı YOKTUR; yanlış değer hata
   vermeden kaydedilir ve etkinlik kendi filtresine düşmez.

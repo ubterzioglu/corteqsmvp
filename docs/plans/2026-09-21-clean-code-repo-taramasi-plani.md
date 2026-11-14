@@ -21,7 +21,7 @@ Mevcut kirli çalışma ağacındaki AI/site-assistant değişiklikleri ayrı ba
 ## Faz 0 — Çalışma ağacı baseline’ını yeşile alma
 
 1. ⛔ **ZATEN YAPILMIŞ (ölçüldü 21.09).** `scripts/ai-knowledge/text-extract.mjs` o değeri `String.fromCharCode(0xc4)` ile üretiyor (satır 31) ve `decodeHtmlEntities` davranış testi `text-extract.test.mjs:92-105`'te duruyor. Bu madde açık sanıldığı sürece ödenmiş borç yeniden ödenir.
-2. `src/lib/catalog-directory.test.ts` içindeki migration yolunu canonical konuma, `supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql`, taşı.
+2. `src/lib/catalog/catalog-directory.test.ts` içindeki migration yolunu canonical konuma, `supabase/migrations/applied/20260921090000_directory_search_anon_normalized.sql`, taşı.
 3. `src/lib/ragApi.ts` için gerçek importer bulunmadığını doğrula; ardından dosyayı kaldır ve agent araç kataloglarını `ingest:tools:check` ile yeniden üret.
 4. `20260920100000` migration kaydının canlı veritabanındaki durumunu ayrıca doğrula; kayıt eksikliği kod değişikliğiyle sessizce bastırılmayacak.
 5. Bu faz sonunda çalışma ağacındaki AI değişiklikleri için aşağıdaki kontroller tamamen yeşil olmalı:

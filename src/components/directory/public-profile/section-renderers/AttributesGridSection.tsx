@@ -1,4 +1,4 @@
-import type { AttributeRowViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { AttributeRowViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import type { PublicSectionRendererProps } from "./renderer-registry";
 

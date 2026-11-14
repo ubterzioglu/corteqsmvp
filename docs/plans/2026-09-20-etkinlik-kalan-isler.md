@@ -124,7 +124,7 @@ Sırayla geçilecek liste:
 - **Saat dilimi listesi** — ✅ **07.11:** bilinen 13 eksik eklendi (Belgrad, Üsküp, Saraybosna,
   Zagreb, Tiran, Tallinn, Riga, Vilnius, Lüksemburg, Malta, `America/Detroit`,
   `America/Phoenix`, `Australia/Melbourne`; liste ~76 satır). Hâlâ 400+ dilimin tamamı değil:
-  listede olmayan bir ülke çıkarsa `src/lib/events-timezone.ts` içindeki
+  listede olmayan bir ülke çıkarsa `src/lib/events/events-timezone.ts` içindeki
   `EVENT_TIMEZONE_OPTIONS` dizisine bir satır eklenir; test, değeri DB biçim kısıtına karşı
   denetler.
 

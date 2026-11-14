@@ -340,7 +340,7 @@ Expected: FAIL with "Cannot find module '@/lib/relocation-tools-admin-api'" (mod
 - [ ] **Step 3: Read the exact `VIZE_QUESTIONS` export to get the real node count**
 
 Run (read-only, to confirm the array length at implementation time — do not hardcode a guessed number):
-`node -e "const fs=require('fs'); const t=fs.readFileSync('src/lib/germany-vize-data.ts','utf8'); console.log((t.match(/id: \"Q\d+\"/g)||[]).length)"`
+`node -e "const fs=require('fs'); const t=fs.readFileSync('src/lib/germany/germany-vize-data.ts','utf8'); console.log((t.match(/id: \"Q\d+\"/g)||[]).length)"`
 
 Use the printed number as `VIZE_DECISION_TREE_NODE_COUNT` in Step 4 (do not import the `.ts` file at build-config time — this is just to determine the constant value once; the runtime code imports `VIZE_QUESTIONS` directly, see below).
 
@@ -355,7 +355,7 @@ Use the printed number as `VIZE_DECISION_TREE_NODE_COUNT` in Step 4 (do not impo
 
 import { supabase } from "@/integrations/supabase/client";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
-import { VIZE_QUESTIONS } from "@/lib/germany-vize-data";
+import { VIZE_QUESTIONS } from "@/lib/germany/germany-vize-data";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const db = supabase as any;

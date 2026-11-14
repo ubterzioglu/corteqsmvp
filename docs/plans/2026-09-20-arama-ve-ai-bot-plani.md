@@ -156,7 +156,7 @@ işlerine dokunulmadı.
 | 1.2 | Ziyaretçiye giriş gerektiği **aramadan önce** söyleniyor (`Info` ipucu) | aynı |
 | 1.3 | Placeholder örnekleri ek'siz + canlıda ölçülmüş değerlerle değiştirildi | aynı |
 | 1.4 | Hızlı çipler gerçekten sonuç veren kategorilere çevrildi | aynı |
-| 1.5 | Sayaç `published` + `public/unlisted` ile filtrelendi; etiket "dizinde görünen kayıt" oldu | `src/lib/catalog-directory.ts` |
+| 1.5 | Sayaç `published` + `public/unlisted` ile filtrelendi; etiket "dizinde görünen kayıt" oldu | `src/lib/catalog/catalog-directory.ts` |
 | 1.6 | 7 sözleşme testi eklendi | `src/components/home-trial/DiasporaSearchSection.test.tsx` |
 
 **Testlerden biri kaynak metni denetler:** örnek listelerine apostrof/ek girerse test
@@ -238,7 +238,7 @@ zorunda kalır**. Bot'u taşınabilir bir servis olarak kurgula.
 ```bash
 npm run test -- src/components/home-trial/DiasporaSearchSection.test.tsx \
                 src/components/DiasporaSearchBar.test.tsx \
-                src/lib/catalog-directory.test.ts
+                src/lib/catalog/catalog-directory.test.ts
 npx tsc -p tsconfig.app.json --noEmit
 npm run lint
 ```

@@ -76,7 +76,7 @@ kendi tablosunda toplamak ve admin panelinden yönetilebilir hâle getirmek.
 | Depolama anahtarı güvenliği | `src/lib/security.ts:104` — `safeStorageFileName` (path traversal + görünmez karakter koruması) |
 | Dosya eki sözleşme testi | `src/lib/service-attachment-security.test.ts` — `accept=` ↔ doğrulama hizası, ham `file.name` yasağı |
 | SEO | `useSeo(PAGE_SEO.career, deps)` — `PAGE_SEO.career` zaten tanımlı |
-| API katmanı deseni | `src/lib/muhasebe-api.ts` + `muhasebe-schemas.ts` · daha yakın örnek: `src/lib/interest-registrations-api.ts` |
+| API katmanı deseni | `src/lib/muhasebe/muhasebe-api.ts` + `muhasebe-schemas.ts` · daha yakın örnek: `src/lib/interest-registrations-api.ts` |
 | Türkçe metin | `src/lib/text-normalization.ts` — `trIncludes`, `trUpper`/`trLower` |
 | Admin rota modülü | `src/pages/admin/kadro/routes.tsx` |
 | Hız sınırlı anon RPC deseni | `report_client_error` RPC'si |

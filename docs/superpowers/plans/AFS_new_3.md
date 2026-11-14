@@ -286,7 +286,7 @@ git commit -m "feat: add DirectorySearchBar component with diaspora-style glass 
 import { render, screen, fireEvent } from "@testing-library/react";
 import { vi } from "vitest";
 import DirectoryFilters from "./DirectoryFilters";
-import type { DirectoryRoleOption } from "@/lib/catalog-directory";
+import type { DirectoryRoleOption } from "@/lib/catalog/catalog-directory";
 
 const mockRoles: DirectoryRoleOption[] = [
   { key: "danisman", label: "Danışman" },
@@ -349,7 +349,7 @@ npm run test -- src/components/directory/DirectoryFilters.test.tsx
 
 ```typescript
 import { cn } from "@/lib/utils";
-import type { DirectoryRoleOption } from "@/lib/catalog-directory";
+import type { DirectoryRoleOption } from "@/lib/catalog/catalog-directory";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 
@@ -474,7 +474,7 @@ git commit -m "feat: add DirectoryFilters with role pill buttons"
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import DirectoryResultRow from "./DirectoryResultRow";
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 
 const mockUserRow: UnifiedDirectoryRow = {
   recordType: "user_profile",
@@ -541,7 +541,7 @@ npm run test -- src/components/directory/DirectoryResultRow.test.tsx
 import { Link } from "react-router-dom";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 
 interface DirectoryResultRowProps {
   row: UnifiedDirectoryRow;
@@ -673,7 +673,7 @@ import {
   listUnifiedDirectoryRows,
   type DirectoryRoleOption,
   type UnifiedDirectoryRow,
-} from "@/lib/catalog-directory";
+} from "@/lib/catalog/catalog-directory";
 
 const DirectoryPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();

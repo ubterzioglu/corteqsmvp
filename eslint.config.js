@@ -107,7 +107,7 @@ export default tseslint.config(
       "src/lib/admin-shell/admin-updates/**",
       "src/lib/admin-shell/social-diaspora-posts/**",
       "src/lib/zgen/zgen-data.ts",
-      "src/lib/germany-vize-data.ts",
+      "src/lib/germany/germany-vize-data.ts",
       "src/lib/role-structure.ts",
       "src/data/**",
     ],

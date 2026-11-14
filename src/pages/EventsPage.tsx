@@ -16,9 +16,9 @@ import {
   eventTypeLabel,
   isOnlineEventType,
   isPhysicalEventType,
-} from "@/lib/events-vocabulary";
-import { eventTimezoneShortLabel, formatEventDate } from "@/lib/events-timezone";
-import { buildEventShareUrl } from "@/lib/event-share";
+} from "@/lib/events/events-vocabulary";
+import { eventTimezoneShortLabel, formatEventDate } from "@/lib/events/events-timezone";
+import { buildEventShareUrl } from "@/lib/events/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
 
 // Filtre değerleri form ile BİREBİR aynı kaynaktan gelir; ayrı listeler yazılırsa

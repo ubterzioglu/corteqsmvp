@@ -158,11 +158,11 @@ oturum `generate-sitemap.mjs`'i "tamir etmeye" kalkabilir.
 atlandı.` uyarısını basardı; basmadı, üstelik `blog: 50` ve `directory/catalog: 20`
 aynı bağlantıdan geldi. Yani `status = 'published'` etkinlik gerçekten **yok**.
 
-Kök neden: yeni etkinlik `status: "pending"` ile açılıyor (`src/lib/events-api.ts:158`)
+Kök neden: yeni etkinlik `status: "pending"` ile açılıyor (`src/lib/events/events-api.ts:158`)
 ve `getEventRoutes` yalnız `published` olanları alır.
 
 ### Yapılacaklar
-1. Etkinlik onay kuyruğunu boşalt (`publishEvent` → `src/lib/events-api.ts:176`).
+1. Etkinlik onay kuyruğunu boşalt (`publishEvent` → `src/lib/events/events-api.ts:176`).
 2. Bağımsız kuruluş profillerinin yayın durumunu kontrol et (`kurulus: 0`).
 3. `npm run generate:sitemap` tekrar çalıştır — sayılar kendiliğinden artar.
 

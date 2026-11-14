@@ -1703,7 +1703,7 @@ Mesaj konusu: `feat(kadro): ilan metni üretimi`
 - Consumes: `KadroResolvedRole` (Görev 1), taksonomi etiketleri (Görev 1)
 - Produces: `buildKadroCsv(roles: KadroResolvedRole[]): string`, `downloadKadroCsv(roles: KadroResolvedRole[]): void`
 
-Desen `src/lib/muhasebe-butce-csv.ts`: saf string üreticisi test edilir, Blob sarmalayıcısı edilmez.
+Desen `src/lib/muhasebe/muhasebe-butce-csv.ts`: saf string üreticisi test edilir, Blob sarmalayıcısı edilmez.
 
 - [ ] **Step 1: Başarısız testi yaz**
 

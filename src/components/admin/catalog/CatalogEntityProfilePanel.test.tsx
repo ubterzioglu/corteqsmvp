@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import CatalogEntityProfilePanel from "@/components/admin/catalog/CatalogEntityProfilePanel";
-import type { CatalogEntityProfile } from "@/lib/catalog-entity-api";
+import type { CatalogEntityProfile } from "@/lib/catalog/catalog-entity-api";
 
 // jsdom does not implement scrollIntoView — Radix Select requires it
 Element.prototype.scrollIntoView = vi.fn();
@@ -10,7 +10,7 @@ Element.prototype.scrollIntoView = vi.fn();
 const getCatalogItemProfileMock = vi.fn();
 const adminSetCatalogItemAttributeMock = vi.fn();
 
-vi.mock("@/lib/catalog-entity-api", () => ({
+vi.mock("@/lib/catalog/catalog-entity-api", () => ({
   getCatalogItemProfile: (...args: unknown[]) => getCatalogItemProfileMock(...args),
   adminSetCatalogItemAttribute: (...args: unknown[]) => adminSetCatalogItemAttributeMock(...args),
 }));

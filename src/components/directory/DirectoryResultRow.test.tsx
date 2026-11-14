@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 
 import DirectoryResultRow from "@/components/directory/DirectoryResultRow";
-import type { UnifiedDirectoryRow } from "@/lib/catalog-directory";
+import type { UnifiedDirectoryRow } from "@/lib/catalog/catalog-directory";
 
 const mockRow: UnifiedDirectoryRow = {
   // Uretim kodu uye satirlari icin "member" uretiyor (catalog-directory.ts:147);

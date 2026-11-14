@@ -401,8 +401,8 @@ supabase functions deploy whatsapp-reply
 | `src/lib/admin.ts` + `src/lib/admin/` | `admin.ts` = barrel; `admin/` = 7 domain API (yeni admin API'leri için pattern) |
 | `src/lib/features.ts` | Feature flag yardımcıları |
 | `src/lib/member-profile-api.ts` | Üye profil API katmanı (tercih edilen) |
-| `src/lib/catalog-directory.ts` | Dizin arama veri katmanı |
-| `src/lib/catalog-entity-api.ts` | Katalog entity profil işlemleri |
+| `src/lib/catalog/catalog-directory.ts` | Dizin arama veri katmanı |
+| `src/lib/catalog/catalog-entity-api.ts` | Katalog entity profil işlemleri |
 | `src/lib/admin-catalog.ts` | Admin unified records / catalog data layer |
 | `src/lib/role-catalog.ts` | Rol tanımları veri katmanı |
 | `src/lib/profile-helpers.ts` | Profil yardımcı fonksiyonları (yeni eklendi) |

@@ -46,7 +46,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
   Beklenen: batch öncesi ölçülenle aynı (CLAUDE.md'deki 82/78 bayat olabilir; ölç).
 
 ### (3) Katalog + uzmanlar (konsolosluk/büyükelçilik dahil) dizinlerde görünür
-- **Mevcut:** `src/lib/catalog-directory.test.ts` · `src/lib/directory-role-groups.test.ts` · `src/pages/DirectoryCatalogItemPage.test.tsx` · `src/pages/CityAmbassadorsPage.test.tsx` · `scripts/generate/generate-sitemap.test.mjs`.
+- **Mevcut:** `src/lib/catalog/catalog-directory.test.ts` · `src/lib/directory-role-groups.test.ts` · `src/pages/DirectoryCatalogItemPage.test.tsx` · `src/pages/CityAmbassadorsPage.test.tsx` · `scripts/generate/generate-sitemap.test.mjs`.
 - **Boşluk:** `/directory`, `/consultants`, `/associations`, `/city-ambassadors`, `/businesses`, `/directory/profile/:userId` rotalarının varlığı ve konsolosluk yönetim sayfasının admin ağacında durması kilitli değildi.
 - **YENİ:** "(3)": 7 rota, `consulates` admin rotası, dizin adreslerinin sitemap'te kalması. `e2e/lansman-smoke.spec.ts` › `/directory?q=avukat` en az bir sonuç kartı çiziliyor (boş sonuç ve hata başarısızlıktır).
 - **Yalnız canlıda:** kayıtların kendisi (rota durması veri göründüğünü kanıtlamaz). Salt okunur SQL:
@@ -90,7 +90,7 @@ Plan: `docs/plans/2026-11-08-ocak-lansman-uygulama-plani.md` (L3). Tutarsızlık
   Elle: girişli üyeyle Cadde akışı açılıyor, gönderi yazılıyor.
 
 ### (7) Etkinlikler, dijital gruplar, Kurucu 1000 / blogger / vlogger, liderlik, 19 Mayıs
-- **Mevcut:** `src/lib/events-api.test.ts` · `src/lib/events-vocabulary.test.ts` · `src/pages/Founding1000Page.test.tsx` · `src/pages/CampaignHubPage.test.tsx` · `src/pages/LeaderboardPage.test.tsx` · `src/pages/May19CampaignPage.test.tsx` · `src/pages/May19MapPage.test.tsx` · `src/App.may19-routes.test.tsx` · `src/App.addwa-routes.test.tsx` · `src/lib/whatsapp-landings.test.ts`.
+- **Mevcut:** `src/lib/events/events-api.test.ts` · `src/lib/events/events-vocabulary.test.ts` · `src/pages/Founding1000Page.test.tsx` · `src/pages/CampaignHubPage.test.tsx` · `src/pages/LeaderboardPage.test.tsx` · `src/pages/May19CampaignPage.test.tsx` · `src/pages/May19MapPage.test.tsx` · `src/App.may19-routes.test.tsx` · `src/App.addwa-routes.test.tsx` · `src/lib/whatsapp-landings.test.ts`.
 - **Boşluk:** tek yerde "bu 19 adres durur" yoktu; her birini ayrı test koruyordu, menü/rota yeniden yazımında toplu kayıp yakalanmazdı.
 - **YENİ:** "(7)": 19 rota (`/events`, `/events/create`, `/addcom`, `/founding-1000`, `/campaign/*`, `/liderlik`, `/19051919` ailesi, `/lansman`, `/anket`, `/ilanlar`, `/relocation`, `/kariyer`); `/campaign/founding-1000` ve `/addwa`, `/whatsapp-groups` 301 hedefleri.
 - **Yalnız canlıda:** başvuru satırları ve liderlik verisi. Salt okunur SQL:

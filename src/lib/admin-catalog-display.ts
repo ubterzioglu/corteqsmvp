@@ -3,7 +3,7 @@
 // Veri erişimi `@/lib/admin-catalog` içinde kalır; burada Supabase çağrısı yoktur.
 
 import type { AdminCatalogFilters } from "@/lib/admin-catalog";
-import type { UnifiedRecord } from "@/lib/catalog-types";
+import type { UnifiedRecord } from "@/lib/catalog/catalog-types";
 
 export const PAGE_SIZE = 50;
 

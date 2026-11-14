@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import type { AdminCatalogRoleOption } from "@/lib/admin-catalog";
 import { formatDateTime, formatLabel } from "@/lib/admin-catalog-display";
-import type { UnifiedRecord } from "@/lib/catalog-types";
+import type { UnifiedRecord } from "@/lib/catalog/catalog-types";
 
 const ProfileDetailSheet = ({
   profile,

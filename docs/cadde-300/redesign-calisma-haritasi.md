@@ -606,7 +606,7 @@ Satır numaraları bu tarihin `main`'ine göredir — kod değiştikçe kayar, d
 
 - `src/pages/cadde/CaddePage.tsx:353-369`
 - `src/pages/cadde/CaddePage.tsx:259-264`
-- `src/lib/catalog-directory.ts:184-204`
+- `src/lib/catalog/catalog-directory.ts:184-204`
 - `supabase/migrations/applied/20260730220000_directory_exclude_admin_accounts.sql:28-36`
 - `src/pages/DirectoryPage.tsx:80-84`
 

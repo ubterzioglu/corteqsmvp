@@ -12,7 +12,7 @@ import {
   updateEvent,
   type CreateEventInput,
   type EventFilters,
-} from "@/lib/events-api";
+} from "@/lib/events/events-api";
 import type { TablesUpdate } from "@/integrations/supabase/types";
 
 const PUBLISHED_EVENTS_KEY = ["events", "published"] as const;

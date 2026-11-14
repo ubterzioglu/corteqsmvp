@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import type { PublicProfileSectionViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileSectionViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import PublicProfileSectionFrame from "./PublicProfileSectionFrame";
 import type { ProfileAccent } from "./public-profile-utils";

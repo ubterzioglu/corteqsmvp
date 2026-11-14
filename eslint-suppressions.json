@@ -209,7 +209,7 @@
       "count": 2
     }
   },
-  "src/lib/catalog-directory.ts": {
+  "src/lib/catalog/catalog-directory.ts": {
     "complexity": {
       "count": 1
     }
@@ -234,12 +234,12 @@
       "count": 1
     }
   },
-  "src/lib/events-api.ts": {
+  "src/lib/events/events-api.ts": {
     "complexity": {
       "count": 1
     }
   },
-  "src/lib/events-timezone.ts": {
+  "src/lib/events/events-timezone.ts": {
     "complexity": {
       "count": 1
     }

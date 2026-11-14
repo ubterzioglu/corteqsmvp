@@ -8,7 +8,7 @@
 import { Calendar } from "lucide-react";
 
 import { PageHero } from "@/components/common/PageHero";
-import { EVENT_CATEGORY_OPTIONS, type EventCategory } from "@/lib/events-vocabulary";
+import { EVENT_CATEGORY_OPTIONS, type EventCategory } from "@/lib/events/events-vocabulary";
 
 /**
  * Hero rozetleri kategori etiketlerinin KOPYASI DEĞİL, sözlükten türetilir.

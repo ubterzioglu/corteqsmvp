@@ -12,7 +12,7 @@ import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { EVENT_COVER_ACCEPT, removeEventCover, uploadEventCover } from "@/lib/event-media";
+import { EVENT_COVER_ACCEPT, removeEventCover, uploadEventCover } from "@/lib/events/event-media";
 
 export interface EventCoverValue {
   url: string;

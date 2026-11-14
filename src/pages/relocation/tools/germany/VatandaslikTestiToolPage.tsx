@@ -12,7 +12,7 @@ import {
   listGeneralQuestions,
   listStateQuestions,
   listStates,
-} from "@/lib/germany-citizenship-api";
+} from "@/lib/germany/germany-citizenship-api";
 import {
   type ExamMode,
   REAL_EXAM_DURATION_SEC,
@@ -22,7 +22,7 @@ import {
   isCorrect,
   scoreExam,
   shuffle,
-} from "@/lib/germany-citizenship-exam";
+} from "@/lib/germany/germany-citizenship-exam";
 
 const OPTION_KEYS = ["a", "b", "c", "d"] as const;
 

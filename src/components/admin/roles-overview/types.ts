@@ -20,7 +20,7 @@ export interface EntityCatalogItem {
 export interface ItemListEntry {
   id: string;
   // Mirrors admin_list_unified_records: member_profile = catalog_items row with
-  // a linked auth user (item_type = 'member'). See src/lib/catalog-types.ts.
+  // a linked auth user (item_type = 'member'). See src/lib/catalog/catalog-types.ts.
   kind: "catalog_item" | "member_profile" | "profile";
   title: string;
   platformRoleKey: string | null;

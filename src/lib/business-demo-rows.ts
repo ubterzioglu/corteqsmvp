@@ -13,7 +13,7 @@
  */
 
 import { businesses } from "@/data/mock";
-import type { PublicCatalogRow } from "@/lib/public-catalog-api";
+import type { PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 
 /**
  * ⚠️ GERÇEK MARKALAR LİSTEDEN ÇIKARILIR.

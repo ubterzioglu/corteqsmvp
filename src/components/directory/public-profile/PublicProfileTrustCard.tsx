@@ -1,6 +1,6 @@
 import { BadgeCheck, ShieldCheck, Sparkles } from "lucide-react";
 
-import type { PublicProfileTrustSignal } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileTrustSignal } from "@/lib/catalog/public-catalog-profile-view-model";
 
 const SIGNAL_ICONS: Record<PublicProfileTrustSignal["key"], typeof ShieldCheck> = {
   verified: ShieldCheck,

@@ -303,7 +303,7 @@ Bu terimler kod genelinde Türkçe kalır — İngilizce'ye çevirme:
 2. **Bare `toUpperCase()/toLowerCase()`** SADECE teknik değerlerde (para kodu, dosya uzantısı, hex, referans kodu)
 3. **CSV export** Blob başına UTF-8 BOM (`"﻿"`) ekle
 4. **`<html lang="tr">`** korunmalı
-5. **DB'ye yazılan değerlerden Türkçe karakter SİLİNMEZ** — `src/lib/events-vocabulary.ts` tek kaynak
+5. **DB'ye yazılan değerlerden Türkçe karakter SİLİNMEZ** — `src/lib/events/events-vocabulary.ts` tek kaynak
 
 ---
 

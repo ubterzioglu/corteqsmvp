@@ -4,8 +4,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { fetchButceYear, upsertButceYear } from "@/lib/muhasebe-butce-api";
-import { seedYear, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
+import { fetchButceYear, upsertButceYear } from "@/lib/muhasebe/muhasebe-butce-api";
+import { seedYear, type ButceYearState } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 export const muhasebeButceKeys = {
   all: ["muhasebe-butce"] as const,

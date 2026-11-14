@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { PublicCatalogRow } from "@/lib/public-catalog-api";
+import type { PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 import type { RoleGroup } from "@/lib/directory-role-groups";
 import {
   deriveCityOptions,

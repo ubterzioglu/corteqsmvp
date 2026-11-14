@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatCurrencyTR } from "@/lib/format-money";
-import { rankTransfers } from "@/lib/germany-transfer";
+import { rankTransfers } from "@/lib/germany/germany-transfer";
 
 export default function ParaTransferiToolPage() {
   const [amount, setAmount] = useState(1000);

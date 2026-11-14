@@ -51,7 +51,7 @@ kod yazmak boşa iştir.
 | Admin traction metrikleri | 🔴 Olay takibi tablosu yok; tek analitik sayfası AI ajan kullanımı için | Türetilmiş metrik sayfası |
 
 İlgili dosyalar: [App.tsx:208-210](../../src/App.tsx#L208-L210) ·
-[events-api.ts](../../src/lib/events-api.ts) ·
+[events-api.ts](../../src/lib/events/events-api.ts) ·
 [AdminEventsPage.tsx](../../src/pages/admin/AdminEventsPage.tsx) ·
 [AddWhatsAppPage.tsx](../../src/pages/AddWhatsAppPage.tsx) ·
 [features.ts](../../src/lib/features.ts)
@@ -139,9 +139,9 @@ Amaç: bugün ücretsiz olanın *kaza ile* kapanmasını imkânsız kılmak.
    eder (istemcide yarış koşulu olur).
 
 **Kod**
-- [events-api.ts](../../src/lib/events-api.ts): `createEvent` doğrudan `insert` yerine
+- [events-api.ts](../../src/lib/events/events-api.ts): `createEvent` doğrudan `insert` yerine
   `create_event_v1` RPC'sini çağırır; `joinEvent`/`leaveEvent`/`fetchEventAttendeeCount` eklenir.
-- `src/lib/events-rules.ts` (yeni): limit sabiti + hata kodu → Türkçe mesaj haritası.
+- `src/lib/events/events-rules.ts` (yeni): limit sabiti + hata kodu → Türkçe mesaj haritası.
   ⚠️ RPC hataları **düz nesnedir, `Error` örneği değil** — `instanceof Error` ile daraltma;
   `code`/`details`/`hint` okunur ([service-finder-format.ts](../../src/lib/service-finder/service-finder-format.ts) referans).
 - `src/components/events/EventAttendeeButton.tsx` (yeni);
@@ -150,7 +150,7 @@ Amaç: bugün ücretsiz olanın *kaza ile* kapanmasını imkânsız kılmak.
 - `src/components/events/EventFeaturePromo.tsx` (yeni): "Öne çıkar" / "Bilet sat" için
   **kilitli** kart + ilgi kaydı (Faz 5).
 
-**Sözleşme testi** `src/lib/events-first-approval.test.ts` — SQL↔TS ayna sözleşmesi
+**Sözleşme testi** `src/lib/events/events-first-approval.test.ts` — SQL↔TS ayna sözleşmesi
 ([cadde-rules.ts](../../src/lib/cadde-rules.ts) deseni): migration metnindeki limit sabiti ile
 `events-rules.ts`'teki sabitin birebir aynı olduğunu ve hata kodlarının iki yönlü eşleştiğini kilitler.
 
@@ -283,7 +283,7 @@ vuruyor, normal view yeterli.
 - **`as TablesInsert<...>` CAST YASAK** — `satisfies` kullan. Cast, olmayan sütuna yazmayı
   tsc'den gizler; hata canlıda `PGRST204` olarak çıkar.
 - **DB'ye yazılan `value`/`key` alanlarından Türkçe karakter silinmez.** Vokabüler tek kaynaktan
-  gelir ([events-vocabulary.ts](../../src/lib/events-vocabulary.ts) deseni), elle yazılmaz.
+  gelir ([events-vocabulary.ts](../../src/lib/events/events-vocabulary.ts) deseni), elle yazılmaz.
 - **Veri bağımlı `useSeo` çağrısı `deps` geçmeli** (`use-seo-deps-contract.test.ts`).
 - **Yeni `src/lib/**` dosyası eklendiyse `npm run ingest:tools:check` çalıştır** — ne lint ne
   test bunu yakalar.

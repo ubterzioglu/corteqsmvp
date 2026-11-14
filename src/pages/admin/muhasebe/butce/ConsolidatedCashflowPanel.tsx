@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
-import { formatCurrency } from "@/lib/muhasebe-format";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
 import {
   averageMonthlyBurn,
   consolidatedMonthlyNet,
@@ -17,8 +17,8 @@ import {
   deptPlanUSD,
   revNet,
   runwayMonthsIndex,
-} from "@/lib/muhasebe-butce-aggregations";
-import { BUTCE_MONTHS, DEPTS, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
+} from "@/lib/muhasebe/muhasebe-butce-aggregations";
+import { BUTCE_MONTHS, DEPTS, type ButceYearState } from "@/lib/muhasebe/muhasebe-butce-schemas";
 import { TrendingUp, TrendingDown, Wallet, Clock } from "lucide-react";
 
 export interface ConsolidatedCashflowPanelProps {

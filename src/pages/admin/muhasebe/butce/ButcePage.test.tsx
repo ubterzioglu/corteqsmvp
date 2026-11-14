@@ -5,7 +5,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import ButcePage from "@/pages/admin/muhasebe/butce/ButcePage";
-import { seedYear } from "@/lib/muhasebe-butce-schemas";
+import { seedYear } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 vi.mock("@/hooks/useMuhasebeButce", async () => {
   const actual = await vi.importActual<typeof import("@/hooks/useMuhasebeButce")>("@/hooks/useMuhasebeButce");

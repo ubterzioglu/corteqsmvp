@@ -115,7 +115,7 @@ son_dogrulama: 2026-11-07
 
 ⚠️ **Depo genelinde üç kırmızı var ve ÜÇÜ DE BU İŞTEN DEĞİL** — paralel bir oturumun
 yarım kalan işinden geliyor, ezberlenmemeli, yeniden ölçülmeli:
-1. `tsc` → `src/lib/catalog-directory.test.ts` 5 hata (`DIRECTORY_PAGE_SIZE`,
+1. `tsc` → `src/lib/catalog/catalog-directory.test.ts` 5 hata (`DIRECTORY_PAGE_SIZE`,
    `getTotalDirectoryCount` kaynakta yok).
 2. `npm run verify:text` → `scripts/ai-knowledge/text-extract.mjs` (HTML entity →
    Latin-1 harf eşleme tablosu; denetim bunu mojibake sanıyor).

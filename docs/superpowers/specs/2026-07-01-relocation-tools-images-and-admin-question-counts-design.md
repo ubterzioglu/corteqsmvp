@@ -54,7 +54,7 @@ Bu nedenle panel, her aracı **gerçek tipine göre** ve **gerçek veri kaynağ�
 |---|---|---|
 | **Soru Bankası (motor)** | 12 araç: orijinal 10 + Banka Seçimi + Sigorta Seçimi | `relocation_tool_questions` tablosu → `tool_key` + `mode` bazlı `count()` (`mode='quick'`, `mode='detailed'`, `mode='both'` her ikisine de sayılır) |
 | **Soru Bankası (standalone)** | Vatandaşlık Testi | `germany_citizenship_questions` tablosu → `count()` (genel + eyalet kırılımı ayrı gösterilebilir) |
-| **Karar Ağacı** | Vize Seçimi | `src/lib/germany-vize-data.ts` → `VIZE_QUESTIONS.length` (derleme zamanı sabit, DB değil) |
+| **Karar Ağacı** | Vize Seçimi | `src/lib/germany/germany-vize-data.ts` → `VIZE_QUESTIONS.length` (derleme zamanı sabit, DB değil) |
 | **Hesaplayıcı** | Maaş Hesaplama, Para Transferi, StepStone | Form alanı sayısı (kod içinde sabit, ör. Maaş Hesaplama ~6 alan: vergi sınıfı, eyalet, kilise vergisi, sigorta, brüt/net yönü) |
 
 ### Sayfa

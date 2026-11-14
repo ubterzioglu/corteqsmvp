@@ -37,7 +37,7 @@ Katalogda `published` + `public` olan **249** kaydın **77'si** `is_placeholder 
 
 | Yol | Kod | Placeholder | Sonuç |
 |---|---|---|---|
-| Liste sayfaları (`/consultants`, `/businesses`, `/city-ambassadors`) | `src/lib/public-catalog-api.ts:120` → `.eq("is_placeholder", false)` | **eler** | 172 kayıt |
+| Liste sayfaları (`/consultants`, `/businesses`, `/city-ambassadors`) | `src/lib/catalog/public-catalog-api.ts:120` → `.eq("is_placeholder", false)` | **eler** | 172 kayıt |
 | `/directory` araması | `search_directory_catalog` — filtre **yok** | **elemiyor** | 237 kayıt, **69'u placeholder** |
 
 Ölçüm komutu:
@@ -96,7 +96,7 @@ kirletir. (2) daha çok iş, (3) geri alması zor.
 
 1. Kararı ver. (1) seçilirse yeni migration: RPC gövdesine `is_placeholder` filtresi.
    **Parent dizine bırakma** — yaz, uygula, `applied/` altına taşı (CLAUDE.md kör noktası).
-2. `src/lib/catalog-directory.test.ts`'e sözleşme testi: arama yolu ile liste yolunun
+2. `src/lib/catalog/catalog-directory.test.ts`'e sözleşme testi: arama yolu ile liste yolunun
    placeholder davranışı **aynı** olmalı.
 3. `npm run check:migrations` ile doğrula.
 

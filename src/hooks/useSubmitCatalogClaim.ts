@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 
-import { submitCatalogClaim } from "@/lib/public-catalog-claim-api";
+import { submitCatalogClaim } from "@/lib/catalog/public-catalog-claim-api";
 
 type SubmitCatalogClaimInput = {
   itemId: string;

@@ -12,7 +12,7 @@ import { SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { AdminCatalogDetail, AdminCatalogRoleOption } from "@/lib/admin-catalog";
 import { formatDateTime, formatLabel, kindLabel } from "@/lib/admin-catalog-display";
-import type { ReviewDecision } from "@/lib/catalog-import-schemas";
+import type { ReviewDecision } from "@/lib/catalog/catalog-import-schemas";
 
 const CatalogDetailSheet = ({
   detail,

@@ -93,7 +93,7 @@ git commit -- \
 ```
 git commit -- \
   src/components/directory/DirectoryResultCard.tsx \
-  src/lib/catalog-directory.ts \
+  src/lib/catalog/catalog-directory.ts \
   src/lib/job-listings-api.ts \
   src/lib/job-listings-api.test.ts \
   src/pages/JobListingsPage.tsx \

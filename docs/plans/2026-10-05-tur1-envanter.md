@@ -30,7 +30,7 @@ son_dogrulama: 2026-11-07
 | `src/lib/admin-shell/admin-updates/2026-10.ts` | A1 | ✓ kod | 5 Ekim özet girişi |
 | `src/lib/cadde-api.ts` | **B11** | ✓ kod | `listCaddePostReactors` (plansız Cadde işi) |
 | `src/lib/cadde-types.ts` | **B11** | ✓ kod | `CaddePostReactor` tipi (plansız) |
-| `src/lib/catalog-directory.ts` | A7 | ✓ kod | `UnifiedDirectoryRow.nextEvent` alanı |
+| `src/lib/catalog/catalog-directory.ts` | A7 | ✓ kod | `UnifiedDirectoryRow.nextEvent` alanı |
 | `src/lib/features.ts` | A4 + A12 | ✓ kod | `career.cv.view` + `career.listing.view_unlimited` (A4); `profile.license_upload` (A12) |
 | `src/lib/profile-attribute-keys.ts` | A5 + A12 | ✓ kod | `cv_share_with_premium` (A5); `business_license_doc` + bucket (A12) |
 | `src/lib/public-content-search.ts` | A16 | ✓ kod | `event` content_type desteği |

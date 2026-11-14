@@ -86,8 +86,8 @@ git commit -m "feat(muhasebe): add muhasebe_butce_state table for bütçe sekmes
 ### Task 2: Zod şemaları + departman/gelir seed sabitleri
 
 **Files:**
-- Create: `src/lib/muhasebe-butce-schemas.ts`
-- Test: `src/lib/muhasebe-butce-schemas.test.ts`
+- Create: `src/lib/muhasebe/muhasebe-butce-schemas.ts`
+- Test: `src/lib/muhasebe/muhasebe-butce-schemas.test.ts`
 
 **Interfaces:**
 - Consumes: yok (temel tip tanımları).
@@ -108,7 +108,7 @@ git commit -m "feat(muhasebe): add muhasebe_butce_state table for bütçe sekmes
 - [ ] **Step 1: Şema ve seed sabitlerinin failing testini yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-schemas.test.ts
+// src/lib/muhasebe/muhasebe-butce-schemas.test.ts
 import { describe, expect, it } from 'vitest';
 import {
   DEPTS,
@@ -116,7 +116,7 @@ import {
   butceYearStateSchema,
   seedYear,
   zeroMonths,
-} from '@/lib/muhasebe-butce-schemas';
+} from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 describe('muhasebe-butce-schemas', () => {
   it('zeroMonths returns 12 zeros', () => {
@@ -151,13 +151,13 @@ describe('muhasebe-butce-schemas', () => {
 
 - [ ] **Step 2: Testi çalıştırıp fail ettiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-schemas.test.ts`
-Expected: FAIL — `Cannot find module '@/lib/muhasebe-butce-schemas'`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-schemas.test.ts`
+Expected: FAIL — `Cannot find module '@/lib/muhasebe/muhasebe-butce-schemas'`
 
 - [ ] **Step 3: Şema dosyasını yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-schemas.ts
+// src/lib/muhasebe/muhasebe-butce-schemas.ts
 // Muhasebe > Bütçe sekmesi — Zod şemaları + sabit departman/gelir seed listeleri.
 // Departman ve gelir kategori seti orijinal prototiple aynı, sabit kodludur;
 // kullanıcı kalem ekleyip silebilir ama departman/kategori kümesi değişmez.
@@ -358,13 +358,13 @@ export function seedYear(): ButceYearState {
 
 - [ ] **Step 4: Testleri çalıştırıp geçtiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-schemas.test.ts`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-schemas.test.ts`
 Expected: PASS (5 test)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/lib/muhasebe-butce-schemas.ts src/lib/muhasebe-butce-schemas.test.ts
+git add src/lib/muhasebe/muhasebe-butce-schemas.ts src/lib/muhasebe/muhasebe-butce-schemas.test.ts
 git commit -m "feat(muhasebe): add bütçe schemas and fixed department/revenue seeds"
 ```
 
@@ -373,11 +373,11 @@ git commit -m "feat(muhasebe): add bütçe schemas and fixed department/revenue 
 ### Task 3: Pure hesaplama fonksiyonları — `muhasebe-butce-aggregations.ts`
 
 **Files:**
-- Create: `src/lib/muhasebe-butce-aggregations.ts`
-- Test: `src/lib/muhasebe-butce-aggregations.test.ts`
+- Create: `src/lib/muhasebe/muhasebe-butce-aggregations.ts`
+- Test: `src/lib/muhasebe/muhasebe-butce-aggregations.test.ts`
 
 **Interfaces:**
-- Consumes: `ButceYearState`, `DeptId`, `ButceCurrency`, `DEPTS` (Task 2, `@/lib/muhasebe-butce-schemas`).
+- Consumes: `ButceYearState`, `DeptId`, `ButceCurrency`, `DEPTS` (Task 2, `@/lib/muhasebe/muhasebe-butce-schemas`).
 - Produces:
   - `function fxRate(state: ButceYearState, cur: ButceCurrency): number`
   - `function deptPlanUSD(state: ButceYearState, id: DeptId, month: number): number`
@@ -395,9 +395,9 @@ git commit -m "feat(muhasebe): add bütçe schemas and fixed department/revenue 
 - [ ] **Step 1: Failing testleri yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-aggregations.test.ts
+// src/lib/muhasebe/muhasebe-butce-aggregations.test.ts
 import { describe, expect, it } from 'vitest';
-import { seedYear, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { seedYear, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 import {
   allocUSD,
   averageMonthlyBurn,
@@ -411,7 +411,7 @@ import {
   revGross,
   revNet,
   runwayMonthsIndex,
-} from '@/lib/muhasebe-butce-aggregations';
+} from '@/lib/muhasebe/muhasebe-butce-aggregations';
 
 function withTechPlan(base: ButceYearState, month: number, usdAmount: number): ButceYearState {
   return {
@@ -546,19 +546,19 @@ describe('muhasebe-butce-aggregations', () => {
 
 - [ ] **Step 2: Testi çalıştırıp fail ettiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-aggregations.test.ts`
-Expected: FAIL — `Cannot find module '@/lib/muhasebe-butce-aggregations'`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-aggregations.test.ts`
+Expected: FAIL — `Cannot find module '@/lib/muhasebe/muhasebe-butce-aggregations'`
 
 - [ ] **Step 3: Implementasyonu yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-aggregations.ts
+// src/lib/muhasebe/muhasebe-butce-aggregations.ts
 // Muhasebe > Bütçe sekmesi — pure hesaplama fonksiyonları.
 // Orijinal prototipteki deptPlanUSD/revNet/allocUSD/runway mantığının
 // state mutasyonu içermeyen TS karşılığı.
 
-import { DEPTS } from '@/lib/muhasebe-butce-schemas';
-import type { ButceCurrency, ButceYearState, DeptId } from '@/lib/muhasebe-butce-schemas';
+import { DEPTS } from '@/lib/muhasebe/muhasebe-butce-schemas';
+import type { ButceCurrency, ButceYearState, DeptId } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 function num(v: number): number {
   return Number.isFinite(v) ? v : 0;
@@ -656,13 +656,13 @@ export function averageMonthlyBurn(monthlyNet: number[]): number {
 
 - [ ] **Step 4: Testleri çalıştırıp geçtiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-aggregations.test.ts`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-aggregations.test.ts`
 Expected: PASS (13 test)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/lib/muhasebe-butce-aggregations.ts src/lib/muhasebe-butce-aggregations.test.ts
+git add src/lib/muhasebe/muhasebe-butce-aggregations.ts src/lib/muhasebe/muhasebe-butce-aggregations.test.ts
 git commit -m "feat(muhasebe): add pure aggregation functions for bütçe sekmesi"
 ```
 
@@ -671,7 +671,7 @@ git commit -m "feat(muhasebe): add pure aggregation functions for bütçe sekmes
 ### Task 4: Supabase API katmanı — `muhasebe-butce-api.ts`
 
 **Files:**
-- Create: `src/lib/muhasebe-butce-api.ts`
+- Create: `src/lib/muhasebe/muhasebe-butce-api.ts`
 
 **Interfaces:**
 - Consumes: `supabase` client (`@/integrations/supabase/client`), `ButceYearState` (Task 2).
@@ -682,11 +682,11 @@ git commit -m "feat(muhasebe): add pure aggregation functions for bütçe sekmes
 - [ ] **Step 1: API dosyasını yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-api.ts
+// src/lib/muhasebe/muhasebe-butce-api.ts
 // Supabase CRUD — muhasebe_butce_state (bütçe sekmesi yıl state'i)
 
 import { supabase } from '@/integrations/supabase/client';
-import type { ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import type { ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 interface MuhasebeButceStateRow {
   id: string;
@@ -721,7 +721,7 @@ Expected: `muhasebe-butce-api.ts` için hata yok. (Not: `supabase/types.ts` içi
 - [ ] **Step 3: Commit**
 
 ```bash
-git add src/lib/muhasebe-butce-api.ts
+git add src/lib/muhasebe/muhasebe-butce-api.ts
 git commit -m "feat(muhasebe): add Supabase API layer for bütçe state"
 ```
 
@@ -734,7 +734,7 @@ git commit -m "feat(muhasebe): add Supabase API layer for bütçe state"
 - Test: `src/hooks/useMuhasebeButce.test.ts`
 
 **Interfaces:**
-- Consumes: `fetchButceYear`, `upsertButceYear` (Task 4), `seedYear` (Task 2, `@/lib/muhasebe-butce-schemas`).
+- Consumes: `fetchButceYear`, `upsertButceYear` (Task 4), `seedYear` (Task 2, `@/lib/muhasebe/muhasebe-butce-schemas`).
 - Produces:
   - `const muhasebeButceKeys = { all: ['muhasebe-butce'] as const, year: (y: number) => [...muhasebeButceKeys.all, y] as const }`
   - `function useButceYear(year: number): UseQueryResult<ButceYearState>` — veri yoksa `seedYear()` döner (DB'ye yazmaz, ilk kayıt autosave ile olur).
@@ -749,14 +749,14 @@ import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
-vi.mock('@/lib/muhasebe-butce-api', () => ({
+vi.mock('@/lib/muhasebe/muhasebe-butce-api', () => ({
   fetchButceYear: vi.fn(),
   upsertButceYear: vi.fn(),
 }));
 
-import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe-butce-api';
+import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe/muhasebe-butce-api';
 import { useButceYear, useSaveButceYear } from '@/hooks/useMuhasebeButce';
-import { seedYear } from '@/lib/muhasebe-butce-schemas';
+import { seedYear } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 function wrapper({ children }: { children: ReactNode }) {
   const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -805,8 +805,8 @@ Expected: FAIL — `Cannot find module '@/hooks/useMuhasebeButce'`
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe-butce-api';
-import { seedYear, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { fetchButceYear, upsertButceYear } from '@/lib/muhasebe/muhasebe-butce-api';
+import { seedYear, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 export const muhasebeButceKeys = {
   all: ['muhasebe-butce'] as const,
@@ -963,7 +963,7 @@ git commit -m "feat(muhasebe): add debounced autosave hook for bütçe sekmesi"
 - Test: `src/components/admin/muhasebe/BudgetMonthTable.test.tsx`
 
 **Interfaces:**
-- Consumes: `BUTCE_MONTHS` (Task 2, `@/lib/muhasebe-butce-schemas`), shadcn `Table`/`Input` (`@/components/ui/table`, `@/components/ui/input`).
+- Consumes: `BUTCE_MONTHS` (Task 2, `@/lib/muhasebe/muhasebe-butce-schemas`), shadcn `Table`/`Input` (`@/components/ui/table`, `@/components/ui/input`).
 - Produces: `interface MonthRowProps { values: number[]; onChange: (month: number, value: number) => void; dashed?: boolean; ariaLabelPrefix: string }` ve `function MonthRow(props: MonthRowProps): JSX.Element` — 12 ay input hücresini render eden satır; `DepartmentBudgetPanel` ve `RevenuePanel` bu bileşeni satır içinde kullanır.
 
 - [ ] **Step 1: Failing testi yaz**
@@ -1026,7 +1026,7 @@ Expected: FAIL — `Cannot find module '@/components/admin/muhasebe/BudgetMonthT
 
 import { TableCell } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
-import { BUTCE_MONTHS } from '@/lib/muhasebe-butce-schemas';
+import { BUTCE_MONTHS } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 export interface MonthRowProps {
   values: number[];
@@ -1080,7 +1080,7 @@ git commit -m "feat(muhasebe): add shared MonthRow input component for bütçe t
 - Test: `src/pages/admin/muhasebe/butce/DepartmentBudgetPanel.test.tsx`
 
 **Interfaces:**
-- Consumes: `MonthRow` (Task 7), `deptPlanUSD`/`deptActualUSD`/`allocUSD`/`departmentTotals` (Task 3), `DEPTS`, `ButceYearState`, `DeptId`, `ButceCurrency`, `BUTCE_CURRENCIES` (Task 2), `KpiCard` (mevcut, `@/components/admin/muhasebe/KpiCard`), `formatCurrency` (mevcut, `@/lib/muhasebe-format`).
+- Consumes: `MonthRow` (Task 7), `deptPlanUSD`/`deptActualUSD`/`allocUSD`/`departmentTotals` (Task 3), `DEPTS`, `ButceYearState`, `DeptId`, `ButceCurrency`, `BUTCE_CURRENCIES` (Task 2), `KpiCard` (mevcut, `@/components/admin/muhasebe/KpiCard`), `formatCurrency` (mevcut, `@/lib/muhasebe/muhasebe-format`).
 - Produces: `interface DepartmentBudgetPanelProps { deptId: DeptId; state: ButceYearState; onChange: (next: ButceYearState) => void }` ve `function DepartmentBudgetPanel(props: DepartmentBudgetPanelProps): JSX.Element`. `ButcePage` (Task 10) bu bileşeni her departman sekmesinde render eder.
 
 - [ ] **Step 1: Failing testi yaz**
@@ -1091,7 +1091,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { DepartmentBudgetPanel } from '@/pages/admin/muhasebe/butce/DepartmentBudgetPanel';
-import { seedYear } from '@/lib/muhasebe-butce-schemas';
+import { seedYear } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 describe('DepartmentBudgetPanel', () => {
   it('renders the department name, its seed expense items, and add-item button', () => {
@@ -1164,8 +1164,8 @@ import {
 } from '@/components/ui/select';
 import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
 import { MonthRow } from '@/components/admin/muhasebe/BudgetMonthTable';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { departmentTotals } from '@/lib/muhasebe-butce-aggregations';
+import { formatCurrency } from '@/lib/muhasebe/muhasebe-format';
+import { departmentTotals } from '@/lib/muhasebe/muhasebe-butce-aggregations';
 import {
   BUTCE_CURRENCIES,
   BUTCE_MONTHS,
@@ -1175,7 +1175,7 @@ import {
   type ButceCurrency,
   type ButceYearState,
   type DeptId,
-} from '@/lib/muhasebe-butce-schemas';
+} from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 export interface DepartmentBudgetPanelProps {
   deptId: DeptId;
@@ -1395,7 +1395,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { RevenuePanel } from '@/pages/admin/muhasebe/butce/RevenuePanel';
-import { seedYear } from '@/lib/muhasebe-butce-schemas';
+import { seedYear } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 describe('RevenuePanel', () => {
   it('renders the seeded revenue rows and add-item button', () => {
@@ -1451,9 +1451,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
 import { MonthRow } from '@/components/admin/muhasebe/BudgetMonthTable';
-import { formatCurrency } from '@/lib/muhasebe-format';
-import { revComm, revGross, revNet } from '@/lib/muhasebe-butce-aggregations';
-import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { formatCurrency } from '@/lib/muhasebe/muhasebe-format';
+import { revComm, revGross, revNet } from '@/lib/muhasebe/muhasebe-butce-aggregations';
+import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 export interface RevenuePanelProps {
   state: ButceYearState;
@@ -1602,7 +1602,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { ConsolidatedCashflowPanel } from '@/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel';
-import { seedYear } from '@/lib/muhasebe-butce-schemas';
+import { seedYear } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 describe('ConsolidatedCashflowPanel', () => {
   it('renders opening balance, fx params, and basis selector', () => {
@@ -1660,7 +1660,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KpiCard } from '@/components/admin/muhasebe/KpiCard';
-import { formatCurrency } from '@/lib/muhasebe-format';
+import { formatCurrency } from '@/lib/muhasebe/muhasebe-format';
 import {
   averageMonthlyBurn,
   consolidatedMonthlyNet,
@@ -1669,8 +1669,8 @@ import {
   deptPlanUSD,
   revNet,
   runwayMonthsIndex,
-} from '@/lib/muhasebe-butce-aggregations';
-import { BUTCE_MONTHS, DEPTS, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+} from '@/lib/muhasebe/muhasebe-butce-aggregations';
+import { BUTCE_MONTHS, DEPTS, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 import { TrendingUp, TrendingDown, Wallet, Clock } from 'lucide-react';
 
 export interface ConsolidatedCashflowPanelProps {
@@ -1915,8 +1915,8 @@ git commit -m "feat(muhasebe): add ConsolidatedCashflowPanel with runway summary
 ### Task 11: CSV export yardımcı fonksiyonu
 
 **Files:**
-- Create: `src/lib/muhasebe-butce-csv.ts`
-- Test: `src/lib/muhasebe-butce-csv.test.ts`
+- Create: `src/lib/muhasebe/muhasebe-butce-csv.ts`
+- Test: `src/lib/muhasebe/muhasebe-butce-csv.test.ts`
 
 **Interfaces:**
 - Consumes: `revNet`, `revComm`, `deptPlanUSD`, `deptActualUSD` (Task 3), `DEPTS`, `BUTCE_MONTHS`, `ButceYearState`.
@@ -1925,10 +1925,10 @@ git commit -m "feat(muhasebe): add ConsolidatedCashflowPanel with runway summary
 - [ ] **Step 1: Failing testi yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-csv.test.ts
+// src/lib/muhasebe/muhasebe-butce-csv.test.ts
 import { describe, expect, it } from 'vitest';
-import { buildButceCsv } from '@/lib/muhasebe-butce-csv';
-import { seedYear, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { buildButceCsv } from '@/lib/muhasebe/muhasebe-butce-csv';
+import { seedYear, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 describe('buildButceCsv', () => {
   it('includes a header row with the year and basis', () => {
@@ -1965,18 +1965,18 @@ describe('buildButceCsv', () => {
 
 - [ ] **Step 2: Testi çalıştırıp fail ettiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-csv.test.ts`
-Expected: FAIL — `Cannot find module '@/lib/muhasebe-butce-csv'`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-csv.test.ts`
+Expected: FAIL — `Cannot find module '@/lib/muhasebe/muhasebe-butce-csv'`
 
 - [ ] **Step 3: Implementasyonu yaz**
 
 ```typescript
-// src/lib/muhasebe-butce-csv.ts
+// src/lib/muhasebe/muhasebe-butce-csv.ts
 // Bütçe sekmesi — CSV export. buildButceCsv test edilebilir, saf string üretir;
 // downloadButceCsv onu Blob'a sarıp tarayıcı indirmesini tetikler.
 
-import { consolidatedMonthlyNet, cumulativeCash, deptActualUSD, deptPlanUSD, revComm, revNet } from '@/lib/muhasebe-butce-aggregations';
-import { BUTCE_MONTHS, DEPTS, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { consolidatedMonthlyNet, cumulativeCash, deptActualUSD, deptPlanUSD, revComm, revNet } from '@/lib/muhasebe/muhasebe-butce-aggregations';
+import { BUTCE_MONTHS, DEPTS, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 function escapeCsvCell(value: string | number): string {
   return `"${String(value).replace(/"/g, '""')}"`;
@@ -2036,13 +2036,13 @@ export function downloadButceCsv(year: string, state: ButceYearState): void {
 
 - [ ] **Step 4: Testleri çalıştırıp geçtiğini doğrula**
 
-Run: `npm run test -- src/lib/muhasebe-butce-csv.test.ts`
+Run: `npm run test -- src/lib/muhasebe/muhasebe-butce-csv.test.ts`
 Expected: PASS (3 test)
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/lib/muhasebe-butce-csv.ts src/lib/muhasebe-butce-csv.test.ts
+git add src/lib/muhasebe/muhasebe-butce-csv.ts src/lib/muhasebe/muhasebe-butce-csv.test.ts
 git commit -m "feat(muhasebe): add CSV export for bütçe sekmesi"
 ```
 
@@ -2067,7 +2067,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import ButcePage from '@/pages/admin/muhasebe/butce/ButcePage';
-import { seedYear } from '@/lib/muhasebe-butce-schemas';
+import { seedYear } from '@/lib/muhasebe/muhasebe-butce-schemas';
 
 vi.mock('@/hooks/useMuhasebeButce', async () => {
   const actual = await vi.importActual<typeof import('@/hooks/useMuhasebeButce')>(
@@ -2122,8 +2122,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useButceYear, useDebouncedButceSave } from '@/hooks/useMuhasebeButce';
-import { downloadButceCsv } from '@/lib/muhasebe-butce-csv';
-import { BUTCE_YEARS, DEPTS, type ButceYearState } from '@/lib/muhasebe-butce-schemas';
+import { downloadButceCsv } from '@/lib/muhasebe/muhasebe-butce-csv';
+import { BUTCE_YEARS, DEPTS, type ButceYearState } from '@/lib/muhasebe/muhasebe-butce-schemas';
 import { DepartmentBudgetPanel } from '@/pages/admin/muhasebe/butce/DepartmentBudgetPanel';
 import { RevenuePanel } from '@/pages/admin/muhasebe/butce/RevenuePanel';
 import { ConsolidatedCashflowPanel } from '@/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel';

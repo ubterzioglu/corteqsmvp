@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profile-schemas";
+import type { PublicCatalogProfilePagePayload } from "@/lib/catalog/public-catalog-profile-schemas";
 
 import PublicProfileShell from "./PublicProfileShell";
 

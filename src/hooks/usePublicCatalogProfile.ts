@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getPublicCatalogProfilePage } from "@/lib/public-catalog-profile-api";
+import { getPublicCatalogProfilePage } from "@/lib/catalog/public-catalog-profile-api";
 
 export const publicCatalogProfileKeys = {
   all: ["public-catalog-profile"] as const,

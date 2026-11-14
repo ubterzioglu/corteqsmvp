@@ -1,6 +1,6 @@
 import { Globe, Link as LinkIcon, Mail, Phone } from "lucide-react";
 
-import type { ContactRowViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { ContactRowViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import type { PublicSectionRendererProps } from "./renderer-registry";
 

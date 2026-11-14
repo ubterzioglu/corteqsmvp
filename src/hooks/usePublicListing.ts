@@ -6,7 +6,7 @@
  */
 
 import { useQuery } from "@tanstack/react-query";
-import { listPublicCatalogRows, type PublicCatalogRow } from "@/lib/public-catalog-api";
+import { listPublicCatalogRows, type PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 
 /**
  * Verilen rollerdeki herkese açık kayıtları getirir.

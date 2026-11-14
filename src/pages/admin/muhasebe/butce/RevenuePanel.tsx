@@ -7,9 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
 import { MonthRow } from "@/components/admin/muhasebe/BudgetMonthTable";
-import { formatCurrency } from "@/lib/muhasebe-format";
-import { revComm, revGross, revNet } from "@/lib/muhasebe-butce-aggregations";
-import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from "@/lib/muhasebe-butce-schemas";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
+import { revComm, revGross, revNet } from "@/lib/muhasebe/muhasebe-butce-aggregations";
+import { BUTCE_MONTHS, makeId, zeroMonths, type ButceYearState } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 export interface RevenuePanelProps {
   state: ButceYearState;

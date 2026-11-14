@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
 import SearchableCitySelect from "@/components/SearchableCitySelect";
 import SearchableCountrySelect from "@/components/SearchableCountrySelect";
-import type { DirectoryRoleOption } from "@/lib/catalog-directory";
+import type { DirectoryRoleOption } from "@/lib/catalog/catalog-directory";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";

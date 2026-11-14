@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { formatCurrency } from "@/lib/muhasebe-format";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
 import type { CurrencyCode } from "@/types/muhasebe";
 import type { LucideIcon } from "lucide-react";
 

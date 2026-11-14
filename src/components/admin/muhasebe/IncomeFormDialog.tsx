@@ -19,8 +19,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { incomeFormSchema, type IncomeFormValues } from "@/lib/muhasebe-schemas";
-import { todayIso } from "@/lib/muhasebe-format";
+import { incomeFormSchema, type IncomeFormValues } from "@/lib/muhasebe/muhasebe-schemas";
+import { todayIso } from "@/lib/muhasebe/muhasebe-format";
 import { CURRENCY_CODES, INCOME_CATEGORY_LABELS, INCOME_STATUS_LABELS } from "@/types/muhasebe";
 import type { CurrencyCode, IncomeCategory, IncomeInput, IncomeRow, IncomeStatus } from "@/types/muhasebe";
 

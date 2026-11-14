@@ -12,7 +12,7 @@ import {
   getVerificationLabel,
   kindLabel,
 } from "@/lib/admin-catalog-display";
-import type { UnifiedRecord } from "@/lib/catalog-types";
+import type { UnifiedRecord } from "@/lib/catalog/catalog-types";
 
 const CatalogRecordsTable = ({
   records,

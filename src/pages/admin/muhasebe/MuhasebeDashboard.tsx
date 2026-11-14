@@ -15,8 +15,8 @@ import {
   aggregateExpenseByPerson,
   aggregateKpiSummary,
   getCurrencyTotal,
-} from "@/lib/muhasebe-aggregations";
-import { formatCurrency } from "@/lib/muhasebe-format";
+} from "@/lib/muhasebe/muhasebe-aggregations";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
 import { formatCompactAmountTR } from "@/lib/format-money";
 import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
 import {

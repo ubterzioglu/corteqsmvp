@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { DepartmentBudgetPanel } from "@/pages/admin/muhasebe/butce/DepartmentBudgetPanel";
-import { seedYear } from "@/lib/muhasebe-butce-schemas";
+import { seedYear } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 // jsdom Pointer Events API'sini implement etmez; Radix UI Select (Alokasyon modu
 // combobox'ı) pointerdown sırasında hasPointerCapture/setPointerCapture/

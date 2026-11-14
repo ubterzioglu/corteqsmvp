@@ -13,7 +13,7 @@ import { BadgeCheck, MapPin } from "lucide-react";
 import DemoBadge from "@/components/DemoBadge";
 import { trUpper } from "@/lib/text-normalization";
 import { trTitleCasePlace } from "@/lib/public-listing-filter";
-import type { PublicCatalogRow } from "@/lib/public-catalog-api";
+import type { PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 
 interface ListingCardProps {
   row: PublicCatalogRow;

@@ -20,8 +20,10 @@ const useGeoCountriesMock = vi.fn();
 const useGeoCitiesMock = vi.fn();
 const useAuthMock = vi.fn();
 
-vi.mock("@/lib/catalog-directory", async () => {
-  const actual = await vi.importActual<typeof import("@/lib/catalog-directory")>("@/lib/catalog-directory");
+vi.mock("@/lib/catalog/catalog-directory", async () => {
+  const actual = await vi.importActual<typeof import("@/lib/catalog/catalog-directory")>(
+    "@/lib/catalog/catalog-directory",
+  );
   return {
     ...actual,
     listUnifiedDirectoryRows: (...args: unknown[]) => listUnifiedDirectoryRowsMock(...args),

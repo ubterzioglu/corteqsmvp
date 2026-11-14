@@ -1,7 +1,7 @@
 import { Info } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import type { PublicProfileProvenanceViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileProvenanceViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 interface PublicProfileProvenanceCardProps {
   provenance: PublicProfileProvenanceViewModel | null;

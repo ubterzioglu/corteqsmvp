@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
-import type { PublicProfileSectionViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileSectionViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import AttributesGridSection from "./AttributesGridSection";
 import BadgesSection from "./BadgesSection";

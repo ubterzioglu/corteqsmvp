@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { ConsolidatedCashflowPanel } from "@/pages/admin/muhasebe/butce/ConsolidatedCashflowPanel";
-import { seedYear } from "@/lib/muhasebe-butce-schemas";
+import { seedYear } from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 describe("ConsolidatedCashflowPanel", () => {
   it("renders opening balance, fx params, and basis selector", () => {

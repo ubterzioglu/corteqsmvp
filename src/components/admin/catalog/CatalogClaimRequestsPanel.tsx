@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { approveCatalogClaim, listCatalogClaims, rejectCatalogClaim } from "@/lib/admin-catalog";
 import { formatDateTime } from "@/lib/admin-catalog-display";
-import type { CatalogClaim } from "@/lib/catalog-types";
+import type { CatalogClaim } from "@/lib/catalog/catalog-types";
 
 type CatalogClaimRequestsPanelProps = {
   itemId: string;

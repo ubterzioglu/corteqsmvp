@@ -16,7 +16,7 @@ import ListingCard from "@/components/directory-listing/ListingCard";
 import ListingFilterBar from "@/components/directory-listing/ListingFilterBar";
 import { usePublicListing } from "@/hooks/usePublicListing";
 import { roleKeysOf, roleLabelOf, type RoleGroup } from "@/lib/directory-role-groups";
-import type { PublicCatalogRow } from "@/lib/public-catalog-api";
+import type { PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 import {
   deriveCityOptions,
   deriveCountryOptions,

@@ -1,7 +1,7 @@
 import { CalendarDays, Globe, Mail, MapPin, MessageCircle, Phone, Share2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import type { PublicProfileQuickAction } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileQuickAction } from "@/lib/catalog/public-catalog-profile-view-model";
 
 const ACTION_ICONS: Record<PublicProfileQuickAction["key"], typeof Globe> = {
   website: Globe,

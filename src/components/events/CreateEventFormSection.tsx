@@ -20,7 +20,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useCreateEvent } from "@/hooks/use-events";
-import { forgetEventFormDraft, readEventFormDraft, rememberEventFormDraft } from "@/lib/event-form-draft";
+import { forgetEventFormDraft, readEventFormDraft, rememberEventFormDraft } from "@/lib/events/event-form-draft";
 import {
   DEFAULT_EVENT_TYPE,
   EVENT_CATEGORY_OPTIONS,
@@ -28,7 +28,7 @@ import {
   isOnlineEventType,
   isPhysicalEventType,
   type EventType,
-} from "@/lib/events-vocabulary";
+} from "@/lib/events/events-vocabulary";
 import {
   EVENT_TIMEZONE_GROUPS,
   EVENT_TIMEZONE_OPTIONS,
@@ -37,7 +37,7 @@ import {
   isKnownEventTimezone,
   resolveBrowserEventTimezone,
   type EventEndTimeWarning,
-} from "@/lib/events-timezone";
+} from "@/lib/events/events-timezone";
 
 const END_TIME_WARNING_ID = "end-time-warning";
 

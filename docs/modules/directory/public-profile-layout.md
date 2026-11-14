@@ -122,8 +122,8 @@ Admin ileride bu sectionları `afs_sections`'a taşırsa DB tanımı otomatik ka
 | Katman | Dosya |
 |---|---|
 | Utils | `src/components/directory/public-profile/public-profile-utils.test.ts` |
-| Schema | `src/lib/public-catalog-profile-schemas.test.ts` |
-| View-model | `src/lib/public-catalog-profile-view-model.test.ts` |
+| Schema | `src/lib/catalog/public-catalog-profile-schemas.test.ts` |
+| View-model | `src/lib/catalog/public-catalog-profile-view-model.test.ts` |
 | Registry | `.../section-renderers/renderer-registry.test.tsx` |
 | Shell (component) | `.../PublicProfileShell.test.tsx` |
 | Page (container) | `src/pages/DirectoryCatalogItemPage.test.tsx` |

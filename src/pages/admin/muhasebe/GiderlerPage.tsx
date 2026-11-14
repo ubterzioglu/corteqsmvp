@@ -25,8 +25,8 @@ import { ExpenseFormDialog } from "@/components/admin/muhasebe/ExpenseFormDialog
 import { StatusBadge } from "@/components/admin/muhasebe/StatusBadge";
 
 import { useExpenses, useCreateExpense, useUpdateExpense, useDeleteExpense } from "@/hooks/useMuhasebe";
-import { aggregateCurrencyTotals } from "@/lib/muhasebe-aggregations";
-import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe-format";
+import { aggregateCurrencyTotals } from "@/lib/muhasebe/muhasebe-aggregations";
+import { formatCurrency, formatCurrencySummary, formatDateTR, safeMuhasebeHref } from "@/lib/muhasebe/muhasebe-format";
 import {
   EXPENSE_CATEGORY_LABELS,
   EXPENSE_STATUS_LABELS,

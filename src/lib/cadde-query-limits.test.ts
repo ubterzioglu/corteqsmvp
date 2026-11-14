@@ -99,8 +99,8 @@ describe("tam olması gereken listeler sayfalanır", () => {
     { file: "src/lib/whatsapp-landings.ts", fn: "listAllSubmissions", why: "moderasyon kuyruğu" },
     { file: "src/lib/feedback.ts", fn: "fetchFeedbackList", why: "okunmamış geri bildirim" },
     { file: "src/lib/may19-campaign.ts", fn: "listMay19CampaignEntries", why: "katılım sayısı" },
-    { file: "src/lib/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },
-    { file: "src/lib/muhasebe-api.ts", fn: "fetchIncomes", why: "gelir toplamı" },
+    { file: "src/lib/muhasebe/muhasebe-api.ts", fn: "fetchExpenses", why: "gider toplamı" },
+    { file: "src/lib/muhasebe/muhasebe-api.ts", fn: "fetchIncomes", why: "gelir toplamı" },
     { file: "src/lib/lansman.ts", fn: "getAllRegistrations", why: "başvuru sayısı" },
     { file: "src/lib/surveys/survey-responses.ts", fn: "getSurveyResponses", why: "anket yüzdeleri" },
     {

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/useAuth";
 import { useMyEvents } from "@/hooks/use-events";
-import type { EventRow } from "@/lib/events-api";
+import type { EventRow } from "@/lib/events/events-api";
 import {
   eventStatusHint,
   eventStatusLabel,
@@ -13,11 +13,11 @@ import {
   eventTypeLabel,
   isOnlineEventType,
   isPhysicalEventType,
-} from "@/lib/events-vocabulary";
-import { describeEventSchedule, formatEventDate, resolveViewerTimezone } from "@/lib/events-timezone";
-import { EVENTS_ACTIVE_LIMIT } from "@/lib/events-rules";
+} from "@/lib/events/events-vocabulary";
+import { describeEventSchedule, formatEventDate, resolveViewerTimezone } from "@/lib/events/events-timezone";
+import { EVENTS_ACTIVE_LIMIT } from "@/lib/events/events-rules";
 import { EventFeaturePromo } from "@/components/events/EventFeaturePromo";
-import { buildEventShareUrl } from "@/lib/event-share";
+import { buildEventShareUrl } from "@/lib/events/event-share";
 import { EventShareButtons } from "@/components/events/EventShareButtons";
 
 /**

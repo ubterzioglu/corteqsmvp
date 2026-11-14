@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { resolveCatalogSlugForLinkedUser } from "@/lib/public-catalog-profile-api";
+import { resolveCatalogSlugForLinkedUser } from "@/lib/catalog/public-catalog-profile-api";
 
 export const ownCatalogSlugKeys = {
   detail: (userId: string) => ["own-catalog-slug", userId] as const,

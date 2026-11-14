@@ -10,7 +10,7 @@ import {
   revokeCatalogItemEditor,
   searchAdminProfiles,
 } from "@/lib/admin-catalog";
-import type { AdminProfileSearchResult, CatalogItemEditor } from "@/lib/catalog-types";
+import type { AdminProfileSearchResult, CatalogItemEditor } from "@/lib/catalog/catalog-types";
 
 type CatalogItemEditorsPanelProps = {
   itemId: string;

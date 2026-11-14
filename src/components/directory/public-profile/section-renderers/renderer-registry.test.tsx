@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
-import type { PublicProfileSectionViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { PublicProfileSectionViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import GenericPublicSection from "./GenericPublicSection";
 import RichTextSection from "./RichTextSection";

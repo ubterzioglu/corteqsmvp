@@ -1,6 +1,6 @@
 import { ExternalLink } from "lucide-react";
 
-import type { LinkRowViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { LinkRowViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 
 import type { PublicSectionRendererProps } from "./renderer-registry";
 

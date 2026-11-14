@@ -20,8 +20,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { expenseFormSchema, type ExpenseFormValues } from "@/lib/muhasebe-schemas";
-import { todayIso } from "@/lib/muhasebe-format";
+import { expenseFormSchema, type ExpenseFormValues } from "@/lib/muhasebe/muhasebe-schemas";
+import { todayIso } from "@/lib/muhasebe/muhasebe-format";
 import {
   CURRENCY_CODES,
   EXPENSE_CATEGORY_LABELS,

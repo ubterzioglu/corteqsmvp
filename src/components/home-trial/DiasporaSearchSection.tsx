@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { Search, ArrowRight, Info } from "lucide-react";
 
 import { useAuth } from "@/components/auth/useAuth";
-import { getTotalDirectoryCount } from "@/lib/catalog-directory";
+import { getTotalDirectoryCount } from "@/lib/catalog/catalog-directory";
 
 /**
  * Arama çubuğunda sırayla beliren örnek aramalar (placeholder döngüsü).

@@ -16,7 +16,7 @@ import {
   listUnifiedDirectoryRows,
   type DirectoryRoleOption,
   type UnifiedDirectoryRow,
-} from "@/lib/catalog-directory";
+} from "@/lib/catalog/catalog-directory";
 import { useGeoCountries } from "@/hooks/useGeo";
 import { useSeo } from "@/lib/seo";
 import { PAGE_SEO } from "@/lib/page-seo";

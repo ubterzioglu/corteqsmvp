@@ -3,12 +3,16 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { publicCatalogProfileKeys } from "@/hooks/usePublicCatalogProfile";
 import { useToast } from "@/hooks/use-toast";
-import { parseDraftValue, readDraftValue, type CatalogAttributeDraftValue } from "@/lib/catalog-attribute-draft";
+import {
+  parseDraftValue,
+  readDraftValue,
+  type CatalogAttributeDraftValue,
+} from "@/lib/catalog/catalog-attribute-draft";
 import {
   getCatalogItemProfile,
   updateCatalogItemAttribute,
   type CatalogEntityProfileAttribute,
-} from "@/lib/catalog-entity-api";
+} from "@/lib/catalog/catalog-entity-api";
 
 import InlineAttributeField, { type AttributeVisibilityDraft } from "./InlineAttributeField";
 

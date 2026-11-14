@@ -13,7 +13,10 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import type { ProfileHeroVariant } from "@/lib/profile-presentation";
-import type { PublicProfileBadgeViewModel, PublicProfileHeroViewModel } from "@/lib/public-catalog-profile-view-model";
+import type {
+  PublicProfileBadgeViewModel,
+  PublicProfileHeroViewModel,
+} from "@/lib/catalog/public-catalog-profile-view-model";
 
 import type { ProfileAccent } from "./public-profile-utils";
 

@@ -13,8 +13,8 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { CreateEventFormSection } from "@/components/events/CreateEventFormSection";
-import { forgetEventFormDraft, rememberEventFormDraft } from "@/lib/event-form-draft";
-import { DEFAULT_EVENT_TYPE, EVENT_CATEGORY_OPTIONS } from "@/lib/events-vocabulary";
+import { forgetEventFormDraft, rememberEventFormDraft } from "@/lib/events/event-form-draft";
+import { DEFAULT_EVENT_TYPE, EVENT_CATEGORY_OPTIONS } from "@/lib/events/events-vocabulary";
 
 const mutateAsyncSpy = vi.fn();
 const toastSpy = vi.fn();

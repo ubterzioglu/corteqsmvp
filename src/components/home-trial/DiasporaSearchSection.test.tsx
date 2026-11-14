@@ -40,7 +40,7 @@ vi.mock("react-router-dom", async () => {
 // CLAUDE.md uyarısı: mock yolu bileşenin GERÇEKTEN import ettiği yol olmalı.
 vi.mock("@/components/auth/useAuth", () => ({ useAuth: () => mockAuth }));
 
-vi.mock("@/lib/catalog-directory", () => ({
+vi.mock("@/lib/catalog/catalog-directory", () => ({
   getTotalDirectoryCount: () => mockTotalCount(),
 }));
 

@@ -8,7 +8,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import type { RelocationToolRow } from "@/lib/relocation-tools-types";
-import { VIZE_QUESTIONS } from "@/lib/germany-vize-data";
+import { VIZE_QUESTIONS } from "@/lib/germany/germany-vize-data";
 
 const db = supabase;
 

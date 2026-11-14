@@ -6,8 +6,8 @@ import { useAuth } from "@/components/auth/useAuth";
 import { Button } from "@/components/ui/button";
 import { usePublicProfileOwnership } from "@/hooks/usePublicProfileOwnership";
 import { useSubmitCatalogClaim } from "@/hooks/useSubmitCatalogClaim";
-import type { PublicCatalogProfilePagePayload } from "@/lib/public-catalog-profile-schemas";
-import { buildPublicCatalogProfileViewModel } from "@/lib/public-catalog-profile-view-model";
+import type { PublicCatalogProfilePagePayload } from "@/lib/catalog/public-catalog-profile-schemas";
+import { buildPublicCatalogProfileViewModel } from "@/lib/catalog/public-catalog-profile-view-model";
 import { buildPublicProfileJsonLd } from "@/lib/public-profile-jsonld";
 import { useSeo } from "@/lib/seo";
 

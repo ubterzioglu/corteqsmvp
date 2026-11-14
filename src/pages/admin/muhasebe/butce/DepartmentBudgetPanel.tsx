@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { KpiCard } from "@/components/admin/muhasebe/KpiCard";
 import { MonthRow } from "@/components/admin/muhasebe/BudgetMonthTable";
-import { formatCurrency } from "@/lib/muhasebe-format";
-import { departmentTotals } from "@/lib/muhasebe-butce-aggregations";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
+import { departmentTotals } from "@/lib/muhasebe/muhasebe-butce-aggregations";
 import {
   BUTCE_CURRENCIES,
   BUTCE_MONTHS,
@@ -20,7 +20,7 @@ import {
   type ButceCurrency,
   type ButceYearState,
   type DeptId,
-} from "@/lib/muhasebe-butce-schemas";
+} from "@/lib/muhasebe/muhasebe-butce-schemas";
 
 export interface DepartmentBudgetPanelProps {
   deptId: DeptId;

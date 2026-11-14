@@ -10,8 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useExpenses, useIncomes } from "@/hooks/useMuhasebe";
-import { aggregateCashflowMonthly, getCurrencyTotal } from "@/lib/muhasebe-aggregations";
-import { formatCurrency } from "@/lib/muhasebe-format";
+import { aggregateCashflowMonthly, getCurrencyTotal } from "@/lib/muhasebe/muhasebe-aggregations";
+import { formatCurrency } from "@/lib/muhasebe/muhasebe-format";
 import { formatCompactAmountTR } from "@/lib/format-money";
 import { CURRENCY_CODES, MONTH_LABELS_TR, type CurrencyCode } from "@/types/muhasebe";
 

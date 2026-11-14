@@ -12,13 +12,13 @@ import {
   parseDraftValue,
   readDraftValue,
   type CatalogAttributeDraftValue as DraftValue,
-} from "@/lib/catalog-attribute-draft";
+} from "@/lib/catalog/catalog-attribute-draft";
 import {
   getCatalogItemProfile,
   updateCatalogItemAttribute,
   type CatalogEntityProfile,
   type CatalogEntityProfileAttribute,
-} from "@/lib/catalog-entity-api";
+} from "@/lib/catalog/catalog-entity-api";
 
 const CatalogItemEditorPage = () => {
   const { itemId } = useParams<{ itemId: string }>();

@@ -18,7 +18,7 @@
  */
 
 import { trCompare, trIncludes, trLower, trUpper } from "@/lib/text-normalization";
-import type { PublicCatalogRow } from "@/lib/public-catalog-api";
+import type { PublicCatalogRow } from "@/lib/catalog/public-catalog-api";
 import { roleKeysForGroup, type RoleGroup } from "@/lib/directory-role-groups";
 
 /** Filtre durumu. `"all"` = süzme yok. */

@@ -418,7 +418,7 @@ satırları da önce incelemeye düşer.
 (`buildAssistantCorsHeaders`, `readJsonWithLimit`) · `src/lib/supabase-chunked.ts` (`fetchAllRows`) ·
 `src/lib/lazy-with-reload.ts` · `src/lib/security.ts` (`safeStorageFileName`) ·
 `src/lib/text-normalization.ts` · `src/types/muhasebe.ts` (etiket sözlükleri) ·
-`src/lib/muhasebe-format.ts` (`formatCurrency`)
+`src/lib/muhasebe/muhasebe-format.ts` (`formatCurrency`)
 
 ## Commit
 
